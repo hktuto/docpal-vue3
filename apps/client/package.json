@@ -1,0 +1,22 @@
+{
+  "name": "client",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@element-plus/nuxt": "^1.0.3",
+    
+    "@types/node": "^18.11.18",
+    "nuxt": "^3.1.1",
+    "sass": "^1.58.0"
+  },
+  "dependencies": {
+    "@intlify/nuxt3": "^0.2.4"
+  }
+}

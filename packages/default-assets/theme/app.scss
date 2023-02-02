@@ -1,0 +1,41 @@
+// @forward './element-plus/default.scss';
+
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: var(--el-font-family);
+}
+*{
+    box-sizing: border-box;
+}
+
+.appThemeBg {
+    background-image : url('/images/bg-light.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+html.dark {
+    .appThemeBg {
+        background-image : url('/images/bg-dark.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+    } 
+}
+
+.glass{
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.3px);
+    -webkit-backdrop-filter: blur(6.3px);
+    border: 1px solid rgba(255, 255, 255, 0.31);
+}
+
+.card{
+    padding: var(--el-component-size-small);
+    border-radius: var(--el-border-radius-round);
+}

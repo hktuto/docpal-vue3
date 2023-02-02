@@ -1,0 +1,34 @@
+{
+    "pipeline": {
+      "deploy":{
+        "dependsOn": [
+          "^build-docker"
+        ]
+      },
+      "build-docker":{
+        "dependsOn": [
+        ],
+        "cache": false
+      },
+      "dev": {
+      },
+      "ui-build": {
+        "outputs": [
+          "dist/**"
+        ]
+      },
+      "form-build":{
+        "outputs": [
+          "dist/**"
+        ]
+      },
+      "story": {
+        "cache": false
+      },
+      "build": {},
+      "start": {
+      },
+      "post-install":{
+      }
+    }
+}
