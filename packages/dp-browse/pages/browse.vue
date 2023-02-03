@@ -1,6 +1,6 @@
 <template>
     <div class="browsePageContainer">
-        <div class="treeContainer">
+        <div class="leftContainer">
             <BrowseTree :path="currentPath" />
         </div>
         <div class="browseContentContainer">
@@ -22,9 +22,13 @@ const currentPath = useState('currentPath', () => route.params.path || '/');
     display: grid;
     grid-template-columns: min-content 1fr;
     gap : var(--el-component-size-small);
+    height: 100%;
+    overflow: hidden;
 }
-.treeContainer{
+.leftContainer{
     min-width: 200px;
     background: var(--el-color-info-light-8);
+    height: 100%;
+    border-radius: var(--el-border-radius-base);
 }
 </style>

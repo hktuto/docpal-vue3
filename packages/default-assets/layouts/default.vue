@@ -1,6 +1,7 @@
 <template>
     <div id="pageContainer">
         <div id="sidebarContainer">
+            <Logo class="sideBarLogo" :mode="logo"/>
             <slot name="sidebar" />
         </div>
         <main id="mainContainer">
@@ -42,5 +43,14 @@
 }
 #mainContent{
     overflow: hidden;
+}
+
+.sideBarLogo {
+  height: 25px;
+  width: auto;
+  // height: 60px;
+  display: grid;
+  justify-self: flex-start;
+  cursor: pointer;
 }
 </style>
