@@ -13,10 +13,13 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@sidebase/nuxt-session": "^0.2.6",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@sidebase/nuxt-session": "^0.2.6",
     "eslint": "^8.28.0",
     "nuxt": "^3.0.0",
     "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@vueuse/core": "^9.12.0"
   }
 }

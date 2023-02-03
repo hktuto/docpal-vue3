@@ -1,11 +1,19 @@
 
-export function api<T>(url: string, options = {}) {
+export async function api<T>(url: string, options = {}):Promise<T> {
     // @ts-ignore
     const { token } = useUser();
-    return useFetch<T>(url, Object.assign({
+    const { data, error, refresh } = await useFetch<T>(url, Object.assign({
         baseURL: '/docpalEndpoint',
         headers:{
             'Authorization': 'Bearer ' + token.value
         }
-    },options))
+    },options));
+    if(data.value) {
+        return data.value as T
+    }
+    if(error.value){
+        throw new Error('fetch fail')
+    }
+    throw new Error('no data return');
+
 }

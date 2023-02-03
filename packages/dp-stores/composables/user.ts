@@ -1,11 +1,6 @@
-import { api } from '../utils/api';
+import { Login, Verify, GetSetting } from '../utils/userApi';
+import { User } from '~~/utils/userApi';
 
-
-export type User = {
-    username: string,
-    userId: string,
-    [key:string] : any
-}
 
 export const useUser = () => {
 
@@ -51,71 +46,57 @@ export const useUser = () => {
     ]
 
     async function getUserSetting() {
-        const {data:userSetting} = await api<any>('/docpal/user/setting')
-        const userSizeValid = uiSize.find((c) => c.value === userSetting.value.size);
+        const userSetting = await GetSetting()
+        const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
         if(!userSizeValid) {
-          delete userSetting.value.size;
+          delete userSetting.size;
         }
-        const userColorValid = colorModeOption.find( c => c.value === userSetting.value.color);
+        const userColorValid = colorModeOption.find( c => c.value === userSetting.color);
         if(!userColorValid) {
-          delete userSetting.value.color;
+          delete userSetting.color;
         }
         userPreference.value = Object.assign(
             {
-              size: '14px',
-              folderView: 'tree',
-              language: 'en-US',
-              color: 'system',
+                size: '14px',
+                folderView: 'tree',
+                language: 'en-US',
+                color: 'system',
             },
             userSetting
-          )
-          appStore.state.value = 'ready';
+        )
+        appStore.state.value = 'ready';
     }
 
     async function verify() {
-        const { data, error } = await api<User>('/nuxeo/user/getApplication', {
-            pick:['username','userId']
-        });
-        if(error.value){
+        try {
+            user.value = await Verify();
+            isLogin.value = true;
+            await getUserSetting();
+        } catch (error) {
             appStore.state.value = 'needAuth';
             isLogin.value = false,
             token.value = "";
             refreshToken.value = "";
-            return;
         }
-        user.value = data.value as User;
-        isLogin.value = true;
-        await getUserSetting();
     }
 
-
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
-        const { data, error } = await api<any>('/auth/nuxeo/login',{
-            method:'post',
-            pick:['access_token','refresh_token','isRequired2FA'],
-            body:{
-                username,  password
-            }
+        const {access_token, refresh_token, isRequired2FA} = await Login({
+            username,  password
         })
-        if(error.value){
-            console.log(error.value)
-            throw new Error('fail');
-        }
-        console.log(data.value)
-        token.value = data.value.access_token,
-        refreshToken.value = data.value.refresh_token
+
+        token.value = access_token,
+        refreshToken.value = refresh_token
         await useFetch('/api/session', {
             method:'PATCH',
             body:{
-                access_token:token.value
+                access_token
             }
         })
-        if(!data.value.isRequired2FA) {
+        if(!isRequired2FA) {
             await verify();
         }
-        return {
-            isRequired2FA: data.value.isRequired2FA
-        }
+        return {isRequired2FA}
     }
 
     async function logout(){
