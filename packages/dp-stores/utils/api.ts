@@ -3,7 +3,7 @@ export async function api<T>(url: string, options = {}):Promise<T> {
     // @ts-ignore
     const { token } = useUser();
     const { data, error, refresh } = await useFetch<T>(url, Object.assign({
-        baseURL: '/docpalEndpoint',
+        baseURL: '/api',
         headers:{
             'Authorization': 'Bearer ' + token.value
         }

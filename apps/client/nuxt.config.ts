@@ -26,17 +26,5 @@ export default defineNuxtConfig({
     extends: [
         ...customLayer()
     ],
-    
-    nitro:{
-        devProxy:{
-            '/docpalEndpoint':{
-                target: process.env.PROXY,
-                changeOrigin: true,
-                prependPath: true,
-            }
-        }
-    }
-
-    
       
 })

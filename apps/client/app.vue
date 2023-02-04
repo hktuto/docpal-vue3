@@ -8,9 +8,7 @@
       <!-- <ElButton @click="state = 'ready' ">ready</ElButton> -->
     </div>
     <div v-else ref="readyElement" class="clientPageContainer">
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
+      <NuxtPage />
     </div>
   </div>
 </template>
@@ -23,9 +21,8 @@ const { state, needAuthEl, loadingEl, readyElement, displayState } = useAppStore
 const user = useUser();
 
 onMounted(async () => {
-  const { session, refresh, update, reset } = await useSession()
-  if(session.value.access_token) {
-    user.token.value = session.value.access_token;
+  if(sessionStorage) {
+    user.token.value = sessionStorage.getItem('token');
   }
   user.verify();
 })

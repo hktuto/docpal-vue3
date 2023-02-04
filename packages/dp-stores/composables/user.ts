@@ -87,12 +87,7 @@ export const useUser = () => {
 
         token.value = access_token,
         refreshToken.value = refresh_token
-        await useFetch('/api/session', {
-            method:'PATCH',
-            body:{
-                access_token
-            }
-        })
+        sessionStorage.setItem('token', access_token);
         if(!isRequired2FA) {
             await verify();
         }
