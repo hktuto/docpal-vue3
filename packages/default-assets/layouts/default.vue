@@ -30,12 +30,13 @@ const logo = computed(() =>  sidebarOpened.value ? 'withName_white' : 'white_log
     grid-template-columns: min-content 1fr;
 }
 #sidebarContainer{
-    background: var(--el-color-info-light-7);
+    background: var(--el-color-primary);
     height: 100%;
     min-width: 40px;
+    padding: calc(var(--el-component-size-small) / 2 );
 }
 #mainContainer{
-    background: var(--el-color-info-light-9);
+    background: var(--el-bg-color);
     height: 100%;
     overflow: hidden;
     display: grid;
