@@ -46,7 +46,7 @@ async function submit() {
         form.username = "";
         from.password = "";
     } catch (error) {
-        
+        console.log(error);
     }
 }
 </script>
