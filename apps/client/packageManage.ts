@@ -10,7 +10,7 @@ export function customLayer():string[] {
     packages.push("../../packages/dp-components")
 
     // default style
-    packages.push(`../../packages/${process.env.STYLE}`)
+    packages.push(`../../packages/${process.env.STYLE || 'defaultAssets'}`)
 
     packages.push('../../packages/dp-browse');
 
@@ -20,6 +20,5 @@ export function customLayer():string[] {
 
 export function makeMenu():string[] {
     const menu:string[] = [];
-
     return menu;
 }
