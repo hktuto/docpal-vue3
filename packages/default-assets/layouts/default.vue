@@ -15,6 +15,11 @@
     </div>
 </template>
 
+<script lang="ts" setup>
+const sidebarOpened = ref(false);
+const logo = computed(() =>  sidebarOpened.value ? 'withName_white' : 'white_logo' )
+</script>
+
 <style lang="scss" scoped>
 #pageContainer{
     width: 100%;
