@@ -1,6 +1,6 @@
 <template>
     <div class="tableContainer">
-        <ElTable v-loading="pending" :data="data" style="width:100%" @cell-dblclick="dbClickHandler(row)">
+        <ElTable v-loading="pending" :data="data" style="width:100%" @cell-dblclick="dbClickHandler">
             <ElTableColumn prop="name" label="name" />
             <ElTableColumn prop="type" label="type" />
         </ElTable>

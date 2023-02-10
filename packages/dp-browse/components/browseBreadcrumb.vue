@@ -2,8 +2,13 @@
     <div class="breadCrumbContainer">
         <!-- {{data}} -->
         <div v-loading="pending" class="breadContainer">
-                {{ $t('browse_home') }} 
+            
             <div class="breadItem pointer" @click="navigate(rootPath)" >
+                <img
+                    width="24"
+                    height="24"
+                    src="/icons/breadcrumb_home.svg"
+                />
             </div>
             <div v-if="data && data.length > 0" class="divider">
                 <ElIcon><ArrowRight/></ElIcon>
