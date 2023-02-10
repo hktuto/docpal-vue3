@@ -1,8 +1,5 @@
 export default defineNuxtConfig({
   extends: ['..', '../../dp-stores', '../../i18n', '../../default-assets', '../../dp-components'],
-  typescript: {
-    includeWorkspace: true
-  },
   runtimeConfig:{
     public:{
       LOCAL_KEY: process.env.LOCAL_KEY || 'client,meta',
@@ -17,5 +14,5 @@ export default defineNuxtConfig({
             prependPath: true,
         }
     }
-}
+  }
 })

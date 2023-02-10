@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "packages/default-assets"
+		},
+		{
+			"path": "packages/dp-browse"
+		},
+		{
+			"path": "packages/dp-components"
+		},
+		{
+			"path": "packages/dp-stores"
+		},
+		{
+			"path": "packages/i18n"
+		},
+		{
+			"path": "apps/client"
+		}
+	]
+}
