@@ -2,10 +2,10 @@
     <div class="breadCrumbContainer">
         <!-- {{data}} -->
         <div v-loading="pending" class="breadContainer">
-            <div class="breadItem pointer" @click="navigate(rootPath)">
-                Home
+                {{ $t('browse_home') }} 
+            <div class="breadItem pointer" @click="navigate(rootPath)" >
             </div>
-            <div v-if="data.length > 0" class="divider">
+            <div v-if="data && data.length > 0" class="divider">
                 <ElIcon><ArrowRight/></ElIcon>
             </div>
             <template v-for="(item,index) in data" :key="data.id">
@@ -16,7 +16,6 @@
                     <ElIcon><ArrowRight/></ElIcon>
                 </div>
             </template>
-
         </div>
     </div>
 </template>

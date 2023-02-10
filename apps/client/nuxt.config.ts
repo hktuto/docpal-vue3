@@ -12,16 +12,12 @@ export default defineNuxtConfig({
         env,
         public: {
           env,
+          LOCAL_KEY: process.env.LOCAL_KEY || 'client,meta',
+          PROXY: process.env.PROXY
         },
       },
     modules:[
-        '@intlify/nuxt3',
-        
     ],
-    
-    // config for `@intlify/nuxt3`
-    intlify: {
-    },
     // color mode setting
     extends: [
         ...customLayer()

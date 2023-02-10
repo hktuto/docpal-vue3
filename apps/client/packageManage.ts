@@ -6,6 +6,9 @@ export function customLayer():string[] {
     // all stores
     packages.push("../../packages/dp-stores")
 
+    // i18n 
+    packages.push('../../packages/i18n');
+
     // all components
     packages.push("../../packages/dp-components")
 
@@ -13,6 +16,7 @@ export function customLayer():string[] {
     packages.push(`../../packages/${process.env.STYLE || 'defaultAssets'}`)
 
     packages.push('../../packages/dp-browse');
+    
 
     return packages;
 

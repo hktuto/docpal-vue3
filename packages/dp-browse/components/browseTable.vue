@@ -1,6 +1,6 @@
 <template>
     <div class="tableContainer">
-        <ElTable v-loading="pending" :data="data" style="width:100%" @cell-dblclick="dbClickHandler">
+        <ElTable v-loading="pending" :data="data" style="width:100%" @cell-dblclick="dbClickHandler(row)">
             <ElTableColumn prop="name" label="name" />
             <ElTableColumn prop="type" label="type" />
         </ElTable>
@@ -18,8 +18,7 @@ const props = defineProps<{
 const emits = defineEmits(['selectedChanged'])
 const { data, refresh, pending } = useAsyncData(() => getChild(props.path));
 
-function dbClickHandler(row, column , cell, event) {
-    console.log(row);
+function dbClickHandler(row) {
     router.push({
         path:'/browse',
         query:{

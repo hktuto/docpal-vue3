@@ -5,7 +5,7 @@ type AppState = 'loading' | 'needAuth' | 'ready'
 export const useAppStore = () => {
 
     const state = useState<AppState>('appState', () => 'loading');
-
+    const noEvent = ref(false);
     const displayState = useState<AppState>('displayState', () => 'loading');
 
     const loadingEl = ref<HTMLElement>();
@@ -42,6 +42,7 @@ export const useAppStore = () => {
 
     return {
         state,
+        noEvent,
         loadingEl,
         needAuthEl,
         readyElement,
