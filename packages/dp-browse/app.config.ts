@@ -7,7 +7,7 @@ export default defineAppConfig({
       url:"/browse",
       icon: "/icons/menu/browser.svg"
     }
-  ]
+  ],
 })
 
 

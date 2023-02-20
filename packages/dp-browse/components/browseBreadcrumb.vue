@@ -10,14 +10,14 @@
                     src="/icons/breadcrumb_home.svg"
                 />
             </div>
-            <div v-if="data && data.length > 0" class="divider">
+            <div v-if="displayBread && displayBread.length > 0" class="divider">
                 <ElIcon><ArrowRight/></ElIcon>
             </div>
-            <template v-for="(item,index) in data" :key="data.id">
-                <div  :class="{breadItem:true, pointer: index < data.length - 1 }" @click="navigate(item.path)">
+            <template v-for="(item,index) in displayBread" :key="displayBread.id">
+                <div  :class="{breadItem:true, pointer: index < displayBread.length - 1 }" @click="navigate(item.path)">
                     {{item.name}}
                 </div>
-                <div v-if="index < data.length - 1" class="divider">
+                <div v-if="index < displayBread.length - 1" class="divider">
                     <ElIcon><ArrowRight/></ElIcon>
                 </div>
             </template>
@@ -37,16 +37,32 @@ const props = withDefaults(defineProps<{
 })
 
 const { data, refresh, pending } = useAsyncData(() => getBreadcrumb(props.path));
+
+const displayBread = computed(() => data.value?.filter(d => d.isFolder)|| []);
+
 watch(props, () => refresh())
+
+function goParent() {
+    router.push({
+        path:'/browse',
+        query:{
+            path: data.value[data.value.length - 2].path
+        }
+    })
+}
 
 function navigate(path) {
     router.push({
         path:'/browse',
         query:{
-            path: path
+            path
         }
     })
 }
+
+defineExpose({
+    goParent
+})
 </script>
 
 <style lang="scss" scoped>

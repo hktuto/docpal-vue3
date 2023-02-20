@@ -9,6 +9,7 @@
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",
+    "postinstall": "nuxi prepare",
     "lint": "eslint ."
   },
   "devDependencies": {
@@ -17,7 +18,7 @@
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "element-plus": "^2.2.28",
     "eslint": "^8.28.0",
-    "nuxt": "^3.0.0",
+    "nuxt": "^3.1.1",
     "sass": "^1.58.0",
     "typescript": "^4.9.3"
   }

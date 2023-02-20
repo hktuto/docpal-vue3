@@ -1,17 +1,24 @@
 <template>
     <NuxtLayout >
         <div class="browsePageContainer">
-            <BrowseBreadcrumb :path="routePath" rootPath="/"/>
-            <BrowseTable :path="routePath" />
+            <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
+            <BrowseTable :path="routePath" :doc="data"/>
         </div>
+        <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed"/>
     </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
+const breadCrumb = ref();
 const route = useRoute();
 const routePath = computed( () => route.query.path || '/')
 const { data, refresh, pending} = await useAsyncData(() => GetDocDetail(route.query.path));
+watch(route, () => refresh());
+
+function detailClosed() {
+    breadCrumb.value.goParent();
+}
 </script>
 
 <style lang="scss" scoped>

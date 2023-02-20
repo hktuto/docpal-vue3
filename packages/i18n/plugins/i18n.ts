@@ -1,4 +1,4 @@
-import { setLocaleMessage } from './../locales/getLocale';
+
 import { availableLocales } from './../makeI18nSetting';
 
 export default defineNuxtPlugin(async({
@@ -14,7 +14,9 @@ export default defineNuxtPlugin(async({
     for await ( const lang of availableLocales) {
         // get locale 
         const language = await getLocalMessage(lang, localeKey, baseUrl);
-        global.setLocaleMessage(lang, language);
+        if(language) {
+            global.setLocaleMessage(lang, language);
+        }
         
     }
     

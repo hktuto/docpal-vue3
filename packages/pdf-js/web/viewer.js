@@ -225,7 +225,11 @@ function messageFromParent(ev) {
   const urlPath = new URL(window.location);
   urlPath.searchParams.set("file", url);
   window.history.pushState({}, "", urlPath);
+  console.log(filename, annotations);
   webViewerLoad();
+}
+function saveAnnotation(){
+  // send annotation to parent
 }
 
 export {

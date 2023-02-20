@@ -2,10 +2,10 @@
     <div class="browseDetailContainer">
         <div v-if="show" class="dialog">
             <div class="header">
-                {{show}}
+                {{pdfReaderUrl}}
             </div>
             <div class="content">
-                <iframe ref="iframe" :src="`http://localhost:8888/web/viewer.html`" crossOrigin />
+                <iframe ref="iframe" :src="pdfReaderUrl" crossOrigin />
             </div>
         </div>
     </div>
@@ -15,9 +15,11 @@
 import { vOnKeyStroke } from '@vueuse/components'
 import { onKeyStroke } from '@vueuse/core'
 
+// get pdf reader url from env
+const {public:{pdfReaderUrl}} = useRuntimeConfig();
+
 const iframe = ref<HTMLElement>();
 const props = defineProps<{
-    docPath?:string,
     doc: Object
     show: boolean
 }>();

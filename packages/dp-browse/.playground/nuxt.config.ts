@@ -1,18 +1,12 @@
-export default defineNuxtConfig({
+import playgroundConfig from '../../../playgroupConfig'
+
+const config = defineNuxtConfig({
   extends: ['..', '../../dp-stores', '../../i18n', '../../default-layout', '../../dp-components'],
-  runtimeConfig:{
-    public:{
-      LOCAL_KEY: process.env.LOCAL_KEY || 'client,meta',
-      PROXY: process.env.PROXY
-    }
-  },
-  nitro:{
-    devProxy:{
-        '/docpalEndpoint':{
-            target: process.env.PROXY,
-            changeOrigin: true,
-            prependPath: true,
-        }
-    }
-  }
+  modules: [
+    '@nuxt/devtools',
+  ],
+  ...playgroundConfig
 })
+
+
+export default config

@@ -20,10 +20,12 @@
 const router = useRouter();
 
 const props = defineProps<{
-    path:string
+    path:string,
+    doc:Object
 }>()
+const {doc} = toRefs(props)
 const emits = defineEmits(['selectedChanged'])
-const { data, refresh, pending } = useAsyncData(() => getChild(props.path));
+const { data, refresh, pending } = useAsyncData(() => getChild(props.doc.path));
 
 function dbClickHandler(row) {
     router.push({
@@ -34,7 +36,11 @@ function dbClickHandler(row) {
     })
 }
 
-watch(props, () => refresh())
+watch(doc, (d:any) => {
+    if(d && d.isFolder) {
+        refresh()
+    }
+})
 
 </script>
 
