@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  extends: ['..', '../../dp-stores', '../../i18n', '../../default-assets', '../../dp-components'],
+  extends: ['..', '../../dp-stores', '../../i18n', '../../default-layout', '../../dp-components'],
   runtimeConfig:{
     public:{
       LOCAL_KEY: process.env.LOCAL_KEY || 'client,meta',

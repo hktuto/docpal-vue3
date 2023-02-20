@@ -1,14 +1,13 @@
+/// <reference path="../../global.d.ts" />
+
 export default defineAppConfig({
-  myProject: {
-    name: 'My amazing Nuxt layer'
-  }
+  menu:[
+    {
+      name:"file_browse",
+      url:"/browse",
+      icon: "/icons/menu/browser.svg"
+    }
+  ]
 })
 
-declare module '@nuxt/schema' {
-  interface AppConfigInput {
-    myProject?: {
-      /** Project name */
-      name?: string
-    }
-  }
-}
+

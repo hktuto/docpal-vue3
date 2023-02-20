@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout >
         <div class="browsePageContainer">
-            <BrowseBreadcrumb :path="routePath" />
+            <BrowseBreadcrumb :path="routePath" rootPath="/"/>
             <BrowseTable :path="routePath" />
         </div>
     </NuxtLayout>

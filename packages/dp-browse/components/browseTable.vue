@@ -1,7 +1,14 @@
 <template>
     <div class="tableContainer">
         <ElTable v-loading="pending" :data="data" style="width:100%" @cell-dblclick="dbClickHandler">
-            <ElTableColumn prop="name" label="name" />
+            <ElTableColumn :label="$t('tableHeader_name')" >
+                 <template #default="scope">
+                     <div class="nameContainer">
+                         <BrowseItemIcon :type="scope.row.isFolder ? 'folder' : 'file'"/>
+                        <div class="label">{{scope.row.name}}</div>
+                     </div>
+                 </template>
+            </ElTableColumn>
             <ElTableColumn prop="type" label="type" />
         </ElTable>
 
@@ -30,3 +37,11 @@ function dbClickHandler(row) {
 watch(props, () => refresh())
 
 </script>
+
+<style lang="scss" scoped>
+.nameContainer{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--app-padding);
+}
+</style>
