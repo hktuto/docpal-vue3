@@ -3,26 +3,16 @@
 export function customLayer():string[] {
     const packages:string[] = [];
 
+    // default style
+    packages.push(`../../packages/${process.env.STYLE || 'default-layout'}`)
+
     // all stores
     packages.push("../../packages/dp-stores")
 
-    // i18n 
-    packages.push('../../packages/i18n');
-
-    // all components
-    packages.push("../../packages/dp-components")
-
-    // default style
-    packages.push(`../../packages/${process.env.STYLE || 'defaultAssets'}`)
 
     packages.push('../../packages/dp-browse');
     
 
     return packages;
 
-}
-
-export function makeMenu():string[] {
-    const menu:string[] = [];
-    return menu;
 }
