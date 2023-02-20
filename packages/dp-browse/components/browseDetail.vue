@@ -2,10 +2,13 @@
     <div class="browseDetailContainer">
         <div v-if="show" class="dialog">
             <div class="header">
-                {{pdfReaderUrl}}
+                <div class="headerLeft"></div>
+                <div class="fileName">{{ doc.name }}</div>
+                <div class="headerRight"></div>
             </div>
             <div class="content">
-                <iframe ref="iframe" :src="pdfReaderUrl" crossOrigin />
+                <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc"  />
+                <LazyVideoPlayer v-if="readerType === 'video'" :doc="doc" />
             </div>
         </div>
     </div>
@@ -15,59 +18,31 @@
 import { vOnKeyStroke } from '@vueuse/components'
 import { onKeyStroke } from '@vueuse/core'
 
-// get pdf reader url from env
-const {public:{pdfReaderUrl}} = useRuntimeConfig();
-
-const iframe = ref<HTMLElement>();
 const props = defineProps<{
     doc: Object
-    show: boolean
+    show: boolean,
 }>();
 const {show} = toRefs(props);
 const emit = defineEmits(['close'])
-const { token } = useUser()
+const blobData = ref();
 
+const readerType = computed(() => {
+    const mineType:string = props.doc?.properties["file:content"]["mime-type"] || '';
+    if(!mineType) return "unknown";
+    if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text')  ) {
+        return 'pdf';
+    }
+    if(mineType.includes('video')) {
+        return 'video';
+    }
+    return 'unknown';
+});
 
 onKeyStroke("Escape", (e) => {
     if(props.show) {
         emit('close')
     }
 })
-
-async function getAnnotation():Promise<Object> {
-    const annotation = await GetAnnotation(props.doc.id )
-    let annotationObj = {}
-    if(annotation.length > 0) {
-    if(annotation[0].object.paths) {
-        annotationObj = JSON.parse(annotation[0].object.paths)
-    }
-    }
-    return annotationObj;
-}
-
-async function sendTokenAndPath() {
-    const blob = await GetDocumentPreview(props.doc.id);
-    
-    const annotations = await getAnnotation()
-    
-    const frame = iframe.value.contentWindow;
-    frame.postMessage({blob, filename: props.doc.name, annotations}, '*')
-}
-
-function gotMessageFromIframe(message:MessageEvent) {
-    const { data } = message;
-    if(!data) return;
-
-    if(data.type === 'ready' ) {
-        sendTokenAndPath()
-    }
-}
-
-onMounted(() => {
-    window.addEventListener('message', gotMessageFromIframe, false)
-})
-
-
 
 
 </script>
@@ -93,14 +68,18 @@ onMounted(() => {
     display: flex;
     place-items: center;
     padding: var(--el-component-size-small);
-    iframe {
-        width: 100%;
-        max-width: 800px;
-        height: 100%;
-        margin: 0 auto;
-        background: #fff;
-        border-radius: 12px;
-        overflow: hidden;
-    }
+    
+}
+.header{
+    width: 100%;
+    padding: var(--app-padding);
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    gap: var(--app-padding);
+    border-bottom: 1px soild var(--el-text-color-regular);
+}
+.fileName{
+    font-size: var(--el-font-size-extra-large);
+    text-align: center;
 }
 </style>

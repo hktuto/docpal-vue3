@@ -30,5 +30,6 @@ function handleCommand(newLocale) {
 <style lang="scss" scoped>
 .currentLang{
     display: block;
+    word-break: keep-all;
 }
 </style>

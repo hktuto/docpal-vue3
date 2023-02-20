@@ -62,7 +62,6 @@ export type BreadResponse = {
 
 }
 export const getBreadcrumb = async(idOrPath:string) => {
-    console.log("getBreadcrumb");
     return api<GetChildResponse>('/nuxeo/document/breadcrumb', {
         method:'POST' ,
         body:{ idOrPath },
@@ -73,5 +72,24 @@ export const getChild = async(idOrPath:string) => {
     return api<GetChildResponse>('/nuxeo/document/children', {
         method:'POST' ,
         body:{ idOrPath },
+    })
+}
+
+export const GetDocumentPreview = async(idOrPath:string) => {
+    return api('/nuxeo/document/preview', {
+        method:'POST',
+        body: {
+            idOrPath
+        },
+        responseType: 'blob'
+    })
+}
+
+export const GetAnnotation = async(idOrPath:string) => {
+    return api('/nuxeo/annotation', {
+        method: 'GET',
+        params:{
+            idOrPath
+        }
     })
 }

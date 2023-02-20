@@ -219,16 +219,22 @@ function messageFromParent(ev) {
   if (!ev || !ev.data) {
     return;
   }
-  const { blob, filename, annotations } = ev.data;
+  const { blob, filename, annotations, locale, colorMode } = ev.data;
   const urlCreator = window.URL || window.webkitURL;
   const url = urlCreator.createObjectURL(blob);
   const urlPath = new URL(window.location);
   urlPath.searchParams.set("file", url);
   window.history.pushState({}, "", urlPath);
-  console.log(filename, annotations);
+  
+  const newLocal = locale === "zh-HK" ? "zh-TW" : locale;
+  if (colorMode === "dark") {
+    // document.getElementsByTagName("html")[0].classList.add("dark");
+  }
+  console.log(filename, annotations, locale, colorMode);
+  window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad();
 }
-function saveAnnotation(){
+function saveAnnotation() {
   // send annotation to parent
 }
 

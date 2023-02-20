@@ -40,6 +40,8 @@ watch(doc, (d:any) => {
     if(d && d.isFolder) {
         refresh()
     }
+}, {
+    immediate: true
 })
 
 </script>

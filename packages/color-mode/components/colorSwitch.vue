@@ -17,7 +17,7 @@ function toggleColor() {
 
 <style lang="scss" scoped>
 .colorSwitchContainer{
-    padding: var(--app-padding);
+    padding: calc(var(--app-padding) / 2);
     border-radius: var(--el-border-radius-base);
     border: 1px solid var(--color-grey-800); 
     background-color: transparent;
