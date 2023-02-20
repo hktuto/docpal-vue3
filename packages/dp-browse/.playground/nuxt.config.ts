@@ -1,7 +1,7 @@
 import playgroundConfig from '../../../playgroupConfig'
 
 const config = defineNuxtConfig({
-  extends: ['..', '../../dp-stores', '../../i18n', '../../default-layout', '../../dp-components'],
+  extends: ['..', '../../dp-stores', '../../default-layout',],
   modules: [
     '@nuxt/devtools',
   ],

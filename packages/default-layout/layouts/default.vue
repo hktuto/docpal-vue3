@@ -10,7 +10,13 @@
         </div>
         <main id="mainContainer">
             <div id="topBarContainer">
+                <div class="expand">
                 <slot name="header" />
+                </div>
+                <div class="actions">
+                  <ColorSwitch />
+                  <LanguageSwitch />
+                </div>
             </div>
             <div id="mainContent">
                 <slot />
@@ -56,6 +62,16 @@ const { x, y } = useMouse()
     background: var(--el-color-info-light-8);
     height: 100%;
     min-height: 40px;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    padding: calc(var(--app-padding) * 1.5 );
+    .actions{
+      display: flex;
+      flex-flow: row nowrap;
+      gap : var(--app-padding);
+      justify-content: flex-start;
+      align-items: center;
+    }
 }
 #mainContent{
     overflow: hidden;

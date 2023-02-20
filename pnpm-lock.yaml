@@ -19,11 +19,14 @@ importers:
 
   packages/color-mode:
     specifiers:
+      '@element-plus/icons-vue': ^2.0.10
       '@nuxtjs/color-mode': ^3.2.0
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       eslint: ^8.28.0
       nuxt: ^3.0.0
       typescript: ^4.9.3
+    dependencies:
+      '@element-plus/icons-vue': 2.0.10
     devDependencies:
       '@nuxtjs/color-mode': 3.2.0
       '@nuxtjs/eslint-config-typescript': 12.0.0_4vsywjlpuriuw3tl5oq6zy5a64
@@ -1561,7 +1564,6 @@ packages:
     resolution: {integrity: sha512-ygEZ1mwPjcPo/OulhzLE7mtDrQBWI8vZzEWSNB2W/RNCRjoQGwbaK4N8lV4rid7Ts4qvySU3njMN7YCiSlSaTQ==}
     peerDependencies:
       vue: ^3.2.0
-    dev: true
 
   /@element-plus/nuxt/1.0.3:
     resolution: {integrity: sha512-CAmW6bapnVMax5GWxFLtKHPTfmcGuZJyM4p36a5XXUQaUfFxphgEhheEFeNDJn1rd6pMupOMOFFPkYwMPHqMNg==}
@@ -3531,7 +3533,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/plugin-transform-typescript': 7.20.13_@babel+core@7.20.12
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.12
-      vite: 4.0.4_sass@1.58.0
+      vite: 4.0.4
       vue: 3.2.45
     transitivePeerDependencies:
       - supports-color
@@ -3544,7 +3546,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.0.4_sass@1.58.0
+      vite: 4.0.4
       vue: 3.2.45
     dev: true
 
@@ -13325,7 +13327,7 @@ packages:
       strip-ansi: 6.0.1
       tiny-invariant: 1.3.1
       typescript: 4.9.5
-      vite: 4.0.4_sass@1.58.0
+      vite: 4.0.4
       vscode-languageclient: 7.0.0
       vscode-languageserver: 7.0.0
       vscode-languageserver-textdocument: 1.0.8
