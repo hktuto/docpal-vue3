@@ -33,7 +33,7 @@ export type User = {
 export const Verify = async():Promise<User> => {
     return api<User>('/nuxeo/user/getApplication', {
         method: 'GET',
-        pick:['username','userId']
+        pick:['username','userId', 'firstName', 'lastName', 'email']
     });
 }
 

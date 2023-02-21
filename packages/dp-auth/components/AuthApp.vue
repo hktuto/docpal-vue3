@@ -1,7 +1,7 @@
 <template>
-  <div class="appThemeBg">
+    <div class="appThemeBg">
     <div v-if="displayState === 'needAuth'" ref="needAuthEl" class="LoginContainer">
-      <AuthLoginForm  />
+      <LoginForm  />
     </div>
     <div v-else-if="displayState != 'ready'" ref="loadingEl" class="loadingContainer">
       <Logo class="loginLogo"/>

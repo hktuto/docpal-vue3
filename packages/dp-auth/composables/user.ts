@@ -1,5 +1,5 @@
-import { Login, Verify, GetSetting } from '../utils/userApi';
-import { User } from '~~/utils/userApi';
+import { useAppStore } from './../../dp-stores/composables/app';
+import { Login, Verify, GetSetting, User } from '../../dp-stores/utils/userApi';
 
 
 export const useUser = () => {
@@ -77,6 +77,9 @@ export const useUser = () => {
             isLogin.value = false,
             token.value = "";
             refreshToken.value = "";
+            if(sessionStorage){
+                sessionStorage.removeItem('token');
+            }
         }
     }
 
@@ -102,6 +105,10 @@ export const useUser = () => {
         token.value = "";
         refreshToken.value = "";
         appStore.state.value = 'needAuth';
+        if(sessionStorage){
+            sessionStorage.removeItem('token');
+        }
+        userPreference.value = null;
     }
 
     return {

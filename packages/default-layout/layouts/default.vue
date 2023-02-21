@@ -16,6 +16,7 @@
                 <div class="actions">
                   <ColorSwitch />
                   <LanguageSwitch />
+                  <UserMiniDropdown />
                 </div>
             </div>
             <div id="mainContent">

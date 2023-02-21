@@ -1,6 +1,5 @@
 <template>
-  <div >
-    <AuthApp />
+  <div>
+    Hello World!
   </div>
 </template>
-

@@ -66,8 +66,3 @@ html.dark {
     100% { opacity: 0;width: 0; height: 0;}
 }
 
-:root {
-    --menu-color: var(--el-color-info);
-    --menu-selected-bg: var(--el-color-white);
-    --app-padding: calc( var(--el-component-size-small) / 2);
-}
