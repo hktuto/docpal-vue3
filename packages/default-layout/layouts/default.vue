@@ -11,7 +11,8 @@
         <main id="mainContainer">
             <div id="topBarContainer">
                 <div class="expand">
-                <slot name="header" />
+                  <SmartSearch />
+                  <slot name="header" />
                 </div>
                 <div class="actions">
                   <ColorSwitch />
@@ -60,12 +61,12 @@ const { x, y } = useMouse()
     grid-template-rows: min-content 1fr;
 }
 #topBarContainer{
-    background: var(--el-color-info-light-8);
+    background: var(--header-bg);
     height: 100%;
     min-height: 40px;
     display: grid;
     grid-template-columns: 1fr min-content;
-    padding: calc(var(--app-padding) * 1.5 );
+    padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
     .actions{
       display: flex;
       flex-flow: row nowrap;

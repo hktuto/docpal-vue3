@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "main": "./nuxt.config.ts",
   "scripts": {
-    "dev": "nuxi prepare & nuxi dev .playground",
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",

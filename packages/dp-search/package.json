@@ -1,15 +1,14 @@
 {
-  "name": "dp-stores",
-  "version": "0.0.1",
-  "private": true,
+  "name": "dp-search",
   "type": "module",
+  "version": "0.0.1",
   "main": "./nuxt.config.ts",
   "scripts": {
     "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",
-    "postinstall": "nuxt prepare",
+    "postinstall": "nuxi prepare",
     "lint": "eslint ."
   },
   "devDependencies": {
@@ -17,8 +16,5 @@
     "eslint": "^8.28.0",
     "nuxt": "^3.0.0",
     "typescript": "^4.9.3"
-  },
-  "dependencies": {
-    "@vueuse/core": "^9.12.0"
   }
 }
