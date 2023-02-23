@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     ],
     css:[
         // dark theme
-        resolve('./theme/element-plus/dark.scss')
+        // resolve('./theme/element-plus/dark.scss')
         
     ],
     // @ts-ignore
