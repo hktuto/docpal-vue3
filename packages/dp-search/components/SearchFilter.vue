@@ -2,6 +2,7 @@
     <div class="filterContainer">
         <FromRenderer :form-json="formJson"  :data="{}" @formChang="formChangeHandler" />
         <ElButton @click="$emit('closed')">close</ElButton>
+        <ElButton @click="$emit('closed')">Submit</ElButton>
     </div>
 </template>
 
