@@ -3,7 +3,7 @@ const { resolve } = createResolver(import.meta.url)
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
     modules:[
-        "@element-plus/nuxt"
+        // "@element-plus/nuxt"
     ],
     css:[
         // dark theme
@@ -21,7 +21,7 @@ export default defineNuxtConfig({
             // 自定义主题和解决样式未导入问题
             preprocessorOptions: {
               scss: {
-                additionalData: `@use "${resolve('./theme/element-plus/default.scss')}" as *; \n`,
+                // additionalData: `@use "${resolve('./theme/element-plus/default.scss')}" as *; \n`,
               },
             },
           }, 

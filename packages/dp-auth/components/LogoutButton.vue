@@ -1,5 +1,5 @@
 <template>
-    <ElButton type="link" @click="logout">{{ $t('login_loginOut') }}</ElButton>
+    <ElButton  @click="logout">{{ $t('login_loginOut') }}</ElButton>
 </template>
 
 <script lang="ts" setup>

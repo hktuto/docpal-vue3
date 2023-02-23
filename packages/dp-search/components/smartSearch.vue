@@ -41,6 +41,7 @@ function focusInput() {
 function blurInput() {
     inputEl.value.blur();
 }
+const keyword = ref("");
 function keywordInputHandler() {
     keyword.value = inputEl.value.value;
 }

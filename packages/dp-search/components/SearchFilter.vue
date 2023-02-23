@@ -1,6 +1,7 @@
 <template>
     <div class="filterContainer">
-        <FromRenderer :formJson="formJson" :data="form" @formChang="formChangeHandler" />
+
+        <FromRenderer :data="{}" @formChang="formChangeHandler" />
     </div>
 </template>
 
@@ -22,9 +23,9 @@ type SearchFilter = {
     pageSize: number,
     currentPageIndex: number
 }
-import formJson from'./json/form.json'
+// import formJson from'./json/form.json'
 const props = defineProps<{
-    form : SearchFilter
+    form ?: SearchFilter
 }>();
 
 //#region dropdown options
