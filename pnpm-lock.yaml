@@ -274,6 +274,21 @@ importers:
       wintersmith: 2.5.0
       yargs: 17.6.2
 
+  packages/v-form-plugin:
+    specifiers:
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      eslint: ^8.28.0
+      nuxt: ^3.0.0
+      typescript: ^4.9.3
+      vform3-builds: ^3.0.10
+    dependencies:
+      vform3-builds: 3.0.10
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      eslint: 8.34.0
+      nuxt: 3.1.1_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
+
 packages:
 
   /@ampproject/remapping/2.2.0:
@@ -13344,6 +13359,10 @@ packages:
     engines: {node: '>= 0.10'}
     dev: true
 
+  /vform3-builds/3.0.10:
+    resolution: {integrity: sha512-sULNk72Z6NG94X9MMgpBwinaIOYjtl7Bn5jZbV9iZaglSYr2SHm/wpXPAjl8F8OW6SzOOJgIpRek+NvOvN7wsg==}
+    dev: false
+
   /vinyl-fs/3.0.3:
     resolution: {integrity: sha512-vIu34EkyNyJxmP0jscNzWBSygh7VWhqun6RmqVfXePrOwi9lhvRs//dOaGOTRUQr4tx7/zd26Tk5WeSVZitgng==}
     engines: {node: '>= 0.10'}
@@ -13575,7 +13594,7 @@ packages:
       strip-ansi: 6.0.1
       tiny-invariant: 1.3.1
       typescript: 4.9.5
-      vite: 4.0.4
+      vite: 4.0.4_sass@1.58.0
       vscode-languageclient: 7.0.0
       vscode-languageserver: 7.0.0
       vscode-languageserver-textdocument: 1.0.8

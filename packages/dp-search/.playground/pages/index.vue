@@ -1,5 +1,5 @@
 <template>
     <NuxtLayout>
-        search page
+        search
     </NuxtLayout>
 </template>
