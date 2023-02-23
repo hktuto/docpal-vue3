@@ -1,11 +1,12 @@
 <template>
     <div class="filterContainer">
-
-        <FromRenderer :data="{}" @formChang="formChangeHandler" />
+        <FromRenderer :form-json="formJson"  :data="{}" @formChang="formChangeHandler" />
+        <ElButton @click="$emit('closed')">close</ElButton>
     </div>
 </template>
 
 <script lang="ts" setup>
+import formJson from'./json/form'
 type SearchFilter = {
     paramsInTextSearch?: string[]
     textSearchType?: string,
@@ -23,7 +24,7 @@ type SearchFilter = {
     pageSize: number,
     currentPageIndex: number
 }
-// import formJson from'./json/form.json'
+
 const props = defineProps<{
     form ?: SearchFilter
 }>();
