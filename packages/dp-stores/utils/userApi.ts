@@ -40,15 +40,25 @@ export const Verify = async():Promise<User> => {
 /**
  * Get User Setting from api
  */
+import{ TableColumnSetting } from '../models/TableColumnSetting'
 export type UserSetting = {
     size?: string,
-    color?: string
-    language?: string
+    color?: string,
+    language?: string,
+    tableSettings?: TableColumnSetting
 }
 export const GetSetting = async():Promise<UserSetting> => {
     return await api<UserSetting>('/docpal/user/setting')
 }
-
-
+export const userSettingSaveApi = async(userSetting:UserSetting) => {
+    try {
+        return await api<UserSetting>('/docpal/user/setting', {
+            method:'PUT' ,
+            body:{ userSetting },
+        })
+    } catch (error) {
+        return false
+    }
+}
 
 

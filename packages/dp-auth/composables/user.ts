@@ -1,4 +1,5 @@
 import { useAppStore } from './../../dp-stores/composables/app';
+import { useSetting } from './../../dp-stores/composables/setting';
 import { Login, Verify, GetSetting, User } from '../../dp-stores/utils/userApi';
 
 
@@ -11,7 +12,7 @@ export const useUser = () => {
     const user = useState<User>('appUser');
 
     const userPreference = useState('userPreference');
-    
+    const settingStore = useSetting()
     const colorModeOption = [
         {
             id: '1',
@@ -61,10 +62,12 @@ export const useUser = () => {
                 folderView: 'tree',
                 language: 'en-US',
                 color: 'system',
+                tableSettings: {}
             },
-            userSetting
+            {...userSetting}
         )
         appStore.state.value = 'ready';
+        settingStore.init()
     }
 
     async function verify() {
@@ -115,9 +118,11 @@ export const useUser = () => {
         // data
         token,
         user,
+        userPreference,
         // function
         login,
         verify,
         logout,
+        getUserSetting,
     }
 }
