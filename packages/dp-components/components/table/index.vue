@@ -4,6 +4,8 @@
         <el-table
        		ref="tableRef"
             :data="tableData"
+            :row-class-name="tableRowClassName"
+            :row-style="rowstyle"
            	v-bind="_options"
             @select="handleSelect"
             @selection-change="handleSelectionChange"
@@ -103,7 +105,23 @@ const emit = defineEmits([
 ])
 const columns__sub = ref(JSON.parse(JSON.stringify(props.columns)))
 const shiftSelectionObj = new shiftCtrlSelection(props.tableData)
+const shiftSelectList = ref([])
 // 自定义索引
+const tableRowClassName = ({ row, rowIndex }) => {
+    row.index = rowIndex;
+    for (let i = 0; i < shiftSelectList.value.length; i++) {
+        if (shiftSelectList.value[i].index === rowIndex) {
+            return 'shiftSelect'
+        }
+    }
+}
+const rowstyle = (row, rowIndex) => {
+    for (let i = 0; i < shiftSelectList.value.length; i++) {
+        if (shiftSelectList.value[i].index === rowIndex) {
+            return { 'background-color': '#ecf5ff!important' };
+        }
+    }
+}
 const indexMethod = (index: number) => {
         const tabIndex = index + (_paginationConfig.value.currentPage - 1) * _paginationConfig.value.pageSize + 1
         return tabIndex
@@ -140,7 +158,8 @@ const handleSelectionChange = (val: any) => {
 }
 // 当某一行被点击时会触发该事件
 const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-    const selected = shiftSelectionObj.select(row)
+    shiftSelectList.value = shiftSelectionObj.select(row)
+    console.log(shiftSelectList.value, shiftSelectList.value.length);
     emit('row-click', row, column, event)
 }
 // 当某个单元格被点击时会触发该事件
@@ -171,6 +190,11 @@ defineExpose({ element: tableRef })
     &:hover {
       transform: scale(1.2);
     }
+}
+</style>
+<style>
+.shiftSelect {
+    background-color: red!important;
 }
 </style>
 

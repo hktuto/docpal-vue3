@@ -32,8 +32,35 @@ export class shiftCtrlSelection {
   }
 
   select(row:any) {
-    this.selectedList.push(row)
-    console.log(row, this.selectedList);
+    if(!this.isCtrl && !this.isShift) {
+      this.selectedList = []
+      this.startPoint = row.index
+      this.selectedList.push(row)
+    }
+    if (this.isCtrl) { // 如果按下的是ctrl   
+      const index = this.selectedList.findIndex(item => item.index === row.index)
+      if (index > -1) this.selectedList.splice(index, 1)
+      else {
+        this.selectedList.push(row)
+        this.startPoint = row.index
+      }
+    } else if (this.isShift) {
+      if (this.startPoint === -1) {
+        this.startPoint = row.index
+        const index = this.selectedList.findIndex(item => item.index === row.index)
+        if(index === -1) this.selectedList.push(row)
+      } else {
+        this.endPoint = row.index
+        for(let i = this.startPoint; i <=  this.endPoint; i++) {
+          const listItem = this.list[i]
+          const index = this.selectedList.findIndex(item => item.index === listItem.index)
+          if(index === -1) this.selectedList.push(listItem)
+        }
+      }
+    }
+    console.log(row);
+    console.log('console.log(row, this.selectedList);', this.selectedList);
+    return this.selectedList
   }
 }
 export default shiftCtrlSelection
