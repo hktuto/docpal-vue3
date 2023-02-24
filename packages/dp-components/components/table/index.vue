@@ -55,7 +55,7 @@ import { ComputedRef, computed, ref } from 'vue'
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import SortButton from './sortButton.vue'
 import TableColumn from './tableColumn.vue'
-import shiftSelection from './shiftSelection'
+import shiftCtrlSelection from './shiftSelection'
 import { ElTable } from 'element-plus'
 export type SortParams<T> = {
     column: TableColumnCtx<T | any>
@@ -102,7 +102,7 @@ const emit = defineEmits([
     'sort-change', // 列排序发生改变触发 
 ])
 const columns__sub = ref(JSON.parse(JSON.stringify(props.columns)))
-const shiftSelectionObj = new shiftSelection()
+const shiftSelectionObj = new shiftCtrlSelection(props.tableData)
 // 自定义索引
 const indexMethod = (index: number) => {
         const tabIndex = index + (_paginationConfig.value.currentPage - 1) * _paginationConfig.value.pageSize + 1
@@ -123,16 +123,15 @@ const handleAction = (command: Table.Command, row: any, index: number) => {
     emit('command', command, row, index)
 }
 async function handleSelect (rows, row) {
-    const selected = shiftSelectionObj.onTrClick(row, props.tableData, tableRef.value.selection)
     console.log({selected});
     
-    if (selected.length > 0) {
-    await tableRef.value.clearSelection()
-    setTimeout(() => {
-        selected.forEach(item => {
-            tableRef.value.toggleRowSelection(item, true)
-        })
-    }, 100);
+    if (selected && selected.length > 0) {
+        await tableRef.value.clearSelection()
+        setTimeout(() => {
+            selected.forEach(item => {
+                tableRef.value.toggleRowSelection(item, true)
+            })
+        }, 100);
     }
 }
 // 多选事件
@@ -141,6 +140,7 @@ const handleSelectionChange = (val: any) => {
 }
 // 当某一行被点击时会触发该事件
 const handleRowClick = (row: any, column: any, event: MouseEvent) => {
+    const selected = shiftSelectionObj.select(row)
     emit('row-click', row, column, event)
 }
 // 当某个单元格被点击时会触发该事件
