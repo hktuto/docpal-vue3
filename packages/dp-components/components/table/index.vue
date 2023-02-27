@@ -1,15 +1,15 @@
 <template>
     <div>
-        <SortButton :columns="columns" orderKey="test"  @reorderColumn="reorderColumn"></SortButton>
+        <SortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></SortButton>
         <el-table
        		ref="tableRef"
             :data="tableData"
             :row-class-name="tableRowClassName"
-            :row-style="rowstyle"
+            :row-style="rowStyle"
            	v-bind="_options"
-            @select="handleSelect"
             @selection-change="handleSelectionChange"
             @row-click="handleRowClick"
+            @row-dblclick="handleRowDblclick"
             @cell-click="handleCellClick"
             @sort-change="handleSortChange">
             <template v-for="(col, index) in columns__sub" :key="index">
@@ -59,6 +59,7 @@ import SortButton from './sortButton.vue'
 import TableColumn from './tableColumn.vue'
 import shiftCtrlSelection from './shiftSelection'
 import { ElTable } from 'element-plus'
+import { onKeyUp, onKeyDown } from '@vueuse/core'
 export type SortParams<T> = {
     column: TableColumnCtx<T | any>
     prop: string
@@ -78,7 +79,6 @@ const _options: ComputedRef<Table.Options> = computed(() => {
         tooltipEffect: 'dark',
         showHeader: true,
         showPagination: false,
-        rowStyle: () => 'cursor:pointer' // 行样式
     }
     return Object.assign(option, props?.options)
 })
@@ -104,23 +104,19 @@ const emit = defineEmits([
     'sort-change', // 列排序发生改变触发 
 ])
 const columns__sub = ref(JSON.parse(JSON.stringify(props.columns)))
-const shiftSelectionObj = new shiftCtrlSelection(props.tableData)
-const shiftSelectList = ref([])
+
 // 自定义索引
 const tableRowClassName = ({ row, rowIndex }) => {
-    row.index = rowIndex;
-    for (let i = 0; i < shiftSelectList.value.length; i++) {
-        if (shiftSelectList.value[i].index === rowIndex) {
-            return 'shiftSelect'
-        }
+    row.rowIndex = rowIndex
+    let rowName = ""
+    const index = shiftSelectList.value.findIndex(c => c.rowIndex === row.rowIndex)
+    if (index > -1) {
+        rowName = "current-row "; // elementUI 默认高亮行的class类 不用再样式了^-^,也可通过css覆盖改变背景颜色
     }
+    return rowName; //也可以再加上其他类名 如果有需求的话
 }
-const rowstyle = (row, rowIndex) => {
-    for (let i = 0; i < shiftSelectList.value.length; i++) {
-        if (shiftSelectList.value[i].index === rowIndex) {
-            return { 'background-color': '#ecf5ff!important' };
-        }
-    }
+const rowStyle = (row, rowIndex) => {
+    
 }
 const indexMethod = (index: number) => {
         const tabIndex = index + (_paginationConfig.value.currentPage - 1) * _paginationConfig.value.pageSize + 1
@@ -140,27 +136,19 @@ const currentPageChange = (currentPage: number) => {
 const handleAction = (command: Table.Command, row: any, index: number) => {
     emit('command', command, row, index)
 }
-async function handleSelect (rows, row) {
-    console.log({selected});
-    
-    if (selected && selected.length > 0) {
-        await tableRef.value.clearSelection()
-        setTimeout(() => {
-            selected.forEach(item => {
-                tableRef.value.toggleRowSelection(item, true)
-            })
-        }, 100);
-    }
-}
+
 // 多选事件
 const handleSelectionChange = (val: any) => {
+    shiftSelectList.value = val
     emit('selection-change', val)
 }
 // 当某一行被点击时会触发该事件
 const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-    shiftSelectList.value = shiftSelectionObj.select(row)
-    console.log(shiftSelectList.value, shiftSelectList.value.length);
+    handleShift(row)
     emit('row-click', row, column, event)
+}
+const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
+    emit('row-dblclick', row, column, event)
 }
 // 当某个单元格被点击时会触发该事件
 const handleCellClick = (row: any, column: any, cell: any, event: MouseEvent) => {
@@ -180,6 +168,92 @@ const handleSortChange = ({ column, prop, order }: SortParams<any>) => {
 function reorderColumn (displayList) {
     columns__sub.value = JSON.parse(JSON.stringify(displayList)) 
 }
+// #region module: sort
+    let CtrlDown = false
+    let shiftOrAltDown = false
+    const shiftSelectList = ref([])
+    function handleShift (row) {
+        let refsElTable = tableRef.value
+        if(CtrlDown) {
+            refsElTable.toggleRowSelection(row); // ctrl多选 如果点击两次同样会取消选中
+            return;
+        }
+        if ( shiftOrAltDown && shiftSelectList.value.length > 0) { 
+            let topAndBottom = getTopAndBottom(row, bottomSelectionRow.value, topSelectionRow.value );
+            const dataObj = refsElTable.data.reduce((prev:any, item:any) => {
+                prev[`${item.rowIndex}`] = item
+                return prev
+            }, {})
+            refsElTable.clearSelection(); //先清空 不然会导致在这两行中间之外的行状态不变
+            for (let index = topAndBottom.top; index <= topAndBottom.bottom; index++) { //选中两行之间的所有行
+                refsElTable.toggleRowSelection(dataObj[index], true);
+            }
+         } else {
+            let findRow = shiftSelectList.value.find(c => c.rowIndex == row.rowIndex); //找出当前选中行
+            //如果只有一行且点击的也是这一行则取消选择 否则清空再选中当前点击行
+            if (findRow&& shiftSelectList.value.length === 1 ) { 
+                refsElTable.toggleRowSelection(row, false);
+                return;
+            }
+            refsElTable.clearSelection();
+            refsElTable.toggleRowSelection(row); 
+        }
+    }
+    const bottomSelectionRow = computed(() => {
+        if (shiftSelectList.value.length == 0) return null;
+        return shiftSelectList.value.reduce((start, end) => {
+            return start.rowIndex > end.rowIndex ? start : end;
+        });
+    })
+    const topSelectionRow = computed(() => {
+        if (shiftSelectList.value.length == 0) return null;
+        return shiftSelectList.value.reduce((start, end) => {
+            return start.rowIndex < end.rowIndex ? start : end;
+        });
+    })
+    /**获取最新最上最下行 */
+    function getTopAndBottom(row, bottom, top) {
+        let n = row.rowIndex,
+            mx = bottom.rowIndex,
+            mi = top.rowIndex;
+        if (n > mx) {
+            return {
+                top: mi,
+                bottom: n
+            };
+        } else if (n < mx && n > mi) {
+            return {
+                top: mi,
+                bottom: n
+            };
+        } else if (n < mi) {
+            return {
+                top: n,
+                bottom: mx
+            };
+        } else if (n == mi || n == mx) {
+            return {
+                top: mi,
+                bottom: mx
+            };
+        }
+    };
+// #endregion
+onMounted(() => {
+    onKeyDown('Control', (e) => {
+      CtrlDown = true
+    })
+    onKeyUp('Control', (e) => {
+      CtrlDown = false
+    })
+    onKeyDown('Shift', (e) => {
+      shiftOrAltDown = true
+    })
+    onKeyUp('Shift', (e) => {
+      // e.preventDefault();
+      shiftOrAltDown = false
+    })
+})
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
 defineExpose({ element: tableRef })
 </script>
@@ -191,10 +265,14 @@ defineExpose({ element: tableRef })
       transform: scale(1.2);
     }
 }
+
 </style>
-<style>
+<style lang="scss">
 .shiftSelect {
     background-color: red!important;
+    td {
+        background-color: red!important;
+    }
 }
 </style>
 

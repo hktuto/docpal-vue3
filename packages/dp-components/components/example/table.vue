@@ -10,7 +10,7 @@
             <Table
                 :columns="tableColumn"
                 :table-data="tableData"
-                :options="{ defaultSort: { prop: 'name', order: 'ascending' }, showPagination: true }"
+                :options="{ defaultSort: { prop: 'name', order: 'ascending' }, showPagination: true, rowKey: 'name' }"
                 @selection-change="handleSelection"
                 @command="handleAction"
                 @sort-change="handleSortChange">
