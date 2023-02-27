@@ -51,7 +51,7 @@ export type SortParams<T> = {
 }
 interface TableProps {
     columns: Table.Column[] // 每列的配置项
-    orderKey: string
+    sortKey: string
 }
 const props = defineProps<TableProps>()
 const emit = defineEmits([
@@ -97,10 +97,10 @@ async function handleSubmit (tableOrder) {
   if (!param.tableSettings) {
     param.tableSettings = {}
   }
-  param.tableSettings[props.orderKey] = tableOrder ? tableOrder :
+  param.tableSettings[props.sortKey] = tableOrder ? tableOrder :
     originalColumns.value.filter((full) => displayList.value.includes(full)).map((v,i) => i)
-  // param.tableSettings[props.orderKey].defaultDisplayList = [...props.tableColumn]
-  // param.tableSettings[props.orderKey] = [...displayList.value],
+  // param.tableSettings[props.sortKey].defaultDisplayList = [...props.tableColumn]
+  // param.tableSettings[props.sortKey] = [...displayList.value],
   await userSettingSaveApi(param)
   await getUserSetting()
   console.log();
@@ -113,14 +113,14 @@ async function handleSubmit (tableOrder) {
 
 function initColumn () {
   // check store default column setting
-  if(props.orderKey && tableColumnSetting) {
-    originalColumns.value = tableColumnSetting[props.orderKey] || props.columns;
+  if(props.sortKey && tableColumnSetting) {
+    originalColumns.value = tableColumnSetting[props.sortKey] || props.columns;
     // normalize user preference
-    if(!tableColumnSetting[props.orderKey]) {
+    if(!tableColumnSetting[props.sortKey]) {
       handleSubmit(originalColumns.value.map( (e,i) => i ))
     }
     // set displayList and hideList
-    const userColumns = userPreference.value.tableSettings[props.orderKey]
+    const userColumns = userPreference.value.tableSettings[props.sortKey]
 
     const { display, hide } = originalColumns.value.reduce( (result, current, index) => {
       userColumns.includes(index) ? result.display.push(current) : result.hide.push(current)
