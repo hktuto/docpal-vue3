@@ -2,7 +2,12 @@ import playgroupConfig from '../../../playgroupConfig'
 
 const config =  defineNuxtConfig({
   extends: ['..',"../../color-mode" , '../../element-ui', '../../i18n', '../../dp-components'],
-  ...playgroupConfig
+  ...playgroupConfig,
+  vite:{
+    optimizeDeps:{
+        include: ['v-form/dist/designer.umd']
+    }
+  }
 })
 
 

@@ -5,7 +5,12 @@ const config = defineNuxtConfig({
   modules: [
     '@nuxt/devtools',
   ],
-  ...playgroundConfig
+  ...playgroundConfig,
+  vite:{
+    optimizeDeps:{
+        include: ['v-form/dist/designer.umd']
+    }
+  }
 })
 
 

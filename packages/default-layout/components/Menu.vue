@@ -11,7 +11,7 @@
             }"
             @click="$router.push({ path: item.url })"
             >
-            <InlineSvg  :src="item.icon"/>
+            <InlineSvg :src="item.icon"/>
             <div v-if="opened" class="itemLabel">
                 {{ $t(item.name) }}
             </div>
