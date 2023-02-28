@@ -101,3 +101,27 @@ export const getTrashApi = async(params: pageParams) => {
     })
     return { entryList, totalSize }
 }
+
+export const deleteByIdApi = async (idOrPath: string) => {
+    try {
+        const res = await api('/nuxeo/document', { 
+            method: 'DELETE',
+            body: { idOrPath }
+        })
+        return true
+    } catch (error) {
+        return false
+    }
+}
+export const restoreByIdApi = async (idOrPath: string) => {
+    try {
+        const res = await api('/nuxeo/document/restore', { 
+            method: 'POST',
+            body:{ idOrPath }
+        })
+        return true
+    } catch (error) {
+        return false
+    }
+}
+
