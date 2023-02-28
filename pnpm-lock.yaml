@@ -201,6 +201,9 @@ importers:
       eslint: ^8.28.0
       nuxt: ^3.0.0
       typescript: ^4.9.3
+      v-form: workspace:*
+    dependencies:
+      v-form: link:../../libraries/v-from
     devDependencies:
       '@nuxt/devtools': 0.1.4_nuxt@3.1.1
       '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
@@ -219,6 +222,9 @@ importers:
       eslint: ^8.28.0
       nuxt: ^3.0.0
       typescript: ^4.9.3
+      v-form: workspace:*
+    dependencies:
+      v-form: link:../../libraries/v-from
     devDependencies:
       '@nuxt/devtools': 0.1.4_nuxt@3.1.1
       '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm

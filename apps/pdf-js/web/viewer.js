@@ -228,7 +228,7 @@ function messageFromParent(ev) {
   
   const newLocal = locale === "zh-HK" ? "zh-TW" : locale;
   if (colorMode === "dark") {
-    // document.getElementsByTagName("html")[0].classList.add("dark");
+    document.getElementsByTagName("html")[0].classList.add("dark");
   }
   console.log(filename, annotations, locale, colorMode);
   window.PDFViewerApplicationOptions.set("locale", newLocal);

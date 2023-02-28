@@ -33,7 +33,7 @@ async function sendPdfAndAnnotation() {
     const blob = await GetDocumentPreview(props.doc.id);
     const annotations = await getAnnotation()
     const frame = iframe.value.contentWindow;
-    // frame.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*');
+    frame.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*');
     loading.value = false;
 }
 

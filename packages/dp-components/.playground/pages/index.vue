@@ -6,8 +6,4 @@
 
 const router = useRouter();
 
-router.push({
-    path:'/test'
-})
-
 </script>
