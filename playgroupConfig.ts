@@ -1,5 +1,6 @@
 const ExcutingAnOrder = process.env.npm_lifecycle_script.split(' ')
 const env = ExcutingAnOrder[ExcutingAnOrder.length - 1];
+
 export default  {
     runtimeConfig:{
         env,

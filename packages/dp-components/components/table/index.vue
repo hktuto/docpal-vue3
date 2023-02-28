@@ -1,7 +1,7 @@
 <template>
     <div class="dp-table-container">
         <div>
-            <SortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></SortButton>
+            <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton>
         </div>
         <div class="dp-table-container--main">
             <el-table
@@ -57,12 +57,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ComputedRef, computed, ref } from 'vue'
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
-import SortButton from './sortButton.vue'
-import TableColumn from './tableColumn.vue'
-import shiftCtrlSelection from './shiftSelection'
-import { ElTable } from 'element-plus'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
 export type SortParams<T> = {
     column: TableColumnCtx<T | any>
@@ -77,7 +72,7 @@ interface TableProps {
 const props = defineProps<TableProps>()
 const tableRef = ref<InstanceType<typeof ElTable>>()
 // 设置option默认值，如果传入自定义的配置则合并option配置项
-const _options: ComputedRef<Table.Options> = computed(() => {
+const _options = computed<Table.Options>(() => {
     const option = {
         stripe: false,
         tooltipEffect: 'dark',
@@ -109,7 +104,7 @@ const emit = defineEmits([
     'pagination-change', // currentPage或者pageSize改变触发 
     'sort-change', // 列排序发生改变触发 
 ])
-const columns__sub = ref(JSON.parse(JSON.stringify(props.columns)))
+const columns__sub = ref(deepCopy(props.columns))
 
 // 自定义索引
 const tableRowClassName = ({ row, rowIndex }) => {
@@ -172,7 +167,7 @@ const handleSortChange = ({ column, prop, order }: SortParams<any>) => {
 }
 
 function reorderColumn (displayList) {
-    columns__sub.value = JSON.parse(JSON.stringify(displayList)) 
+    columns__sub.value = deepCopy(displayList);
 }
 // #region module: sort
     let CtrlDown = false
