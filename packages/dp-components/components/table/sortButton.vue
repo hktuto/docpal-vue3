@@ -32,7 +32,7 @@
         <template #footer>
           <el-button @click="handleCancle"> {{ $t('cancelText')}} </el-button>
           <el-button @click="handleRevert"> {{ $t('revert')}} </el-button>
-          <el-button type="primary" @click="handleSubmit"> {{ $t('common_submit') }} </el-button>
+          <el-button type="primary" @click="handleSubmit()"> {{ $t('common_submit') }} </el-button>
         </template>
       </el-dialog>
     </client-only>
@@ -71,7 +71,7 @@ const displayList = ref([
   { label: "Jean", id: 3 },
   { label: "Gerard", id: 4 }
 ])
-const originalColumns = ref()
+
 const loading = ref(false)
 const hideList =ref([])
 function handelDragChange (params) {
@@ -82,61 +82,73 @@ function handleCancle () {
 }
 // 使用前端默认配置
 function handleRevert () {
-  displayList.value = props.tableColumn.filter(item => {
-    return !item.hide
+  const userColumns = getDefaultColumns()
+  const { display, hide } = originalColumns.value.reduce( (result, current, index) => {
+    userColumns.includes(index) ? result.display.push(current) : result.hide.push(current)
+    return result;
+  }, {
+    display:[],
+    hide: []
   })
-  hideList.value = props.tableColumn.filter(item => {
-    return item.hide
-  })
+  displayList.value = display;
+  hideList.value = hide;
   handleSubmit()
 }
-
-async function handleSubmit (tableOrder) {
+// 保存偏好设置
+async function handleSubmit () {
   loading.value = true
   const param = { ...userPreference.value }
   if (!param.tableSettings) {
     param.tableSettings = {}
   }
-  param.tableSettings[props.sortKey] = tableOrder ? tableOrder :
-    originalColumns.value.filter((full) => displayList.value.includes(full)).map((v,i) => i)
+  const displayOrder = displayList.value.reduce((prev,item,index) => {
+    prev.push(item.rowIndex)
+    return prev},[])
+  param.tableSettings[props.sortKey] = displayOrder
+  // param.tableSettings[props.sortKey] = JSON.stringify(param.tableSettings[props.sortKey])
   // param.tableSettings[props.sortKey].defaultDisplayList = [...props.tableColumn]
   // param.tableSettings[props.sortKey] = [...displayList.value],
   await userSettingSaveApi(param)
   await getUserSetting()
-  console.log();
   
   // displayList.value.forEach(item => { item.hide = false })
   emit('reorderColumn', displayList.value)
   loading.value = false
   dialogShow.value = false
 }
-
+const originalColumns = ref()
 function initColumn () {
   // check store default column setting
   if(props.sortKey && tableColumnSetting) {
     originalColumns.value = tableColumnSetting[props.sortKey] || props.columns;
     // normalize user preference
-    if(!tableColumnSetting[props.sortKey]) {
-      handleSubmit(originalColumns.value.map( (e,i) => i ))
-    }
+    
     // set displayList and hideList
-    const userColumns = userPreference.value.tableSettings[props.sortKey]
+    let userColumns = getDefaultColumns()
+    if (userPreference.value.tableSettings[props.sortKey]) {
+      userColumns = userPreference.value.tableSettings[props.sortKey]
+    }
 
     const { display, hide } = originalColumns.value.reduce( (result, current, index) => {
+      current.rowIndex = index
       userColumns.includes(index) ? result.display.push(current) : result.hide.push(current)
       return result;
     }, {
       display:[],
       hide: []
     })
-    console.log({display, hide});
-    
 
     displayList.value = display;
     console.log(displayList.value, 'displayList.value');
     
     hideList.value = hide;
   }
+}
+function getDefaultColumns () {
+  return originalColumns.value.reduce((prev, item, index) => {
+    if(!item.hide) prev.push(index)
+    return prev
+  }, [])
 }
 
 onMounted(() => {

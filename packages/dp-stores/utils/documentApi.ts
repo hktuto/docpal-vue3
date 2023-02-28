@@ -1,4 +1,5 @@
 
+import { pageParams } from './api'
 export type GetChildResponse = {
     id: string,
     isFolder : boolean,
@@ -92,4 +93,11 @@ export const GetAnnotation = async(idOrPath:string) => {
             idOrPath
         }
     })
+}
+export const getTrashApi = async(params: pageParams) => {
+    const { entryList, totalSize } = await api('/nuxeo/document/trash', {
+        method: 'GET',
+        params
+    })
+    return { entryList, totalSize }
 }

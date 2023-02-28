@@ -17,5 +17,5 @@ export type TableColumnItem = {
 
 
 export type TableColumnSetting = {
-    [key in TABLE]? : TableColumnItem[]
+    [key:string] : TableColumnItem[]
 }

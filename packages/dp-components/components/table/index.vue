@@ -1,48 +1,52 @@
 <template>
-    <div>
-        <SortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></SortButton>
-        <el-table
-       		ref="tableRef"
-            :data="tableData"
-            :row-class-name="tableRowClassName"
-            :row-style="rowStyle"
-           	v-bind="_options"
-            @selection-change="handleSelectionChange"
-            @row-click="handleRowClick"
-            @row-dblclick="handleRowDblclick"
-            @cell-click="handleCellClick"
-            @sort-change="handleSortChange">
-            <template v-for="(col, index) in columns__sub" :key="index">
-                <template v-if="!col.hide">
-                    <!---复选框, 序号 (START)-->
-                    <el-table-column
-                        v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
-                        :index="indexMethod"
-                        v-bind="col">
-                        <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
-                        <template #default="{ row, $index }">
-                            <!-- render函数 (START) : 使用内置的component组件可以支持h函数渲染和txs语法 -->
-                            <component v-if="col.render" :is="col.render" :row="row" :index="$index" />
-                            <!-- render函数 (END) -->
-                            <!-- 自定义slot (START) -->
-                            <slot v-else-if="col.slot" name="expand" :row="row" :index="$index"></slot>
-                            <!-- 自定义slot (END) -->
+    <div class="dp-table-container">
+        <div>
+            <SortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></SortButton>
+        </div>
+        <div class="dp-table-container--main">
+            <el-table
+                ref="tableRef"
+                :data="tableData"
+                :row-class-name="tableRowClassName"
+                :row-style="rowStyle"
+                v-bind="_options"
+                @selection-change="handleSelectionChange"
+                @row-click="handleRowClick"
+                @row-dblclick="handleRowDblclick"
+                @cell-click="handleCellClick"
+                @sort-change="handleSortChange">
+                <template v-for="(col, index) in columns__sub" :key="index">
+                    <template v-if="!col.hide">
+                        <!---复选框, 序号 (START)-->
+                        <el-table-column
+                            v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
+                            :index="indexMethod"
+                            v-bind="col">
+                            <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
+                            <template #default="{ row, $index }">
+                                <!-- render函数 (START) : 使用内置的component组件可以支持h函数渲染和txs语法 -->
+                                <component v-if="col.render" :is="col.render" :row="row" :index="$index" />
+                                <!-- render函数 (END) -->
+                                <!-- 自定义slot (START) -->
+                                <slot v-else-if="col.slot" name="expand" :row="row" :index="$index"></slot>
+                                <!-- 自定义slot (END) -->
+                            </template>
+                        </el-table-column>
+                        <!---复选框, 序号 (END)-->
+                        <TableColumn :col="col" v-else @command="handleAction">
+                        <!-- 自定义表头插槽 -->
+                        <template #customHeader="{ slotName, column, index }">
+                            <slot :name="slotName" :column="column" :index="index" />
                         </template>
-                    </el-table-column>
-                    <!---复选框, 序号 (END)-->
-                    <TableColumn :col="col" v-else @command="handleAction">
-                       <!-- 自定义表头插槽 -->
-                       <template #customHeader="{ slotName, column, index }">
-                           <slot :name="slotName" :column="column" :index="index" />
-                       </template>
-                       <!-- 自定义列插槽 -->
-                       <template #default="{ slotName, row, index }">
-                          <slot :name="slotName" :row="row" :index="index" />
-                      </template>
-                    </TableColumn>
+                        <!-- 自定义列插槽 -->
+                        <template #default="{ slotName, row, index }">
+                            <slot :name="slotName" :row="row" :index="index" />
+                        </template>
+                        </TableColumn>
+                    </template>
                 </template>
-            </template>
-        </el-table>
+            </el-table>
+        </div>
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
             <el-pagination
@@ -79,6 +83,7 @@ const _options: ComputedRef<Table.Options> = computed(() => {
         tooltipEffect: 'dark',
         showHeader: true,
         showPagination: false,
+        height: '100%'
     }
     return Object.assign(option, props?.options)
 })
@@ -96,6 +101,7 @@ const _paginationConfig = computed(() => {
 const emit = defineEmits([
     'selection-change', // 当选择项发生变化时会触发该事件
     'row-click', // 当某一行被点击时会触发该事件
+    'row-dblclick', // 当某一行被双击时会触发该事件
     'cell-click', // 当某个单元格被点击时会触发该事件
     'command', // 按钮组事件
     'size-change', // pageSize事件
@@ -265,7 +271,17 @@ defineExpose({ element: tableRef })
       transform: scale(1.2);
     }
 }
-
+.dp-table-container {
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    height: 99%;
+    &--main {
+        overflow: hidden;
+        .el-table {
+            height: 100%;
+        }
+    }
+}
 </style>
 <style lang="scss">
 .shiftSelect {

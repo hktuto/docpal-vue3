@@ -1,10 +1,19 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-defineProps<{ col: Table.Column }>()
+const props = defineProps<{ col: Table.Column }>()
 const emit = defineEmits(['command'])
 // 按钮组事件
 const handleAction = (command: Table.Command, { row, $index }: { row: any; $index: number }) => {
     emit('command', command, row, $index)
+}
+function getProp(row) {
+    let result = ''
+    let nextValue = { ...row }
+    props.col.prop.split('.').forEach(key => {
+        result = nextValue[key]
+        nextValue = nextValue[key]
+    })
+    return result
 }
 </script>
 <template>
@@ -25,18 +34,18 @@ const handleAction = (command: Table.Command, { row, $index }: { row: any; $inde
                 preview-teleported
                 :hide-on-click-modal="true"
                 :preview-src-list="[row[col.prop!]]"
-                :src="row[col.prop!]"
+                :src="getProp(row)"
                 fit="cover"
                 class="w-9 h-9 rounded-lg" />
             <!---图片 (END)-->
             <!--- 格式化日期 (本项目日期是时间戳，这里日期格式化可根据你的项目来更改) (START)-->
             <template v-else-if="col.type === 'date'">
                 <!---十位数时间戳-->
-                <span v-if="String(row[col.prop!])?.length <= 10">
-                    {{ dayjs.unix(row[col.prop!]).format(col.dateFormat ?? 'YYYY-MM-DD') }}
+                <span v-if="String(getProp(row))?.length <= 10">
+                    {{ dayjs.unix(getProp(row)).format(col.dateFormat ?? 'YYYY-MM-DD') }}
                 </span>
                 <!---十三位数时间戳-->
-                <span v-else>{{ dayjs(row[col.prop!]).format(col.dateFormat ?? 'YYYY-MM-DD') }}</span>
+                <span v-else>{{ dayjs(getProp(row)).format(col.dateFormat ?? 'YYYY-MM-DD') }}</span>
             </template>
             <!--- 格式化日期 (本项目日期是时间戳，这里日期格式化可根据你的项目来更改) (END)-->
             <!-- 如果传递按钮数组，就展示按钮组 START-->
@@ -59,7 +68,7 @@ const handleAction = (command: Table.Command, { row, $index }: { row: any; $inde
             <slot v-else-if="col.slot" :slotName="col.slot" :row="row" :index="$index"></slot>
             <!-- 自定义slot (END) -->
             <!-- 默认渲染 (START) -->
-            <span v-else>{{ row[col.prop!] }}</span>
+            <span v-else>{{ getProp(row) }}</span>
             <!-- 默认渲染 (END) -->
         </template>
         <!-- 自定义表头 -->
@@ -71,7 +80,7 @@ const handleAction = (command: Table.Command, { row, $index }: { row: any; $inde
                 :slotName="col.headerSlot"
                 :column="column"
                 :index="$index"></slot>
-            <span v-else>{{ column.label }}</span>
+            <span v-else>{{ $t(column.label) }}</span>
         </template>
     </el-table-column>
 </template>

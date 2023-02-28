@@ -1,4 +1,10 @@
 
+export type pageParams = {
+    pageIndex?: number,
+    pageNum?: number,
+    pageSize : number,
+    [key: string]: any
+}
 export async function api<T>(url: string, options = {}):Promise<T> {
     // @ts-ignore
     const { token } = useUser();
