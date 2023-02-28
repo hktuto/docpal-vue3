@@ -10,9 +10,20 @@
 <script lang="ts" setup>
 import { Sunny, Moon } from '@element-plus/icons-vue'
 const colorMode = useColorMode();
+const {userPreference,savePreference} = useUser()
 function toggleColor() {
-    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark';
+    // save user preference
+    userPreference.value.color = colorMode.value;
+    savePreference()
 }
+
+onMounted(() => {
+    console.log(userPreference.value.color)
+    
+    colorMode.preference = userPreference.value.color
+    // get user preference
+})
 </script>
 
 <style lang="scss" scoped>

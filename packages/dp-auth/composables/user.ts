@@ -1,6 +1,6 @@
 import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
-import { Login, Verify, GetSetting, User } from '../../dp-stores/utils/userApi';
+import { Login, Verify, GetSetting, User, UserSettingSaveApi, UserSetting } from '../../dp-stores/utils/userApi';
 
 
 export const useUser = () => {
@@ -11,7 +11,7 @@ export const useUser = () => {
     const refreshToken = useState<string>('refreshToken', () => "");
     const user = useState<User>('appUser');
 
-    const userPreference = useState('userPreference');
+    const userPreference = useState<UserSetting>('userPreference');
     const settingStore = useSetting()
     const colorModeOption = [
         {
@@ -70,6 +70,10 @@ export const useUser = () => {
         settingStore.init()
     }
 
+    async function savePreference() {
+        await UserSettingSaveApi(userPreference.value)
+    }
+
     async function verify() {
         try {
             user.value = await Verify();
@@ -110,8 +114,7 @@ export const useUser = () => {
         appStore.state.value = 'needAuth';
         if(sessionStorage){
             sessionStorage.removeItem('token');
-        }
-        userPreference.value = null;
+        };
     }
 
     return {
@@ -124,5 +127,6 @@ export const useUser = () => {
         verify,
         logout,
         getUserSetting,
+        savePreference,
     }
 }
