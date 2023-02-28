@@ -1,7 +1,8 @@
 {
-  "name": "v-form-designer",
+  "name": "v-form",
   "version": "3.0.10",
   "private": true,
+  "main": "dist/designer.umd.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

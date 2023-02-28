@@ -15,7 +15,7 @@ export default defineConfig({
     vueJsx({}),
 
     //解决引入commonjs模块后打包出现的{'default' is not exported by XXX}错误!!
-    commonjs({requireReturnsDefault: true}),  /* 配置requireReturnsDefault属性，
+    commonjs({requireReturnsDefault: true}), /* 配置requireReturnsDefault属性，
     解决打包后引入VForm出现的"Axios is not a constructor"错！！ */
 
     //可视化Bundle

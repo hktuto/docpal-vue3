@@ -22,7 +22,7 @@
 <script>
   import emitter from '@/utils/emitter'
   import i18n from "../../../utils/i18n"
-  import refMixin from "../../../components/form-render/refMixin"
+  import refMixin from "../refMixin"
   import ContainerItemWrapper from './container-item-wrapper'
   import GridColItem from './grid-col-item'
   import containerItemMixin from "./containerItemMixin"

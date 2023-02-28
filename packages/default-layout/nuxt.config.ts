@@ -8,6 +8,10 @@ export default defineNuxtConfig({
     css:[
       // dark theme
       resolve('./theme/app.scss')
-      
-  ],
+    ],
+    vite:{
+      optimizeDeps:{
+          include: ['v-form/dist/designer.umd']
+      }
+  }
 })

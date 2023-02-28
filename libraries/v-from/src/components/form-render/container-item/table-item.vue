@@ -26,7 +26,7 @@
 <script>
   import emitter from '@/utils/emitter'
   import i18n from "../../../utils/i18n"
-  import refMixin from "../../../components/form-render/refMixin"
+  import refMixin from "../refMixin"
   import ContainerItemWrapper from './container-item-wrapper'
   import TableCellItem from './table-cell-item'
   import containerItemMixin from "./containerItemMixin";

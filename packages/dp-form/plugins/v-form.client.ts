@@ -1,6 +1,7 @@
-// @ts-ignore
-import VForm3 from 'vform3-builds' 
-import 'vform3-builds/dist/designer.style.css' 
+
+
+import VForm3 from 'v-form/dist/designer.umd' 
+import 'v-form/dist/designer.style.css' 
 
 export default defineNuxtPlugin(nuxtApp => {
     // Doing something with nuxtApp

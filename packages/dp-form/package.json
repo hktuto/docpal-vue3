@@ -1,5 +1,5 @@
 {
-  "name": "v-form-plugin",
+  "name": "dp-form",
   "private": true,
   "type": "module",
   "version": "0.0.1",
@@ -16,9 +16,10 @@
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "eslint": "^8.28.0",
     "nuxt": "^3.0.0",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "vform3-builds": "^3.0.10",
+    "v-form":"workspace:*"
   },
   "dependencies": {
-    "vform3-builds": "^3.0.10"
   }
 }
