@@ -1,5 +1,5 @@
 import {customLayer} from './packageManage'
-import playgroundConfig from '../../playgroupConfig'
+import playgroundConfig from '../../playgroundConfig'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     components: true,

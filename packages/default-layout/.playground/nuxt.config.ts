@@ -1,13 +1,8 @@
-import playgroupConfig from '../../../playgroupConfig'
+import playgroundConfig from '../../../utils/playgroundConfig'
 
 const config =  defineNuxtConfig({
   extends: ['..',"../../color-mode" , '../../element-ui', '../../i18n', '../../dp-components'],
-  ...playgroupConfig,
-  vite:{
-    optimizeDeps:{
-        include: ['v-form/dist/designer.umd']
-    }
-  }
+  ...playgroundConfig({}),
 })
 
 

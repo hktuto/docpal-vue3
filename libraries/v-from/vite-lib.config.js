@@ -51,6 +51,7 @@ export default defineConfig({
   },
 
   build: {
+    emptyOutDir:false,
     //minify: false,
     lib: {
       entry: resolve(__dirname, 'install.js'),

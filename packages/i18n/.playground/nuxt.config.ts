@@ -1,8 +1,8 @@
-import playgroupConfig from '../../../playgroupConfig'
+import playgroundConfig from '../../../utils/playgroundConfig'
 
 const config = defineNuxtConfig({
   extends: ['..', '../../dp-stores'],
-  ...playgroupConfig
+  ...playgroundConfig
 })
 
 

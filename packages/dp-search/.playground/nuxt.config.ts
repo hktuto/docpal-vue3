@@ -1,11 +1,7 @@
-import playGroupConfig from '../../../playgroupConfig' 
+import playgroundConfig from '../../../utils/playgroundConfig' 
 
 export default defineNuxtConfig({
   extends: ['..', '../../default-layout', '../../dp-auth', '../../dp-stores'],
-  ...playGroupConfig,
-  vite:{
-    optimizeDeps:{
-        include: ['v-form/dist/designer.umd']
-    }
-  }
+  ...playgroundConfig({useFormRender:true}),
+  
 })
