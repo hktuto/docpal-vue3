@@ -11,7 +11,7 @@
 import { Sunny, Moon } from '@element-plus/icons-vue'
 const colorMode = useColorMode();
 function toggleColor() {
-    colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark'
+    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 </script>
 
@@ -25,7 +25,6 @@ function toggleColor() {
     &:hover{
         background-color: var(--color-grey-800);
         color: var(--color-grey-000);
-        --color:
     }
 }
 </style>

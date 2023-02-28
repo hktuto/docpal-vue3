@@ -1,7 +1,7 @@
 
 import playgroundConfig from '../../../utils/playgroundConfig'
 export default defineNuxtConfig({
-  extends: ['..','../../dp-stores', '../../default-layout', '../../dp-auth'],
+  extends: ['..','../../dp-stores', '../../layout-default', '../../dp-auth'],
   typescript: {
     includeWorkspace: true
   },
