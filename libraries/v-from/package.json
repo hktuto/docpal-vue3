@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:both": "vite build --config vite-lib.config.js && vite build --config vite-lib-render.config.js",
     "lib": "vite build --config vite-lib.config.js",
     "lib-render": "vite build --config vite-lib-render.config.js",
     "preview": "vite preview"
