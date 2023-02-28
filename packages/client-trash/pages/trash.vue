@@ -4,70 +4,197 @@
                 @pagination-change="handlePaginationChange"
                 @row-dblclick="handleDblclick"></Table>
         <Drawer ref="DrawerRef" :modal="false" pointerModal>
-            test
+            <template #title>
+                <div class="grid__drawer__title">
+                <h3 v-if="detailFile">{{detailFile.name}}</h3>
+                <div class="flex">
+                    <el-button class="mg-r" size="mini" type="primary" :icon="RefreshLeft" @click="handleRestoreOne(detailFile.id)" circle></el-button>
+                    <el-popover  :visible="deleteOnePopoverShow"
+                            placement="bottom" width="20rem">
+                        <p>{{$t('msg_confirmWhetherToDelete')}}</p>
+                        <div style="text-align: right; margin: 0">
+                            <el-button @click="deleteOnePopoverShow = false">{{ $t('dpButtom_cancel')}}</el-button>
+                            <el-button @click="handleDeleteOne(detailFile.id)" type="primary">{{ $t('trash_actions_delete')}}</el-button>
+                        </div>
+                        <template #reference>
+                            <el-button  size="mini" type="danger" :icon="Delete" circle
+                                        @click="deleteOnePopoverShow = !deleteOnePopoverShow"></el-button>
+                        </template>
+                    </el-popover>
+                </div>
+                </div>
+            </template>
         </Drawer>
     </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
-const route = useRoute()
-const router = useRouter()
-const pageParams = {
-    pageIndex: 0,
-    pageSize: 20
-}
-const state = reactive<State>({
-    loading: false,
-    tableData: [],
-    options: { 
-        showPagination: true, 
-        paginationConfig: {
-            total: 0,
-            currentPage: 1,
-            pageSize: pageParams.pageSize
+import { ElNotification } from 'element-plus'
+import { RefreshLeft, Delete } from '@element-plus/icons-vue'
+// #region module: page
+    const route = useRoute()
+    const router = useRouter()
+    const pageParams = {
+        pageIndex: 0,
+        pageSize: 20
+    }
+    const state = reactive<State>({
+        loading: false,
+        tableData: [],
+        options: { 
+            showPagination: true, 
+            paginationConfig: {
+                total: 0,
+                currentPage: 1,
+                pageSize: pageParams.pageSize
+            }
         }
-     }
-})
-const tableColumn = [
-    { label: 'tableHeader_name', prop: 'name' },
-    { label: 'tableHeader_path', prop: 'logicalPath' },
-    { label: 'tableHeader_type', prop: 'type' },
-    { label: 'trash_deleteBy', prop: 'properties.principalName' },
-    { label: 'trash_date', prop: "properties.trashed_date", type: 'date' },
-]
-async function getList (param) {
-    state.loading = true
-    const res = await getTrashApi(param)
-    state.tableData = res.entryList
-    state.options.paginationConfig.total = res.totalSize
-    state.options.paginationConfig.pageSize = param.pageSize
-    state.options.paginationConfig.currentPage = param.pageIndex + 1
-    state.loading = false
-}
-function handlePaginationChange (page: number, pageSize: number) {
-    router.push({ 
-        query: { page, pageSize } 
     })
+    const tableColumn = [
+        { label: 'tableHeader_name', prop: 'name' },
+        { label: 'tableHeader_path', prop: 'logicalPath' },
+        { label: 'tableHeader_type', prop: 'type' },
+        { label: 'trash_deleteBy', prop: 'properties.principalName' },
+        { label: 'trash_date', prop: "properties.trashed_date", type: 'date' },
+    ]
+    async function getList (param) {
+        state.loading = true
+        const res = await getTrashApi(param)
+        state.tableData = res.entryList
+        state.options.paginationConfig.total = res.totalSize
+        state.options.paginationConfig.pageSize = param.pageSize
+        state.options.paginationConfig.currentPage = param.pageIndex + 1
+        state.loading = false
+    }
+    function handlePaginationChange (page: number, pageSize: number) {
+        if(!pageSize) pageSize = pageParams.pageSize
+        const time = new Date().valueOf().toString()
+        router.push({ 
+            query: { page, pageSize, time } 
+        })
+    }
+    watch(
+        () => route.query,
+        async (newval) => {
+            const { page, pageSize } = newval
+            pageParams.pageIndex = (Number(page) - 1) || 0
+            pageParams.pageSize = Number(pageSize) || pageParams.pageSize
+            getList(pageParams)
+        },
+        { immediate: true }
+    )
+    const { tableData, options, loading } = toRefs(state)
+// #endregion
+const detailFile=ref<any>({
+    name: ''
+})
+function handleDblclick (row) {
+    detailFile.value = row
+    if (!row.isFolder) DrawerRef.value.handleOpen()
+    else DrawerRef.value.handleClose()
 }
-watch(
-    () => route.query,
-    async (newval) => {
-        const { page, pageSize } = newval
-        pageParams.pageIndex = (Number(page) - 1) || 0
-        pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-        getList(pageParams)
-    },
-    { immediate: true }
-)
-const { tableData, options, loading } = toRefs(state)
 
-const DrawerRef = ref()
-function handleDblclick () {
-    console.log('test');
-    
-    DrawerRef.value.handleOpen()
-}
+// #region module: delete
+    const DrawerRef = ref()
+    const batchAction = ref('')
+    const processDetail = ref({
+        completeNum: 0,
+        totalNum: 0,
+        curName: '',
+    })
+    const ProgressDialogRef = ref()
+    function handleRestore () {
+        batchAction.value = 'restore'
+        batchActionHandler()
+    }
+    function handleDelete () {
+        batchAction.value = 'delete'
+        batchActionHandler()
+        deleteAllPopoverShow.value = false
+    }
+    const batchActionHandler = async () => {
+        if (selectedRow.value.length === 0) {
+            ElNotification.error(i18n.t('dpTip_noSelection') as string)
+            return
+        }
+        if (!batchAction.value) {
+            ElNotification.error(i18n.t('trash_error_noAction') as string)
+            return
+        }
+        processDetail.value.totalNum = selectedRow.value.length
+        processDetail.value.completeNum = 0
+        ProgressDialogRef.value.openDialog()
+
+        const promises = []
+        switch (batchAction.value) {
+            case 'restore':
+                selectedRow.value.forEach((s) => promises.push(restore(s.id)))
+                break
+            case 'delete':
+                selectedRow.value.forEach((s) => promises.push(deleteOne(s.id)))
+                break
+        }
+        const res = await Promise.all(promises)
+        batchAction.value = null
+        handleMsg(res)
+        setTimeout(async() => {
+            await TableRef.value.tableDataGet()
+            TableRef.value.clearSelection()
+        }, 2000)
+    }
+    function handleMsg (ids) {
+        let num = 0
+        const fileNames = ids.reduce((p, id, index) => {
+        if (id) {
+            num++
+            p += ' <br/>' + TableRef.value.tableData.find(item => item.id === id).name
+        }
+        return p
+        }, '')
+        if (num !== 0) {
+            ElNotification.error({
+                title: '',
+                dangerouslyUseHTMLString: true,
+                message: `${num} ${i18n.t('Fail')}: ${fileNames}`
+            })
+        } else {
+            ElNotification.success(`${i18n.t('commons_success')}` )
+        }
+    }
+    const deleteOnePopoverShow = ref(false)
+    async function handleDeleteOne (id, row?) {
+        if(!!row) row.deleteOnePopoverShow = false
+        deleteOnePopoverShow.value = false
+        loading.value = true
+        await deleteOne(id)
+        setTimeout(async () => {
+            handlePaginationChange(pageParams.pageIndex + 1)
+            loading.value = false
+            DrawerRef.value.handleClose()
+        }, 500)
+    }
+    async function handleRestoreOne (id) {
+        loading.value = true
+        await restore(id)
+        // 系统会延时 还原
+        setTimeout(async () => {
+            handlePaginationChange(pageParams.pageIndex + 1)
+            loading.value = false
+            DrawerRef.value.handleClose()
+        }, 500)
+    }
+    async function deleteOne(idOrPath) {
+        await deleteByIdApi(idOrPath)
+        // processDetail.value.completeNum++
+        return idOrPath
+    }
+    const restore = async (idOrPath: string) => {
+        await restoreByIdApi(idOrPath)
+        // processDetail.value.completeNum++
+        return idOrPath
+    }
+// #endregion
 </script>
 
 <style lang="scss" scoped>

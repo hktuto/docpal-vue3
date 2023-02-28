@@ -1,23 +1,24 @@
 <template>
+<div class="dp-drawer">
   <el-drawer
-    v-drawerDrag="{ min, max }"
     v-model="drawerShow"
     direction="rtl"
     :before-close="handleClose"
-    append-to-body
     :wrapperClosable="false" :show-close="false" :modal="modal"
     :style="`--pointer-events: ${pointerModal ? 'none': 'auto'}`"
   >
     <template #title>
-      <el-button v-if="closeButton" class="button__close" icon="el-icon-arrow-right" circle @click="handleClose"></el-button>
+      <el-button v-if="closeButton" class="button__close" :icon="ArrowRightBold" circle @click="handleClose"></el-button>
       <slot name="title" />
     </template>
     <slot />
+    <div v-drawer-drag="{ min, max }"></div>
   </el-drawer>
+</div>
 </template>
 
 <script lang="ts" setup>
-import { Directive, DirectiveBinding } from 'vue';
+import { ArrowRightBold } from '@element-plus/icons-vue'
   interface drawerProps {
     min?: [Number, String],
     max?: [Number, String],
@@ -31,12 +32,12 @@ import { Directive, DirectiveBinding } from 'vue';
     modal: true,
     pointerModal: false
   })
-  const vDrawerDrag: Directive = {
+  const vDrawerDrag = {
     // 在绑定元素的 attribute 前
     // 或事件监听器应用前调用
     mounted(el, binding, vnode, oldVnode) {
       const { min: minWidth, max: maxWidth } = binding.value
-      const dragDom = el.querySelector('.el-drawer')
+      const dragDom = document.querySelector('.el-drawer')
       const resizeElL = document.createElement('div')
       const dragButton = document.createElement('div')
       dragDom.appendChild(dragButton)
@@ -87,54 +88,44 @@ import { Directive, DirectiveBinding } from 'vue';
 </script>
 
 <style lang="scss" scoped>
-.el-drawer__wrapper {
-  // z-index: -1!important;
-  pointer-events: var(--pointer-events);
-  // .el-drawer__container {
-  //   pointer-events: var(--pointer-events);
-  // }
-}
-.el-drawer {
-  pointer-events: auto;
-  border-top-left-radius: calc(var(--app-padding) );
-  border-bottom-left-radius: calc(var(--app-padding) );
-  &__header {
+.dp-drawer {
+  :deep(.el-drawer) {
+    padding: 10px;
+    overflow: auto;
+  }
+
+  :deep(.el-drawer__header) {
+    margin-bottom: 12px;
+    padding: 5px 5px 0;
     & > :first-child {
       flex: unset;
       margin-right: 5px;
     }
-    margin-bottom: 10px;
   }
-  &__body {
-    padding: 0 20px 1rem 20px;
+
+  :deep(.el-drawer__body) {
+    padding-left: 5px;
   }
-  .grid__drawer__title {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr min-content;
-    align-items: center;
+  :deep(.dragButton) {
+    width: 6px;
+    border-radius: 3px;
+    height: 6rem;
+    background: var(--color-grey-500);
+    // cursor: grab;
+    cursor: w-resize;
+
+    position: absolute;
+    left: 8px;
+    top: 50%;
   }
-}
+  :deep(.resizeElL) {
+    cursor: w-resize;
+    height: 100%;
+    width: 14px;
 
-:deep(.dragButton) {
-  width: 6px;
-  border-radius: 3px;
-  height: 6rem;
-  background: var(--color-grey-500);
-  // cursor: grab;
-  cursor: w-resize;
-
-  position: absolute;
-  left: 8px;
-  top: 50%;
-}
-:deep(resizeElL) {
-  cursor: w-resize;
-  height: 100%;
-  width: 14px;
-
-  position: absolute;
-  left: 0;
-  top: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 </style>
