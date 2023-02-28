@@ -34,7 +34,7 @@ const langResources = {
 }
 
 const i18n = createI18n({
-  locale: localStorage.getItem('v_form_locale') || 'zh-CN',
+  locale: localStorage.getItem('v_form_locale') || 'en-US',
   messages: langResources
 })
 

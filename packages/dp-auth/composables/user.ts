@@ -13,6 +13,8 @@ export const useUser = () => {
 
     const userPreference = useState<UserSetting>('userPreference');
     const settingStore = useSetting()
+
+    
     const colorModeOption = [
         {
             id: '1',
@@ -72,6 +74,7 @@ export const useUser = () => {
 
     async function savePreference() {
         await UserSettingSaveApi(userPreference.value)
+        
     }
 
     async function verify() {
