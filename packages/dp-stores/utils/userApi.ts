@@ -50,11 +50,11 @@ export type UserSetting = {
 export const GetSetting = async():Promise<UserSetting> => {
     return await api<UserSetting>('/docpal/user/setting')
 }
-export const UserSettingSaveApi = async(userSetting:UserSetting) => {
+export const UserSettingSaveApi = async(body:UserSetting) => {
     try {
         return await api<UserSetting>('/docpal/user/setting', {
             method:'PUT' ,
-            body:{ userSetting },
+            body,
         })
     } catch (error) {
         return false

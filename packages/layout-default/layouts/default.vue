@@ -67,7 +67,7 @@ const { x, y } = useMouse()
     display: grid;
     grid-template-columns: 1fr min-content;
     padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
-    z-index: 2;
+    z-index: 4;
     .actions{
       display: flex;
       flex-flow: row nowrap;
