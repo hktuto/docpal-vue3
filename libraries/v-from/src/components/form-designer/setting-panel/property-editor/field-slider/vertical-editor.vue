@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.vertical')">
+  <el-form-item :label="$t('designer.setting.vertical')">
     <el-switch v-model="optionModel.vertical"></el-switch>
   </el-form-item>
 </template>

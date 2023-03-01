@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.allowHalf')">
+  <el-form-item :label="$t('designer.setting.allowHalf')">
     <el-switch v-model="optionModel.allowHalf"></el-switch>
   </el-form-item>
 </template>

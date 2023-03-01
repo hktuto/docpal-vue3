@@ -22,22 +22,22 @@
     </draggable>
 
     <div class="grid-col-action" v-if="designer.selectedId === widget.id && widget.type === 'grid-col'">
-      <i :title="i18nt('designer.hint.selectParentWidget')"
+      <i :title="$t('designer.hint.selectParentWidget')"
          @click.stop="selectParentWidget(widget)"><svg-icon icon-class="el-back" /></i>
-      <i v-if="!!parentList && (parentList.length > 1)" :title="i18nt('designer.hint.moveUpWidget')"
+      <i v-if="!!parentList && (parentList.length > 1)" :title="$t('designer.hint.moveUpWidget')"
          @click.stop="moveUpWidget()"><svg-icon icon-class="el-move-up" /></i>
-      <i v-if="!!parentList && (parentList.length > 1)" :title="i18nt('designer.hint.moveDownWidget')"
+      <i v-if="!!parentList && (parentList.length > 1)" :title="$t('designer.hint.moveDownWidget')"
          @click.stop="moveDownWidget()"><svg-icon icon-class="el-move-down" /></i>
-      <i :title="i18nt('designer.hint.cloneWidget')" @click.stop="cloneGridCol(widget)">
+      <i :title="$t('designer.hint.cloneWidget')" @click.stop="cloneGridCol(widget)">
         <svg-icon icon-class="el-clone" />
       </i>
-      <i :title="i18nt('designer.hint.remove')" @click.stop="removeWidget">
+      <i :title="$t('designer.hint.remove')" @click.stop="removeWidget">
         <svg-icon icon-class="el-delete" />
       </i>
     </div>
 
     <div class="grid-col-handler" v-if="designer.selectedId === widget.id && widget.type === 'grid-col'">
-      <i>{{i18nt('designer.widgetLabel.' + widget.type)}}</i>
+      <i>{{$t('designer.widgetLabel.' + widget.type)}}</i>
     </div>
   </el-col>
 </template>

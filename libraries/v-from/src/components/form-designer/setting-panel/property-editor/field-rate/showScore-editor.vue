@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.showScore')">
+  <el-form-item :label="$t('designer.setting.showScore')">
     <el-switch v-model="optionModel.showScore"></el-switch>
   </el-form-item>
 </template>

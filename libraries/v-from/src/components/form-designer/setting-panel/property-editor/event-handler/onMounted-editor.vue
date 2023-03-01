@@ -1,7 +1,7 @@
 <template>
   <el-form-item label="onMounted" label-width="150px">
     <el-button type="info" icon="el-icon-edit" plain round @click="editEventHandler('onMounted', eventParams)">
-      {{i18nt('designer.setting.addEventHandler')}}</el-button>
+      {{$t('designer.setting.addEventHandler')}}</el-button>
   </el-form-item>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.responsive')">
+  <el-form-item :label="$t('designer.setting.responsive')">
     <el-switch v-model="optionModel.responsive"></el-switch>
   </el-form-item>
 </template>

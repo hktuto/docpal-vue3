@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.defaultValue')">
+  <el-form-item :label="$t('designer.setting.defaultValue')">
     <el-time-picker v-model="optionModel.defaultValue" is-range @change="emitDefaultValueChange"
                     :format="optionModel.format" value-format="HH:mm:ss" style="width: 100%">
     </el-time-picker>

@@ -25,7 +25,7 @@
     </template>
     <template v-else>
       <el-col>
-        <div class="blank-cell"><span class="invisible-content">{{i18nt('render.hint.blankCellContent')}}</span></div>
+        <div class="blank-cell"><span class="invisible-content">{{$t('render.hint.blankCellContent')}}</span></div>
       </el-col>
     </template>
   </el-col>

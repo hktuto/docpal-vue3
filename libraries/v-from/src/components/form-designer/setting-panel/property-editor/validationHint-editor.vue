@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.validationHint')">
+  <el-form-item :label="$t('designer.setting.validationHint')">
     <el-input type="text" v-model="optionModel.validationHint"></el-input>
   </el-form-item>
 </template>

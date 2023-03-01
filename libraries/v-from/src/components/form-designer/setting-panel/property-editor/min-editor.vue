@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.minValue')">
+  <el-form-item :label="$t('designer.setting.minValue')">
     <el-input-number v-model="minValue" class="hide-spin-button" style="width: 100%"></el-input-number>
   </el-form-item>
 </template>

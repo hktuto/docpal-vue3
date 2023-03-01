@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.cellWidth')">
+  <el-form-item :label="$t('designer.setting.cellWidth')">
     <el-input type="text" v-model="optionModel.cellWidth"></el-input>
   </el-form-item>
 </template>

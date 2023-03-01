@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.widgetSize')">
+  <el-form-item :label="$t('designer.setting.widgetSize')">
     <el-select v-model="optionModel.size">
       <el-option v-for="item in widgetSizes" :key="item.value" :label="item.label"
                  :value="item.value">

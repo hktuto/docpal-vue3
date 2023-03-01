@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.remote')">
+  <el-form-item :label="$t('designer.setting.remote')">
     <el-switch v-model="optionModel.remote" @change="onRemoteChange"></el-switch>
   </el-form-item>
 </template>

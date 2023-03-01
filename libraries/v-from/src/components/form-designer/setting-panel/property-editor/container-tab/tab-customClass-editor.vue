@@ -4,13 +4,13 @@
 
 <template>
   <div>
-    <el-form-item :label="i18nt('designer.setting.customClass')">
+    <el-form-item :label="$t('designer.setting.customClass')">
       <el-select v-model="optionModel.customClass" multiple filterable allow-create
                  default-first-option>
         <el-option v-for="(item, idx) in cssClassList" :key="idx" :label="item" :value="item"></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item :label="i18nt('designer.setting.tabPaneSetting')"></el-form-item>
+    <el-form-item :label="$t('designer.setting.tabPaneSetting')"></el-form-item>
     <el-form-item label-width="0" class="panes-setting">
       <draggable tag="ul" :list="selectedWidget.tabs" item-key="id"
                  v-bind="{group:'panesGroup', ghostClass: 'ghost', handle: '.drag-option'}">
@@ -18,7 +18,7 @@
           <li class="col-item">
             <!-- span style="margin-right: 12px">{{tpIdx + 1}}</span -->
             <el-checkbox v-model="tpItem.options.active" disabled @change="(evt) => onTabPaneActiveChange(evt, tpItem)"
-                         style="margin-right: 8px">{{i18nt('designer.setting.paneActive')}}</el-checkbox>
+                         style="margin-right: 8px">{{$t('designer.setting.paneActive')}}</el-checkbox>
             <el-input link type="primary" v-model="tpItem.options.label" style="width: 155px"></el-input>
             <i class="iconfont icon-drag drag-option"></i>
             <el-button circle plain size="small" type="danger" @click="deleteTabPane(selectedWidget, tpIdx)"
@@ -28,7 +28,7 @@
       </draggable>
 
       <div>
-        <el-button link type="primary" @click="addTabPane(selectedWidget)">{{i18nt('designer.setting.addTabPane')}}</el-button>
+        <el-button link type="primary" @click="addTabPane(selectedWidget)">{{$t('designer.setting.addTabPane')}}</el-button>
       </div>
     </el-form-item>
   </div>
@@ -75,7 +75,7 @@
 
       deleteTabPane(curTabs, tpIdx) {
         if (curTabs.tabs.length === 1) {
-          this.$message.info(this.i18nt('designer.hint.lastPaneCannotBeDeleted'))
+          this.$message.info(this.$t('designer.hint.lastPaneCannotBeDeleted'))
           return
         }
 

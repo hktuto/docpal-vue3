@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.textContent')">
+  <el-form-item :label="$t('designer.setting.textContent')">
     <el-input v-model="optionModel.textContent"></el-input>
   </el-form-item>
 </template>

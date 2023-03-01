@@ -5,11 +5,11 @@
     <el-tabs v-model="firstTab" class="no-bottom-margin indent-left-margin">
       <el-tab-pane name="componentLib">
         <template #label>
-          <span><svg-icon icon-class="el-set-up" /> {{i18nt('designer.componentLib')}}</span>
+          <span><svg-icon icon-class="el-set-up" /> {{$t('designer.componentLib')}}</span>
         </template>
 
       <el-collapse v-model="activeNames" class="widget-collapse">
-        <el-collapse-item name="1" :title="i18nt('designer.containerTitle')">
+        <el-collapse-item name="1" :title="$t('designer.containerTitle')">
           <draggable tag="ul" :list="containers" item-key="key" :group="{name: 'dragGroup', pull: 'clone', put: false}"
                      :clone="handleContainerWidgetClone" ghost-class="ghost" :sort="false"
                      :move="checkContainerMove" @end="onContainerDragEnd">
@@ -21,7 +21,7 @@
           </draggable>
         </el-collapse-item>
 
-        <el-collapse-item name="2" :title="i18nt('designer.basicFieldTitle')">
+        <el-collapse-item name="2" :title="$t('designer.basicFieldTitle')">
           <draggable tag="ul" :list="basicFields" item-key="key" :group="{name: 'dragGroup', pull: 'clone', put: false}"
                      :move="checkFieldMove"
                      :clone="handleFieldWidgetClone" ghost-class="ghost" :sort="false">
@@ -33,7 +33,7 @@
           </draggable>
         </el-collapse-item>
 
-        <el-collapse-item name="3" :title="i18nt('designer.advancedFieldTitle')">
+        <el-collapse-item name="3" :title="$t('designer.advancedFieldTitle')">
           <draggable tag="ul" :list="advancedFields" item-key="key" :group="{name: 'dragGroup', pull: 'clone', put: false}"
                      :move="checkFieldMove"
                      :clone="handleFieldWidgetClone" ghost-class="ghost" :sort="false">
@@ -45,7 +45,7 @@
           </draggable>
         </el-collapse-item>
 
-        <el-collapse-item name="4" :title="i18nt('designer.customFieldTitle')">
+        <el-collapse-item name="4" :title="$t('designer.customFieldTitle')">
           <draggable tag="ul" :list="customFields" item-key="key" :group="{name: 'dragGroup', pull: 'clone', put: false}"
                      :move="checkFieldMove"
                      :clone="handleFieldWidgetClone" ghost-class="ghost" :sort="false">
@@ -64,7 +64,7 @@
 
       <el-tab-pane v-if="showFormTemplates()" name="formLib" style="padding: 8px">
         <template #label>
-          <span><svg-icon icon-class="el-form-template" /> {{i18nt('designer.formLib')}}</span>
+          <span><svg-icon icon-class="el-form-template" /> {{$t('designer.formLib')}}</span>
         </template>
 
         <template v-for="(ft, idx) in formTemplates">
@@ -78,7 +78,7 @@
             <div class="bottom clear-fix">
               <span class="ft-title">#{{idx+1}} {{ft.title}}</span>
               <el-button link type="primary" class="right-button" @click="loadFormTemplate(ft.jsonUrl)">
-                {{i18nt('designer.hint.loadFormTemplate')}}</el-button>
+                {{$t('designer.hint.loadFormTemplate')}}</el-button>
             </div>
           </el-card>
         </template>
@@ -247,9 +247,9 @@
       },
 
       loadFormTemplate(jsonUrl) {
-        this.$confirm(this.i18nt('designer.hint.loadFormTemplateHint'), this.i18nt('render.hint.prompt'), {
-          confirmButtonText: this.i18nt('render.hint.confirm'),
-          cancelButtonText: this.i18nt('render.hint.cancel')
+        this.$confirm(this.$t('designer.hint.loadFormTemplateHint'), this.$t('render.hint.prompt'), {
+          confirmButtonText: this.$t('render.hint.confirm'),
+          cancelButtonText: this.$t('render.hint.cancel')
         }).then(() => {
           axios.get(jsonUrl).then(res => {
             let modifiedFlag = false
@@ -262,9 +262,9 @@
               this.designer.emitHistoryChange()
             }
 
-            this.$message.success(this.i18nt('designer.hint.loadFormTemplateSuccess'))
+            this.$message.success(this.$t('designer.hint.loadFormTemplateSuccess'))
           }).catch(error => {
-            this.$message.error(this.i18nt('designer.hint.loadFormTemplateFailed') + ':' + error)
+            this.$message.error(this.$t('designer.hint.loadFormTemplateFailed') + ':' + error)
           })
         }).catch(error => {
           console.error(error)

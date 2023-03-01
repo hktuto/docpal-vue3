@@ -1,8 +1,8 @@
 <template>
   <el-form-item>
     <template #label>
-      <span>{{i18nt('designer.setting.fileTypes')}}
-        <el-tooltip effect="light" :content="i18nt('designer.setting.fileTypesHelp')">
+      <span>{{$t('designer.setting.fileTypes')}}
+        <el-tooltip effect="light" :content="$t('designer.setting.fileTypesHelp')">
           <svg-icon icon-class="el-info" /></el-tooltip>
       </span>
     </template>

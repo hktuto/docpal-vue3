@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.withCredentials')">
+  <el-form-item :label="$t('designer.setting.withCredentials')">
     <el-switch v-model="optionModel.withCredentials"></el-switch>
   </el-form-item>
 </template>

@@ -37,22 +37,22 @@
     <div v-else-if="(selectedWidget.type === 'cascader')" class="full-width-input">
       <el-cascader v-model="optionModel.defaultValue" :options="optionModel.optionItems"
                    @change="emitDefaultValueChange"
-                   :placeholder="i18nt('render.hint.selectPlaceholder')">
+                   :placeholder="$t('render.hint.selectPlaceholder')">
       </el-cascader>
     </div>
     <div v-if="(selectedWidget.type === 'cascader')">
-      <el-button link type="primary" @click="importCascaderOptions">{{i18nt('designer.setting.importOptions')}}</el-button>
-      <el-button link type="primary" @click="resetDefault">{{i18nt('designer.setting.resetDefault')}}</el-button>
+      <el-button link type="primary" @click="importCascaderOptions">{{$t('designer.setting.importOptions')}}</el-button>
+      <el-button link type="primary" @click="resetDefault">{{$t('designer.setting.resetDefault')}}</el-button>
     </div>
 
     <div v-if="(selectedWidget.type === 'radio') || (selectedWidget.type === 'checkbox') || (selectedWidget.type === 'select')">
-      <el-button link type="primary" @click="addOption">{{i18nt('designer.setting.addOption')}}</el-button>
-      <el-button link type="primary" @click="importOptions">{{i18nt('designer.setting.importOptions')}}</el-button>
-      <el-button link type="primary" @click="resetDefault">{{i18nt('designer.setting.resetDefault')}}</el-button>
+      <el-button link type="primary" @click="addOption">{{$t('designer.setting.addOption')}}</el-button>
+      <el-button link type="primary" @click="importOptions">{{$t('designer.setting.importOptions')}}</el-button>
+      <el-button link type="primary" @click="resetDefault">{{$t('designer.setting.resetDefault')}}</el-button>
     </div>
 
     <div v-if="showImportDialogFlag" class="" v-drag="['.drag-dialog.el-dialog', '.drag-dialog .el-dialog__header']">
-      <el-dialog :title="i18nt('designer.setting.importOptions')" v-model="showImportDialogFlag"
+      <el-dialog :title="$t('designer.setting.importOptions')" v-model="showImportDialogFlag"
                  :show-close="true" class="drag-dialog small-padding-dialog" append-to-body
                  :close-on-click-modal="false" :close-on-press-escape="false" :destroy-on-close="true">
         <el-form-item>
@@ -60,22 +60,22 @@
         </el-form-item>
         <template #footer>
           <div class="dialog-footer">
-            <el-button size="large" type="primary" @click="saveOptions">{{i18nt('designer.hint.confirm')}}</el-button>
-            <el-button size="large" @click="showImportDialogFlag = false">{{i18nt('designer.hint.cancel')}}</el-button>
+            <el-button size="large" type="primary" @click="saveOptions">{{$t('designer.hint.confirm')}}</el-button>
+            <el-button size="large" @click="showImportDialogFlag = false">{{$t('designer.hint.cancel')}}</el-button>
           </div>
         </template>
       </el-dialog>
     </div>
 
     <div v-if="showImportCascaderDialogFlag" class="" v-drag="['.drag-dialog.el-dialog', '.drag-dialog .el-dialog__header']">
-      <el-dialog :title="i18nt('designer.setting.importOptions')" v-model="showImportCascaderDialogFlag"
+      <el-dialog :title="$t('designer.setting.importOptions')" v-model="showImportCascaderDialogFlag"
                  :show-close="true" class="drag-dialog small-padding-dialog" append-to-body
                  :close-on-click-modal="false" :close-on-press-escape="false" :destroy-on-close="true">
         <code-editor v-model="cascaderOptions" mode="json" :readonly="false"></code-editor>
         <template #footer>
           <div class="dialog-footer">
-            <el-button size="large" type="primary" @click="saveCascaderOptions">{{i18nt('designer.hint.confirm')}}</el-button>
-            <el-button size="large" @click="showImportCascaderDialogFlag = false">{{i18nt('designer.hint.cancel')}}</el-button>
+            <el-button size="large" type="primary" @click="saveCascaderOptions">{{$t('designer.hint.confirm')}}</el-button>
+            <el-button size="large" @click="showImportCascaderDialogFlag = false">{{$t('designer.hint.cancel')}}</el-button>
           </div>
         </template>
       </el-dialog>
@@ -212,7 +212,7 @@
 
           this.showImportCascaderDialogFlag = false
         } catch (ex) {
-          this.$message.error(this.i18nt('designer.hint.invalidOptionsData') + ex.message)
+          this.$message.error(this.$t('designer.hint.invalidOptionsData') + ex.message)
         }
       },
 

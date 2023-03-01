@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.activeColor')">
+  <el-form-item :label="$t('designer.setting.activeColor')">
     <el-color-picker v-model="optionModel.activeColor"></el-color-picker>
   </el-form-item>
 </template>

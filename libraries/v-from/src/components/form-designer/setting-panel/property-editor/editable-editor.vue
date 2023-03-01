@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.editable')">
+  <el-form-item :label="$t('designer.setting.editable')">
     <el-switch v-model="optionModel.editable"></el-switch>
   </el-form-item>
 </template>

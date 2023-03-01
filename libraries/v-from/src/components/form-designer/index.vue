@@ -13,22 +13,22 @@
     <el-header class="main-header">
       <div class="float-left main-title">
         <img src="../../assets/vform-logo.png" @click="openHome">
-        <span class="bold">VForm 3</span> {{i18nt('application.productTitle')}} <span class="version-span">Ver {{vFormVersion}}</span></div>
+        <span class="bold">VForm 3</span> {{$t('application.productTitle')}} <span class="version-span">Ver {{vFormVersion}}</span></div>
       <div class="float-right external-link">
         <el-dropdown v-if="showLink('languageMenu')" :hide-timeout="2000" @command="handleLanguageChanged">
           <span class="el-dropdown-link">{{curLangName}}<svg-icon icon-class="el-arrow-down" /></span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="zh-CN">{{i18nt('application.zh-CN')}}</el-dropdown-item>
-              <el-dropdown-item command="en-US">{{i18nt('application.en-US')}}</el-dropdown-item>
+              <el-dropdown-item command="zh-CN">{{$t('application.zh-CN')}}</el-dropdown-item>
+              <el-dropdown-item command="en-US">{{$t('application.en-US')}}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <a v-if="showLink('externalLink')" href="javascript:void(0)" @click="(ev) => openUrl(ev, gitUrl)" target="_blank"><svg-icon icon-class="github" />{{i18nt('application.github')}}</a>
-        <a v-if="showLink('externalLink')" href="javascript:void(0)" @click="(ev) => openUrl(ev, docUrl)" target="_blank"><svg-icon icon-class="document" />{{i18nt('application.document')}}</a>
-        <a v-if="showLink('externalLink')" href="javascript:void(0)" @click="(ev) => openUrl(ev, chatUrl)" target="_blank">{{i18nt('application.qqGroup')}}</a>
+        <a v-if="showLink('externalLink')" href="javascript:void(0)" @click="(ev) => openUrl(ev, gitUrl)" target="_blank"><svg-icon icon-class="github" />{{$t('application.github')}}</a>
+        <a v-if="showLink('externalLink')" href="javascript:void(0)" @click="(ev) => openUrl(ev, docUrl)" target="_blank"><svg-icon icon-class="document" />{{$t('application.document')}}</a>
+        <a v-if="showLink('externalLink')" href="javascript:void(0)" @click="(ev) => openUrl(ev, chatUrl)" target="_blank">{{$t('application.qqGroup')}}</a>
         <a v-if="showLink('externalLink')" href="javascript:void(0)" @click="(ev) => openUrl(ev, subScribeUrl)" target="_blank">
-          {{i18nt('application.subscription')}}<i class="el-icon-top-right"></i></a>
+          {{$t('application.subscription')}}<i class="el-icon-top-right"></i></a>
       </div>
     </el-header>
 
@@ -227,14 +227,14 @@
 
         axios.get(MOCK_CASE_URL + this.caseName + '.txt').then(res => {
           if (!!res.data.code) {
-            this.$message.error(this.i18nt('designer.hint.sampleLoadedFail'))
+            this.$message.error(this.$t('designer.hint.sampleLoadedFail'))
             return
           }
 
           this.setFormJson(res.data)
-          this.$message.success(this.i18nt('designer.hint.sampleLoadedSuccess'))
+          this.$message.success(this.$t('designer.hint.sampleLoadedSuccess'))
         }).catch(error => {
-          this.$message.error(this.i18nt('designer.hint.sampleLoadedFail') + ':' + error)
+          this.$message.error(this.$t('designer.hint.sampleLoadedFail') + ':' + error)
         })
       },
 
@@ -245,7 +245,7 @@
         } else {
           this.curLocale = this.curLocale || 'zh-CN'
         }
-        this.curLangName = this.i18nt('application.' + this.curLocale)
+        this.curLangName = this.$t('application.' + this.curLocale)
         this.changeLanguage(this.curLocale)
       },
 
@@ -273,7 +273,7 @@
 
       handleLanguageChanged(command) {
         this.changeLanguage(command)
-        this.curLangName = this.i18nt('application.' + command)
+        this.curLangName = this.$t('application.' + command)
       },
 
       changeLanguage(langName) {

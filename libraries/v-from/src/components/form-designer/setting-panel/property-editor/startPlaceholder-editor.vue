@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.startPlaceholder')">
+  <el-form-item :label="$t('designer.setting.startPlaceholder')">
     <el-input type="text" v-model="optionModel.startPlaceholder"></el-input>
   </el-form-item>
 </template>

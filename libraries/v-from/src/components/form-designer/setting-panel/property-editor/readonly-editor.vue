@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.readonly')">
+  <el-form-item :label="$t('designer.setting.readonly')">
     <el-switch v-model="optionModel.readonly"></el-switch>
   </el-form-item>
 </template>

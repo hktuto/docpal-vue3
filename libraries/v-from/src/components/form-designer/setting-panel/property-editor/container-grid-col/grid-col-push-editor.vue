@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.colPushTitle')">
+  <el-form-item :label="$t('designer.setting.colPushTitle')">
     <el-input-number v-model.number="optionModel.push" :min="0" :max="24"
                      style="width: 100%"></el-input-number>
   </el-form-item>

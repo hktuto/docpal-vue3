@@ -1,7 +1,7 @@
 
 
-import VForm3 from 'v-form/dist/render.umd' 
-import 'v-form/dist/render.style.css' 
+import VForm3 from 'v-form/dist/designer.umd' 
+import 'v-form/dist/designer.style.css' 
 
 export default defineNuxtPlugin(nuxtApp => {
     // Doing something with nuxtApp

@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.clearable')">
+  <el-form-item :label="$t('designer.setting.clearable')">
     <el-switch v-model="optionModel.clearable"></el-switch>
   </el-form-item>
 </template>

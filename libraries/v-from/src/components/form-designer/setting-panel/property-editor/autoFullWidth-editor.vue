@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.autoFullWidth')">
+  <el-form-item :label="$t('designer.setting.autoFullWidth')">
     <el-switch v-model="optionModel.autoFullWidth"></el-switch>
   </el-form-item>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.buttonStyle')">
+  <el-form-item :label="$t('designer.setting.buttonStyle')">
     <el-switch v-model="optionModel.buttonStyle"></el-switch>
   </el-form-item>
 </template>
