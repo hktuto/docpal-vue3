@@ -1,8 +1,8 @@
 <template>
   <el-form-item prop="name" :rules="nameRequiredRule">
     <template #label>
-      <span>{{i18nt('designer.setting.uniqueName')}}
-        <el-tooltip effect="light" :content="i18nt('designer.setting.editNameHelp')">
+      <span>{{$t('designer.setting.uniqueName')}}
+        <el-tooltip effect="light" :content="$t('designer.setting.editNameHelp')">
           <svg-icon icon-class="el-info" /></el-tooltip>
       </span>
     </template>
@@ -11,7 +11,7 @@
     </template>
     <template v-else>
       <el-select v-model="optionModel.name" allow-create filterable :disabled="widgetNameReadonly" @change="updateWidgetNameAndRef"
-                 :title="i18nt('designer.setting.editNameHelp')">
+                 :title="$t('designer.setting.editNameHelp')">
         <el-option v-for="(sf, sfIdx) in serverFieldList" :key="sfIdx" :label="sf.label" :value="sf.name"></el-option>
       </el-select>
     </template>
@@ -55,7 +55,7 @@
         let oldName = this.designer.selectedWidgetName
         if (isEmptyStr(newName)) {
           this.selectedWidget.options.name = oldName
-          this.$message.info(this.i18nt('designer.hint.nameRequired'))
+          this.$message.info(this.$t('designer.hint.nameRequired'))
           return
         }
 
@@ -63,7 +63,7 @@
           let foundRef = this.designer.formWidget.getWidgetRef(newName) // 检查newName是否已存在！！
           if (!!foundRef) {
             this.selectedWidget.options.name = oldName
-            this.$message.info(this.i18nt('designer.hint.duplicateName') + newName)
+            this.$message.info(this.$t('designer.hint.duplicateName') + newName)
             return
           }
 

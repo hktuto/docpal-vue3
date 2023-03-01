@@ -11,11 +11,11 @@
                :default-first-option="allowDefaultFirstOption"
                :automatic-dropdown="field.options.automaticDropdown"
                :multiple="field.options.multiple" :multiple-limit="field.options.multipleLimit"
-               :placeholder="field.options.placeholder || i18nt('render.hint.selectPlaceholder')"
+               :placeholder="$t(field.options.placeholder) || $t('render.hint.selectPlaceholder')"
                :remote="field.options.remote" :remote-method="remoteQuery"
                @focus="handleFocusCustomEvent" @blur="handleBlurCustomEvent"
                @change="handleChangeEvent">
-      <el-option v-for="item in field.options.optionItems" :key="item.value" :label="item.label"
+      <el-option v-for="item in field.options.optionItems" :key="item.value" :label="$t(item.label)"
                  :value="item.value" :disabled="item.disabled">
       </el-option>
     </el-select>

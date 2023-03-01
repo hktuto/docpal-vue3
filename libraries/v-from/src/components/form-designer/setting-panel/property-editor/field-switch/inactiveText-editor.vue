@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.inactiveText')">
+  <el-form-item :label="$t('designer.setting.inactiveText')">
     <el-input v-model="optionModel.inactiveText"></el-input>
   </el-form-item>
 </template>

@@ -1,8 +1,8 @@
 <template>
   <el-form-item>
     <template #label>
-      <span>{{i18nt('designer.setting.validation')}}
-        <el-tooltip effect="light" :content="i18nt('designer.setting.validationHelp')">
+      <span>{{$t('designer.setting.validation')}}
+        <el-tooltip effect="light" :content="$t('designer.setting.validationHelp')">
           <svg-icon icon-class="el-info" /></el-tooltip>
       </span>
     </template>
@@ -34,14 +34,14 @@
     data() {
       return {
         fieldValidators: [
-          {value: 'number', label: this.i18nt('designer.hint.numberValidator')},
-          {value: 'letter', label: this.i18nt('designer.hint.letterValidator')},
-          {value: 'letterAndNumber', label: this.i18nt('designer.hint.letterAndNumberValidator')},
-          {value: 'mobilePhone', label: this.i18nt('designer.hint.mobilePhoneValidator')},
-          {value: 'email', label: this.i18nt('designer.hint.emailValidator')},
-          {value: 'url', label: this.i18nt('designer.hint.urlValidator')},
-          {value: 'noChinese', label: this.i18nt('designer.hint.noChineseValidator')},
-          {value: 'chinese', label: this.i18nt('designer.hint.chineseValidator')},
+          {value: 'number', label: this.$t('designer.hint.numberValidator')},
+          {value: 'letter', label: this.$t('designer.hint.letterValidator')},
+          {value: 'letterAndNumber', label: this.$t('designer.hint.letterAndNumberValidator')},
+          {value: 'mobilePhone', label: this.$t('designer.hint.mobilePhoneValidator')},
+          {value: 'email', label: this.$t('designer.hint.emailValidator')},
+          {value: 'url', label: this.$t('designer.hint.urlValidator')},
+          {value: 'noChinese', label: this.$t('designer.hint.noChineseValidator')},
+          {value: 'chinese', label: this.$t('designer.hint.chineseValidator')},
         ],
       }
     },

@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.showStops')">
+  <el-form-item :label="$t('designer.setting.showStops')">
     <el-switch v-model="optionModel.showStops"></el-switch>
   </el-form-item>
 </template>

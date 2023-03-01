@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.minLength')">
+  <el-form-item :label="$t('designer.setting.minLength')">
     <el-input type="number" @input="inputNumberHandler" class="hide-spin-button"
               min="0" v-model="minLength" style="width: 100%"></el-input>
   </el-form-item>

@@ -22,10 +22,10 @@
         <div class="upload-file-list">
           <span class="upload-file-name" :title="file.name">{{file.name}}</span>
           <a :href="file.url" download="" target="_blank">
-            <span class="el-icon-download file-action" :title="i18nt('render.hint.downloadFile')">
+            <span class="el-icon-download file-action" :title="$t('render.hint.downloadFile')">
               <svg-icon icon-class="el-download" />
             </span></a>
-          <span class="file-action" :title="i18nt('render.hint.removeFile')" v-if="!field.options.disabled"
+          <span class="file-action" :title="$t('render.hint.removeFile')" v-if="!field.options.disabled"
             @click="removeUploadFile(file.name, file.url, file.uid)"><svg-icon icon-class="el-delete" /></span>
         </div>
       </template>
@@ -128,7 +128,7 @@
     methods: {
       handleFileExceed() {
         let uploadLimit = this.field.options.limit
-        this.$message.warning( this.i18nt('render.hint.uploadExceed').replace('${uploadLimit}', uploadLimit) )
+        this.$message.warning( this.$t('render.hint.uploadExceed').replace('${uploadLimit}', uploadLimit) )
       },
 
       beforeFileUpload(file) {
@@ -143,7 +143,7 @@
           }
         }
         if (!fileTypeCheckResult) {
-          this.$message.error(this.i18nt('render.hint.unsupportedFileType') + extFileName)
+          this.$message.error(this.$t('render.hint.unsupportedFileType') + extFileName)
           return false;
         }
 
@@ -154,7 +154,7 @@
         }
         fileSizeCheckResult = file.size / 1024 / 1024 <= uploadFileMaxSize
         if (!fileSizeCheckResult) {
-          this.$message.error(this.i18nt('render.hint.fileSizeExceed') + uploadFileMaxSize + 'MB')
+          this.$message.error(this.$t('render.hint.fileSizeExceed') + uploadFileMaxSize + 'MB')
           return false;
         }
 
@@ -255,7 +255,7 @@
           customFn.call(this, err, file, fileList)
         } else {
           this.$message({
-            message: this.i18nt('render.hint.uploadError') + err,
+            message: this.$t('render.hint.uploadError') + err,
             duration: 3000,
             type: 'error',
           })

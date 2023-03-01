@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form-item :label="i18nt('designer.setting.widgetColumnWidth')" v-show="!!subFormChildWidgetFlag">
+    <el-form-item :label="$t('designer.setting.widgetColumnWidth')" v-show="!!subFormChildWidgetFlag">
       <el-input type="text" v-model="optionModel.columnWidth"></el-input>
     </el-form-item>
   </div>

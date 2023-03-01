@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.displayType')">
+  <el-form-item :label="$t('designer.setting.displayType')">
     <el-select v-model="optionModel.type">
       <el-option label="daterange" value="daterange"></el-option>
       <el-option label="datetimerange" value="datetimerange"></el-option>

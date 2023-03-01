@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.format')">
+  <el-form-item :label="$t('designer.setting.format')">
     <el-select v-model="optionModel.format" filterable allow-create>
       <el-option label="HH:mm:ss" value="HH:mm:ss"></el-option>
       <el-option label="HH时mm分ss秒" value="HH时mm分ss秒"></el-option>

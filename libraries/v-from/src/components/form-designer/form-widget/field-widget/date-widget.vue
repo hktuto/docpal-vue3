@@ -8,7 +8,7 @@
                     :size="widgetSize"
                     :clearable="field.options.clearable" :editable="field.options.editable"
                     :format="field.options.format" :value-format="field.options.valueFormat"
-                    :placeholder="field.options.placeholder || i18nt('render.hint.datePlaceholder')"
+                    :placeholder="field.options.placeholder || $t('render.hint.datePlaceholder')"
                     @focus="handleFocusCustomEvent" @blur="handleBlurCustomEvent"
                     @change="handleChangeEvent">
     </el-date-picker>

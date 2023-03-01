@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.showText')">
+  <el-form-item :label="$t('designer.setting.showText')">
     <el-switch v-model="optionModel.showText"></el-switch>
   </el-form-item>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form-item :label="i18nt('designer.setting.contentHeight')">
+    <el-form-item :label="$t('designer.setting.contentHeight')">
       <el-input type="text" v-model="optionModel.contentHeight"></el-input>
     </el-form-item>
   </div>

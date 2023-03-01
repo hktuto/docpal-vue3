@@ -395,7 +395,7 @@
       getWidgetRef(widgetName, showError = false) {
         let foundRef = this.widgetRefList[widgetName]
         if (!foundRef && !!showError) {
-          this.$message.error(this.i18nt('render.hint.refNotFound') + widgetName)
+          this.$message.error(this.$t('render.hint.refNotFound') + widgetName)
         }
         return foundRef
       },
@@ -474,7 +474,7 @@
           if (valid) {
             callback(this.formDataModel)
           } else {
-            callback(this.formDataModel, this.i18nt('render.hint.validationFailed'))
+            callback(this.formDataModel, this.$t('render.hint.validationFailed'))
           }
         })
 

@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.range')">
+  <el-form-item :label="$t('designer.setting.range')">
     <el-switch v-model="optionModel.range"></el-switch>
   </el-form-item>
 </template>

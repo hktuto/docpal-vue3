@@ -11,7 +11,7 @@
 <template>
   <div class="field-wrapper" :class="{'design-time-bottom-margin': !!this.designer}">
     <el-form-item v-if="!!field.formItemFlag && (!field.options.hidden || (designState === true))"
-                  :label="label" :label-width="labelWidth + 'px'"
+                  :label="$t(label)" :label-width="labelWidth + 'px'"
                   :title="field.options.labelTooltip"
                   :rules="rules" :prop="getPropName()"
                   :class="[selected ? 'selected' : '', labelAlign, customClass, field.options.required ? 'required' : '']"
@@ -22,16 +22,16 @@
           <template v-if="field.options.labelIconPosition === 'front'">
             <template v-if="!!field.options.labelTooltip">
               <el-tooltip :content="field.options.labelTooltip" effect="light">
-                <svg-icon :icon-class="field.options.labelIconClass" /></el-tooltip>{{label}}</template>
+                <svg-icon :icon-class="field.options.labelIconClass" /></el-tooltip>{{$t(label)}}</template>
             <template v-else>
-              <svg-icon :icon-class="field.options.labelIconClass" />{{label}}</template>
+              <svg-icon :icon-class="field.options.labelIconClass" />{{$t(label)}}</template>
           </template>
           <template v-else-if="field.options.labelIconPosition === 'rear'">
             <template v-if="!!field.options.labelTooltip">
-              {{label}}<el-tooltip :content="field.options.labelTooltip" effect="light">
+              {{$t(label)}}<el-tooltip :content="field.options.labelTooltip" effect="light">
               <svg-icon :icon-class="field.options.labelIconClass" /></el-tooltip></template>
             <template v-else>
-              {{label}}<svg-icon :icon-class="field.options.labelIconClass" /></template>
+              {{$t(label)}}<svg-icon :icon-class="field.options.labelIconClass" /></template>
           </template>
         </span>
       </template>
@@ -40,20 +40,20 @@
 
     <template v-if="!!this.designer">
       <div class="field-action" v-if="designer.selectedId === field.id">
-        <i :title="i18nt('designer.hint.selectParentWidget')"
+        <i :title="$t('designer.hint.selectParentWidget')"
            @click.stop="selectParentWidget(field)"><svg-icon icon-class="el-back" /></i>
-        <i v-if="!!parentList && (parentList.length > 1)" :title="i18nt('designer.hint.moveUpWidget')"
+        <i v-if="!!parentList && (parentList.length > 1)" :title="$t('designer.hint.moveUpWidget')"
            @click.stop="moveUpWidget(field)"><svg-icon icon-class="el-move-up" /></i>
-        <i v-if="!!parentList && (parentList.length > 1)" :title="i18nt('designer.hint.moveDownWidget')"
+        <i v-if="!!parentList && (parentList.length > 1)" :title="$t('designer.hint.moveDownWidget')"
            @click.stop="moveDownWidget(field)"><svg-icon icon-class="el-move-down" /></i>
-        <i :title="i18nt('designer.hint.remove')" @click.stop="removeFieldWidget">
+        <i :title="$t('designer.hint.remove')" @click.stop="removeFieldWidget">
           <svg-icon icon-class="el-delete" />
         </i>
       </div>
 
       <div class="drag-handler background-opacity" v-if="designer.selectedId === field.id">
-        <i :title="i18nt('designer.hint.dragHandler')"><svg-icon icon-class="el-drag-move" /></i>
-        <i>{{i18n2t(`designer.widgetLabel.${field.type}`, `extension.widgetLabel.${field.type}`)}}</i>
+        <i :title="$t('designer.hint.dragHandler')"><svg-icon icon-class="el-drag-move" /></i>
+        <i>{{$t(`designer.widgetLabel.${field.type}`, `extension.widgetLabel.${field.type}`)}}</i>
         <i v-if="field.options.hidden === true"><svg-icon icon-class="el-hide" /></i>
       </div>
     </template>

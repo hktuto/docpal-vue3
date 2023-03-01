@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form-item :label="i18nt('designer.setting.gridColHeight')">
+    <el-form-item :label="$t('designer.setting.gridColHeight')">
       <el-input type="number" v-model="optionModel.colHeight" @input="inputNumberHandler"
                 min="0" class="hide-spin-button"></el-input>
     </el-form-item>

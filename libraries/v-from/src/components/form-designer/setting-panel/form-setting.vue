@@ -3,77 +3,77 @@
     <el-form :model="formConfig" size="small" label-position="left" label-width="120px"
              class="setting-form" @submit.prevent>
       <el-collapse v-model="formActiveCollapseNames" class="setting-collapse">
-        <el-collapse-item name="1" :title="i18nt('designer.setting.basicSetting')">
-          <el-form-item :label="i18nt('designer.setting.formSize')">
+        <el-collapse-item name="1" :title="$t('designer.setting.basicSetting')">
+          <el-form-item :label="$t('designer.setting.formSize')">
             <el-select v-model="formConfig.size">
               <el-option v-for="item in formSizes" :key="item.value" :label="item.label"
                          :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="i18nt('designer.setting.labelPosition')">
+          <el-form-item :label="$t('designer.setting.labelPosition')">
             <el-radio-group v-model="formConfig.labelPosition" class="radio-group-custom">
-              <el-radio-button label="left">{{i18nt('designer.setting.leftPosition')}}</el-radio-button>
-              <el-radio-button label="top">{{i18nt('designer.setting.topPosition')}}</el-radio-button>
+              <el-radio-button label="left">{{$t('designer.setting.leftPosition')}}</el-radio-button>
+              <el-radio-button label="top">{{$t('designer.setting.topPosition')}}</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item :label="i18nt('designer.setting.labelAlign')">
+          <el-form-item :label="$t('designer.setting.labelAlign')">
             <el-radio-group v-model="formConfig.labelAlign" class="radio-group-custom">
-              <el-radio-button label="label-left-align">{{i18nt('designer.setting.leftAlign')}}</el-radio-button>
-              <el-radio-button label="label-center-align">{{i18nt('designer.setting.centerAlign')}}</el-radio-button>
-              <el-radio-button label="label-right-align">{{i18nt('designer.setting.rightAlign')}}</el-radio-button>
+              <el-radio-button label="label-left-align">{{$t('designer.setting.leftAlign')}}</el-radio-button>
+              <el-radio-button label="label-center-align">{{$t('designer.setting.centerAlign')}}</el-radio-button>
+              <el-radio-button label="label-right-align">{{$t('designer.setting.rightAlign')}}</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item :label="i18nt('designer.setting.labelWidth')">
+          <el-form-item :label="$t('designer.setting.labelWidth')">
             <el-input-number v-model="formConfig.labelWidth" :min="0" style="width: 100%"></el-input-number>
           </el-form-item>
-          <el-form-item :label="i18nt('designer.setting.formCss')">
-            <el-button type="info" icon="el-icon-edit" plain round @click="editFormCss">{{i18nt('designer.setting.addCss')}}</el-button>
+          <el-form-item :label="$t('designer.setting.formCss')">
+            <el-button type="info" icon="el-icon-edit" plain round @click="editFormCss">{{$t('designer.setting.addCss')}}</el-button>
           </el-form-item>
           <!-- -->
-          <el-form-item :label="i18nt('designer.setting.customClass')">
+          <el-form-item :label="$t('designer.setting.customClass')">
             <el-select v-model="formConfig.customClass" multiple filterable allow-create
                        default-first-option>
               <el-option v-for="(item, idx) in cssClassList" :key="idx" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
           <!-- -->
-          <el-form-item :label="i18nt('designer.setting.globalFunctions')">
-            <el-button type="info" icon="el-icon-edit" plain round @click="editGlobalFunctions">{{i18nt('designer.setting.addEventHandler')}}</el-button>
+          <el-form-item :label="$t('designer.setting.globalFunctions')">
+            <el-button type="info" icon="el-icon-edit" plain round @click="editGlobalFunctions">{{$t('designer.setting.addEventHandler')}}</el-button>
           </el-form-item>
           <el-form-item label-width="0">
-            <el-divider class="custom-divider">{{i18nt('designer.setting.formSFCSetting')}}</el-divider>
+            <el-divider class="custom-divider">{{$t('designer.setting.formSFCSetting')}}</el-divider>
           </el-form-item>
-          <el-form-item :label="i18nt('designer.setting.formModelName')">
+          <el-form-item :label="$t('designer.setting.formModelName')">
             <el-input type="text" v-model="formConfig.modelName"></el-input>
           </el-form-item>
-          <el-form-item :label="i18nt('designer.setting.formRefName')">
+          <el-form-item :label="$t('designer.setting.formRefName')">
             <el-input type="text" v-model="formConfig.refName"></el-input>
           </el-form-item>
-          <el-form-item :label="i18nt('designer.setting.formRulesName')">
+          <el-form-item :label="$t('designer.setting.formRulesName')">
             <el-input type="text" v-model="formConfig.rulesName"></el-input>
           </el-form-item>
         </el-collapse-item>
 
-        <el-collapse-item v-if="showEventCollapse()" name="2" :title="i18nt('designer.setting.eventSetting')">
+        <el-collapse-item v-if="showEventCollapse()" name="2" :title="$t('designer.setting.eventSetting')">
           <el-form-item label="onFormCreated" label-width="150px">
             <el-button type="info" icon="el-icon-edit" plain round @click="editFormEventHandler('onFormCreated')">
-              {{i18nt('designer.setting.addEventHandler')}}</el-button>
+              {{$t('designer.setting.addEventHandler')}}</el-button>
           </el-form-item>
           <el-form-item label="onFormMounted" label-width="150px">
             <el-button type="info" icon="el-icon-edit" plain round @click="editFormEventHandler('onFormMounted')">
-              {{i18nt('designer.setting.addEventHandler')}}</el-button>
+              {{$t('designer.setting.addEventHandler')}}</el-button>
           </el-form-item>
           <!-- -->
           <el-form-item label="onFormDataChange" label-width="150px">
             <el-button type="info" icon="el-icon-edit" plain round @click="editFormEventHandler('onFormDataChange')">
-              {{i18nt('designer.setting.addEventHandler')}}</el-button>
+              {{$t('designer.setting.addEventHandler')}}</el-button>
           </el-form-item>
           <!-- -->
           <!--
           <el-form-item label="onFormValidate">
             <el-button type="info" icon="el-icon-edit" plain round @click="editFormEventHandler('onFormValidate')">
-              {{i18nt('designer.setting.addEventHandler')}}</el-button>
+              {{$t('designer.setting.addEventHandler')}}</el-button>
           </el-form-item>
           -->
         </el-collapse-item>
@@ -81,7 +81,7 @@
     </el-form>
 
     <div v-if="showFormEventDialogFlag" class="" v-drag="['.drag-dialog.el-dialog', '.drag-dialog .el-dialog__header']">
-      <el-dialog :title="i18nt('designer.setting.editFormEventHandler')" v-model="showFormEventDialogFlag"
+      <el-dialog :title="$t('designer.setting.editFormEventHandler')" v-model="showFormEventDialogFlag"
                  :show-close="true" class="drag-dialog small-padding-dialog" append-to-body
                  :close-on-click-modal="false" :close-on-press-escape="false" :destroy-on-close="true">
         <el-alert type="info" :closable="false" :title="'form.' + eventParamsMap[curEventName]"></el-alert>
@@ -90,41 +90,41 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="showFormEventDialogFlag = false">
-              {{i18nt('designer.hint.cancel')}}</el-button>
+              {{$t('designer.hint.cancel')}}</el-button>
             <el-button type="primary" @click="saveFormEventHandler">
-              {{i18nt('designer.hint.confirm')}}</el-button>
+              {{$t('designer.hint.confirm')}}</el-button>
           </div>
         </template>
       </el-dialog>
     </div>
 
     <div v-if="showEditFormCssDialogFlag" class="" v-drag="['.drag-dialog.el-dialog', '.drag-dialog .el-dialog__header']">
-      <el-dialog :title="i18nt('designer.setting.formCss')" v-model="showEditFormCssDialogFlag"
+      <el-dialog :title="$t('designer.setting.formCss')" v-model="showEditFormCssDialogFlag"
                  :show-close="true" class="drag-dialog small-padding-dialog" append-to-body
                  :close-on-click-modal="false" :close-on-press-escape="false" :destroy-on-close="true">
         <code-editor :mode="'css'" :readonly="false" v-model="formCssCode"></code-editor>
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="showEditFormCssDialogFlag = false">
-              {{i18nt('designer.hint.cancel')}}</el-button>
+              {{$t('designer.hint.cancel')}}</el-button>
             <el-button type="primary" @click="saveFormCss">
-              {{i18nt('designer.hint.confirm')}}</el-button>
+              {{$t('designer.hint.confirm')}}</el-button>
           </div>
         </template>
       </el-dialog>
     </div>
 
     <div v-if="showEditFunctionsDialogFlag" class="" v-drag="['.drag-dialog.el-dialog', '.drag-dialog .el-dialog__header']">
-      <el-dialog :title="i18nt('designer.setting.globalFunctions')" v-model="showEditFunctionsDialogFlag"
+      <el-dialog :title="$t('designer.setting.globalFunctions')" v-model="showEditFunctionsDialogFlag"
                  :show-close="true" class="drag-dialog small-padding-dialog" append-to-body
                  :close-on-click-modal="false" :close-on-press-escape="false" :destroy-on-close="true">
         <code-editor :mode="'javascript'" :readonly="false" v-model="functionsCode" ref="gfEditor"></code-editor>
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="showEditFunctionsDialogFlag = false">
-              {{i18nt('designer.hint.cancel')}}</el-button>
+              {{$t('designer.hint.cancel')}}</el-button>
             <el-button type="primary" @click="saveGlobalFunctions">
-              {{i18nt('designer.hint.confirm')}}</el-button>
+              {{$t('designer.hint.confirm')}}</el-button>
           </div>
         </template>
       </el-dialog>
@@ -281,7 +281,7 @@
           })
 
           if (syntaxErrorFlag) {
-            this.$message.error(this.i18nt('designer.setting.syntaxCheckWarning'))
+            this.$message.error(this.$t('designer.setting.syntaxCheckWarning'))
             return
           }
         }
@@ -308,7 +308,7 @@
           })
 
           if (syntaxErrorFlag) {
-            this.$message.error(this.i18nt('designer.setting.syntaxCheckWarning'))
+            this.$message.error(this.$t('designer.setting.syntaxCheckWarning'))
             return
           }
         }

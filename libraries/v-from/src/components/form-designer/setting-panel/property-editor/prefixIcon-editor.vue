@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.prefixIcon')">
+  <el-form-item :label="$t('designer.setting.prefixIcon')">
     <el-input type="text" v-model="optionModel.prefixIcon"></el-input>
   </el-form-item>
 </template>

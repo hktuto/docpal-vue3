@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.uploadTip')">
+  <el-form-item :label="$t('designer.setting.uploadTip')">
     <el-input type="text" v-model="optionModel.uploadTip"></el-input>
   </el-form-item>
 </template>

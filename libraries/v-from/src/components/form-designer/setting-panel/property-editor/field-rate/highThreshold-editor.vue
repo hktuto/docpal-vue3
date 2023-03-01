@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.highThreshold')">
+  <el-form-item :label="$t('designer.setting.highThreshold')">
     <el-input-number v-model="optionModel.highThreshold" :min="optionModel.lowThreshold" :max="optionModel.max"
                      class="hide-spin-button" style="width: 100%"></el-input-number>
   </el-form-item>

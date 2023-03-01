@@ -1,6 +1,6 @@
 <template>
   <el-form-item label-width="0">
-    <el-divider class="custom-divider-margin-top">{{i18nt('designer.setting.optionsSetting')}}</el-divider>
+    <el-divider class="custom-divider-margin-top">{{$t('designer.setting.optionsSetting')}}</el-divider>
     <option-items-setting :designer="designer" :selected-widget="selectedWidget"></option-items-setting>
   </el-form-item>
 </template>

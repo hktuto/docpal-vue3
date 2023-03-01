@@ -5,10 +5,10 @@
          v-show="!widget.options.hidden">
       <el-row class="header-row">
         <div class="action-header-column">
-          <span class="action-label">{{i18nt('render.hint.subFormAction')}}</span>
+          <span class="action-label">{{$t('render.hint.subFormAction')}}</span>
           <el-button :disabled="actionDisabled" round type="primary" size="small" class="action-button" @click="addSubFormRow"
-                     :title="i18nt('render.hint.subFormAddActionHint')">
-            {{i18nt('render.hint.subFormAddAction')}}<svg-icon icon-class="el-plus" /></el-button>
+                     :title="$t('render.hint.subFormAddActionHint')">
+            {{$t('render.hint.subFormAddAction')}}<svg-icon icon-class="el-plus" /></el-button>
         </div>
         <template v-for="(subWidget) in widget.widgetList" :key="subWidget.id + 'thc'">
           <div class="field-header-column"
@@ -39,9 +39,9 @@
         <div class="sub-form-action-column hide-label">
           <div class="action-button-column">
             <el-button :disabled="actionDisabled" circle @click="insertSubFormRow(sfrIdx)"
-                       :title="i18nt('render.hint.insertSubFormRow')"><svg-icon icon-class="el-plus" /></el-button>
+                       :title="$t('render.hint.insertSubFormRow')"><svg-icon icon-class="el-plus" /></el-button>
             <el-button :disabled="actionDisabled" circle @click="deleteSubFormRow(sfrIdx)"
-                       :title="i18nt('render.hint.deleteSubFormRow')"><svg-icon icon-class="el-delete" /></el-button>
+                       :title="$t('render.hint.deleteSubFormRow')"><svg-icon icon-class="el-delete" /></el-button>
             <span v-if="widget.options.showRowNumber" class="row-number-span">#{{sfrIdx+1}}</span>
           </div>
         </div>
@@ -260,9 +260,9 @@
       },
 
       deleteSubFormRow(formRowIndex) {
-        this.$confirm(this.i18nt('render.hint.deleteSubFormRow') + '?', this.i18nt('render.hint.prompt'), {
-          confirmButtonText: this.i18nt('render.hint.confirm'),
-          cancelButtonText: this.i18nt('render.hint.cancel')
+        this.$confirm(this.$t('render.hint.deleteSubFormRow') + '?', this.$t('render.hint.prompt'), {
+          confirmButtonText: this.$t('render.hint.confirm'),
+          cancelButtonText: this.$t('render.hint.cancel')
         }).then(() => {
           let oldSubFormData = this.formModel[this.widget.options.name] || []
           let deletedDataRow = deepClone(oldSubFormData[formRowIndex])

@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.contentPosition')">
+  <el-form-item :label="$t('designer.setting.contentPosition')">
     <el-select v-model="optionModel.contentPosition">
       <el-option label="center" value="center"></el-option>
       <el-option label="left" value="left"></el-option>

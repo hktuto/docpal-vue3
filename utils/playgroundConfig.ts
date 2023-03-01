@@ -33,7 +33,7 @@ const makeConfig = (options:RuntimeOption) => {
     })
   }
   if(options.useFormRender) {
-    defaultConfig.vite.optimizeDeps.include.push('v-form/dist/render.umd');
+    defaultConfig.vite.optimizeDeps.include.push('v-form/dist/designer.umd');
     defaultConfig.plugins.push({
       src:'../../../utils/formRenderPlugin', mode: 'client'
     })

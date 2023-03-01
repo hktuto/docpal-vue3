@@ -5,7 +5,7 @@
              :class="[customClass, layoutType + '-layout']" :size="size" :validate-on-rule-change="false">
 
       <template v-if="designer.widgetList.length === 0">
-        <div class="no-widget-hint">{{i18nt('designer.noWidgetHint')}}</div>
+        <div class="no-widget-hint">{{$t('designer.noWidgetHint')}}</div>
       </template>
 
       <div class="form-widget-list">
@@ -168,7 +168,7 @@
       getWidgetRef(widgetName, showError = false) {
         let foundRef = this.widgetRefList[widgetName]
         if (!foundRef && !!showError) {
-          this.$message.error(this.i18nt('designer.hint.refNotFound') + widgetName)
+          this.$message.error(this.$t('designer.hint.refNotFound') + widgetName)
         }
         return foundRef
       },

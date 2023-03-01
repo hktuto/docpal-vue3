@@ -2225,7 +2225,7 @@ const langResources = {
   }, zhLocaleElement), zhLocale), zhLocale_render), zhLocale_extension)
 };
 const i18n = createI18n({
-  locale: localStorage.getItem("v_form_locale") || "zh-CN",
+  locale: localStorage.getItem("v_form_locale") || "en-US",
   messages: langResources
 });
 const changeLocale = function(langName) {
@@ -2429,27 +2429,27 @@ function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
     !!this.designer ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
       $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_1$m, [
         createElementVNode("i", {
-          title: _ctx.i18nt("designer.hint.selectParentWidget"),
+          title: _ctx.$t("designer.hint.selectParentWidget"),
           onClick: _cache[1] || (_cache[1] = withModifiers(($event) => $options.selectParentWidget($props.field), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-back" })
         ], 8, _hoisted_2$g),
         !!$props.parentList && $props.parentList.length > 1 ? (openBlock(), createElementBlock("i", {
           key: 0,
-          title: _ctx.i18nt("designer.hint.moveUpWidget"),
+          title: _ctx.$t("designer.hint.moveUpWidget"),
           onClick: _cache[2] || (_cache[2] = withModifiers(($event) => $options.moveUpWidget($props.field), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-move-up" })
         ], 8, _hoisted_3$e)) : createCommentVNode("", true),
         !!$props.parentList && $props.parentList.length > 1 ? (openBlock(), createElementBlock("i", {
           key: 1,
-          title: _ctx.i18nt("designer.hint.moveDownWidget"),
+          title: _ctx.$t("designer.hint.moveDownWidget"),
           onClick: _cache[3] || (_cache[3] = withModifiers(($event) => $options.moveDownWidget($props.field), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-move-down" })
         ], 8, _hoisted_4$7)) : createCommentVNode("", true),
         createElementVNode("i", {
-          title: _ctx.i18nt("designer.hint.remove"),
+          title: _ctx.$t("designer.hint.remove"),
           onClick: _cache[4] || (_cache[4] = withModifiers((...args) => $options.removeFieldWidget && $options.removeFieldWidget(...args), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-delete" })
@@ -2457,11 +2457,11 @@ function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
       ])) : createCommentVNode("", true),
       $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_6$5, [
         createElementVNode("i", {
-          title: _ctx.i18nt("designer.hint.dragHandler")
+          title: _ctx.$t("designer.hint.dragHandler")
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-drag-move" })
         ], 8, _hoisted_7$5),
-        createElementVNode("i", null, toDisplayString(_ctx.i18n2t(`designer.widgetLabel.${$props.field.type}`, `extension.widgetLabel.${$props.field.type}`)), 1),
+        createElementVNode("i", null, toDisplayString(_ctx.$t(`designer.widgetLabel.${$props.field.type}`, `extension.widgetLabel.${$props.field.type}`)), 1),
         $props.field.options.hidden === true ? (openBlock(), createElementBlock("i", _hoisted_8$2, [
           createVNode(_component_svg_icon, { "icon-class": "el-hide" })
         ])) : createCommentVNode("", true)
@@ -2469,7 +2469,7 @@ function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64)) : createCommentVNode("", true)
   ], 6);
 }
-var StaticContentWrapper = /* @__PURE__ */ _export_sfc$1(_sfc_main$J, [["render", _sfc_render$J], ["__scopeId", "data-v-40b65808"]]);
+var StaticContentWrapper = /* @__PURE__ */ _export_sfc$1(_sfc_main$J, [["render", _sfc_render$J], ["__scopeId", "data-v-2c3a4c20"]]);
 var __glob_0_19 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": StaticContentWrapper
@@ -4012,7 +4012,7 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
   }, [
     !!$props.field.formItemFlag && (!$props.field.options.hidden || $props.designState === true) ? (openBlock(), createBlock(_component_el_form_item, {
       key: 0,
-      label: $options.label,
+      label: _ctx.$t($options.label),
       "label-width": $options.labelWidth + "px",
       title: $props.field.options.labelTooltip,
       rules: $props.rules,
@@ -4035,16 +4035,16 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
                 ]),
                 _: 1
               }, 8, ["content"]),
-              createTextVNode(toDisplayString($options.label), 1)
+              createTextVNode(toDisplayString(_ctx.$t($options.label)), 1)
             ], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
               createVNode(_component_svg_icon, {
                 "icon-class": $props.field.options.labelIconClass
               }, null, 8, ["icon-class"]),
-              createTextVNode(toDisplayString($options.label), 1)
+              createTextVNode(toDisplayString(_ctx.$t($options.label)), 1)
             ], 64))
           ], 64)) : $props.field.options.labelIconPosition === "rear" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
             !!$props.field.options.labelTooltip ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-              createTextVNode(toDisplayString($options.label), 1),
+              createTextVNode(toDisplayString(_ctx.$t($options.label)), 1),
               createVNode(_component_el_tooltip, {
                 content: $props.field.options.labelTooltip,
                 effect: "light"
@@ -4057,7 +4057,7 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
                 _: 1
               }, 8, ["content"])
             ], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-              createTextVNode(toDisplayString($options.label), 1),
+              createTextVNode(toDisplayString(_ctx.$t($options.label)), 1),
               createVNode(_component_svg_icon, {
                 "icon-class": $props.field.options.labelIconClass
               }, null, 8, ["icon-class"])
@@ -4073,27 +4073,27 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     !!this.designer ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [
       $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_2$f, [
         createElementVNode("i", {
-          title: _ctx.i18nt("designer.hint.selectParentWidget"),
+          title: _ctx.$t("designer.hint.selectParentWidget"),
           onClick: _cache[1] || (_cache[1] = withModifiers(($event) => $options.selectParentWidget($props.field), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-back" })
         ], 8, _hoisted_3$d),
         !!$props.parentList && $props.parentList.length > 1 ? (openBlock(), createElementBlock("i", {
           key: 0,
-          title: _ctx.i18nt("designer.hint.moveUpWidget"),
+          title: _ctx.$t("designer.hint.moveUpWidget"),
           onClick: _cache[2] || (_cache[2] = withModifiers(($event) => $options.moveUpWidget($props.field), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-move-up" })
         ], 8, _hoisted_4$6)) : createCommentVNode("", true),
         !!$props.parentList && $props.parentList.length > 1 ? (openBlock(), createElementBlock("i", {
           key: 1,
-          title: _ctx.i18nt("designer.hint.moveDownWidget"),
+          title: _ctx.$t("designer.hint.moveDownWidget"),
           onClick: _cache[3] || (_cache[3] = withModifiers(($event) => $options.moveDownWidget($props.field), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-move-down" })
         ], 8, _hoisted_5$5)) : createCommentVNode("", true),
         createElementVNode("i", {
-          title: _ctx.i18nt("designer.hint.remove"),
+          title: _ctx.$t("designer.hint.remove"),
           onClick: _cache[4] || (_cache[4] = withModifiers((...args) => $options.removeFieldWidget && $options.removeFieldWidget(...args), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-delete" })
@@ -4101,11 +4101,11 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
       ])) : createCommentVNode("", true),
       $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_7$4, [
         createElementVNode("i", {
-          title: _ctx.i18nt("designer.hint.dragHandler")
+          title: _ctx.$t("designer.hint.dragHandler")
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-drag-move" })
         ], 8, _hoisted_8$1),
-        createElementVNode("i", null, toDisplayString(_ctx.i18n2t(`designer.widgetLabel.${$props.field.type}`, `extension.widgetLabel.${$props.field.type}`)), 1),
+        createElementVNode("i", null, toDisplayString(_ctx.$t(`designer.widgetLabel.${$props.field.type}`, `extension.widgetLabel.${$props.field.type}`)), 1),
         $props.field.options.hidden === true ? (openBlock(), createElementBlock("i", _hoisted_9$1, [
           createVNode(_component_svg_icon, { "icon-class": "el-hide" })
         ])) : createCommentVNode("", true)
@@ -4113,7 +4113,7 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64)) : createCommentVNode("", true)
   ], 2);
 }
-var FormItemWrapper = /* @__PURE__ */ _export_sfc$1(_sfc_main$H, [["render", _sfc_render$H], ["__scopeId", "data-v-2d53b001"]]);
+var FormItemWrapper = /* @__PURE__ */ _export_sfc$1(_sfc_main$H, [["render", _sfc_render$H], ["__scopeId", "data-v-6e1ed8ce"]]);
 var __glob_0_8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": FormItemWrapper
@@ -4206,7 +4206,7 @@ function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
           size: _ctx.widgetSize,
           clearable: $props.field.options.clearable,
           filterable: $props.field.options.filterable,
-          placeholder: $props.field.options.placeholder || _ctx.i18nt("render.hint.selectPlaceholder"),
+          placeholder: $props.field.options.placeholder || _ctx.$t("render.hint.selectPlaceholder"),
           "show-all-levels": $options.showFullPath,
           props: { checkStrictly: $props.field.options.checkStrictly, multiple: $props.field.options.multiple, expandTrigger: "hover" },
           onFocus: _ctx.handleFocusCustomEvent,
@@ -4218,7 +4218,7 @@ function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var cascaderWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$G, [["render", _sfc_render$G], ["__scopeId", "data-v-130f5280"]]);
+var cascaderWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$G, [["render", _sfc_render$G], ["__scopeId", "data-v-7de3ff42"]]);
 var __glob_0_1$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": cascaderWidget
@@ -4522,8 +4522,8 @@ function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
           editable: $props.field.options.editable,
           format: $props.field.options.format,
           "value-format": $props.field.options.valueFormat,
-          "start-placeholder": $props.field.options.startPlaceholder || _ctx.i18nt("render.hint.startDatePlaceholder"),
-          "end-placeholder": $props.field.options.endPlaceholder || _ctx.i18nt("render.hint.endDatePlaceholder"),
+          "start-placeholder": $props.field.options.startPlaceholder || _ctx.$t("render.hint.startDatePlaceholder"),
+          "end-placeholder": $props.field.options.endPlaceholder || _ctx.$t("render.hint.endDatePlaceholder"),
           onFocus: _ctx.handleFocusCustomEvent,
           onBlur: _ctx.handleBlurCustomEvent,
           onChange: _ctx.handleChangeEvent
@@ -4533,7 +4533,7 @@ function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var dateRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$D, [["render", _sfc_render$D], ["__scopeId", "data-v-8805cad8"]]);
+var dateRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$D, [["render", _sfc_render$D], ["__scopeId", "data-v-7ee1c99a"]]);
 var __glob_0_4$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": dateRangeWidget
@@ -4623,7 +4623,7 @@ function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
         editable: $props.field.options.editable,
         format: $props.field.options.format,
         "value-format": $props.field.options.valueFormat,
-        placeholder: $props.field.options.placeholder || _ctx.i18nt("render.hint.datePlaceholder"),
+        placeholder: $props.field.options.placeholder || _ctx.$t("render.hint.datePlaceholder"),
         onFocus: _ctx.handleFocusCustomEvent,
         onBlur: _ctx.handleBlurCustomEvent,
         onChange: _ctx.handleChangeEvent
@@ -4632,7 +4632,7 @@ function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var dateWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$C, [["render", _sfc_render$C], ["__scopeId", "data-v-14d5b71a"]]);
+var dateWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$C, [["render", _sfc_render$C], ["__scopeId", "data-v-c56361fa"]]);
 var __glob_0_5$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": dateWidget
@@ -4786,7 +4786,7 @@ const _sfc_main$A = {
   methods: {
     handleFileExceed() {
       let uploadLimit = this.field.options.limit;
-      this.$message.warning(this.i18nt("render.hint.uploadExceed").replace("${uploadLimit}", uploadLimit));
+      this.$message.warning(this.$t("render.hint.uploadExceed").replace("${uploadLimit}", uploadLimit));
     },
     beforeFileUpload(file) {
       let fileTypeCheckResult = false;
@@ -4800,7 +4800,7 @@ const _sfc_main$A = {
         }
       }
       if (!fileTypeCheckResult) {
-        this.$message.error(this.i18nt("render.hint.unsupportedFileType") + extFileName);
+        this.$message.error(this.$t("render.hint.unsupportedFileType") + extFileName);
         return false;
       }
       let fileSizeCheckResult = false;
@@ -4810,7 +4810,7 @@ const _sfc_main$A = {
       }
       fileSizeCheckResult = file.size / 1024 / 1024 <= uploadFileMaxSize;
       if (!fileSizeCheckResult) {
-        this.$message.error(this.i18nt("render.hint.fileSizeExceed") + uploadFileMaxSize + "MB");
+        this.$message.error(this.$t("render.hint.fileSizeExceed") + uploadFileMaxSize + "MB");
         return false;
       }
       this.uploadData.key = file.name;
@@ -4899,7 +4899,7 @@ const _sfc_main$A = {
         customFn.call(this, err, file, fileList);
       } else {
         this.$message({
-          message: this.i18nt("render.hint.uploadError") + err,
+          message: this.$t("render.hint.uploadError") + err,
           duration: 3e3,
           type: "error"
         });
@@ -4907,7 +4907,7 @@ const _sfc_main$A = {
     }
   }
 };
-const _withScopeId = (n) => (pushScopeId("data-v-396987e9"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-31858f53"), n = n(), popScopeId(), n);
 const _hoisted_1$j = {
   key: 0,
   class: "el-upload__tip"
@@ -4973,7 +4973,7 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
             }, [
               createElementVNode("span", {
                 class: "el-icon-download file-action",
-                title: _ctx.i18nt("render.hint.downloadFile")
+                title: _ctx.$t("render.hint.downloadFile")
               }, [
                 createVNode(_component_svg_icon, { "icon-class": "el-download" })
               ], 8, _hoisted_6$3)
@@ -4981,7 +4981,7 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
             !$props.field.options.disabled ? (openBlock(), createElementBlock("span", {
               key: 0,
               class: "file-action",
-              title: _ctx.i18nt("render.hint.removeFile"),
+              title: _ctx.$t("render.hint.removeFile"),
               onClick: ($event) => $options.removeUploadFile(file.name, file.url, file.uid)
             }, [
               createVNode(_component_svg_icon, { "icon-class": "el-delete" })
@@ -4994,7 +4994,7 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$A, [["render", _sfc_render$A], ["__scopeId", "data-v-396987e9"]]);
+var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$A, [["render", _sfc_render$A], ["__scopeId", "data-v-31858f53"]]);
 var __glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": fileUploadWidget
@@ -5373,7 +5373,7 @@ const _sfc_main$w = {
   methods: {
     handlePictureExceed() {
       let uploadLimit = this.field.options.limit;
-      this.$message.warning(this.i18nt("render.hint.uploadExceed").replace("${uploadLimit}", uploadLimit));
+      this.$message.warning(this.$t("render.hint.uploadExceed").replace("${uploadLimit}", uploadLimit));
     },
     beforePictureUpload(file) {
       let fileTypeCheckResult = false;
@@ -5386,7 +5386,7 @@ const _sfc_main$w = {
         }
       }
       if (!fileTypeCheckResult) {
-        this.$message.error(this.i18nt("render.hint.unsupportedFileType") + file.type);
+        this.$message.error(this.$t("render.hint.unsupportedFileType") + file.type);
         return false;
       }
       let fileSizeCheckResult = false;
@@ -5478,7 +5478,7 @@ const _sfc_main$w = {
         customFn.call(this, err, file, fileList);
       } else {
         this.$message({
-          message: this.i18nt("render.hint.uploadError") + err,
+          message: this.$t("render.hint.uploadError") + err,
           duration: 3e3,
           type: "error"
         });
@@ -5587,7 +5587,7 @@ function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var pictureUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$w, [["render", _sfc_render$w], ["__scopeId", "data-v-5404b7f6"]]);
+var pictureUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$w, [["render", _sfc_render$w], ["__scopeId", "data-v-5a7fa515"]]);
 var __glob_0_12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": pictureUploadWidget
@@ -17462,7 +17462,7 @@ function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
         "automatic-dropdown": $props.field.options.automaticDropdown,
         multiple: $props.field.options.multiple,
         "multiple-limit": $props.field.options.multipleLimit,
-        placeholder: $props.field.options.placeholder || _ctx.i18nt("render.hint.selectPlaceholder"),
+        placeholder: _ctx.$t($props.field.options.placeholder) || _ctx.$t("render.hint.selectPlaceholder"),
         remote: $props.field.options.remote,
         "remote-method": _ctx.remoteQuery,
         onFocus: _ctx.handleFocusCustomEvent,
@@ -17473,7 +17473,7 @@ function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
           (openBlock(true), createElementBlock(Fragment, null, renderList($props.field.options.optionItems, (item) => {
             return openBlock(), createBlock(_component_el_option, {
               key: item.value,
-              label: item.label,
+              label: _ctx.$t(item.label),
               value: item.value,
               disabled: item.disabled
             }, null, 8, ["label", "value", "disabled"]);
@@ -17485,7 +17485,7 @@ function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var selectWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$r, [["render", _sfc_render$r], ["__scopeId", "data-v-3819309e"]]);
+var selectWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$r, [["render", _sfc_render$r], ["__scopeId", "data-v-4206ba6a"]]);
 var __glob_0_16 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": selectWidget
@@ -18015,8 +18015,8 @@ function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
           editable: $props.field.options.editable,
           format: $props.field.options.format,
           "value-format": "HH:mm:ss",
-          "start-placeholder": $props.field.options.startPlaceholder || _ctx.i18nt("render.hint.startTimePlaceholder"),
-          "end-placeholder": $props.field.options.endPlaceholder || _ctx.i18nt("render.hint.endTimePlaceholder"),
+          "start-placeholder": $props.field.options.startPlaceholder || _ctx.$t("render.hint.startTimePlaceholder"),
+          "end-placeholder": $props.field.options.endPlaceholder || _ctx.$t("render.hint.endTimePlaceholder"),
           onFocus: _ctx.handleFocusCustomEvent,
           onBlur: _ctx.handleBlurCustomEvent,
           onChange: _ctx.handleChangeEvent
@@ -18026,7 +18026,7 @@ function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var timeRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$l, [["render", _sfc_render$l], ["__scopeId", "data-v-6789eaac"]]);
+var timeRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$l, [["render", _sfc_render$l], ["__scopeId", "data-v-2b70e154"]]);
 var __glob_0_23 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": timeRangeWidget
@@ -18115,7 +18115,7 @@ function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
         editable: $props.field.options.editable,
         format: $props.field.options.format,
         "value-format": "HH:mm:ss",
-        placeholder: $props.field.options.placeholder || _ctx.i18nt("render.hint.timePlaceholder"),
+        placeholder: $props.field.options.placeholder || _ctx.$t("render.hint.timePlaceholder"),
         onFocus: _ctx.handleFocusCustomEvent,
         onBlur: _ctx.handleBlurCustomEvent,
         onChange: _ctx.handleChangeEvent
@@ -18124,7 +18124,7 @@ function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var timeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$k, [["render", _sfc_render$k], ["__scopeId", "data-v-b2bd1886"]]);
+var timeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$k, [["render", _sfc_render$k], ["__scopeId", "data-v-4f8b3e9b"]]);
 var __glob_0_24 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": timeWidget
@@ -18255,7 +18255,7 @@ function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
       }), 256)) : (openBlock(), createBlock(_component_el_col, { key: 1 }, {
         default: withCtx(() => [
           createElementVNode("div", _hoisted_1$e, [
-            createElementVNode("span", _hoisted_2$c, toDisplayString(_ctx.i18nt("render.hint.blankCellContent")), 1)
+            createElementVNode("span", _hoisted_2$c, toDisplayString(_ctx.$t("render.hint.blankCellContent")), 1)
           ])
         ]),
         _: 1
@@ -18266,7 +18266,7 @@ function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     [vShow, !$props.widget.options.hidden]
   ]);
 }
-var GridColItem = /* @__PURE__ */ _export_sfc$1(_sfc_main$j, [["render", _sfc_render$j], ["__scopeId", "data-v-118947eb"]]);
+var GridColItem = /* @__PURE__ */ _export_sfc$1(_sfc_main$j, [["render", _sfc_render$j], ["__scopeId", "data-v-8cecd14e"]]);
 var __glob_0_1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": GridColItem
@@ -18657,9 +18657,9 @@ const _sfc_main$h = {
       this.handleSubFormRowChange(oldSubFormData);
     },
     deleteSubFormRow(formRowIndex) {
-      this.$confirm(this.i18nt("render.hint.deleteSubFormRow") + "?", this.i18nt("render.hint.prompt"), {
-        confirmButtonText: this.i18nt("render.hint.confirm"),
-        cancelButtonText: this.i18nt("render.hint.cancel")
+      this.$confirm(this.$t("render.hint.deleteSubFormRow") + "?", this.$t("render.hint.prompt"), {
+        confirmButtonText: this.$t("render.hint.confirm"),
+        cancelButtonText: this.$t("render.hint.cancel")
       }).then(() => {
         let oldSubFormData = this.formModel[this.widget.options.name] || [];
         let deletedDataRow = deepClone(oldSubFormData[formRowIndex]);
@@ -18725,7 +18725,7 @@ function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
         createVNode(_component_el_row, { class: "header-row" }, {
           default: withCtx(() => [
             createElementVNode("div", _hoisted_1$d, [
-              createElementVNode("span", _hoisted_2$b, toDisplayString(_ctx.i18nt("render.hint.subFormAction")), 1),
+              createElementVNode("span", _hoisted_2$b, toDisplayString(_ctx.$t("render.hint.subFormAction")), 1),
               createVNode(_component_el_button, {
                 disabled: $data.actionDisabled,
                 round: "",
@@ -18733,10 +18733,10 @@ function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
                 size: "small",
                 class: "action-button",
                 onClick: $options.addSubFormRow,
-                title: _ctx.i18nt("render.hint.subFormAddActionHint")
+                title: _ctx.$t("render.hint.subFormAddActionHint")
               }, {
                 default: withCtx(() => [
-                  createTextVNode(toDisplayString(_ctx.i18nt("render.hint.subFormAddAction")), 1),
+                  createTextVNode(toDisplayString(_ctx.$t("render.hint.subFormAddAction")), 1),
                   createVNode(_component_svg_icon, { "icon-class": "el-plus" })
                 ]),
                 _: 1
@@ -18811,7 +18811,7 @@ function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
                     disabled: $data.actionDisabled,
                     circle: "",
                     onClick: ($event) => $options.insertSubFormRow(sfrIdx),
-                    title: _ctx.i18nt("render.hint.insertSubFormRow")
+                    title: _ctx.$t("render.hint.insertSubFormRow")
                   }, {
                     default: withCtx(() => [
                       createVNode(_component_svg_icon, { "icon-class": "el-plus" })
@@ -18822,7 +18822,7 @@ function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
                     disabled: $data.actionDisabled,
                     circle: "",
                     onClick: ($event) => $options.deleteSubFormRow(sfrIdx),
-                    title: _ctx.i18nt("render.hint.deleteSubFormRow")
+                    title: _ctx.$t("render.hint.deleteSubFormRow")
                   }, {
                     default: withCtx(() => [
                       createVNode(_component_svg_icon, { "icon-class": "el-delete" })
@@ -18861,7 +18861,7 @@ function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["widget"]);
 }
-var subFormItem = /* @__PURE__ */ _export_sfc$1(_sfc_main$h, [["render", _sfc_render$h], ["__scopeId", "data-v-2113e2dc"]]);
+var subFormItem = /* @__PURE__ */ _export_sfc$1(_sfc_main$h, [["render", _sfc_render$h], ["__scopeId", "data-v-0391bfba"]]);
 var __glob_0_3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": subFormItem
@@ -19448,7 +19448,7 @@ const _sfc_main$d = {
     getWidgetRef(widgetName, showError = false) {
       let foundRef = this.widgetRefList[widgetName];
       if (!foundRef && !!showError) {
-        this.$message.error(this.i18nt("render.hint.refNotFound") + widgetName);
+        this.$message.error(this.$t("render.hint.refNotFound") + widgetName);
       }
       return foundRef;
     },
@@ -19508,7 +19508,7 @@ const _sfc_main$d = {
         if (valid) {
           callback2(this.formDataModel);
         } else {
-          callback2(this.formDataModel, this.i18nt("render.hint.validationFailed"));
+          callback2(this.formDataModel, this.$t("render.hint.validationFailed"));
         }
       });
       return promise;
@@ -19735,7 +19735,7 @@ function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["label-position", "size", "class", "label-width", "model"]);
 }
-var VFormRender = /* @__PURE__ */ _export_sfc$1(_sfc_main$d, [["render", _sfc_render$d], ["__scopeId", "data-v-5ad82756"]]);
+var VFormRender = /* @__PURE__ */ _export_sfc$1(_sfc_main$d, [["render", _sfc_render$d], ["__scopeId", "data-v-fdbf1ac8"]]);
 var _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -19961,13 +19961,13 @@ function registerIcon(app) {
 if (typeof window !== "undefined") {
   let loadSvg = function() {
     var body = document.body;
-    var svgDom = document.getElementById("__svg__icons__dom__1677564224579__");
+    var svgDom = document.getElementById("__svg__icons__dom__1677638690408__");
     if (!svgDom) {
       svgDom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgDom.style.position = "absolute";
       svgDom.style.width = "0";
       svgDom.style.height = "0";
-      svgDom.id = "__svg__icons__dom__1677564224579__";
+      svgDom.id = "__svg__icons__dom__1677638690408__";
       svgDom.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       svgDom.setAttribute("xmlns:link", "http://www.w3.org/1999/xlink");
     }
@@ -20232,48 +20232,48 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     renderSlot(_ctx.$slots, "default", {}, void 0, true),
     $props.designer.selectedId === $props.widget.id && !$props.widget.internal ? (openBlock(), createElementBlock("div", _hoisted_1$2, [
       createElementVNode("i", {
-        title: _ctx.i18nt("designer.hint.selectParentWidget"),
+        title: _ctx.$t("designer.hint.selectParentWidget"),
         onClick: _cache[0] || (_cache[0] = withModifiers(($event) => _ctx.selectParentWidget($props.widget), ["stop"]))
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-back" })
       ], 8, _hoisted_2$1),
       !!$props.parentList && $props.parentList.length > 1 ? (openBlock(), createElementBlock("i", {
         key: 0,
-        title: _ctx.i18nt("designer.hint.moveUpWidget"),
+        title: _ctx.$t("designer.hint.moveUpWidget"),
         onClick: _cache[1] || (_cache[1] = withModifiers(($event) => _ctx.moveUpWidget(), ["stop"]))
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-move-up" })
       ], 8, _hoisted_3)) : createCommentVNode("", true),
       !!$props.parentList && $props.parentList.length > 1 ? (openBlock(), createElementBlock("i", {
         key: 1,
-        title: _ctx.i18nt("designer.hint.moveDownWidget"),
+        title: _ctx.$t("designer.hint.moveDownWidget"),
         onClick: _cache[2] || (_cache[2] = withModifiers(($event) => _ctx.moveDownWidget(), ["stop"]))
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-move-down" })
       ], 8, _hoisted_4)) : createCommentVNode("", true),
       $props.widget.type === "table" ? (openBlock(), createElementBlock("i", {
         key: 2,
-        title: _ctx.i18nt("designer.hint.insertRow"),
+        title: _ctx.$t("designer.hint.insertRow"),
         onClick: _cache[3] || (_cache[3] = withModifiers(($event) => _ctx.appendTableRow($props.widget), ["stop"]))
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-insert-row" })
       ], 8, _hoisted_5)) : createCommentVNode("", true),
       $props.widget.type === "table" ? (openBlock(), createElementBlock("i", {
         key: 3,
-        title: _ctx.i18nt("designer.hint.insertColumn"),
+        title: _ctx.$t("designer.hint.insertColumn"),
         onClick: _cache[4] || (_cache[4] = withModifiers(($event) => _ctx.appendTableCol($props.widget), ["stop"]))
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-insert-column" })
       ], 8, _hoisted_6)) : createCommentVNode("", true),
       $props.widget.type === "grid" || $props.widget.type === "table" ? (openBlock(), createElementBlock("i", {
         key: 4,
-        title: _ctx.i18nt("designer.hint.cloneWidget"),
+        title: _ctx.$t("designer.hint.cloneWidget"),
         onClick: _cache[5] || (_cache[5] = withModifiers(($event) => _ctx.cloneContainer($props.widget), ["stop"]))
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-clone" })
       ], 8, _hoisted_7)) : createCommentVNode("", true),
       createElementVNode("i", {
-        title: _ctx.i18nt("designer.hint.remove"),
+        title: _ctx.$t("designer.hint.remove"),
         onClick: _cache[6] || (_cache[6] = withModifiers((...args) => _ctx.removeWidget && _ctx.removeWidget(...args), ["stop"]))
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-delete" })
@@ -20281,7 +20281,7 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     ])) : createCommentVNode("", true),
     $props.designer.selectedId === $props.widget.id && !$props.widget.internal ? (openBlock(), createElementBlock("div", _hoisted_9, [
       createElementVNode("i", {
-        title: _ctx.i18nt("designer.hint.dragHandler")
+        title: _ctx.$t("designer.hint.dragHandler")
       }, [
         createVNode(_component_svg_icon, { "icon-class": "el-drag-move" })
       ], 8, _hoisted_10),
@@ -20292,7 +20292,7 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     ])) : createCommentVNode("", true)
   ], 2);
 }
-var ContainerWrapper = /* @__PURE__ */ _export_sfc$1(_sfc_main$3, [["render", _sfc_render$3], ["__scopeId", "data-v-dc661e70"]]);
+var ContainerWrapper = /* @__PURE__ */ _export_sfc$1(_sfc_main$3, [["render", _sfc_render$3], ["__scopeId", "data-v-49d9fa1c"]]);
 var refMixinDesign = {
   methods: {
     initRefList() {

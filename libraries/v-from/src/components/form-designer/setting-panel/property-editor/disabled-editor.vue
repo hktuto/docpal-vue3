@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.disabled')">
+  <el-form-item :label="$t('designer.setting.disabled')">
     <el-switch v-model="optionModel.disabled"></el-switch>
   </el-form-item>
 </template>

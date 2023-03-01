@@ -146,7 +146,7 @@
     methods: {
       handlePictureExceed() {
         let uploadLimit = this.field.options.limit
-        this.$message.warning( this.i18nt('render.hint.uploadExceed').replace('${uploadLimit}', uploadLimit) )
+        this.$message.warning( this.$t('render.hint.uploadExceed').replace('${uploadLimit}', uploadLimit) )
       },
 
       beforePictureUpload(file) {
@@ -160,7 +160,7 @@
           }
         }
         if (!fileTypeCheckResult) {
-          this.$message.error(this.i18nt('render.hint.unsupportedFileType') + file.type)
+          this.$message.error(this.$t('render.hint.unsupportedFileType') + file.type)
           return false;
         }
 
@@ -267,7 +267,7 @@
           customFn.call(this, err, file, fileList)
         } else {
           this.$message({
-            message: this.i18nt('render.hint.uploadError') + err,
+            message: this.$t('render.hint.uploadError') + err,
             duration: 3000,
             type: 'error',
           })

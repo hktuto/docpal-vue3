@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.showAllLevels')">
+  <el-form-item :label="$t('designer.setting.showAllLevels')">
     <el-switch v-model="optionModel.showAllLevels"></el-switch>
   </el-form-item>
 </template>

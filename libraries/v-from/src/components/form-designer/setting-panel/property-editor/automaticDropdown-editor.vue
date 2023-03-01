@@ -1,5 +1,5 @@
 <template>
-  <el-form-item :label="i18nt('designer.setting.automaticDropdown')">
+  <el-form-item :label="$t('designer.setting.automaticDropdown')">
     <el-switch v-model="optionModel.automaticDropdown"></el-switch>
   </el-form-item>
 </template>
