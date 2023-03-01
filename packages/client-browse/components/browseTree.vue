@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import type Node from 'element-plus/es/components/tree/src/model/node'
-
+import { GetChildThumbnail } from 'dp-api'
 const router = useRouter()
 const defaultExpandedKeys = ref([]);
 const currentPath = ref('/');

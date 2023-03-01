@@ -12,6 +12,7 @@
 
 
 <script lang="ts" setup>
+import { GetDocDetail } from 'dp-api'
 const breadCrumb = ref();
 const route = useRoute();
 const routePath = computed( () => route.query.path || '/')

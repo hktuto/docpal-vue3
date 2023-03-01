@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts" setup>
+import { GetChild } from 'dp-api'
 // setup
 const router = useRouter();
 
@@ -25,7 +26,7 @@ const props = defineProps<{
 }>()
 const {doc} = toRefs(props)
 const emits = defineEmits(['selectedChanged'])
-const { data, refresh, pending } = useAsyncData(() => getChild(props.doc.path));
+const { data, refresh, pending } = useAsyncData(() => GetChild(props.doc.path));
 
 function dbClickHandler(row) {
     router.push({

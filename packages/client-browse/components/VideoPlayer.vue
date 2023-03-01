@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts" setup>
+import { GetDocumentPreview } from 'dp-api'
 const props = defineProps<{
     doc:object
 }>()
