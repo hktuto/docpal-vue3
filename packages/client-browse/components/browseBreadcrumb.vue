@@ -27,6 +27,7 @@
 
 <script lang="ts" setup>
 import {Back, ArrowRight} from '@element-plus/icons-vue'
+import { GetBreadcrumb } from 'dp-api'
 const router = useRouter();
 const props = withDefaults(defineProps<{
     path:string,
@@ -36,7 +37,7 @@ const props = withDefaults(defineProps<{
     rootPath: '/'
 })
 
-const { data, refresh, pending } = useAsyncData(() => getBreadcrumb(props.path));
+const { data, refresh, pending } = useAsyncData(() => GetBreadcrumb(props.path));
 
 const displayBread = computed(() => data.value?.filter(d => d.isFolder)|| []);
 

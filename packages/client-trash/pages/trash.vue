@@ -30,6 +30,7 @@
 
 
 <script lang="ts" setup>
+import { GetTrashApi, DeleteByIdApi, RestoreByIdApi } from 'dp-api'
 import { ElNotification } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 // #region module: page
@@ -60,7 +61,7 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
     ]
     async function getList (param) {
         state.loading = true
-        const res = await getTrashApi(param)
+        const res = await GetTrashApi(param)
         state.tableData = res.entryList
         state.options.paginationConfig.total = res.totalSize
         state.options.paginationConfig.pageSize = param.pageSize
@@ -185,12 +186,12 @@ function handleDblclick (row) {
         }, 500)
     }
     async function deleteOne(idOrPath) {
-        await deleteByIdApi(idOrPath)
+        await DeleteByIdApi(idOrPath)
         // processDetail.value.completeNum++
         return idOrPath
     }
     const restore = async (idOrPath: string) => {
-        await restoreByIdApi(idOrPath)
+        await RestoreByIdApi(idOrPath)
         // processDetail.value.completeNum++
         return idOrPath
     }
