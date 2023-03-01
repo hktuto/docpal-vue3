@@ -69,7 +69,7 @@ watchDebounced(searchForm, (newKeyword, oldKeyword) => {
 .wrapper{
     --input-padding: calc(var(--app-padding) * 0.8);
     --input-height: calc(var(--input-padding) * 2 + 16px);
-    --radius: var(--el-border-radius-base);
+    --radius: var(--el-border-radius-round);
     width: 100%;
     max-width: 600px;
     position: relative;
@@ -79,16 +79,16 @@ watchDebounced(searchForm, (newKeyword, oldKeyword) => {
 .inputContainer{
     
     width: 100%;
-    padding: calc(var(--app-padding) * 0.8);
+    padding: calc(var(--app-padding) * 0.8) var(--app-padding);
     display: grid;
     grid-template-columns: min-content 1fr min-content;
     gap: 4px;
     justify-content: flex-start;
     align-items: center;
-    border: 1px solid var(--color-grey-800);
+    // border: 1px solid var(--color-grey-800);
     border-radius: var(--radius);
     transition: all .2s ease-in-out;
-    
+    background-color: var(--color-grey-050);
     input {
         height: 16px;
         width: 100%;
