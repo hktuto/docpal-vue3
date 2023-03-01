@@ -1,8 +1,8 @@
 import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
-import { Login, Verify, GetSetting, User, UserSettingSaveApi, UserSetting } from '../../dp-stores/utils/userApi';
 
-
+import {GetSetting, UserSettingSaveApi, Login, api, Verify} from 'dp-api'
+import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
 
     const appStore = useAppStore();    
@@ -101,6 +101,7 @@ export const useUser = () => {
         token.value = access_token,
         refreshToken.value = refresh_token
         sessionStorage.setItem('token', access_token);
+        api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
         if(!isRequired2FA) {
             await verify();
         }

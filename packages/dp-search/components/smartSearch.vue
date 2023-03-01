@@ -1,5 +1,5 @@
 <template>
-    <div class="searchContainer" @mouseleave="blurInput">
+    <div class="searchContainer" @mouseleave="blurInput" @mouseenter="elHoverHandler">
         <div ref="wrapper" class="wrapper">
             <div :class="{inputContainer:true, dropdownOpened}" @mouseenter="focusInput">
                 <ElIcon><Search /></ElIcon>
@@ -8,6 +8,7 @@
             </div>
             <div  :class="{popUpDialog:true, dropdownOpened}">
                 <SearchFilter v-if="filterOpened" @closed="filterOpened = false"/>
+                <SearchShortResult v-if="optionOpened" />
             </div>
         </div>
     </div>
@@ -19,9 +20,8 @@ import { watchDebounced, onClickOutside } from '@vueuse/core'
 const show = ref(false);
 
 const inputEl = ref();
-const searchForm = ref({});
 const wrapper = ref();
-const searchStore = useSearch();
+const {searchFilter, search} = useSearch();
 
 //#region  dialog 
 const optionOpened = ref(false);
@@ -40,7 +40,9 @@ onClickOutside(wrapper, (event) => {
     }
 })
 //#endregion
-
+function elHoverHandler() {
+    
+}
 function focusInput() {
     inputEl.value.focus();
 }
@@ -52,9 +54,7 @@ function keywordInputHandler() {
     keyword.value = inputEl.value.value;
 }
 
-watchDebounced(searchForm, (newKeyword, oldKeyword) => {
-    console.log(newKeyword, oldKeyword)
-},{ debounce: 200, maxWait: 500 },)
+
 
 </script>
 

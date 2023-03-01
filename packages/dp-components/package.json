@@ -22,6 +22,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "dp-api":"workspace:*"
   }
 }
