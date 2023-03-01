@@ -1,3 +1,5 @@
+import { TableColumnSetting } from "./Table"
+
 export type UserSetting = {
     size?: string,
     color?: string,
@@ -5,27 +7,14 @@ export type UserSetting = {
     tableSettings?: TableColumnSetting
 }
 
-export type TableColumnSetting = {
-    [key:string] : TableColumnItem[]
-}
+
 
 export type User = {
     username: string,
     userId: string
 }
-export type TableColumnItem = {
-    id?: string | any,
-    property?: string,
-    label?: string,
-    sortable?:boolean,
-    slot ?: string,
-    align ?: string,
-    width ?: string | number,
-    defaultValue ?: any,
-    headerAlign ?: string,
-    isFilter ?: boolean,
-    canNotDelete ?:boolean
-}
+
+
 
 
 export type LoginResponse = {
