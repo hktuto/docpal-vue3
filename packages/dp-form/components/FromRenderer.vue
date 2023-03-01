@@ -20,7 +20,9 @@
         if(!props.formJson) return {}
         if(props.formJson.formConfig.jsonVersion === 3) return props.formJson;
         // normalize vue 2 form designer
-        const json = Object.assign(props.formJson, {formConfig:{jsonVersion:3}})
+
+        const json = props.formJson;
+        json.formConfig.jsonVersion = 3
         // replace all axios
         console.log(json)
         return json
