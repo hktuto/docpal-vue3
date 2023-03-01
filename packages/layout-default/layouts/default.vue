@@ -11,8 +11,9 @@
         <main id="mainContainer">
             <div id="topBarContainer">
                 <div class="expand">
+                  <slot name="preHeader" />
                   <SmartSearch />
-                  <slot name="header" />
+                  <slot name="postHeader" />
                 </div>
                 <div class="actions">
                   <ColorSwitch />
