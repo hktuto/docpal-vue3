@@ -88,7 +88,7 @@ function keywordInputHandler() {
     // border: 1px solid var(--color-grey-800);
     border-radius: var(--radius);
     transition: all .2s ease-in-out;
-    background-color: var(--color-grey-050);
+    background-color: var(--color-grey-000);
     input {
         height: 16px;
         width: 100%;
