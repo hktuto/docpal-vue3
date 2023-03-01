@@ -35,6 +35,12 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.languageSwitchContainer{
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: center;
+}
 .currentLang{
     display: block;
     word-break: keep-all;
