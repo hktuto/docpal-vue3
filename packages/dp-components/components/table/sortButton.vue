@@ -40,7 +40,7 @@
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue'
 import draggable from 'vuedraggable'
-import { userSettingSaveApi } from '../../../dp-stores/utils/userApi';
+import { UserSettingSaveApi } from 'dp-api'
 const { userPreference } = toRefs(useUser())
 const { getUserSetting } = useUser()
 const { tableColumnSetting } = toRefs(useSetting())
@@ -108,7 +108,7 @@ async function handleSubmit () {
   // param.tableSettings[props.sortKey] = JSON.stringify(param.tableSettings[props.sortKey])
   // param.tableSettings[props.sortKey].defaultDisplayList = [...props.tableColumn]
   // param.tableSettings[props.sortKey] = [...displayList.value],
-  await userSettingSaveApi(param)
+  await UserSettingSaveApi(param)
   await getUserSetting()
   
   // displayList.value.forEach(item => { item.hide = false })

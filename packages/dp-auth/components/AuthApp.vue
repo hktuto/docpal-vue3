@@ -17,12 +17,13 @@
 <script lang="ts" setup>
 // check app ready, if no go to login
 const { state, needAuthEl, loadingEl, readyElement, displayState } = useAppStore()
-
+import { api } from 'dp-api'
 const user = useUser();
 
 onMounted(async () => {
 
   if(sessionStorage) {
+    api.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.getItem('token');
     user.token.value = sessionStorage.getItem('token');
   }
   user.verify();

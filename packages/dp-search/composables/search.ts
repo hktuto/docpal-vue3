@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-
+import { watchDebounced } from '@vueuse/core'
 type Command = {
     label:string,
     function: Function,
@@ -28,7 +28,34 @@ export const useSearch = () => {
 
     const commands = ref<Command[]>([]);
 
+    const searchFilter = useState<SearchFilter>('searchFilter',() => ({
+        paramsInTextSearch: [],
+        textSearchType: '',
+        folderType: '',
+        type: [],
+        modified: '',
+        authors: [],
+        collections: [],
+        tags: [],
+        size: '',
+        pageSize: 20,
+        currentPageIndex: 1
+    }))
+
+    const searchResult = useState('searchResult',() => ([]));
+
+    async function search(){
+
+    }
+
+    watchDebounced(searchFilter, (newFilter, oldFilter) => {
+        search()
+    },{ debounce: 200, maxWait: 500 },)
+
     return {
-        commands
+        commands,
+        searchResult,
+        search,
+        searchFilter
     }
 }
