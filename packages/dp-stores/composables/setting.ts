@@ -1,13 +1,12 @@
 import { useDebounceFn } from "@vueuse/core";
 import { TableColumnSetting } from '../models/TableColumnSetting'
 import {
-  getOCRSetting,
-  getExternalEndpoint,
-  getTableColumnSetting,
-  getAvailableLanguage,
-  OCR_SETTING,
-  } from '../utils/settingApi'
-
+  GetOCRSetting,
+  GetExternalEndpoint,
+  GetTableColumnSetting,
+  GetAvailableLanguage,
+  } from 'dp-api'
+import { OCR_SETTING } from 'dp-api/src/model/setting'
 
 export const useSetting = () => {
   const tableColumnSetting = useState<TableColumnSetting>('tableColumnSetting');
@@ -20,10 +19,10 @@ export const useSetting = () => {
       upload : "upload.app4.wclsolution.com",
   }));
   async function init () {
-    ocrSetting.value = await getOCRSetting()
-    tableColumnSetting.value = await getTableColumnSetting()
-    availableLanguage.value = await getAvailableLanguage()
-    externalEndpoint.value = await getExternalEndpoint()
+    ocrSetting.value = await GetOCRSetting()
+    tableColumnSetting.value = await GetTableColumnSetting()
+    availableLanguage.value = await GetAvailableLanguage()
+    externalEndpoint.value = await GetExternalEndpoint()
   }
   function canOCR(extension: string): boolean { 
     return ocrSetting.value.supportedInputFormats.includes(extension);
