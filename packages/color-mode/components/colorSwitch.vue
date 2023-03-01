@@ -14,7 +14,7 @@ const {userPreference,savePreference} = useUser()
 function toggleColor() {
     colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark';
     // save user preference
-    userPreference.value.color = colorMode.value;
+    userPreference.value.color = colorMode.preference;
     savePreference()
 }
 
@@ -26,11 +26,15 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .colorSwitchContainer{
-    padding: calc(var(--app-padding) / 2);
-    border-radius: var(--el-border-radius-base);
-    border: 1px solid var(--color-grey-800); 
-    background-color: transparent;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--el-border-radius-round);
+
+    background-color: var(--color-grey-050);
     transform: all .5s ease-in-out;
+    font-size: 12px;
+    display: grid;
+    place-items: center;
     &:hover{
         background-color: var(--color-grey-800);
         color: var(--color-grey-000);
