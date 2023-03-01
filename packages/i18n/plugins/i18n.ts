@@ -1,6 +1,6 @@
 
 import { availableLocales } from './../makeI18nSetting';
-
+import { api } from 'dp-api'
 export default defineNuxtPlugin(async({
     vueApp:{
         __VUE_I18N__:{
@@ -22,13 +22,13 @@ export default defineNuxtPlugin(async({
     
 })
 
-async function getLocalMessage (locale, localeKey, baseUrl) {
+async function getLocalMessage (locale:string, localeKey:string[], _baseUrl:string) {
     const newLanguage = {}
     for await ( const key of localeKey) {
         try {
             // @ts-ignore
-            const {data} = await api(`/api/docpal/relation/queryLanguage?locale=${locale}&languageKey=${key}`)
-            data.forEach( item => {
+            const {data} = await api.get(`/docpal/relation/queryLanguage?locale=${locale}&languageKey=${key}`).then(res=>res.data)
+            data.forEach( (item:any) => {
                 const json = JSON.parse(item.languageContent);
                 Object.assign(newLanguage, json);
             })
