@@ -19,17 +19,26 @@
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n';
 const {locale} = useI18n()
+const {userPreference,savePreference} = useUser()
 const {public:{availableLocales}} = useRuntimeConfig();
 
 function handleCommand(newLocale) {
     locale.value = newLocale
+    userPreference.value.language = newLocale;
+    savePreference()
     // TODO : save to user preference
 }
+
+onMounted(() => {
+    locale.value = userPreference.value.language
+})
 </script>
 
 <style lang="scss" scoped>
 .currentLang{
     display: block;
     word-break: keep-all;
+    line-height: 1;
+    font-size: var(--el-font-size-extra-small);
 }
 </style>
