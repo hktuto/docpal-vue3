@@ -19,22 +19,18 @@
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n';
 const {locale} = useI18n()
+const {userPreference,savePreference} = useUser()
 const {public:{availableLocales}} = useRuntimeConfig();
-const { userPreference, savePreference } = useUser()
+
 function handleCommand(newLocale) {
     locale.value = newLocale
     userPreference.value.language = newLocale;
-    // v-from locale setting
-    localStorage.setItem('v_form_locale', newLocale);
     savePreference()
     // TODO : save to user preference
 }
 
 onMounted(() => {
-    console.log("onMounted", userPreference.value)
-    locale.value = userPreference.value.language;
-    // v-from locale setting
-    localStorage.setItem('v_form_locale', locale.value);
+    locale.value = userPreference.value.language
 })
 </script>
 
@@ -42,5 +38,7 @@ onMounted(() => {
 .currentLang{
     display: block;
     word-break: keep-all;
+    line-height: 1;
+    font-size: var(--el-font-size-extra-small);
 }
 </style>
