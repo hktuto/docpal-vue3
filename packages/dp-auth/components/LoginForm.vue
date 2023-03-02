@@ -44,7 +44,7 @@ async function submit() {
         loading.value = true;
        const {isRequired2FA} = await userStore.login(form.username, form.password);
         form.username = "";
-        from.password = "";
+        form.password = "";
     } catch (error) {
         console.log(error);
     }

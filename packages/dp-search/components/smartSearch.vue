@@ -1,6 +1,6 @@
 <template>
     <div class="searchContainer" @mouseleave="blurInput" @mouseenter="elHoverHandler">
-        <div ref="wrapper" class="wrapper">
+        <div ref="wrapper" :class="{wrapper:true, dropdownOpened}">
             <div :class="{inputContainer:true, dropdownOpened}" @mouseenter="focusInput">
                 <ElIcon><Search /></ElIcon>
                 <input ref="inputEl" :value="keyword" :placeholder="$t('search_keyword')" @input="keywordInputHandler"  />
@@ -70,11 +70,16 @@ function keywordInputHandler() {
     --input-padding: calc(var(--app-padding) * 0.8);
     --input-height: calc(var(--input-padding) * 2 + 16px);
     --radius: var(--el-border-radius-round);
+    --max-width: 400px;
     width: 100%;
-    max-width: 600px;
+    max-width: var(--max-width);
     position: relative;
     isolation: isolate;
-    
+    margin:0 auto;
+    transition: all .3s ease-in-out;
+    &.dropdownOpened{
+        --max-width: 800px;
+    }
 }
 .inputContainer{
     
@@ -102,7 +107,7 @@ function keywordInputHandler() {
     &:hover, &:focus-within, &.dropdownOpened{
         border-color: var(--color-grey-000);
         background-color: var(--color-grey-0000);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        // box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         
     }
 }
