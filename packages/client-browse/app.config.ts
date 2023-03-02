@@ -4,8 +4,10 @@ export default defineAppConfig({
   menu:[
     {
       name:"file_browse",
+      routeName:'browse',
       url:"/browse",
-      icon: "/icons/menu/browser.svg"
+      icon: "/icons/menu/browser.svg",
+      order:0,
     }
   ],
 })

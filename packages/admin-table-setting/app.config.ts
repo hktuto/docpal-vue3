@@ -4,8 +4,10 @@ export default defineAppConfig({
   menu:[
     {
       name:"table_setting",
+      routeName:"tableSetting",
       url:"/tableSetting",
-      icon: "/icons/menu/tableSetting.svg"
+      icon: "/icons/menu/tableSetting.svg",
+      order: 999,
     }
   ],
 })

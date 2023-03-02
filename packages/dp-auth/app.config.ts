@@ -4,8 +4,10 @@ export default defineAppConfig({
   menu:[
     {
       name:'admin_setting',
+      routeName:"setting",
       icon: '/icons/menu/user.svg',
-      url: '/setting'
+      url: '/setting',
+      order:99
     }
   ]
 })
