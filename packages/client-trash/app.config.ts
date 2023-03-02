@@ -6,7 +6,8 @@ export default defineAppConfig({
       name:"file_trash",
       routeName:"trash",
       url:"/trash",
-      icon: "/icons/menu/trash.svg"
+      icon: "/icons/menu/trash.svg",
+      order:5,
     }
   ],
 })
