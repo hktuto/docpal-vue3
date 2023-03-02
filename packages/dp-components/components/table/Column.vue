@@ -1,19 +1,37 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
+import ValueFilters from '../../stores/index'
 const props = defineProps<{ col: Table.Column }>()
 const emit = defineEmits(['command'])
 // 按钮组事件
 const handleAction = (command: Table.Command, { row, $index }: { row: any; $index: number }) => {
     emit('command', command, row, $index)
 }
-function getProp(row) {
+function getProp(row, prop?) {
+    if(!prop) prop = props.col.prop
     let result = ''
     let nextValue = { ...row }
-    props.col.prop.split('.').forEach(key => {
+    prop.split('.').forEach(key => {
         result = nextValue[key]
         nextValue = nextValue[key]
     })
     return result
+}
+function formatProp (row) {
+    console.log( props.col);
+    if(!props.col.formatList || props.col.formatList.length === 0) return getProp(row)
+    else {
+        let result = ''
+        props.col.formatList.forEach(item => {
+            console.log(item);
+            if (item.formatFun) {
+                result += ValueFilters[item.formatFun](getProp(row, item.prop),deepCopy(item.params) )
+            } else {
+                result += getProp(row, item.prop)
+            }
+        })
+        return result
+    }
 }
 </script>
 <template>
@@ -38,7 +56,6 @@ function getProp(row) {
                 fit="cover"
                 class="w-9 h-9 rounded-lg" />
             <!---图片 (END)-->
-            <!--- 格式化日期 (本项目日期是时间戳，这里日期格式化可根据你的项目来更改) (START)-->
             <template v-else-if="col.type === 'date'">
                 <!---十位数时间戳-->
                 <span v-if="String(getProp(row))?.length <= 10">
@@ -47,7 +64,6 @@ function getProp(row) {
                 <!---十三位数时间戳-->
                 <span v-else>{{ dayjs(getProp(row)).format(col.dateFormat ?? 'YYYY-MM-DD') }}</span>
             </template>
-            <!--- 格式化日期 (本项目日期是时间戳，这里日期格式化可根据你的项目来更改) (END)-->
             <!-- 如果传递按钮数组，就展示按钮组 START-->
             <el-button-group v-else-if="col.buttons?.length">
                 <el-button
@@ -68,7 +84,7 @@ function getProp(row) {
             <slot v-else-if="col.slot" :slotName="col.slot" :row="row" :index="$index"></slot>
             <!-- 自定义slot (END) -->
             <!-- 默认渲染 (START) -->
-            <span v-else>{{ getProp(row) }}</span>
+            <span v-else>{{ formatProp(row) }}</span>
             <!-- 默认渲染 (END) -->
         </template>
         <!-- 自定义表头 -->

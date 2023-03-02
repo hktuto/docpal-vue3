@@ -7,6 +7,12 @@ declare namespace Table {
     type Command = string | number
     type DateFormat = 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm' | 'YYYY-MM'
     type Order = 'ascending' | 'descending'
+    interface formatListType {
+        joiner?: string,
+        prop?: string,
+        formatFun?: string,
+        params?: any
+    }
     interface ButtonItem {
         name: string,
         command: Command,
@@ -37,6 +43,7 @@ declare namespace Table {
         headerRender?: ({ column, index }) => VNodeChild, // 渲染函数，渲染列表头
         headerSlot?: string, // 自定义表头插槽名字
         children?: Column[] // 配置多级表头的数据集合, 具体用法可参考多级表头使用示例。
+        formatList?: formatListType[] // 配置显示的属性（带格式）列表
     }
     interface Options {
         height?: string | number,
