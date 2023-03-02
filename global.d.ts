@@ -1,9 +1,11 @@
 export type  MenuItem = {
-    name?: string,
+    name: string,
+    routeName: string,
     url?: string,
     icon: string,
     role?: string[],
     public?: boolean,
+    order: number,
 }
 
 declare module '@nuxt/schema' {

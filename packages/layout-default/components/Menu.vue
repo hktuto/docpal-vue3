@@ -35,7 +35,9 @@ const {user} = useUser();
  * filter Menu to difference role
  */
 const displayMenu = computed(
-    () => menu.filter( m => m.role ? m.role.includes(user.value.role) : true)
+    () => menu
+        .filter(m => m.role ? m.role.includes(user.value.role) : true)
+        .sort((a,b) => a.order - b.order)
 )
 //#endregion
 
