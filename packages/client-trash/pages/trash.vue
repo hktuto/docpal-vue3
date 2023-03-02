@@ -54,6 +54,7 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
             }
         }
     })
+    
     const tableColumn = [
         { label: 'tableHeader_name', prop: 'name' },
         { label: 'tableHeader_path', prop: 'logicalPath' },

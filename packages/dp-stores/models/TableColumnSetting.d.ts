@@ -13,6 +13,8 @@ export type TableColumnItem = {
     headerAlign ?: string,
     isFilter ?: boolean,
     canNotDelete ?:boolean
+    prop ?: string,
+    type ?: string,
 }
 
 

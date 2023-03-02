@@ -22,7 +22,8 @@ export enum TABLE {
     ADHOC_Submitted_TASK = 'adhocSubmittedTask',
     ADHOC_Approval_TASK = 'adhocApprovalTask',
     ADHOC_Completed_TASK = 'adhocCompletedTask',
-    ACTIVE_TASK = 'activeTask'
+    ACTIVE_TASK = 'activeTask',
+    CLIENT_TRASH="clientTrash"
 }
 
 export const defaultSetting: TableColumnSetting = {
@@ -169,6 +170,21 @@ export const defaultSetting: TableColumnSetting = {
         { label: 'workflow_createDate', property: 'createDate', sortable: true, align: 'center', width: 130 },
         { label: 'role.approver', property: 'approvedBy', sortable: true, isFilter: true, width: 150 },
         { label: 'dpTable_approvedDate', property: 'approvedDate', sortable: true, align: 'center', width: 130 },
+    ],
+    [TABLE.ADHOC_Completed_TASK] : [
+        { label: 'table_path', property: 'documentPath', sortable: true },
+        { label: 'info_version', property: 'documentApprovalVersion', align: 'right', width: 70 },
+        { label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true, width: 150 },
+        { label: 'workflow_createDate', property: 'createDate', sortable: true, align: 'center', width: 130 },
+        { label: 'role.approver', property: 'approvedBy', sortable: true, isFilter: true, width: 150 },
+        { label: 'dpTable_approvedDate', property: 'approvedDate', sortable: true, align: 'center', width: 130 },
+    ],
+    [TABLE.CLIENT_TRASH] : [
+        { label: 'tableHeader_name', prop: 'name' },
+        { label: 'tableHeader_path', prop: 'logicalPath' },
+        { label: 'tableHeader_type', prop: 'type' },
+        { label: 'trash_deleteBy', prop: 'properties.principalName' },
+        { label: 'trash_date', prop: "properties.trashed_date", type: 'date' }
     ]
 
 
