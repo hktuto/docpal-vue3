@@ -10,8 +10,8 @@
         </div>
         <main id="mainContainer">
             <div id="topBarContainer">
+                  <PageTitle  />
                 <div class="expand">
-                  <slot name="preHeader" />
                   <SmartSearch />
                   <slot name="postHeader" />
                 </div>
@@ -66,10 +66,18 @@ const { x, y } = useMouse()
     height: 100%;
     min-height: 40px;
     display: grid;
-    grid-template-columns: 1fr min-content;
+    grid-template-columns: min-content 1fr min-content;
     padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
     gap: var(--app-padding);
+    align-items: center;
     z-index: 4;
+    .expand{
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: var(--app-padding);
+    }
     .actions{
       display: flex;
       flex-flow: row nowrap;

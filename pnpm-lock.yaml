@@ -12,11 +12,13 @@ importers:
     specifiers:
       '@element-plus/nuxt': ^1.0.3
       '@types/node': ^18.11.18
+      dp-api: workspace:*
       nuxt: ^3.1.1
       sass: ^1.58.0
     devDependencies:
       '@element-plus/nuxt': 1.0.3
       '@types/node': 18.11.18
+      dp-api: link:../../packages/dp-api
       nuxt: 3.1.1_f5vcjb3akvjdur4ffzogu2hewu
       sass: 1.58.0
 
@@ -245,17 +247,16 @@ importers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
       '@vueuse/core': ^9.12.0
+      dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.0.0
       typescript: ^4.9.3
-      v-form: workspace:*
-    dependencies:
-      v-form: link:../../libraries/v-from
     devDependencies:
       '@nuxt/devtools': 0.1.4_nuxt@3.1.1
       '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
       '@vueuse/components': 9.13.0
       '@vueuse/core': 9.13.0
+      dp-api: link:../dp-api
       eslint: 8.34.0
       nuxt: 3.1.1_7kw3g6rralp5ps6mg3uyzz6azm
       typescript: 4.9.5

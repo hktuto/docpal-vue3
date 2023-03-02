@@ -54,7 +54,7 @@ onKeyStroke("Escape", (e) => {
     top:0;
     width: 100vw;
     height: 100vh;
-    z-index: 3;
+    z-index: 5;
     background-color: rgba(0,0,0,0.8);
     display: grid;
     grid-template-rows: min-content 1fr;
