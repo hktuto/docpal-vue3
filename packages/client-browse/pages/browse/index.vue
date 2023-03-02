@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout >
-        
+        <page-container>
         <div class="browsePageContainer">
             <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
             <BrowseTable :path="routePath" :doc="data"/>
@@ -8,6 +8,7 @@
         <template v-if="data && !data.isFolder">
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" />
         </template>
+        </page-container>
     </NuxtLayout>
 </template>
 
@@ -28,10 +29,9 @@ function detailClosed() {
 
 <style lang="scss" scoped>
 .browsePageContainer{
-    padding: var(--el-component-size-small);
     display: grid;
     grid-template-rows: min-content min-content 1fr;
-    gap : var(--el-component-size-small);
+    gap : var(--app-padding);
     height: 100%;
     overflow: hidden;
 }
