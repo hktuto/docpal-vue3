@@ -1,6 +1,7 @@
 <template>
   <div >
     <AuthApp />
+    <!-- <NuxtPage /> -->
   </div>
 </template>
 
