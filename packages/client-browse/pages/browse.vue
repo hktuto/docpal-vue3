@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout >
+        
         <div class="browsePageContainer">
             <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
             <BrowseTable :path="routePath" :doc="data"/>
