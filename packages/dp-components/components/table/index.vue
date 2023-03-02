@@ -18,30 +18,11 @@
                 <template v-for="(col, index) in columns__sub" :key="index">
                     <template v-if="!col.hide">
                         <!---复选框, 序号 (START)-->
-                        <el-table-column
-                            v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
-                            :index="indexMethod"
-                            v-bind="col">
-                            <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
-                            <template #default="{ row, $index }">
-                                <!-- render函数 (START) : 使用内置的component组件可以支持h函数渲染和txs语法 -->
-                                <component v-if="col.render" :is="col.render" :row="row" :index="$index" />
-                                <!-- render函数 (END) -->
-                                <!-- 自定义slot (START) -->
-                                <slot v-else-if="col.slot" name="expand" :row="row" :index="$index"></slot>
-                                <!-- 自定义slot (END) -->
-                            </template>
-                        </el-table-column>
+                        
                         <!---复选框, 序号 (END)-->
-                        <TableColumn :col="col" v-else @command="handleAction">
+                        <TableColumn :col="col" @command="handleAction">
                         <!-- 自定义表头插槽 -->
-                        <template #customHeader="{ slotName, column, index }">
-                            <slot :name="slotName" :column="column" :index="index" />
-                        </template>
-                        <!-- 自定义列插槽 -->
-                        <template #default="{ slotName, row, index }">
-                            <slot :name="slotName" :row="row" :index="index" />
-                        </template>
+                            
                         </TableColumn>
                     </template>
                 </template>
@@ -59,18 +40,19 @@
 <script lang="ts" setup>
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
-export type SortParams<T> = {
+export type SortParams = {
     column: TableColumnCtx<T | any>
     prop: string
     order: Table.Order
 }
-interface TableProps {
+
+const props = defineProps<{
     tableData: Array<object> // table的数据
     columns: Table.Column[] // 每列的配置项
     options?: Table.Options
-}
-const props = defineProps<TableProps>()
-const tableRef = ref<InstanceType<typeof ElTable>>()
+}>()
+const tableRef = ref();
+
 // 设置option默认值，如果传入自定义的配置则合并option配置项
 const _options = computed<Table.Options>(() => {
     const option = {
@@ -84,14 +66,14 @@ const _options = computed<Table.Options>(() => {
 })
 // 合并分页配置
 const _paginationConfig = computed(() => {
-    const config = {
+    return {
         total: 0,
         currentPage: 1,
         pageSize: 10,
         pageSizes: [10, 20, 30, 40, 50, 100],
-        layout: 'total, sizes, prev, pager, next, jumper'
+        layout: 'total, sizes, prev, pager, next, jumper',
+        ..._options.value.paginationConfig
     }
-    return Object.assign(config, _options.value.paginationConfig)
 }) 
 const emit = defineEmits([
     'selection-change', // 当选择项发生变化时会触发该事件
@@ -123,48 +105,50 @@ const indexMethod = (index: number) => {
         const tabIndex = index + (_paginationConfig.value.currentPage - 1) * _paginationConfig.value.pageSize + 1
         return tabIndex
     }
-// 切换pageSize
-const pageSizeChange = (pageSize: number) => {
-    emit('size-change', pageSize)
-    emit('pagination-change', 1, pageSize)
-}
-// 切换currentPage
-const currentPageChange = (currentPage: number) => {
-    emit('current-change', currentPage)
-    emit('pagination-change', currentPage, _paginationConfig.value.pageSize)
-}
-// 按钮组事件
-const handleAction = (command: Table.Command, row: any, index: number) => {
-    emit('command', command, row, index)
-}
+// #region Event Handling
+    // 切换pageSize
+    const pageSizeChange = (pageSize: number) => {
+        emit('size-change', pageSize)
+        emit('pagination-change', 1, pageSize)
+    }
+    // 切换currentPage
+    const currentPageChange = (currentPage: number) => {
+        emit('current-change', currentPage)
+        emit('pagination-change', currentPage, _paginationConfig.value.pageSize)
+    }
+    // 按钮组事件
+    const handleAction = (command: Table.Command, row: any, index: number) => {
+        emit('command', command, row, index)
+    }
 
-// 多选事件
-const handleSelectionChange = (val: any) => {
-    shiftSelectList.value = val
-    emit('selection-change', val)
-}
-// 当某一行被点击时会触发该事件
-const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-    handleShift(row)
-    emit('row-click', row, column, event)
-}
-const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
-    emit('row-dblclick', row, column, event)
-}
-// 当某个单元格被点击时会触发该事件
-const handleCellClick = (row: any, column: any, cell: any, event: MouseEvent) => {
-    emit('cell-click', row, column, cell, event)
-}
-/**
-	*  当表格的排序条件发生变化的时候会触发该事件
-	 * 在列中设置 sortable 属性即可实现以该列为基准的排序， 接受一个 Boolean，默认为 false。
-	 * 可以通过 Table 的 default-sort 属性设置默认的排序列和排序顺序。 
-	 * 如果需要后端排序，需将 sortable 设置为 custom，同时在 Table 上监听 sort-change 事件，
-	 * 在事件回调中可以获取当前排序的字段名和排序顺序，从而向接口请求排序后的表格数据。
- 	*/
-const handleSortChange = ({ column, prop, order }: SortParams<any>) => {
-    emit('sort-change', { column, prop, order })
-}
+    // 多选事件
+    const handleSelectionChange = (val: any) => {
+        shiftSelectList.value = val
+        emit('selection-change', val)
+    }
+    // 当某一行被点击时会触发该事件
+    const handleRowClick = (row: any, column: any, event: MouseEvent) => {
+        handleShift(row)
+        emit('row-click', row, column, event)
+    }
+    const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
+        emit('row-dblclick', row, column, event)
+    }
+    // 当某个单元格被点击时会触发该事件
+    const handleCellClick = (row: any, column: any, cell: any, event: MouseEvent) => {
+        emit('cell-click', row, column, cell, event)
+    }
+    /**
+        *  当表格的排序条件发生变化的时候会触发该事件
+        * 在列中设置 sortable 属性即可实现以该列为基准的排序， 接受一个 Boolean，默认为 false。
+        * 可以通过 Table 的 default-sort 属性设置默认的排序列和排序顺序。 
+        * 如果需要后端排序，需将 sortable 设置为 custom，同时在 Table 上监听 sort-change 事件，
+        * 在事件回调中可以获取当前排序的字段名和排序顺序，从而向接口请求排序后的表格数据。
+        */
+    const handleSortChange = ({ column, prop, order }: SortParams<any>) => {
+        emit('sort-change', { column, prop, order })
+    }
+// #endregion
 
 function reorderColumn (displayList) {
     columns__sub.value = deepCopy(displayList);
@@ -256,7 +240,7 @@ onMounted(() => {
     })
 })
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
-defineExpose({ element: tableRef })
+// defineExpose({ element: tableRef })
 </script>
 <style lang="scss" scoped>
 :deep(.el-image__inner) {
