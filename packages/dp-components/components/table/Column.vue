@@ -44,28 +44,31 @@ function formatProp (row) {
     <!-- 其他正常列 -->
     <el-table-column
         v-else v-bind="col">
-        <template #default="{ row, $index }">
-            <!---图片 (START)-->
-            <!-- 如需更改图片size，可自行配置参数 -->
+        <!---图片 (START)-->
+        <!-- 如需更改图片size，可自行配置参数 -->
+        <template v-if="col.type === 'image'" #default="{ row, $index }">
+            
             <el-image
-                v-if="col.type === 'image'"
+                
                 preview-teleported
                 :hide-on-click-modal="true"
                 :preview-src-list="[row[col.prop!]]"
                 :src="getProp(row)"
                 fit="cover"
                 class="w-9 h-9 rounded-lg" />
-            <!---图片 (END)-->
-            <template v-else-if="col.type === 'date'">
-                <!---十位数时间戳-->
-                <span v-if="String(getProp(row))?.length <= 10">
-                    {{ dayjs.unix(getProp(row)).format(col.dateFormat ?? 'YYYY-MM-DD') }}
-                </span>
-                <!---十三位数时间戳-->
-                <span v-else>{{ dayjs(getProp(row)).format(col.dateFormat ?? 'YYYY-MM-DD') }}</span>
-            </template>
+        </template>
+        <!---图片 (END)-->
+
+        <!-- 如果传递按钮数组，就展示按钮组 END-->
+        <!-- render函数 (START) -->
+        <!-- 使用内置的component组件可以支持h函数渲染和txs语法 -->
+        <template v-else-if="col.render"  #default="{ row, $index }">
+            <component  :is="col.render" :row="row" :index="$index" />
+        </template>
+            
+        <template v-else-if="col.buttons?.length"  #default="{ row, $index }">
             <!-- 如果传递按钮数组，就展示按钮组 START-->
-            <el-button-group v-else-if="col.buttons?.length">
+            <el-button-group >
                 <el-button
                     v-for="(btn, index) in col.buttons"
                     :key="index"
@@ -75,16 +78,17 @@ function formatProp (row) {
                     >{{ btn.name }}</el-button
                 >
             </el-button-group>
-            <!-- 如果传递按钮数组，就展示按钮组 END-->
-            <!-- render函数 (START) -->
-            <!-- 使用内置的component组件可以支持h函数渲染和txs语法 -->
-            <component v-else-if="col.render" :is="col.render" :row="row" :index="$index" />
+        </template>
+        <template v-else-if="col.slot" #default="{ row, $index }">
+            
             <!-- render函数 (END) -->
             <!-- 自定义slot (START) -->
-            <slot v-else-if="col.slot" :slotName="col.slot" :row="row" :index="$index"></slot>
+            <slot  :slotName="col.slot" :row="row" :index="$index"></slot>
+        </template>
+        <template v-else #default="{ row, $index }">
             <!-- 自定义slot (END) -->
             <!-- 默认渲染 (START) -->
-            <span v-else>{{ formatProp(row) }}</span>
+            <span >{{ formatProp(row) }}</span>
             <!-- 默认渲染 (END) -->
         </template>
         <!-- 自定义表头 -->
