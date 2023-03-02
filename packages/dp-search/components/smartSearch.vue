@@ -8,7 +8,7 @@
             </div>
             <div  :class="{popUpDialog:true, dropdownOpened}">
                 <SearchFilter v-if="filterOpened" @closed="filterOpened = false"/>
-                <SearchShortResult v-if="optionOpened" />
+                <!-- <SearchShortResult v-if="optionOpened" /> -->
             </div>
         </div>
     </div>
@@ -31,6 +31,7 @@ const dropdownOpened = computed(() => {
 })
 
 function openFilter(){
+    console.log(filterOpened.value);
     filterOpened.value = true;
 }
 onClickOutside(wrapper, (event) => {
@@ -44,9 +45,11 @@ function elHoverHandler() {
     
 }
 function focusInput() {
+    console.log(inputEl.value)
     inputEl.value.focus();
 }
 function blurInput() {
+    console.log(inputEl.value)
     inputEl.value.blur();
 }
 const keyword = ref("");

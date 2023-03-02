@@ -1,31 +1,31 @@
 <template>
     <NuxtLayout >
         <PageContainer>
-            <Table v-loading="loading" :columns="tableColumn" :table-data="tableData" :options="options"
-                    @pagination-change="handlePaginationChange"
-                    @row-dblclick="handleDblclick"></Table>
-            <Drawer ref="DrawerRef" :modal="false" pointerModal>
-                <template #title>
-                    <div class="grid__drawer__title">
-                    <h3 v-if="detailFile">{{detailFile.name}}</h3>
-                    <div class="flex">
-                        <el-button class="mg-r" size="mini" type="primary" :icon="RefreshLeft" @click="handleRestoreOne(detailFile.id)" circle></el-button>
-                        <el-popover  :visible="deleteOnePopoverShow"
-                                placement="bottom" width="20rem">
-                            <p>{{$t('msg_confirmWhetherToDelete')}}</p>
-                            <div style="text-align: right; margin: 0">
-                                <el-button @click="deleteOnePopoverShow = false">{{ $t('dpButtom_cancel')}}</el-button>
-                                <el-button @click="handleDeleteOne(detailFile.id)" type="primary">{{ $t('trash_actions_delete')}}</el-button>
-                            </div>
-                            <template #reference>
-                                <el-button  size="mini" type="danger" :icon="Delete" circle
-                                            @click="deleteOnePopoverShow = !deleteOnePopoverShow"></el-button>
-                            </template>
-                        </el-popover>
-                    </div>
-                    </div>
-                </template>
-            </Drawer>
+        <Table v-loading="loading" :columns="tableColumn" :table-data="tableData" :options="options"
+                @pagination-change="handlePaginationChange"
+                @row-dblclick="handleDblclick"></Table>
+        <Drawer ref="DrawerRef" :modal="false" pointerModal>
+            <template #title>
+                <div class="grid__drawer__title">
+                <h3 v-if="detailFile">{{detailFile.name}}</h3>
+                <div class="flex">
+                    <el-button class="mg-r" size="mini" type="primary" :icon="RefreshLeft" @click="handleRestoreOne(detailFile.id)" circle></el-button>
+                    <el-popover  :visible="deleteOnePopoverShow"
+                            placement="bottom" width="20rem">
+                        <p>{{$t('msg_confirmWhetherToDelete')}}</p>
+                        <div style="text-align: right; margin: 0">
+                            <el-button @click="deleteOnePopoverShow = false">{{ $t('dpButtom_cancel')}}</el-button>
+                            <el-button @click="handleDeleteOne(detailFile.id)" type="primary">{{ $t('trash_actions_delete')}}</el-button>
+                        </div>
+                        <template #reference>
+                            <el-button  size="mini" type="danger" :icon="Delete" circle
+                                        @click="deleteOnePopoverShow = !deleteOnePopoverShow"></el-button>
+                        </template>
+                    </el-popover>
+                </div>
+                </div>
+            </template>
+        </Drawer>
         </PageContainer>
     </NuxtLayout>
 </template>
