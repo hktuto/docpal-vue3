@@ -1,22 +1,24 @@
 <template>
 <div>{{$t('formatDisplay')}}</div>
-  <el-tag
-    v-for="(formatItem, index) in formatList"
-    :key="index"
-    class="mx-1"
-    closable
-    :disable-transitions="false"
-    @click="showDialog(formatItem)"
-    @close="handleDelete(formatItem, index)"
-  >
-    {{ formatItem.prop }}
-  </el-tag>
-  <el-button class="button-new-tag ml-1" size="small" @click="showDialog()">
-    + Add Prop
-  </el-button>
-  <TableColumnPropsEdit ref="tableColumnPropsEditRef"
-    @add="handleAdd"
-    @save="handleSave"></TableColumnPropsEdit>
+<div class="tag-container">
+    <el-tag
+        v-for="(formatItem, index) in formatList"
+        :key="index"
+        class="mx-1"
+        closable
+        :disable-transitions="false"
+        @click="showDialog(formatItem)"
+        @close="handleDelete(formatItem, index)"
+    >
+        {{ formatItem.prop }}
+    </el-tag>
+    <el-button class="button-new-tag ml-1" size="small" @click="showDialog()">
+        + Add Prop
+    </el-button>
+</div>
+    <TableColumnPropsEdit ref="tableColumnPropsEditRef"
+        @add="handleAdd"
+        @save="handleSave"></TableColumnPropsEdit>
 </template>
 
 <script lang="ts" setup>
@@ -50,6 +52,17 @@ function handleDelete (formatItem,index) {
 
 
 const showDialog = (formatItem) => {
-  tableColumnPropsEditRef.value.handleOpen(props.formatList, formatItem)
+    tableColumnPropsEditRef.value.handleOpen(props.formatList, formatItem)
 }
 </script>
+<style lang="scss" scoped>
+.tag-container {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+.el-tag {
+  margin: var(--app-input-padding);
+}
+</style>

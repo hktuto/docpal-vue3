@@ -8,17 +8,27 @@
                     <el-button @click="handleSave">save</el-button>
                 </div>
             </div>
-            <main>
-                <el-card v-for="(item,index) in tableColumns">
-                    <template #header>
-                        <div class="flex-x-between">
-                            <span>column-{{index + 1}}</span>
-                            <el-button v-if="!item.default" class="button" :icon="Delete" @click="handleDeleteColumn(item,index)"></el-button>
-                        </div>
-                    </template>
-                    <TableColumnEdit :ref="(el) => tableColumnEditRefs[item.id] = el" :column="item"></TableColumnEdit>
-                </el-card>
-            </main>
+            <draggable
+                :list="tableColumns"
+                item-key="id"
+                class="table-setting"
+                ghost-class="ghost"
+                :move="checkMove"
+                @start="dragging = true"
+                @end="dragging = false"
+            >
+                <template #item="{ element, index }">
+                    <el-card>
+                        <template #header>
+                            <div class="flex-x-between">
+                                <span>column-{{index + 1}}</span>
+                                <el-button v-if="!element.default" class="button" :icon="Delete" @click="handleDeleteColumn(element,index)"></el-button>
+                            </div>
+                        </template>
+                        <TableColumnEdit :ref="(el) => tableColumnEditRefs[element.id] = el" :column="element"></TableColumnEdit>
+                    </el-card>
+                </template>
+            </draggable>
         </div>
         <TableColumnAdd ref="tableColumnAddRef"
             @add="handleColumnAdd"></TableColumnAdd>
@@ -27,6 +37,7 @@
 
 
 <script lang="ts" setup>
+import draggable from 'vuedraggable'
 import { Delete } from '@element-plus/icons-vue'
 import { SaveTableColumnSetting } from 'dp-api'
 const route = useRoute()
@@ -54,8 +65,8 @@ function handleSave () {
         prev.push(item.id)
         return prev
     },[])
-    Object.keys(tableColumnEditRefs.value).forEach(key => {
-        if(columnIds.includes(key)) columns.push(tableColumnEditRefs.value[key].getForm())
+    columnIds.forEach(id => {
+        columns.push(tableColumnEditRefs.value[id].getForm())
     })
     const setting = deepCopy(tableColumnSetting.value)
     setting[route.params.id] = columns
@@ -78,6 +89,15 @@ watch(
         },
         { immediate: true }
     )
+// #region module: draggable
+    const dragEnabled = ref(true) // 为true时方可拖拽 
+    const dragging = ref(false)
+    function checkMove (e) {
+        console.log("Future index: " + e.draggedContext.futureIndex);
+    }
+// #endregion
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -86,15 +106,24 @@ watch(
     display: grid;
     grid-template-rows: min-content 1fr;
     height: 100%;
-
-    main{
+    .table-setting {
         overflow: auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        align-content: start;
+        gap: var(--app-padding) 0;
         .el-card {
             margin: var(--app-padding);
+            height: 360px;
         }
     }
 }
 .padding {
     padding: var(--app-padding)
 }
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+
 </style>

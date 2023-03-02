@@ -54,14 +54,98 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
             }
         }
     })
-    
     const tableColumn = [
-        { label: 'tableHeader_name', prop: 'name' },
-        { label: 'tableHeader_path', prop: 'logicalPath' },
-        { label: 'tableHeader_type', prop: 'type' },
-        { label: 'trash_deleteBy', prop: 'properties.principalName' },
-        { label: 'trash_date', prop: "properties.trashed_date", type: 'date' },
-    ]
+  {
+    "type": "",
+    "label": "tableHeader_name",
+    "prop": "name",
+    "align": "left",
+    "hide": false,
+    "system": false,
+    "showOverflowTooltip": false,
+    "formatList": [],
+    "id": "1"
+  },
+  {
+    "type": "",
+    "label": "tableHeader_path",
+    "prop": "logicalPath",
+    "align": "left",
+    "hide": false,
+    "system": false,
+    "showOverflowTooltip": false,
+    "formatList": [],
+    "id": "2"
+  },
+  {
+    "type": "",
+    "label": "tableHeader_type",
+    "prop": "type",
+    "align": "left",
+    "hide": false,
+    "system": false,
+    "showOverflowTooltip": false,
+    "formatList": [],
+    "id": "3"
+  },
+  {
+    "type": "",
+    "label": "trash_deleteBy",
+    "prop": "properties.principalName",
+    "align": "left",
+    "hide": false,
+    "system": false,
+    "showOverflowTooltip": false,
+    "formatList": [],
+    "id": "4"
+  },
+  {
+    "type": "",
+    "label": "modifiedDate",
+    "prop": "modifiedDate",
+    "align": "left",
+    "hide": false,
+    "system": false,
+    "showOverflowTooltip": false,
+    "formatList": [
+      {
+        "joiner": "",
+        "prop": "name",
+        "formatFun": "",
+        "params": {},
+        "index": 0
+      },
+      {
+        "joiner": "",
+        "prop": "modifiedDate",
+        "formatFun": "dateFormat",
+        "params": {
+          "format": "YYYY-MM"
+        },
+        "index": 1
+      }
+    ],
+    "id": "1677748673863"
+  },
+  {
+    "type": "date",
+    "label": "trash_date",
+    "prop": "properties.trashed_date",
+    "align": "left",
+    "hide": false,
+    "system": false,
+    "showOverflowTooltip": false,
+    "formatList": [],
+    "id": "5"
+  }
+]
+    // const tableColumn = [
+    //     { label: 'tableHeader_name', prop: 'name' },
+    //     { label: 'tableHeader_path', prop: 'logicalPath' },
+    //     { label: 'tableHeader_type', prop: 'type' },
+    //     { label: 'trash_deleteBy', prop: 'properties.principalName' },
+    //     { label: 'trash_date', prop: "properties.trashed_date", type: 'date' },
+    // ]
     async function getList (param) {
         state.loading = true
         const res = await GetTrashApi(param)
