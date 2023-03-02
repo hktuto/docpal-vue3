@@ -1,5 +1,5 @@
 import {customLayer} from './packageManage'
-import playgroundConfig from '../../playgroundConfig'
+import playgroundConfig from '../../utils/playgroundConfig'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     components: true,
@@ -7,5 +7,5 @@ export default defineNuxtConfig({
     extends: [
         ...customLayer()
     ],
-    ...playgroundConfig
+    ...playgroundConfig({useFormDesigner:true})
 })

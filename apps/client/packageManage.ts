@@ -4,14 +4,20 @@ export function customLayer():string[] {
     const packages:string[] = [];
 
     // default style
-    packages.push(`../../packages/${process.env.STYLE || 'layout-default'}`)
-    packages.push("../../packages/dp-auth")
+    
     // all stores
-    packages.push("../../packages/dp-stores")
+    
 
 
     packages.push('../../packages/client-browse');
+    packages.push('../../packages/client-trash');
+    packages.push('../../packages/admin-table-setting');
+
+    packages.push("../../packages/dp-stores")
+    packages.push("../../packages/dp-auth")
     
+    packages.push(`../../packages/layout-default`) // 有其它 extends 的要最後加入，不然會被改了
+
 
     return packages;
 
