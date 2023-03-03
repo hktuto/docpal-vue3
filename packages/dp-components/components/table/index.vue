@@ -254,6 +254,7 @@ onMounted(() => {
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     height: 99%;
+    user-select: none;
     &--main {
         overflow: hidden;
         .el-table {

@@ -2,7 +2,7 @@
     <NuxtLayout >
         <div class="mainContent">
             <div class="padding flex-x-between">
-                {{route.params.id}}
+                <div class="title">{{route.params.id}}</div>
                 <div>
                     <el-button @click="handleOpenAdd">add column</el-button>
                     <el-button @click="handleSave">save</el-button>
@@ -102,6 +102,8 @@ watch(
 
 <style lang="scss" scoped>
 .mainContent {
+    --card-height: 480px;
+    --card-width: 280px;
     padding: var(--app-padding);
     display: grid;
     grid-template-rows: min-content 1fr;
@@ -109,12 +111,13 @@ watch(
     .table-setting {
         overflow: auto;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fill, var(--card-width));
         align-content: start;
         gap: var(--app-padding) 0;
+        overflow: auto;
         .el-card {
             margin: var(--app-padding);
-            height: 360px;
+            height: var(--card-height);
         }
     }
 }
@@ -125,5 +128,8 @@ watch(
   opacity: 0.5;
   background: #c8ebfb;
 }
-
+.title{
+    font-size: 1.6rem;
+    font-weight: 900;
+}
 </style>
