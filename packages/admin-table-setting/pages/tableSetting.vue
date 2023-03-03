@@ -4,7 +4,7 @@
             <el-aside width="200px">
                 <div :class="getClass(key)" v-for="(value,key) in tableColumnSetting"
                     @click="setCurrentKey(key)">{{key}}</div>
-                <div :class="getClass('trash')" @click="setCurrentKey('trash')">trash</div>
+                <!-- <div :class="getClass('trash')" @click="setCurrentKey('trash')">trash</div> -->
             </el-aside>
             <el-main><NuxtPage /></el-main>
         </el-container>
