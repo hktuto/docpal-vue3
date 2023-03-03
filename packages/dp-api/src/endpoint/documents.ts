@@ -22,7 +22,7 @@ export const GetDocumentPreview = async(idOrPath:string) => {
         idOrPath
     },{
         responseType: 'blob'
-    })
+    }).then(res =>res.data)
 }
 
 export const GetAnnotation = async(idOrPath:string) => {
