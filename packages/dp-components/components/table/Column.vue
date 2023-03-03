@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import ValueFilters from '../../stores/index'
 const props = defineProps<{ col: Table.Column }>()
 const emit = defineEmits(['command'])
 // 按钮组事件
@@ -9,29 +8,10 @@ const handleAction = (command: Table.Command, { row, $index }: { row: any; $inde
 }
 function getProp(row, prop?) {
     if(!prop) prop = props.col.prop
-    let result = ''
-    let nextValue = { ...row }
-    prop.split('.').forEach(key => {
-        result = nextValue[key]
-        nextValue = nextValue[key]
-    })
-    return result
+    return tableHelper.getProp(row, prop)
 }
 function formatProp (row) {
-    console.log( props.col);
-    if(!props.col.formatList || props.col.formatList.length === 0) return getProp(row)
-    else {
-        let result = ''
-        props.col.formatList.forEach(item => {
-            console.log(item);
-            if (item.formatFun) {
-                result += ValueFilters[item.formatFun](getProp(row, item.prop),deepCopy(item.params) )
-            } else {
-                result += getProp(row, item.prop)
-            }
-        })
-        return result
-    }
+    return tableHelper.getFormatProp(row, props.col)
 }
 </script>
 <template>

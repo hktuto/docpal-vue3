@@ -1,17 +1,24 @@
 <template>
 <div>{{$t('formatDisplay')}}</div>
 <div class="tag-container">
-    <el-tag
-        v-for="(formatItem, index) in formatList"
-        :key="index"
-        class="mx-1"
-        closable
-        :disable-transitions="false"
-        @click="showDialog(formatItem)"
-        @close="handleDelete(formatItem, index)"
-    >
-        {{ formatItem.prop }}
-    </el-tag>
+    <draggable
+            :list="formatList"
+            item-key="prop"
+            class="tag-list"
+            ghost-class="ghost"
+            @end="handleDragEnd"
+            >
+            <template #item="{ element, index }">
+                <el-tag
+                    closable
+                    :disable-transitions="false"
+                    @click="showDialog(formatItem)"
+                    @close="handleDelete(formatItem, index)"
+                >
+                    {{ element.prop }}
+                </el-tag>
+            </template>
+    </draggable>
     <el-button class="button-new-tag ml-1" size="small" @click="showDialog()">
         + Add Prop
     </el-button>
@@ -22,6 +29,7 @@
 </template>
 
 <script lang="ts" setup>
+import draggable from 'vuedraggable'
 interface TableProps {
     formatList: Table.formatListType[]
 }
@@ -49,7 +57,11 @@ function handleDelete (formatItem,index) {
     list = list.map((item, index) => ({ ...item, index }))
     emit('update:formatList', list)
 }
-
+function handleDragEnd () {
+    let list = deepCopy(props.formatList)
+    list = list.map((item, index) => ({ ...item, index }))
+    emit('update:formatList', list)
+}
 
 const showDialog = (formatItem) => {
     tableColumnPropsEditRef.value.handleOpen(props.formatList, formatItem)
@@ -61,6 +73,9 @@ const showDialog = (formatItem) => {
     overflow: hidden;
     white-space: nowrap;
     overflow-x: auto;
+    .tag-list {
+        display: inline-block;
+    }
 }
 .el-tag {
   margin: var(--app-input-padding);

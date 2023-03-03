@@ -37,14 +37,13 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
 import onMountedEditorVue from '../../../libraries/v-from/src/components/form-designer/setting-panel/property-editor/event-handler/onMounted-editor.vue'
-import { trashType, propListGet, getFilterArr, getPropType } from '../../dp-components/stores/index'
 const dialogVisible = ref(false)
 function handleOpen() {
     dialogVisible.value = true
 }
 // #region module: form
     const formRef = ref<FormInstance>()
-    const propList = propListGet(trashType)
+    const propList = tableHelper.propListGet(tableHelper.trashType)
     const form = reactive({
         type: '',
         label: '',
