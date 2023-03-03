@@ -1,6 +1,6 @@
 <template>
     <div class="contentContainer" v-loading="loading">
-        <iframe ref="iframe" :src="pdfReaderUrl" allowfullscreen/>
+        <iframe ref="iframe" :src="pdfReaderUrl" allowfullscreen />
     </div>
 </template>
 
@@ -31,10 +31,14 @@ async function getAnnotation():Promise<Object> {
 
 async function sendPdfAndAnnotation() {
     loading.value = true;
-    const blob = await GetDocumentPreview(props.doc.id);
-    const annotations = await getAnnotation()
-    const frame = iframe.value.contentWindow;
-    frame.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*');
+    try {
+        const blob = await GetDocumentPreview(props.doc.id);
+        const annotations = await getAnnotation()
+        const frame = iframe.value.contentWindow;
+        const sendMessage = frame.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*'); 
+    } catch (error) {
+        console.log(error);
+    }
     loading.value = false;
 }
 
