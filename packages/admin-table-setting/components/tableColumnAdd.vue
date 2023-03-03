@@ -1,32 +1,6 @@
 <template>
 <el-dialog v-model="dialogVisible" :title="$t('addColumn')">
-    <el-form ref="formRef"
-            :model="form"
-            :rules="rules"
-            label-width="120px"
-    >   
-
-        <el-form-item label="prop" prop="prop">
-            <el-select v-model="form.prop" clearable placeholder="please select prop"
-                @change="formatItemPropChange">
-                <el-option v-for="item in propList" :label="item.label" :value="item.value" />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="label" prop="label">
-            <el-input v-model="form.label" />
-        </el-form-item>
-        <el-form-item label="align" prop="align">
-            <el-radio-group v-model="form.align">
-                <el-radio-button label="left" />
-                <el-radio-button label="center" />
-                <el-radio-button label="right" />
-            </el-radio-group>
-        </el-form-item>
-        <el-form-item :label="$t('hide')" prop="hide">
-            <el-switch v-model="form.hide" />
-        </el-form-item>
-        
-    </el-form>
+    <TableColumnEdit ref="TableColumnEditRef"></TableColumnEdit>
     <template #footer>
         <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
         <el-button @click="handleAdd">{{$t('add')}}</el-button>
@@ -40,27 +14,12 @@ import onMountedEditorVue from '../../../libraries/v-from/src/components/form-de
 const dialogVisible = ref(false)
 function handleOpen() {
     dialogVisible.value = true
+    TableColumnEditRef.value.initForm()
 }
-// #region module: form
-    const formRef = ref<FormInstance>()
-    const propList = tableHelper.propListGet(tableHelper.trashType)
-    const form = reactive({
-        type: '',
-        label: '',
-        prop: '',
-        align: 'left',
-        hide: false,
-        system: false, // 后期兼容不允许删除
-        showOverflowTooltip: false,
-        formatList: [],
-    })
-    const rules = reactive<FormRules>({})
-// #endregion
-function getForm () {
-    return deepCopy(form)
-}
+const TableColumnEditRef = ref()
 const emit = defineEmits(['add'])
 function handleAdd () {
+    const form = TableColumnEditRef.value.getForm()
     emit('add', deepCopy(form))
     dialogVisible.value = false
 }

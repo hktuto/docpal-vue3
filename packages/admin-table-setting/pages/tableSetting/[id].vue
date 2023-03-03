@@ -1,5 +1,4 @@
 <template>
-    <NuxtLayout >
         <div class="mainContent">
             <div class="padding flex-x-between">
                 <div class="title">{{route.params.id}}</div>
@@ -35,7 +34,6 @@
         </div>
         <TableColumnAdd ref="tableColumnAddRef"
             @add="handleColumnAdd"></TableColumnAdd>
-    </NuxtLayout>
 </template>
 
 
@@ -105,7 +103,7 @@ watch(
 
 <style lang="scss" scoped>
 .mainContent {
-    --card-height: 480px;
+    --card-height: 520px;
     --card-width: 280px;
     padding: var(--app-padding);
     display: grid;

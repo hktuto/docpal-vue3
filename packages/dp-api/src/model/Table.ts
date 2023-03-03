@@ -14,7 +14,12 @@ export type TableColumnItem = {
     isFilter ?: boolean,
     canNotDelete ?:boolean
 }
-
+export type TableBase = {
+    commands: any[]
+}
+export type TableBaseSetting = {
+    [key:string] : TableBase
+}
 export enum TABLE {
     META_CAPTURE_PROFILE = "metaCaptureProfile",
     META_IMPORT_MAPPING = 'metaImportMapping',
@@ -185,4 +190,81 @@ export const defaultSetting: TableColumnSetting = {
         { label: 'dpTable_approvedDate', property: 'approvedDate', sortable: true, align: 'center', width: 130 },
     ]
 
+}
+export const defaultTableBaseSetting: TableBaseSetting = {
+    [TABLE.ALL_TASK] : {
+        commands: []
+    },
+    [TABLE.ALL_TASK] : {
+        commands: []
+    },
+    [TABLE.META_CAPTURE_PROFILE]: {
+        commands: []
+    },
+    [TABLE.META_IMPORT_MAPPING] :{
+        commands: []
+    },
+    [TABLE.META_PROFILE_DIALOG] :{
+        commands: []
+    },
+    [TABLE.META_LIST] : {
+        commands: []
+    },
+    [TABLE.META_DISPLAY_LIST] : {
+        commands: []
+    },
+    [TABLE.META_RELATED_LIST] : {
+        commands: []
+    },
+    [TABLE.CHILD_FORM] : {
+        commands: []
+    },
+    [TABLE.HIERARCHIAL_FORM]:{
+        commands: []
+    },
+    [TABLE.SIMPLE_FORM]:{
+        commands: []
+    },
+    [TABLE.ADMIN_WORKFLOW] :{
+        commands: []
+    },
+    [TABLE.VERSION_POPOVER] :{
+        commands: []
+    },
+    [TABLE.COMPLETE_TASK] :{
+        commands: []
+    },
+    [TABLE.ACTIVE_TASK] :{
+        commands: []
+    },
+    [TABLE.MY_TASK] :{
+        commands: []
+    },
+    [TABLE.SMART_FOLDER] :{
+        commands: []
+    },
+    [TABLE.FILE_REQUEST_DETAIL] :{
+        commands: []
+    },
+    [TABLE.FILE_REQUEST_INDEX] : {
+        commands: []
+    },
+    [TABLE.ADHOC_Submitted_TASK] : {
+        commands: []
+    },
+    [TABLE.ADHOC_Approval_TASK] : {
+        commands: []
+    },
+    [TABLE.ADHOC_Completed_TASK] : {
+        commands: []
+    },
+    [TABLE.ADHOC_Completed_TASK] : {
+        commands: []
+    },
+    [TABLE.CLIENT_TRASH] : {
+        commands: ['delete', 'restored']
+    },
+    'trash' : {
+        commands: ['delete', 'restored']
+    }
 }
