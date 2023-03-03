@@ -17,5 +17,8 @@
     'base': 0.9rem,
     'small': 0.8rem,
     'extra-small': 0.75rem,
+  ),
+  $table: (
+    'current-row-bg-color': var(--el-color-primary-light-7),
   )
 );
