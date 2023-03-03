@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defaultTableBaseSetting } from 'dp-api/src/model/Table'
+import { defaultSetting } from 'dp-api/src/model/Table'
 // 'primary' | 'success' | 'warning' | 'danger' | 'info'
 import type { FormInstance, FormRules } from 'element-plus'
 const route = useRoute()
@@ -75,7 +75,7 @@ const emit = defineEmits(['add', 'save'])
     }
 // #endregion
 function initFormatItem (buttonItem) {
-    state.commandList = defaultTableBaseSetting[route.params.id].commands
+    state.commandList = defaultSetting[route.params.id].events
     Object.keys(meta).forEach(key => {
         form[key] = meta[key]
     })
