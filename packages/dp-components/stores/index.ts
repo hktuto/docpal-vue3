@@ -49,7 +49,7 @@ export function getFilterArr (metaType: metaType) {
   const result:any = []
   filterArr.forEach(item => {
     if(!item.supportedType || item.supportedType.includes(metaType)) {
-      result.push({ lable: item.name, value: item.name, ...item })
+      result.push({ label: item.name, value: item.name, ...item })
     }
   })
   return result
