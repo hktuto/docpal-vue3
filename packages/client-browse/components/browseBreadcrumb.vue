@@ -44,10 +44,11 @@ const displayBread = computed(() => data.value?.filter(d => d.isFolder)|| []);
 watch(props, () => refresh())
 
 function goParent() {
+    const path = data.value[data.value.length - 2].path || props.rootPath;
     router.push({
         path:'/browse',
         query:{
-            path: data.value[data.value.length - 2].path
+            path
         }
     })
 }
