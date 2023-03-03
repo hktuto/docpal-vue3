@@ -1,4 +1,4 @@
-import '../../../dp-components/typing/table'
+// import '../../../dp-components/typing/table'
 export type TableColumnSetting = {
     [key:string] : TableColumnSettingItem
 }
