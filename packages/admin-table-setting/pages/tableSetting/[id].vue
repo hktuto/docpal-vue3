@@ -1,11 +1,10 @@
 <template>
-    <NuxtLayout >
         <div class="mainContent">
             <div class="padding flex-x-between">
                 <div class="title">{{route.params.id}}</div>
                 <div>
-                    <el-button @click="handleOpenAdd">add column</el-button>
-                    <el-button @click="handleSave">save</el-button>
+                    <el-button @click="handleOpenAdd">{{$t('addColumn')}}</el-button>
+                    <el-button @click="handleSave">{{$t('save')}}</el-button>
                 </div>
             </div>
             <draggable
@@ -35,7 +34,6 @@
         </div>
         <TableColumnAdd ref="tableColumnAddRef"
             @add="handleColumnAdd"></TableColumnAdd>
-    </NuxtLayout>
 </template>
 
 
@@ -73,7 +71,9 @@ function handleSave () {
     })
     const setting = deepCopy(tableColumnSetting.value)
     setting[route.params.id] = columns
-    SaveTableColumnSetting(setting)
+    console.log({setting});
+    
+    // SaveTableColumnSetting(setting)
 }
 function handleColumnAdd (column) {
     column.id = new Date().valueOf().toString()
@@ -105,7 +105,7 @@ watch(
 
 <style lang="scss" scoped>
 .mainContent {
-    --card-height: 480px;
+    --card-height: 520px;
     --card-width: 280px;
     padding: var(--app-padding);
     display: grid;
