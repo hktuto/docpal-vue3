@@ -39,9 +39,8 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
-import { trashType, propListGet, getFilterArr, getPropType } from '../../dp-components/stores/index'
 const state = reactive({
-    propList: propListGet(trashType),
+    propList: tableHelper.propListGet(tableHelper.trashType),
     formatFunList: [],
 })
 const emit = defineEmits(['add', 'save'])
@@ -68,7 +67,7 @@ const emit = defineEmits(['add', 'save'])
         form.formatFun = ''
         form.params = {}
         state.formatFunList = []
-        state.formatFunList = getFilterArr(getPropType(trashType, prop))
+        state.formatFunList = tableHelper.getFilterArr(tableHelper.getPropType(tableHelper.trashType, prop))
         console.log(state.formatFunList, 'formatItemPropChange');
         
     }

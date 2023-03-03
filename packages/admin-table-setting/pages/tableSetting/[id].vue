@@ -13,6 +13,7 @@
                 item-key="id"
                 class="table-setting"
                 ghost-class="ghost"
+                handle=".handleDrag"
                 :move="checkMove"
                 @start="dragging = true"
                 @end="dragging = false"
@@ -21,7 +22,9 @@
                     <el-card>
                         <template #header>
                             <div class="flex-x-between">
-                                <span>column-{{index + 1}}</span>
+                                <span>
+                                    <el-icon class="handleDrag"><Rank /></el-icon>
+                                    column-{{index + 1}}</span>
                                 <el-button v-if="!element.default" class="button" :icon="Delete" @click="handleDeleteColumn(element,index)"></el-button>
                             </div>
                         </template>
@@ -38,7 +41,7 @@
 
 <script lang="ts" setup>
 import draggable from 'vuedraggable'
-import { Delete } from '@element-plus/icons-vue'
+import { Delete, Rank } from '@element-plus/icons-vue'
 import { SaveTableColumnSetting } from 'dp-api'
 const route = useRoute()
 const { tableColumnSetting } = toRefs(useSetting())
