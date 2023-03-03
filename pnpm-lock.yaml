@@ -8,6 +8,20 @@ importers:
     devDependencies:
       v-form: link:libraries/v-from
 
+  apps/admin:
+    specifiers:
+      '@element-plus/nuxt': ^1.0.3
+      '@types/node': ^18.11.18
+      dp-api: workspace:*
+      nuxt: ^3.1.1
+      sass: ^1.58.0
+    devDependencies:
+      '@element-plus/nuxt': 1.0.3
+      '@types/node': 18.11.18
+      dp-api: link:../../packages/dp-api
+      nuxt: 3.1.1_f5vcjb3akvjdur4ffzogu2hewu
+      sass: 1.58.0
+
   apps/client:
     specifiers:
       '@element-plus/nuxt': ^1.0.3
@@ -203,20 +217,21 @@ importers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
       '@vueuse/core': ^9.12.0
+      dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.0.0
       typescript: ^4.9.3
-      v-form: workspace:*
-    dependencies:
-      v-form: link:../../libraries/v-from
+      vuedraggable: ^4.1.0
     devDependencies:
       '@nuxt/devtools': 0.1.4_nuxt@3.1.1
       '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
       '@vueuse/components': 9.13.0
       '@vueuse/core': 9.13.0
+      dp-api: link:../dp-api
       eslint: 8.34.0
       nuxt: 3.1.1_7kw3g6rralp5ps6mg3uyzz6azm
       typescript: 4.9.5
+      vuedraggable: 4.1.0
 
   packages/client-browse:
     specifiers:
@@ -13082,7 +13097,6 @@ packages:
 
   /sortablejs/1.14.0:
     resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
-    dev: false
 
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
@@ -14958,7 +14972,6 @@ packages:
       vue: ^3.0.1
     dependencies:
       sortablejs: 1.14.0
-    dev: false
 
   /watchpack/2.4.0:
     resolution: {integrity: sha512-Lcvm7MGST/4fup+ifyKi2hjyIAwcdI4HRgtvTpIUxBRhB+RFtUh8XtDOxUfctVCnhVi+QQj49i91OyvzkJl6cg==}

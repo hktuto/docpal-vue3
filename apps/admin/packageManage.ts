@@ -9,8 +9,7 @@ export function customLayer():string[] {
     
 
 
-    packages.push('../../packages/client-browse');
-    packages.push('../../packages/client-trash');
+    packages.push('../../packages/admin-table-setting');
 
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")

@@ -3,7 +3,7 @@
         <el-form ref="formRef"
                 :model="form"
                 :rules="rules"
-                label-width="120px"
+                label-position="top"
         >
             <el-form-item label="prop" prop="prop">
                 <el-select v-model="form.prop" clearable placeholder="please select prop"
