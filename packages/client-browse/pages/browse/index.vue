@@ -33,6 +33,6 @@ function detailClosed() {
     grid-template-rows: min-content min-content 1fr;
     gap : var(--app-padding);
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
 }
 </style>
