@@ -12,8 +12,8 @@
                 <el-tag
                     closable
                     :disable-transitions="false"
-                    @click="showDialog(formatItem)"
-                    @close="handleDelete(formatItem, index)"
+                    @click="showDialog(element)"
+                    @close="handleDelete(element, index)"
                 >
                     {{ element.prop }}
                 </el-tag>
