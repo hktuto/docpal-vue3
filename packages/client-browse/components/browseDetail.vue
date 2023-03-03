@@ -27,7 +27,8 @@ const emit = defineEmits(['close'])
 const blobData = ref();
 
 const readerType = computed(() => {
-    const mineType:string = props.doc?.properties["file:content"]["mime-type"] || '';
+    const properties = props.doc?.properties
+    const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
     if(!mineType) return "unknown";
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text')  ) {
         return 'pdf';
