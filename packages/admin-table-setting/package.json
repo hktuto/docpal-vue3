@@ -11,17 +11,15 @@
     "preview": "nuxi preview .playground",
     "lint": "eslint ."
   },
-  "dependencies": {
-    "v-form":"workspace:*"
-  },
   "devDependencies": {
     "@nuxt/devtools": "^0.1.4",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@vueuse/components": "^9.13.0",
     "@vueuse/core": "^9.12.0",
+    "dp-api": "workspace:*",
     "eslint": "^8.28.0",
     "nuxt": "^3.0.0",
     "typescript": "^4.9.3",
-    "dp-api":"workspace:*"
+    "vuedraggable": "^4.1.0"
   }
 }
