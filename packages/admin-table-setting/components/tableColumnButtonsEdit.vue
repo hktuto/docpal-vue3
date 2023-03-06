@@ -5,7 +5,7 @@
                 label-width="120px"
         >
             <el-form-item :label="$t('content')" prop="name"
-                :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">
+                :rules="[ { required: false, message: 'Please input email address', trigger: 'change'}]">
                 <el-input v-model="form.name" clearable />
             </el-form-item>
             <el-form-item :label="$t('command')" prop="command" >
