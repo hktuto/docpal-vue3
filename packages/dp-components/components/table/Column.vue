@@ -60,9 +60,9 @@ function getIcon (row, position='prefixIcon') {
                     :type="btn.type"
                     @click="handleAction(btn.command, { row, $index })"
                     >
-                    <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
+                        <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
                         {{ btn.name }}
-                    <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
+                        <SvgIcon :src="btn.suffixIcon" ></SvgIcon>
                     </el-button
                 >
             </el-button-group>
