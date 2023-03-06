@@ -14,7 +14,7 @@ function formatProp (row) {
     return tableHelper.getFormatProp(row, props.col)
 }
 function getIcon (row, position='prefixIcon') {
-    console.log(col[position]);
+    // console.log(col[position]);
     
 }
 </script>
