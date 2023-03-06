@@ -60,6 +60,7 @@ const { x, y } = useMouse()
     overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr;
+    z-index: 1;
 }
 #topBarContainer{
     background: var(--header-bg);
@@ -70,7 +71,7 @@ const { x, y } = useMouse()
     padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
     gap: var(--app-padding);
     align-items: center;
-    z-index: 4;
+    z-index: 2;
     .expand{
       display: flex;
       flex-flow: row nowrap;
@@ -107,7 +108,7 @@ const { x, y } = useMouse()
   overflow: hidden;
   transform: scale(1);
   box-shadow: 2px 0px 10px rgb(0 0 0 / 30%);
-  z-index: 2;
+  z-index: 3;
   
   &:after{
     --size: 250px;

@@ -1,25 +1,23 @@
 {
-  "name": "dp-form",
+  "name": "dp-log",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
-  "version": "0.0.1",
   "main": "./nuxt.config.ts",
   "scripts": {
-    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev --port 3222",
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",
-    "postinstall": "nuxi prepare",
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@nuxt/content": "^2.4.3",
-    "@nuxt/devtools": "^0.1.4",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "eslint": "^8.28.0",
     "nuxt": "^3.0.0",
-    "typescript": "^4.9.3",
-    "v-form": "workspace:*",
-    "vform3-builds": "^3.0.10"
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10"
   }
 }
