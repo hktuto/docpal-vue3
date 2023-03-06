@@ -27,6 +27,12 @@
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item :label="$t('prefixIcon')" prop="prefixIcon">
+                <SvgIconSelector v-model:src="form.prefixIcon" />
+            </el-form-item>
+            <el-form-item :label="$t('suffixIcon')" prop="suffixIcon">
+                <SvgIconSelector v-model:src="form.suffixIcon" />
+            </el-form-item>
         </el-form>
 
         <template #footer>
@@ -65,6 +71,8 @@ const emit = defineEmits(['add', 'save'])
         command: '',
         size: '',
         type: 'primary',
+        prefixIcon: '',
+        suffixIcon: ''
     } 
     async function handleSave() {
         const valid = await formRef.value.validate((valid, fields) => valid)

@@ -121,6 +121,12 @@ watch(
         .el-card {
             margin: var(--app-padding);
             height: var(--card-height);
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: min-content 1fr;
+            :deep(.el-card__body) {
+                overflow: auto;
+            }
         }
     }
 }

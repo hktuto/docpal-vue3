@@ -18,6 +18,8 @@ declare namespace Table {
         command: Command,
         size?: Size
         type?: 'primary' | 'success' | 'warning' | 'danger' | 'info',
+        prefixIcon?: string,
+        suffixIcon?: string,
     }
     interface Sort {
         prop: string
@@ -38,6 +40,8 @@ declare namespace Table {
         dateFormat?: DateFormat, // 显示在页面中的日期格式，简单列举了几种格式， 可自行配置
         showOverflowTooltip?: boolean,
         buttons?: ButtonItem[],
+        prefixIcon?: string,
+        suffixIcon?: string,
         render?: (row?: Record<string, any>, index?: number) => VNodeChild // 渲染函数，渲染这一列的每一行的单元格
         sortable?: boolean | 'custom', // 对应列是否可以排序， 如果设置为 'custom'，则代表用户希望远程排序，需要监听 Table 的 sort-change 事件
         headerRender?: ({ column, index }) => VNodeChild, // 渲染函数，渲染列表头
