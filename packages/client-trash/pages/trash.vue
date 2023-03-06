@@ -55,90 +55,101 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
         }
     })
     const tableColumn = [
-  {
-    "type": "",
-    "label": "tableHeader_name",
-    "prop": "name",
-    "align": "left",
-    "hide": false,
-    "system": false,
-    "showOverflowTooltip": false,
-    "formatList": [],
-    "id": "1"
-  },
-  {
-    "type": "",
-    "label": "tableHeader_path",
-    "prop": "logicalPath",
-    "align": "left",
-    "hide": false,
-    "system": false,
-    "showOverflowTooltip": false,
-    "formatList": [],
-    "id": "2"
-  },
-  {
-    "type": "",
-    "label": "tableHeader_type",
-    "prop": "type",
-    "align": "left",
-    "hide": false,
-    "system": false,
-    "showOverflowTooltip": false,
-    "formatList": [],
-    "id": "3"
-  },
-  {
-    "type": "",
-    "label": "trash_deleteBy",
-    "prop": "properties.principalName",
-    "align": "left",
-    "hide": false,
-    "system": false,
-    "showOverflowTooltip": false,
-    "formatList": [],
-    "id": "4"
-  },
-  {
-    "type": "",
-    "label": "modifiedDate",
-    "prop": "modifiedDate",
-    "align": "left",
-    "hide": false,
-    "system": false,
-    "showOverflowTooltip": false,
-    "formatList": [
-      {
-        "joiner": "",
-        "prop": "name",
-        "formatFun": "",
-        "params": {},
-        "index": 0
-      },
-      {
-        "joiner": "",
-        "prop": "modifiedDate",
-        "formatFun": "dateFormat",
-        "params": {
-          "format": "YYYY-MM"
+        {
+            "type": "",
+            "label": "tableHeader_name",
+            "prop": "name",
+            "align": "left",
+            "hide": false,
+            "system": false,
+            "showOverflowTooltip": false,
+            "formatList": [],
+            "buttons": [],
+            "prefixIcon": "",
+            "suffixIcon": "",
+            "id": "1"
         },
-        "index": 1
-      }
-    ],
-    "id": "1677748673863"
-  },
-  {
-    "type": "date",
-    "label": "trash_date",
-    "prop": "properties.trashed_date",
-    "align": "left",
-    "hide": false,
-    "system": false,
-    "showOverflowTooltip": false,
-    "formatList": [],
-    "id": "5"
-  }
-]
+        {
+            "type": "",
+            "label": "tableHeader_path",
+            "prop": "logicalPath",
+            "align": "left",
+            "hide": false,
+            "system": false,
+            "showOverflowTooltip": false,
+            "formatList": [],
+            "buttons": [],
+            "prefixIcon": "",
+            "suffixIcon": "",
+            "id": "2"
+        },
+        {
+            "type": "",
+            "label": "tableHeader_type",
+            "prop": "type",
+            "align": "left",
+            "hide": false,
+            "system": false,
+            "showOverflowTooltip": false,
+            "formatList": [],
+            "buttons": [],
+            "prefixIcon": "",
+            "suffixIcon": "",
+            "id": "3"
+        },
+        {
+            "type": "",
+            "label": "trash_deleteBy",
+            "prop": "properties.principalName",
+            "align": "left",
+            "hide": false,
+            "system": false,
+            "showOverflowTooltip": false,
+            "formatList": [],
+            "buttons": [],
+            "prefixIcon": "",
+            "suffixIcon": "",
+            "id": "4"
+        },
+        {
+            "type": "date",
+            "label": "trash_date",
+            "prop": "properties.trashed_date",
+            "align": "left",
+            "hide": false,
+            "system": false,
+            "showOverflowTooltip": false,
+            "formatList": [],
+            "buttons": [],
+            "prefixIcon": "",
+            "suffixIcon": "",
+            "id": "5"
+        },
+        {
+            "type": "",
+            "label": "actions",
+            "prop": "",
+            "align": "left",
+            "hide": false,
+            "system": false,
+            "showOverflowTooltip": false,
+            "formatList": [],
+            "buttons": [
+                {
+                    "name": "restored",
+                    "command": "restored",
+                    "size": "large",
+                    "type": "primary",
+                    "prefixIcon": "/icons/file-selected.svg",
+                    "suffixIcon": "/icons/menu/virtual.svg",
+                    "index": 0
+                }
+            ],
+            "prefixIcon": "",
+            "suffixIcon": "",
+            "id": "1678091777412"
+        }
+    ]
     // const tableColumn = [
     //     { label: 'tableHeader_name', prop: 'name' },
     //     { label: 'tableHeader_path', prop: 'logicalPath' },

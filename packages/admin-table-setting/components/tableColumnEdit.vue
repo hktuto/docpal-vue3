@@ -31,8 +31,14 @@
                 <el-radio-button label="right" />
             </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('hide')" prop="hide">
+        <el-form-item :label="$t('hide')">
             <el-switch v-model="form.hide" />
+        </el-form-item>
+        <el-form-item :label="$t('prefixIcon')" prop="prefixIcon">
+            <SvgIconSelector v-model:src="form.prefixIcon" />
+        </el-form-item>
+        <el-form-item :label="$t('suffixIcon')" prop="suffixIcon">
+            <SvgIconSelector v-model:src="form.suffixIcon" />
         </el-form-item>
         <TableColumnProps v-if="!showTypeList.includes('buttons')" v-model:formatList="form.formatList"></TableColumnProps>
         <TableColumnButtons v-else v-model:buttons="form.buttons"></TableColumnButtons>
@@ -75,6 +81,8 @@ const state = reactive({
         system: false, // 后期兼容不允许删除
         showOverflowTooltip: false,
         formatList: [],
+        prefixIcon: '',
+        suffixIcon: ''
     }
     const rules = reactive<FormRules>({
         name: [
@@ -107,9 +115,9 @@ function initForm () {
     console.log('???');
     
 }
-watch(() => props.column, (newValue) => {
+onMounted(() => {
     initForm()
-}, { immediate: true })
+})
 const { showTypeList } = toRefs(state)
 defineExpose({ getForm, initForm })
 </script>

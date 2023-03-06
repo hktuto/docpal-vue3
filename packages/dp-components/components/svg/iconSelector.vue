@@ -1,0 +1,56 @@
+<template>
+<div class="dp-drawer">
+    <div class="flex-y">
+        <SvgIcon :src="_src" />
+        <el-button @click="dialogVisible = true">
+            {{$t('selectSvg')}}
+        </el-button>
+    </div>
+    <el-dialog v-model="dialogVisible" :title="$t('selectSvg')" custom-class="svg-selector__dialog">
+        
+        <SvgIconList ref="svgIconListRef" v-model:selectedSrc="_src"></SvgIconList>
+        <template #footer>
+            <div class="">{{$t('selectedSvg')}}:<SvgIcon :src="_src" /></div>
+            <div>
+                <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
+                <el-button type="primary" @click="handleConfirm">{{$t('confirm')}}</el-button>
+            </div>
+        </template>
+    </el-dialog>
+</div>
+</template>
+<script lang="ts" setup>
+const props = defineProps<{
+    src: string
+}>()
+const dialogVisible = ref(false)
+const _src = ref(props.src)
+const svgIconListRef = ref()
+const emit = defineEmits(['update:src'])
+function handleConfirm () {
+    svgIconListRef.value.getSvg()
+    dialogVisible.value = false
+    emit('update:src', _src.value)
+}
+</script>
+
+<style lang="scss" scoped>
+:deep(.el-dialog__footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+:deep(.svg-selector__dialog) {
+    .el-dialog__body {
+        max-height: 60vh;
+        overflow: auto;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+.flex-y {
+    display: flex;
+    align-items: center;
+    gap: var(--app-padding);
+}
+</style>

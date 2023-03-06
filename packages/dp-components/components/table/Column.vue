@@ -13,6 +13,10 @@ function getProp(row, prop?) {
 function formatProp (row) {
     return tableHelper.getFormatProp(row, props.col)
 }
+function getIcon (row, position='prefixIcon') {
+    console.log(col[position]);
+    
+}
 </script>
 <template>
     <!-- 如果有配置多级表头的数据，则递归该组件 -->
@@ -55,7 +59,11 @@ function formatProp (row) {
                     :size="btn.size"
                     :type="btn.type"
                     @click="handleAction(btn.command, { row, $index })"
-                    >{{ btn.name }}</el-button
+                    >
+                    <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
+                        {{ btn.name }}
+                    <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
+                    </el-button
                 >
             </el-button-group>
         </template>
@@ -68,7 +76,9 @@ function formatProp (row) {
         <template v-else #default="{ row, $index }">
             <!-- 自定义slot (END) -->
             <!-- 默认渲染 (START) -->
+            <SvgIcon :src="getIcon(row)" ></SvgIcon>
             <span >{{ formatProp(row) }}</span>
+            <SvgIcon :src="getIcon(row, 'suffixIcon')"></SvgIcon>
             <!-- 默认渲染 (END) -->
         </template>
         <!-- 自定义表头 -->
