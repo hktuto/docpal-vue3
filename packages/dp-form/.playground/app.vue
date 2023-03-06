@@ -1,3 +1,3 @@
 <template>
-  <AuthApp />
+  <NuxtPage />
 </template>
