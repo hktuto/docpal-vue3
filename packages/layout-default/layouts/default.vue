@@ -160,4 +160,15 @@ const { x, y } = useMouse()
     }
   }
 }
+.fit-height {
+  #mainContent{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  &.withPadding #mainContent {
+    padding: calc(var(--app-padding) * 2);
+  }
+}
 </style>

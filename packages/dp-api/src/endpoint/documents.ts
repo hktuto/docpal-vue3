@@ -1,5 +1,5 @@
 import {api} from '../';
-import { BreadResponse, DocDetail, GetChildResponse, pageParams } from '../model/document';
+import { BreadResponse, DocDetail, GetChildResponse, pageParams } from '../model';
 
 export const GetChildThumbnail = async(idOrPath: string):Promise<GetChildResponse> => {
     return api.post<GetChildResponse>('/nuxeo/document/children/thumbnail',{ idOrPath }).then(res => res.data);

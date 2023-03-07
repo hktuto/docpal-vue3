@@ -6,13 +6,6 @@ export type GetChildResponse = {
     path: string
 }
 
-export type pageParams = {
-    pageIndex?: number,
-    pageNum?: number,
-    pageSize : number,
-    [key: string]: any
-}
-
 export type DocDetail = {
     createdBy?:string,
     createdDate?:string,
