@@ -15,7 +15,9 @@
                     @click="showDialog(element)"
                     @close="handleDelete(element, index)"
                 >
+                    <SvgIcon :src="element.prefixIcon" ></SvgIcon>
                     {{ element.name }}
+                    <SvgIcon :src="element.suffixIcon" ></SvgIcon>
                 </el-tag>
             </template>
     </draggable>
@@ -79,5 +81,10 @@ const showDialog = (buttonItem: Table.ButtonItem) => {
 }
 .el-tag {
   margin: var(--app-input-padding);
+  :deep(.el-tag__content) {
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(3, min-content);
+  }
 }
 </style>

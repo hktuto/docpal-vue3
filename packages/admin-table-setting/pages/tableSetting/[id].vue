@@ -48,17 +48,7 @@ const tableColumnAddRef = ref()
 const tableColumns = ref([])
 
 function initTableColumns(id) {
-    if(id === 'trash') {
-        tableColumns.value = [
-            { id: '1', label: 'tableHeader_name', prop: 'name' },
-            { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
-            { id: '3', label: 'tableHeader_type', prop: 'type' },
-            { id: '4', label: 'trash_deleteBy', prop: 'properties.principalName' },
-            { id: '5', label: 'trash_date', prop: "properties.trashed_date", type: 'date' }
-        ]
-    } else {
-        tableColumns.value = tableColumnSetting.value[id]
-    }
+    tableColumns.value = tableColumnSetting.value[id].columns    
 }
 function handleSave () {
     const columns = []
