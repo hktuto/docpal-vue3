@@ -103,7 +103,10 @@ function handleDblclick (row) {
 const { tableData, options, loading, sFolderList, tabName } = toRefs(state)
 onMounted(async() => {
     state.sFolderList = await sfolderGetApi()
-    if(state.sFolderList.length > 0) handleTabClick(state.sFolderList[0].id)
+    if(state.sFolderList.length > 0) {
+        const index = state.sFolderList.findIndex(item => item.id === route.query.tab) || 0
+        handleTabClick(state.sFolderList[index].id)
+    }
 })
 </script>
 
