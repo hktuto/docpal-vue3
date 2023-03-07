@@ -7,7 +7,7 @@
                 <img
                     width="24"
                     height="24"
-                    src="/icons/breadcrumb_home.svg"
+                    :src="'/icons/breadcrumb_home.svg'"
                 />
             </div>
             <div v-if="displayBread && displayBread.length > 0" class="divider">
