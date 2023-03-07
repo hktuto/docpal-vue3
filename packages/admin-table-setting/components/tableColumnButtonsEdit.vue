@@ -8,7 +8,7 @@
                 :rules="[ { required: false, message: 'Please input email address', trigger: 'change'}]">
                 <el-input v-model="form.name" clearable />
             </el-form-item>
-            <el-form-item :label="$t('command')" prop="command" >
+            <el-form-item :label="$t('event')" prop="command" >
                 <el-select v-model="form.command" clearable>
                     <el-option v-for="item in commandList" :key="item" :label="item" :value="item" />
                 </el-select>
