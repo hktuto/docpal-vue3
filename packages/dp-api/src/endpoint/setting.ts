@@ -1,19 +1,19 @@
 
 import { api } from '../'
-import { TABLE, TableColumnSetting, defaultSetting } from '../model/Table';
+import { TABLE, TableColumnSetting, defaultTableSetting } from '../model/Table';
 import { OCR_SETTING, ServerLanguageResponse } from '../model/setting';
 
 
 export const GetTableColumnSetting = async():Promise<TableColumnSetting> => {
     const serverResponse = await api.get<TableColumnSetting>('/nuxeo/admin/setting/tableColumn').then(res => res.data);
-    const defaultSetting = GetDefaultTable()
-    return Object.assign(defaultSetting, serverResponse);
+    const defaultTableSetting = GetDefaultTable()
+    return Object.assign(defaultTableSetting, serverResponse);
   }
 
   export const GetDefaultTable = ():TableColumnSetting => {
     const result : TableColumnSetting = {}
     Object.values(TABLE).forEach((value) => {
-        result[value] = defaultSetting[value] ?? []
+        result[value] = defaultTableSetting[value] ?? []
     })
     return result;
   }

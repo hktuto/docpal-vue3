@@ -24,7 +24,14 @@ export type TableColumnItem = {
     isFilter ?: boolean,
     canNotDelete ?:boolean,
     prop?: string,
-    type?: string
+    type?: string,
+    hide?: boolean,
+    system?: boolean,
+    showOverflowTooltip?: boolean,
+    formatList?: any[],
+    buttons?: any[],
+    prefixIcon?: string,
+    suffixIcon?: string
 }
 export type TableBase = {
     commands: any[]
@@ -54,10 +61,10 @@ export enum TABLE {
     ADHOC_Approval_TASK = 'adhocApprovalTask',
     ADHOC_Completed_TASK = 'adhocCompletedTask',
     ACTIVE_TASK = 'activeTask',
-    CLIENT_TRASH = 'trash'
+    CLIENT_TRASH = 'clientTrash'
 }
 
-export const defaultSetting: TableColumnSetting = {
+export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ALL_TASK] : {
         columns: [
             { id:1, label: 'table_name', property: 'taskName', sortable: true },
@@ -304,7 +311,31 @@ export const defaultSetting: TableColumnSetting = {
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
             { id: '4', label: 'trash_deleteBy', prop: 'properties.principalName' },
-            { id: '5', label: 'trash_date', prop: "properties.trashed_date" }
+            { id: '5', label: 'trash_date', prop: "properties.trashed_date" },
+            {
+                "type": "",
+                "label": "actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "restored",
+                        "command": "restored",
+                        "size": "large",
+                        "type": "primary",
+                        "prefixIcon": "/icons/file-selected.svg",
+                        "suffixIcon": "/icons/menu/virtual.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+                "id": "1678091777412"
+            }
         ],
         events: ['delete', 'restored'],
         options: { pageSize: 20 }

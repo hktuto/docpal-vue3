@@ -5,3 +5,4 @@ export const api = axios.create({
 })
 
 export * from './endpoint';
+export * from './model';

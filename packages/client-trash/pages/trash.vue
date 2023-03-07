@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout >
         <PageContainer>
-        <Table v-loading="loading" :columns="tableColumn" :table-data="tableData" :options="options"
+        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @pagination-change="handlePaginationChange"
                 @row-dblclick="handleDblclick"></Table>
         <Drawer ref="DrawerRef" :modal="false" pointerModal>
@@ -32,7 +32,7 @@
 
 
 <script lang="ts" setup>
-import { GetTrashApi, DeleteByIdApi, RestoreByIdApi } from 'dp-api'
+import { GetTrashApi, DeleteByIdApi, RestoreByIdApi, TABLE, defaultTableSetting } from 'dp-api'
 import { ElNotification } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 // #region module: page
@@ -54,109 +54,9 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
             }
         }
     })
-    const tableColumn = [
-        {
-            "type": "",
-            "label": "tableHeader_name",
-            "prop": "name",
-            "align": "left",
-            "hide": false,
-            "system": false,
-            "showOverflowTooltip": false,
-            "formatList": [],
-            "buttons": [],
-            "prefixIcon": "",
-            "suffixIcon": "",
-            "id": "1"
-        },
-        {
-            "type": "",
-            "label": "tableHeader_path",
-            "prop": "logicalPath",
-            "align": "left",
-            "hide": false,
-            "system": false,
-            "showOverflowTooltip": false,
-            "formatList": [],
-            "buttons": [],
-            "prefixIcon": "",
-            "suffixIcon": "",
-            "id": "2"
-        },
-        {
-            "type": "",
-            "label": "tableHeader_type",
-            "prop": "type",
-            "align": "left",
-            "hide": false,
-            "system": false,
-            "showOverflowTooltip": false,
-            "formatList": [],
-            "buttons": [],
-            "prefixIcon": "",
-            "suffixIcon": "",
-            "id": "3"
-        },
-        {
-            "type": "",
-            "label": "trash_deleteBy",
-            "prop": "properties.principalName",
-            "align": "left",
-            "hide": false,
-            "system": false,
-            "showOverflowTooltip": false,
-            "formatList": [],
-            "buttons": [],
-            "prefixIcon": "",
-            "suffixIcon": "",
-            "id": "4"
-        },
-        {
-            "type": "date",
-            "label": "trash_date",
-            "prop": "properties.trashed_date",
-            "align": "left",
-            "hide": false,
-            "system": false,
-            "showOverflowTooltip": false,
-            "formatList": [],
-            "buttons": [],
-            "prefixIcon": "",
-            "suffixIcon": "",
-            "id": "5"
-        },
-        {
-            "type": "",
-            "label": "actions",
-            "prop": "",
-            "align": "left",
-            "hide": false,
-            "system": false,
-            "showOverflowTooltip": false,
-            "formatList": [],
-            "buttons": [
-                {
-                    "name": "restored",
-                    "command": "restored",
-                    "size": "large",
-                    "type": "primary",
-                    "prefixIcon": "/icons/file-selected.svg",
-                    "suffixIcon": "/icons/menu/virtual.svg",
-                    "index": 0
-                }
-            ],
-            "prefixIcon": "",
-            "suffixIcon": "",
-            "id": "1678091777412"
-        }
-    ]
-    // const tableColumn = [
-    //     { label: 'tableHeader_name', prop: 'name' },
-    //     { label: 'tableHeader_path', prop: 'logicalPath' },
-    //     { label: 'tableHeader_type', prop: 'type' },
-    //     { label: 'trash_deleteBy', prop: 'properties.principalName' },
-    //     { label: 'trash_date', prop: "properties.trashed_date", type: 'date' },
-    // ]
+    const tableKey = TABLE.CLIENT_TRASH
+    const tableSetting = defaultTableSetting[tableKey]
+
     async function getList (param) {
         state.loading = true
         const res = await GetTrashApi(param)
