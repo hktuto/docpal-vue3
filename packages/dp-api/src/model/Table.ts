@@ -61,7 +61,8 @@ export enum TABLE {
     ADHOC_Approval_TASK = 'adhocApprovalTask',
     ADHOC_Completed_TASK = 'adhocCompletedTask',
     ACTIVE_TASK = 'activeTask',
-    CLIENT_TRASH = 'clientTrash'
+    CLIENT_TRASH = 'clientTrash',
+    CLIENT_SMART_FOLDER = 'clientSmartFolder'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -225,13 +226,24 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { pageSize: 20 }
     },
-    [TABLE.SMART_FOLDER] : {
+    [TABLE.CLIENT_SMART_FOLDER] : {
         columns: [
-            { slot: 'icon', property: 'isFolder' },
-            { label: 'table_name', property: 'name', sortable: true },
-            // { label: 'table_path', property: 'path', sortable: true },
-            { label: 'table_modifiedDate', property: 'modifiedDate', sortable: true },
-            { label: 'table_type', property: 'type', sortable: true },
+            { label: 'table_name', prop: 'name' },
+            { label: 'table_path', prop: 'logicalPath' },
+            { label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { label: 'table_type', prop: 'type' },
         ],
         events: [],
         options: { pageSize: 20 }
@@ -311,7 +323,17 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
             { id: '4', label: 'trash_deleteBy', prop: 'properties.principalName' },
-            { id: '5', label: 'trash_date', prop: "properties.trashed_date" },
+            { id: '5', label: 'trash_date', prop: "properties.trashed_date", formatList: [
+                {
+                    "joiner": "",
+                    "prop": "properties.trashed_date",
+                    "formatFun": "dateFormat",
+                    "params": {
+                        "format": ""
+                    },
+                    "index": 0
+                }]
+            },
             {
                 "type": "",
                 "label": "actions",
@@ -335,7 +357,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "prefixIcon": "",
                 "suffixIcon": "",
                 "id": "1678091777412"
-            }
+            },
+            
         ],
         events: ['delete', 'restored'],
         options: { pageSize: 20 }
