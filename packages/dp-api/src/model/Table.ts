@@ -62,7 +62,8 @@ export enum TABLE {
     ADHOC_Completed_TASK = 'adhocCompletedTask',
     ACTIVE_TASK = 'activeTask',
     CLIENT_TRASH = 'clientTrash',
-    CLIENT_SMART_FOLDER = 'clientSmartFolder'
+    CLIENT_SMART_FOLDER = 'clientSmartFolder',
+    CLIENT_COLLECTION = 'clientCollection'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -362,5 +363,49 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: ['delete', 'restored'],
         options: { pageSize: 20 }
-    }
+    },
+    [TABLE.CLIENT_COLLECTION] : {
+        columns: [
+            { label: 'table_name', prop: 'name' },
+            { label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { label: 'table_type', prop: 'type' },
+            {
+                "type": "",
+                "label": "actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/virtual.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+                "id": "1678091777412"
+            }
+        ],
+        events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    
+
 }

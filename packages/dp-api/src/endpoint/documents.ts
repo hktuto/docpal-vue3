@@ -30,14 +30,34 @@ export const GetAnnotation = async(idOrPath:string) => {
         idOrPath
     }})
 }
-export const GetTrashApi = async(params: pageParams) => {
-    const { entryList, totalSize }:any = await api.get('/nuxeo/document/trash',{ params }).then(res => res.data)
-    return { entryList, totalSize }
-}
 
-export const DeleteByIdApi = async (idOrPath: string) => {
-    return await api.delete('/nuxeo/document', { data:idOrPath }).then(() => true)
-}
-export const RestoreByIdApi = async (idOrPath: string) => {
-    return await api.post('/nuxeo/document/restore', { idOrPath }).then(() => true)
-}
+// #region module: trash
+    export const GetTrashApi = async(params: pageParams) => {
+        const { entryList, totalSize }:any = await api.get('/nuxeo/document/trash',{ params }).then(res => res.data)
+        return { entryList, totalSize }
+    }
+
+    export const DeleteByIdApi = async (idOrPath: string) => {
+        return await api.delete('/nuxeo/document', { data:{idOrPath} }).then(() => true)
+    }
+    export const RestoreByIdApi = async (idOrPath: string) => {
+        return await api.post('/nuxeo/document/restore', { idOrPath }).then(() => true)
+    }
+// #endregion
+
+// #region module: collection
+    export const getCollectionApi = async (params: pageParams) => {
+        const { entryList, totalSize } = await api.get('/nuxeo/collection', { params }).then(res =>res.data);
+        return {entryList, totalSize}
+    }
+    export const removeCollectionApi = async (idOrPath: string) => {
+        return await api.delete('/nuxeo/collection/remove', { data: {idOrPath} }).then(res =>res.data);
+    }
+    export const getCollectionDocApi = async (idOrPath: string) => {
+        return await api.delete('/nuxeo/collection/remove', { data: {idOrPath} }).then(res =>res.data);
+    }
+    export const getCollectionDoc = async (idOrPath: string) => {
+        const { entryList, totalSize } = await api.post('/nuxeo/collection/documents', { idOrPath }).then(res =>res.data);
+        return {entryList, totalSize}
+    }
+// #endregion
