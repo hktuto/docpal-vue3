@@ -1,12 +1,10 @@
 
-import { availableLocales } from './../makeI18nSetting';
+import { availableLocales } from '../makeI18nSetting';
 import { api } from 'dp-api'
+
+
 export default defineNuxtPlugin(async({
-    vueApp:{
-        __VUE_I18N__:{
-            global
-        }
-    },
+    $i18n,
     $config
 }) => {
     const localeKey = $config.public.LOCAL_KEY.split(',');
@@ -15,7 +13,7 @@ export default defineNuxtPlugin(async({
         // get locale 
         const language = await getLocalMessage(lang, localeKey, baseUrl);
         if(language) {
-            global.setLocaleMessage(lang, language);
+            $i18n.setLocaleMessage(lang, language);
         }
         
     }

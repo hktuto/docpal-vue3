@@ -1,12 +1,12 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 import i18nSetting, {availableLocales} from './makeI18nSetting'
 
-
 export default defineNuxtConfig({
     modules: [
-        '@intlify/nuxt3',
+      '@nuxtjs/i18n',
       ],
-      intlify: i18nSetting(),
+      // @ts-ignore
+      i18n: i18nSetting(),
       runtimeConfig:{
         public: {
           availableLocales

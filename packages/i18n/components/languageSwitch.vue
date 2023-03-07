@@ -2,6 +2,7 @@
     <div class="languageSwitchContainer">
         
         <ElDropdown  @command="handleCommand">
+
             <div class="currentLang">
                 {{$t(locale)}}
             </div>
