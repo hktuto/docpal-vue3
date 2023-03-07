@@ -6,9 +6,10 @@
   "main": "./nuxt.config.ts",
   "scripts": {
     "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
-    "build": "nuxi build .playground",
+    "build": "nuxi build .playground --dotenv ../../../.env.dev",
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",
+    "postinstall": "nuxi prepare",
     "lint": "eslint ."
   },
   "devDependencies": {
