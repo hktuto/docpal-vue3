@@ -3,21 +3,34 @@
         <el-container>
             <el-aside width="200px">
                 <div class="collection-list" style="--color: #F56C6C">
-                    <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': tabName === item.id}]" @click="handleTabClick(item.id)">
+                    <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': curCollection.id === item.id}]" @click="handleTabClick(item)">
                         <span class="ellipsis" :title="item.name">{{item.name}}</span>
                         <el-icon class="color__danger__hover cursorPointer"
                             @click.stop="handleDelete(item)"><Delete /></el-icon>
                     </div>
                 </div>
-                <el-button>{{$t('add')}}</el-button>
+                <el-button :loading="fileFormAddLoading" @click="openDialog()">{{$t('collections_new')}}</el-button>
             </el-aside>
-            <el-main class="">
-                    <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-                        @pagination-change="handlePaginationChange"
-                        @command="handleAction"
-                        @row-dblclick="handleDblclick"></Table>
-            </el-main>
+            <el-container>
+                <el-header>
+                    <div class="flex-x-start">{{curCollection.name}} 
+                        <SvgIcon src="/icons/edit.svg" class="mg-l" 
+                            @click="openDialog(true)"/>
+                    </div>
+                    <el-button v-if="selectedDocs.length > 1"
+                        @click="handleMulDelete">{{$t('delete')}}</el-button>
+                </el-header>
+                <el-main class="">
+                        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                            @selection-change="handleSelectionChange"
+                            @pagination-change="handlePaginationChange"
+                            @command="handleAction"
+                            @row-dblclick="handleDblclick"></Table>
+                </el-main>
+            </el-container>
         </el-container>
+        <FileFormDialog ref="fileFormDialogAddRef" :title="$t('collections_new')" @submit="submitNewCollection"></FileFormDialog>
+        <FileFormDialog ref="fileFormDialogEditRef" :title="$t('editCollection')" @submit="saveCollection"></FileFormDialog>
     </NuxtLayout>
 </template>
 
@@ -26,7 +39,8 @@
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete } from '@element-plus/icons-vue'
-import { getCollectionApi, DeleteByIdApi, removeCollectionApi, getCollectionDoc, TABLE, defaultTableSetting } from 'dp-api'
+import { getCollectionApi, DeleteByIdApi, removeCollectionApi, getCollectionDoc, createCollectionApi, patchDocApi,
+        TABLE, defaultTableSetting, idOrPathParams } from 'dp-api'
 const { t } = useI18n();
 const route = useRoute()
 const router = useRouter()
@@ -46,7 +60,8 @@ const state = reactive<State>({
         }
     },
     collectionList: [],
-    tabName: ''
+    curCollection: '',
+    selectedDocs: []
 })
 
 // #region module: collectionList
@@ -56,21 +71,20 @@ const state = reactive<State>({
         if(state.collectionList.length > 0) {
             let index = state.collectionList.findIndex(item => item.id === route.query.tab)
             if (index === -1) index = 0
-            handleTabClick(state.collectionList[index].id)
+            handleTabClick(state.collectionList[index])
         }
     }
-    function handleTabClick(tab) {
-        state.tabName = tab
+    function handleTabClick(row) {
+        state.curCollection = row
         const time = new Date().valueOf().toString() + 1
         router.push({ 
-            query: { tab, page: 0, pageSize: pageParams.pageSize, time } 
+            query: { tab: row.id, page: 0, pageSize: pageParams.pageSize, time } 
         })
     }
     function handleDelete(row) {
         ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
                 const res = await DeleteByIdApi(row.id)
-                console.log(res);
                 getCollectionList()
             })
     }
@@ -81,7 +95,7 @@ const state = reactive<State>({
     const tableSetting = defaultTableSetting[tableKey]
     async function getList (param, tab) {
         state.loading = true
-        const res = await getCollectionDoc(state.tabName)
+        const res = await getCollectionDoc(state.curCollection.id)
         state.tableData = res.entryList
         state.options.paginationConfig.total = res.totalSize
         state.options.paginationConfig.pageSize = param.pageSize
@@ -92,7 +106,7 @@ const state = reactive<State>({
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
         router.push({ 
-            query: { tab: state.tabName, page, pageSize, time } 
+            query: { tab: state.curCollection.id, page, pageSize, time } 
         })
     }
     watch(
@@ -109,13 +123,58 @@ const state = reactive<State>({
     )
 // #endregion
 // #region module: collection doc
-    function handleDocDelete(row) {
+    function handleMulDelete () {
+        const docIds = state.selectedDocs.reduce((prev,item) => {
+            prev.push({ idOrPath: item.id })
+            return prev
+        }, [])
+        handleDocDelete(docIds)
+    }
+    function handleDocDelete(docIds: idOrPathParams[]) {
+        const param = {
+            documents: docIds,
+            collection: { idOrPath: state.curCollection.id }
+        }
         ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
-                const res = await removeCollectionApi(row.id)
-                console.log(res);
-                // getCollectionList()
+                state.loading = true
+                const res = await removeCollectionApi(param)
+                setTimeout(() => {
+                    const time = new Date().valueOf().toString() + 1
+                    router.push({ 
+                        query: { tab: state.curCollection.id, page: 0, pageSize: pageParams.pageSize, time } 
+                    })
+                }, 500)
             })
+    }
+// #endregion
+// #region module: collection new dialog
+    const fileFormDialogEditRef = ref()
+    const fileFormDialogAddRef = ref()
+    const fileFormAddLoading = ref(false)
+    const fileFormEditLoading = ref(false)
+    function openDialog (isEdit) {
+        if(isEdit) fileFormDialogEditRef.value.handleOpen(state.curCollection)
+        else fileFormDialogAddRef.value.handleOpen()
+    }
+    async function submitNewCollection(form) {
+        fileFormAddLoading.value = true
+        console.log({form});
+        await createCollectionApi(form)
+        setTimeout(async() => {
+            await getCollectionList()
+            // fileFormDialogAddRef.value.handleClose()
+            fileFormAddLoading.value = false
+        }, 500)
+    }
+    async function saveCollection(form) {
+        fileFormEditLoading.value = true
+        form.idOrPath = state.curCollection.id
+        await patchDocApi(form)
+        setTimeout(async() => {
+            await getCollectionList()
+            fileFormAddLoading.value = false
+        }, 500)
     }
 // #endregion
 function handleDblclick (row) {
@@ -129,13 +188,17 @@ function handleDblclick (row) {
 function handleAction (command, row: any, index: number) {
     switch (command) {
         case 'delete':
-            handleDocDelete(row)
+            const docIds = [ { idOrPath: row.id } ]
+            handleDocDelete(docIds)
             break
         default:
             break
     }
 }
-const { tableData, options, loading, collectionList, tabName } = toRefs(state)
+function handleSelectionChange(rows) {
+    state.selectedDocs = deepCopy(rows)
+}
+const { tableData, options, loading, collectionList, curCollection, selectedDocs } = toRefs(state)
 onMounted(() => {
     getCollectionList()
 })
@@ -149,7 +212,8 @@ onMounted(() => {
     overflow: hidden;
 }
 .current {
-    background-color: aqua;
+    background-color: var(--menu-selected-bg);
+    color: var(--menu-selected-color);
 }
 .el-container {
     height: 100%;
@@ -171,7 +235,15 @@ onMounted(() => {
         gap: var(--app-padding);
     }
 }
+.el-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 .el-main {
     padding: 0 var(--app-padding);
+}
+.mg-l {
+    margin-left: var(--app-padding);
 }
 </style>

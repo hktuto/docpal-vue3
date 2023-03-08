@@ -394,7 +394,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     {
                         "name": "",
                         "command": "delete",
-                        "suffixIcon": "/icons/menu/virtual.svg",
+                        "suffixIcon": "/icons/delete.svg",
                         "index": 0
                     }
                 ],

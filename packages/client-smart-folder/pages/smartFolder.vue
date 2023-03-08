@@ -104,7 +104,8 @@ const { tableData, options, loading, sFolderList, tabName } = toRefs(state)
 onMounted(async() => {
     state.sFolderList = await sfolderGetApi()
     if(state.sFolderList.length > 0) {
-        const index = state.sFolderList.findIndex(item => item.id === route.query.tab) || 0
+        let index = state.sFolderList.findIndex(item => item.id === route.query.tab)
+        if (index === -1) index = 0
         handleTabClick(state.sFolderList[index].id)
     }
 })

@@ -12,6 +12,7 @@ export type DocDetail = {
     modifiedDate?: string,
     description?:string,
     id: string,
+    idOrPath?: string,
     name: string,
     path: string,
     isCheckedOut: boolean,
@@ -47,5 +48,16 @@ export type DocDetail = {
 
 export type BreadResponse = {
 
+}
+export type collectionCreateParams = {
+    name: string,
+    description: string
+}
+export type collectionRemoveDocParams = {
+    documents: idOrPathParams[],
+    collection: idOrPathParams
+}
+export type idOrPathParams = {
+    idOrPath: string
 }
 
