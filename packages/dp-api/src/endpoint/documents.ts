@@ -1,5 +1,6 @@
 import {api} from '../';
-import { BreadResponse, DocDetail, GetChildResponse, pageParams } from '../model';
+import { BreadResponse, DocDetail, GetChildResponse, 
+    pageParams, collectionRemoveDocParams, collectionCreateParams } from '../model';
 
 export const GetChildThumbnail = async(idOrPath: string):Promise<GetChildResponse> => {
     return api.post<GetChildResponse>('/nuxeo/document/children/thumbnail',{ idOrPath }).then(res => res.data);
@@ -7,6 +8,9 @@ export const GetChildThumbnail = async(idOrPath: string):Promise<GetChildRespons
 
 export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {
     return api.post<DocDetail>('/nuxeo/document',{ idOrPath }).then(res => res.data);
+}
+export const patchDocApi = async(params: DocDetail):Promise<DocDetail> => {
+    return api.patch<DocDetail>('/nuxeo/document', params).then(res => res.data);
 }
 
 export const GetBreadcrumb = async(idOrPath:string):Promise<BreadResponse> => {
@@ -50,8 +54,11 @@ export const GetAnnotation = async(idOrPath:string) => {
         const { entryList, totalSize } = await api.get('/nuxeo/collection', { params }).then(res =>res.data);
         return {entryList, totalSize}
     }
-    export const removeCollectionApi = async (idOrPath: string) => {
-        return await api.delete('/nuxeo/collection/remove', { data: {idOrPath} }).then(res =>res.data);
+    export const removeCollectionApi = async (params: collectionRemoveDocParams) => {
+        return await api.delete('/nuxeo/collection/remove', { data: params }).then(res =>res.data);
+    }
+    export const createCollectionApi = async (params: collectionCreateParams) => {
+        return await api.post('/nuxeo/collection/create', params).then(res =>res.data);
     }
     export const getCollectionDocApi = async (idOrPath: string) => {
         return await api.delete('/nuxeo/collection/remove', { data: {idOrPath} }).then(res =>res.data);
