@@ -256,6 +256,46 @@ importers:
       nuxt: 3.1.1_7kw3g6rralp5ps6mg3uyzz6azm
       typescript: 4.9.5
 
+  packages/client-collection:
+    specifiers:
+      '@nuxt/devtools': ^0.1.4
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^9.12.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.0.0
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxt/devtools': 0.1.4_nuxt@3.1.1
+      '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 9.13.0
+      dp-api: link:../dp-api
+      eslint: 8.34.0
+      nuxt: 3.1.1_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
+
+  packages/client-smart-folder:
+    specifiers:
+      '@nuxt/devtools': ^0.1.4
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^9.12.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.0.0
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxt/devtools': 0.1.4_nuxt@3.1.1
+      '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 9.13.0
+      dp-api: link:../dp-api
+      eslint: 8.34.0
+      nuxt: 3.1.1_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
+
   packages/client-trash:
     specifiers:
       '@nuxt/devtools': ^0.1.4
@@ -3983,7 +4023,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/plugin-transform-typescript': 7.20.13_@babel+core@7.20.12
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.12
-      vite: 4.0.4
+      vite: 4.0.4_f5vcjb3akvjdur4ffzogu2hewu
       vue: 3.2.45
     transitivePeerDependencies:
       - supports-color
@@ -4007,7 +4047,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.0.4
+      vite: 4.0.4_f5vcjb3akvjdur4ffzogu2hewu
       vue: 3.2.45
     dev: true
 

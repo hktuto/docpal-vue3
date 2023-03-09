@@ -1,6 +1,6 @@
 import { useDebounceFn } from "@vueuse/core";
 
-type AppState = 'loading' | 'needAuth' | 'ready' 
+type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | ""
 
 export const useAppStore = () => {
 
@@ -16,10 +16,9 @@ export const useAppStore = () => {
 
     const debounceChangeState = useDebounceFn(() => {
         displayState.value = state.value
-    }, 1000)
+    }, 500)
 
     watch(state, (_newState, oldState ) => {
-        console.log(_newState, oldState)
         switch(oldState) {
             case 'loading':
                 if(loadingEl.value) {
