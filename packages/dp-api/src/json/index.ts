@@ -11,5 +11,5 @@ export const jsonList = getJsonListApi()
 export function getJsonApi (key) {
     return jsonList[key]
 }
-console.log({jsonList})
-console.log(getJsonApi('clientPictureForm.json'))
+// console.log({jsonList})
+// console.log(getJsonApi('clientPictureForm.json'))

@@ -1,8 +1,6 @@
 <template>
     <div class="filterContainer">
-        <client-only>
-            <FromRenderer :form-json="formJson" />
-        </client-only>
+        <FromRenderer :form-json="formJson" />
     </div>
 </template>
 
@@ -10,7 +8,8 @@
 import { getJsonApi } from 'dp-api'
 const formJson = ref()
 onMounted(() => {
-    formJson.value = getJsonApi('clientPictureForm.json')
+    formJson.value = getJsonApi('search.json')
+    console.log(formJson.value)
 })
 </script>
 
