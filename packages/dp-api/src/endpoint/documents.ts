@@ -68,3 +68,19 @@ export const GetAnnotation = async(idOrPath:string) => {
         return {entryList, totalSize}
     }
 // #endregion
+
+// #region module: share
+export const getShareListApi = async (params: pageParams) => {
+    const res = await api.post('/nuxeo/share/get', params).then(res =>res.data);
+    console.log(res);
+    
+    return { entryList: res.list, totalSize: res.total }
+}
+export const deleteShareListApi = async (params: string[]) => {
+    const res = await api.delete('/nuxeo/share', {data: params}).then(res =>res.data);
+    console.log(res);
+    
+    return { entryList: res.list, totalSize: res.total }
+}
+// #endregion
+
