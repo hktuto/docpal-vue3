@@ -1,11 +1,25 @@
 <template>
     <client-only class="reorderButtom__container">
       <el-button type="primary" v-popover="popoverRef">{{ $t('tableHeader_orderColumn') }}</el-button>
-      <el-popover ref="popoverRef">
+      <el-popover ref="popoverRef" width="280">
         <div class="listContainer">
-          <div v-for="item in displayList" class="listItem">
-            {{ item }}
-          </div>
+          <draggable class="list-group" 
+                    :list="displayList" 
+                    itemKey="name" 
+                    group="people"
+                    @change="handleSubmit">
+            <template #item="{ element, index }">
+              <div class="list-group-item">
+                  <div class="label">
+                    {{$t(element.label || element.type)}}
+                  </div>
+                  <div class="show">
+                    {{element.show}}
+                  </div>
+                </div>
+            </template>
+          </draggable>
+          <el-button @click="handleRevert"> {{ $t('revert')}} </el-button>
         </div>
       </el-popover>
       <!-- <el-dialog v-model="dialogShow" :title="$t('tableHeader_reorderColumn')" custom-class="reorder__dialog">
@@ -108,7 +122,9 @@ async function handleSubmit () {
     param.tableSettings = {}
   }
   const displayOrder = displayList.value.reduce((prev,item,index) => {
-    prev.push(item.rowIndex)
+    if(item.show){
+      prev.push(item.rowIndex)
+    }
     return prev},[])
   param.tableSettings[props.sortKey] = displayOrder
   // param.tableSettings[props.sortKey] = JSON.stringify(param.tableSettings[props.sortKey])
@@ -170,12 +186,12 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .list-group {
-  height: 30vh;
-  padding-left: 10px;
-  padding-right: 10px;
+  max-height: 50vh;
   overflow: auto;
   position: relative;
   .list-group-item {
+    display: flex;
+    flex-flow: row nowrap;
     padding: calc(var(--app-padding));
     &:hover {
       background: var(--hover-text-color);
