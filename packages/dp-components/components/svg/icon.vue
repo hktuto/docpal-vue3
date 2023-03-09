@@ -1,11 +1,11 @@
 <template>
     <template v-if="round">
         <span class="svg-icon-round">
-            <InlineSvg :src="src"/>
+            <component :is="InlineSvg" :class="svgClass" :src="src"></component>
         </span>
     </template>
     <template v-else>
-        <InlineSvg class="svg-icon" :src="src"/>
+        <component :is="InlineSvg" :class="svgClass" :src="src"></component>
     </template>
 </template>
 
@@ -15,13 +15,16 @@ const props = defineProps<{
     src: string,
     round: boolean
 }>()
+const svgClass = computed(() => {
+    return 'svg-icon'
+})
 </script>
 
 <style lang="scss" scoped>
 .svg-icon {
     cursor: pointer;
-    width: var(--icon-size, 1.5rem);
-    height: var(--icon-size, 1.5rem);
+    width: var(--icon-size, );
+    height: var(--icon-size, 24px);
     fill: currentColor;
     color: var(--icon-color, #AEB6BA);
     &:hover {
@@ -43,7 +46,6 @@ const props = defineProps<{
     place-items: center;
     svg {
         color: currentColor;
-        fill: currentColor;
         width: var(--icon-size, 14px);
         height: var(--icon-size, 14px);
     }
