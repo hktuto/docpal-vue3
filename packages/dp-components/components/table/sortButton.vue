@@ -7,18 +7,23 @@
                     :list="displayList" 
                     itemKey="name" 
                     group="people"
+                    handle=".handle"
                     @change="handleSubmit">
             <template #item="{ element, index }">
               <div class="list-group-item">
+                <div class="handle">
+                  <SvgIcon src="/icons/move-handle.svg" />
+                </div>
                   <div class="label">
                     {{$t(element.label || element.type)}}
                   </div>
                   <div class="show">
-                    {{element.show}}
+                    <el-switch v-model="element.show" @change="handleSubmit"/>
                   </div>
                 </div>
             </template>
           </draggable>
+          <hr />
           <el-button @click="handleRevert"> {{ $t('revert')}} </el-button>
         </div>
       </el-popover>
@@ -74,26 +79,16 @@ interface TableProps {
 }
 const props = defineProps<TableProps>()
 const emit = defineEmits([
-    'selection-change', // 当选择项发生变化时会触发该事件
-    'row-click', // 当某一行被点击时会触发该事件
-    'cell-click', // 当某个单元格被点击时会触发该事件
-    'command', // 按钮组事件
-    'size-change', // pageSize事件
-    'current-change', // currentPage按钮组事件
-    'pagination-change', // currentPage或者pageSize改变触发 
-    'sort-change', // 列排序发生改变触发 
+    'reorderColumn', 
 ])
 
 const popoverRef = ref(); 
 
 const dialogShow = ref(false)
 const displayList = ref([
-  { label: "John", id: 1 },
-  { label: "Joao", id: 2 },
-  { label: "Jean", id: 3 },
-  { label: "Gerard", id: 4 }
 ])
-
+const originalColumns = ref()
+const showList = computed(() => displayList.value.filter(item => item.show))
 const loading = ref(false)
 // const hideList =ref([])
 
@@ -103,15 +98,11 @@ function handleCancle () {
 // 使用前端默认配置
 function handleRevert () {
   const userColumns = getDefaultColumns()
-  const { display, hide } = originalColumns.value.reduce( (result, current, index) => {
-    userColumns.includes(index) ? result.display.push(current) : result.hide.push(current)
-    return result;
-  }, {
-    display:[],
-    hide: []
-  })
-  displayList.value = display;
-  hideList.value = hide;
+  displayList.value = originalColumns.value.map( (item,index) => {
+      item.rowIndex = index;
+      item.show = userColumns.includes(index)
+      return item
+    })
   handleSubmit()
 }
 // 保存偏好设置
@@ -127,18 +118,12 @@ async function handleSubmit () {
     }
     return prev},[])
   param.tableSettings[props.sortKey] = displayOrder
-  // param.tableSettings[props.sortKey] = JSON.stringify(param.tableSettings[props.sortKey])
-  // param.tableSettings[props.sortKey].defaultDisplayList = [...props.tableColumn]
-  // param.tableSettings[props.sortKey] = [...displayList.value],
   await UserSettingSaveApi(param)
   await getUserSetting()
-  
-  // displayList.value.forEach(item => { item.hide = false })
-  emit('reorderColumn', displayList.value)
+  emit('reorderColumn', showList.value)
   loading.value = false
-  dialogShow.value = false
 }
-const originalColumns = ref()
+
 function initColumn () {
   // check store default column setting
   if(props.sortKey && tableColumnSetting) {
@@ -156,16 +141,6 @@ function initColumn () {
       item.show = userColumns.includes(index)
       return item
     })
-    console.log(displayList.value)
-    // const { display, hide } = originalColumns.value.reduce( (result, current, index) => {
-    //   current.rowIndex = index
-    //   userColumns.includes(index) ? result.display.push(current) : result.hide.push(current)
-    //   return result;
-    // }, {
-    //   display:[],
-    //   hide: []
-    // })
-
   }
 }
 
@@ -178,7 +153,7 @@ function getDefaultColumns () {
 
 onMounted(() => {
   initColumn()
-  emit('reorderColumn', displayList.value)
+  emit('reorderColumn', showList.value)
 })
 </script>
 
@@ -190,11 +165,16 @@ onMounted(() => {
   overflow: auto;
   position: relative;
   .list-group-item {
-    display: flex;
-    flex-flow: row nowrap;
-    padding: calc(var(--app-padding));
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    padding: calc(var(--app-padding)) calc(var(--app-padding) / 2) ;
+    background: var(--color-grey-000);
+    align-items: center;
     &:hover {
-      background: var(--hover-text-color);
+      background: var(--color-grey-0000);
+    }
+    & + & {
+      border-top: 1px solid var(--color-grey-150);
     }
   }
   // .list-group-item.sortable-chose {}

@@ -1,6 +1,6 @@
 <template>
 <div class="svg-list-container">
-    <div v-for="list in iconList" :key="list.name">
+    <div v-for="list in svgIconList" :key="list.name">
         {{list.name}}
         <div class="svg-list">
             <el-card v-for="svg in list.children" :key="svg.src" :class="{'selectedSvg': svg.src === _selectSvg}" @click="handleSvgClick(svg)">
@@ -12,7 +12,6 @@
 </div>
 </template>
 <script lang="ts" setup>
-import { iconList } from './svg'
 const props = defineProps<{
     selectedSrc: string
 }>()

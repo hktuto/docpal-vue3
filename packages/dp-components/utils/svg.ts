@@ -33,4 +33,4 @@ export function getIconList () {
         return prev
     }, [])
 }
-export const iconList = getIconList()
+export const svgIconList = getIconList()
