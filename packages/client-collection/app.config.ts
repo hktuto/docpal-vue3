@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"collection",
       url:"/collection",
       icon: "/icons/menu/collection.svg",
-      order:5,
+      order:2,
     }
   ],
 })
