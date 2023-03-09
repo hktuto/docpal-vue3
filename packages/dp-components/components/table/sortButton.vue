@@ -4,7 +4,7 @@
       <el-popover ref="popoverRef">
         <div class="listContainer">
           <div v-for="item in displayList" class="listItem">
-
+            {{ item }}
           </div>
         </div>
       </el-popover>
@@ -135,18 +135,21 @@ function initColumn () {
       userColumns = userPreference.value.tableSettings[props.sortKey]
     }
 
-    const { display, hide } = originalColumns.value.reduce( (result, current, index) => {
-      current.rowIndex = index
-      userColumns.includes(index) ? result.display.push(current) : result.hide.push(current)
-      return result;
-    }, {
-      display:[],
-      hide: []
+    displayList.value = originalColumns.value.map( (item,index) => {
+      item.rowIndex = index;
+      item.show = userColumns.includes(index)
+      return item
     })
+    console.log(displayList.value)
+    // const { display, hide } = originalColumns.value.reduce( (result, current, index) => {
+    //   current.rowIndex = index
+    //   userColumns.includes(index) ? result.display.push(current) : result.hide.push(current)
+    //   return result;
+    // }, {
+    //   display:[],
+    //   hide: []
+    // })
 
-    displayList.value = display;
-    
-    hideList.value = hide;
   }
 }
 
