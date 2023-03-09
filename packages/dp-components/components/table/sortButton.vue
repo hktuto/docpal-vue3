@@ -3,7 +3,7 @@
       <el-button type="primary" v-popover="popoverRef">{{ $t('tableHeader_orderColumn') }}</el-button>
       <el-popover ref="popoverRef">
         <div class="listContainer">
-          <div v-for="item in " class="listItem">
+          <div v-for="item in displayList" class="listItem">
 
           </div>
         </div>
@@ -184,14 +184,5 @@ onMounted(() => {
   }
 }
 </style>
-<style lang="scss">
-.reorder__dialog {
-  .el-dialog__body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: var(--app-padding);
-    column-gap: var(--app-padding);
-  }
-}
-</style>
+
 
