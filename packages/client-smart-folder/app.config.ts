@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"smartFolder",
       url:"/smartFolder",
       icon: "/icons/menu/smartFolder.svg",
-      order:5,
+      order:3,
     }
   ],
 })

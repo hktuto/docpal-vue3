@@ -6,7 +6,6 @@
     <div v-else-if="displayState != 'ready'" ref="loadingEl" class="loadingContainer">
       <div class="contain">
         <Logo class="loginLogo"/>
-        {{displayState}}
       </div>
       <!-- <ElButton @click="state = 'ready' ">ready</ElButton> -->
     </div>
