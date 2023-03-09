@@ -4,7 +4,10 @@
       <LoginForm  />
     </div>
     <div v-else-if="displayState != 'ready'" ref="loadingEl" class="loadingContainer">
-      <Logo class="loginLogo"/>
+      <div class="contain">
+        <Logo class="loginLogo"/>
+        {{displayState}}
+      </div>
       <!-- <ElButton @click="state = 'ready' ">ready</ElButton> -->
     </div>
     <div v-else ref="readyElement" class="clientPageContainer">
@@ -50,6 +53,7 @@ onMounted(async () => {
   height: 100%;
 }
 .loginLogo{
-  max-width: 320px;
+  max-width: 280px;
+  width: 100%;
 }
 </style>

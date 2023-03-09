@@ -26,18 +26,10 @@ type RuntimeOption = {
 
 
 const makeConfig = (options:RuntimeOption) => {
-  if(options.useFormDesigner) {
-    defaultConfig.vite.optimizeDeps.include.push('v-form/dist/designer.umd');
+  defaultConfig.vite.optimizeDeps.include.push('v-form/dist/designer.umd');
     defaultConfig.plugins.push({
       src:'../../../utils/formDesignerPlugin', mode: 'client'
     })
-  }
-  if(options.useFormRender) {
-    defaultConfig.vite.optimizeDeps.include.push('v-form/dist/designer.umd');
-    defaultConfig.plugins.push({
-      src:'../../../utils/formRenderPlugin', mode: 'client'
-    })
-  }
   return defaultConfig
 }
 export default makeConfig

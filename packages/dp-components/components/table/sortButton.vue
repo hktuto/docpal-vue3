@@ -1,9 +1,14 @@
 <template>
     <client-only class="reorderButtom__container">
-      <slot>
-        <el-button type="primary" @click="dialogShow = true">{{ $t('tableHeader_orderColumn') }}</el-button>
-      </slot>
-      <el-dialog v-model="dialogShow" :title="$t('tableHeader_reorderColumn')" custom-class="reorder__dialog">
+      <el-button type="primary" v-popover="popoverRef">{{ $t('tableHeader_orderColumn') }}</el-button>
+      <el-popover ref="popoverRef">
+        <div class="listContainer">
+          <div v-for="item in " class="listItem">
+
+          </div>
+        </div>
+      </el-popover>
+      <!-- <el-dialog v-model="dialogShow" :title="$t('tableHeader_reorderColumn')" custom-class="reorder__dialog">
         <el-card class="box-card">
           <template #header> <span>{{$t('tableHeader_displayColumn')}}</span> </template>
           <draggable class="list-group" 
@@ -34,7 +39,7 @@
           <el-button @click="handleRevert"> {{ $t('revert')}} </el-button>
           <el-button type="primary" @click="handleSubmit()"> {{ $t('common_submit') }} </el-button>
         </template>
-      </el-dialog>
+      </el-dialog> -->
     </client-only>
 </template>
 <script lang="ts" setup>
@@ -64,6 +69,9 @@ const emit = defineEmits([
     'pagination-change', // currentPage或者pageSize改变触发 
     'sort-change', // 列排序发生改变触发 
 ])
+
+const popoverRef = ref(); 
+
 const dialogShow = ref(false)
 const displayList = ref([
   { label: "John", id: 1 },
@@ -73,12 +81,10 @@ const displayList = ref([
 ])
 
 const loading = ref(false)
-const hideList =ref([])
-function handelDragChange (params) {
-}
+// const hideList =ref([])
+
 function handleCancle () {
   initColumn()
-  dialogShow.value = false
 }
 // 使用前端默认配置
 function handleRevert () {
@@ -139,11 +145,11 @@ function initColumn () {
     })
 
     displayList.value = display;
-    console.log(displayList.value, 'displayList.value');
     
     hideList.value = hide;
   }
 }
+
 function getDefaultColumns () {
   return originalColumns.value.reduce((prev, item, index) => {
     if(!item.hide) prev.push(index)
@@ -156,6 +162,9 @@ onMounted(() => {
   emit('reorderColumn', displayList.value)
 })
 </script>
+
+
+
 <style lang="scss" scoped>
 .list-group {
   height: 30vh;

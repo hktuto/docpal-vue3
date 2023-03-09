@@ -1,6 +1,7 @@
 <template>
     <div class="dp-table-container">
         <div>
+            <slot name="preSortButton"></slot>
             <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton>
         </div>
         <div class="dp-table-container--main">
