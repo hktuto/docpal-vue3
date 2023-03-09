@@ -5,6 +5,11 @@
       <!-- <ExampleTest></ExampleTest> -->
       <!-- <ExampleTablePagination></ExampleTablePagination> -->
     </el-tab-pane>
+    <el-tab-pane label="render">
+      <ExampleFormRender></ExampleFormRender>
+      <!-- <ExampleTest></ExampleTest> -->
+      <!-- <ExampleTablePagination></ExampleTablePagination> -->
+    </el-tab-pane>
   </el-tabs>
 </template>
 <script lang="ts" setup>
