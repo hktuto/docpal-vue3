@@ -1,6 +1,8 @@
 <template>
     <div class="filterContainer">
-        <FromRenderer :form-json="formJson" />
+        <client-only>
+            <FromRenderer :form-json="formJson" />
+        </client-only>
     </div>
 </template>
 
