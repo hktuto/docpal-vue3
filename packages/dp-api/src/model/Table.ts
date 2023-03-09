@@ -63,7 +63,8 @@ export enum TABLE {
     ACTIVE_TASK = 'activeTask',
     CLIENT_TRASH = 'clientTrash',
     CLIENT_SMART_FOLDER = 'clientSmartFolder',
-    CLIENT_COLLECTION = 'clientCollection'
+    CLIENT_COLLECTION = 'clientCollection',
+    CLIENT_SHARE_LIST = 'clientShareList'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -406,6 +407,72 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['delete'],
         options: { pageSize: 20 }
     },
-    
+    [TABLE.CLIENT_SHARE_LIST] : {
+        columns: [
+            { label: 'tableHeader_emailList', prop: 'emailList', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "emailList",
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { label: 'tableHeader_numberOfFiles', prop: 'documentSize' },
+            { label: 'tableHeader_creationDate', prop: 'created', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "created",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { label: 'tableHeader_dueDate', prop: 'expiredDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "expiredDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                "type": "",
+                "label": "actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "disabled",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+                "id": "1678091777412"
+            }
+        ],
+        events: ['disabled'],
+        options: { pageSize: 20 }
+    },
 
 }
