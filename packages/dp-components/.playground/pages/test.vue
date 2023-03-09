@@ -1,12 +1,13 @@
 <template>
   <el-tabs :tab-position="tabPosition" class="demo-tabs">
     <el-tab-pane label="table">
-      <ExampleTable></ExampleTable>
+      <ExampleFormRender></ExampleFormRender>
+      <!-- <ExampleTable></ExampleTable> -->
       <!-- <ExampleTest></ExampleTest> -->
       <!-- <ExampleTablePagination></ExampleTablePagination> -->
     </el-tab-pane>
     <el-tab-pane label="render">
-      <ExampleFormRender></ExampleFormRender>
+      <!-- <ExampleFormRender></ExampleFormRender> -->
       <!-- <ExampleTest></ExampleTest> -->
       <!-- <ExampleTablePagination></ExampleTablePagination> -->
     </el-tab-pane>

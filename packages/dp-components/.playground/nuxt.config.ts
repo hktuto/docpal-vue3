@@ -5,7 +5,7 @@ const config = defineNuxtConfig({
   modules: [
     '@nuxt/devtools',
   ],
-  ...playgroundConfig({useFormRender:true}),
+  ...playgroundConfig({}),
 })
 
 
