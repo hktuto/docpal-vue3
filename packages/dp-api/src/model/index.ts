@@ -4,10 +4,12 @@ export * from './search.d'
 export * from './setting.d'
 export * from './Table'
 export type pageParams = {
-    pageIndex?: number,
-    currentPageIndex?: number,
-    pageNum?: number,
-    pageSize : number,
+    page ?: number,
+    pageIndex ?: number,
+    currentPageIndex ?: number,
+    pageNum ?: number,
+    size ?: number,
+    pageSize ?: number,
     [key: string]: any
 }
 
