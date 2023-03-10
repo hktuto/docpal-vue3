@@ -12,11 +12,6 @@ export function getJsonApi (key: string) {
     return formJsonList[key]
 }
 
-export function saveJsonApi (jsonName: any, data: any) {
-    
-    console.log(jsonName, data);
-    const file = `./${jsonName}`
-}
 
 // console.log({formJsonList})
 // console.log(getJsonApi('clientPictureForm.json'))
