@@ -5,6 +5,7 @@
             <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
             <BrowseTable :path="routePath" :doc="data"/>
         </div>
+        <SvgIconSelector v-model:src="icon" />
         <template v-if="data && !data.isFolder">
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" />
         </template>
@@ -16,7 +17,9 @@
 <script lang="ts" setup>
 import { GetDocDetail } from 'dp-api'
 const breadCrumb = ref();
+const icon = ref("");
 const route = useRoute();
+
 const routePath = computed( () => route.query.path || '/')
 const { data, refresh, pending} = await useAsyncData(() => GetDocDetail(route.query.path));
 watch(route, () => refresh());
