@@ -1,3 +1,4 @@
+import { dplog } from './../../dp-log/utils/logs';
 import dayjs from 'dayjs'
 export type metaType = 'string' | 'date' | 'boolean' | 'number' | 'array'
 const trashType = {
@@ -150,6 +151,7 @@ const tableHelper = {
         else {
             let result = ''
             col.formatList.forEach((item:any) => {
+                dplog(item);
                 if (item.formatFun) {
                     result += this.ValueFilters[item.formatFun](this.getProp(row, item.prop),deepCopy(item.params) )
                 } else {

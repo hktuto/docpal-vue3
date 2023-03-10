@@ -14,12 +14,13 @@
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "dp-api": "workspace:*",
     "eslint": "^8.28.0",
     "nuxt": "^3.0.0",
-    "typescript": "^4.9.3",
-    "dp-api":"workspace:*"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.4.7",
     "@vueuse/core": "^9.12.0"
   }
 }
