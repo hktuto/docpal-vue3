@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-export type metaType = 'string' | 'date' | 'boolean' | 'number'
+export type metaType = 'string' | 'date' | 'boolean' | 'number' | 'array'
 const trashType = {
   id: 'string',
   name: 'string',
@@ -27,36 +27,42 @@ const tableHelper = {
     trashType,
     filterArr: [
         {
-        name: 'dateFormat',
-        supportedType: ['date'],
-        params: {
-            format: 'string'
-        }
-        }, {
-        name: 'capitalized',
-        supportedType: ['string'],
-        }, {
-        name: 'hidePhone',
-        supportedType: ['number'],
-        }, {
-        name: 'hideIdCard',
-        supportedType: ['number'],
-        },{
-        name: 'hideEmail',
-        supportedType: ['string'],
-        },{
-        name: 'regExp',
-        params: {
-            regExp: 'string',
-            format: 'string'
-        },
-        example: [
-            {
-            regExp: '/^(\\d{6})\\d+(\\d{4})$/',
-            format: '$1******$2',
-            description: 'regExp.description.hideIdCard'
+            name: 'dateFormat',
+            supportedType: ['date'],
+            params: {
+                format: 'string'
             }
-        ]
+        }, {
+            name: 'capitalized',
+            supportedType: ['string'],
+        }, {
+            name: 'hidePhone',
+            supportedType: ['number'],
+        }, {
+            name: 'hideIdCard',
+            supportedType: ['number'],
+        },{
+            name: 'hideEmail',
+            supportedType: ['string'],
+        },{
+            name: 'regExp',
+            params: {
+                regExp: 'string',
+                format: 'string'
+            },
+            example: [
+                {
+                regExp: '/^(\\d{6})\\d+(\\d{4})$/',
+                format: '$1******$2',
+                description: 'regExp.description.hideIdCard'
+                }
+            ]
+        },{
+            name: 'concat',
+            supportedType: ['array'],
+            params: {
+                joiner: 'string',
+            },
         }
     ],
     ValueFilters: <any>{
@@ -101,6 +107,10 @@ const tableHelper = {
         },
         regExp (value: any, params: any) {
             return value.replace(eval(params.regExp), params.format)
+        },
+        concat (value: any, params: any) {
+            if (!params.joiner) params.joiner = ','
+            return value.join(params.joiner)
         }
     },
     getFilterArr (metaType: metaType) {
@@ -140,7 +150,6 @@ const tableHelper = {
         else {
             let result = ''
             col.formatList.forEach((item:any) => {
-                console.log(item);
                 if (item.formatFun) {
                     result += this.ValueFilters[item.formatFun](this.getProp(row, item.prop),deepCopy(item.params) )
                 } else {
@@ -151,13 +160,17 @@ const tableHelper = {
         }
     },
     getProp(row:any, prop: string) {
-        let result = ''
-        let nextValue = { ...row }
-        prop.split('.').forEach(key => {
-            result = nextValue[key]
-            nextValue = nextValue[key]
-        })
-        return result
+        try {
+            let result = ''
+            let nextValue = { ...row }
+            prop.split('.').forEach(key => {
+                result = nextValue[key]
+                nextValue = nextValue[key]
+            })
+            return result
+        } catch (error) {
+            return ''
+        }
     }
 }
 export default tableHelper

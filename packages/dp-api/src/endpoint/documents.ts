@@ -1,6 +1,8 @@
 import {api} from '../';
 import { BreadResponse, DocDetail, GetChildResponse, 
-    pageParams, collectionRemoveDocParams, collectionCreateParams } from '../model';
+    pageParams, collectionRemoveDocParams, collectionCreateParams,
+    shareInfo
+} from '../model';
 
 export const GetChildThumbnail = async(idOrPath: string):Promise<GetChildResponse> => {
     return api.post<GetChildResponse>('/nuxeo/document/children/thumbnail',{ idOrPath }).then(res => res.data);
@@ -72,15 +74,14 @@ export const GetAnnotation = async(idOrPath:string) => {
 // #region module: share
 export const getShareListApi = async (params: pageParams) => {
     const res = await api.post('/nuxeo/share/get', params).then(res =>res.data);
-    console.log(res);
-    
     return { entryList: res.list, totalSize: res.total }
 }
 export const deleteShareListApi = async (params: string[]) => {
     const res = await api.delete('/nuxeo/share', {data: params}).then(res =>res.data);
-    console.log(res);
-    
     return { entryList: res.list, totalSize: res.total }
+}
+export const patchShareInfoApi = async (params: shareInfo) => {
+    return await api.patch('/nuxeo/share', params).then(res =>res.data);
 }
 // #endregion
 

@@ -61,3 +61,13 @@ export type idOrPathParams = {
     idOrPath: string
 }
 
+export type shareInfo = {
+    accessToken ?: string,
+    created ?: string,
+    documentSize ?: number,
+    easyShareList ?: any[],
+    emailList ?: string[],
+    expiredDate ?: string,
+    shareID ?: string
+}
+
