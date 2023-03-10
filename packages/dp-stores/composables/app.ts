@@ -12,7 +12,7 @@ export const useAppStore = defineStore('app', () => {
     const needAuthEl = ref<HTMLElement>();
     const readyElement = ref<HTMLElement>();
 
-    const appLoadingList = ref<any[]>([]);
+   
 
     const fadeOutClass = "fadeOut"
 
@@ -20,16 +20,16 @@ export const useAppStore = defineStore('app', () => {
         displayState.value = state.value
     }, 500)
 
+    const appLoadingList = ref<any[]>([]);
     async function appInit(){
         for await ( const item of appLoadingList.value) {
             state.value = item.key;
             await item.function;
         }
-        
     }
 
     watch(state, (_newState, oldState ) => {
-        console.log(_newState)
+        dplog(_newState)
         switch(oldState) {
             case 'loading':
                 if(loadingEl.value) {

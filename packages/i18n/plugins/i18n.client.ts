@@ -1,3 +1,4 @@
+import { dplog } from './../../dp-log/utils/logs';
 // import { useAppStore } from './../../dp-stores/composables/app';
 
 import { availableLocales } from '../makeI18nSetting';
@@ -22,7 +23,7 @@ export default defineNuxtPlugin(async({
 })
 
 async function setLanuage(i18n:any, lang:string, localeKey:string[], baseUrl:string) {
-    console.log("Set Language")
+    dplog("Set Language")
     const language = await getLocalMessage(lang, localeKey, baseUrl);
         if(language) {
             i18n.setLocaleMessage(lang, language);

@@ -6,6 +6,4 @@ const config = defineNuxtConfig({
 })
 
 
-console.log(config)
-
 export default config

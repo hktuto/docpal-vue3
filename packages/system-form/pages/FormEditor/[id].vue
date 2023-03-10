@@ -13,7 +13,7 @@ const fromDesignerRef = ref()
 function handleSave () {
     
     const newJson = fromDesignerRef.value.getFormJson()
-    console.log({newJson});
+    dplog({newJson});
     saveJsonApi(route.params.id, newJson)
 }
 watch(() => route.params.id, (newJsonName) => {
