@@ -1,5 +1,6 @@
 <template>
 <div class="svg-list-container">
+    {{svgIconList}}
     <div v-for="list in svgIconList" :key="list.name">
         {{list.name}}
         <div class="svg-list">

@@ -7,5 +7,5 @@ export default defineNuxtConfig({
     extends: [
         ...customLayer()
     ],
-    ...playgroundConfig({useFormDesigner:true})
+    ...playgroundConfig({})
 })

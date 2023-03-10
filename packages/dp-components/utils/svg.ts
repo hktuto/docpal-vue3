@@ -1,4 +1,4 @@
-const iconModules = import.meta.glob("../../public/icons/**/*.svg")
+const iconModules = import.meta.glob("../public/icons/**/*.svg")
 export function getIconList () {
     const iconListObj:any = {
         'common': {
@@ -10,7 +10,7 @@ export function getIconList () {
         const regexName = /(?<=\.\.\/public\/icons)(.+?)(?=\.svg)/g
         // @ts-ignore
         const regexResult:any = key.match(regexName)[0]
-        const src = key.replace(/\.\.\/\.\.\/public/, '')
+        const src = key.replace(/\.\.\/public/, '')
         const names = regexResult.split('/').filter((name: string) => name)
         let _iconList:any = iconListObj['common'].children
         names.forEach((name:string, index: number) => {

@@ -26,6 +26,7 @@ const user = useUser();
 
 onMounted(async () => {
   await appStore.appInit();
+  console.log(svgIconList);
   if(sessionStorage) {
     api.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.getItem('token');
     user.token.value = sessionStorage.getItem('token');
