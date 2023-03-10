@@ -7,20 +7,20 @@
 </template>
 
 <script lang="ts" setup>
-import { getJsonApi, saveJsonApi } from 'dp-api'
+import { getJsonApi } from 'dp-api'
 const route = useRoute()
 const fromDesignerRef = ref()
-function handleSave () {
+async function handleSave () {
     
-    const newJson = fromDesignerRef.value.getFormJson()
-    dplog({newJson});
-    saveJsonApi(route.params.id, newJson)
+    const body = fromDesignerRef.value.getFormJson()
+    dplog({body});
+    const save = await $fetch(`/form/${route.params.id}`, { method:'post', body})
 }
+
+onMounted(() => fromDesignerRef.value.setFormJson(getJsonApi(route.params.id)))
 watch(() => route.params.id, (newJsonName) => {
-    setTimeout(() => {
-        fromDesignerRef.value.setFormJson(getJsonApi(newJsonName))
-    })
-}, { immediate: true })
+    fromDesignerRef.value.setFormJson(getJsonApi(newJsonName))
+}, { immediate: false })
 </script>
 <style lang="scss" scoped>
 :deep(.left-toolbar) {
