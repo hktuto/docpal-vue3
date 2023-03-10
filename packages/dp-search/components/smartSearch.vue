@@ -45,7 +45,7 @@ function elHoverHandler() {
     
 }
 function focusInput() {
-    console.log(inputEl.value)
+    dplog(inputEl.value)
     inputEl.value.focus();
 }
 function blurInput() {
