@@ -11,6 +11,8 @@
   --font-size-base: #{$--font-size-base};
   --header-height: 60px;
 
+  
+
   --primary-gradient: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   --second-background-color: linear-gradient(180deg, #F2F8FA 0%, #E6EDF7 100%);
 
@@ -72,11 +74,25 @@
   }
 
 }
+#gradient-canvas{
+  --gradient-color-1: #119de9;
+  --gradient-color-2: #637fdc;
+  --gradient-color-3: #1dd6c3;
+  --gradient-color-4: #9adfee;
+}
 
 html.dark{
   
   --background-color: rgb(30, 31, 32);
   --second-background-color: linear-gradient(180deg, #3F484F 0%, #2B3138 100%);
+
+  
+  #gradient-canvas{
+    --gradient-color-1: #1088c9;
+    --gradient-color-2: #4963bb;
+    --gradient-color-3: #12a294;
+    --gradient-color-4: #63b8cb;
+  }
   // font-color
   --color-grey-0000: #000;
   --color-grey-000: #{$color-grey-950};

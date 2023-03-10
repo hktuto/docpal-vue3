@@ -5,6 +5,7 @@
       
     </div>
     <div v-else-if="appStore.displayState != 'ready'" ref="loadingEl" class="loadingContainer">
+     
       <div class="contain">
         <Logo class="loginLogo"/>
         {{ appStore.state }}
@@ -14,6 +15,7 @@
     <div v-else ref="readyElement" class="clientPageContainer">
       <NuxtPage />
     </div>
+     <LoadingBg v-if="appStore.displayState != 'ready'" />
   </div>
 </template>
 
