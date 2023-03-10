@@ -16,3 +16,11 @@ export const Login = async(data: LoginRequest):Promise<LoginResponse> => {
 export const Verify = async():Promise<User> => {
     return api.get<User>('/nuxeo/user/getApplication').then(res => res.data);
 }
+
+let userListStore = []
+export const getUserListApi = async(refresh: boolean = false):Promise<User[]> => {
+    if (userListStore.length > 0 && !refresh) return userListStore
+    let response = await api.post<User[]>('/nuxeo/identity/users', {}).then(res => res.data);
+    userListStore = [...response.sort((a,b)=> (a.username.localeCompare(b.username) ))]
+    return userListStore
+}
