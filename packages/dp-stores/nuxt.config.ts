@@ -5,7 +5,16 @@ const env = ExcutingAnOrder[ExcutingAnOrder.length - 1];
 export default defineNuxtConfig({
     modules:[
         // 'dp/nuxt-session'
+        '@pinia/nuxt',
     ],
+    // @ts-ignore
+    pinia: {
+        autoImports: [
+          // automatically imports `defineStore`
+          'defineStore', // import { defineStore } from 'pinia'
+          ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+        ],
+      },
     nitro:{
         devProxy:{
             '/api':{
