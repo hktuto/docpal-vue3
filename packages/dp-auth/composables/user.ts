@@ -1,10 +1,11 @@
-import { useAppStore } from './../../dp-stores/composables/app';
+// import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
 
 import {GetSetting, UserSettingSaveApi, Login, api, Verify} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
 
+    // @ts-ignore
     const appStore = useAppStore();    
     const isLogin = useState<boolean>('isLogin',() => false);
     const token = useState<string>('userToken', () => "");
@@ -69,7 +70,7 @@ export const useUser = () => {
             },
             {...userSetting}
         )
-        appStore.state.value = 'ready';
+        appStore.state = 'ready';
         settingStore.init()
     }
 
@@ -84,7 +85,7 @@ export const useUser = () => {
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
-            appStore.state.value = 'needAuth';
+            appStore.state = 'needAuth';
             isLogin.value = false,
             token.value = "";
             refreshToken.value = "";
@@ -116,7 +117,7 @@ export const useUser = () => {
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
-        appStore.state.value = 'needAuth';
+        appStore.state = 'needAuth';
         if(sessionStorage){
             sessionStorage.removeItem('token');
         };

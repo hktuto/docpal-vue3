@@ -1,16 +1,18 @@
 import { useDebounceFn } from "@vueuse/core";
-
+import { defineStore } from 'pinia'
 type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | ""
 
-export const useAppStore = () => {
+export const useAppStore = defineStore('app', () => {
 
-    const state = useState<AppState>('appState', () => 'loading');
+    const state = ref<AppState>('loading');
     const noEvent = ref(false);
-    const displayState = useState<AppState>('displayState', () => 'loading');
+    const displayState = ref<AppState>('loading');
 
     const loadingEl = ref<HTMLElement>();
     const needAuthEl = ref<HTMLElement>();
     const readyElement = ref<HTMLElement>();
+
+    const appLoadingList = ref<any[]>([]);
 
     const fadeOutClass = "fadeOut"
 
@@ -18,7 +20,16 @@ export const useAppStore = () => {
         displayState.value = state.value
     }, 500)
 
+    async function appInit(){
+        for await ( const item of appLoadingList.value) {
+            state.value = item.key;
+            await item.function;
+        }
+        
+    }
+
     watch(state, (_newState, oldState ) => {
+        console.log(_newState)
         switch(oldState) {
             case 'loading':
                 if(loadingEl.value) {
@@ -45,7 +56,10 @@ export const useAppStore = () => {
         loadingEl,
         needAuthEl,
         readyElement,
-        displayState
+        displayState,
+
+        appLoadingList,
+        appInit
     }
     
-}
+})
