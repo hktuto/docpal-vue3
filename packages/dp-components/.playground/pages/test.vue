@@ -1,15 +1,15 @@
 <template>
   <el-tabs :tab-position="tabPosition" class="demo-tabs">
     <el-tab-pane label="table">
-      <ExampleFormRender></ExampleFormRender>
       <!-- <ExampleTable></ExampleTable> -->
       <!-- <ExampleTest></ExampleTest> -->
       <!-- <ExampleTablePagination></ExampleTablePagination> -->
     </el-tab-pane>
     <el-tab-pane label="render">
-      <!-- <ExampleFormRender></ExampleFormRender> -->
-      <!-- <ExampleTest></ExampleTest> -->
-      <!-- <ExampleTablePagination></ExampleTablePagination> -->
+      <ExampleFormRender></ExampleFormRender>
+    </el-tab-pane>
+    <el-tab-pane label="designer">
+      <FromDesigner></FromDesigner>
     </el-tab-pane>
   </el-tabs>
 </template>
