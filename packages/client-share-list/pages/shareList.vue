@@ -42,8 +42,8 @@ const { t } = useI18n();
         const res = await getShareListApi(param)
         state.tableData = res.entryList
         state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.pageIndex + 1
+        state.options.paginationConfig.pageSize = param.size
+        state.options.paginationConfig.currentPage = param.page + 1
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
@@ -73,6 +73,8 @@ const { t } = useI18n();
         () => route.query,
         async (newval) => {
             const { page, pageSize } = newval
+            console.log({pageSize});
+            
             pageParams.pageIndex = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             getList({page: pageParams.pageIndex, size: pageParams.pageSize})
