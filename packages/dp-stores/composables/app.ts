@@ -1,6 +1,7 @@
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from 'pinia'
-type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | ""
+type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | 'offline' | ""
+import { useOnline } from '@vueuse/core'
 
 export const useAppStore = defineStore('app', () => {
 
@@ -12,7 +13,9 @@ export const useAppStore = defineStore('app', () => {
     const needAuthEl = ref<HTMLElement>();
     const readyElement = ref<HTMLElement>();
 
-   
+    
+    const online = useOnline();
+    const user = useUser();
 
     const fadeOutClass = "fadeOut"
 
@@ -50,6 +53,14 @@ export const useAppStore = defineStore('app', () => {
         debounceChangeState();
     })
 
+    watch(online, async(bool) => {
+        if(!bool) {
+            state.value = 'offline';
+        }else{
+            await appInit();
+            await user.verify();
+        }
+    })
     return {
         state,
         noEvent,
