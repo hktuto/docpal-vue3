@@ -1,7 +1,9 @@
 import {api} from '../';
 import { BreadResponse, DocDetail, GetChildResponse, 
     pageParams, collectionRemoveDocParams, collectionCreateParams,
-    shareInfo
+    shareInfo,
+    DocType,
+    Meta
 } from '../model';
 
 export const GetChildThumbnail = async(idOrPath: string):Promise<GetChildResponse> => {
@@ -84,4 +86,26 @@ export const patchShareInfoApi = async (params: shareInfo) => {
     return await api.patch('/nuxeo/share', params).then(res =>res.data);
 }
 // #endregion
+// #region module:fileRequest
+    export const getFileRequestListApi = async (params: pageParams) => {
+        const res = await api.get('/nuxeo/filerequest', { params }).then(res =>res.data);
+        return { entryList: res.requests, totalSize: res.total }
+    }
+// #endregion
 
+// #region module: documentType
+    let docTypesStore = []
+    export const getDocTypeListApi = async(refresh: boolean = false):Promise<DocType[]> => {
+        if (docTypesStore.length > 0 && !refresh) return docTypesStore
+        let response = await api.get<DocType[]>('/nuxeo/types').then(res => res.data);
+        docTypesStore = [...response.sort((a,b)=> (a.name.localeCompare(b.name) ))]
+        return docTypesStore
+    }
+    const metaStore = {}
+    export const metaValidationRuleGetApi = async (documentType: string, refresh: boolean = false):Promise<Meta[]> => {
+        if(documentType && metaStore[documentType] && !refresh) return metaStore[documentType]
+        const response = await api.get('/docpal/workflow/queryMetaValidationRule', { params: { documentType } }).then(res => res.data.data);
+        metaStore[documentType] = response
+        return response
+    }
+// #endregion

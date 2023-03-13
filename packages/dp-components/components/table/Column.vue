@@ -68,7 +68,6 @@ function getIcon (row, position='prefixIcon') {
             </el-button-group>
         </template>
         <template v-else-if="col.slot" #default="{ row, $index }">
-            
             <!-- render函数 (END) -->
             <!-- 自定义slot (START) -->
             <slot  :slotName="col.slot" :row="row" :index="$index"></slot>

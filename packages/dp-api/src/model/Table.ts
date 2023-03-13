@@ -9,7 +9,7 @@ export type TableColumnSettingItem = {
     options: TableColumnSettingOptions
 }
 export type TableColumnSettingOptions = {
-    pageSize: number
+    pageSize?: number
 }
 export type TableColumnItem = {
     id?: string | any,
@@ -64,7 +64,9 @@ export enum TABLE {
     CLIENT_TRASH = 'clientTrash',
     CLIENT_SMART_FOLDER = 'clientSmartFolder',
     CLIENT_COLLECTION = 'clientCollection',
-    CLIENT_SHARE_LIST = 'clientShareList'
+    CLIENT_SHARE_LIST = 'clientShareList',
+    CLIENT_FILE_REQUEST = 'clientFileRequest',
+    CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -474,5 +476,49 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['disabled'],
         options: { pageSize: 20 }
     },
-
+    [TABLE.CLIENT_FILE_REQUEST] : {
+        columns: [
+            { label: 'dpTable_email', prop: 'email' },
+            { label: 'dpTable_location', prop: 'documentId' },
+            { label: 'dpTable_message', prop: 'message' },
+            { label: 'dpTable_status', prop: 'status',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "status",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { label: 'dpTable_createdDate', prop: 'createdDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_FILE_REQUEST_AUDIT] : {
+        columns: [
+            { type: 'selection' },
+            { type: 'expand', slot: 'expand' },
+            { label: 'dpDocument_fileName', prop: 'initName', sortable: true },
+            { label: 'dpDocument_fileType', prop: 'documentType', slot: 'documentType', sortable: true },
+            { label: 'dpTool_approve', prop: 'approve', slot: 'approve', sortable: true, align: 'center' },
+        ],
+        events: [],
+        options: { }
+    }
 }

@@ -9,21 +9,42 @@
                 ref="tableRef"
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                :row-style="rowStyle"
                 v-bind="_options"
                 @selection-change="handleSelectionChange"
                 @row-click="handleRowClick"
                 @row-dblclick="handleRowDblclick"
                 @cell-click="handleCellClick"
-                @sort-change="handleSortChange">
+                @sort-change="handleSortChange"
+                @expand-change="(row, expandedRows) => emit('expand-change', row, expandedRows)">
                 <template v-for="(col, index) in columns__sub" :key="index">
                     <template v-if="!col.hide">
                         <!---复选框, 序号 (START)-->
-                        
+                            <el-table-column
+                                v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
+                                :index="indexMethod"
+                                v-bind="col">
+                                <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
+                                <template #default="{ row, $index }">
+                                    <!-- render函数 (START) : 使用内置的component组件可以支持h函数渲染和txs语法 -->
+                                    <component v-if="col.render" :is="col.render" :row="row" :index="$index" />
+                                    <!-- render函数 (END) -->
+                                    <!-- 自定义slot (START) -->
+                                    <slot v-else-if="col.slot" name="expand" :row="row" :index="$index"></slot>
+                                    <!-- 自定义slot (END) -->
+                                </template>
+                            </el-table-column>
                         <!---复选框, 序号 (END)-->
-                        <TableColumn :col="col" @command="handleAction">
-                        <!-- 自定义表头插槽 -->
-                            
+                        <TableColumn v-else :col="col" @command="handleAction">
+                             <!-- 自定义表头插槽 -->
+                                <template #customHeader="{ slotName, column, index }">
+                                    <slot :name="slotName" :column="column" :index="index" />
+                                </template>
+                             <!-- 自定义表头插槽 -->
+                            <!-- 自定义列插槽 -->
+                                <template #default="{ slotName, row, index }">
+                                    <slot :name="slotName" :row="row" :index="index" />
+                                </template>
+                            <!-- 自定义列插槽 -->
                         </TableColumn>
                     </template>
                 </template>
@@ -86,6 +107,7 @@ const emit = defineEmits([
     'current-change', // currentPage按钮组事件
     'pagination-change', // currentPage或者pageSize改变触发 
     'sort-change', // 列排序发生改变触发 
+    'expand-change'
 ])
 const columns__sub = ref(deepCopy(props.columns))
 
