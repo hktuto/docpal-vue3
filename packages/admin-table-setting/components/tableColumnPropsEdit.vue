@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
+const tableHelper = useTableHelper()
 const state = reactive({
     propList: tableHelper.propListGet(tableHelper.trashType),
     formatFunList: [],
@@ -67,7 +68,7 @@ const emit = defineEmits(['add', 'save'])
         form.formatFun = ''
         form.params = {}
         state.formatFunList = []
-        state.formatFunList = tableHelper.getFilterArr(tableHelper.getPropType(tableHelper.trashType, prop))
+        state.formatFunList = tableHelper.getTableFilters(tableHelper.getPropType(tableHelper.trashType, prop))
         console.log(state.formatFunList, 'formatItemPropChange');
         
     }

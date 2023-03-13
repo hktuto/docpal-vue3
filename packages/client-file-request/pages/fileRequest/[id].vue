@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
+    <NuxtLayout class="fit-height withPadding" backPath="/fileRequest">
         <div class="container">
             <div class="left-top-left">
                 <el-select v-model="documentType" filterable default-first-option >

@@ -10,7 +10,7 @@
         </div>
         <main id="mainContainer">
             <div id="topBarContainer">
-                  <PageTitle  />
+                  <PageTitle  :backPath="backPath"/>
                 <div class="expand">
                   <SmartSearch />
                   <slot name="postHeader" />
@@ -30,7 +30,9 @@
 
 <script lang="ts" setup>
 import InlineSvg from 'vue-inline-svg'
-
+const props = defineProps<{
+    backPath?: string
+}>()
 const opened = ref(false);
 const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
 

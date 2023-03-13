@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
+const tableHelper = useTableHelper()
 const props = defineProps<{ col: Table.Column }>()
 const emit = defineEmits(['command'])
 // 按钮组事件
