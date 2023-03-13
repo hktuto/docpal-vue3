@@ -35,7 +35,7 @@ onMounted(() => {
     height: 100vh;
     overflow: hidden;
     z-index: -1;
-    background: var(--primary-color);
+    background-color: var(--primary-color);
     #gradient-canvas{
         position: fixed;
         left: 0;
