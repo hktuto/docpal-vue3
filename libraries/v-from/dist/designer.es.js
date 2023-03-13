@@ -1066,6 +1066,1361 @@ axios$2.exports = axios$1;
 axios$2.exports.default = axios$1;
 var require$$0 = axios$2.exports;
 var axios = require$$0;
+var TABLE;
+(function(TABLE2) {
+  TABLE2["META_CAPTURE_PROFILE"] = "metaCaptureProfile";
+  TABLE2["META_IMPORT_MAPPING"] = "metaImportMapping";
+  TABLE2["META_PROFILE_DIALOG"] = "metaProfileDialog";
+  TABLE2["META_LIST"] = "metaList";
+  TABLE2["META_DISPLAY_LIST"] = "metaDisplayList";
+  TABLE2["META_RELATED_LIST"] = "metaRelatedList";
+  TABLE2["CHILD_FORM"] = "childForm";
+  TABLE2["HIERARCHIAL_FORM"] = "hierarchicalForm";
+  TABLE2["SIMPLE_FORM"] = "simpleForm";
+  TABLE2["ADMIN_WORKFLOW"] = "adminWorkflow";
+  TABLE2["VERSION_POPOVER"] = "versionPopOver";
+  TABLE2["ALL_TASK"] = "allTask";
+  TABLE2["COMPLETE_TASK"] = "completeTask";
+  TABLE2["MY_TASK"] = "myTask";
+  TABLE2["SMART_FOLDER"] = "smartFolder";
+  TABLE2["FILE_REQUEST_DETAIL"] = "fileRequestDetail";
+  TABLE2["FILE_REQUEST_INDEX"] = "fileRequestIndex";
+  TABLE2["ADHOC_Submitted_TASK"] = "adhocSubmittedTask";
+  TABLE2["ADHOC_Approval_TASK"] = "adhocApprovalTask";
+  TABLE2["ADHOC_Completed_TASK"] = "adhocCompletedTask";
+  TABLE2["ACTIVE_TASK"] = "activeTask";
+  TABLE2["CLIENT_TRASH"] = "clientTrash";
+  TABLE2["CLIENT_SMART_FOLDER"] = "clientSmartFolder";
+  TABLE2["CLIENT_COLLECTION"] = "clientCollection";
+  TABLE2["CLIENT_SHARE_LIST"] = "clientShareList";
+})(TABLE || (TABLE = {}));
+({
+  [TABLE.ALL_TASK]: {
+    columns: [
+      { id: 1, label: "table_name", property: "taskName", sortable: true },
+      { id: 2, label: "workflow_workflow", property: "processDefinitionName", sortable: true, isFilter: true },
+      { id: 3, slot: "status", property: "status", label: "common_status" },
+      { id: 4, slot: "assignee", property: "assignee", label: "workflow_assignee" },
+      { id: 5, label: "workflow_createDate", property: "createDate", sortable: true },
+      { id: 6, label: "workflow_dueDate", property: "dueDate", sortable: true }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.META_CAPTURE_PROFILE]: {
+    columns: [
+      { label: "dpTable_id", property: "profileID", sortable: true },
+      { label: "dpTable_name", property: "profileName" },
+      { slot: "action", property: "action", label: "dpTable_actions" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.META_IMPORT_MAPPING]: {
+    columns: [
+      { label: "docType_property", property: "key", sortable: true },
+      { label: "table_label", property: "label" },
+      { slot: "action", property: "action", label: "table.action" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.META_PROFILE_DIALOG]: {
+    columns: [
+      { property: "title", label: "title" },
+      { property: "name", label: "name" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.META_LIST]: {
+    columns: [
+      { slot: "icon" },
+      { label: "docType_documentType", property: "name", sortable: true },
+      { slot: "metaMapping", label: "docType_metaMapping" },
+      { slot: "metaProfile", label: "docType_metaMapping" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.META_DISPLAY_LIST]: {
+    columns: [
+      { label: "docType_property", property: "metaData", sortable: true },
+      { label: "form_vocabulary", property: "vocabulary" },
+      { label: "form_length", property: "length", align: "right", width: "100" },
+      { slot: "isRequire", label: "form_isRequire", property: "isRequire", width: "100" },
+      { slot: "display", property: "display", label: "form_display" },
+      { slot: "action", property: "action", label: "table_action" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.META_RELATED_LIST]: {
+    columns: [
+      { label: "dpTable_documentType", property: "type", sortable: true },
+      { label: "rightDetail_meta", property: "meta" },
+      { slot: "action", property: "action", label: "table_actions" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.CHILD_FORM]: {
+    columns: [
+      { property: "id", label: "id", slot: "id" },
+      { property: "label", label: "dpTable_label" },
+      { property: "parentEntryID", label: "parentEntryID", slot: "parentEntryID" },
+      { property: "obsolete", label: "obsolete", slot: "obsolete", width: "100", align: "center", headerAlign: "center", defaultValue: false },
+      { property: "order", label: "order", defaultValue: 0 }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.HIERARCHIAL_FORM]: {
+    columns: [
+      { property: "id", label: "id", slot: "id" },
+      { property: "label", label: "dpTable_label" },
+      { property: "obsolete", label: "obsolete", slot: "obsolete", width: "100", align: "center", headerAlign: "center", defaultValue: false }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.SIMPLE_FORM]: {
+    columns: [
+      { property: "id", label: "id", slot: "id" },
+      { property: "label", label: "dpTable_label" },
+      { property: "obsolete", label: "obsolete", slot: "obsolete", width: "100", align: "center", headerAlign: "center", defaultValue: false }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.ADMIN_WORKFLOW]: {
+    columns: [
+      { label: "dpTable_selection", slot: "selection", canNotDelete: true },
+      { label: "table_name", property: "taskName", sortable: true },
+      { label: "workflow_workflow", property: "processDefinitionName", sortable: true, isFilter: true },
+      { label: "role.creator", property: "startUserId", sortable: true, isFilter: true },
+      { label: "workflow_assignee", slot: "assignee", property: "assignee" },
+      { label: "workflow_createDate", property: "createDate", sortable: true },
+      { label: "workflow_dueDate", property: "dueDate", sortable: true },
+      { label: "dpTable_actions", slot: "action", property: "action" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.VERSION_POPOVER]: {
+    columns: [
+      { label: "file_versionNumber", property: "version", sortable: true },
+      { label: "table_lastModified", property: "time", sortable: true },
+      { slot: "action", property: "action", label: "table_action" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.COMPLETE_TASK]: {
+    columns: [
+      { label: "table_name", property: "taskName", sortable: true },
+      { slot: "workflow", label: "workflow_workflow", property: "workflow" },
+      { label: "workflow_createDate", property: "createDate", sortable: true },
+      { label: "table_completeDate", property: "completeDate", sortable: true },
+      { slot: "duration", label: "table_duration", property: "duration" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.ACTIVE_TASK]: {
+    columns: [
+      { label: "table_name", property: "taskName", sortable: true },
+      { slot: "workflow", label: "workflow_workflow", property: "workflow" },
+      { id: 3, slot: "status", property: "status", label: "common_status" },
+      { id: 4, slot: "assignee", property: "assignee", label: "workflow_assignee" },
+      { label: "workflow_createDate", property: "createDate", sortable: true }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.MY_TASK]: {
+    columns: [
+      { label: "table_name", property: "taskName", sortable: true },
+      { label: "workflow_workflow", property: "processDefinitionName", sortable: true, isFilter: true },
+      { slot: "status", label: "common_status", property: "status" },
+      { slot: "assignee", label: "workflow_assignee", property: "assignee" },
+      { label: "workflow_createDate", property: "createDate", sortable: true },
+      { label: "workflow_dueDate", property: "dueDate", sortable: true }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.CLIENT_SMART_FOLDER]: {
+    columns: [
+      { label: "table_name", prop: "name" },
+      { label: "table_path", prop: "logicalPath" },
+      {
+        label: "table_modifiedDate",
+        prop: "modifiedDate",
+        formatList: [
+          {
+            "joiner": "",
+            "prop": "modifiedDate",
+            "formatFun": "dateFormat",
+            "params": {
+              "format": ""
+            },
+            "index": 0
+          }
+        ]
+      },
+      { label: "table_type", prop: "type" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.FILE_REQUEST_DETAIL]: {
+    columns: [
+      { slot: "selection" },
+      { slot: "expand" },
+      { label: "dpDocument_fileName", property: "initName", sortable: true },
+      { slot: "fileType", label: "dpDocument_fileType", property: "documentType", sortable: true },
+      { slot: "approve", label: "dpTool_approve", property: "approve", sortable: true, align: "center" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.FILE_REQUEST_INDEX]: {
+    columns: [
+      { label: "dpTable_email", property: "email", sortable: true },
+      { label: "dpTable_location", property: "documentId", sortable: true },
+      { label: "dpTable_message", property: "message", sortable: true },
+      { label: "dpTable_status", property: "status", sortable: true, slot: "status" },
+      { label: "dpTable_createdDate", property: "createdDate", sortable: true }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.ADHOC_Submitted_TASK]: {
+    columns: [
+      { label: "table_path", property: "documentPath", sortable: true },
+      { label: "role.approvers", property: "user_approver_id", sortable: true, isFilter: true },
+      { label: "workflow_createDate", property: "createDate", sortable: true }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.ADHOC_Approval_TASK]: {
+    columns: [
+      { label: "table_path", property: "documentPath", sortable: true },
+      { label: "role.creator", property: "user_creator_id", sortable: true, isFilter: true },
+      { label: "workflow_createDate", property: "createDate", sortable: true }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.ADHOC_Completed_TASK]: {
+    columns: [
+      { label: "table_path", property: "documentPath", sortable: true },
+      { label: "info_version", property: "documentApprovalVersion", align: "right", width: "70" },
+      { label: "role.creator", property: "user_creator_id", sortable: true, isFilter: true, width: "150" },
+      { label: "workflow_createDate", property: "createDate", sortable: true, align: "center", width: "130" },
+      { label: "role.approver", property: "approvedBy", sortable: true, isFilter: true, width: "150" },
+      { label: "dpTable_approvedDate", property: "approvedDate", sortable: true, align: "center", width: "130" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.ADHOC_Completed_TASK]: {
+    columns: [
+      { label: "table_path", property: "documentPath", sortable: true },
+      { label: "info_version", property: "documentApprovalVersion", align: "right", width: "70" },
+      { label: "role.creator", property: "user_creator_id", sortable: true, isFilter: true, width: "150" },
+      { label: "workflow_createDate", property: "createDate", sortable: true, align: "center", width: "130" },
+      { label: "role.approver", property: "approvedBy", sortable: true, isFilter: true, width: "150" },
+      { label: "dpTable_approvedDate", property: "approvedDate", sortable: true, align: "center", width: "130" }
+    ],
+    events: [],
+    options: { pageSize: 20 }
+  },
+  [TABLE.CLIENT_TRASH]: {
+    columns: [
+      { id: "1", label: "tableHeader_name", prop: "name" },
+      { id: "2", label: "tableHeader_path", prop: "logicalPath" },
+      { id: "3", label: "tableHeader_type", prop: "type" },
+      { id: "4", label: "trash_deleteBy", prop: "properties.principalName" },
+      {
+        id: "5",
+        label: "trash_date",
+        prop: "properties.trashed_date",
+        formatList: [
+          {
+            "joiner": "",
+            "prop": "properties.trashed_date",
+            "formatFun": "dateFormat",
+            "params": {
+              "format": ""
+            },
+            "index": 0
+          }
+        ]
+      },
+      {
+        "type": "",
+        "label": "actions",
+        "prop": "",
+        "align": "left",
+        "hide": false,
+        "system": false,
+        "showOverflowTooltip": false,
+        "formatList": [],
+        "buttons": [
+          {
+            "name": "restored",
+            "command": "restored",
+            "size": "large",
+            "type": "primary",
+            "prefixIcon": "/icons/file-selected.svg",
+            "suffixIcon": "/icons/menu/virtual.svg",
+            "index": 0
+          }
+        ],
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "id": "1678091777412"
+      }
+    ],
+    events: ["delete", "restored"],
+    options: { pageSize: 20 }
+  },
+  [TABLE.CLIENT_COLLECTION]: {
+    columns: [
+      { label: "table_name", prop: "name" },
+      {
+        label: "table_modifiedDate",
+        prop: "modifiedDate",
+        formatList: [
+          {
+            "joiner": "",
+            "prop": "modifiedDate",
+            "formatFun": "dateFormat",
+            "params": {
+              "format": ""
+            },
+            "index": 0
+          }
+        ]
+      },
+      { label: "table_type", prop: "type" },
+      {
+        "type": "",
+        "label": "actions",
+        "prop": "",
+        "align": "left",
+        "hide": false,
+        "system": false,
+        "showOverflowTooltip": false,
+        "formatList": [],
+        "buttons": [
+          {
+            "name": "",
+            "command": "delete",
+            "suffixIcon": "/icons/menu/trash.svg",
+            "index": 0
+          }
+        ],
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "id": "1678091777412"
+      }
+    ],
+    events: ["delete"],
+    options: { pageSize: 20 }
+  },
+  [TABLE.CLIENT_SHARE_LIST]: {
+    columns: [
+      {
+        label: "tableHeader_emailList",
+        prop: "emailList",
+        formatList: [
+          {
+            "joiner": "",
+            "prop": "emailList",
+            "formatFun": "concat",
+            "params": {
+              "joiner": ""
+            },
+            "index": 0
+          }
+        ]
+      },
+      { label: "tableHeader_numberOfFiles", prop: "documentSize" },
+      {
+        label: "tableHeader_creationDate",
+        prop: "created",
+        formatList: [
+          {
+            "joiner": "",
+            "prop": "created",
+            "formatFun": "dateFormat",
+            "params": {
+              "format": ""
+            },
+            "index": 0
+          }
+        ]
+      },
+      {
+        label: "tableHeader_dueDate",
+        prop: "expiredDate",
+        formatList: [
+          {
+            "joiner": "",
+            "prop": "expiredDate",
+            "formatFun": "dateFormat",
+            "params": {
+              "format": ""
+            },
+            "index": 0
+          }
+        ]
+      },
+      {
+        "type": "",
+        "label": "actions",
+        "prop": "",
+        "align": "left",
+        "hide": false,
+        "system": false,
+        "showOverflowTooltip": false,
+        "formatList": [],
+        "buttons": [
+          {
+            "name": "",
+            "command": "disabled",
+            "suffixIcon": "/icons/menu/trash.svg",
+            "index": 0
+          }
+        ],
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "id": "1678091777412"
+      }
+    ],
+    events: ["disabled"],
+    options: { pageSize: 20 }
+  }
+});
+const widgetList$1 = [
+  {
+    type: "grid",
+    category: "container",
+    icon: "grid",
+    cols: [
+      {
+        type: "grid-col",
+        category: "container",
+        icon: "grid-col",
+        internal: true,
+        widgetList: [
+          {
+            type: "checkbox",
+            icon: "checkbox-field",
+            formItemFlag: true,
+            options: {
+              name: "system_primaryType_agg",
+              label: "system_primaryType_agg",
+              labelZh: "",
+              labelAlign: "",
+              defaultValue: [],
+              columnWidth: "200px",
+              size: "",
+              displayStyle: "block",
+              buttonStyle: false,
+              border: false,
+              labelWidth: null,
+              labelHidden: false,
+              disabled: false,
+              hidden: false,
+              optionItems: [],
+              required: false,
+              requiredHint: "",
+              validation: "",
+              validationHint: "",
+              customClass: [],
+              labelIconClass: null,
+              labelIconPosition: "rear",
+              labelTooltip: null,
+              onCreated: "",
+              onMounted: "",
+              onChange: "",
+              onValidate: ""
+            },
+            id: "checkbox102048"
+          },
+          {
+            type: "static-text",
+            icon: "static-text",
+            formItemFlag: false,
+            options: {
+              name: "no_system_primaryType_agg",
+              columnWidth: "200px",
+              hidden: true,
+              textContent: "noAvailableResults",
+              fontSize: "13px",
+              customClass: [],
+              onCreated: "",
+              onMounted: "",
+              label: "no_system_primaryType_agg"
+            },
+            id: "statictext93593"
+          }
+        ],
+        options: {
+          name: "gridCol39617",
+          hidden: false,
+          span: 24,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          responsive: false,
+          md: 12,
+          sm: 12,
+          xs: 12,
+          customClass: ""
+        },
+        id: "grid-col-39617"
+      },
+      {
+        type: "grid-col",
+        category: "container",
+        icon: "grid-col",
+        internal: true,
+        widgetList: [
+          {
+            type: "checkbox",
+            icon: "checkbox-field",
+            formItemFlag: true,
+            options: {
+              name: "system_mimetype_agg",
+              label: "system_mimetype_agg",
+              labelZh: "",
+              labelAlign: "",
+              defaultValue: [],
+              columnWidth: "200px",
+              size: "",
+              displayStyle: "block",
+              buttonStyle: false,
+              border: false,
+              labelWidth: null,
+              labelHidden: false,
+              disabled: false,
+              hidden: false,
+              optionItems: [],
+              required: false,
+              requiredHint: "",
+              validation: "",
+              validationHint: "",
+              customClass: [],
+              labelIconClass: null,
+              labelIconPosition: "rear",
+              labelTooltip: null,
+              onCreated: "",
+              onMounted: "",
+              onChange: "",
+              onValidate: ""
+            },
+            id: "checkbox102049"
+          },
+          {
+            type: "static-text",
+            icon: "static-text",
+            formItemFlag: false,
+            options: {
+              name: "no_system_mimetype_agg",
+              columnWidth: "200px",
+              hidden: true,
+              textContent: "noAvailableResults",
+              fontSize: "13px",
+              customClass: "",
+              onCreated: "",
+              onMounted: "",
+              label: "no_system_mimetype_agg"
+            },
+            id: "statictext32837"
+          }
+        ],
+        options: {
+          name: "gridCol84723",
+          hidden: false,
+          span: 24,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          responsive: false,
+          md: 12,
+          sm: 12,
+          xs: 12,
+          customClass: ""
+        },
+        id: "grid-col-84723"
+      },
+      {
+        type: "grid-col",
+        category: "container",
+        icon: "grid-col",
+        internal: true,
+        widgetList: [
+          {
+            type: "checkbox",
+            icon: "checkbox-field",
+            formItemFlag: true,
+            options: {
+              name: "asset_width_agg",
+              label: "asset_width_agg",
+              labelZh: "",
+              labelAlign: "",
+              defaultValue: [],
+              columnWidth: "200px",
+              size: "",
+              displayStyle: "block",
+              buttonStyle: false,
+              border: false,
+              labelWidth: null,
+              labelHidden: false,
+              disabled: false,
+              hidden: false,
+              optionItems: [],
+              required: false,
+              requiredHint: "",
+              validation: "",
+              validationHint: "",
+              customClass: [],
+              labelIconClass: null,
+              labelIconPosition: "rear",
+              labelTooltip: null,
+              onCreated: "",
+              onMounted: "",
+              onChange: "",
+              onValidate: ""
+            },
+            id: "checkbox33966"
+          },
+          {
+            type: "static-text",
+            icon: "static-text",
+            formItemFlag: false,
+            options: {
+              name: "no_asset_width_agg",
+              columnWidth: "200px",
+              hidden: true,
+              textContent: "noAvailableResults",
+              fontSize: "13px",
+              customClass: "",
+              onCreated: "",
+              onMounted: "",
+              label: "no_asset_width_agg"
+            },
+            id: "statictext55999"
+          }
+        ],
+        options: {
+          name: "gridCol66588",
+          hidden: false,
+          span: 24,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          responsive: false,
+          md: 12,
+          sm: 12,
+          xs: 12,
+          customClass: ""
+        },
+        id: "grid-col-66588"
+      },
+      {
+        type: "grid-col",
+        category: "container",
+        icon: "grid-col",
+        internal: true,
+        widgetList: [
+          {
+            type: "checkbox",
+            icon: "checkbox-field",
+            formItemFlag: true,
+            options: {
+              name: "asset_height_agg",
+              label: "asset_height_agg",
+              labelZh: "",
+              labelAlign: "",
+              defaultValue: [],
+              columnWidth: "200px",
+              size: "",
+              displayStyle: "block",
+              buttonStyle: false,
+              border: false,
+              labelWidth: null,
+              labelHidden: false,
+              disabled: false,
+              hidden: false,
+              optionItems: [],
+              required: false,
+              requiredHint: "",
+              validation: "",
+              validationHint: "",
+              customClass: [],
+              labelIconClass: null,
+              labelIconPosition: "rear",
+              labelTooltip: null,
+              onCreated: "",
+              onMounted: "",
+              onChange: "",
+              onValidate: ""
+            },
+            id: "checkbox102045"
+          },
+          {
+            type: "static-text",
+            icon: "static-text",
+            formItemFlag: false,
+            options: {
+              name: "no_asset_height_agg",
+              columnWidth: "200px",
+              hidden: true,
+              textContent: "noAvailableResults",
+              fontSize: "13px",
+              customClass: "",
+              onCreated: "",
+              onMounted: "",
+              label: "no_asset_height_agg"
+            },
+            id: "statictext105026"
+          }
+        ],
+        options: {
+          name: "gridCol86168",
+          hidden: false,
+          span: 24,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          responsive: false,
+          md: 12,
+          sm: 12,
+          xs: 12,
+          customClass: ""
+        },
+        id: "grid-col-86168"
+      },
+      {
+        type: "grid-col",
+        category: "container",
+        icon: "grid-col",
+        internal: true,
+        widgetList: [
+          {
+            type: "checkbox",
+            icon: "checkbox-field",
+            formItemFlag: true,
+            options: {
+              name: "color_profile_agg",
+              label: "color_profile_agg",
+              labelZh: "",
+              labelAlign: "",
+              defaultValue: [],
+              columnWidth: "200px",
+              size: "",
+              displayStyle: "block",
+              buttonStyle: false,
+              border: false,
+              labelWidth: null,
+              labelHidden: false,
+              disabled: false,
+              hidden: false,
+              optionItems: [],
+              required: false,
+              requiredHint: "",
+              validation: "",
+              validationHint: "",
+              customClass: [],
+              labelIconClass: null,
+              labelIconPosition: "rear",
+              labelTooltip: null,
+              onCreated: "",
+              onMounted: "",
+              onChange: "",
+              onValidate: ""
+            },
+            id: "checkbox102047"
+          },
+          {
+            type: "static-text",
+            icon: "static-text",
+            formItemFlag: false,
+            options: {
+              name: "no_color_profile_agg",
+              columnWidth: "200px",
+              hidden: true,
+              textContent: "noAvailableResults",
+              fontSize: "13px",
+              customClass: "",
+              onCreated: "",
+              onMounted: "",
+              label: "no_color_profile_agg"
+            },
+            id: "statictext23169"
+          }
+        ],
+        options: {
+          name: "gridCol81202",
+          hidden: false,
+          span: 24,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          responsive: false,
+          md: 12,
+          sm: 12,
+          xs: 12,
+          customClass: ""
+        },
+        id: "grid-col-81202"
+      },
+      {
+        type: "grid-col",
+        category: "container",
+        icon: "grid-col",
+        internal: true,
+        widgetList: [
+          {
+            type: "checkbox",
+            icon: "checkbox-field",
+            formItemFlag: true,
+            options: {
+              name: "color_depth_agg",
+              label: "color_depth_agg",
+              labelZh: "",
+              labelAlign: "",
+              defaultValue: [],
+              columnWidth: "200px",
+              size: "",
+              displayStyle: "block",
+              buttonStyle: false,
+              border: false,
+              labelWidth: null,
+              labelHidden: false,
+              disabled: false,
+              hidden: false,
+              optionItems: [],
+              required: false,
+              requiredHint: "",
+              validation: "",
+              validationHint: "",
+              customClass: [],
+              labelIconClass: null,
+              labelIconPosition: "rear",
+              labelTooltip: null,
+              onCreated: "",
+              onMounted: "",
+              onChange: "",
+              onValidate: ""
+            },
+            id: "checkbox102046"
+          },
+          {
+            type: "static-text",
+            icon: "static-text",
+            formItemFlag: false,
+            options: {
+              name: "no_color_depth_agg",
+              columnWidth: "200px",
+              hidden: true,
+              textContent: "noAvailableResults",
+              fontSize: "13px",
+              customClass: "",
+              onCreated: "",
+              onMounted: "",
+              label: "no_color_depth_agg"
+            },
+            id: "statictext26948"
+          }
+        ],
+        options: {
+          name: "gridCol93885",
+          hidden: false,
+          span: 24,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          responsive: false,
+          md: 12,
+          sm: 12,
+          xs: 12,
+          customClass: ""
+        },
+        id: "grid-col-93885"
+      },
+      {
+        type: "grid-col",
+        category: "container",
+        icon: "grid-col",
+        internal: true,
+        widgetList: [
+          {
+            type: "checkbox",
+            icon: "checkbox-field",
+            formItemFlag: true,
+            options: {
+              name: "video_duration_agg",
+              label: "video_duration_agg",
+              labelZh: "",
+              labelAlign: "",
+              defaultValue: [],
+              columnWidth: "200px",
+              size: "",
+              displayStyle: "block",
+              buttonStyle: false,
+              border: false,
+              labelWidth: null,
+              labelHidden: false,
+              disabled: false,
+              hidden: false,
+              optionItems: [],
+              required: false,
+              requiredHint: "",
+              validation: "",
+              validationHint: "",
+              customClass: [],
+              labelIconClass: null,
+              labelIconPosition: "rear",
+              labelTooltip: null,
+              onCreated: "",
+              onMounted: "",
+              onChange: "",
+              onValidate: ""
+            },
+            id: "checkbox1020455"
+          },
+          {
+            type: "static-text",
+            icon: "static-text",
+            formItemFlag: false,
+            options: {
+              name: "no_video_duration_agg",
+              columnWidth: "200px",
+              hidden: true,
+              textContent: "noAvailableResults",
+              fontSize: "13px",
+              customClass: "",
+              onCreated: "",
+              onMounted: "",
+              label: "no_video_duration_agg"
+            },
+            id: "statictext33472"
+          }
+        ],
+        options: {
+          name: "gridCol29889",
+          hidden: false,
+          span: 24,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          responsive: false,
+          md: 12,
+          sm: 12,
+          xs: 12,
+          customClass: ""
+        },
+        id: "grid-col-29889"
+      }
+    ],
+    options: {
+      name: "grid75719",
+      hidden: false,
+      gutter: 12,
+      colHeight: null,
+      customClass: []
+    },
+    id: "grid75719"
+  }
+];
+const formConfig$1 = {
+  modelName: "formData",
+  refName: "vForm",
+  rulesName: "rules",
+  labelWidth: 80,
+  labelPosition: "top",
+  size: "",
+  labelAlign: "label-left-align",
+  cssCode: ".picture-search--container {}\n\n.picture-search--container .el-form-item {\n  margin-bottom: unset;\n  margin-top: 10px;\n}",
+  customClass: [
+    "picture-search--container"
+  ],
+  functions: "",
+  layoutType: "PC",
+  jsonVersion: 3,
+  onFormCreated: "",
+  onFormMounted: "",
+  onFormDataChange: "",
+  saveRemoteOptions: "never",
+  labelFormUniqueName: true
+};
+var clientPictureForm = {
+  widgetList: widgetList$1,
+  formConfig: formConfig$1
+};
+var __glob_0_0$4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  widgetList: widgetList$1,
+  formConfig: formConfig$1,
+  "default": clientPictureForm
+}, Symbol.toStringTag, { value: "Module" }));
+const widgetList = [
+  {
+    type: "select",
+    icon: "select-field",
+    formItemFlag: true,
+    options: {
+      name: "type",
+      label: "search_documentType",
+      labelZh: "\u6587\u6863\u7C7B\u578B",
+      labelAlign: "",
+      defaultValue: [],
+      placeholder: "dpTip_all",
+      prefixIcon: "",
+      columnWidth: "200px",
+      size: "",
+      labelWidth: null,
+      labelHidden: false,
+      disabled: false,
+      hidden: false,
+      clearable: true,
+      filterable: true,
+      allowCreate: false,
+      remote: false,
+      automaticDropdown: false,
+      multiple: true,
+      multipleLimit: 0,
+      optionItems: [],
+      required: false,
+      requiredHint: "",
+      validation: "",
+      validationHint: "",
+      customClass: "",
+      labelIconClass: null,
+      labelIconPosition: "rear",
+      labelTooltip: null,
+      onCreated: "",
+      onMounted: "this.$axios.post('/nuxeo/types', {}).then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item.name,\n    label: item.name\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
+      onRemoteQuery: "",
+      onChange: "",
+      onFocus: "",
+      onBlur: "",
+      onValidate: ""
+    },
+    id: "select105463"
+  },
+  {
+    type: "select",
+    icon: "select-field",
+    formItemFlag: true,
+    options: {
+      name: "modified",
+      label: "search_modificationDate",
+      labelZh: "\u66F4\u65B0\u65F6\u95F4",
+      labelAlign: "",
+      defaultValue: "",
+      placeholder: "dpTip_all",
+      prefixIcon: "",
+      columnWidth: "200px",
+      size: "",
+      labelWidth: null,
+      labelHidden: false,
+      disabled: false,
+      hidden: false,
+      clearable: true,
+      filterable: true,
+      allowCreate: false,
+      remote: false,
+      automaticDropdown: false,
+      multiple: false,
+      multipleLimit: 0,
+      optionItems: [
+        {
+          label: "Last 24h",
+          value: "last24h"
+        },
+        {
+          label: "Last week",
+          value: "lastWeek"
+        },
+        {
+          label: "Last month",
+          value: "lastMonth"
+        },
+        {
+          value: "lastYear",
+          label: "Last year"
+        },
+        {
+          value: "priorToLastYear",
+          label: "More than 1 year ago"
+        }
+      ],
+      required: false,
+      requiredHint: "",
+      validation: "",
+      validationHint: "",
+      customClass: [],
+      labelIconClass: null,
+      labelIconPosition: "rear",
+      labelTooltip: null,
+      onCreated: "",
+      onMounted: "",
+      onRemoteQuery: "",
+      onChange: "",
+      onFocus: "",
+      onBlur: "",
+      onValidate: ""
+    },
+    id: "select54847"
+  },
+  {
+    type: "select",
+    icon: "select-field",
+    formItemFlag: true,
+    options: {
+      name: "authors",
+      label: "search_authors",
+      labelZh: "\u4F5C\u8005",
+      labelAlign: "label-left-align",
+      defaultValue: [],
+      placeholder: "dpTip_all",
+      prefixIcon: "",
+      columnWidth: "200px",
+      size: "",
+      labelWidth: null,
+      labelHidden: false,
+      disabled: false,
+      hidden: false,
+      clearable: true,
+      filterable: true,
+      allowCreate: false,
+      remote: false,
+      automaticDropdown: false,
+      multiple: true,
+      multipleLimit: 0,
+      optionItems: [],
+      required: false,
+      requiredHint: "",
+      validation: "",
+      validationHint: "",
+      customClass: "",
+      labelIconClass: null,
+      labelIconPosition: "rear",
+      labelTooltip: null,
+      onCreated: "",
+      onMounted: "this.$axios.post('/nuxeo/identity/users', {}).then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item.username,\n    label: item.username\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
+      onRemoteQuery: "",
+      onChange: "",
+      onFocus: "",
+      onBlur: "",
+      onValidate: ""
+    },
+    id: "select59109"
+  },
+  {
+    type: "select",
+    icon: "select-field",
+    formItemFlag: true,
+    options: {
+      name: "collections",
+      label: "search_collections",
+      labelZh: "search_collections",
+      labelAlign: "",
+      defaultValue: [],
+      placeholder: "",
+      prefixIcon: "",
+      columnWidth: "200px",
+      size: "",
+      labelWidth: null,
+      labelHidden: false,
+      disabled: false,
+      hidden: false,
+      clearable: true,
+      filterable: false,
+      allowCreate: false,
+      remote: false,
+      automaticDropdown: false,
+      multiple: true,
+      multipleLimit: 0,
+      optionItems: [],
+      required: false,
+      requiredHint: "",
+      validation: "",
+      validationHint: "",
+      customClass: [],
+      labelIconClass: null,
+      labelIconPosition: "rear",
+      labelTooltip: null,
+      onCreated: "",
+      onMounted: "this.$axios.get('/nuxeo/collection/all').then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item.id,\n    label: item.name\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
+      onRemoteQuery: "",
+      onChange: "",
+      onFocus: "",
+      onBlur: "",
+      onValidate: ""
+    },
+    id: "select64376"
+  },
+  {
+    type: "select",
+    icon: "select-field",
+    formItemFlag: true,
+    options: {
+      name: "tags",
+      label: "search_tags",
+      labelZh: "\u6807\u7B7E",
+      labelAlign: "",
+      defaultValue: [],
+      placeholder: "dpTip_all",
+      prefixIcon: "",
+      columnWidth: "200px",
+      size: "",
+      labelWidth: null,
+      labelHidden: false,
+      disabled: false,
+      hidden: false,
+      clearable: true,
+      filterable: true,
+      allowCreate: false,
+      remote: false,
+      automaticDropdown: false,
+      multiple: true,
+      multipleLimit: 0,
+      optionItems: [],
+      required: false,
+      requiredHint: "",
+      validation: "",
+      validationHint: "",
+      customClass: "",
+      labelIconClass: null,
+      labelIconPosition: "rear",
+      labelTooltip: null,
+      onCreated: "",
+      onMounted: "this.$axios.post('/nuxeo/tags/getAllTags', {}).then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item,\n    label: item\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
+      onRemoteQuery: "",
+      onChange: "",
+      onFocus: "",
+      onBlur: "",
+      onValidate: ""
+    },
+    id: "select55898"
+  },
+  {
+    type: "select",
+    icon: "select-field",
+    formItemFlag: true,
+    options: {
+      name: "size",
+      label: "search_size",
+      labelZh: "\u6587\u4EF6\u5927\u5C0F",
+      labelAlign: "",
+      defaultValue: "",
+      placeholder: "dpTip_all",
+      prefixIcon: "",
+      columnWidth: "200px",
+      size: "",
+      labelWidth: null,
+      labelHidden: false,
+      disabled: false,
+      hidden: false,
+      clearable: true,
+      filterable: true,
+      allowCreate: false,
+      remote: false,
+      automaticDropdown: false,
+      multiple: false,
+      multipleLimit: 0,
+      optionItems: [
+        {
+          label: "Less than 100 KB",
+          value: "100"
+        },
+        {
+          label: "Between 100 KB and 1 MB",
+          value: "1000"
+        },
+        {
+          label: "Between 1 MB and 10 MB",
+          value: "10000"
+        },
+        {
+          value: "100000",
+          label: "Between 10 MB and 100 MB"
+        },
+        {
+          value: "1000000",
+          label: "More than 100 MB"
+        }
+      ],
+      required: false,
+      requiredHint: "",
+      validation: "",
+      validationHint: "",
+      customClass: "",
+      labelIconClass: null,
+      labelIconPosition: "rear",
+      labelTooltip: null,
+      onCreated: "",
+      onMounted: "",
+      onRemoteQuery: "",
+      onChange: "",
+      onFocus: "",
+      onBlur: "",
+      onValidate: ""
+    },
+    id: "select80655"
+  }
+];
+const formConfig = {
+  modelName: "formData",
+  refName: "vForm",
+  rulesName: "rules",
+  labelWidth: 80,
+  labelPosition: "top",
+  size: "",
+  labelAlign: "label-left-align",
+  saveRemoteOptions: "never",
+  labelFormUniqueName: true,
+  cssCode: "",
+  customClass: "",
+  functions: "",
+  layoutType: "PC",
+  onFormCreated: "",
+  onFormMounted: "",
+  onFormDataChange: ""
+};
+var search$1 = {
+  widgetList,
+  formConfig
+};
+var __glob_0_1$4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  widgetList,
+  formConfig,
+  "default": search$1
+}, Symbol.toStringTag, { value: "Module" }));
+const jsonModules = { "./clientPictureForm.json": __glob_0_0$4, "./search.json": __glob_0_1$4 };
+function getFormJsonListApi() {
+  const data2 = Object.keys(jsonModules).reduce((prev, key) => {
+    const name = key.replace(/\.\//, "");
+    prev[name] = jsonModules[key].default;
+    return prev;
+  }, {});
+  return data2;
+}
+getFormJsonListApi();
+const api = axios.create({
+  baseURL: "/api"
+});
 const containers = [
   {
     type: "grid",
@@ -60351,13 +61706,13 @@ function registerIcon(app) {
 if (typeof window !== "undefined") {
   let loadSvg = function() {
     var body = document.body;
-    var svgDom = document.getElementById("__svg__icons__dom__1677638680412__");
+    var svgDom = document.getElementById("__svg__icons__dom__1678689186256__");
     if (!svgDom) {
       svgDom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgDom.style.position = "absolute";
       svgDom.style.width = "0";
       svgDom.style.height = "0";
-      svgDom.id = "__svg__icons__dom__1677638680412__";
+      svgDom.id = "__svg__icons__dom__1678689186256__";
       svgDom.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       svgDom.setAttribute("xmlns:link", "http://www.w3.org/1999/xlink");
     }
@@ -61055,8 +62410,11 @@ const install = (app) => {
   components.forEach((component) => {
     app.component(component.name, component);
   });
-  window.axios = axios;
+  window.$api = api;
 };
+if (typeof window !== "undefined" && window.Vue) {
+  window.$api = api;
+}
 var install$1 = {
   install,
   VFormDesigner,
