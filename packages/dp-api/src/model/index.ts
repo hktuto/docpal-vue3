@@ -2,6 +2,7 @@ export * from './user.d';
 export * from './document.d'
 export * from './search.d'
 export * from './setting.d'
+export * from './workflow.d'
 export * from './Table'
 export type pageParams = {
     page ?: number,

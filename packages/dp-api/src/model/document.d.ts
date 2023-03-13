@@ -45,7 +45,34 @@ export type DocDetail = {
     version: string
 
 }
-
+export type DocType = {
+    isFolder: boolean,
+    name: string,
+    keywords: DocTypeMeta[]
+}
+export type DocTypeMeta = {
+    name: string,
+    type: string,
+    value: any
+}
+export type Meta = {
+    creationTime: string,
+    creatorId: string,
+    creatorName: string,
+    dataType: string,
+    directoryEntries: any,
+    display: true
+    documentType: string,
+    id: number | string,
+    isRequire: false
+    length: number,
+    metaData: string,
+    modifiedId: string,
+    modifiedName: string,
+    modifiedTime: string,
+    status: number,
+    vocabulary: string,
+}
 export type BreadResponse = {
 
 }

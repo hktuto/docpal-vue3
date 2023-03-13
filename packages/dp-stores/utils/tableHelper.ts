@@ -63,6 +63,9 @@ const tableHelper = {
             params: {
                 joiner: 'string',
             },
+        }, {
+            name: 'i18n',
+            supportedType: ['string']
         }
     ],
     ValueFilters: <any>{
@@ -111,6 +114,10 @@ const tableHelper = {
         concat (value: any, params: any) {
             if (!params.joiner) params.joiner = ','
             return value.join(params.joiner)
+        },
+        i18n (value: any) {
+            // return i18n.t(value)
+            return value
         }
     },
     getFilterArr (metaType: metaType) {
@@ -174,3 +181,7 @@ const tableHelper = {
     }
 }
 export default tableHelper
+
+export const formatDate = (time:any, format="YYYY-MM-DD HH:mm") => {
+    return dayjs(time).format(format)
+}
