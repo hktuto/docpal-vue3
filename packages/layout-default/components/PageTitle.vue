@@ -1,11 +1,17 @@
 <template>
     <div class="pageHeaderContainer">
+        <el-icon v-if="backPath" class="el-icon--left cursorPointer icon__hover" @click="handleBack"><ArrowLeftBold /></el-icon>
         {{$t(currentRouteMenuName)}}
     </div>
 </template>
 
 <script lang="ts" setup>
+import { ArrowLeftBold } from '@element-plus/icons-vue'
+const props = defineProps<{
+    backPath?: string
+}>()
 const route = useRoute();
+const router = useRouter()
 const { menu } = useAppConfig();
 const currentRouteMenuName = ref("");
 
@@ -13,7 +19,9 @@ function getMenuItemFromPathName(name: string) {
     const item = menu.find( item => item.routeName === name);
     currentRouteMenuName.value = item?.name || "";
 }
-
+function handleBack () {
+    router.push(props.backPath)
+}
 
 watch( route , (newRoute) => {
     getMenuItemFromPathName(route.name)

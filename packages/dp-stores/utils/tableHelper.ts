@@ -23,30 +23,67 @@ const trashType = {
   parentRef: 'string',
   logicalPath: 'string'
 }
-
-const tableHelper = {
-    trashType,
-    filterArr: [
-        {
-            name: 'dateFormat',
+export const useTableHelper = () => {
+    const { $i18n: {t} } = useNuxtApp()
+    const tableFilters = <any>{
+        dateFormat: {
             supportedType: ['date'],
             params: {
                 format: 'string'
+            },
+            fun(time:string = '', params:any){
+                if(!time) return ''
+                if(!params.format) params.format = 'YYYY-MM-DD HH:mm'
+                return dayjs(time).format( params.format)
             }
-        }, {
-            name: 'capitalized',
+        },
+        capitalized: {
             supportedType: ['string'],
-        }, {
+            fun(str: string){
+                str = str.toLowerCase();
+                return str.replace(/\b(\w)|\s(\w)/g, (m) => m.toUpperCase())
+            }
+        },
+        hideEmail: {
+            supportedType: ['string'],
+            fun(email: string) {
+                if (String (email).indexOf ('@') > 0) {
+                    let newEmail, str = email.split('@'), _s = '';
+            
+                    if (str[0].length > 4) {
+                        _s = str[0].substr (0, 4);
+                        for (let i = 0; i < str[0].length - 4; i++) {
+                            _s += '*';
+                        }
+                    } else {
+                        _s = str[0].substr (0, 1);
+                        for (let i = 0; i < str[0].length - 1; i++) {
+                            _s += '*';
+                        }
+                    }
+                    newEmail = _s + '@' + str[1];
+                    return newEmail;
+                } else {
+                    return email;
+                }
+            }
+        },
+        hidePhone: {
             name: 'hidePhone',
             supportedType: ['number'],
-        }, {
-            name: 'hideIdCard',
+            fun(value: any) {
+                if(!Number(value)) return Number(value)
+                return value.replace(/^(\d{3})\d+(\d{4})$/, "$1****$2");
+            }
+        },
+        hideIdCard: {
             supportedType: ['number'],
-        },{
-            name: 'hideEmail',
-            supportedType: ['string'],
-        },{
-            name: 'regExp',
+            fun(value: any) {
+                if(!Number(value)) return Number(value)
+                return value.replace(/^(\d{6})\d+(\d{4})$/, "$1******$2");
+            }
+        },
+        regExp: {
             params: {
                 regExp: 'string',
                 format: 'string'
@@ -57,80 +94,39 @@ const tableHelper = {
                 format: '$1******$2',
                 description: 'regExp.description.hideIdCard'
                 }
-            ]
-        },{
-            name: 'concat',
+            ],
+            fun(value: any, params: any) {
+                return value.replace(eval(params.regExp), params.format)
+            }
+        },
+        concat: {
             supportedType: ['array'],
             params: {
                 joiner: 'string',
             },
-        }, {
-            name: 'i18n',
-            supportedType: ['string']
-        }
-    ],
-    ValueFilters: <any>{
-        dateFormat(time:string = '', params:any){
-            if(!time) return ''
-            if(!params.format) params.format = 'YYYY-MM-DD HH:mm'
-            return dayjs(time).format( params.format)
-        },
-        capitalized(str: string){
-            str = str.toLowerCase();
-            return str.replace(/\b(\w)|\s(\w)/g, (m) => m.toUpperCase())
-        },
-        hideEmail (email: string) {
-            if (String (email).indexOf ('@') > 0) {
-                let newEmail, str = email.split('@'), _s = '';
-        
-                if (str[0].length > 4) {
-                    _s = str[0].substr (0, 4);
-                    for (let i = 0; i < str[0].length - 4; i++) {
-                        _s += '*';
-                    }
-                } else {
-                    _s = str[0].substr (0, 1);
-                    for (let i = 0; i < str[0].length - 1; i++) {
-                        _s += '*';
-                    }
-                }
-                newEmail = _s + '@' + str[1];
-                return newEmail;
-            } else {
-                return email;
+            fun(value: any, params: any) {
+                if (!params.joiner) params.joiner = ','
+                return value.join(params.joiner)
             }
         },
-        /* 数字 */
-        hidePhone(value: any) {
-            if(!Number(value)) return Number(value)
-            return value.replace(/^(\d{3})\d+(\d{4})$/, "$1****$2");
-        },
-        hideIdCard(value: any) {
-            if(!Number(value)) return Number(value)
-            return value.replace(/^(\d{6})\d+(\d{4})$/, "$1******$2");
-        },
-        regExp (value: any, params: any) {
-            return value.replace(eval(params.regExp), params.format)
-        },
-        concat (value: any, params: any) {
-            if (!params.joiner) params.joiner = ','
-            return value.join(params.joiner)
-        },
-        i18n (value: any) {
-            // return i18n.t(value)
-            return value
+        i18n: {
+            supportedType: ['string'],
+            fun(value:any){
+                return t(value)
+            }
         }
-    },
-    getFilterArr (metaType: metaType) {
+    }
+    function getTableFilters (metaType: metaType) {
         const result:any = []
-        this.filterArr.forEach(item => {
-        if(!item.supportedType || item.supportedType.includes(metaType)) {
-            result.push({ label: item.name, value: item.name, ...item })
-        }
+        Object.keys(tableFilters).forEach((key: string) => {
+            const item = tableFilters[key]
+            if(!item.supportedType || item.supportedType.includes(metaType)) {
+                result.push({ label: key, value: key, ...item })
+            }
         })
         return result
-    },
-    propListGet (typeObj: any) {
+    }
+    function propListGet (typeObj: any) {
         const result:any = []
         recursion(typeObj)
         return result
@@ -143,8 +139,8 @@ const tableHelper = {
             else result.push({value: prefix + key, label: prefix + key})
         })
         }
-    },
-    getPropType(row: any, prop: string) {
+    }
+    function getPropType(row: any, prop: string) {
         let result = ''
         let nextValue = { ...row }
         prop.split('.').forEach(key => {
@@ -152,23 +148,23 @@ const tableHelper = {
             nextValue = nextValue[key]
         })
         return result
-    },
-    getFormatProp(row: any, col: any) {
-        if(!col.formatList || col.formatList.length === 0) return this.getProp(row, col.prop)
+    }
+    function getFormatProp(row: any, col: any) {
+        if(!col.formatList || col.formatList.length === 0) return getProp(row, col.prop)
         else {
             let result = ''
             col.formatList.forEach((item:any) => {
                 dplog(item);
                 if (item.formatFun) {
-                    result += this.ValueFilters[item.formatFun](this.getProp(row, item.prop),deepCopy(item.params) )
+                    result += tableFilters[item.formatFun]['fun'](getProp(row, item.prop),deepCopy(item.params) )
                 } else {
-                    result += this.getProp(row, item.prop)
+                    result += getProp(row, item.prop)
                 }
             })
             return result
         }
-    },
-    getProp(row:any, prop: string) {
+    }
+    function getProp(row:any, prop: string) {
         try {
             let result = ''
             let nextValue = { ...row }
@@ -181,8 +177,17 @@ const tableHelper = {
             return ''
         }
     }
+    return {
+        trashType,
+        tableFilters,
+        getTableFilters,
+        propListGet,
+        getPropType,
+        getFormatProp,
+        getProp
+    }
 }
-export default tableHelper
+export default useTableHelper
 
 export const formatDate = (time:any, format="YYYY-MM-DD HH:mm") => {
     return dayjs(time).format(format)

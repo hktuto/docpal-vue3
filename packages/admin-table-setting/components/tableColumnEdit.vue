@@ -56,6 +56,7 @@ const props = defineProps<TableProps>()
 const state = reactive({
     showTypeList: []
 })
+const tableHelper = useTableHelper()
 // #region module:  
 // #endregion
 // #region module: form
