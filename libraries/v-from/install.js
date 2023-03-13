@@ -1,4 +1,3 @@
-import axios from 'axios'
 
 import VFormDesigner from '@/components/form-designer/index.vue'
 import VFormRender from '@/components/form-render/index.vue'
@@ -59,11 +58,10 @@ const install = (app) => {
     app.component(component.name, component)
   })
 
-  window.axios = axios
 }
 
 if (typeof window !== 'undefined' && window.Vue) { /* script方式引入时赋值axios！！ */
-  //window.axios = axios
+
 }
 
 export default {

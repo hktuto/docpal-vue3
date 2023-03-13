@@ -1,34 +1,16 @@
 <template>
     <div class="filterContainer">
-        <FromRenderer :form-json="formJson"  :data="{}" @formChang="formChangeHandler" />
+        <FromRenderer v-if="filterJson" :form-json="filterJson"  :data="searchFilter" @formChang="formChangeHandler" />
         <ElButton @click="$emit('closed')">close</ElButton>
         <ElButton @click="$emit('closed')">Submit</ElButton>
     </div>
 </template>
 
 <script lang="ts" setup>
-import formJson from'./json/form'
-type SearchFilter = {
-    paramsInTextSearch?: string[]
-    textSearchType?: string,
-    // paramsInTextSearch?: string[][]
-    or?: string[]
-    type?: string[]
-    modified?: string
-    authors?: string[]
-    collections?: string[]
-    tags?: string[]
-    size?: string,
-    // size?: string[],
-    folderType?: string,
+import { getJsonApi } from 'dp-api'
+const filterJson = ref();
 
-    pageSize: number,
-    currentPageIndex: number
-}
-
-const props = defineProps<{
-    form ?: SearchFilter
-}>();
+const {searchFilter, search} = useSearch();
 
 //#region dropdown options
 const searchTypeOptions = ref()
@@ -36,6 +18,11 @@ const searchTypeOptions = ref()
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
     console.log(fieldName,newValue,oldValue,formModel)
 }
+
+onMounted(async() => {
+    filterJson.value = await getJsonApi('search.json')
+    console.log(filterJson.value)
+})
 
 </script>
 

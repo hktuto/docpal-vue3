@@ -2,18 +2,19 @@
     <div class="appThemeBg">
     <div v-if="appStore.displayState === 'needAuth'" ref="needAuthEl" class="LoginContainer">
       <LoginForm  />
-      
     </div>
     <div v-else-if="appStore.displayState != 'ready'" ref="loadingEl" class="loadingContainer">
+     
       <div class="contain">
-        <Logo class="loginLogo"/>
-        {{ appStore.state }}
+        <LogoCacheWhite class="loginLogo" />
+        <div class="status">{{ appStore.state }}</div>
       </div>
       <!-- <ElButton @click="state = 'ready' ">ready</ElButton> -->
     </div>
     <div v-else ref="readyElement" class="clientPageContainer">
       <NuxtPage />
     </div>
+     <LoadingBg v-if="appStore.displayState != 'ready'" />
   </div>
 </template>
 
@@ -26,7 +27,6 @@ const user = useUser();
 
 onMounted(async () => {
   await appStore.appInit();
-  console.log(svgIconList);
   if(sessionStorage) {
     api.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.getItem('token');
     user.token.value = sessionStorage.getItem('token');
@@ -56,7 +56,7 @@ onMounted(async () => {
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    gap: var(--app-padding);
+    gap: 0;
   }
 }
 .clientPageContainer{
@@ -66,5 +66,10 @@ onMounted(async () => {
 .loginLogo{
   max-width: 280px;
   width: 100%;
+}
+.status{
+  font-size: 1.8rem;
+  color: #fff;
+  font-weight: 100;
 }
 </style>
