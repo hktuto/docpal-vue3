@@ -1,7 +1,9 @@
 <template>
     <div class="dp-table-container">
-        <div>
-            <slot name="preSortButton"></slot>
+        <div class="tableHeader">
+            <div class="headerLeftExpand">
+                <slot name="preSortButton"></slot>
+            </div>
             <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton>
         </div>
         <div class="dp-table-container--main">
@@ -284,6 +286,13 @@ onMounted(() => {
             height: 100%;
         }
     }
+}
+
+.tableHeader{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: var(--app-padding);
 }
 </style>
 <style lang="scss">
