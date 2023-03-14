@@ -336,7 +336,9 @@ class Gradient {
         this.minigl = new MiniGl(this.el, null, null, !0), 
         requestAnimationFrame(() => {
             this.el && (this.computedCanvasStyle = getComputedStyle(this.el), this.waitForCssVars())
-        })
+        }),
+        window.dispatchEvent(new CustomEvent('miniGLRender'),{})
+        
         /*
         this.scrollObserver = await s.create(.1, !1),
         this.scrollObserver.observe(this.el),
