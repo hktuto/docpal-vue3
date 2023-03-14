@@ -73,6 +73,7 @@ const { x, y } = useMouse()
     padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
     gap: var(--app-padding);
     align-items: center;
+    position: relative ; // some browser default position is static, will ignore z-index;
     z-index: 2;
     .expand{
       display: flex;
