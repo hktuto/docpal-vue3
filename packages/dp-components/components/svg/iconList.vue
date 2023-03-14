@@ -1,13 +1,11 @@
 <template>
 <div class="svg-list-container">
-    {{svgIconList}}
-    <div v-for="list in svgIconList" :key="list.name">
-        {{list.name}}
+    <div v-for="list in svgIconList" :key="list.name" class="catergoryContainer">
+        <div class="categoryTitle">{{list.name}}</div>
         <div class="svg-list">
-            <el-card v-for="svg in list.children" :key="svg.src" :class="{'selectedSvg': svg.src === _selectSvg}" @click="handleSvgClick(svg)">
-                <SvgIcon :src="svg.src" />
-                <div>{{svg.name}}</div>
-            </el-card>
+            <div class="iconContainer" v-for="svg in list.children" :key="svg.src" :class="{'selectedSvg': svg.src === _selectSvg}" @click="handleSvgClick(svg)">
+               <SvgIcon :src="svg.src" />
+            </div>
         </div>
     </div>
 </div>
@@ -31,10 +29,24 @@ defineExpose({ getSvg })
 </script>
 
 <style lang="scss" scoped>
+.catergoryContainer{
+        margin-block: var(--app-padding);
+        .categoryTitle{
+            font-size: var(--el-font-size-medium);
+        }
+    }
 .svg-list {
     display: grid;
-    grid-template-columns: repeat(7,1fr);
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
     gap: var(--app-padding);
+    
+    .iconContainer{
+        aspect-ratio: 1 / 1;
+        display: grid;
+        place-items: center;
+        border-radius: var(--app-padding);
+        --icon-size: 32px;
+    }
     .selectedSvg {
         background-color: aquamarine;
     }
