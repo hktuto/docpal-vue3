@@ -2,7 +2,7 @@
     <div class="filterContainer">
         <FromRenderer v-if="filterJson" :form-json="filterJson"  :data="searchFilter" @formChang="formChangeHandler" />
         <ElButton @click="$emit('closed')">close</ElButton>
-        <ElButton @click="$emit('closed')">Submit</ElButton>
+        <ElButton @click="$emit('submit')">Submit</ElButton>
     </div>
 </template>
 
@@ -18,6 +18,7 @@ const searchTypeOptions = ref()
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
     console.log(fieldName,newValue,oldValue,formModel)
 }
+
 
 onMounted(async() => {
     filterJson.value = await getJsonApi('search.json')

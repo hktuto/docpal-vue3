@@ -3,11 +3,11 @@
         <div ref="wrapper" :class="{wrapper:true, dropdownOpened}">
             <div :class="{inputContainer:true, dropdownOpened}" @mouseenter="focusInput">
                 <ElIcon><Search /></ElIcon>
-                <input ref="inputEl" :value="keyword" :placeholder="$t('search_keyword')" @input="keywordInputHandler"  />
+                <input ref="inputEl" :value="searchFilter.keyword" :placeholder="$t('search_keyword')" @input="keywordInputHandler"  />
                 <ElIcon class="filterIcon" @click="openFilter"><Operation /></ElIcon>
             </div>
             <div  :class="{popUpDialog:true, dropdownOpened}">
-                <SearchFilter v-if="filterOpened" @closed="filterOpened = false"/>
+                <SearchFilter v-if="filterOpened" @closed="filterOpened = false" @submit=""/>
                 <!-- <SearchShortResult v-if="optionOpened" /> -->
             </div>
         </div>
@@ -31,7 +31,6 @@ const dropdownOpened = computed(() => {
 })
 
 function openFilter(){
-    console.log(filterOpened.value);
     filterOpened.value = true;
 }
 onClickOutside(wrapper, (event) => {
@@ -45,14 +44,14 @@ function elHoverHandler() {
     
 }
 function focusInput() {
-    dplog(inputEl.value)
     inputEl.value.focus();
 }
 function blurInput() {
-    console.log(inputEl.value)
     inputEl.value.blur();
 }
-const keyword = ref("");
+
+
+
 function keywordInputHandler() {
     keyword.value = inputEl.value.value;
 }
