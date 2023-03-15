@@ -66,7 +66,8 @@ export enum TABLE {
     CLIENT_COLLECTION = 'clientCollection',
     CLIENT_SHARE_LIST = 'clientShareList',
     CLIENT_FILE_REQUEST = 'clientFileRequest',
-    CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit'
+    CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit',
+    CLIENT_COMPLETE_TASK = 'clientCompleteTask'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -520,5 +521,53 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: [],
         options: { }
+    },
+    [TABLE.CLIENT_COMPLETE_TASK] : {
+        columns: [
+            { label: 'table_name', prop: 'businessKey', sortable: true },
+            { label: 'workflow_workflow', prop: 'processDefinitionName' },
+            // { label: 'workflow_workflow', property: 'name', sortable: true },
+            { label: 'workflow_createDate', prop: 'createDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { label: 'table_completeDate', prop: 'completeDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "endTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { label: 'table_duration', prop: 'duration', align: 'right',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "endTime",
+                        "formatFun": "duration",
+                        "params": {
+                            "date": "startTime"
+                        },
+                        "index": 0
+                    }
+                ] 
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
     }
 }

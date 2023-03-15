@@ -65,14 +65,14 @@
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
 export type SortParams = {
-    column: TableColumnCtx<T | any>
-    prop: string
+    column: TableColumnCtx<T | any>,
+    prop: string,
     order: Table.Order
 }
 
 const props = defineProps<{
-    tableData: Array<object> // table的数据
-    columns: Table.Column[] // 每列的配置项
+    tableData: Array<object>, // table的数据
+    columns: Table.Column[], // 每列的配置项
     options?: Table.Options
 }>()
 const tableRef = ref();
@@ -80,6 +80,7 @@ const tableRef = ref();
 // 设置option默认值，如果传入自定义的配置则合并option配置项
 const _options = computed<Table.Options>(() => {
     const option = {
+        multiSelect: false,
         stripe: false,
         tooltipEffect: 'dark',
         showHeader: true,
@@ -153,7 +154,7 @@ const indexMethod = (index: number) => {
     }
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-        handleShift(row)
+        if(_options.value.multiSelect) handleShift(row)
         emit('row-click', row, column, event)
     }
     const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
