@@ -292,8 +292,15 @@ onMounted(() => {
 .tableHeader{
     width: 100%;
     display: grid;
+    align-items: flex-end;
     grid-template-columns: 1fr min-content;
     gap: var(--app-padding);
+    .headerLeftExpand {
+        overflow: hidden;
+    }
+    &>:deep(.el-button)  {
+        margin-bottom: 10px;
+    }
 }
 </style>
 <style lang="scss">

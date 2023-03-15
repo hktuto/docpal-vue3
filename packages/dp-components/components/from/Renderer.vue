@@ -15,13 +15,10 @@
     }>();
     const vFormRenderRef = ref()
     const fromJsonNormalizer = computed(() => {
+        if(!props.formJson) return {}
         let json = deepCopy(props.formJson)
-        console.log({json});
-        
-        if(!json) return {}
-        // if(json.formConfig.jsonVersion === 3) return props.formJson;
+        if(json.formConfig.jsonVersion === 3) return props.formJson;
         // normalize vue 2 form designer
-        console.log(json, '===============');
         if(!json.formConfig) json.formConfig = { }
         json.formConfig.jsonVersion = 3
         let st = JSON.stringify(json);
@@ -43,5 +40,10 @@
 </script>
 
 <style scoped>
-
+:deep(.el-form-item__content div) {
+    width: 100%;
+    .el-date-editor {
+        width: 100%;
+    }
+}
 </style>
