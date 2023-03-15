@@ -13,7 +13,7 @@
 import InlineSvg from 'vue-inline-svg';
 const props = defineProps<{
     src: string,
-    round: boolean
+    round?: boolean
 }>()
 const svgClass = computed(() => {
     return 'svg-icon'

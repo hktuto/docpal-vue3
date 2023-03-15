@@ -1,3 +1,4 @@
+import { pageParams } from './index'
 export type workflowProps = {
     id: string,
     name: string,
@@ -24,3 +25,17 @@ export type workflowFormReq = {
 export type workflowFormProperties = {
     approved: string,
 }
+export type workflowBpmnReq = {
+    processKey?: string,
+    processDefinitionId?:  string,
+}
+export type workflowCommentSendReq = {
+    processInstanceId: string,
+    userId: string,
+    text: string,
+}
+export type historyProcessReq = {
+    processInstanceId?: string,
+    completed?: boolean,
+    userId?: string,
+}&pageParams

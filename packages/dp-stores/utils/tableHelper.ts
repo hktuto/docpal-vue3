@@ -113,8 +113,26 @@ export const useTableHelper = () => {
             fun(value:any){
                 return t(value)
             }
+        },
+        duration: {
+            supportedType: ['date'],
+            params: {
+                date: 'string',
+            },
+            fun(value:any, params: any){
+                const date = getProp(params.row, params.date)
+                if(!value || !date) return ''
+                return dayjs(value).diff(date, 'day') + t('common_days')
+            }
         }
     }
+    function getFilters () {
+        return Object.keys(tableFilters).reduce((prev:any,key:any) => {
+            prev[key] = tableFilters[key].fun
+            return prev
+        }, {})
+    }
+    const formatFuns:any = getFilters()
     function getTableFilters (metaType: metaType) {
         const result:any = []
         Object.keys(tableFilters).forEach((key: string) => {
@@ -149,16 +167,20 @@ export const useTableHelper = () => {
         return result
     }
     function getFormatProp(row: any, col: any) {
-        if(!col.formatList || col.formatList.length === 0) return getProp(row, col.prop)
+        const _row = deepCopy(row)
+        const _col = deepCopy(col)
+        if(!_col.formatList || _col.formatList.length === 0) return getProp(_row, _col.prop)
         else {
-            let result = ''
-            col.formatList.forEach((item:any) => {
+            const result = _col.formatList.reduce((prev: string, item:any) => {
                 if (item.formatFun) {
-                    result += tableFilters[item.formatFun]['fun'](getProp(row, item.prop),deepCopy(item.params) )
+                    item.params.row = _row
+                    const value = getProp(_row, item.prop)
+                    prev = prev + formatFuns[item.formatFun](value, deepCopy(item.params) )
                 } else {
-                    result += getProp(row, item.prop)
+                    prev = prev + getProp(_row, item.prop)
                 }
-            })
+                return prev
+            }, '')
             return result
         }
     }
@@ -188,5 +210,6 @@ export const useTableHelper = () => {
 export default useTableHelper
 
 export const formatDate = (time:any, format="YYYY-MM-DD HH:mm") => {
+    if (!time) return ''
     return dayjs(time).format(format)
 }

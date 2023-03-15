@@ -50,6 +50,7 @@ declare namespace Table {
         formatList?: formatListType[] // 配置显示的属性（带格式）列表
     }
     interface Options {
+        multiSelect: boolean,
         height?: string | number,
         // Table 的高度， 默认为自动高度。 如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。
         stripe?: boolean, // 是否为斑马纹 table
@@ -57,11 +58,11 @@ declare namespace Table {
         size?: Size // Table 的尺寸
         showHeader?: boolean // 是否显示表头,
         tooltipEffect?: 'dark' | 'light' // tooltip effect 属性
-        showPagination?: boolean, // 是否展示分页器
+        showPagination?: boolean // 是否展示分页器
         paginationConfig?: Pagination, // 分页器配置项，详情见下方 paginationConfig 属性,
-   	 	rowStyle?: ({ row, rowIndex }) => stirng | object // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style。
+   	 	rowStyle?: ({ row, rowIndex }) => stirng | object, // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style。
    	 	headerCellStyle?: import('vue').CSSProperties, // 表头单元格的style样式，是一个object为所有表头单元格设置一样的 Style。注：CSSProperties类型就是一个对象，像正常在style中写css一样 {color: #f00}
- 	 	defaultSort?: Sort // 默认的排序列的 prop 和顺序。 它的 prop 属性指定默认的排序的列，order 指定默认排序的顺序。
+ 	 	defaultSort?: Sort, // 默认的排序列的 prop 和顺序。 它的 prop 属性指定默认的排序的列，order 指定默认排序的顺序。
  	 	rowKey?: string // 行数据的 Key，用来优化 Table 的渲染。
     }
     interface Pagination {

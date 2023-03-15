@@ -27,8 +27,7 @@ function getIcon (row, position='prefixIcon') {
         </el-table-column>
     </template>
     <!-- 其他正常列 -->
-    <el-table-column
-        v-else v-bind="col">
+    <el-table-column v-else v-bind="col">
         <!---图片 (START)-->
         <!-- 如需更改图片size，可自行配置参数 -->
         <template v-if="col.type === 'image'" #default="{ row, $index }">
@@ -76,9 +75,7 @@ function getIcon (row, position='prefixIcon') {
         <template v-else #default="{ row, $index }">
             <!-- 自定义slot (END) -->
             <!-- 默认渲染 (START) -->
-            <SvgIcon :src="getIcon(row)" ></SvgIcon>
             <span >{{ formatProp(row) }}</span>
-            <SvgIcon :src="getIcon(row, 'suffixIcon')"></SvgIcon>
             <!-- 默认渲染 (END) -->
         </template>
         <!-- 自定义表头 -->
