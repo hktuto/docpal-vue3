@@ -2,13 +2,17 @@
     <Table  :columns="tableSetting.columns" :table-data="tableData" :options="options"
             v-loading="loading"
             @pagination-change="handlePaginationChange"
-            @row-dblclick="handleDblclick"></Table>
+            @row-dblclick="handleDblclick">
+            <template #preSortButton>
+                <FromRenderer :form-json="formJson" @formChange="handleFormChange"/>
+            </template>
+            </Table>
 </template>
 
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { historyProcessGetApi, TABLE, defaultTableSetting } from 'dp-api'
+import { historyProcessGetApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const user = useUser();
 // #region module: page
@@ -30,7 +34,8 @@ const user = useUser();
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             }
-        }
+        },
+        extraParams: {}
     })
     const tableKey = TABLE.CLIENT_COMPLETE_TASK
     const tableSetting = defaultTableSetting[tableKey]
@@ -38,7 +43,7 @@ const user = useUser();
     async function getList (param) {
         param.userId = user.user.value.userId || user.user.value.username
         state.loading = true
-        const res = await historyProcessGetApi(param)
+        const res = await historyProcessGetApi({...param, ...state.extraParams})
         
         state.tableData = res.entryList
         state.loading = false
@@ -46,7 +51,7 @@ const user = useUser();
         state.options.paginationConfig.pageSize = param.pageSize
         state.options.paginationConfig.currentPage = param.pageIndex + 1
     }
-    function handlePaginationChange (page: number, pageSize: number) {
+    function handlePaginationChange (page: number, pageSize: number = pageParams.pageSize) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
         router.push({ 
@@ -66,13 +71,23 @@ const user = useUser();
     )
     const { tableData, options, loading } = toRefs(state)
 // #endregion
-
+// #region module: search json
+    const formJson = getJsonApi('workflowCompleteTaskSearch.json')
+    function handleFormChange (data) {
+        state.extraParams = deepCopy(data.formModel)
+        handlePaginationChange(1)
+    }
+// #endregion
 function handleDblclick (row) {
     router.push(`/workflow/${row.id}?state=complete`)
 }
-onMounted(() => {
+onMounted(async() => {
+    
 })
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-form-item--default) {
+    margin-bottom: unset;
+}
 </style>
