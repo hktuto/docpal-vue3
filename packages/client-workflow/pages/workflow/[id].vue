@@ -1,7 +1,8 @@
 <template>
 <NuxtLayout class="fit-height withPadding " :backPath="`/workflow?tab=${backState}`">
     <div class="grid-layout">
-        <WorkflowDetailCompleteInfo :taskDetail="taskDetail"></WorkflowDetailCompleteInfo>
+        <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>
+        <WorkflowDetailInfo v-else :taskDetail="taskDetail"></WorkflowDetailInfo>
         <el-tabs v-model="activeTab" class="grid-layout-tab" @tab-change="tabChange">
             <el-tab-pane :label="$t('workflow_form')" name="form" v-loading="state.loading">
                 <WorkflowDetailFormRender ref="vFormRef" />
@@ -20,18 +21,24 @@
 
 <script lang="ts" setup>
 import {
+    getTaskApi, // 获取未完成的任务详情
     historyProcessDetailGetApi, // 获取已完成的任务详情
+    activeProcessDetailGetApi, // 获取参与中的任务详情
     taskFormJsonGetApi,
     getActivityApi
 } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
 const state = reactive({
-    activeTab: 'form',
     backState: route.query.state,
+    processState: {
+        'completeTask': 'completeTask', 
+        'activeTask': 'activeTask'
+    },
+    activeTab: 'form',
     taskDetail: {},
     activityList: [],
-    loading: false
+    loading: false,
 })
 const { activeTab, backState, taskDetail, form } = toRefs(state)
 function tabChange (tab) {
@@ -39,25 +46,37 @@ function tabChange (tab) {
 }
 async function getDetail() {
     const processInstanceId = route.params.id
-    const params = {
-        processInstanceId,
-        completed: true
+    switch(state.backState) {
+        case state.processState.completeTask:
+            state.taskDetail = await historyProcessDetailGetApi({ processInstanceId, completed: true })
+            break
+        case state.processState.activeTask:
+            state.taskDetail = await activeProcessDetailGetApi(processInstanceId)
+            break
+        default:
+            state.taskDetail = await getTaskApi(processInstanceId)
     }
-    state.taskDetail = await historyProcessDetailGetApi(params)
-    handleGetTask(processInstanceId)
-    setTimeout(() => {
-        handleFormDataGet()
+    handleGetActivity(processInstanceId)
+    setTimeout(async() => {
+        state.loading = true
+        await handleFormDataGet()
+        state.loading = false
     }, 100)
 
 }
 // #region module: form
     const vFormRef = ref()
     async function handleFormDataGet () {
-        state.loading = true
-        const formData = formDataGet(state.taskDetail.processVariables)
-        const formJson = await formJsonGet('complete', state.taskDetail.processDefinitionKey)
-        vFormRef.value.setForm(formJson, formData)
-        state.loading = false
+        switch(state.backState) {
+            case state.processState.completeTask:
+            case state.processState.activeTask:
+                const formData = formDataGet(state.taskDetail.processVariables)
+                const formJson = await formJsonGet('complete', state.taskDetail.processDefinitionKey)
+                vFormRef.value.setForm(formJson, formData)
+                break
+            default:
+                break
+        }
     }
     function formDataGet (obj) {
         return Object.keys(obj).reduce((prev, key) => {
@@ -73,7 +92,7 @@ async function getDetail() {
     }
 // #endregion
 // #region module: activity 
-    async function handleGetTask (processInstanceId) {
+    async function handleGetActivity (processInstanceId) {
         state.activityList = await getActivityApi(processInstanceId)
     } 
 // #endregion

@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { historyProcessGetApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { activeProcessGetApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const user = useUser();
 // #region module: page
@@ -21,8 +21,7 @@ const user = useUser();
     const pageParams = {
         pageIndex: 0,
         pageSize: 20,
-        completed: true,
-        userId: user.user.userId || user.user.username
+        // userId: user.user.value.userId || user.user.value.username
     }
     const state = reactive<State>({
         loading: false,
@@ -36,15 +35,15 @@ const user = useUser();
             }
         },
         extraParams: {},
-        tabName: 'completeTask'
+        tabName: 'activeTask'
     })
-    const tableKey = TABLE.CLIENT_COMPLETE_TASK
+    const tableKey = TABLE.CLIENT_ACTIVE_TASK
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
         param.userId = user.user.value.userId || user.user.value.username
         state.loading = true
-        const res = await historyProcessGetApi({...param, ...state.extraParams})
+        const res = await activeProcessGetApi({...param, ...state.extraParams})
         
         state.tableData = res.entryList
         state.loading = false
@@ -73,7 +72,7 @@ const user = useUser();
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 // #region module: search json
-    const formJson = getJsonApi('workflowCompleteTaskSearch.json')
+    const formJson = getJsonApi('workflowActiveTaskSearch.json')
     function handleFormChange (data) {
         state.extraParams = deepCopy(data.formModel)
         handlePaginationChange(1)

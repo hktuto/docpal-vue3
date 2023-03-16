@@ -266,7 +266,7 @@ onMounted(() => {
     })
 })
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
-// defineExpose({ element: tableRef })
+defineExpose({ reorderColumn })
 </script>
 <style lang="scss" scoped>
 :deep(.el-image__inner) {
@@ -280,6 +280,7 @@ onMounted(() => {
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     height: 99%;
+    overflow: hidden;
     user-select: none;
     &--main {
         overflow: hidden;
