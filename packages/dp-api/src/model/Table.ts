@@ -67,7 +67,11 @@ export enum TABLE {
     CLIENT_SHARE_LIST = 'clientShareList',
     CLIENT_FILE_REQUEST = 'clientFileRequest',
     CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit',
-    CLIENT_COMPLETE_TASK = 'clientCompleteTask'
+    CLIENT_COMPLETE_TASK = 'clientCompleteTask',
+    CLIENT_ACTIVE_TASK = 'clientActiveTask',
+    CLIENT_ADHOC_APPROVAL_TASK = 'clientAdhocApprovalTask',
+    CLIENT_ADHOC_SUBMITTED_TASK = 'clientAdhocSubmittedTask',
+    CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -294,18 +298,6 @@ export const defaultTableSetting: TableColumnSetting = {
             { label: 'table_path', property: 'documentPath', sortable: true },
             { label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true },
             { label: 'workflow_createDate', property: 'createDate', sortable: true },
-        ],
-        events: [],
-        options: { pageSize: 20 }
-    },
-    [TABLE.ADHOC_Completed_TASK] : {
-        columns: [
-            { label: 'table_path', property: 'documentPath', sortable: true },
-            { label: 'info_version', property: 'documentApprovalVersion', align: 'right', width: '70' },
-            { label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true, width: '150' },
-            { label: 'workflow_createDate', property: 'createDate', sortable: true, align: 'center', width: '130' },
-            { label: 'role.approver', property: 'approvedBy', sortable: true, isFilter: true, width: '150' },
-            { label: 'dpTable_approvedDate', property: 'approvedDate', sortable: true, align: 'center', width: '130' },
         ],
         events: [],
         options: { pageSize: 20 }
@@ -569,5 +561,105 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: [],
         options: { pageSize: 20 }
-    }
+    },
+    [TABLE.CLIENT_ACTIVE_TASK] : {
+        columns: [
+            { label: 'table_name', prop: 'businessKey' },
+            { label: 'workflow_workflow', prop: 'processDefinitionName' },
+            { label: 'workflow_assignee', prop: 'name',  },
+            { label: 'workflow_createDate', prop: 'startTime', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_ADHOC_SUBMITTED_TASK] : {
+        columns: [
+            { label: 'table_path', prop: 'documentPath' },
+            { label: 'role.approvers', prop: 'user_approver_id' },
+            { label: 'workflow_createDate', prop: 'startTime',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_ADHOC_APPROVAL_TASK] : {
+        columns: [
+            { label: 'table_path', prop: 'documentPath' },
+            { label: 'role.creator', prop: 'user_creator_id' },
+            { label: 'workflow_createDate', prop: 'startTime',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_ADHOC_COMPLETED_TASK] : {
+        columns: [
+            { label: 'table_path', prop: 'documentPath'},
+            { label: 'info_version', prop: 'documentApprovalVersion', align: 'right', width: '80' },
+            { label: 'role.creator', prop: 'user_creator_id', width: '150' },
+            { label: 'workflow_createDate', prop: 'startTime', align: 'center', width: '180',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { label: 'role.approver', prop: 'approvedBy', width: '150' },
+            { label: 'dpTable_approvedDate', prop: 'approvedDate', align: 'center', width: '150',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "approvedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
 }

@@ -26,7 +26,7 @@
             }}
         </div>
     </div>
-    <div class="infoContainer">
+    <div class="infoContainer" v-if="state === 'completeTask'">
         <div class="label">{{ $t('tableHeader_completeDate') }}</div>
         <div class="value">
             {{
@@ -38,7 +38,8 @@
 </template>
 <script lang="ts" setup>
 const props = defineProps<{
-    taskDetail: object
+    taskDetail: object,
+    state: string
 }>()
 </script>
 <style lang="scss" scoped>

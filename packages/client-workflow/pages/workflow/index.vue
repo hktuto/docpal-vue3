@@ -3,20 +3,19 @@
     <el-tabs v-model="activeTab" class="grid-layout" @tab-change="tabChange">
         <el-tab-pane :label="$t('workflow_allTask')" name="allTask">
             <div>allTask
-                <WorkflowDetailDiscussionChannel/>
             </div>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_myTask')" name="myTask">
             <div>myTask</div>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_completedTask')" name="completeTask">
-            <WorkflowCompleteTask></WorkflowCompleteTask>
+            <WorkflowCompleteTask v-if="activeTab === 'completeTask'"/>
         </el-tab-pane>
-        <el-tab-pane :label="$t('workflow_ActiveTask')" name="ActiveTask">
-            <div>ActiveTask</div>
+        <el-tab-pane :label="$t('workflow_ActiveTask')" name="activeTask">
+            <WorkflowActiveTask v-if="activeTab === 'activeTask'"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_adhocTask')" name="adhocTask">
-            <div>adhocTask</div>
+            <WorkflowAdhocTask v-if="activeTab === 'adhocTask'"/>
         </el-tab-pane>
     </el-tabs>
 </NuxtLayout>
@@ -35,7 +34,7 @@ function tabChange (tab) {
 }
 watch(() => route.query.tab, (newTab) => {
     state.activeTab = newTab
-})
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
