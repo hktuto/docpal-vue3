@@ -26,19 +26,19 @@ export const getTaskApi = async(taskId:string) => {
     
 export const activeProcessGetApi = async(params: pageParams) => {
     const res = await api.post('/docpal/workflow/process/active', params).then(res => res.data);
-    return { entryList: res.list, totalSize: res.count }
+    return { entryList: res.entryList || [], totalSize: res.totalSize }
 }
 export const activeProcessDetailGetApi = async(processInstanceId: string) => {
     const res = await api.post('/docpal/workflow/process/active', {processInstanceId}).then(res => res.data);
-    return res.list[0] || {}
+    return res.entryList[0] || {}
 }
 export const historyProcessGetApi = async(params: historyProcessReq) => {
     const res = await api.post('/docpal/workflow/history/process', params).then(res => res.data);
-    return { entryList: res.list, totalSize: res.count }
+    return { entryList: res.entryList || [], totalSize: res.totalSize }
 }
 export const historyProcessDetailGetApi = async(params: historyProcessReq) => {
     const res = await api.post('/docpal/workflow/history/process', params).then(res => res.data);
-    return res.list[0] || {}
+    return res.entryList[0] || {}
 }
 export const getAdHocPageApi = async(param) => {
     const res = await api.post(`/docpal/workflow/queryAdhocApprovalPage`, param).then(res => res.data.data);
