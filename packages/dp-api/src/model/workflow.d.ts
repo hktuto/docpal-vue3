@@ -25,6 +25,10 @@ export type workflowFormReq = {
 export type workflowFormProperties = {
     approved: string,
 }
+export type fromPropertiesReq = {
+    processKey?: string,
+    taskId?:  string,
+}
 export type workflowBpmnReq = {
     processKey?: string,
     processDefinitionId?:  string,

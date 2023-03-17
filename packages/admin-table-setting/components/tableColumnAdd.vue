@@ -10,7 +10,6 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
-import onMountedEditorVue from '../../../libraries/v-from/src/components/form-designer/setting-panel/property-editor/event-handler/onMounted-editor.vue'
 const dialogVisible = ref(false)
 function handleOpen() {
     dialogVisible.value = true

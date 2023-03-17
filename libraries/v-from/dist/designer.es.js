@@ -18,2409 +18,6 @@ var __spreadValues = (a, b) => {
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 import require$$0$1, { reactive, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, resolveComponent, createBlock, normalizeStyle, withCtx, createVNode, createTextVNode, Fragment, renderList, renderSlot, withModifiers, pushScopeId, popScopeId, createSlots, watch, ref, onBeforeUnmount, onMounted, onUnmounted, withDirectives, mergeProps, resolveDynamicComponent, normalizeProps, guardReactiveProps, vShow, resolveDirective, defineComponent, isVNode } from "vue";
-var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-function getDefaultExportFromCjs(x) {
-  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
-}
-var axios$2 = { exports: {} };
-var bind$2 = function bind2(fn, thisArg) {
-  return function wrap() {
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-    return fn.apply(thisArg, args);
-  };
-};
-var bind$1 = bind$2;
-var toString = Object.prototype.toString;
-function isArray(val) {
-  return toString.call(val) === "[object Array]";
-}
-function isUndefined(val) {
-  return typeof val === "undefined";
-}
-function isBuffer(val) {
-  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor) && typeof val.constructor.isBuffer === "function" && val.constructor.isBuffer(val);
-}
-function isArrayBuffer(val) {
-  return toString.call(val) === "[object ArrayBuffer]";
-}
-function isFormData(val) {
-  return typeof FormData !== "undefined" && val instanceof FormData;
-}
-function isArrayBufferView(val) {
-  var result;
-  if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView) {
-    result = ArrayBuffer.isView(val);
-  } else {
-    result = val && val.buffer && val.buffer instanceof ArrayBuffer;
-  }
-  return result;
-}
-function isString(val) {
-  return typeof val === "string";
-}
-function isNumber(val) {
-  return typeof val === "number";
-}
-function isObject(val) {
-  return val !== null && typeof val === "object";
-}
-function isPlainObject(val) {
-  if (toString.call(val) !== "[object Object]") {
-    return false;
-  }
-  var prototype = Object.getPrototypeOf(val);
-  return prototype === null || prototype === Object.prototype;
-}
-function isDate(val) {
-  return toString.call(val) === "[object Date]";
-}
-function isFile(val) {
-  return toString.call(val) === "[object File]";
-}
-function isBlob(val) {
-  return toString.call(val) === "[object Blob]";
-}
-function isFunction(val) {
-  return toString.call(val) === "[object Function]";
-}
-function isStream(val) {
-  return isObject(val) && isFunction(val.pipe);
-}
-function isURLSearchParams(val) {
-  return typeof URLSearchParams !== "undefined" && val instanceof URLSearchParams;
-}
-function trim(str) {
-  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, "");
-}
-function isStandardBrowserEnv() {
-  if (typeof navigator !== "undefined" && (navigator.product === "ReactNative" || navigator.product === "NativeScript" || navigator.product === "NS")) {
-    return false;
-  }
-  return typeof window !== "undefined" && typeof document !== "undefined";
-}
-function forEach(obj, fn) {
-  if (obj === null || typeof obj === "undefined") {
-    return;
-  }
-  if (typeof obj !== "object") {
-    obj = [obj];
-  }
-  if (isArray(obj)) {
-    for (var i = 0, l = obj.length; i < l; i++) {
-      fn.call(null, obj[i], i, obj);
-    }
-  } else {
-    for (var key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        fn.call(null, obj[key], key, obj);
-      }
-    }
-  }
-}
-function merge() {
-  var result = {};
-  function assignValue(val, key) {
-    if (isPlainObject(result[key]) && isPlainObject(val)) {
-      result[key] = merge(result[key], val);
-    } else if (isPlainObject(val)) {
-      result[key] = merge({}, val);
-    } else if (isArray(val)) {
-      result[key] = val.slice();
-    } else {
-      result[key] = val;
-    }
-  }
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    forEach(arguments[i], assignValue);
-  }
-  return result;
-}
-function extend$1(a, b, thisArg) {
-  forEach(b, function assignValue(val, key) {
-    if (thisArg && typeof val === "function") {
-      a[key] = bind$1(val, thisArg);
-    } else {
-      a[key] = val;
-    }
-  });
-  return a;
-}
-function stripBOM(content) {
-  if (content.charCodeAt(0) === 65279) {
-    content = content.slice(1);
-  }
-  return content;
-}
-var utils$d = {
-  isArray,
-  isArrayBuffer,
-  isBuffer,
-  isFormData,
-  isArrayBufferView,
-  isString,
-  isNumber,
-  isObject,
-  isPlainObject,
-  isUndefined,
-  isDate,
-  isFile,
-  isBlob,
-  isFunction,
-  isStream,
-  isURLSearchParams,
-  isStandardBrowserEnv,
-  forEach,
-  merge,
-  extend: extend$1,
-  trim,
-  stripBOM
-};
-var utils$c = utils$d;
-function encode(val) {
-  return encodeURIComponent(val).replace(/%3A/gi, ":").replace(/%24/g, "$").replace(/%2C/gi, ",").replace(/%20/g, "+").replace(/%5B/gi, "[").replace(/%5D/gi, "]");
-}
-var buildURL$2 = function buildURL2(url, params, paramsSerializer) {
-  if (!params) {
-    return url;
-  }
-  var serializedParams;
-  if (paramsSerializer) {
-    serializedParams = paramsSerializer(params);
-  } else if (utils$c.isURLSearchParams(params)) {
-    serializedParams = params.toString();
-  } else {
-    var parts = [];
-    utils$c.forEach(params, function serialize(val, key) {
-      if (val === null || typeof val === "undefined") {
-        return;
-      }
-      if (utils$c.isArray(val)) {
-        key = key + "[]";
-      } else {
-        val = [val];
-      }
-      utils$c.forEach(val, function parseValue(v) {
-        if (utils$c.isDate(v)) {
-          v = v.toISOString();
-        } else if (utils$c.isObject(v)) {
-          v = JSON.stringify(v);
-        }
-        parts.push(encode(key) + "=" + encode(v));
-      });
-    });
-    serializedParams = parts.join("&");
-  }
-  if (serializedParams) {
-    var hashmarkIndex = url.indexOf("#");
-    if (hashmarkIndex !== -1) {
-      url = url.slice(0, hashmarkIndex);
-    }
-    url += (url.indexOf("?") === -1 ? "?" : "&") + serializedParams;
-  }
-  return url;
-};
-var utils$b = utils$d;
-function InterceptorManager$1() {
-  this.handlers = [];
-}
-InterceptorManager$1.prototype.use = function use(fulfilled, rejected, options) {
-  this.handlers.push({
-    fulfilled,
-    rejected,
-    synchronous: options ? options.synchronous : false,
-    runWhen: options ? options.runWhen : null
-  });
-  return this.handlers.length - 1;
-};
-InterceptorManager$1.prototype.eject = function eject(id) {
-  if (this.handlers[id]) {
-    this.handlers[id] = null;
-  }
-};
-InterceptorManager$1.prototype.forEach = function forEach2(fn) {
-  utils$b.forEach(this.handlers, function forEachHandler(h) {
-    if (h !== null) {
-      fn(h);
-    }
-  });
-};
-var InterceptorManager_1 = InterceptorManager$1;
-var utils$a = utils$d;
-var normalizeHeaderName$1 = function normalizeHeaderName2(headers, normalizedName) {
-  utils$a.forEach(headers, function processHeader(value2, name) {
-    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-      headers[normalizedName] = value2;
-      delete headers[name];
-    }
-  });
-};
-var enhanceError$2 = function enhanceError2(error, config, code, request2, response) {
-  error.config = config;
-  if (code) {
-    error.code = code;
-  }
-  error.request = request2;
-  error.response = response;
-  error.isAxiosError = true;
-  error.toJSON = function toJSON() {
-    return {
-      message: this.message,
-      name: this.name,
-      description: this.description,
-      number: this.number,
-      fileName: this.fileName,
-      lineNumber: this.lineNumber,
-      columnNumber: this.columnNumber,
-      stack: this.stack,
-      config: this.config,
-      code: this.code,
-      status: this.response && this.response.status ? this.response.status : null
-    };
-  };
-  return error;
-};
-var enhanceError$1 = enhanceError$2;
-var createError$2 = function createError2(message, config, code, request2, response) {
-  var error = new Error(message);
-  return enhanceError$1(error, config, code, request2, response);
-};
-var createError$1 = createError$2;
-var settle$1 = function settle2(resolve, reject, response) {
-  var validateStatus2 = response.config.validateStatus;
-  if (!response.status || !validateStatus2 || validateStatus2(response.status)) {
-    resolve(response);
-  } else {
-    reject(createError$1("Request failed with status code " + response.status, response.config, null, response.request, response));
-  }
-};
-var utils$9 = utils$d;
-var cookies$1 = utils$9.isStandardBrowserEnv() ? function standardBrowserEnv() {
-  return {
-    write: function write(name, value2, expires, path, domain, secure) {
-      var cookie = [];
-      cookie.push(name + "=" + encodeURIComponent(value2));
-      if (utils$9.isNumber(expires)) {
-        cookie.push("expires=" + new Date(expires).toGMTString());
-      }
-      if (utils$9.isString(path)) {
-        cookie.push("path=" + path);
-      }
-      if (utils$9.isString(domain)) {
-        cookie.push("domain=" + domain);
-      }
-      if (secure === true) {
-        cookie.push("secure");
-      }
-      document.cookie = cookie.join("; ");
-    },
-    read: function read(name) {
-      var match = document.cookie.match(new RegExp("(^|;\\s*)(" + name + ")=([^;]*)"));
-      return match ? decodeURIComponent(match[3]) : null;
-    },
-    remove: function remove(name) {
-      this.write(name, "", Date.now() - 864e5);
-    }
-  };
-}() : function nonStandardBrowserEnv() {
-  return {
-    write: function write() {
-    },
-    read: function read() {
-      return null;
-    },
-    remove: function remove() {
-    }
-  };
-}();
-var isAbsoluteURL$1 = function isAbsoluteURL2(url) {
-  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-};
-var combineURLs$1 = function combineURLs2(baseURL, relativeURL) {
-  return relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
-};
-var isAbsoluteURL = isAbsoluteURL$1;
-var combineURLs = combineURLs$1;
-var buildFullPath$1 = function buildFullPath2(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
-    return combineURLs(baseURL, requestedURL);
-  }
-  return requestedURL;
-};
-var utils$8 = utils$d;
-var ignoreDuplicateOf = [
-  "age",
-  "authorization",
-  "content-length",
-  "content-type",
-  "etag",
-  "expires",
-  "from",
-  "host",
-  "if-modified-since",
-  "if-unmodified-since",
-  "last-modified",
-  "location",
-  "max-forwards",
-  "proxy-authorization",
-  "referer",
-  "retry-after",
-  "user-agent"
-];
-var parseHeaders$1 = function parseHeaders2(headers) {
-  var parsed = {};
-  var key;
-  var val;
-  var i;
-  if (!headers) {
-    return parsed;
-  }
-  utils$8.forEach(headers.split("\n"), function parser(line) {
-    i = line.indexOf(":");
-    key = utils$8.trim(line.substr(0, i)).toLowerCase();
-    val = utils$8.trim(line.substr(i + 1));
-    if (key) {
-      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-        return;
-      }
-      if (key === "set-cookie") {
-        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-      } else {
-        parsed[key] = parsed[key] ? parsed[key] + ", " + val : val;
-      }
-    }
-  });
-  return parsed;
-};
-var utils$7 = utils$d;
-var isURLSameOrigin$1 = utils$7.isStandardBrowserEnv() ? function standardBrowserEnv2() {
-  var msie = /(msie|trident)/i.test(navigator.userAgent);
-  var urlParsingNode = document.createElement("a");
-  var originURL;
-  function resolveURL(url) {
-    var href = url;
-    if (msie) {
-      urlParsingNode.setAttribute("href", href);
-      href = urlParsingNode.href;
-    }
-    urlParsingNode.setAttribute("href", href);
-    return {
-      href: urlParsingNode.href,
-      protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, "") : "",
-      host: urlParsingNode.host,
-      search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, "") : "",
-      hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, "") : "",
-      hostname: urlParsingNode.hostname,
-      port: urlParsingNode.port,
-      pathname: urlParsingNode.pathname.charAt(0) === "/" ? urlParsingNode.pathname : "/" + urlParsingNode.pathname
-    };
-  }
-  originURL = resolveURL(window.location.href);
-  return function isURLSameOrigin2(requestURL) {
-    var parsed = utils$7.isString(requestURL) ? resolveURL(requestURL) : requestURL;
-    return parsed.protocol === originURL.protocol && parsed.host === originURL.host;
-  };
-}() : function nonStandardBrowserEnv2() {
-  return function isURLSameOrigin2() {
-    return true;
-  };
-}();
-function Cancel$3(message) {
-  this.message = message;
-}
-Cancel$3.prototype.toString = function toString2() {
-  return "Cancel" + (this.message ? ": " + this.message : "");
-};
-Cancel$3.prototype.__CANCEL__ = true;
-var Cancel_1 = Cancel$3;
-var utils$6 = utils$d;
-var settle = settle$1;
-var cookies = cookies$1;
-var buildURL$1 = buildURL$2;
-var buildFullPath = buildFullPath$1;
-var parseHeaders = parseHeaders$1;
-var isURLSameOrigin = isURLSameOrigin$1;
-var createError = createError$2;
-var defaults$5 = defaults_1;
-var Cancel$2 = Cancel_1;
-var xhr = function xhrAdapter(config) {
-  return new Promise(function dispatchXhrRequest(resolve, reject) {
-    var requestData = config.data;
-    var requestHeaders = config.headers;
-    var responseType = config.responseType;
-    var onCanceled;
-    function done() {
-      if (config.cancelToken) {
-        config.cancelToken.unsubscribe(onCanceled);
-      }
-      if (config.signal) {
-        config.signal.removeEventListener("abort", onCanceled);
-      }
-    }
-    if (utils$6.isFormData(requestData)) {
-      delete requestHeaders["Content-Type"];
-    }
-    var request2 = new XMLHttpRequest();
-    if (config.auth) {
-      var username = config.auth.username || "";
-      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : "";
-      requestHeaders.Authorization = "Basic " + btoa(username + ":" + password);
-    }
-    var fullPath = buildFullPath(config.baseURL, config.url);
-    request2.open(config.method.toUpperCase(), buildURL$1(fullPath, config.params, config.paramsSerializer), true);
-    request2.timeout = config.timeout;
-    function onloadend() {
-      if (!request2) {
-        return;
-      }
-      var responseHeaders = "getAllResponseHeaders" in request2 ? parseHeaders(request2.getAllResponseHeaders()) : null;
-      var responseData = !responseType || responseType === "text" || responseType === "json" ? request2.responseText : request2.response;
-      var response = {
-        data: responseData,
-        status: request2.status,
-        statusText: request2.statusText,
-        headers: responseHeaders,
-        config,
-        request: request2
-      };
-      settle(function _resolve(value2) {
-        resolve(value2);
-        done();
-      }, function _reject(err) {
-        reject(err);
-        done();
-      }, response);
-      request2 = null;
-    }
-    if ("onloadend" in request2) {
-      request2.onloadend = onloadend;
-    } else {
-      request2.onreadystatechange = function handleLoad() {
-        if (!request2 || request2.readyState !== 4) {
-          return;
-        }
-        if (request2.status === 0 && !(request2.responseURL && request2.responseURL.indexOf("file:") === 0)) {
-          return;
-        }
-        setTimeout(onloadend);
-      };
-    }
-    request2.onabort = function handleAbort() {
-      if (!request2) {
-        return;
-      }
-      reject(createError("Request aborted", config, "ECONNABORTED", request2));
-      request2 = null;
-    };
-    request2.onerror = function handleError() {
-      reject(createError("Network Error", config, null, request2));
-      request2 = null;
-    };
-    request2.ontimeout = function handleTimeout() {
-      var timeoutErrorMessage = config.timeout ? "timeout of " + config.timeout + "ms exceeded" : "timeout exceeded";
-      var transitional2 = config.transitional || defaults$5.transitional;
-      if (config.timeoutErrorMessage) {
-        timeoutErrorMessage = config.timeoutErrorMessage;
-      }
-      reject(createError(timeoutErrorMessage, config, transitional2.clarifyTimeoutError ? "ETIMEDOUT" : "ECONNABORTED", request2));
-      request2 = null;
-    };
-    if (utils$6.isStandardBrowserEnv()) {
-      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ? cookies.read(config.xsrfCookieName) : void 0;
-      if (xsrfValue) {
-        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-      }
-    }
-    if ("setRequestHeader" in request2) {
-      utils$6.forEach(requestHeaders, function setRequestHeader(val, key) {
-        if (typeof requestData === "undefined" && key.toLowerCase() === "content-type") {
-          delete requestHeaders[key];
-        } else {
-          request2.setRequestHeader(key, val);
-        }
-      });
-    }
-    if (!utils$6.isUndefined(config.withCredentials)) {
-      request2.withCredentials = !!config.withCredentials;
-    }
-    if (responseType && responseType !== "json") {
-      request2.responseType = config.responseType;
-    }
-    if (typeof config.onDownloadProgress === "function") {
-      request2.addEventListener("progress", config.onDownloadProgress);
-    }
-    if (typeof config.onUploadProgress === "function" && request2.upload) {
-      request2.upload.addEventListener("progress", config.onUploadProgress);
-    }
-    if (config.cancelToken || config.signal) {
-      onCanceled = function(cancel) {
-        if (!request2) {
-          return;
-        }
-        reject(!cancel || cancel && cancel.type ? new Cancel$2("canceled") : cancel);
-        request2.abort();
-        request2 = null;
-      };
-      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-      if (config.signal) {
-        config.signal.aborted ? onCanceled() : config.signal.addEventListener("abort", onCanceled);
-      }
-    }
-    if (!requestData) {
-      requestData = null;
-    }
-    request2.send(requestData);
-  });
-};
-var utils$5 = utils$d;
-var normalizeHeaderName = normalizeHeaderName$1;
-var enhanceError = enhanceError$2;
-var DEFAULT_CONTENT_TYPE = {
-  "Content-Type": "application/x-www-form-urlencoded"
-};
-function setContentTypeIfUnset(headers, value2) {
-  if (!utils$5.isUndefined(headers) && utils$5.isUndefined(headers["Content-Type"])) {
-    headers["Content-Type"] = value2;
-  }
-}
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== "undefined") {
-    adapter = xhr;
-  } else if (typeof process !== "undefined" && Object.prototype.toString.call(process) === "[object process]") {
-    adapter = xhr;
-  }
-  return adapter;
-}
-function stringifySafely(rawValue, parser, encoder) {
-  if (utils$5.isString(rawValue)) {
-    try {
-      (parser || JSON.parse)(rawValue);
-      return utils$5.trim(rawValue);
-    } catch (e) {
-      if (e.name !== "SyntaxError") {
-        throw e;
-      }
-    }
-  }
-  return (encoder || JSON.stringify)(rawValue);
-}
-var defaults$4 = {
-  transitional: {
-    silentJSONParsing: true,
-    forcedJSONParsing: true,
-    clarifyTimeoutError: false
-  },
-  adapter: getDefaultAdapter(),
-  transformRequest: [function transformRequest(data2, headers) {
-    normalizeHeaderName(headers, "Accept");
-    normalizeHeaderName(headers, "Content-Type");
-    if (utils$5.isFormData(data2) || utils$5.isArrayBuffer(data2) || utils$5.isBuffer(data2) || utils$5.isStream(data2) || utils$5.isFile(data2) || utils$5.isBlob(data2)) {
-      return data2;
-    }
-    if (utils$5.isArrayBufferView(data2)) {
-      return data2.buffer;
-    }
-    if (utils$5.isURLSearchParams(data2)) {
-      setContentTypeIfUnset(headers, "application/x-www-form-urlencoded;charset=utf-8");
-      return data2.toString();
-    }
-    if (utils$5.isObject(data2) || headers && headers["Content-Type"] === "application/json") {
-      setContentTypeIfUnset(headers, "application/json");
-      return stringifySafely(data2);
-    }
-    return data2;
-  }],
-  transformResponse: [function transformResponse(data2) {
-    var transitional2 = this.transitional || defaults$4.transitional;
-    var silentJSONParsing = transitional2 && transitional2.silentJSONParsing;
-    var forcedJSONParsing = transitional2 && transitional2.forcedJSONParsing;
-    var strictJSONParsing = !silentJSONParsing && this.responseType === "json";
-    if (strictJSONParsing || forcedJSONParsing && utils$5.isString(data2) && data2.length) {
-      try {
-        return JSON.parse(data2);
-      } catch (e) {
-        if (strictJSONParsing) {
-          if (e.name === "SyntaxError") {
-            throw enhanceError(e, this, "E_JSON_PARSE");
-          }
-          throw e;
-        }
-      }
-    }
-    return data2;
-  }],
-  timeout: 0,
-  xsrfCookieName: "XSRF-TOKEN",
-  xsrfHeaderName: "X-XSRF-TOKEN",
-  maxContentLength: -1,
-  maxBodyLength: -1,
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  },
-  headers: {
-    common: {
-      "Accept": "application/json, text/plain, */*"
-    }
-  }
-};
-utils$5.forEach(["delete", "get", "head"], function forEachMethodNoData(method) {
-  defaults$4.headers[method] = {};
-});
-utils$5.forEach(["post", "put", "patch"], function forEachMethodWithData(method) {
-  defaults$4.headers[method] = utils$5.merge(DEFAULT_CONTENT_TYPE);
-});
-var defaults_1 = defaults$4;
-var utils$4 = utils$d;
-var defaults$3 = defaults_1;
-var transformData$1 = function transformData2(data2, headers, fns) {
-  var context = this || defaults$3;
-  utils$4.forEach(fns, function transform(fn) {
-    data2 = fn.call(context, data2, headers);
-  });
-  return data2;
-};
-var isCancel$1 = function isCancel2(value2) {
-  return !!(value2 && value2.__CANCEL__);
-};
-var utils$3 = utils$d;
-var transformData = transformData$1;
-var isCancel = isCancel$1;
-var defaults$2 = defaults_1;
-var Cancel$1 = Cancel_1;
-function throwIfCancellationRequested(config) {
-  if (config.cancelToken) {
-    config.cancelToken.throwIfRequested();
-  }
-  if (config.signal && config.signal.aborted) {
-    throw new Cancel$1("canceled");
-  }
-}
-var dispatchRequest$1 = function dispatchRequest2(config) {
-  throwIfCancellationRequested(config);
-  config.headers = config.headers || {};
-  config.data = transformData.call(config, config.data, config.headers, config.transformRequest);
-  config.headers = utils$3.merge(config.headers.common || {}, config.headers[config.method] || {}, config.headers);
-  utils$3.forEach(["delete", "get", "head", "post", "put", "patch", "common"], function cleanHeaderConfig(method) {
-    delete config.headers[method];
-  });
-  var adapter = config.adapter || defaults$2.adapter;
-  return adapter(config).then(function onAdapterResolution(response) {
-    throwIfCancellationRequested(config);
-    response.data = transformData.call(config, response.data, response.headers, config.transformResponse);
-    return response;
-  }, function onAdapterRejection(reason) {
-    if (!isCancel(reason)) {
-      throwIfCancellationRequested(config);
-      if (reason && reason.response) {
-        reason.response.data = transformData.call(config, reason.response.data, reason.response.headers, config.transformResponse);
-      }
-    }
-    return Promise.reject(reason);
-  });
-};
-var utils$2 = utils$d;
-var mergeConfig$2 = function mergeConfig2(config1, config2) {
-  config2 = config2 || {};
-  var config = {};
-  function getMergedValue(target, source2) {
-    if (utils$2.isPlainObject(target) && utils$2.isPlainObject(source2)) {
-      return utils$2.merge(target, source2);
-    } else if (utils$2.isPlainObject(source2)) {
-      return utils$2.merge({}, source2);
-    } else if (utils$2.isArray(source2)) {
-      return source2.slice();
-    }
-    return source2;
-  }
-  function mergeDeepProperties(prop) {
-    if (!utils$2.isUndefined(config2[prop])) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (!utils$2.isUndefined(config1[prop])) {
-      return getMergedValue(void 0, config1[prop]);
-    }
-  }
-  function valueFromConfig2(prop) {
-    if (!utils$2.isUndefined(config2[prop])) {
-      return getMergedValue(void 0, config2[prop]);
-    }
-  }
-  function defaultToConfig2(prop) {
-    if (!utils$2.isUndefined(config2[prop])) {
-      return getMergedValue(void 0, config2[prop]);
-    } else if (!utils$2.isUndefined(config1[prop])) {
-      return getMergedValue(void 0, config1[prop]);
-    }
-  }
-  function mergeDirectKeys(prop) {
-    if (prop in config2) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (prop in config1) {
-      return getMergedValue(void 0, config1[prop]);
-    }
-  }
-  var mergeMap = {
-    "url": valueFromConfig2,
-    "method": valueFromConfig2,
-    "data": valueFromConfig2,
-    "baseURL": defaultToConfig2,
-    "transformRequest": defaultToConfig2,
-    "transformResponse": defaultToConfig2,
-    "paramsSerializer": defaultToConfig2,
-    "timeout": defaultToConfig2,
-    "timeoutMessage": defaultToConfig2,
-    "withCredentials": defaultToConfig2,
-    "adapter": defaultToConfig2,
-    "responseType": defaultToConfig2,
-    "xsrfCookieName": defaultToConfig2,
-    "xsrfHeaderName": defaultToConfig2,
-    "onUploadProgress": defaultToConfig2,
-    "onDownloadProgress": defaultToConfig2,
-    "decompress": defaultToConfig2,
-    "maxContentLength": defaultToConfig2,
-    "maxBodyLength": defaultToConfig2,
-    "transport": defaultToConfig2,
-    "httpAgent": defaultToConfig2,
-    "httpsAgent": defaultToConfig2,
-    "cancelToken": defaultToConfig2,
-    "socketPath": defaultToConfig2,
-    "responseEncoding": defaultToConfig2,
-    "validateStatus": mergeDirectKeys
-  };
-  utils$2.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
-    var merge2 = mergeMap[prop] || mergeDeepProperties;
-    var configValue = merge2(prop);
-    utils$2.isUndefined(configValue) && merge2 !== mergeDirectKeys || (config[prop] = configValue);
-  });
-  return config;
-};
-var data = {
-  "version": "0.24.0"
-};
-var VERSION = data.version;
-var validators$1 = {};
-["object", "boolean", "number", "function", "string", "symbol"].forEach(function(type, i) {
-  validators$1[type] = function validator2(thing) {
-    return typeof thing === type || "a" + (i < 1 ? "n " : " ") + type;
-  };
-});
-var deprecatedWarnings = {};
-validators$1.transitional = function transitional(validator2, version2, message) {
-  function formatMessage(opt, desc) {
-    return "[Axios v" + VERSION + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
-  }
-  return function(value2, opt, opts) {
-    if (validator2 === false) {
-      throw new Error(formatMessage(opt, " has been removed" + (version2 ? " in " + version2 : "")));
-    }
-    if (version2 && !deprecatedWarnings[opt]) {
-      deprecatedWarnings[opt] = true;
-      console.warn(formatMessage(opt, " has been deprecated since v" + version2 + " and will be removed in the near future"));
-    }
-    return validator2 ? validator2(value2, opt, opts) : true;
-  };
-};
-function assertOptions(options, schema, allowUnknown) {
-  if (typeof options !== "object") {
-    throw new TypeError("options must be an object");
-  }
-  var keys = Object.keys(options);
-  var i = keys.length;
-  while (i-- > 0) {
-    var opt = keys[i];
-    var validator2 = schema[opt];
-    if (validator2) {
-      var value2 = options[opt];
-      var result = value2 === void 0 || validator2(value2, opt, options);
-      if (result !== true) {
-        throw new TypeError("option " + opt + " must be " + result);
-      }
-      continue;
-    }
-    if (allowUnknown !== true) {
-      throw Error("Unknown option " + opt);
-    }
-  }
-}
-var validator$1 = {
-  assertOptions,
-  validators: validators$1
-};
-var utils$1 = utils$d;
-var buildURL = buildURL$2;
-var InterceptorManager = InterceptorManager_1;
-var dispatchRequest = dispatchRequest$1;
-var mergeConfig$1 = mergeConfig$2;
-var validator = validator$1;
-var validators = validator.validators;
-function Axios$1(instanceConfig) {
-  this.defaults = instanceConfig;
-  this.interceptors = {
-    request: new InterceptorManager(),
-    response: new InterceptorManager()
-  };
-}
-Axios$1.prototype.request = function request(config) {
-  if (typeof config === "string") {
-    config = arguments[1] || {};
-    config.url = arguments[0];
-  } else {
-    config = config || {};
-  }
-  config = mergeConfig$1(this.defaults, config);
-  if (config.method) {
-    config.method = config.method.toLowerCase();
-  } else if (this.defaults.method) {
-    config.method = this.defaults.method.toLowerCase();
-  } else {
-    config.method = "get";
-  }
-  var transitional2 = config.transitional;
-  if (transitional2 !== void 0) {
-    validator.assertOptions(transitional2, {
-      silentJSONParsing: validators.transitional(validators.boolean),
-      forcedJSONParsing: validators.transitional(validators.boolean),
-      clarifyTimeoutError: validators.transitional(validators.boolean)
-    }, false);
-  }
-  var requestInterceptorChain = [];
-  var synchronousRequestInterceptors = true;
-  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-    if (typeof interceptor.runWhen === "function" && interceptor.runWhen(config) === false) {
-      return;
-    }
-    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
-    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
-  });
-  var responseInterceptorChain = [];
-  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-  });
-  var promise;
-  if (!synchronousRequestInterceptors) {
-    var chain = [dispatchRequest, void 0];
-    Array.prototype.unshift.apply(chain, requestInterceptorChain);
-    chain = chain.concat(responseInterceptorChain);
-    promise = Promise.resolve(config);
-    while (chain.length) {
-      promise = promise.then(chain.shift(), chain.shift());
-    }
-    return promise;
-  }
-  var newConfig = config;
-  while (requestInterceptorChain.length) {
-    var onFulfilled = requestInterceptorChain.shift();
-    var onRejected = requestInterceptorChain.shift();
-    try {
-      newConfig = onFulfilled(newConfig);
-    } catch (error) {
-      onRejected(error);
-      break;
-    }
-  }
-  try {
-    promise = dispatchRequest(newConfig);
-  } catch (error) {
-    return Promise.reject(error);
-  }
-  while (responseInterceptorChain.length) {
-    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
-  }
-  return promise;
-};
-Axios$1.prototype.getUri = function getUri(config) {
-  config = mergeConfig$1(this.defaults, config);
-  return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, "");
-};
-utils$1.forEach(["delete", "get", "head", "options"], function forEachMethodNoData2(method) {
-  Axios$1.prototype[method] = function(url, config) {
-    return this.request(mergeConfig$1(config || {}, {
-      method,
-      url,
-      data: (config || {}).data
-    }));
-  };
-});
-utils$1.forEach(["post", "put", "patch"], function forEachMethodWithData2(method) {
-  Axios$1.prototype[method] = function(url, data2, config) {
-    return this.request(mergeConfig$1(config || {}, {
-      method,
-      url,
-      data: data2
-    }));
-  };
-});
-var Axios_1 = Axios$1;
-var Cancel = Cancel_1;
-function CancelToken(executor) {
-  if (typeof executor !== "function") {
-    throw new TypeError("executor must be a function.");
-  }
-  var resolvePromise;
-  this.promise = new Promise(function promiseExecutor(resolve) {
-    resolvePromise = resolve;
-  });
-  var token = this;
-  this.promise.then(function(cancel) {
-    if (!token._listeners)
-      return;
-    var i;
-    var l = token._listeners.length;
-    for (i = 0; i < l; i++) {
-      token._listeners[i](cancel);
-    }
-    token._listeners = null;
-  });
-  this.promise.then = function(onfulfilled) {
-    var _resolve;
-    var promise = new Promise(function(resolve) {
-      token.subscribe(resolve);
-      _resolve = resolve;
-    }).then(onfulfilled);
-    promise.cancel = function reject() {
-      token.unsubscribe(_resolve);
-    };
-    return promise;
-  };
-  executor(function cancel(message) {
-    if (token.reason) {
-      return;
-    }
-    token.reason = new Cancel(message);
-    resolvePromise(token.reason);
-  });
-}
-CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-  if (this.reason) {
-    throw this.reason;
-  }
-};
-CancelToken.prototype.subscribe = function subscribe(listener) {
-  if (this.reason) {
-    listener(this.reason);
-    return;
-  }
-  if (this._listeners) {
-    this._listeners.push(listener);
-  } else {
-    this._listeners = [listener];
-  }
-};
-CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
-  if (!this._listeners) {
-    return;
-  }
-  var index2 = this._listeners.indexOf(listener);
-  if (index2 !== -1) {
-    this._listeners.splice(index2, 1);
-  }
-};
-CancelToken.source = function source() {
-  var cancel;
-  var token = new CancelToken(function executor(c) {
-    cancel = c;
-  });
-  return {
-    token,
-    cancel
-  };
-};
-var CancelToken_1 = CancelToken;
-var spread = function spread2(callback2) {
-  return function wrap(arr) {
-    return callback2.apply(null, arr);
-  };
-};
-var isAxiosError = function isAxiosError2(payload) {
-  return typeof payload === "object" && payload.isAxiosError === true;
-};
-var utils = utils$d;
-var bind = bind$2;
-var Axios = Axios_1;
-var mergeConfig = mergeConfig$2;
-var defaults$1 = defaults_1;
-function createInstance(defaultConfig) {
-  var context = new Axios(defaultConfig);
-  var instance2 = bind(Axios.prototype.request, context);
-  utils.extend(instance2, Axios.prototype, context);
-  utils.extend(instance2, context);
-  instance2.create = function create(instanceConfig) {
-    return createInstance(mergeConfig(defaultConfig, instanceConfig));
-  };
-  return instance2;
-}
-var axios$1 = createInstance(defaults$1);
-axios$1.Axios = Axios;
-axios$1.Cancel = Cancel_1;
-axios$1.CancelToken = CancelToken_1;
-axios$1.isCancel = isCancel$1;
-axios$1.VERSION = data.version;
-axios$1.all = function all(promises) {
-  return Promise.all(promises);
-};
-axios$1.spread = spread;
-axios$1.isAxiosError = isAxiosError;
-axios$2.exports = axios$1;
-axios$2.exports.default = axios$1;
-var require$$0 = axios$2.exports;
-var axios = require$$0;
-var TABLE;
-(function(TABLE2) {
-  TABLE2["META_CAPTURE_PROFILE"] = "metaCaptureProfile";
-  TABLE2["META_IMPORT_MAPPING"] = "metaImportMapping";
-  TABLE2["META_PROFILE_DIALOG"] = "metaProfileDialog";
-  TABLE2["META_LIST"] = "metaList";
-  TABLE2["META_DISPLAY_LIST"] = "metaDisplayList";
-  TABLE2["META_RELATED_LIST"] = "metaRelatedList";
-  TABLE2["CHILD_FORM"] = "childForm";
-  TABLE2["HIERARCHIAL_FORM"] = "hierarchicalForm";
-  TABLE2["SIMPLE_FORM"] = "simpleForm";
-  TABLE2["ADMIN_WORKFLOW"] = "adminWorkflow";
-  TABLE2["VERSION_POPOVER"] = "versionPopOver";
-  TABLE2["ALL_TASK"] = "allTask";
-  TABLE2["COMPLETE_TASK"] = "completeTask";
-  TABLE2["MY_TASK"] = "myTask";
-  TABLE2["SMART_FOLDER"] = "smartFolder";
-  TABLE2["FILE_REQUEST_DETAIL"] = "fileRequestDetail";
-  TABLE2["FILE_REQUEST_INDEX"] = "fileRequestIndex";
-  TABLE2["ADHOC_Submitted_TASK"] = "adhocSubmittedTask";
-  TABLE2["ADHOC_Approval_TASK"] = "adhocApprovalTask";
-  TABLE2["ADHOC_Completed_TASK"] = "adhocCompletedTask";
-  TABLE2["ACTIVE_TASK"] = "activeTask";
-  TABLE2["CLIENT_TRASH"] = "clientTrash";
-  TABLE2["CLIENT_SMART_FOLDER"] = "clientSmartFolder";
-  TABLE2["CLIENT_COLLECTION"] = "clientCollection";
-  TABLE2["CLIENT_SHARE_LIST"] = "clientShareList";
-})(TABLE || (TABLE = {}));
-({
-  [TABLE.ALL_TASK]: {
-    columns: [
-      { id: 1, label: "table_name", property: "taskName", sortable: true },
-      { id: 2, label: "workflow_workflow", property: "processDefinitionName", sortable: true, isFilter: true },
-      { id: 3, slot: "status", property: "status", label: "common_status" },
-      { id: 4, slot: "assignee", property: "assignee", label: "workflow_assignee" },
-      { id: 5, label: "workflow_createDate", property: "createDate", sortable: true },
-      { id: 6, label: "workflow_dueDate", property: "dueDate", sortable: true }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.META_CAPTURE_PROFILE]: {
-    columns: [
-      { label: "dpTable_id", property: "profileID", sortable: true },
-      { label: "dpTable_name", property: "profileName" },
-      { slot: "action", property: "action", label: "dpTable_actions" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.META_IMPORT_MAPPING]: {
-    columns: [
-      { label: "docType_property", property: "key", sortable: true },
-      { label: "table_label", property: "label" },
-      { slot: "action", property: "action", label: "table.action" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.META_PROFILE_DIALOG]: {
-    columns: [
-      { property: "title", label: "title" },
-      { property: "name", label: "name" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.META_LIST]: {
-    columns: [
-      { slot: "icon" },
-      { label: "docType_documentType", property: "name", sortable: true },
-      { slot: "metaMapping", label: "docType_metaMapping" },
-      { slot: "metaProfile", label: "docType_metaMapping" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.META_DISPLAY_LIST]: {
-    columns: [
-      { label: "docType_property", property: "metaData", sortable: true },
-      { label: "form_vocabulary", property: "vocabulary" },
-      { label: "form_length", property: "length", align: "right", width: "100" },
-      { slot: "isRequire", label: "form_isRequire", property: "isRequire", width: "100" },
-      { slot: "display", property: "display", label: "form_display" },
-      { slot: "action", property: "action", label: "table_action" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.META_RELATED_LIST]: {
-    columns: [
-      { label: "dpTable_documentType", property: "type", sortable: true },
-      { label: "rightDetail_meta", property: "meta" },
-      { slot: "action", property: "action", label: "table_actions" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.CHILD_FORM]: {
-    columns: [
-      { property: "id", label: "id", slot: "id" },
-      { property: "label", label: "dpTable_label" },
-      { property: "parentEntryID", label: "parentEntryID", slot: "parentEntryID" },
-      { property: "obsolete", label: "obsolete", slot: "obsolete", width: "100", align: "center", headerAlign: "center", defaultValue: false },
-      { property: "order", label: "order", defaultValue: 0 }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.HIERARCHIAL_FORM]: {
-    columns: [
-      { property: "id", label: "id", slot: "id" },
-      { property: "label", label: "dpTable_label" },
-      { property: "obsolete", label: "obsolete", slot: "obsolete", width: "100", align: "center", headerAlign: "center", defaultValue: false }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.SIMPLE_FORM]: {
-    columns: [
-      { property: "id", label: "id", slot: "id" },
-      { property: "label", label: "dpTable_label" },
-      { property: "obsolete", label: "obsolete", slot: "obsolete", width: "100", align: "center", headerAlign: "center", defaultValue: false }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.ADMIN_WORKFLOW]: {
-    columns: [
-      { label: "dpTable_selection", slot: "selection", canNotDelete: true },
-      { label: "table_name", property: "taskName", sortable: true },
-      { label: "workflow_workflow", property: "processDefinitionName", sortable: true, isFilter: true },
-      { label: "role.creator", property: "startUserId", sortable: true, isFilter: true },
-      { label: "workflow_assignee", slot: "assignee", property: "assignee" },
-      { label: "workflow_createDate", property: "createDate", sortable: true },
-      { label: "workflow_dueDate", property: "dueDate", sortable: true },
-      { label: "dpTable_actions", slot: "action", property: "action" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.VERSION_POPOVER]: {
-    columns: [
-      { label: "file_versionNumber", property: "version", sortable: true },
-      { label: "table_lastModified", property: "time", sortable: true },
-      { slot: "action", property: "action", label: "table_action" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.COMPLETE_TASK]: {
-    columns: [
-      { label: "table_name", property: "taskName", sortable: true },
-      { slot: "workflow", label: "workflow_workflow", property: "workflow" },
-      { label: "workflow_createDate", property: "createDate", sortable: true },
-      { label: "table_completeDate", property: "completeDate", sortable: true },
-      { slot: "duration", label: "table_duration", property: "duration" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.ACTIVE_TASK]: {
-    columns: [
-      { label: "table_name", property: "taskName", sortable: true },
-      { slot: "workflow", label: "workflow_workflow", property: "workflow" },
-      { id: 3, slot: "status", property: "status", label: "common_status" },
-      { id: 4, slot: "assignee", property: "assignee", label: "workflow_assignee" },
-      { label: "workflow_createDate", property: "createDate", sortable: true }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.MY_TASK]: {
-    columns: [
-      { label: "table_name", property: "taskName", sortable: true },
-      { label: "workflow_workflow", property: "processDefinitionName", sortable: true, isFilter: true },
-      { slot: "status", label: "common_status", property: "status" },
-      { slot: "assignee", label: "workflow_assignee", property: "assignee" },
-      { label: "workflow_createDate", property: "createDate", sortable: true },
-      { label: "workflow_dueDate", property: "dueDate", sortable: true }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.CLIENT_SMART_FOLDER]: {
-    columns: [
-      { label: "table_name", prop: "name" },
-      { label: "table_path", prop: "logicalPath" },
-      {
-        label: "table_modifiedDate",
-        prop: "modifiedDate",
-        formatList: [
-          {
-            "joiner": "",
-            "prop": "modifiedDate",
-            "formatFun": "dateFormat",
-            "params": {
-              "format": ""
-            },
-            "index": 0
-          }
-        ]
-      },
-      { label: "table_type", prop: "type" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.FILE_REQUEST_DETAIL]: {
-    columns: [
-      { slot: "selection" },
-      { slot: "expand" },
-      { label: "dpDocument_fileName", property: "initName", sortable: true },
-      { slot: "fileType", label: "dpDocument_fileType", property: "documentType", sortable: true },
-      { slot: "approve", label: "dpTool_approve", property: "approve", sortable: true, align: "center" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.FILE_REQUEST_INDEX]: {
-    columns: [
-      { label: "dpTable_email", property: "email", sortable: true },
-      { label: "dpTable_location", property: "documentId", sortable: true },
-      { label: "dpTable_message", property: "message", sortable: true },
-      { label: "dpTable_status", property: "status", sortable: true, slot: "status" },
-      { label: "dpTable_createdDate", property: "createdDate", sortable: true }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.ADHOC_Submitted_TASK]: {
-    columns: [
-      { label: "table_path", property: "documentPath", sortable: true },
-      { label: "role.approvers", property: "user_approver_id", sortable: true, isFilter: true },
-      { label: "workflow_createDate", property: "createDate", sortable: true }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.ADHOC_Approval_TASK]: {
-    columns: [
-      { label: "table_path", property: "documentPath", sortable: true },
-      { label: "role.creator", property: "user_creator_id", sortable: true, isFilter: true },
-      { label: "workflow_createDate", property: "createDate", sortable: true }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.ADHOC_Completed_TASK]: {
-    columns: [
-      { label: "table_path", property: "documentPath", sortable: true },
-      { label: "info_version", property: "documentApprovalVersion", align: "right", width: "70" },
-      { label: "role.creator", property: "user_creator_id", sortable: true, isFilter: true, width: "150" },
-      { label: "workflow_createDate", property: "createDate", sortable: true, align: "center", width: "130" },
-      { label: "role.approver", property: "approvedBy", sortable: true, isFilter: true, width: "150" },
-      { label: "dpTable_approvedDate", property: "approvedDate", sortable: true, align: "center", width: "130" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.ADHOC_Completed_TASK]: {
-    columns: [
-      { label: "table_path", property: "documentPath", sortable: true },
-      { label: "info_version", property: "documentApprovalVersion", align: "right", width: "70" },
-      { label: "role.creator", property: "user_creator_id", sortable: true, isFilter: true, width: "150" },
-      { label: "workflow_createDate", property: "createDate", sortable: true, align: "center", width: "130" },
-      { label: "role.approver", property: "approvedBy", sortable: true, isFilter: true, width: "150" },
-      { label: "dpTable_approvedDate", property: "approvedDate", sortable: true, align: "center", width: "130" }
-    ],
-    events: [],
-    options: { pageSize: 20 }
-  },
-  [TABLE.CLIENT_TRASH]: {
-    columns: [
-      { id: "1", label: "tableHeader_name", prop: "name" },
-      { id: "2", label: "tableHeader_path", prop: "logicalPath" },
-      { id: "3", label: "tableHeader_type", prop: "type" },
-      { id: "4", label: "trash_deleteBy", prop: "properties.principalName" },
-      {
-        id: "5",
-        label: "trash_date",
-        prop: "properties.trashed_date",
-        formatList: [
-          {
-            "joiner": "",
-            "prop": "properties.trashed_date",
-            "formatFun": "dateFormat",
-            "params": {
-              "format": ""
-            },
-            "index": 0
-          }
-        ]
-      },
-      {
-        "type": "",
-        "label": "actions",
-        "prop": "",
-        "align": "left",
-        "hide": false,
-        "system": false,
-        "showOverflowTooltip": false,
-        "formatList": [],
-        "buttons": [
-          {
-            "name": "restored",
-            "command": "restored",
-            "size": "large",
-            "type": "primary",
-            "prefixIcon": "/icons/file-selected.svg",
-            "suffixIcon": "/icons/menu/virtual.svg",
-            "index": 0
-          }
-        ],
-        "prefixIcon": "",
-        "suffixIcon": "",
-        "id": "1678091777412"
-      }
-    ],
-    events: ["delete", "restored"],
-    options: { pageSize: 20 }
-  },
-  [TABLE.CLIENT_COLLECTION]: {
-    columns: [
-      { label: "table_name", prop: "name" },
-      {
-        label: "table_modifiedDate",
-        prop: "modifiedDate",
-        formatList: [
-          {
-            "joiner": "",
-            "prop": "modifiedDate",
-            "formatFun": "dateFormat",
-            "params": {
-              "format": ""
-            },
-            "index": 0
-          }
-        ]
-      },
-      { label: "table_type", prop: "type" },
-      {
-        "type": "",
-        "label": "actions",
-        "prop": "",
-        "align": "left",
-        "hide": false,
-        "system": false,
-        "showOverflowTooltip": false,
-        "formatList": [],
-        "buttons": [
-          {
-            "name": "",
-            "command": "delete",
-            "suffixIcon": "/icons/menu/trash.svg",
-            "index": 0
-          }
-        ],
-        "prefixIcon": "",
-        "suffixIcon": "",
-        "id": "1678091777412"
-      }
-    ],
-    events: ["delete"],
-    options: { pageSize: 20 }
-  },
-  [TABLE.CLIENT_SHARE_LIST]: {
-    columns: [
-      {
-        label: "tableHeader_emailList",
-        prop: "emailList",
-        formatList: [
-          {
-            "joiner": "",
-            "prop": "emailList",
-            "formatFun": "concat",
-            "params": {
-              "joiner": ""
-            },
-            "index": 0
-          }
-        ]
-      },
-      { label: "tableHeader_numberOfFiles", prop: "documentSize" },
-      {
-        label: "tableHeader_creationDate",
-        prop: "created",
-        formatList: [
-          {
-            "joiner": "",
-            "prop": "created",
-            "formatFun": "dateFormat",
-            "params": {
-              "format": ""
-            },
-            "index": 0
-          }
-        ]
-      },
-      {
-        label: "tableHeader_dueDate",
-        prop: "expiredDate",
-        formatList: [
-          {
-            "joiner": "",
-            "prop": "expiredDate",
-            "formatFun": "dateFormat",
-            "params": {
-              "format": ""
-            },
-            "index": 0
-          }
-        ]
-      },
-      {
-        "type": "",
-        "label": "actions",
-        "prop": "",
-        "align": "left",
-        "hide": false,
-        "system": false,
-        "showOverflowTooltip": false,
-        "formatList": [],
-        "buttons": [
-          {
-            "name": "",
-            "command": "disabled",
-            "suffixIcon": "/icons/menu/trash.svg",
-            "index": 0
-          }
-        ],
-        "prefixIcon": "",
-        "suffixIcon": "",
-        "id": "1678091777412"
-      }
-    ],
-    events: ["disabled"],
-    options: { pageSize: 20 }
-  }
-});
-const widgetList$1 = [
-  {
-    type: "grid",
-    category: "container",
-    icon: "grid",
-    cols: [
-      {
-        type: "grid-col",
-        category: "container",
-        icon: "grid-col",
-        internal: true,
-        widgetList: [
-          {
-            type: "checkbox",
-            icon: "checkbox-field",
-            formItemFlag: true,
-            options: {
-              name: "system_primaryType_agg",
-              label: "system_primaryType_agg",
-              labelZh: "",
-              labelAlign: "",
-              defaultValue: [],
-              columnWidth: "200px",
-              size: "",
-              displayStyle: "block",
-              buttonStyle: false,
-              border: false,
-              labelWidth: null,
-              labelHidden: false,
-              disabled: false,
-              hidden: false,
-              optionItems: [],
-              required: false,
-              requiredHint: "",
-              validation: "",
-              validationHint: "",
-              customClass: [],
-              labelIconClass: null,
-              labelIconPosition: "rear",
-              labelTooltip: null,
-              onCreated: "",
-              onMounted: "",
-              onChange: "",
-              onValidate: ""
-            },
-            id: "checkbox102048"
-          },
-          {
-            type: "static-text",
-            icon: "static-text",
-            formItemFlag: false,
-            options: {
-              name: "no_system_primaryType_agg",
-              columnWidth: "200px",
-              hidden: true,
-              textContent: "noAvailableResults",
-              fontSize: "13px",
-              customClass: [],
-              onCreated: "",
-              onMounted: "",
-              label: "no_system_primaryType_agg"
-            },
-            id: "statictext93593"
-          }
-        ],
-        options: {
-          name: "gridCol39617",
-          hidden: false,
-          span: 24,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          responsive: false,
-          md: 12,
-          sm: 12,
-          xs: 12,
-          customClass: ""
-        },
-        id: "grid-col-39617"
-      },
-      {
-        type: "grid-col",
-        category: "container",
-        icon: "grid-col",
-        internal: true,
-        widgetList: [
-          {
-            type: "checkbox",
-            icon: "checkbox-field",
-            formItemFlag: true,
-            options: {
-              name: "system_mimetype_agg",
-              label: "system_mimetype_agg",
-              labelZh: "",
-              labelAlign: "",
-              defaultValue: [],
-              columnWidth: "200px",
-              size: "",
-              displayStyle: "block",
-              buttonStyle: false,
-              border: false,
-              labelWidth: null,
-              labelHidden: false,
-              disabled: false,
-              hidden: false,
-              optionItems: [],
-              required: false,
-              requiredHint: "",
-              validation: "",
-              validationHint: "",
-              customClass: [],
-              labelIconClass: null,
-              labelIconPosition: "rear",
-              labelTooltip: null,
-              onCreated: "",
-              onMounted: "",
-              onChange: "",
-              onValidate: ""
-            },
-            id: "checkbox102049"
-          },
-          {
-            type: "static-text",
-            icon: "static-text",
-            formItemFlag: false,
-            options: {
-              name: "no_system_mimetype_agg",
-              columnWidth: "200px",
-              hidden: true,
-              textContent: "noAvailableResults",
-              fontSize: "13px",
-              customClass: "",
-              onCreated: "",
-              onMounted: "",
-              label: "no_system_mimetype_agg"
-            },
-            id: "statictext32837"
-          }
-        ],
-        options: {
-          name: "gridCol84723",
-          hidden: false,
-          span: 24,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          responsive: false,
-          md: 12,
-          sm: 12,
-          xs: 12,
-          customClass: ""
-        },
-        id: "grid-col-84723"
-      },
-      {
-        type: "grid-col",
-        category: "container",
-        icon: "grid-col",
-        internal: true,
-        widgetList: [
-          {
-            type: "checkbox",
-            icon: "checkbox-field",
-            formItemFlag: true,
-            options: {
-              name: "asset_width_agg",
-              label: "asset_width_agg",
-              labelZh: "",
-              labelAlign: "",
-              defaultValue: [],
-              columnWidth: "200px",
-              size: "",
-              displayStyle: "block",
-              buttonStyle: false,
-              border: false,
-              labelWidth: null,
-              labelHidden: false,
-              disabled: false,
-              hidden: false,
-              optionItems: [],
-              required: false,
-              requiredHint: "",
-              validation: "",
-              validationHint: "",
-              customClass: [],
-              labelIconClass: null,
-              labelIconPosition: "rear",
-              labelTooltip: null,
-              onCreated: "",
-              onMounted: "",
-              onChange: "",
-              onValidate: ""
-            },
-            id: "checkbox33966"
-          },
-          {
-            type: "static-text",
-            icon: "static-text",
-            formItemFlag: false,
-            options: {
-              name: "no_asset_width_agg",
-              columnWidth: "200px",
-              hidden: true,
-              textContent: "noAvailableResults",
-              fontSize: "13px",
-              customClass: "",
-              onCreated: "",
-              onMounted: "",
-              label: "no_asset_width_agg"
-            },
-            id: "statictext55999"
-          }
-        ],
-        options: {
-          name: "gridCol66588",
-          hidden: false,
-          span: 24,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          responsive: false,
-          md: 12,
-          sm: 12,
-          xs: 12,
-          customClass: ""
-        },
-        id: "grid-col-66588"
-      },
-      {
-        type: "grid-col",
-        category: "container",
-        icon: "grid-col",
-        internal: true,
-        widgetList: [
-          {
-            type: "checkbox",
-            icon: "checkbox-field",
-            formItemFlag: true,
-            options: {
-              name: "asset_height_agg",
-              label: "asset_height_agg",
-              labelZh: "",
-              labelAlign: "",
-              defaultValue: [],
-              columnWidth: "200px",
-              size: "",
-              displayStyle: "block",
-              buttonStyle: false,
-              border: false,
-              labelWidth: null,
-              labelHidden: false,
-              disabled: false,
-              hidden: false,
-              optionItems: [],
-              required: false,
-              requiredHint: "",
-              validation: "",
-              validationHint: "",
-              customClass: [],
-              labelIconClass: null,
-              labelIconPosition: "rear",
-              labelTooltip: null,
-              onCreated: "",
-              onMounted: "",
-              onChange: "",
-              onValidate: ""
-            },
-            id: "checkbox102045"
-          },
-          {
-            type: "static-text",
-            icon: "static-text",
-            formItemFlag: false,
-            options: {
-              name: "no_asset_height_agg",
-              columnWidth: "200px",
-              hidden: true,
-              textContent: "noAvailableResults",
-              fontSize: "13px",
-              customClass: "",
-              onCreated: "",
-              onMounted: "",
-              label: "no_asset_height_agg"
-            },
-            id: "statictext105026"
-          }
-        ],
-        options: {
-          name: "gridCol86168",
-          hidden: false,
-          span: 24,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          responsive: false,
-          md: 12,
-          sm: 12,
-          xs: 12,
-          customClass: ""
-        },
-        id: "grid-col-86168"
-      },
-      {
-        type: "grid-col",
-        category: "container",
-        icon: "grid-col",
-        internal: true,
-        widgetList: [
-          {
-            type: "checkbox",
-            icon: "checkbox-field",
-            formItemFlag: true,
-            options: {
-              name: "color_profile_agg",
-              label: "color_profile_agg",
-              labelZh: "",
-              labelAlign: "",
-              defaultValue: [],
-              columnWidth: "200px",
-              size: "",
-              displayStyle: "block",
-              buttonStyle: false,
-              border: false,
-              labelWidth: null,
-              labelHidden: false,
-              disabled: false,
-              hidden: false,
-              optionItems: [],
-              required: false,
-              requiredHint: "",
-              validation: "",
-              validationHint: "",
-              customClass: [],
-              labelIconClass: null,
-              labelIconPosition: "rear",
-              labelTooltip: null,
-              onCreated: "",
-              onMounted: "",
-              onChange: "",
-              onValidate: ""
-            },
-            id: "checkbox102047"
-          },
-          {
-            type: "static-text",
-            icon: "static-text",
-            formItemFlag: false,
-            options: {
-              name: "no_color_profile_agg",
-              columnWidth: "200px",
-              hidden: true,
-              textContent: "noAvailableResults",
-              fontSize: "13px",
-              customClass: "",
-              onCreated: "",
-              onMounted: "",
-              label: "no_color_profile_agg"
-            },
-            id: "statictext23169"
-          }
-        ],
-        options: {
-          name: "gridCol81202",
-          hidden: false,
-          span: 24,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          responsive: false,
-          md: 12,
-          sm: 12,
-          xs: 12,
-          customClass: ""
-        },
-        id: "grid-col-81202"
-      },
-      {
-        type: "grid-col",
-        category: "container",
-        icon: "grid-col",
-        internal: true,
-        widgetList: [
-          {
-            type: "checkbox",
-            icon: "checkbox-field",
-            formItemFlag: true,
-            options: {
-              name: "color_depth_agg",
-              label: "color_depth_agg",
-              labelZh: "",
-              labelAlign: "",
-              defaultValue: [],
-              columnWidth: "200px",
-              size: "",
-              displayStyle: "block",
-              buttonStyle: false,
-              border: false,
-              labelWidth: null,
-              labelHidden: false,
-              disabled: false,
-              hidden: false,
-              optionItems: [],
-              required: false,
-              requiredHint: "",
-              validation: "",
-              validationHint: "",
-              customClass: [],
-              labelIconClass: null,
-              labelIconPosition: "rear",
-              labelTooltip: null,
-              onCreated: "",
-              onMounted: "",
-              onChange: "",
-              onValidate: ""
-            },
-            id: "checkbox102046"
-          },
-          {
-            type: "static-text",
-            icon: "static-text",
-            formItemFlag: false,
-            options: {
-              name: "no_color_depth_agg",
-              columnWidth: "200px",
-              hidden: true,
-              textContent: "noAvailableResults",
-              fontSize: "13px",
-              customClass: "",
-              onCreated: "",
-              onMounted: "",
-              label: "no_color_depth_agg"
-            },
-            id: "statictext26948"
-          }
-        ],
-        options: {
-          name: "gridCol93885",
-          hidden: false,
-          span: 24,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          responsive: false,
-          md: 12,
-          sm: 12,
-          xs: 12,
-          customClass: ""
-        },
-        id: "grid-col-93885"
-      },
-      {
-        type: "grid-col",
-        category: "container",
-        icon: "grid-col",
-        internal: true,
-        widgetList: [
-          {
-            type: "checkbox",
-            icon: "checkbox-field",
-            formItemFlag: true,
-            options: {
-              name: "video_duration_agg",
-              label: "video_duration_agg",
-              labelZh: "",
-              labelAlign: "",
-              defaultValue: [],
-              columnWidth: "200px",
-              size: "",
-              displayStyle: "block",
-              buttonStyle: false,
-              border: false,
-              labelWidth: null,
-              labelHidden: false,
-              disabled: false,
-              hidden: false,
-              optionItems: [],
-              required: false,
-              requiredHint: "",
-              validation: "",
-              validationHint: "",
-              customClass: [],
-              labelIconClass: null,
-              labelIconPosition: "rear",
-              labelTooltip: null,
-              onCreated: "",
-              onMounted: "",
-              onChange: "",
-              onValidate: ""
-            },
-            id: "checkbox1020455"
-          },
-          {
-            type: "static-text",
-            icon: "static-text",
-            formItemFlag: false,
-            options: {
-              name: "no_video_duration_agg",
-              columnWidth: "200px",
-              hidden: true,
-              textContent: "noAvailableResults",
-              fontSize: "13px",
-              customClass: "",
-              onCreated: "",
-              onMounted: "",
-              label: "no_video_duration_agg"
-            },
-            id: "statictext33472"
-          }
-        ],
-        options: {
-          name: "gridCol29889",
-          hidden: false,
-          span: 24,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          responsive: false,
-          md: 12,
-          sm: 12,
-          xs: 12,
-          customClass: ""
-        },
-        id: "grid-col-29889"
-      }
-    ],
-    options: {
-      name: "grid75719",
-      hidden: false,
-      gutter: 12,
-      colHeight: null,
-      customClass: []
-    },
-    id: "grid75719"
-  }
-];
-const formConfig$1 = {
-  modelName: "formData",
-  refName: "vForm",
-  rulesName: "rules",
-  labelWidth: 80,
-  labelPosition: "top",
-  size: "",
-  labelAlign: "label-left-align",
-  cssCode: ".picture-search--container {}\n\n.picture-search--container .el-form-item {\n  margin-bottom: unset;\n  margin-top: 10px;\n}",
-  customClass: [
-    "picture-search--container"
-  ],
-  functions: "",
-  layoutType: "PC",
-  jsonVersion: 3,
-  onFormCreated: "",
-  onFormMounted: "",
-  onFormDataChange: "",
-  saveRemoteOptions: "never",
-  labelFormUniqueName: true
-};
-var clientPictureForm = {
-  widgetList: widgetList$1,
-  formConfig: formConfig$1
-};
-var __glob_0_0$4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  widgetList: widgetList$1,
-  formConfig: formConfig$1,
-  "default": clientPictureForm
-}, Symbol.toStringTag, { value: "Module" }));
-const widgetList = [
-  {
-    type: "select",
-    icon: "select-field",
-    formItemFlag: true,
-    options: {
-      name: "type",
-      label: "search_documentType",
-      labelZh: "\u6587\u6863\u7C7B\u578B",
-      labelAlign: "",
-      defaultValue: [],
-      placeholder: "dpTip_all",
-      prefixIcon: "",
-      columnWidth: "200px",
-      size: "",
-      labelWidth: null,
-      labelHidden: false,
-      disabled: false,
-      hidden: false,
-      clearable: true,
-      filterable: true,
-      allowCreate: false,
-      remote: false,
-      automaticDropdown: false,
-      multiple: true,
-      multipleLimit: 0,
-      optionItems: [],
-      required: false,
-      requiredHint: "",
-      validation: "",
-      validationHint: "",
-      customClass: "",
-      labelIconClass: null,
-      labelIconPosition: "rear",
-      labelTooltip: null,
-      onCreated: "",
-      onMounted: "this.$axios.post('/nuxeo/types', {}).then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item.name,\n    label: item.name\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
-      onRemoteQuery: "",
-      onChange: "",
-      onFocus: "",
-      onBlur: "",
-      onValidate: ""
-    },
-    id: "select105463"
-  },
-  {
-    type: "select",
-    icon: "select-field",
-    formItemFlag: true,
-    options: {
-      name: "modified",
-      label: "search_modificationDate",
-      labelZh: "\u66F4\u65B0\u65F6\u95F4",
-      labelAlign: "",
-      defaultValue: "",
-      placeholder: "dpTip_all",
-      prefixIcon: "",
-      columnWidth: "200px",
-      size: "",
-      labelWidth: null,
-      labelHidden: false,
-      disabled: false,
-      hidden: false,
-      clearable: true,
-      filterable: true,
-      allowCreate: false,
-      remote: false,
-      automaticDropdown: false,
-      multiple: false,
-      multipleLimit: 0,
-      optionItems: [
-        {
-          label: "Last 24h",
-          value: "last24h"
-        },
-        {
-          label: "Last week",
-          value: "lastWeek"
-        },
-        {
-          label: "Last month",
-          value: "lastMonth"
-        },
-        {
-          value: "lastYear",
-          label: "Last year"
-        },
-        {
-          value: "priorToLastYear",
-          label: "More than 1 year ago"
-        }
-      ],
-      required: false,
-      requiredHint: "",
-      validation: "",
-      validationHint: "",
-      customClass: [],
-      labelIconClass: null,
-      labelIconPosition: "rear",
-      labelTooltip: null,
-      onCreated: "",
-      onMounted: "",
-      onRemoteQuery: "",
-      onChange: "",
-      onFocus: "",
-      onBlur: "",
-      onValidate: ""
-    },
-    id: "select54847"
-  },
-  {
-    type: "select",
-    icon: "select-field",
-    formItemFlag: true,
-    options: {
-      name: "authors",
-      label: "search_authors",
-      labelZh: "\u4F5C\u8005",
-      labelAlign: "label-left-align",
-      defaultValue: [],
-      placeholder: "dpTip_all",
-      prefixIcon: "",
-      columnWidth: "200px",
-      size: "",
-      labelWidth: null,
-      labelHidden: false,
-      disabled: false,
-      hidden: false,
-      clearable: true,
-      filterable: true,
-      allowCreate: false,
-      remote: false,
-      automaticDropdown: false,
-      multiple: true,
-      multipleLimit: 0,
-      optionItems: [],
-      required: false,
-      requiredHint: "",
-      validation: "",
-      validationHint: "",
-      customClass: "",
-      labelIconClass: null,
-      labelIconPosition: "rear",
-      labelTooltip: null,
-      onCreated: "",
-      onMounted: "this.$axios.post('/nuxeo/identity/users', {}).then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item.username,\n    label: item.username\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
-      onRemoteQuery: "",
-      onChange: "",
-      onFocus: "",
-      onBlur: "",
-      onValidate: ""
-    },
-    id: "select59109"
-  },
-  {
-    type: "select",
-    icon: "select-field",
-    formItemFlag: true,
-    options: {
-      name: "collections",
-      label: "search_collections",
-      labelZh: "search_collections",
-      labelAlign: "",
-      defaultValue: [],
-      placeholder: "",
-      prefixIcon: "",
-      columnWidth: "200px",
-      size: "",
-      labelWidth: null,
-      labelHidden: false,
-      disabled: false,
-      hidden: false,
-      clearable: true,
-      filterable: false,
-      allowCreate: false,
-      remote: false,
-      automaticDropdown: false,
-      multiple: true,
-      multipleLimit: 0,
-      optionItems: [],
-      required: false,
-      requiredHint: "",
-      validation: "",
-      validationHint: "",
-      customClass: [],
-      labelIconClass: null,
-      labelIconPosition: "rear",
-      labelTooltip: null,
-      onCreated: "",
-      onMounted: "this.$axios.get('/nuxeo/collection/all').then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item.id,\n    label: item.name\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
-      onRemoteQuery: "",
-      onChange: "",
-      onFocus: "",
-      onBlur: "",
-      onValidate: ""
-    },
-    id: "select64376"
-  },
-  {
-    type: "select",
-    icon: "select-field",
-    formItemFlag: true,
-    options: {
-      name: "tags",
-      label: "search_tags",
-      labelZh: "\u6807\u7B7E",
-      labelAlign: "",
-      defaultValue: [],
-      placeholder: "dpTip_all",
-      prefixIcon: "",
-      columnWidth: "200px",
-      size: "",
-      labelWidth: null,
-      labelHidden: false,
-      disabled: false,
-      hidden: false,
-      clearable: true,
-      filterable: true,
-      allowCreate: false,
-      remote: false,
-      automaticDropdown: false,
-      multiple: true,
-      multipleLimit: 0,
-      optionItems: [],
-      required: false,
-      requiredHint: "",
-      validation: "",
-      validationHint: "",
-      customClass: "",
-      labelIconClass: null,
-      labelIconPosition: "rear",
-      labelTooltip: null,
-      onCreated: "",
-      onMounted: "this.$axios.post('/nuxeo/tags/getAllTags', {}).then(res => {\n   res = res.data\n  const reponse = res.map(item => ({\n    value: item,\n    label: item\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
-      onRemoteQuery: "",
-      onChange: "",
-      onFocus: "",
-      onBlur: "",
-      onValidate: ""
-    },
-    id: "select55898"
-  },
-  {
-    type: "select",
-    icon: "select-field",
-    formItemFlag: true,
-    options: {
-      name: "size",
-      label: "search_size",
-      labelZh: "\u6587\u4EF6\u5927\u5C0F",
-      labelAlign: "",
-      defaultValue: "",
-      placeholder: "dpTip_all",
-      prefixIcon: "",
-      columnWidth: "200px",
-      size: "",
-      labelWidth: null,
-      labelHidden: false,
-      disabled: false,
-      hidden: false,
-      clearable: true,
-      filterable: true,
-      allowCreate: false,
-      remote: false,
-      automaticDropdown: false,
-      multiple: false,
-      multipleLimit: 0,
-      optionItems: [
-        {
-          label: "Less than 100 KB",
-          value: "100"
-        },
-        {
-          label: "Between 100 KB and 1 MB",
-          value: "1000"
-        },
-        {
-          label: "Between 1 MB and 10 MB",
-          value: "10000"
-        },
-        {
-          value: "100000",
-          label: "Between 10 MB and 100 MB"
-        },
-        {
-          value: "1000000",
-          label: "More than 100 MB"
-        }
-      ],
-      required: false,
-      requiredHint: "",
-      validation: "",
-      validationHint: "",
-      customClass: "",
-      labelIconClass: null,
-      labelIconPosition: "rear",
-      labelTooltip: null,
-      onCreated: "",
-      onMounted: "",
-      onRemoteQuery: "",
-      onChange: "",
-      onFocus: "",
-      onBlur: "",
-      onValidate: ""
-    },
-    id: "select80655"
-  }
-];
-const formConfig = {
-  modelName: "formData",
-  refName: "vForm",
-  rulesName: "rules",
-  labelWidth: 80,
-  labelPosition: "top",
-  size: "",
-  labelAlign: "label-left-align",
-  saveRemoteOptions: "never",
-  labelFormUniqueName: true,
-  cssCode: "",
-  customClass: "",
-  functions: "",
-  layoutType: "PC",
-  onFormCreated: "",
-  onFormMounted: "",
-  onFormDataChange: ""
-};
-var search$1 = {
-  widgetList,
-  formConfig
-};
-var __glob_0_1$4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  widgetList,
-  formConfig,
-  "default": search$1
-}, Symbol.toStringTag, { value: "Module" }));
-const jsonModules = { "./clientPictureForm.json": __glob_0_0$4, "./search.json": __glob_0_1$4 };
-function getFormJsonListApi() {
-  const data2 = Object.keys(jsonModules).reduce((prev, key) => {
-    const name = key.replace(/\.\//, "");
-    prev[name] = jsonModules[key].default;
-    return prev;
-  }, {});
-  return data2;
-}
-getFormJsonListApi();
-const api = axios.create({
-  baseURL: "/api"
-});
 const containers = [
   {
     type: "grid",
@@ -3307,6 +904,10 @@ const formTemplates = [
     description: "\u8868\u5355\u6A21\u677F\u8BE6\u7EC6\u8BF4\u660E..."
   }
 ];
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+function getDefaultExportFromCjs(x) {
+  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
+}
 var clipboard = { exports: {} };
 /*!
  * clipboard.js v2.0.11
@@ -5238,6 +2839,1050 @@ var i18n$1 = {
     }
   }
 };
+var axios$2 = { exports: {} };
+var bind$2 = function bind2(fn, thisArg) {
+  return function wrap() {
+    var args = new Array(arguments.length);
+    for (var i = 0; i < args.length; i++) {
+      args[i] = arguments[i];
+    }
+    return fn.apply(thisArg, args);
+  };
+};
+var bind$1 = bind$2;
+var toString = Object.prototype.toString;
+function isArray(val) {
+  return toString.call(val) === "[object Array]";
+}
+function isUndefined(val) {
+  return typeof val === "undefined";
+}
+function isBuffer(val) {
+  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor) && typeof val.constructor.isBuffer === "function" && val.constructor.isBuffer(val);
+}
+function isArrayBuffer(val) {
+  return toString.call(val) === "[object ArrayBuffer]";
+}
+function isFormData(val) {
+  return typeof FormData !== "undefined" && val instanceof FormData;
+}
+function isArrayBufferView(val) {
+  var result;
+  if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView) {
+    result = ArrayBuffer.isView(val);
+  } else {
+    result = val && val.buffer && val.buffer instanceof ArrayBuffer;
+  }
+  return result;
+}
+function isString(val) {
+  return typeof val === "string";
+}
+function isNumber(val) {
+  return typeof val === "number";
+}
+function isObject(val) {
+  return val !== null && typeof val === "object";
+}
+function isPlainObject(val) {
+  if (toString.call(val) !== "[object Object]") {
+    return false;
+  }
+  var prototype = Object.getPrototypeOf(val);
+  return prototype === null || prototype === Object.prototype;
+}
+function isDate(val) {
+  return toString.call(val) === "[object Date]";
+}
+function isFile(val) {
+  return toString.call(val) === "[object File]";
+}
+function isBlob(val) {
+  return toString.call(val) === "[object Blob]";
+}
+function isFunction(val) {
+  return toString.call(val) === "[object Function]";
+}
+function isStream(val) {
+  return isObject(val) && isFunction(val.pipe);
+}
+function isURLSearchParams(val) {
+  return typeof URLSearchParams !== "undefined" && val instanceof URLSearchParams;
+}
+function trim(str) {
+  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, "");
+}
+function isStandardBrowserEnv() {
+  if (typeof navigator !== "undefined" && (navigator.product === "ReactNative" || navigator.product === "NativeScript" || navigator.product === "NS")) {
+    return false;
+  }
+  return typeof window !== "undefined" && typeof document !== "undefined";
+}
+function forEach(obj, fn) {
+  if (obj === null || typeof obj === "undefined") {
+    return;
+  }
+  if (typeof obj !== "object") {
+    obj = [obj];
+  }
+  if (isArray(obj)) {
+    for (var i = 0, l = obj.length; i < l; i++) {
+      fn.call(null, obj[i], i, obj);
+    }
+  } else {
+    for (var key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        fn.call(null, obj[key], key, obj);
+      }
+    }
+  }
+}
+function merge() {
+  var result = {};
+  function assignValue(val, key) {
+    if (isPlainObject(result[key]) && isPlainObject(val)) {
+      result[key] = merge(result[key], val);
+    } else if (isPlainObject(val)) {
+      result[key] = merge({}, val);
+    } else if (isArray(val)) {
+      result[key] = val.slice();
+    } else {
+      result[key] = val;
+    }
+  }
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    forEach(arguments[i], assignValue);
+  }
+  return result;
+}
+function extend$1(a, b, thisArg) {
+  forEach(b, function assignValue(val, key) {
+    if (thisArg && typeof val === "function") {
+      a[key] = bind$1(val, thisArg);
+    } else {
+      a[key] = val;
+    }
+  });
+  return a;
+}
+function stripBOM(content) {
+  if (content.charCodeAt(0) === 65279) {
+    content = content.slice(1);
+  }
+  return content;
+}
+var utils$d = {
+  isArray,
+  isArrayBuffer,
+  isBuffer,
+  isFormData,
+  isArrayBufferView,
+  isString,
+  isNumber,
+  isObject,
+  isPlainObject,
+  isUndefined,
+  isDate,
+  isFile,
+  isBlob,
+  isFunction,
+  isStream,
+  isURLSearchParams,
+  isStandardBrowserEnv,
+  forEach,
+  merge,
+  extend: extend$1,
+  trim,
+  stripBOM
+};
+var utils$c = utils$d;
+function encode(val) {
+  return encodeURIComponent(val).replace(/%3A/gi, ":").replace(/%24/g, "$").replace(/%2C/gi, ",").replace(/%20/g, "+").replace(/%5B/gi, "[").replace(/%5D/gi, "]");
+}
+var buildURL$2 = function buildURL2(url, params, paramsSerializer) {
+  if (!params) {
+    return url;
+  }
+  var serializedParams;
+  if (paramsSerializer) {
+    serializedParams = paramsSerializer(params);
+  } else if (utils$c.isURLSearchParams(params)) {
+    serializedParams = params.toString();
+  } else {
+    var parts = [];
+    utils$c.forEach(params, function serialize(val, key) {
+      if (val === null || typeof val === "undefined") {
+        return;
+      }
+      if (utils$c.isArray(val)) {
+        key = key + "[]";
+      } else {
+        val = [val];
+      }
+      utils$c.forEach(val, function parseValue(v) {
+        if (utils$c.isDate(v)) {
+          v = v.toISOString();
+        } else if (utils$c.isObject(v)) {
+          v = JSON.stringify(v);
+        }
+        parts.push(encode(key) + "=" + encode(v));
+      });
+    });
+    serializedParams = parts.join("&");
+  }
+  if (serializedParams) {
+    var hashmarkIndex = url.indexOf("#");
+    if (hashmarkIndex !== -1) {
+      url = url.slice(0, hashmarkIndex);
+    }
+    url += (url.indexOf("?") === -1 ? "?" : "&") + serializedParams;
+  }
+  return url;
+};
+var utils$b = utils$d;
+function InterceptorManager$1() {
+  this.handlers = [];
+}
+InterceptorManager$1.prototype.use = function use(fulfilled, rejected, options) {
+  this.handlers.push({
+    fulfilled,
+    rejected,
+    synchronous: options ? options.synchronous : false,
+    runWhen: options ? options.runWhen : null
+  });
+  return this.handlers.length - 1;
+};
+InterceptorManager$1.prototype.eject = function eject(id) {
+  if (this.handlers[id]) {
+    this.handlers[id] = null;
+  }
+};
+InterceptorManager$1.prototype.forEach = function forEach2(fn) {
+  utils$b.forEach(this.handlers, function forEachHandler(h) {
+    if (h !== null) {
+      fn(h);
+    }
+  });
+};
+var InterceptorManager_1 = InterceptorManager$1;
+var utils$a = utils$d;
+var normalizeHeaderName$1 = function normalizeHeaderName2(headers, normalizedName) {
+  utils$a.forEach(headers, function processHeader(value2, name) {
+    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
+      headers[normalizedName] = value2;
+      delete headers[name];
+    }
+  });
+};
+var enhanceError$2 = function enhanceError2(error, config, code, request2, response) {
+  error.config = config;
+  if (code) {
+    error.code = code;
+  }
+  error.request = request2;
+  error.response = response;
+  error.isAxiosError = true;
+  error.toJSON = function toJSON() {
+    return {
+      message: this.message,
+      name: this.name,
+      description: this.description,
+      number: this.number,
+      fileName: this.fileName,
+      lineNumber: this.lineNumber,
+      columnNumber: this.columnNumber,
+      stack: this.stack,
+      config: this.config,
+      code: this.code,
+      status: this.response && this.response.status ? this.response.status : null
+    };
+  };
+  return error;
+};
+var enhanceError$1 = enhanceError$2;
+var createError$2 = function createError2(message, config, code, request2, response) {
+  var error = new Error(message);
+  return enhanceError$1(error, config, code, request2, response);
+};
+var createError$1 = createError$2;
+var settle$1 = function settle2(resolve, reject, response) {
+  var validateStatus2 = response.config.validateStatus;
+  if (!response.status || !validateStatus2 || validateStatus2(response.status)) {
+    resolve(response);
+  } else {
+    reject(createError$1("Request failed with status code " + response.status, response.config, null, response.request, response));
+  }
+};
+var utils$9 = utils$d;
+var cookies$1 = utils$9.isStandardBrowserEnv() ? function standardBrowserEnv() {
+  return {
+    write: function write(name, value2, expires, path, domain, secure) {
+      var cookie = [];
+      cookie.push(name + "=" + encodeURIComponent(value2));
+      if (utils$9.isNumber(expires)) {
+        cookie.push("expires=" + new Date(expires).toGMTString());
+      }
+      if (utils$9.isString(path)) {
+        cookie.push("path=" + path);
+      }
+      if (utils$9.isString(domain)) {
+        cookie.push("domain=" + domain);
+      }
+      if (secure === true) {
+        cookie.push("secure");
+      }
+      document.cookie = cookie.join("; ");
+    },
+    read: function read(name) {
+      var match = document.cookie.match(new RegExp("(^|;\\s*)(" + name + ")=([^;]*)"));
+      return match ? decodeURIComponent(match[3]) : null;
+    },
+    remove: function remove(name) {
+      this.write(name, "", Date.now() - 864e5);
+    }
+  };
+}() : function nonStandardBrowserEnv() {
+  return {
+    write: function write() {
+    },
+    read: function read() {
+      return null;
+    },
+    remove: function remove() {
+    }
+  };
+}();
+var isAbsoluteURL$1 = function isAbsoluteURL2(url) {
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
+};
+var combineURLs$1 = function combineURLs2(baseURL, relativeURL) {
+  return relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
+};
+var isAbsoluteURL = isAbsoluteURL$1;
+var combineURLs = combineURLs$1;
+var buildFullPath$1 = function buildFullPath2(baseURL, requestedURL) {
+  if (baseURL && !isAbsoluteURL(requestedURL)) {
+    return combineURLs(baseURL, requestedURL);
+  }
+  return requestedURL;
+};
+var utils$8 = utils$d;
+var ignoreDuplicateOf = [
+  "age",
+  "authorization",
+  "content-length",
+  "content-type",
+  "etag",
+  "expires",
+  "from",
+  "host",
+  "if-modified-since",
+  "if-unmodified-since",
+  "last-modified",
+  "location",
+  "max-forwards",
+  "proxy-authorization",
+  "referer",
+  "retry-after",
+  "user-agent"
+];
+var parseHeaders$1 = function parseHeaders2(headers) {
+  var parsed = {};
+  var key;
+  var val;
+  var i;
+  if (!headers) {
+    return parsed;
+  }
+  utils$8.forEach(headers.split("\n"), function parser(line) {
+    i = line.indexOf(":");
+    key = utils$8.trim(line.substr(0, i)).toLowerCase();
+    val = utils$8.trim(line.substr(i + 1));
+    if (key) {
+      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
+        return;
+      }
+      if (key === "set-cookie") {
+        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
+      } else {
+        parsed[key] = parsed[key] ? parsed[key] + ", " + val : val;
+      }
+    }
+  });
+  return parsed;
+};
+var utils$7 = utils$d;
+var isURLSameOrigin$1 = utils$7.isStandardBrowserEnv() ? function standardBrowserEnv2() {
+  var msie = /(msie|trident)/i.test(navigator.userAgent);
+  var urlParsingNode = document.createElement("a");
+  var originURL;
+  function resolveURL(url) {
+    var href = url;
+    if (msie) {
+      urlParsingNode.setAttribute("href", href);
+      href = urlParsingNode.href;
+    }
+    urlParsingNode.setAttribute("href", href);
+    return {
+      href: urlParsingNode.href,
+      protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, "") : "",
+      host: urlParsingNode.host,
+      search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, "") : "",
+      hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, "") : "",
+      hostname: urlParsingNode.hostname,
+      port: urlParsingNode.port,
+      pathname: urlParsingNode.pathname.charAt(0) === "/" ? urlParsingNode.pathname : "/" + urlParsingNode.pathname
+    };
+  }
+  originURL = resolveURL(window.location.href);
+  return function isURLSameOrigin2(requestURL) {
+    var parsed = utils$7.isString(requestURL) ? resolveURL(requestURL) : requestURL;
+    return parsed.protocol === originURL.protocol && parsed.host === originURL.host;
+  };
+}() : function nonStandardBrowserEnv2() {
+  return function isURLSameOrigin2() {
+    return true;
+  };
+}();
+function Cancel$3(message) {
+  this.message = message;
+}
+Cancel$3.prototype.toString = function toString2() {
+  return "Cancel" + (this.message ? ": " + this.message : "");
+};
+Cancel$3.prototype.__CANCEL__ = true;
+var Cancel_1 = Cancel$3;
+var utils$6 = utils$d;
+var settle = settle$1;
+var cookies = cookies$1;
+var buildURL$1 = buildURL$2;
+var buildFullPath = buildFullPath$1;
+var parseHeaders = parseHeaders$1;
+var isURLSameOrigin = isURLSameOrigin$1;
+var createError = createError$2;
+var defaults$5 = defaults_1;
+var Cancel$2 = Cancel_1;
+var xhr = function xhrAdapter(config) {
+  return new Promise(function dispatchXhrRequest(resolve, reject) {
+    var requestData = config.data;
+    var requestHeaders = config.headers;
+    var responseType = config.responseType;
+    var onCanceled;
+    function done() {
+      if (config.cancelToken) {
+        config.cancelToken.unsubscribe(onCanceled);
+      }
+      if (config.signal) {
+        config.signal.removeEventListener("abort", onCanceled);
+      }
+    }
+    if (utils$6.isFormData(requestData)) {
+      delete requestHeaders["Content-Type"];
+    }
+    var request2 = new XMLHttpRequest();
+    if (config.auth) {
+      var username = config.auth.username || "";
+      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : "";
+      requestHeaders.Authorization = "Basic " + btoa(username + ":" + password);
+    }
+    var fullPath = buildFullPath(config.baseURL, config.url);
+    request2.open(config.method.toUpperCase(), buildURL$1(fullPath, config.params, config.paramsSerializer), true);
+    request2.timeout = config.timeout;
+    function onloadend() {
+      if (!request2) {
+        return;
+      }
+      var responseHeaders = "getAllResponseHeaders" in request2 ? parseHeaders(request2.getAllResponseHeaders()) : null;
+      var responseData = !responseType || responseType === "text" || responseType === "json" ? request2.responseText : request2.response;
+      var response = {
+        data: responseData,
+        status: request2.status,
+        statusText: request2.statusText,
+        headers: responseHeaders,
+        config,
+        request: request2
+      };
+      settle(function _resolve(value2) {
+        resolve(value2);
+        done();
+      }, function _reject(err) {
+        reject(err);
+        done();
+      }, response);
+      request2 = null;
+    }
+    if ("onloadend" in request2) {
+      request2.onloadend = onloadend;
+    } else {
+      request2.onreadystatechange = function handleLoad() {
+        if (!request2 || request2.readyState !== 4) {
+          return;
+        }
+        if (request2.status === 0 && !(request2.responseURL && request2.responseURL.indexOf("file:") === 0)) {
+          return;
+        }
+        setTimeout(onloadend);
+      };
+    }
+    request2.onabort = function handleAbort() {
+      if (!request2) {
+        return;
+      }
+      reject(createError("Request aborted", config, "ECONNABORTED", request2));
+      request2 = null;
+    };
+    request2.onerror = function handleError() {
+      reject(createError("Network Error", config, null, request2));
+      request2 = null;
+    };
+    request2.ontimeout = function handleTimeout() {
+      var timeoutErrorMessage = config.timeout ? "timeout of " + config.timeout + "ms exceeded" : "timeout exceeded";
+      var transitional2 = config.transitional || defaults$5.transitional;
+      if (config.timeoutErrorMessage) {
+        timeoutErrorMessage = config.timeoutErrorMessage;
+      }
+      reject(createError(timeoutErrorMessage, config, transitional2.clarifyTimeoutError ? "ETIMEDOUT" : "ECONNABORTED", request2));
+      request2 = null;
+    };
+    if (utils$6.isStandardBrowserEnv()) {
+      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ? cookies.read(config.xsrfCookieName) : void 0;
+      if (xsrfValue) {
+        requestHeaders[config.xsrfHeaderName] = xsrfValue;
+      }
+    }
+    if ("setRequestHeader" in request2) {
+      utils$6.forEach(requestHeaders, function setRequestHeader(val, key) {
+        if (typeof requestData === "undefined" && key.toLowerCase() === "content-type") {
+          delete requestHeaders[key];
+        } else {
+          request2.setRequestHeader(key, val);
+        }
+      });
+    }
+    if (!utils$6.isUndefined(config.withCredentials)) {
+      request2.withCredentials = !!config.withCredentials;
+    }
+    if (responseType && responseType !== "json") {
+      request2.responseType = config.responseType;
+    }
+    if (typeof config.onDownloadProgress === "function") {
+      request2.addEventListener("progress", config.onDownloadProgress);
+    }
+    if (typeof config.onUploadProgress === "function" && request2.upload) {
+      request2.upload.addEventListener("progress", config.onUploadProgress);
+    }
+    if (config.cancelToken || config.signal) {
+      onCanceled = function(cancel) {
+        if (!request2) {
+          return;
+        }
+        reject(!cancel || cancel && cancel.type ? new Cancel$2("canceled") : cancel);
+        request2.abort();
+        request2 = null;
+      };
+      config.cancelToken && config.cancelToken.subscribe(onCanceled);
+      if (config.signal) {
+        config.signal.aborted ? onCanceled() : config.signal.addEventListener("abort", onCanceled);
+      }
+    }
+    if (!requestData) {
+      requestData = null;
+    }
+    request2.send(requestData);
+  });
+};
+var utils$5 = utils$d;
+var normalizeHeaderName = normalizeHeaderName$1;
+var enhanceError = enhanceError$2;
+var DEFAULT_CONTENT_TYPE = {
+  "Content-Type": "application/x-www-form-urlencoded"
+};
+function setContentTypeIfUnset(headers, value2) {
+  if (!utils$5.isUndefined(headers) && utils$5.isUndefined(headers["Content-Type"])) {
+    headers["Content-Type"] = value2;
+  }
+}
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== "undefined") {
+    adapter = xhr;
+  } else if (typeof process !== "undefined" && Object.prototype.toString.call(process) === "[object process]") {
+    adapter = xhr;
+  }
+  return adapter;
+}
+function stringifySafely(rawValue, parser, encoder) {
+  if (utils$5.isString(rawValue)) {
+    try {
+      (parser || JSON.parse)(rawValue);
+      return utils$5.trim(rawValue);
+    } catch (e) {
+      if (e.name !== "SyntaxError") {
+        throw e;
+      }
+    }
+  }
+  return (encoder || JSON.stringify)(rawValue);
+}
+var defaults$4 = {
+  transitional: {
+    silentJSONParsing: true,
+    forcedJSONParsing: true,
+    clarifyTimeoutError: false
+  },
+  adapter: getDefaultAdapter(),
+  transformRequest: [function transformRequest(data2, headers) {
+    normalizeHeaderName(headers, "Accept");
+    normalizeHeaderName(headers, "Content-Type");
+    if (utils$5.isFormData(data2) || utils$5.isArrayBuffer(data2) || utils$5.isBuffer(data2) || utils$5.isStream(data2) || utils$5.isFile(data2) || utils$5.isBlob(data2)) {
+      return data2;
+    }
+    if (utils$5.isArrayBufferView(data2)) {
+      return data2.buffer;
+    }
+    if (utils$5.isURLSearchParams(data2)) {
+      setContentTypeIfUnset(headers, "application/x-www-form-urlencoded;charset=utf-8");
+      return data2.toString();
+    }
+    if (utils$5.isObject(data2) || headers && headers["Content-Type"] === "application/json") {
+      setContentTypeIfUnset(headers, "application/json");
+      return stringifySafely(data2);
+    }
+    return data2;
+  }],
+  transformResponse: [function transformResponse(data2) {
+    var transitional2 = this.transitional || defaults$4.transitional;
+    var silentJSONParsing = transitional2 && transitional2.silentJSONParsing;
+    var forcedJSONParsing = transitional2 && transitional2.forcedJSONParsing;
+    var strictJSONParsing = !silentJSONParsing && this.responseType === "json";
+    if (strictJSONParsing || forcedJSONParsing && utils$5.isString(data2) && data2.length) {
+      try {
+        return JSON.parse(data2);
+      } catch (e) {
+        if (strictJSONParsing) {
+          if (e.name === "SyntaxError") {
+            throw enhanceError(e, this, "E_JSON_PARSE");
+          }
+          throw e;
+        }
+      }
+    }
+    return data2;
+  }],
+  timeout: 0,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
+  maxContentLength: -1,
+  maxBodyLength: -1,
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  },
+  headers: {
+    common: {
+      "Accept": "application/json, text/plain, */*"
+    }
+  }
+};
+utils$5.forEach(["delete", "get", "head"], function forEachMethodNoData(method) {
+  defaults$4.headers[method] = {};
+});
+utils$5.forEach(["post", "put", "patch"], function forEachMethodWithData(method) {
+  defaults$4.headers[method] = utils$5.merge(DEFAULT_CONTENT_TYPE);
+});
+var defaults_1 = defaults$4;
+var utils$4 = utils$d;
+var defaults$3 = defaults_1;
+var transformData$1 = function transformData2(data2, headers, fns) {
+  var context = this || defaults$3;
+  utils$4.forEach(fns, function transform(fn) {
+    data2 = fn.call(context, data2, headers);
+  });
+  return data2;
+};
+var isCancel$1 = function isCancel2(value2) {
+  return !!(value2 && value2.__CANCEL__);
+};
+var utils$3 = utils$d;
+var transformData = transformData$1;
+var isCancel = isCancel$1;
+var defaults$2 = defaults_1;
+var Cancel$1 = Cancel_1;
+function throwIfCancellationRequested(config) {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested();
+  }
+  if (config.signal && config.signal.aborted) {
+    throw new Cancel$1("canceled");
+  }
+}
+var dispatchRequest$1 = function dispatchRequest2(config) {
+  throwIfCancellationRequested(config);
+  config.headers = config.headers || {};
+  config.data = transformData.call(config, config.data, config.headers, config.transformRequest);
+  config.headers = utils$3.merge(config.headers.common || {}, config.headers[config.method] || {}, config.headers);
+  utils$3.forEach(["delete", "get", "head", "post", "put", "patch", "common"], function cleanHeaderConfig(method) {
+    delete config.headers[method];
+  });
+  var adapter = config.adapter || defaults$2.adapter;
+  return adapter(config).then(function onAdapterResolution(response) {
+    throwIfCancellationRequested(config);
+    response.data = transformData.call(config, response.data, response.headers, config.transformResponse);
+    return response;
+  }, function onAdapterRejection(reason) {
+    if (!isCancel(reason)) {
+      throwIfCancellationRequested(config);
+      if (reason && reason.response) {
+        reason.response.data = transformData.call(config, reason.response.data, reason.response.headers, config.transformResponse);
+      }
+    }
+    return Promise.reject(reason);
+  });
+};
+var utils$2 = utils$d;
+var mergeConfig$2 = function mergeConfig2(config1, config2) {
+  config2 = config2 || {};
+  var config = {};
+  function getMergedValue(target, source2) {
+    if (utils$2.isPlainObject(target) && utils$2.isPlainObject(source2)) {
+      return utils$2.merge(target, source2);
+    } else if (utils$2.isPlainObject(source2)) {
+      return utils$2.merge({}, source2);
+    } else if (utils$2.isArray(source2)) {
+      return source2.slice();
+    }
+    return source2;
+  }
+  function mergeDeepProperties(prop) {
+    if (!utils$2.isUndefined(config2[prop])) {
+      return getMergedValue(config1[prop], config2[prop]);
+    } else if (!utils$2.isUndefined(config1[prop])) {
+      return getMergedValue(void 0, config1[prop]);
+    }
+  }
+  function valueFromConfig2(prop) {
+    if (!utils$2.isUndefined(config2[prop])) {
+      return getMergedValue(void 0, config2[prop]);
+    }
+  }
+  function defaultToConfig2(prop) {
+    if (!utils$2.isUndefined(config2[prop])) {
+      return getMergedValue(void 0, config2[prop]);
+    } else if (!utils$2.isUndefined(config1[prop])) {
+      return getMergedValue(void 0, config1[prop]);
+    }
+  }
+  function mergeDirectKeys(prop) {
+    if (prop in config2) {
+      return getMergedValue(config1[prop], config2[prop]);
+    } else if (prop in config1) {
+      return getMergedValue(void 0, config1[prop]);
+    }
+  }
+  var mergeMap = {
+    "url": valueFromConfig2,
+    "method": valueFromConfig2,
+    "data": valueFromConfig2,
+    "baseURL": defaultToConfig2,
+    "transformRequest": defaultToConfig2,
+    "transformResponse": defaultToConfig2,
+    "paramsSerializer": defaultToConfig2,
+    "timeout": defaultToConfig2,
+    "timeoutMessage": defaultToConfig2,
+    "withCredentials": defaultToConfig2,
+    "adapter": defaultToConfig2,
+    "responseType": defaultToConfig2,
+    "xsrfCookieName": defaultToConfig2,
+    "xsrfHeaderName": defaultToConfig2,
+    "onUploadProgress": defaultToConfig2,
+    "onDownloadProgress": defaultToConfig2,
+    "decompress": defaultToConfig2,
+    "maxContentLength": defaultToConfig2,
+    "maxBodyLength": defaultToConfig2,
+    "transport": defaultToConfig2,
+    "httpAgent": defaultToConfig2,
+    "httpsAgent": defaultToConfig2,
+    "cancelToken": defaultToConfig2,
+    "socketPath": defaultToConfig2,
+    "responseEncoding": defaultToConfig2,
+    "validateStatus": mergeDirectKeys
+  };
+  utils$2.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
+    var merge2 = mergeMap[prop] || mergeDeepProperties;
+    var configValue = merge2(prop);
+    utils$2.isUndefined(configValue) && merge2 !== mergeDirectKeys || (config[prop] = configValue);
+  });
+  return config;
+};
+var data = {
+  "version": "0.24.0"
+};
+var VERSION = data.version;
+var validators$1 = {};
+["object", "boolean", "number", "function", "string", "symbol"].forEach(function(type, i) {
+  validators$1[type] = function validator2(thing) {
+    return typeof thing === type || "a" + (i < 1 ? "n " : " ") + type;
+  };
+});
+var deprecatedWarnings = {};
+validators$1.transitional = function transitional(validator2, version2, message) {
+  function formatMessage(opt, desc) {
+    return "[Axios v" + VERSION + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
+  }
+  return function(value2, opt, opts) {
+    if (validator2 === false) {
+      throw new Error(formatMessage(opt, " has been removed" + (version2 ? " in " + version2 : "")));
+    }
+    if (version2 && !deprecatedWarnings[opt]) {
+      deprecatedWarnings[opt] = true;
+      console.warn(formatMessage(opt, " has been deprecated since v" + version2 + " and will be removed in the near future"));
+    }
+    return validator2 ? validator2(value2, opt, opts) : true;
+  };
+};
+function assertOptions(options, schema, allowUnknown) {
+  if (typeof options !== "object") {
+    throw new TypeError("options must be an object");
+  }
+  var keys = Object.keys(options);
+  var i = keys.length;
+  while (i-- > 0) {
+    var opt = keys[i];
+    var validator2 = schema[opt];
+    if (validator2) {
+      var value2 = options[opt];
+      var result = value2 === void 0 || validator2(value2, opt, options);
+      if (result !== true) {
+        throw new TypeError("option " + opt + " must be " + result);
+      }
+      continue;
+    }
+    if (allowUnknown !== true) {
+      throw Error("Unknown option " + opt);
+    }
+  }
+}
+var validator$1 = {
+  assertOptions,
+  validators: validators$1
+};
+var utils$1 = utils$d;
+var buildURL = buildURL$2;
+var InterceptorManager = InterceptorManager_1;
+var dispatchRequest = dispatchRequest$1;
+var mergeConfig$1 = mergeConfig$2;
+var validator = validator$1;
+var validators = validator.validators;
+function Axios$1(instanceConfig) {
+  this.defaults = instanceConfig;
+  this.interceptors = {
+    request: new InterceptorManager(),
+    response: new InterceptorManager()
+  };
+}
+Axios$1.prototype.request = function request(config) {
+  if (typeof config === "string") {
+    config = arguments[1] || {};
+    config.url = arguments[0];
+  } else {
+    config = config || {};
+  }
+  config = mergeConfig$1(this.defaults, config);
+  if (config.method) {
+    config.method = config.method.toLowerCase();
+  } else if (this.defaults.method) {
+    config.method = this.defaults.method.toLowerCase();
+  } else {
+    config.method = "get";
+  }
+  var transitional2 = config.transitional;
+  if (transitional2 !== void 0) {
+    validator.assertOptions(transitional2, {
+      silentJSONParsing: validators.transitional(validators.boolean),
+      forcedJSONParsing: validators.transitional(validators.boolean),
+      clarifyTimeoutError: validators.transitional(validators.boolean)
+    }, false);
+  }
+  var requestInterceptorChain = [];
+  var synchronousRequestInterceptors = true;
+  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+    if (typeof interceptor.runWhen === "function" && interceptor.runWhen(config) === false) {
+      return;
+    }
+    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
+    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
+  });
+  var responseInterceptorChain = [];
+  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
+  });
+  var promise;
+  if (!synchronousRequestInterceptors) {
+    var chain = [dispatchRequest, void 0];
+    Array.prototype.unshift.apply(chain, requestInterceptorChain);
+    chain = chain.concat(responseInterceptorChain);
+    promise = Promise.resolve(config);
+    while (chain.length) {
+      promise = promise.then(chain.shift(), chain.shift());
+    }
+    return promise;
+  }
+  var newConfig = config;
+  while (requestInterceptorChain.length) {
+    var onFulfilled = requestInterceptorChain.shift();
+    var onRejected = requestInterceptorChain.shift();
+    try {
+      newConfig = onFulfilled(newConfig);
+    } catch (error) {
+      onRejected(error);
+      break;
+    }
+  }
+  try {
+    promise = dispatchRequest(newConfig);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+  while (responseInterceptorChain.length) {
+    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
+  }
+  return promise;
+};
+Axios$1.prototype.getUri = function getUri(config) {
+  config = mergeConfig$1(this.defaults, config);
+  return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, "");
+};
+utils$1.forEach(["delete", "get", "head", "options"], function forEachMethodNoData2(method) {
+  Axios$1.prototype[method] = function(url, config) {
+    return this.request(mergeConfig$1(config || {}, {
+      method,
+      url,
+      data: (config || {}).data
+    }));
+  };
+});
+utils$1.forEach(["post", "put", "patch"], function forEachMethodWithData2(method) {
+  Axios$1.prototype[method] = function(url, data2, config) {
+    return this.request(mergeConfig$1(config || {}, {
+      method,
+      url,
+      data: data2
+    }));
+  };
+});
+var Axios_1 = Axios$1;
+var Cancel = Cancel_1;
+function CancelToken(executor) {
+  if (typeof executor !== "function") {
+    throw new TypeError("executor must be a function.");
+  }
+  var resolvePromise;
+  this.promise = new Promise(function promiseExecutor(resolve) {
+    resolvePromise = resolve;
+  });
+  var token = this;
+  this.promise.then(function(cancel) {
+    if (!token._listeners)
+      return;
+    var i;
+    var l = token._listeners.length;
+    for (i = 0; i < l; i++) {
+      token._listeners[i](cancel);
+    }
+    token._listeners = null;
+  });
+  this.promise.then = function(onfulfilled) {
+    var _resolve;
+    var promise = new Promise(function(resolve) {
+      token.subscribe(resolve);
+      _resolve = resolve;
+    }).then(onfulfilled);
+    promise.cancel = function reject() {
+      token.unsubscribe(_resolve);
+    };
+    return promise;
+  };
+  executor(function cancel(message) {
+    if (token.reason) {
+      return;
+    }
+    token.reason = new Cancel(message);
+    resolvePromise(token.reason);
+  });
+}
+CancelToken.prototype.throwIfRequested = function throwIfRequested() {
+  if (this.reason) {
+    throw this.reason;
+  }
+};
+CancelToken.prototype.subscribe = function subscribe(listener) {
+  if (this.reason) {
+    listener(this.reason);
+    return;
+  }
+  if (this._listeners) {
+    this._listeners.push(listener);
+  } else {
+    this._listeners = [listener];
+  }
+};
+CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
+  if (!this._listeners) {
+    return;
+  }
+  var index2 = this._listeners.indexOf(listener);
+  if (index2 !== -1) {
+    this._listeners.splice(index2, 1);
+  }
+};
+CancelToken.source = function source() {
+  var cancel;
+  var token = new CancelToken(function executor(c) {
+    cancel = c;
+  });
+  return {
+    token,
+    cancel
+  };
+};
+var CancelToken_1 = CancelToken;
+var spread = function spread2(callback2) {
+  return function wrap(arr) {
+    return callback2.apply(null, arr);
+  };
+};
+var isAxiosError = function isAxiosError2(payload) {
+  return typeof payload === "object" && payload.isAxiosError === true;
+};
+var utils = utils$d;
+var bind = bind$2;
+var Axios = Axios_1;
+var mergeConfig = mergeConfig$2;
+var defaults$1 = defaults_1;
+function createInstance(defaultConfig) {
+  var context = new Axios(defaultConfig);
+  var instance2 = bind(Axios.prototype.request, context);
+  utils.extend(instance2, Axios.prototype, context);
+  utils.extend(instance2, context);
+  instance2.create = function create(instanceConfig) {
+    return createInstance(mergeConfig(defaultConfig, instanceConfig));
+  };
+  return instance2;
+}
+var axios$1 = createInstance(defaults$1);
+axios$1.Axios = Axios;
+axios$1.Cancel = Cancel_1;
+axios$1.CancelToken = CancelToken_1;
+axios$1.isCancel = isCancel$1;
+axios$1.VERSION = data.version;
+axios$1.all = function all(promises) {
+  return Promise.all(promises);
+};
+axios$1.spread = spread;
+axios$1.isAxiosError = isAxiosError;
+axios$2.exports = axios$1;
+axios$2.exports.default = axios$1;
+var require$$0 = axios$2.exports;
+var axios = require$$0;
 var index_vue_vue_type_style_index_0_scoped_true_lang$7 = "";
 var _export_sfc$1 = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
@@ -6445,6 +5090,10 @@ var fieldMixin = {
     },
     setLabel(newLabel) {
       this.field.options.label = newLabel;
+    },
+    setPickerOptions(pickerOptions) {
+      console.log("setPickerOptions", pickerOptions);
+      return false;
     },
     focus() {
       if (!!this.getFieldEditor() && !!this.getFieldEditor().focus) {
@@ -45550,7 +44199,6 @@ const _hoisted_16 = { class: "dialog-footer" };
 function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_svg_icon = resolveComponent("svg-icon");
   const _component_el_button = resolveComponent("el-button");
-  const _component_el_button_group = resolveComponent("el-button-group");
   const _component_el_tree = resolveComponent("el-tree");
   const _component_el_drawer = resolveComponent("el-drawer");
   const _component_VFormRender = resolveComponent("VFormRender");
@@ -45586,38 +44234,6 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
         ]),
         _: 1
       }, 8, ["disabled", "title", "onClick"]),
-      createVNode(_component_el_button_group, { style: { "margin-left": "20px" } }, {
-        default: withCtx(() => [
-          createVNode(_component_el_button, {
-            type: $options.layoutType === "PC" ? "info" : "",
-            onClick: _cache[0] || (_cache[0] = ($event) => $options.changeLayoutType("PC"))
-          }, {
-            default: withCtx(() => [
-              createTextVNode(toDisplayString(_ctx.$t("designer.toolbar.pcLayout")), 1)
-            ]),
-            _: 1
-          }, 8, ["type"]),
-          createVNode(_component_el_button, {
-            type: $options.layoutType === "Pad" ? "info" : "",
-            onClick: _cache[1] || (_cache[1] = ($event) => $options.changeLayoutType("Pad"))
-          }, {
-            default: withCtx(() => [
-              createTextVNode(toDisplayString(_ctx.$t("designer.toolbar.padLayout")), 1)
-            ]),
-            _: 1
-          }, 8, ["type"]),
-          createVNode(_component_el_button, {
-            type: $options.layoutType === "H5" ? "info" : "",
-            onClick: _cache[2] || (_cache[2] = ($event) => $options.changeLayoutType("H5"))
-          }, {
-            default: withCtx(() => [
-              createTextVNode(toDisplayString(_ctx.$t("designer.toolbar.mobileLayout")), 1)
-            ]),
-            _: 1
-          }, 8, ["type"])
-        ]),
-        _: 1
-      }),
       createVNode(_component_el_button, {
         style: { "margin-left": "20px" },
         title: _ctx.$t("designer.toolbar.nodeTreeHint"),
@@ -45633,7 +44249,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
       title: _ctx.$t("designer.toolbar.nodeTreeTitle"),
       direction: "ltr",
       modelValue: $data.showNodeTreeDrawerFlag,
-      "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.showNodeTreeDrawerFlag = $event),
+      "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.showNodeTreeDrawerFlag = $event),
       modal: true,
       size: 280,
       "destroy-on-close": true,
@@ -45736,7 +44352,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
       createVNode(_component_el_dialog, {
         title: _ctx.$t("designer.toolbar.preview"),
         modelValue: $data.showPreviewDialogFlag,
-        "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => $data.showPreviewDialogFlag = $event),
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.showPreviewDialogFlag = $event),
         "show-close": true,
         "close-on-click-modal": false,
         "close-on-press-escape": false,
@@ -45786,7 +44402,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
               _: 1
             }, 8, ["onClick"]),
             createVNode(_component_el_button, {
-              onClick: _cache[4] || (_cache[4] = ($event) => $data.showPreviewDialogFlag = false)
+              onClick: _cache[1] || (_cache[1] = ($event) => $data.showPreviewDialogFlag = false)
             }, {
               default: withCtx(() => [
                 createTextVNode(toDisplayString(_ctx.$t("designer.hint.closePreview")), 1)
@@ -45828,7 +44444,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
       createVNode(_component_el_dialog, {
         title: _ctx.$t("designer.toolbar.importJson"),
         modelValue: $data.showImportJsonDialogFlag,
-        "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.showImportJsonDialogFlag = $event),
+        "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => $data.showImportJsonDialogFlag = $event),
         "show-close": true,
         class: "drag-dialog small-padding-dialog",
         "append-to-body": true,
@@ -45849,7 +44465,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
               _: 1
             }, 8, ["onClick"]),
             createVNode(_component_el_button, {
-              onClick: _cache[7] || (_cache[7] = ($event) => $data.showImportJsonDialogFlag = false)
+              onClick: _cache[4] || (_cache[4] = ($event) => $data.showImportJsonDialogFlag = false)
             }, {
               default: withCtx(() => [
                 createTextVNode(toDisplayString(_ctx.$t("designer.hint.cancel")), 1)
@@ -45869,7 +44485,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
             mode: "json",
             readonly: false,
             modelValue: $data.importTemplate,
-            "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.importTemplate = $event)
+            "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => $data.importTemplate = $event)
           }, null, 8, ["modelValue"])
         ]),
         _: 1
@@ -45881,7 +44497,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
       createVNode(_component_el_dialog, {
         title: _ctx.$t("designer.toolbar.exportJson"),
         modelValue: $data.showExportJsonDialogFlag,
-        "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.showExportJsonDialogFlag = $event),
+        "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => $data.showExportJsonDialogFlag = $event),
         "show-close": true,
         class: "drag-dialog small-padding-dialog",
         center: "",
@@ -45910,7 +44526,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
               _: 1
             }, 8, ["onClick"]),
             createVNode(_component_el_button, {
-              onClick: _cache[10] || (_cache[10] = ($event) => $data.showExportJsonDialogFlag = false)
+              onClick: _cache[7] || (_cache[7] = ($event) => $data.showExportJsonDialogFlag = false)
             }, {
               default: withCtx(() => [
                 createTextVNode(toDisplayString(_ctx.$t("designer.hint.closePreview")), 1)
@@ -45924,7 +44540,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
             mode: "json",
             readonly: true,
             modelValue: $data.jsonContent,
-            "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.jsonContent = $event)
+            "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => $data.jsonContent = $event)
           }, null, 8, ["modelValue"])
         ]),
         _: 1
@@ -45936,7 +44552,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
       createVNode(_component_el_dialog, {
         title: _ctx.$t("designer.toolbar.exportCode"),
         modelValue: $data.showExportCodeDialogFlag,
-        "onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => $data.showExportCodeDialogFlag = $event),
+        "onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => $data.showExportCodeDialogFlag = $event),
         "show-close": true,
         class: "drag-dialog small-padding-dialog",
         center: "",
@@ -45983,7 +44599,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
               _: 1
             }, 8, ["onClick"]),
             createVNode(_component_el_button, {
-              onClick: _cache[15] || (_cache[15] = ($event) => $data.showExportCodeDialogFlag = false)
+              onClick: _cache[12] || (_cache[12] = ($event) => $data.showExportCodeDialogFlag = false)
             }, {
               default: withCtx(() => [
                 createTextVNode(toDisplayString(_ctx.$t("designer.hint.closePreview")), 1)
@@ -45997,7 +44613,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
             type: "border-card",
             class: "no-box-shadow no-padding",
             modelValue: $data.activeCodeTab,
-            "onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => $data.activeCodeTab = $event)
+            "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => $data.activeCodeTab = $event)
           }, {
             default: withCtx(() => [
               createVNode(_component_el_tab_pane, {
@@ -46009,7 +44625,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
                     mode: "html",
                     readonly: true,
                     modelValue: $data.vueCode,
-                    "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => $data.vueCode = $event),
+                    "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => $data.vueCode = $event),
                     "user-worker": false
                   }, null, 8, ["modelValue"])
                 ]),
@@ -46024,7 +44640,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
                     mode: "html",
                     readonly: true,
                     modelValue: $data.htmlCode,
-                    "onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => $data.htmlCode = $event),
+                    "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => $data.htmlCode = $event),
                     "user-worker": false
                   }, null, 8, ["modelValue"])
                 ]),
@@ -46043,7 +44659,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
       createVNode(_component_el_dialog, {
         title: _ctx.$t("designer.hint.exportFormData"),
         modelValue: $data.showFormDataDialogFlag,
-        "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => $data.showFormDataDialogFlag = $event),
+        "onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => $data.showFormDataDialogFlag = $event),
         "show-close": true,
         class: "nested-drag-dialog dialog-title-light-bg",
         center: "",
@@ -46072,7 +44688,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
               _: 1
             }, 8, ["onClick"]),
             createVNode(_component_el_button, {
-              onClick: _cache[18] || (_cache[18] = ($event) => $data.showFormDataDialogFlag = false)
+              onClick: _cache[15] || (_cache[15] = ($event) => $data.showFormDataDialogFlag = false)
             }, {
               default: withCtx(() => [
                 createTextVNode(toDisplayString(_ctx.$t("designer.hint.closePreview")), 1)
@@ -46087,7 +44703,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
               mode: "json",
               readonly: true,
               modelValue: $data.formDataJson,
-              "onUpdate:modelValue": _cache[17] || (_cache[17] = ($event) => $data.formDataJson = $event)
+              "onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => $data.formDataJson = $event)
             }, null, 8, ["modelValue"])
           ])
         ]),
@@ -46101,7 +44717,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
         key: 0,
         title: _ctx.$t("designer.toolbar.generateSFC"),
         modelValue: $data.showExportSFCDialogFlag,
-        "onUpdate:modelValue": _cache[24] || (_cache[24] = ($event) => $data.showExportSFCDialogFlag = $event),
+        "onUpdate:modelValue": _cache[21] || (_cache[21] = ($event) => $data.showExportSFCDialogFlag = $event),
         "append-to-body": "",
         "show-close": true,
         class: "drag-dialog small-padding-dialog",
@@ -46148,7 +44764,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
               _: 1
             }, 8, ["onClick"]),
             createVNode(_component_el_button, {
-              onClick: _cache[23] || (_cache[23] = ($event) => $data.showExportSFCDialogFlag = false)
+              onClick: _cache[20] || (_cache[20] = ($event) => $data.showExportSFCDialogFlag = false)
             }, {
               default: withCtx(() => [
                 createTextVNode(toDisplayString(_ctx.$t("designer.hint.closePreview")), 1)
@@ -46162,7 +44778,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
             type: "border-card",
             class: "no-box-shadow no-padding",
             modelValue: $data.activeSFCTab,
-            "onUpdate:modelValue": _cache[22] || (_cache[22] = ($event) => $data.activeSFCTab = $event)
+            "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => $data.activeSFCTab = $event)
           }, {
             default: withCtx(() => [
               createVNode(_component_el_tab_pane, {
@@ -46174,7 +44790,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
                     mode: "html",
                     readonly: true,
                     modelValue: $data.sfcCode,
-                    "onUpdate:modelValue": _cache[20] || (_cache[20] = ($event) => $data.sfcCode = $event),
+                    "onUpdate:modelValue": _cache[17] || (_cache[17] = ($event) => $data.sfcCode = $event),
                     "user-worker": false
                   }, null, 8, ["modelValue"])
                 ]),
@@ -46189,7 +44805,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
                     mode: "html",
                     readonly: true,
                     modelValue: $data.sfcCodeV3,
-                    "onUpdate:modelValue": _cache[21] || (_cache[21] = ($event) => $data.sfcCodeV3 = $event),
+                    "onUpdate:modelValue": _cache[18] || (_cache[18] = ($event) => $data.sfcCodeV3 = $event),
                     "user-worker": false
                   }, null, 8, ["modelValue"])
                 ]),
@@ -46206,7 +44822,7 @@ function _sfc_render$2w(_ctx, _cache, $props, $setup, $data, $options) {
     ]) : createCommentVNode("", true)
   ]);
 }
-var ToolbarPanel = /* @__PURE__ */ _export_sfc$1(_sfc_main$2w, [["render", _sfc_render$2w], ["__scopeId", "data-v-589d1c37"]]);
+var ToolbarPanel = /* @__PURE__ */ _export_sfc$1(_sfc_main$2w, [["render", _sfc_render$2w], ["__scopeId", "data-v-e1dbbb04"]]);
 const _sfc_main$2v = {
   name: "allowCreate-editor",
   mixins: [i18n$1],
@@ -61706,13 +60322,13 @@ function registerIcon(app) {
 if (typeof window !== "undefined") {
   let loadSvg = function() {
     var body = document.body;
-    var svgDom = document.getElementById("__svg__icons__dom__1678689186256__");
+    var svgDom = document.getElementById("__svg__icons__dom__1679033032629__");
     if (!svgDom) {
       svgDom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgDom.style.position = "absolute";
       svgDom.style.width = "0";
       svgDom.style.height = "0";
-      svgDom.id = "__svg__icons__dom__1678689186256__";
+      svgDom.id = "__svg__icons__dom__1679033032629__";
       svgDom.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       svgDom.setAttribute("xmlns:link", "http://www.w3.org/1999/xlink");
     }
@@ -62410,11 +61026,7 @@ const install = (app) => {
   components.forEach((component) => {
     app.component(component.name, component);
   });
-  window.$api = api;
 };
-if (typeof window !== "undefined" && window.Vue) {
-  window.$api = api;
-}
 var install$1 = {
   install,
   VFormDesigner,

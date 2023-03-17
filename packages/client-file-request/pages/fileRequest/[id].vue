@@ -116,7 +116,7 @@ const state = reactive({
     async function getData () {
         let result = []
         state.loading = true
-        const response = await getFormPropsApi(route.params.id)
+        const response = await getFormPropsApi({ taskId: route.params.id })
         const index = response.findIndex(item => item.id === 'files')
         if (index !== -1) tableData.value = await revertUploadFile( response[index].value)
         if(tableData.value.length > 0) state.curDoc = tableData.value[0]

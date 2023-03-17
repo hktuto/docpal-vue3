@@ -512,7 +512,17 @@ export default {
     setLabel(newLabel) {
       this.field.options.label = newLabel
     },
-
+    /**
+     * 加载选项，并清空字段值
+     * @param pickerOptions
+     */
+    setPickerOptions(pickerOptions) {
+      // TODO 日期选项设置
+      console.log('setPickerOptions', pickerOptions)
+      return false
+      // this.field.options.pickerOptions = pickerOptions
+      //this.clearSelectedOptions()  //清空已选选项
+    },
     focus() {
       if (!!this.getFieldEditor() && !!this.getFieldEditor().focus) {
         this.getFieldEditor().focus()
@@ -531,7 +541,7 @@ export default {
         this.fieldModel = ''
       }
     },
-
+    
     /**
      * 加载选项，并清空字段值
      * @param options

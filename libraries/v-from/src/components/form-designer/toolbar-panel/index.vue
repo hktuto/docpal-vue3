@@ -5,14 +5,14 @@
         <svg-icon icon-class="undo" /></el-button>
       <el-button link type="primary" :disabled="redoDisabled" :title="$t('designer.toolbar.redoHint')" @click="redoHistory">
         <svg-icon icon-class="redo" /></el-button>
-      <el-button-group style="margin-left: 20px">
+      <!-- <el-button-group style="margin-left: 20px">
         <el-button :type="layoutType === 'PC' ? 'info': ''" @click="changeLayoutType('PC')">
           {{$t('designer.toolbar.pcLayout')}}</el-button>
         <el-button :type="layoutType === 'Pad' ? 'info': ''" @click="changeLayoutType('Pad')">
           {{$t('designer.toolbar.padLayout')}}</el-button>
         <el-button :type="layoutType === 'H5' ? 'info': ''" @click="changeLayoutType('H5')">
           {{$t('designer.toolbar.mobileLayout')}}</el-button>
-      </el-button-group>
+      </el-button-group> -->
       <el-button style="margin-left: 20px" :title="$t('designer.toolbar.nodeTreeHint')" @click="showNodeTreeDrawer">
         <svg-icon icon-class="node-tree" /></el-button>
     </div>
@@ -751,6 +751,11 @@
     .right-toolbar-con {
       text-align: left;
       width: 600px;
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      line-height: 42px;
+      height: 42px;
     }
 
     :deep(.el-button) {

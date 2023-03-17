@@ -1,5 +1,8 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
+    <div class="buttons--absolute">
+        <WorkflowPopoverNewTask />
+    </div>
     <el-tabs v-model="activeTab" class="grid-layout" @tab-change="tabChange">
         <el-tab-pane :label="$t('workflow_allTask')" name="allTask">
             <div>allTask
@@ -46,5 +49,11 @@ watch(() => route.query.tab, (newTab) => {
     :deep(.el-tab-pane) {
         height: 100%;
     }
+}
+.buttons--absolute {
+    position: absolute;
+    right: calc(var(--app-padding) * 2);
+    top: calc(var(--app-padding) * 2);
+    z-index: 2;
 }
 </style>
