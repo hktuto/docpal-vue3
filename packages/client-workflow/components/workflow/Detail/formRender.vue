@@ -49,11 +49,16 @@ async function revertUploadFile (ids) {
     })
     return result
 }
+function getFormData () {
+    console.log(FromRendererRef.value.vFormRenderRef);
+    
+    FromRendererRef.value.vFormRenderRef.getFormData(false)
+}
 onMounted(() => {
     
 })
 const { formData, formJson } = toRefs(state)
-defineExpose({ setForm })
+defineExpose({ setForm, getFormData })
 </script>
 
 <style scoped>

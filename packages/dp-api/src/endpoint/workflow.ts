@@ -6,16 +6,19 @@ import {
     workflowAttachmentInfo,
     workflowFormReq,
     workflowBpmnReq,
-    workflowCommentSendReq
+    workflowCommentSendReq,
+    fromPropertiesReq
 } from '../model';
 
-export const getFormPropsApi = async(taskId:string):Promise<workflowProps[]> => {
-    return await api.post<workflowProps[]>('/docpal/workflow/properties',{ taskId }).then(res => res.data);
+export const getFormPropsApi = async(params: fromPropertiesReq):Promise<workflowProps[]> => {
+    return await api.post<workflowProps[]>('/docpal/workflow/properties', params).then(res => res.data);
 }
 export const workflowAttachmentInfoGetApi = async(attachmentId:string):Promise<workflowAttachmentInfo> => {
     return await api.get<workflowAttachmentInfo>(`/docpal/workflow/task/attachment/info?attachmentId=${attachmentId}`).then(res => res.data);
 }
-
+export const getAvailableWorkflowApi = async () => {
+    return await api.post('/docpal/workflow/process/list',{}).then(res => res.data);
+}
 export const workflowFormSubmitApi = async(params: workflowFormReq) => {
     const response = await api.post('/docpal/workflow/form/submit', params).then(res => res.data);
     return response || true

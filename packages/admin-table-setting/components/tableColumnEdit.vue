@@ -48,7 +48,6 @@
 <script lang="ts" setup>
 import { CircleCloseFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import onMountedEditorVue from '../../../libraries/v-from/src/components/form-designer/setting-panel/property-editor/event-handler/onMounted-editor.vue'
 interface TableProps {
     column: Table.Column
 }
