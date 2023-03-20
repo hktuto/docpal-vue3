@@ -1,7 +1,8 @@
 <template>
     <div class="formContainer">
         <client-only>
-            <v-form-render ref="vFormRenderRef" :form-json="fromJsonNormalizer" :form-data="data" :option-data="options" @formChange="formChange" />
+            <v-form-render ref="vFormRenderRef" :form-json="fromJsonNormalizer" :form-data="data" :option-data="options" @formChange="formChange" 
+                @file-preview="handleFilePreview"/>
         </client-only>
     </div>
 </template>
@@ -19,7 +20,7 @@
         if(!props.formJson.formConfig) return {}
         
         let json = deepCopy(props.formJson)
-        // console.log('?????????????????????????????', {json});
+        console.log('fromJsonNormalizer', {json});
         // if(json.formConfig.jsonVersion === 3) return props.formJson;
         // normalize vue 2 form designer
         if(!json.formConfig) json.formConfig = { }
@@ -43,6 +44,14 @@
 
     function formChange(fieldName, newValue, oldValue, formModel) {
         emits('formChange', {fieldName,newValue,oldValue,formModel})
+    }
+    function handleFilePreview() {
+        console.log('handleFilePreviewinnsnjsjsdhsdsdssdjkdskshkksdsdfhksdksuccess');
+        
+    }
+    function handleFilePreview2() {
+        console.log('handleFilePreview2');
+        
     }
     defineExpose({ vFormRenderRef, setFormJson })
 </script>

@@ -25,8 +25,14 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
-import { getAvailableWorkflowApi, getFormPropsApi, taskFormJsonGetApi } from 'dp-api'
+import { 
+    getAvailableWorkflowApi, 
+    getFormPropsApi, 
+    taskFormJsonGetApi,
+    workflowProcessStartApi } from 'dp-api'
+const emits = defineEmits(['created']);
 const state = reactive({
     availableWorkflow: [],
     formDialogVisible: false,
@@ -50,16 +56,29 @@ async function workflowClickHandler (item: Workflow) {
 }
 // #region module: vform
     const vFormRef = ref()
-    function checkAndSubmit () {
-        const data = vFormRef.value.getFormData()
-        console.log({data})
+    async function checkAndSubmit () {
+        const data = await vFormRef.value.getFormData()
+        if(data) {
+            const form = {
+                processKey: state.selectedWorkflow.key,
+                businessKey: data.businessKey || "",
+                properties: Object.entries(data).reduce((newObj, [key, val]) => {
+                    if (val) newObj[key]= val
+                    return newObj;
+                },{}),
+            }
+            await workflowProcessStartApi(form)
+            state.formDialogVisible = false
+            ElMessage.success('Workflow created')
+            emits('created')
+        }
     }
     async function initForm (processKey) {
         const props = await getFormPropsApi({ processKey })
         const formData = formDataGet(props)
         const formJson = await formJsonGet('start', processKey)
         setTimeout(() => {
-            vFormRef.value.setForm(formJson, formData)
+            vFormRef.value.setForm(formJson, formData, props)
         })
     }
     function formDataGet (propList) {
