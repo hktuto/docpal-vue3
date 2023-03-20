@@ -6,6 +6,7 @@ export type TableColumnSetting = {
 export type TableColumnSettingItem = {
     columns: TableColumnItem[],
     events: string[],
+    slots?: TableColumnItem[],
     options: TableColumnSettingOptions
 }
 export type TableColumnSettingOptions = {
@@ -334,7 +335,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 }]
             },
             {
-                "type": "",
+                "type": "buttons",
                 "label": "actions",
                 "prop": "",
                 "align": "left",
@@ -521,7 +522,7 @@ export const defaultTableSetting: TableColumnSetting = {
             { id:1, label: 'table_name', prop: 'taskInstance.processDefinitionName' },
             { id:2, label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
             { id:3, label: 'common_status', prop: 'name' },
-            { id:4, label: 'workflow_assignee', prop: 'assignee' },
+            { id:4, label: 'workflow_assignee', prop: 'assignee', type: 'slot', slot: 'assignee' },
             { id:5, label: 'workflow_createDate', prop: 'createDate', 
                 formatList: [
                     {
@@ -550,6 +551,9 @@ export const defaultTableSetting: TableColumnSetting = {
             },
         ],
         events: [],
+        slots: [
+            { slot: 'assignee', label: 'workflow_assignee', prop: 'assignee' },
+        ],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_WORKFLOW_MY_TASK] : {

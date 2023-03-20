@@ -1,30 +1,19 @@
 <template>
 <div>
-    <el-checkbox-group v-model="showTypeList" :min="0" :max="1">
-            <!-- slot/render -->
-        <el-checkbox v-for="typeItem in ['buttons']" :key="typeItem" :label="typeItem">{{
-        typeItem
-        }}</el-checkbox>
-    </el-checkbox-group>
-    <template >
-        
-    </template>
+   
     <el-form ref="formRef"
             :model="form"
             :rules="rules"
             label-position="top"
     >   
+        <el-radio-group v-if="typeList" v-model="form.type">
+            <el-radio label="">prop</el-radio>
+            <el-radio v-for="typeItem in typeList" :key="typeItem" :label="typeItem" >{{typeItem}}</el-radio>
+        </el-radio-group>
         <el-form-item :label="$t('header')" prop="label">
             <el-input v-model="form.label" />
         </el-form-item>
-            
-        <el-form-item v-if="!showTypeList.includes('buttons')" :label="$t('prop')" prop="prop" >
-            <el-select v-model="form.prop" clearable placeholder="please select prop"
-            @change="formatItemPropChange">
-            <el-option v-for="item in propList" :label="item.label" :value="item.value" />
-        </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('align')" prop="align">
+                <el-form-item :label="$t('align')" prop="align">
             <el-radio-group v-model="form.align">
                 <el-radio-button label="left" />
                 <el-radio-button label="center" />
@@ -34,13 +23,24 @@
         <el-form-item :label="$t('hide')">
             <el-switch v-model="form.hide" />
         </el-form-item>
-        <el-form-item :label="$t('prefixIcon')" prop="prefixIcon">
-            <SvgIconSelector v-model:src="form.prefixIcon" />
-        </el-form-item>
-        <el-form-item :label="$t('suffixIcon')" prop="suffixIcon">
-            <SvgIconSelector v-model:src="form.suffixIcon" />
-        </el-form-item>
-        <TableColumnProps v-if="!showTypeList.includes('buttons')" v-model:formatList="form.formatList"></TableColumnProps>
+        <template v-if="form.type === ''">
+            <el-form-item  :label="$t('primaryProp')" prop="prop" >
+                <el-select v-model="form.prop" placeholder="please select prop"
+                    @change="formatItemPropChange">
+                    <el-option v-for="item in propList" :label="item.label" :value="item.value" />
+                </el-select>
+            </el-form-item>
+            <TableColumnProps v-model:formatList="form.formatList"></TableColumnProps>
+        </template>
+        <template v-else-if="form.type === 'slot'">
+            <el-form-item  :label="$t('primaryProp')" prop="prop" >
+                <el-select v-model="form.slot" clearable placeholder="please select prop"
+                    value-key="slot"
+                    @change="slotChange">
+                    <el-option v-for="item in state.slotList" :label="item.slot" :value="item" />
+                </el-select>
+            </el-form-item>
+        </template>
         <TableColumnButtons v-else v-model:buttons="form.buttons"></TableColumnButtons>
     </el-form>
 </div>
@@ -48,13 +48,15 @@
 <script lang="ts" setup>
 import { CircleCloseFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-interface TableProps {
-    column: Table.Column
-}
-const props = defineProps<TableProps>()
+import { defaultTableSetting } from 'dp-api/src/model/Table'
+const props = defineProps<{
+    column: Table.Column,
+    typeList: Array
+}>()
 const state = reactive({
-    showTypeList: []
+    slotList: []
 })
+const route = useRoute()
 const tableHelper = useTableHelper()
 // #region module:  
 // #endregion
@@ -104,21 +106,26 @@ const tableHelper = useTableHelper()
 function getForm () {
     return deepCopy(form)
 }
+
 function initForm () {
-    state.showTypeList = []
     Object.keys(metaData).forEach(key => {
         form[key] = metaData[key]
     })
     if (props.column) Object.keys(props.column).forEach(key => {
         form[key] = props.column[key]
     })
-    console.log('???');
-    
+    const defaultSlots = defaultTableSetting[route.params.id].slots
+    if (defaultSlots) state.slotList = defaultSlots
+}
+function slotChange (slotItem) {
+    const data = { ...deepCopy(form), ...slotItem }
+    Object.keys(data).forEach(key => {
+        form[key] = data[key]
+    })
 }
 onMounted(() => {
     initForm()
 })
-const { showTypeList } = toRefs(state)
 defineExpose({ getForm, initForm })
 </script>
 

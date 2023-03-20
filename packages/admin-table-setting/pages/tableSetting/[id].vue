@@ -32,7 +32,7 @@
                 </template>
             </draggable>
         </div>
-        <TableColumnAdd ref="tableColumnAddRef"
+        <TableColumnAdd ref="tableColumnAddRef" :typeList="typeList"
             @add="handleColumnAdd"></TableColumnAdd>
 </template>
 
@@ -41,13 +41,20 @@
 import draggable from 'vuedraggable'
 import { Delete, Rank } from '@element-plus/icons-vue'
 import { SaveTableColumnSetting } from 'dp-api'
+import { defaultTableSetting } from 'dp-api/src/model/Table'
+
 const route = useRoute()
 const { tableColumnSetting } = toRefs(useSetting())
 const tableColumnEditRefs = ref({})
 const tableColumnAddRef = ref()
 const tableColumns = ref([])
+const typeList = ref([])
 
 function initTableColumns(id) {
+    const defaultSlot = defaultTableSetting[route.params.id].slots
+    const defaultEvents = defaultTableSetting[route.params.id].events
+    if (defaultSlot && defaultSlot.length > 0) typeList.value.push('slot')
+    if (defaultEvents && defaultEvents.length > 0) typeList.value.push('buttons')
     tableColumns.value = tableColumnSetting.value[id].columns    
 }
 function handleSave () {
