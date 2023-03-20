@@ -26,6 +26,28 @@ export const workflowFormSubmitApi = async(params: workflowFormReq) => {
 export const getTaskApi = async(taskId:string) => {
     return await api.post('/docpal/workflow/task', { taskId }).then(res => res.data);
 }
+/**
+ * 
+ * @param candidateOrAssigned user
+ * @param cassignedUser personal
+ *  @param interrelatedUserId active
+ * @returns 
+ */
+export const getMyTask = async(params: pageParams) =>{
+    const res = await api.post('/docpal/workflow/tasks/personal', params).then(res => res.data);
+    return { entryList: res.entryList || [], totalSize: res.totalSize }
+}
+/**
+ * 
+ * @param candidateOrAssigned user
+ * @param cassignedUser personal
+ *  @param interrelatedUserId active
+ * @returns 
+ */
+export const getAllTask = async(params: pageParams) =>{
+    const res = await api.post('/docpal/workflow/tasks/user', params).then(res => res.data);
+    return { entryList: res.entryList || [], totalSize: res.totalSize }
+}
 export const workflowProcessStartApi = async(form: any) => {
     return await api.post('/docpal/workflow/process/start', form ).then(res => res.data);
 }   

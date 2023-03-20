@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { activeProcessGetApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { getMyTask, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const user = useUser();
 // #region module: page
@@ -35,15 +35,15 @@ const user = useUser();
             }
         },
         extraParams: {},
-        tabName: 'activeTask'
+        tabName: 'myTask'
     })
-    const tableKey = TABLE.CLIENT_WORKFLOW_ACTIVE_TASK
+    const tableKey = TABLE.CLIENT_WORKFLOW_MY_TASK
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
         param.userId = user.user.value.userId || user.user.value.username
         state.loading = true
-        const res = await activeProcessGetApi({...param, ...state.extraParams})
+        const res = await getMyTask({...param, ...state.extraParams})
         
         state.tableData = res.entryList
         state.loading = false
@@ -72,7 +72,7 @@ const user = useUser();
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 // #region module: search json
-    const formJson = getJsonApi('workflowActiveTaskSearch.json')
+    const formJson = getJsonApi('workflowUncompleteTaskSearch.json')
     function handleFormChange (data) {
         state.extraParams = deepCopy(data.formModel)
         handlePaginationChange(1)
