@@ -5,11 +5,10 @@
     </div>
     <el-tabs v-model="activeTab" class="grid-layout" @tab-change="tabChange">
         <el-tab-pane :label="$t('workflow_allTask')" name="allTask">
-            <div>allTask
-            </div>
+            <WorkflowAllTask v-if="activeTab === 'allTask'"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_myTask')" name="myTask">
-            <div>myTask</div>
+            <WorkflowMyTask v-if="activeTab === 'myTask'"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_completedTask')" name="completeTask">
             <WorkflowCompleteTask v-if="activeTab === 'completeTask'"/>

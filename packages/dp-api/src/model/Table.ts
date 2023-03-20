@@ -67,8 +67,10 @@ export enum TABLE {
     CLIENT_SHARE_LIST = 'clientShareList',
     CLIENT_FILE_REQUEST = 'clientFileRequest',
     CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit',
-    CLIENT_COMPLETE_TASK = 'clientCompleteTask',
-    CLIENT_ACTIVE_TASK = 'clientActiveTask',
+    CLIENT_WORKFLOW_All_TASK = 'clientAllTask',
+    CLIENT_WORKFLOW_MY_TASK = 'clientMyTask',
+    CLIENT_WORKFLOW_COMPLETE_TASK = 'clientCompleteTask',
+    CLIENT_WORKFLOW_ACTIVE_TASK = 'clientActiveTask',
     CLIENT_ADHOC_APPROVAL_TASK = 'clientAdhocApprovalTask',
     CLIENT_ADHOC_SUBMITTED_TASK = 'clientAdhocSubmittedTask',
     CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask'
@@ -514,7 +516,79 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { }
     },
-    [TABLE.CLIENT_COMPLETE_TASK] : {
+    [TABLE.CLIENT_WORKFLOW_All_TASK] : {
+        columns: [
+            { id:1, label: 'table_name', prop: 'taskInstance.processDefinitionName' },
+            { id:2, label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
+            { id:3, label: 'common_status', prop: 'name' },
+            { id:4, label: 'workflow_assignee', prop: 'assignee' },
+            { id:5, label: 'workflow_createDate', prop: 'createDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id:6, label: 'workflow_dueDate', prop: 'dueDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "dueDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_WORKFLOW_MY_TASK] : {
+        columns: [
+            { label: 'table_name', prop: 'taskInstance.processDefinitionName' },
+            { label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName'},
+            { label: 'common_status', prop: 'name', },
+            { label: 'workflow_assignee', prop: 'assignee', },
+            { label: 'workflow_createDate', prop: 'createDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { label: 'workflow_dueDate', prop: 'dueDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "dueDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_WORKFLOW_COMPLETE_TASK] : {
         columns: [
             { label: 'table_name', prop: 'businessKey', sortable: true },
             { label: 'workflow_workflow', prop: 'processDefinitionName' },
@@ -562,7 +636,7 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { pageSize: 20 }
     },
-    [TABLE.CLIENT_ACTIVE_TASK] : {
+    [TABLE.CLIENT_WORKFLOW_ACTIVE_TASK] : {
         columns: [
             { label: 'table_name', prop: 'businessKey' },
             { label: 'workflow_workflow', prop: 'processDefinitionName' },
