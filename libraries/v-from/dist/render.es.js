@@ -2406,11 +2406,11 @@ const _hoisted_2$g = ["title"];
 const _hoisted_3$e = ["title"];
 const _hoisted_4$7 = ["title"];
 const _hoisted_5$6 = ["title"];
-const _hoisted_6$5 = {
+const _hoisted_6$4 = {
   key: 1,
   class: "drag-handler background-opacity"
 };
-const _hoisted_7$5 = ["title"];
+const _hoisted_7$4 = ["title"];
 const _hoisted_8$2 = { key: 0 };
 function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_svg_icon = resolveComponent("svg-icon");
@@ -2455,12 +2455,12 @@ function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
           createVNode(_component_svg_icon, { "icon-class": "el-delete" })
         ], 8, _hoisted_5$6)
       ])) : createCommentVNode("", true),
-      $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_6$5, [
+      $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_6$4, [
         createElementVNode("i", {
           title: _ctx.$t("designer.hint.dragHandler")
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-drag-move" })
-        ], 8, _hoisted_7$5),
+        ], 8, _hoisted_7$4),
         createElementVNode("i", null, toDisplayString(_ctx.$t(`designer.widgetLabel.${$props.field.type}`, `extension.widgetLabel.${$props.field.type}`)), 1),
         $props.field.options.hidden === true ? (openBlock(), createElementBlock("i", _hoisted_8$2, [
           createVNode(_component_svg_icon, { "icon-class": "el-hide" })
@@ -4000,8 +4000,8 @@ const _hoisted_2$f = {
 const _hoisted_3$d = ["title"];
 const _hoisted_4$6 = ["title"];
 const _hoisted_5$5 = ["title"];
-const _hoisted_6$4 = ["title"];
-const _hoisted_7$4 = {
+const _hoisted_6$3 = ["title"];
+const _hoisted_7$3 = {
   key: 1,
   class: "drag-handler background-opacity"
 };
@@ -4101,9 +4101,9 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
           onClick: _cache[4] || (_cache[4] = withModifiers((...args) => $options.removeFieldWidget && $options.removeFieldWidget(...args), ["stop"]))
         }, [
           createVNode(_component_svg_icon, { "icon-class": "el-delete" })
-        ], 8, _hoisted_6$4)
+        ], 8, _hoisted_6$3)
       ])) : createCommentVNode("", true),
-      $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_7$4, [
+      $props.designer.selectedId === $props.field.id ? (openBlock(), createElementBlock("div", _hoisted_7$3, [
         createElementVNode("i", {
           title: _ctx.$t("designer.hint.dragHandler")
         }, [
@@ -4793,29 +4793,29 @@ const _sfc_main$A = {
       this.$message.warning(this.$t("render.hint.uploadExceed").replace("${uploadLimit}", uploadLimit));
     },
     beforeFileUpload(file) {
-      let fileTypeCheckResult = false;
-      let extFileName = file.name.substring(file.name.lastIndexOf(".") + 1);
-      if (!!this.field.options && !!this.field.options.fileTypes) {
-        let uploadFileTypes = this.field.options.fileTypes;
-        if (uploadFileTypes.length > 0) {
-          fileTypeCheckResult = uploadFileTypes.some((ft) => {
-            return extFileName.toLowerCase() === ft.toLowerCase();
-          });
+      if (!!this.field.options && !!this.field.options.fileTypes && this.field.options.fileTypes.length > 0) {
+        let fileTypeCheckResult = false;
+        let extFileName = file.name.substring(file.name.lastIndexOf(".") + 1);
+        if (!!this.field.options && !!this.field.options.fileTypes) {
+          let uploadFileTypes = this.field.options.fileTypes;
+          if (uploadFileTypes.length > 0) {
+            fileTypeCheckResult = uploadFileTypes.some((ft) => {
+              return extFileName.toLowerCase() === ft.toLowerCase();
+            });
+          }
+        }
+        if (!fileTypeCheckResult) {
+          this.$message.error(this.$t("render.hint.unsupportedFileType") + extFileName);
+          return false;
         }
       }
-      if (!fileTypeCheckResult) {
-        this.$message.error(this.$t("render.hint.unsupportedFileType") + extFileName);
-        return false;
-      }
       let fileSizeCheckResult = false;
-      let uploadFileMaxSize = 5;
-      if (!!this.field.options && !!this.field.options.fileMaxSize) {
-        uploadFileMaxSize = this.field.options.fileMaxSize;
-      }
-      fileSizeCheckResult = file.size / 1024 / 1024 <= uploadFileMaxSize;
-      if (!fileSizeCheckResult) {
-        this.$message.error(this.$t("render.hint.fileSizeExceed") + uploadFileMaxSize + "MB");
-        return false;
+      if (!!this.field.options.fileMaxSize) {
+        fileSizeCheckResult = file.size / 1024 / 1024 <= this.field.options.fileMaxSize;
+        if (!fileSizeCheckResult) {
+          this.$message.error(this.i18nt("render.hint.fileSizeExceed") + this.field.options.fileMaxSize + "MB");
+          return false;
+        }
       }
       this.uploadData.key = file.name;
       return this.handleOnBeforeUpload(file);
@@ -4908,20 +4908,22 @@ const _sfc_main$A = {
           type: "error"
         });
       }
+    },
+    handlePreview(file) {
+      this.emit$("filePreview", file);
+      this.dispatch("VFormRender", "filePreview", file);
     }
   }
 };
-const _withScopeId = (n) => (pushScopeId("data-v-31858f53"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-e611276e"), n = n(), popScopeId(), n);
 const _hoisted_1$j = {
   key: 0,
   class: "el-upload__tip"
 };
 const _hoisted_2$e = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ createElementVNode("i", { class: "el-icon-plus avatar-uploader-icon" }, null, -1));
 const _hoisted_3$c = { class: "upload-file-list" };
-const _hoisted_4$5 = ["title"];
-const _hoisted_5$4 = ["href"];
-const _hoisted_6$3 = ["title"];
-const _hoisted_7$3 = ["title", "onClick"];
+const _hoisted_4$5 = ["title", "onClick"];
+const _hoisted_5$4 = ["title", "onClick"];
 function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_svg_icon = resolveComponent("svg-icon");
   const _component_el_upload = resolveComponent("el-upload");
@@ -4942,6 +4944,7 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
       createVNode(_component_el_upload, {
         ref: "fieldEditor",
         disabled: $props.field.options.disabled,
+        name: "files",
         style: normalizeStyle($data.styleVariables),
         class: normalizeClass(["dynamicPseudoAfter", { "hideUploadDiv": $data.uploadBtnHidden }]),
         action: $props.field.options.uploadURL,
@@ -4968,20 +4971,9 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
           createElementVNode("div", _hoisted_3$c, [
             createElementVNode("span", {
               class: "upload-file-name",
-              title: file.name
+              title: file.name,
+              onClick: ($event) => $options.handlePreview(file)
             }, toDisplayString(file.name), 9, _hoisted_4$5),
-            createElementVNode("a", {
-              href: file.url,
-              download: "",
-              target: "_blank"
-            }, [
-              createElementVNode("span", {
-                class: "el-icon-download file-action",
-                title: _ctx.$t("render.hint.downloadFile")
-              }, [
-                createVNode(_component_svg_icon, { "icon-class": "el-download" })
-              ], 8, _hoisted_6$3)
-            ], 8, _hoisted_5$4),
             !$props.field.options.disabled ? (openBlock(), createElementBlock("span", {
               key: 0,
               class: "file-action",
@@ -4989,7 +4981,7 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
               onClick: ($event) => $options.removeUploadFile(file.name, file.url, file.uid)
             }, [
               createVNode(_component_svg_icon, { "icon-class": "el-delete" })
-            ], 8, _hoisted_7$3)) : createCommentVNode("", true)
+            ], 8, _hoisted_5$4)) : createCommentVNode("", true)
           ])
         ]),
         _: 1
@@ -4998,7 +4990,7 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$A, [["render", _sfc_render$A], ["__scopeId", "data-v-31858f53"]]);
+var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$A, [["render", _sfc_render$A], ["__scopeId", "data-v-e611276e"]]);
 var __glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": fileUploadWidget
@@ -5380,18 +5372,20 @@ const _sfc_main$w = {
       this.$message.warning(this.$t("render.hint.uploadExceed").replace("${uploadLimit}", uploadLimit));
     },
     beforePictureUpload(file) {
-      let fileTypeCheckResult = false;
-      if (!!this.field.options && !!this.field.options.fileTypes) {
-        let uploadFileTypes = this.field.options.fileTypes;
-        if (uploadFileTypes.length > 0) {
-          fileTypeCheckResult = uploadFileTypes.some((ft) => {
-            return file.type === "image/" + ft;
-          });
+      if (!!this.field.options && !!this.field.options.fileTypes && this.field.options.fileTypes.length > 0) {
+        let fileTypeCheckResult = false;
+        if (!!this.field.options && !!this.field.options.fileTypes) {
+          let uploadFileTypes = this.field.options.fileTypes;
+          if (uploadFileTypes.length > 0) {
+            fileTypeCheckResult = uploadFileTypes.some((ft) => {
+              return file.type === "image/" + ft;
+            });
+          }
         }
-      }
-      if (!fileTypeCheckResult) {
-        this.$message.error(this.$t("render.hint.unsupportedFileType") + file.type);
-        return false;
+        if (!fileTypeCheckResult) {
+          this.$message.error(this.$t("render.hint.unsupportedFileType") + file.type);
+          return false;
+        }
       }
       let fileSizeCheckResult = false;
       let uploadFileMaxSize = 5;
@@ -5528,6 +5522,7 @@ function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
       createVNode(_component_el_upload, {
         ref: "fieldEditor",
         disabled: $props.field.options.disabled,
+        name: "files",
         action: $props.field.options.uploadURL,
         headers: $data.uploadHeaders,
         data: $data.uploadData,
@@ -5591,7 +5586,7 @@ function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var pictureUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$w, [["render", _sfc_render$w], ["__scopeId", "data-v-5a7fa515"]]);
+var pictureUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$w, [["render", _sfc_render$w], ["__scopeId", "data-v-447e8418"]]);
 var __glob_0_12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": pictureUploadWidget
@@ -19253,6 +19248,7 @@ const _sfc_main$d = {
       }
       this.addFieldChangeEventHandler();
       this.addFieldValidateEventHandler();
+      this.addFilePreviewEventHandler();
       this.registerFormToRefList();
       this.handleOnCreated();
     },
@@ -19363,6 +19359,12 @@ const _sfc_main$d = {
       this.off$("fieldValidation");
       this.on$("fieldValidation", (fieldName) => {
         this.$refs.renderForm.validateField(fieldName);
+      });
+    },
+    addFilePreviewEventHandler() {
+      this.off$("filePreview");
+      this.on$("filePreview", (file) => {
+        this.$emit("filePreview", file);
       });
     },
     registerFormToRefList() {
@@ -19739,7 +19741,7 @@ function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["label-position", "size", "class", "label-width", "model"]);
 }
-var VFormRender = /* @__PURE__ */ _export_sfc$1(_sfc_main$d, [["render", _sfc_render$d], ["__scopeId", "data-v-fdbf1ac8"]]);
+var VFormRender = /* @__PURE__ */ _export_sfc$1(_sfc_main$d, [["render", _sfc_render$d], ["__scopeId", "data-v-cf2815f6"]]);
 var _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -19965,13 +19967,13 @@ function registerIcon(app) {
 if (typeof window !== "undefined") {
   let loadSvg = function() {
     var body = document.body;
-    var svgDom = document.getElementById("__svg__icons__dom__1679033397827__");
+    var svgDom = document.getElementById("__svg__icons__dom__1679275448419__");
     if (!svgDom) {
       svgDom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgDom.style.position = "absolute";
       svgDom.style.width = "0";
       svgDom.style.height = "0";
-      svgDom.id = "__svg__icons__dom__1679033397827__";
+      svgDom.id = "__svg__icons__dom__1679275448419__";
       svgDom.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       svgDom.setAttribute("xmlns:link", "http://www.w3.org/1999/xlink");
     }

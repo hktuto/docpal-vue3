@@ -1,7 +1,8 @@
 <template>
   <el-config-provider :locale="elLocale">
   <div id="app">
-    <VFormDesigner ref="vfDesignerRef" :global-dsv="globalDsv">
+    <VFormDesigner ref="vfDesignerRef" :global-dsv="globalDsv"
+    @file-preview="filePreview">
       <!--
       <template #customToolButtons>
         <el-button type="text" @click="doTest">测试btn</el-button>
@@ -49,8 +50,10 @@ export default {
     doTest() {
       let fieldList = this.$refs.vfDesignerRef.getFieldWidgets(null, true)
       console.log('test', fieldList)
+    },
+    filePreview(file){
+      console.log(45678789, file);
     }
-
   }
 }
 </script>

@@ -3,7 +3,7 @@
                      :parent-widget="parentWidget" :parent-list="parentList" :index-of-parent-list="indexOfParentList"
                      :sub-form-row-index="subFormRowIndex" :sub-form-col-index="subFormColIndex" :sub-form-row-id="subFormRowId">
     <!-- el-upload增加:name="field.options.name"后，会导致又拍云上传失败！故删除之！！ -->
-    <el-upload ref="fieldEditor" :disabled="field.options.disabled"
+    <el-upload ref="fieldEditor" :disabled="field.options.disabled" name="files"
                :action="field.options.uploadURL" :headers="uploadHeaders" :data="uploadData"
                :with-credentials="field.options.withCredentials"
                :multiple="field.options.multipleSelect" :file-list="fileList" :show-file-list="field.options.showFileList"
@@ -150,18 +150,20 @@
       },
 
       beforePictureUpload(file) {
-        let fileTypeCheckResult = false
-        if (!!this.field.options && !!this.field.options.fileTypes) {
-          let uploadFileTypes = this.field.options.fileTypes
-          if (uploadFileTypes.length > 0) {
-            fileTypeCheckResult = uploadFileTypes.some( (ft) => {
-              return file.type === 'image/' + ft
-            })
+        if (!!this.field.options && !!this.field.options.fileTypes && this.field.options.fileTypes.length > 0) {
+          let fileTypeCheckResult = false
+          if (!!this.field.options && !!this.field.options.fileTypes) {
+            let uploadFileTypes = this.field.options.fileTypes
+            if (uploadFileTypes.length > 0) {
+              fileTypeCheckResult = uploadFileTypes.some( (ft) => {
+                return file.type === 'image/' + ft
+              })
+            }
           }
-        }
-        if (!fileTypeCheckResult) {
-          this.$message.error(this.$t('render.hint.unsupportedFileType') + file.type)
-          return false;
+          if (!fileTypeCheckResult) {
+            this.$message.error(this.$t('render.hint.unsupportedFileType') + file.type)
+            return false;
+          }
         }
 
         let fileSizeCheckResult = false
