@@ -519,10 +519,11 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_All_TASK] : {
         columns: [
-            { id:1, label: 'table_name', prop: 'taskInstance.processDefinitionName' },
+            { id:1, label: 'table_name', prop: 'taskInstance.businessKey' },
             { id:2, label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
             { id:3, label: 'common_status', prop: 'name' },
             { id:4, label: 'workflow_assignee', prop: 'assignee', type: 'slot', slot: 'assignee' },
+            { id:7, label: 'workflow_startUser', prop: 'taskInstance.startUserId' },
             { id:5, label: 'workflow_createDate', prop: 'createDate', 
                 formatList: [
                     {
@@ -558,7 +559,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_MY_TASK] : {
         columns: [
-            { label: 'table_name', prop: 'taskInstance.processDefinitionName' },
+            { label: 'table_name', prop: 'taskInstance.businessKey' },
             { label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName'},
             { label: 'common_status', prop: 'name', },
             { label: 'workflow_assignee', prop: 'assignee', },

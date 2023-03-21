@@ -1,5 +1,5 @@
 <template>
-    <FromRenderer :class="{vformReadonly: readonly}" ref="FromRendererRef" :formJson="formJson" :data="formData"></FromRenderer>
+    <FromRenderer :class="{vformReadonly: state.readonly}" ref="FromRendererRef" :formJson="formJson" :data="formData"></FromRenderer>
 </template>
 
 <script lang="ts" setup>
@@ -10,7 +10,8 @@ const props = defineProps<{
 const state = reactive({
     formData: {}, 
     formJson: {},
-    writableIds: []
+    writableIds: [],
+    readonly: false
 })
 const FromRendererRef = ref()
 // #region module: set
@@ -100,11 +101,21 @@ const FromRendererRef = ref()
         return data
     }
 // #endregion
+// #region module:
+    function enableForm () {
+        state.readonly = false
+        FromRendererRef.value.vFormRenderRef.enableForm()
+    }
+    function disableForm () {
+        state.readonly = true
+        FromRendererRef.value.vFormRenderRef.disableForm()
+    }
+// #endregion
 onMounted(() => {
     
 })
 const { formData, formJson } = toRefs(state)
-defineExpose({ setForm, getFormData })
+defineExpose({ setForm, getFormData, disableForm, enableForm })
 </script>
 
 <style scoped>

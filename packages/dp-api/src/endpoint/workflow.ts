@@ -26,22 +26,27 @@ export const workflowFormSubmitApi = async(params: workflowFormReq) => {
 export const getTaskApi = async(taskId:string) => {
     return await api.post('/docpal/workflow/task', { taskId }).then(res => res.data);
 }
-/**
- * 
- * @param candidateOrAssigned user
- * @param cassignedUser personal
- *  @param interrelatedUserId active
- * @returns 
- */
 export const getMyTask = async(params: pageParams) =>{
     const res = await api.post('/docpal/workflow/tasks/personal', params).then(res => res.data);
     return { entryList: res.entryList || [], totalSize: res.totalSize }
 }
+export const taskClaimApi = async(taskId:string, userId:string) => {
+    return await api.post('/docpal/workflow/task/claim', { taskId, userId }).then(res => res.data);
+}
+export const taskUnClaimApi = async(taskId:string) => {
+    const response = await api.post('/docpal/workflow/task/unclaim', { taskId }).then(res => res.data);
+    return response
+}
+export const taskDeleteApi = async(processInstanceId:string, userId:string) => {
+    const response = await api.delete('/docpal/workflow/process/deleteProcessInstanceByCreator', { params:{ processInstanceId, userId } }).then(res => res.data);
+    return response
+}
+
 /**
  * 
  * @param candidateOrAssigned user
  * @param cassignedUser personal
- *  @param interrelatedUserId active
+ * @param interrelatedUserId active
  * @returns 
  */
 export const getAllTask = async(params: pageParams) =>{
