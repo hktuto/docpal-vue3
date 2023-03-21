@@ -17,10 +17,10 @@
                 <WorkflowDetailActivity :activityList="state.activityList" />
             </el-tab-pane>
             <el-tab-pane :label="$t('workflow_graph')" name="graph">
-                <WorkflowDetailGraph :processDefinitionId="taskDetail.processDefinitionId" :steps="getCurrentStep"/>
+                <WorkflowDetailGraph :processDefinitionId="taskDetail.taskInstance?.processDefinitionId" :steps="getCurrentStep"/>
             </el-tab-pane>
         </el-tabs>
-        <WorkflowDetailDiscussionChannel :id="route.params.id"/>
+        <WorkflowDetailDiscussionChannel :id="taskDetail.instanceId"/>
     </div>
 </NuxtLayout>
 </template>
