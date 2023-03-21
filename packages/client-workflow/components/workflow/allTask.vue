@@ -6,13 +6,20 @@
             <template #preSortButton>
                 <FromRenderer :form-json="formJson" @formChange="handleFormChange"/>
             </template>
-            </Table>
+            <template #assignee="{ row, index }">
+                <el-tag v-if="row.assignee" round>{{ row.assignee || ''}}</el-tag>
+                <el-button v-else  type="primary" size="small" round
+                        @click="claimTask(row)" >
+                        {{ $t('workflow_claim') }}
+                </el-button>
+            </template>
+    </Table>
 </template>
 
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { getAllTask, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { getAllTask, taskClaimApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const user = useUser();
 // #region module: page
@@ -22,8 +29,8 @@ const user = useUser();
         pageIndex: 0,
         pageSize: 20,
         candidateOrAssigned: user.user.value.userId || user.user.value.username,
-        interrelatedUserId: user.user.value.userId || user.user.value.username,
-        cassignedUser: user.user.value.userId || user.user.value.username,
+        // interrelatedUserId: user.user.value.userId || user.user.value.username,
+        // assignedUser: user.user.value.userId || user.user.value.username,
         // userId: user.user.value.userId || user.user.value.username
     }
     const state = reactive<State>({
@@ -83,6 +90,11 @@ const user = useUser();
 // #endregion
 function handleDblclick (row) {
     router.push(`/workflow/${row.id}?state=${state.tabName}`)
+}
+async function claimTask(row) {
+    console.log(row, 'claimTask');
+    await taskClaimApi(row.id, user.user.value.userId || user.user.value.username)
+    handlePaginationChange(pageParams.pageIndex)
 }
 onMounted(async() => {
     
