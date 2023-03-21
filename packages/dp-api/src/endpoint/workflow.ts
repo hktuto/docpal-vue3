@@ -7,7 +7,8 @@ import {
     workflowFormReq,
     workflowBpmnReq,
     workflowCommentSendReq,
-    fromPropertiesReq
+    fromPropertiesReq,
+    propertiesSaveReq
 } from '../model';
 
 export const getFormPropsApi = async(params: fromPropertiesReq):Promise<workflowProps[]> => {
@@ -79,6 +80,12 @@ export const getAdHocPageApi = async(param) => {
 }
 export const taskFormJsonGetApi = async(params) => {
     return await api.get('/docpal/relation/query', {params: params}).then(res => res.data);
+}
+export const propertiesSaveApi = async(params: propertiesSaveReq) => {
+    return await api.post('/docpal/workflow/properties/save', params).then(res => res.data);
+}
+export const propertiesSubmitApi = async(params: propertiesSaveReq) => {
+    return await api.post('/docpal/workflow/form/submit', params).then(res => res.data);
 }
 export const getActivityApi = async(processInstanceId:string) => {
     const response = await api.post('/docpal/workflow/history/activity', { processInstanceId, pageSize:-1 }).then(res => res.data);

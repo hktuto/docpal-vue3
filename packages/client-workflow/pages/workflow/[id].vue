@@ -6,12 +6,12 @@
             <WorkflowDetailInfo v-else :taskDetail="taskDetail" @change="handleTaskInfoChange"></WorkflowDetailInfo>
         </div>
         <el-tabs v-model="activeTab" class="grid-layout-tab" @tab-change="tabChange">
-            <el-tab-pane :label="$t('workflow_form')" name="form" v-loading="state.loading">
+            <el-tab-pane class="grid-layout-tab-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
                 <WorkflowDetailFormRender ref="vFormRef" />
-                <!-- <template v-if="submitShow">
-                    <Button @click="handleSave">{{$t('workflow_save')}}</Button>
-                    <Button type="primary" @click="handleSubmit">{{$t('common_submit')}}</Button>
-                </template> -->
+                <div class="grid-layout-tab-pane--btns" v-if="isAssigneeUser">
+                    <el-button @click="handleSave">{{$t('workflow_save')}}</el-button>
+                    <el-button type="primary" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+                </div>
             </el-tab-pane>
             <el-tab-pane :label="$t('workflow_activity')" name="activity">
                 <WorkflowDetailActivity :activityList="state.activityList" />
@@ -26,13 +26,16 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
     getTaskApi, // 获取未完成的任务详情
     historyProcessDetailGetApi, // 获取已完成的任务详情
     activeProcessDetailGetApi, // 获取参与中的任务详情
     getFormPropsApi,
     taskFormJsonGetApi,
-    getActivityApi
+    getActivityApi,
+    propertiesSaveApi,
+    propertiesSubmitApi
 } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
@@ -74,6 +77,11 @@ async function getDetail() {
         handleDisabledForm()
     }, 100)
 }
+const isAssigneeUser = computed(() => {
+    const userId = user.value.userId || user.value.username
+    const id = state.taskDetail.assignee
+    return id === userId
+})
 // #region module: form
     const vFormRef = ref()
     async function handleFormDataGet () {
@@ -118,6 +126,39 @@ async function getDetail() {
         if(userId !== state.taskDetail.assignee) {
             vFormRef.value.disableForm()
         }
+    }
+    async function handleSave () {
+        try {
+            const data = await vFormRef.value.getFormData(false)
+            state.loading = true
+            const param = {
+                taskId: route.params.id,
+                properties: { ...data },
+            }
+            await propertiesSaveApi(param)
+            ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
+            state.loading = false
+        } catch (error) {
+            ElMessage.error(error)
+        }
+    }
+    async function handleSubmit () {
+        state.loading = true
+        try {
+            const data = await vFormRef.value.getFormData(true, false)
+            if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
+            const param = {
+                taskId: route.params.id,
+                properties: { ...data },
+            }
+            const res = await propertiesSubmitApi(param)
+            if (res.errorCode) throw new Error(res.message || 'error');
+            ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
+            router.push(`/workflow?tab=${state.backState}`)
+        } catch (error) {
+            ElMessage.error(error.message)
+        }
+        state.loading = false
     }
 // #endregion
 // #region module: activity 
@@ -164,6 +205,15 @@ watch(() => route.query, (q) => {
     overflow: hidden;
     :deep(.el-tab-pane) {
         height: 100%;
+    }
+}
+.grid-layout-tab-pane {
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    &--btns {
+        box-shadow: var(--el-box-shadow-light);
+        padding: var(--app-padding);
+        text-align: right;
     }
 }
 </style>
