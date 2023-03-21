@@ -82,7 +82,13 @@ const FromRendererRef = ref()
         return dataDeArray(data)
     }
     function dataDeArray (formDatas: Object) {
-        const data = deepCopy(formDatas)
+        const data = Object.keys(formDatas).reduce((prev,key) => {
+            if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
+                prev[key] = formDatas[key]
+            }
+            return prev
+        }, {})
+        // const data = deepCopy(formDatas)
         Object.keys(data).forEach((key, _index) => {
             if (data[key] instanceof Array) {
             const idArrs = []

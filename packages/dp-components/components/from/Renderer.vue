@@ -28,6 +28,7 @@
         let st = JSON.stringify(json);
         st = st.replaceAll('this.$axios','$api');
         st = st.replaceAll('this.$cookies.get','$getCookie')
+        st = st.replaceAll('yyyy-MM-dd','YYYY-MM-DD')
         json = JSON.parse(st);
         console.log({json});
         

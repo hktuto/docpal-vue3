@@ -22,6 +22,10 @@ export type workflowFormReq = {
     taskId: string,
     properties: workflowFormProperties
 }
+export type propertiesSaveReq = {
+    taskId: string,
+    properties: any
+}
 export type workflowFormProperties = {
     approved: string,
 }
