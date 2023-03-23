@@ -62,7 +62,7 @@ const FromRendererRef = ref()
     }
 // #endregion
 // #region module: get
-    async function getFormData (needValidation = true, onlyWritable = true) {
+    async function getFormData (needValidation = true, onlyWritable = false) {
         let formData = {}
         if (!needValidation) formData = FromRendererRef.value.vFormRenderRef.getFormData(false)
         else formData = await FromRendererRef.value.vFormRenderRef.getFormData().then(res => {
@@ -71,6 +71,8 @@ const FromRendererRef = ref()
             return false
         })
         if(!formData) return false
+        console.log({formData});
+        
         return onlyWritable ? writableDataDeArray(formData) : dataDeArray(formData)
     }
 
@@ -86,6 +88,8 @@ const FromRendererRef = ref()
             if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
                 prev[key] = formDatas[key]
             }
+            console.log(formDatas[key], 'formDatas[key]');
+            
             return prev
         }, {})
         // const data = deepCopy(formDatas)

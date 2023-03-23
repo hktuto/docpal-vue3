@@ -111,6 +111,7 @@ import { log } from 'console';
     created() {
       /* 注意：子组件mounted在父组件created之后、父组件mounted之前触发，故子组件mounted需要用到的prop
          需要在父组件created中初始化！！ */
+      this.handleUploadHeaders()
       this.initFieldModel()
       this.registerToRefList()
       this.initEventHandler()
@@ -266,6 +267,21 @@ import { log } from 'console';
       handlePreview(file) {
         this.emit$('filePreview', file)
         this.dispatch('VFormRender', 'filePreview', file)
+      },
+      handleUploadHeaders() {
+        const cookieToken = this.getCookie('docpal-token');
+        if (cookieToken) this.uploadHeaders = { 'Authorization': `Bearer ${cookieToken}` }
+      },
+      getCookie(name) {
+        var strCookies = document.cookie;
+        var array = strCookies.split(';');
+        for (var i = 0; i < array.length; i++) {
+          var item = array[i].split("=");
+          if (item[0].replace(' ', '') === name) {
+              return item[1];
+          }
+        }
+        return null;
       }
     }
   }

@@ -127,6 +127,7 @@
     created() {
       /* 注意：子组件mounted在父组件created之后、父组件mounted之前触发，故子组件mounted需要用到的prop
          需要在父组件created中初始化！！ */
+      this.handleUploadHeaders()
       this.initFieldModel()
       this.registerToRefList()
       this.initEventHandler()
@@ -281,6 +282,21 @@
         this.previewIndex = this.previewList.indexOf(url)
         // 模拟点击 <el-image> 组件下的 img 标签（点击事件被绑定在的每张 img 上）
         this.$refs['imageRef'].$el.children[0].click()
+      },
+      handleUploadHeaders() {
+        const cookieToken = this.getCookie('docpal-token');
+        if (cookieToken) this.uploadHeaders = { 'Authorization': `Bearer ${cookieToken}` }
+      },
+      getCookie(name) {
+        var strCookies = document.cookie;
+        var array = strCookies.split(';');
+        for (var i = 0; i < array.length; i++) {
+          var item = array[i].split("=");
+          if (item[0].replace(' ', '') === name) {
+              return item[1];
+          }
+        }
+        return null;
       }
 
     }

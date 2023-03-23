@@ -34,3 +34,49 @@ export const alertSchema = {
     customClass: '',
   }
 }
+
+export const selectGroupSchema = {
+  type: 'select-group',
+  icon: 'select-group-field',
+  formItemFlag: true,
+  options: {
+    name: '',
+    label: '',
+    labelAlign: '',
+    defaultValue: '',
+    placeholder: '',
+    prefixIcon: '',
+    columnWidth: '200px',
+    size: '',
+    labelWidth: null,
+    labelHidden: false,
+    disabled: false,
+    hidden: false,
+    clearable: true,
+    filterable: false,
+    allowCreate: false,
+    remote: false,
+    automaticDropdown: false,  //自动下拉
+    multiple: false,
+    multipleLimit: 0,
+    optionItems: [
+    ],
+    required: false,
+    requiredHint: '',
+    validation: '',
+    validationHint: '',
+    //-------------------
+    customClass: '',  //自定义css类名
+    labelIconClass: null,
+    labelIconPosition: 'rear',
+    labelTooltip: null,
+    //-------------------
+    onCreated: '',
+    onMounted: '',
+    onRemoteQuery: '',
+    onChange: '',
+    onFocus: '',
+    onBlur: '',
+    onValidate: '',
+  }
+}
