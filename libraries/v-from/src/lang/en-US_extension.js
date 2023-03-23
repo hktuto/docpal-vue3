@@ -3,6 +3,7 @@ export default {
     widgetLabel: {
       card: 'Card',
       alert: 'Alert',
+      'select-group': 'Select Group',
     },
 
     setting: {

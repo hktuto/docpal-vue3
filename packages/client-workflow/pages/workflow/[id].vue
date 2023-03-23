@@ -129,7 +129,7 @@ const isAssigneeUser = computed(() => {
     }
     async function handleSave () {
         try {
-            const data = await vFormRef.value.getFormData(false)
+            const data = await vFormRef.value.getFormData(false, false)
             state.loading = true
             const param = {
                 taskId: route.params.id,

@@ -3,6 +3,7 @@ export default {
     widgetLabel: {
       card: '卡片',
       alert: '提示',
+      'select-group': '分组选项',
     },
 
     setting: {

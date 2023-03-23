@@ -13,13 +13,34 @@ import CardItem from '@/extension/samples/card/card-item'
 import {registerCWGenerator} from '@/utils/sfc-generator'
 import {cardTemplateGenerator} from '@/extension/samples/extension-sfc-generator'
 
+import { selectGroupSchema } from "@/extension/samples/extension-schema"
+import SelectGroupWidget from '@/extension/samples/selectGroup/select-group-widget'
+import {selectGroupGenerator} from '@/extension/samples/extension-sfc-generator'
+
 import {alertSchema} from "@/extension/samples/extension-schema"
 import AlertWidget from '@/extension/samples/alert/alert-widget'
 import {registerFWGenerator} from '@/utils/sfc-generator'
 import {alertTemplateGenerator} from '@/extension/samples/extension-sfc-generator'
 
 export const loadExtension = function (app) {
-
+    loadCard(app)
+    loadAlertWidget(app)
+    loadSelectGroupWidget(app)
+}
+const loadSelectGroupWidget = (app) => {
+    /**
+   * 加载字段组件步骤：
+   * 1. 加载组件Json Schema;
+   * 2. 全局注册字段组件，字段组件设计期和运行期共用，故需要仅需注册一个组件；
+   * 3. 全局注册属性编辑器组件（基本属性、高级属性、事件属性）；
+   * 4. 注册字段组件的代码生成器；
+   * 5. 加载完毕。
+   */
+    addCustomWidgetSchema(selectGroupSchema)  //加载组件Json Schema
+    app.component(SelectGroupWidget.name, SelectGroupWidget)  //注册组件
+    registerFWGenerator('selectGroup', selectGroupGenerator)  //注册字段组件的代码生成器
+}
+const loadCard = (app) => {
   /**
    * 加载容器组件步骤：
    * 1. 加载组件Json Schema;
@@ -54,8 +75,9 @@ export const loadExtension = function (app) {
   registerCWGenerator('card', cardTemplateGenerator)  //注册容器组件的代码生成器
   /* -------------------------------------------------- */
   /* 容器组件加载完毕 end */
-
-  /**
+}
+const loadAlertWidget = (app) => {
+    /**
    * 加载字段组件步骤：
    * 1. 加载组件Json Schema;
    * 2. 全局注册字段组件，字段组件设计期和运行期共用，故仅需注册一个组件；

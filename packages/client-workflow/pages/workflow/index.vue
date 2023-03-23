@@ -1,6 +1,7 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
     <div class="buttons--absolute">
+        <WorkflowPopoverPersonal />
         <WorkflowPopoverNewTask @created="tabChange(activeTab)"/>
     </div>
     <el-tabs v-model="activeTab" class="grid-layout" @tab-change="tabChange">
