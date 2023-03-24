@@ -432,7 +432,7 @@ const basicFields = [
       label: "",
       labelAlign: "",
       type: "date",
-      defaultValue: null,
+      defaultValue: "",
       placeholder: "",
       columnWidth: "200px",
       size: "",
@@ -444,8 +444,9 @@ const basicFields = [
       hidden: false,
       clearable: true,
       editable: false,
-      format: "YYYY-MM-DD",
-      valueFormat: "YYYY-MM-DD",
+      format: "YYYY-MM-DD HH:mm",
+      valueFormat: "YYYY-MM-DD HH:mm",
+      defaultTime: "2000-01-01 00:00:00",
       required: false,
       requiredHint: "",
       validation: "",
@@ -485,7 +486,8 @@ const basicFields = [
       clearable: true,
       editable: false,
       format: "YYYY-MM-DD",
-      valueFormat: "YYYY-MM-DD",
+      valueFormat: "YYYY-MM-DD HH:mm",
+      defaultTime: ["2000-01-01 00:00:00", "2000-01-01 23:59:00"],
       required: false,
       requiredHint: "",
       validation: "",
@@ -5919,18 +5921,19 @@ function _sfc_render$2Z(_ctx, _cache, $props, $setup, $data, $options) {
           editable: $props.field.options.editable,
           format: $props.field.options.format,
           "value-format": $props.field.options.valueFormat,
+          "default-time": $props.field.options.defaultTime,
           "start-placeholder": $props.field.options.startPlaceholder || _ctx.$t("render.hint.startDatePlaceholder"),
           "end-placeholder": $props.field.options.endPlaceholder || _ctx.$t("render.hint.endDatePlaceholder"),
           onFocus: _ctx.handleFocusCustomEvent,
           onBlur: _ctx.handleBlurCustomEvent,
           onChange: _ctx.handleChangeEvent
-        }, null, 8, ["type", "modelValue", "disabled", "readonly", "size", "clearable", "editable", "format", "value-format", "start-placeholder", "end-placeholder", "onFocus", "onBlur", "onChange"])
+        }, null, 8, ["type", "modelValue", "disabled", "readonly", "size", "clearable", "editable", "format", "value-format", "default-time", "start-placeholder", "end-placeholder", "onFocus", "onBlur", "onChange"])
       ], 2)
     ]),
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var dateRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$2Z, [["render", _sfc_render$2Z], ["__scopeId", "data-v-7ee1c99a"]]);
+var dateRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$2Z, [["render", _sfc_render$2Z], ["__scopeId", "data-v-3a8016d4"]]);
 var __glob_0_4$3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": dateRangeWidget
@@ -6020,16 +6023,17 @@ function _sfc_render$2Y(_ctx, _cache, $props, $setup, $data, $options) {
         editable: $props.field.options.editable,
         format: $props.field.options.format,
         "value-format": $props.field.options.valueFormat,
+        "default-time": $props.field.options.defaultTime,
         placeholder: $props.field.options.placeholder || _ctx.$t("render.hint.datePlaceholder"),
         onFocus: _ctx.handleFocusCustomEvent,
         onBlur: _ctx.handleBlurCustomEvent,
         onChange: _ctx.handleChangeEvent
-      }, null, 8, ["type", "modelValue", "class", "readonly", "disabled", "size", "clearable", "editable", "format", "value-format", "placeholder", "onFocus", "onBlur", "onChange"])
+      }, null, 8, ["type", "modelValue", "class", "readonly", "disabled", "size", "clearable", "editable", "format", "value-format", "default-time", "placeholder", "onFocus", "onBlur", "onChange"])
     ]),
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var dateWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$2Y, [["render", _sfc_render$2Y], ["__scopeId", "data-v-c56361fa"]]);
+var dateWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$2Y, [["render", _sfc_render$2Y], ["__scopeId", "data-v-875ea7ee"]]);
 var __glob_0_5$3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": dateWidget
@@ -6325,7 +6329,7 @@ const _sfc_main$2W = {
     }
   }
 };
-const _withScopeId$3 = (n) => (pushScopeId("data-v-54edcc92"), n = n(), popScopeId(), n);
+const _withScopeId$3 = (n) => (pushScopeId("data-v-2557ce3b"), n = n(), popScopeId(), n);
 const _hoisted_1$A = {
   key: 0,
   class: "el-upload__tip"
@@ -6400,7 +6404,7 @@ function _sfc_render$2W(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$2W, [["render", _sfc_render$2W], ["__scopeId", "data-v-54edcc92"]]);
+var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$2W, [["render", _sfc_render$2W], ["__scopeId", "data-v-2557ce3b"]]);
 var __glob_0_7$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": fileUploadWidget
@@ -60360,13 +60364,13 @@ function registerIcon(app) {
 if (typeof window !== "undefined") {
   let loadSvg = function() {
     var body = document.body;
-    var svgDom = document.getElementById("__svg__icons__dom__1679532097842__");
+    var svgDom = document.getElementById("__svg__icons__dom__1679636387204__");
     if (!svgDom) {
       svgDom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgDom.style.position = "absolute";
       svgDom.style.width = "0";
       svgDom.style.height = "0";
-      svgDom.id = "__svg__icons__dom__1679532097842__";
+      svgDom.id = "__svg__icons__dom__1679636387204__";
       svgDom.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       svgDom.setAttribute("xmlns:link", "http://www.w3.org/1999/xlink");
     }

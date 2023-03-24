@@ -8,6 +8,7 @@
                       :size="widgetSize"
                       :clearable="field.options.clearable" :editable="field.options.editable"
                       :format="field.options.format" :value-format="field.options.valueFormat"
+                      :default-time="field.options.defaultTime"
                       :start-placeholder="field.options.startPlaceholder || $t('render.hint.startDatePlaceholder')"
                       :end-placeholder="field.options.endPlaceholder || $t('render.hint.endDatePlaceholder')"
                       @focus="handleFocusCustomEvent" @blur="handleBlurCustomEvent"

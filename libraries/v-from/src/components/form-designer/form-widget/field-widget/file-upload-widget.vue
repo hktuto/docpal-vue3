@@ -41,7 +41,6 @@
   import {deepClone} from "@/utils/util";
   import fieldMixin from "@/components/form-designer/form-widget/field-widget/fieldMixin";
   import SvgIcon from "@/components/svg-icon/index";
-import { log } from 'console';
 
   let selectFileText = "'" + translate('render.hint.selectFile') + "'"
 

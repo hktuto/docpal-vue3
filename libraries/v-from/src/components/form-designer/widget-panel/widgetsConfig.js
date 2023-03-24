@@ -445,7 +445,7 @@ export const basicFields = [
       label: '',
       labelAlign: '',
       type: 'date',
-      defaultValue: null,
+      defaultValue: '',
       placeholder: '',
       columnWidth: '200px',
       size: '',
@@ -457,8 +457,9 @@ export const basicFields = [
       hidden: false,
       clearable: true,
       editable: false,
-      format: 'YYYY-MM-DD',  //日期显示格式
-      valueFormat: 'YYYY-MM-DD',  //日期对象格式
+      format: 'YYYY-MM-DD HH:mm',  //日期显示格式
+      valueFormat: 'YYYY-MM-DD HH:mm',  //日期对象格式
+      defaultTime: '2000-01-01 00:00:00',
       required: false,
       requiredHint: '',
       validation: '',
@@ -501,7 +502,8 @@ export const basicFields = [
       clearable: true,
       editable: false,
       format: 'YYYY-MM-DD',  //日期显示格式
-      valueFormat: 'YYYY-MM-DD',  //日期对象格式
+      valueFormat: 'YYYY-MM-DD HH:mm',  //日期对象格式
+      defaultTime: ['2000-01-01 00:00:00','2000-01-01 23:59:00'],
       required: false,
       requiredHint: '',
       validation: '',

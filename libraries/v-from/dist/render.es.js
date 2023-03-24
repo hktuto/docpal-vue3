@@ -4528,18 +4528,19 @@ function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
           editable: $props.field.options.editable,
           format: $props.field.options.format,
           "value-format": $props.field.options.valueFormat,
+          "default-time": $props.field.options.defaultTime,
           "start-placeholder": $props.field.options.startPlaceholder || _ctx.$t("render.hint.startDatePlaceholder"),
           "end-placeholder": $props.field.options.endPlaceholder || _ctx.$t("render.hint.endDatePlaceholder"),
           onFocus: _ctx.handleFocusCustomEvent,
           onBlur: _ctx.handleBlurCustomEvent,
           onChange: _ctx.handleChangeEvent
-        }, null, 8, ["type", "modelValue", "disabled", "readonly", "size", "clearable", "editable", "format", "value-format", "start-placeholder", "end-placeholder", "onFocus", "onBlur", "onChange"])
+        }, null, 8, ["type", "modelValue", "disabled", "readonly", "size", "clearable", "editable", "format", "value-format", "default-time", "start-placeholder", "end-placeholder", "onFocus", "onBlur", "onChange"])
       ], 2)
     ]),
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var dateRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$E, [["render", _sfc_render$E], ["__scopeId", "data-v-7ee1c99a"]]);
+var dateRangeWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$E, [["render", _sfc_render$E], ["__scopeId", "data-v-3a8016d4"]]);
 var __glob_0_4$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": dateRangeWidget
@@ -4629,16 +4630,17 @@ function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
         editable: $props.field.options.editable,
         format: $props.field.options.format,
         "value-format": $props.field.options.valueFormat,
+        "default-time": $props.field.options.defaultTime,
         placeholder: $props.field.options.placeholder || _ctx.$t("render.hint.datePlaceholder"),
         onFocus: _ctx.handleFocusCustomEvent,
         onBlur: _ctx.handleBlurCustomEvent,
         onChange: _ctx.handleChangeEvent
-      }, null, 8, ["type", "modelValue", "class", "readonly", "disabled", "size", "clearable", "editable", "format", "value-format", "placeholder", "onFocus", "onBlur", "onChange"])
+      }, null, 8, ["type", "modelValue", "class", "readonly", "disabled", "size", "clearable", "editable", "format", "value-format", "default-time", "placeholder", "onFocus", "onBlur", "onChange"])
     ]),
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var dateWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$D, [["render", _sfc_render$D], ["__scopeId", "data-v-c56361fa"]]);
+var dateWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$D, [["render", _sfc_render$D], ["__scopeId", "data-v-875ea7ee"]]);
 var __glob_0_5$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": dateWidget
@@ -4934,7 +4936,7 @@ const _sfc_main$B = {
     }
   }
 };
-const _withScopeId = (n) => (pushScopeId("data-v-54edcc92"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-2557ce3b"), n = n(), popScopeId(), n);
 const _hoisted_1$j = {
   key: 0,
   class: "el-upload__tip"
@@ -5009,7 +5011,7 @@ function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$B, [["render", _sfc_render$B], ["__scopeId", "data-v-54edcc92"]]);
+var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$B, [["render", _sfc_render$B], ["__scopeId", "data-v-2557ce3b"]]);
 var __glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": fileUploadWidget
@@ -20003,13 +20005,13 @@ function registerIcon(app) {
 if (typeof window !== "undefined") {
   let loadSvg = function() {
     var body = document.body;
-    var svgDom = document.getElementById("__svg__icons__dom__1679532109345__");
+    var svgDom = document.getElementById("__svg__icons__dom__1679636397520__");
     if (!svgDom) {
       svgDom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgDom.style.position = "absolute";
       svgDom.style.width = "0";
       svgDom.style.height = "0";
-      svgDom.id = "__svg__icons__dom__1679532109345__";
+      svgDom.id = "__svg__icons__dom__1679636397520__";
       svgDom.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       svgDom.setAttribute("xmlns:link", "http://www.w3.org/1999/xlink");
     }
