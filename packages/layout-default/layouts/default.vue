@@ -1,5 +1,6 @@
 <template>
     <div id="pageContainer" :style="`--mouse-x:${x}px; --mouse-y:${y}px;`">
+        <div id="fullPage"></div>
         <div id="sidebarContainer">
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
@@ -173,5 +174,11 @@ const { x, y } = useMouse()
   &.withPadding #mainContent {
     padding: calc(var(--app-padding) * 2);
   }
+}
+
+#fullPage{
+  position: fixed;
+  left: 0;
+  top: 0;
 }
 </style>

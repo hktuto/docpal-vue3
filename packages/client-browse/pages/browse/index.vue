@@ -6,9 +6,10 @@
             <BrowseTable :path="routePath" :doc="data"/>
         </div>
         <SvgIconSelector v-model:src="icon" />
-        <template v-if="data && !data.isFolder">
+
+        <Teleport v-if="data && !data.isFolder" to="body">
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" />
-        </template>
+        </Teleport>
         </page-container>
     </NuxtLayout>
 </template>

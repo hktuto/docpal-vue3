@@ -85,7 +85,6 @@ class InkEditor extends AnnotationEditor {
     this.translationX = this.translationY = 0;
     this.x = 0;
     this.y = 0;
-    console.log("constructor ink", params);
   }
 
   static initialize(l10n) {
@@ -491,6 +490,15 @@ class InkEditor extends AnnotationEditor {
     for (const path of this.bezierPath2D) {
       ctx.stroke(path);
     }
+    console.log({
+      paths: this.paths,
+      color: this.color,
+      opacity: this.opacity,
+      pageDimensions: this.pageDimensions,
+      pageIndex: this.pageIndex,
+      bezierPath2D: this.bezierPath2D,
+    });
+    // console.log("redraw,", this);
   }
 
   /**
