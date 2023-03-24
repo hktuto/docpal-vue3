@@ -357,6 +357,7 @@ class AnnotationEditorLayer {
       case AnnotationEditorType.FREETEXT:
         return new FreeTextEditor(params);
       case AnnotationEditorType.INK:
+        console.log("create Ink :", params);
         return new InkEditor(params);
     }
     return null;

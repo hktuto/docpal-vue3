@@ -2,9 +2,9 @@
     <div class="browseDetailContainer">
         <div v-if="show" class="dialog">
             <div class="header">
-                <div class="headerLeft"></div>
+                <div id="fileDetailHeaderLeft" class="headerLeft"></div>
                 <div class="fileName">{{ doc.name }}</div>
-                <div class="headerRight"></div>
+                <div id="fileDetailHeaderRight" class="headerRight"></div>
             </div>
             <div class="content">
                 <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc"  />
@@ -29,14 +29,14 @@ const blobData = ref();
 const readerType = computed(() => {
     const properties = props.doc?.properties
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
-    if(!mineType) return "unknown";
+    // if(!mineType) return "unknown";
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text')  ) {
         return 'pdf';
     }
     if(mineType.includes('video')) {
         return 'video';
     }
-    return 'unknown';
+    return 'pdf';
 });
 
 onKeyStroke("Escape", (e) => {
@@ -80,7 +80,8 @@ onKeyStroke("Escape", (e) => {
     border-bottom: 1px soild var(--el-text-color-regular);
 }
 .fileName{
-    font-size: var(--el-font-size-extra-large);
+    font-size: var(--el-font-size-large);
     text-align: center;
+    color: var(--color-grey-0000);
 }
 </style>
