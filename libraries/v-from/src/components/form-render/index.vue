@@ -164,6 +164,7 @@
         }
         this.addFieldChangeEventHandler()
         this.addFieldValidateEventHandler()
+        this.addFilePreviewEventHandler()
         this.registerFormToRefList()
         this.handleOnCreated()
       },
@@ -287,6 +288,12 @@
         this.off$('fieldValidation')  //移除原有事件监听
         this.on$('fieldValidation', (fieldName) => {
           this.$refs.renderForm.validateField(fieldName)
+        })
+      },
+      addFilePreviewEventHandler() {
+        this.off$('filePreview')  //移除原有事件监听
+        this.on$('filePreview', (file) => {
+          this.$emit('filePreview', file)
         })
       },
 

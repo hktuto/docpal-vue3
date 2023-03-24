@@ -3,7 +3,7 @@
                      :parent-widget="parentWidget" :parent-list="parentList" :index-of-parent-list="indexOfParentList"
                      :sub-form-row-index="subFormRowIndex" :sub-form-col-index="subFormColIndex" :sub-form-row-id="subFormRowId">
     <!-- el-upload增加:name="field.options.name"后，会导致又拍云上传失败！故删除之！！ -->
-    <el-upload ref="fieldEditor" :disabled="field.options.disabled"
+    <el-upload ref="fieldEditor" :disabled="field.options.disabled" name="files"
                :action="field.options.uploadURL" :headers="uploadHeaders" :data="uploadData"
                :with-credentials="field.options.withCredentials"
                :multiple="field.options.multipleSelect" :file-list="fileList" :show-file-list="field.options.showFileList"
@@ -127,6 +127,7 @@
     created() {
       /* 注意：子组件mounted在父组件created之后、父组件mounted之前触发，故子组件mounted需要用到的prop
          需要在父组件created中初始化！！ */
+      this.handleUploadHeaders()
       this.initFieldModel()
       this.registerToRefList()
       this.initEventHandler()
@@ -150,18 +151,20 @@
       },
 
       beforePictureUpload(file) {
-        let fileTypeCheckResult = false
-        if (!!this.field.options && !!this.field.options.fileTypes) {
-          let uploadFileTypes = this.field.options.fileTypes
-          if (uploadFileTypes.length > 0) {
-            fileTypeCheckResult = uploadFileTypes.some( (ft) => {
-              return file.type === 'image/' + ft
-            })
+        if (!!this.field.options && !!this.field.options.fileTypes && this.field.options.fileTypes.length > 0) {
+          let fileTypeCheckResult = false
+          if (!!this.field.options && !!this.field.options.fileTypes) {
+            let uploadFileTypes = this.field.options.fileTypes
+            if (uploadFileTypes.length > 0) {
+              fileTypeCheckResult = uploadFileTypes.some( (ft) => {
+                return file.type === 'image/' + ft
+              })
+            }
           }
-        }
-        if (!fileTypeCheckResult) {
-          this.$message.error(this.$t('render.hint.unsupportedFileType') + file.type)
-          return false;
+          if (!fileTypeCheckResult) {
+            this.$message.error(this.$t('render.hint.unsupportedFileType') + file.type)
+            return false;
+          }
         }
 
         let fileSizeCheckResult = false
@@ -279,6 +282,21 @@
         this.previewIndex = this.previewList.indexOf(url)
         // 模拟点击 <el-image> 组件下的 img 标签（点击事件被绑定在的每张 img 上）
         this.$refs['imageRef'].$el.children[0].click()
+      },
+      handleUploadHeaders() {
+        const cookieToken = this.getCookie('docpal-token');
+        if (cookieToken) this.uploadHeaders = { 'Authorization': `Bearer ${cookieToken}` }
+      },
+      getCookie(name) {
+        var strCookies = document.cookie;
+        var array = strCookies.split(';');
+        for (var i = 0; i < array.length; i++) {
+          var item = array[i].split("=");
+          if (item[0].replace(' ', '') === name) {
+              return item[1];
+          }
+        }
+        return null;
       }
 
     }

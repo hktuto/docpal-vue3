@@ -38,7 +38,7 @@ const user = useUser();
         extraParams: {},
         tabName: 'completeTask'
     })
-    const tableKey = TABLE.CLIENT_COMPLETE_TASK
+    const tableKey = TABLE.CLIENT_WORKFLOW_COMPLETE_TASK
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {

@@ -1,15 +1,15 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
     <div class="buttons--absolute">
-        <WorkflowPopoverNewTask />
+        <WorkflowPopoverPersonal />
+        <WorkflowPopoverNewTask @created="tabChange(activeTab)"/>
     </div>
     <el-tabs v-model="activeTab" class="grid-layout" @tab-change="tabChange">
         <el-tab-pane :label="$t('workflow_allTask')" name="allTask">
-            <div>allTask
-            </div>
+            <WorkflowAllTask v-if="activeTab === 'allTask'"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_myTask')" name="myTask">
-            <div>myTask</div>
+            <WorkflowMyTask v-if="activeTab === 'myTask'"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_completedTask')" name="completeTask">
             <WorkflowCompleteTask v-if="activeTab === 'completeTask'"/>
@@ -33,10 +33,17 @@ const state = reactive({
 })
 const { activeTab } = toRefs(state)
 function tabChange (tab) {
-    router.push({query: { tab }})
+    const refreshList = ['allTask', 'myTask', 'activeTask']
+    if(refreshList.includes(tab)) {
+        const time = new Date().valueOf().toString()
+        router.push({query: { tab, time }})
+    } else {
+        router.push({query: { tab }})
+    }
 }
-watch(() => route.query.tab, (newTab) => {
-    state.activeTab = newTab
+watch(() => route.query, (q) => {
+    if(!q.tab) q.tab = 'myTask'
+    state.activeTab = q.tab
 }, { immediate: true })
 </script>
 

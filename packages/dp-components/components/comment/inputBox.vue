@@ -39,7 +39,10 @@ function handleAdd () {
     }
     if (state.loading) return
     state.loading = true
-    emit('handleAdd', state._text, () => { state.loading = false })
+    emit('handleAdd', state._text, () => { 
+        state._text = ''
+        state.loading = false
+    })
 }
 const { _text, loading } = toRefs(state)
 watch(() => props.text, (newValue) => {

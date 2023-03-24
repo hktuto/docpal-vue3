@@ -31,7 +31,7 @@ export const useTableHelper = () => {
                 format: 'string'
             },
             fun(time:string = '', params:any){
-                if(!time) return ''
+                if(!time) return '-'
                 if(!params.format) params.format = 'YYYY-MM-DD HH:mm'
                 return dayjs(time).format( params.format)
             }
@@ -210,6 +210,6 @@ export const useTableHelper = () => {
 export default useTableHelper
 
 export const formatDate = (time:any, format="YYYY-MM-DD HH:mm") => {
-    if (!time) return ''
+    if (!time) return '-'
     return dayjs(time).format(format)
 }

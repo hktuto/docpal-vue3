@@ -50,3 +50,7 @@ export const alertTemplateGenerator = function(fw, formConfig) {
 
   return alertTemplate
 }
+export const selectGroupGenerator= function(fw, formConfig) {
+  return ''
+}
+

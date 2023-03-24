@@ -43,7 +43,7 @@ const user = useUser();
         },
         extraParams: {}
     })
-    const tableKey = TABLE.CLIENT_COMPLETE_TASK
+    const tableKey = TABLE.CLIENT_WORKFLOW_COMPLETE_TASK
     const tableSetting = ref(defaultTableSetting[tableKey])
 
     async function getList (param) {

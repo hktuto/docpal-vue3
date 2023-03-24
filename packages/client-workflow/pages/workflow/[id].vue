@@ -1,34 +1,46 @@
 <template>
 <NuxtLayout class="fit-height withPadding " :backPath="`/workflow?tab=${backState}`">
     <div class="grid-layout">
-        <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>
-        <WorkflowDetailInfo v-else :taskDetail="taskDetail"></WorkflowDetailInfo>
+        <div>
+            <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>
+            <WorkflowDetailInfo v-else :taskDetail="taskDetail" @change="handleTaskInfoChange"></WorkflowDetailInfo>
+        </div>
         <el-tabs v-model="activeTab" class="grid-layout-tab" @tab-change="tabChange">
-            <el-tab-pane :label="$t('workflow_form')" name="form" v-loading="state.loading">
+            <el-tab-pane class="grid-layout-tab-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
                 <WorkflowDetailFormRender ref="vFormRef" />
+                <div class="grid-layout-tab-pane--btns" v-if="isAssigneeUser">
+                    <el-button @click="handleSave">{{$t('workflow_save')}}</el-button>
+                    <el-button type="primary" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+                </div>
             </el-tab-pane>
             <el-tab-pane :label="$t('workflow_activity')" name="activity">
                 <WorkflowDetailActivity :activityList="state.activityList" />
             </el-tab-pane>
             <el-tab-pane :label="$t('workflow_graph')" name="graph">
-                <WorkflowDetailGraph :processDefinitionId="taskDetail.processDefinitionId" :steps="getCurrentStep"/>
+                <WorkflowDetailGraph :processDefinitionId="taskDetail.taskInstance?.processDefinitionId" :steps="getCurrentStep"/>
             </el-tab-pane>
         </el-tabs>
-        <WorkflowDetailDiscussionChannel :id="route.params.id"/>
+        <WorkflowDetailDiscussionChannel :id="taskDetail.instanceId"/>
     </div>
 </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
     getTaskApi, // 获取未完成的任务详情
     historyProcessDetailGetApi, // 获取已完成的任务详情
     activeProcessDetailGetApi, // 获取参与中的任务详情
+    getFormPropsApi,
     taskFormJsonGetApi,
-    getActivityApi
+    getActivityApi,
+    propertiesSaveApi,
+    propertiesSubmitApi
 } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
+const userStore = useUser();
+const { user } = toRefs(userStore)
 const state = reactive({
     backState: route.query.state,
     processState: {
@@ -39,6 +51,7 @@ const state = reactive({
     taskDetail: {},
     activityList: [],
     loading: false,
+    submitShow: false
 })
 const { activeTab, backState, taskDetail, form } = toRefs(state)
 function tabChange (tab) {
@@ -56,25 +69,37 @@ async function getDetail() {
         default:
             state.taskDetail = await getTaskApi(processInstanceId)
     }
-    handleGetActivity(processInstanceId)
+    handleGetActivity(state.taskDetail.instanceId)
     setTimeout(async() => {
         state.loading = true
         await handleFormDataGet()
         state.loading = false
+        handleDisabledForm()
     }, 100)
-
 }
+const isAssigneeUser = computed(() => {
+    const userId = user.value.userId || user.value.username
+    const id = state.taskDetail.assignee
+    return id === userId
+})
 // #region module: form
     const vFormRef = ref()
     async function handleFormDataGet () {
+        let formJson
+        let formData
         switch(state.backState) {
             case state.processState.completeTask:
             case state.processState.activeTask:
-                const formData = formDataGet(state.taskDetail.processVariables)
-                const formJson = await formJsonGet('complete', state.taskDetail.processDefinitionKey)
+                formData = formDataGet(state.taskDetail.processVariables)
+                formJson = await formJsonGet('complete', state.taskDetail.processDefinitionKey)
                 vFormRef.value.setForm(formJson, formData)
                 break
             default:
+                const properties = await getFormPropsApi({ taskId: route.params.id })
+                formData = formDataGetFromProps(properties)
+                formJson = await formJsonGet(state.taskDetail.taskDefinitionKey,
+                                state.taskDetail.taskInstance.processDefinitionKey)
+                vFormRef.value.setForm(formJson, formData)
                 break
         }
     }
@@ -84,11 +109,56 @@ async function getDetail() {
                     return prev
                 }, {})
     }
+    function formDataGetFromProps (list) {
+        return list.reduce((prev, item) => {
+                    prev[item.id] = item.value
+                    return prev
+                }, {})
+    }
     async function formJsonGet (userTaskId:string, processKey:string) {
         const response = await taskFormJsonGetApi({userTaskId, processKey})
         if (!response.data[0] ||
             response.data[0] && !response.data[0].jsonValue) return {}
         return JSON.parse(response.data[0].jsonValue)
+    }
+    function handleDisabledForm() {
+        const userId = user.value.userId || user.value.username
+        if(userId !== state.taskDetail.assignee) {
+            vFormRef.value.disableForm()
+        }
+    }
+    async function handleSave () {
+        try {
+            const data = await vFormRef.value.getFormData(false, false)
+            state.loading = true
+            const param = {
+                taskId: route.params.id,
+                properties: { ...data },
+            }
+            await propertiesSaveApi(param)
+            ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
+            state.loading = false
+        } catch (error) {
+            ElMessage.error(error)
+        }
+    }
+    async function handleSubmit () {
+        state.loading = true
+        try {
+            const data = await vFormRef.value.getFormData(true, false)
+            if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
+            const param = {
+                taskId: route.params.id,
+                properties: { ...data },
+            }
+            const res = await propertiesSubmitApi(param)
+            if (res.errorCode) throw new Error(res.message || 'error');
+            ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
+            router.push(`/workflow?tab=${state.backState}`)
+        } catch (error) {
+            ElMessage.error(error.message)
+        }
+        state.loading = false
     }
 // #endregion
 // #region module: activity 
@@ -99,6 +169,19 @@ async function getDetail() {
 // #region module: graph
     const getCurrentStep = computed(() => state.activityList.map( activity => activity.originalPersistentState.activityId))
 // #endregion
+
+ // taskClaim后 处理taskDetail并重新请求getActivity
+const handleTaskInfoChange = async (taskDetailRes, isClaim) => {
+    taskDetail.value = { ...taskDetailRes }
+    handleGetActivity( taskDetail.value.taskInstance?.processInstanceId)
+    if (isClaim) {
+        state.loading = true
+        await handleFormDataGet()
+        state.loading = false
+    } else {
+        vFormRef.value.disableForm()
+    }
+}
 onMounted(() => {
     getDetail()
 })
@@ -122,6 +205,15 @@ watch(() => route.query, (q) => {
     overflow: hidden;
     :deep(.el-tab-pane) {
         height: 100%;
+    }
+}
+.grid-layout-tab-pane {
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    &--btns {
+        box-shadow: var(--el-box-shadow-light);
+        padding: var(--app-padding);
+        text-align: right;
     }
 }
 </style>

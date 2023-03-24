@@ -3,7 +3,7 @@
                      :parent-widget="parentWidget" :parent-list="parentList" :index-of-parent-list="indexOfParentList"
                      :sub-form-row-index="subFormRowIndex" :sub-form-col-index="subFormColIndex" :sub-form-row-id="subFormRowId">
     <!-- el-upload增加:name="field.options.name"后，会导致又拍云上传失败！故删除之！！ -->
-    <el-upload ref="fieldEditor" :disabled="field.options.disabled"
+    <el-upload ref="fieldEditor" :disabled="field.options.disabled" name="files"
                :style="styleVariables" class="dynamicPseudoAfter"
                :action="field.options.uploadURL" :headers="uploadHeaders" :data="uploadData"
                :with-credentials="field.options.withCredentials"
@@ -20,11 +20,12 @@
       </template>
       <template #file="{ file }">
         <div class="upload-file-list">
-          <span class="upload-file-name" :title="file.name">{{file.name}}</span>
-          <a :href="file.url" download="" target="_blank">
+          <span class="upload-file-name" :title="file.name" @click="handlePreview(file)">{{file.name}}</span>
+          <!-- <a :href="file.url" download="" target="_blank">
             <span class="el-icon-download file-action" :title="$t('render.hint.downloadFile')">
               <svg-icon icon-class="el-download" />
-            </span></a>
+            </span>
+          </a> -->
           <span class="file-action" :title="$t('render.hint.removeFile')" v-if="!field.options.disabled"
             @click="removeUploadFile(file.name, file.url, file.uid)"><svg-icon icon-class="el-delete" /></span>
         </div>
@@ -40,6 +41,7 @@
   import {deepClone} from "@/utils/util";
   import fieldMixin from "@/components/form-designer/form-widget/field-widget/fieldMixin";
   import SvgIcon from "@/components/svg-icon/index";
+import { log } from 'console';
 
   let selectFileText = "'" + translate('render.hint.selectFile') + "'"
 
@@ -109,6 +111,7 @@
     created() {
       /* 注意：子组件mounted在父组件created之后、父组件mounted之前触发，故子组件mounted需要用到的prop
          需要在父组件created中初始化！！ */
+      this.handleUploadHeaders()
       this.initFieldModel()
       this.registerToRefList()
       this.initEventHandler()
@@ -132,30 +135,30 @@
       },
 
       beforeFileUpload(file) {
-        let fileTypeCheckResult = false
-        let extFileName = file.name.substring(file.name.lastIndexOf('.') + 1)
-        if (!!this.field.options && !!this.field.options.fileTypes) {
-          let uploadFileTypes = this.field.options.fileTypes
-          if (uploadFileTypes.length > 0) {
-            fileTypeCheckResult = uploadFileTypes.some( (ft) => {
-              return extFileName.toLowerCase() === ft.toLowerCase()
-            })
+        if (!!this.field.options && !!this.field.options.fileTypes && this.field.options.fileTypes.length > 0) {
+          let fileTypeCheckResult = false
+          let extFileName = file.name.substring(file.name.lastIndexOf('.') + 1)
+          if (!!this.field.options && !!this.field.options.fileTypes) {
+            let uploadFileTypes = this.field.options.fileTypes
+            if (uploadFileTypes.length > 0) {
+              fileTypeCheckResult = uploadFileTypes.some( (ft) => {
+                return extFileName.toLowerCase() === ft.toLowerCase()
+              })
+            }
           }
-        }
-        if (!fileTypeCheckResult) {
-          this.$message.error(this.$t('render.hint.unsupportedFileType') + extFileName)
-          return false;
+          if (!fileTypeCheckResult) {
+            this.$message.error(this.$t('render.hint.unsupportedFileType') + extFileName)
+            return false;
+          }
         }
 
         let fileSizeCheckResult = false
-        let uploadFileMaxSize = 5  //5MB
-        if (!!this.field.options && !!this.field.options.fileMaxSize) {
-          uploadFileMaxSize = this.field.options.fileMaxSize
-        }
-        fileSizeCheckResult = file.size / 1024 / 1024 <= uploadFileMaxSize
-        if (!fileSizeCheckResult) {
-          this.$message.error(this.$t('render.hint.fileSizeExceed') + uploadFileMaxSize + 'MB')
-          return false;
+        if (!!this.field.options.fileMaxSize) {
+          fileSizeCheckResult = file.size / 1024 / 1024 <= this.field.options.fileMaxSize
+          if (!fileSizeCheckResult) {
+            this.$message.error(this.i18nt('render.hint.fileSizeExceed') + this.field.options.fileMaxSize + 'MB')
+            return false;
+          }
         }
 
         this.uploadData.key = file.name
@@ -261,7 +264,25 @@
           })
         }
       },
-
+      handlePreview(file) {
+        this.emit$('filePreview', file)
+        this.dispatch('VFormRender', 'filePreview', file)
+      },
+      handleUploadHeaders() {
+        const cookieToken = this.getCookie('docpal-token');
+        if (cookieToken) this.uploadHeaders = { 'Authorization': `Bearer ${cookieToken}` }
+      },
+      getCookie(name) {
+        var strCookies = document.cookie;
+        var array = strCookies.split(';');
+        for (var i = 0; i < array.length; i++) {
+          var item = array[i].split("=");
+          if (item[0].replace(' ', '') === name) {
+              return item[1];
+          }
+        }
+        return null;
+      }
     }
   }
 </script>
