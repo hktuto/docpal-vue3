@@ -69,8 +69,8 @@ See https://github.com/adobe-type-tools/cmap-resources
         }
       }
     </script>
-
-    <script src="viewer.js" type="module-shim"></script>
+    
+    <script src="viewer.js" type="module-shim" prefetch></script>
 <!--#endif-->
 
 <!--#if (GENERIC && !MINIFIED) -->
@@ -197,9 +197,9 @@ See https://github.com/adobe-type-tools/cmap-resources
         <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
           <div id="secondaryToolbarButtonContainer">
 <!--#if GENERIC-->
-            <button id="secondaryOpenFile" class="secondaryToolbarButton visibleLargeView" title="Open File" tabindex="51" data-l10n-id="open_file">
+            <!-- <button id="secondaryOpenFile" class="secondaryToolbarButton visibleLargeView" title="Open File" tabindex="51" data-l10n-id="open_file">
               <span data-l10n-id="open_file_label">Open</span>
-            </button>
+            </button> -->
 <!--#endif-->
 
             <button id="secondaryPrint" class="secondaryToolbarButton visibleMediumView" title="Print" tabindex="52" data-l10n-id="print">
