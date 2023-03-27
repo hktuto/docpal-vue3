@@ -17,6 +17,12 @@
 		},
 		{
 			"path": "apps/client"
+		},
+		{
+			"path": "packages/client-browse"
+		},
+		{
+			"path": "libraries/pdf-js"
 		}
 	]
 }

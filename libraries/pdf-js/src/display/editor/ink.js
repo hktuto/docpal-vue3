@@ -41,6 +41,8 @@ class InkEditor extends AnnotationEditor {
 
   #baseWidth = 0;
 
+
+
   #boundCanvasPointermove = this.canvasPointermove.bind(this);
 
   #boundCanvasPointerleave = this.canvasPointerleave.bind(this);
@@ -94,7 +96,6 @@ class InkEditor extends AnnotationEditor {
         l10n.get(str),
       ])
     );
-    console.log("lnk initialize");
   }
 
   static updateDefaultParams(type, value) {
@@ -487,18 +488,21 @@ class InkEditor extends AnnotationEditor {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.#updateTransform();
+    // save annotation to window
     for (const path of this.bezierPath2D) {
       ctx.stroke(path);
     }
-    console.log({
-      paths: this.paths,
-      color: this.color,
-      opacity: this.opacity,
-      pageDimensions: this.pageDimensions,
-      pageIndex: this.pageIndex,
+    const index = window.annotations.findIndex( item => item.id === this.id);
+    const saveObj = {
+      id: this.id,
+      path: this.paths,
       bezierPath2D: this.bezierPath2D,
-    });
-    // console.log("redraw,", this);
+    }
+    if(index !== -1) {
+      window.annotations[index] = this.serialize();
+    }else {
+      window.annotations.push(this.serialize());
+    }
   }
 
   /**

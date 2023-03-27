@@ -9,10 +9,10 @@ import { GetDocumentPreview, GetAnnotation } from 'dp-api'
 import {useI18n} from 'vue-i18n';
 import { useEventListener } from '@vueuse/core'
 const props = defineProps<{
-    doc: object
+    doc: any
 }>()
 
-const iframe = ref<HTMLElement>();
+const iframe = ref<HTMLIFrameElement>();
 const {public:{pdfReaderUrl}} = useRuntimeConfig();
 const loading = ref(false);
 // const colorMode = useColorMode();
@@ -20,7 +20,7 @@ const {locale} = useI18n()
 
 async function getAnnotation():Promise<Object> {
     const annotation = await GetAnnotation(props.doc.id )
-    let annotationObj = {}
+    let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
             annotationObj = JSON.parse(annotation[0].object.paths)
@@ -30,12 +30,14 @@ async function getAnnotation():Promise<Object> {
 }
 
 async function sendPdfAndAnnotation() {
+    console.log('sendPdfAndAnnotation');
     loading.value = true;
     try {
+      console.log("get Document Preview");
         const blob = await GetDocumentPreview(props.doc.id);
         const annotations = await getAnnotation()
-        const frame = iframe.value.contentWindow;
-        const sendMessage = frame.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*'); 
+        const frame = iframe.value?.contentWindow;
+        frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*');
     } catch (error) {
         console.log(error);
     }
@@ -43,6 +45,7 @@ async function sendPdfAndAnnotation() {
 }
 
 function gotMessageFromIframe(message:MessageEvent) {
+    console.log(message);
     const { data } = message;
     if(!data) return;
 
@@ -53,7 +56,7 @@ function gotMessageFromIframe(message:MessageEvent) {
 
 useEventListener(window, 'message', gotMessageFromIframe)
 
-</script> 
+</script>
 
 <style lang="scss" scoped>
 .contentContainer{

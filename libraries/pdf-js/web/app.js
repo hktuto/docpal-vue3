@@ -665,6 +665,7 @@ const PDFViewerApplication = {
   },
 
   run(config) {
+    console.log("pdfjs run")
     this.initialize(config).then(webViewerInitialized);
   },
 
@@ -2203,18 +2204,19 @@ function webViewerInitialized() {
 
   if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
     const fileInput = appConfig.openFileInput;
-    fileInput.value = null;
-
-    fileInput.addEventListener("change", function (evt) {
-      const { files } = evt.target;
-      if (!files || files.length === 0) {
-        return;
-      }
-      eventBus.dispatch("fileinputchange", {
-        source: this,
-        fileInput: evt.target,
+    if (!fileInput) {
+    } else {
+      fileInput.addEventListener("change", function (evt) {
+        const {files} = evt.target;
+        if (!files || files.length === 0) {
+          return;
+        }
+        eventBus.dispatch("fileinputchange", {
+          source: this,
+          fileInput: evt.target,
+        });
       });
-    });
+    }
 
     // Enable dragging-and-dropping a new PDF file onto the viewerContainer.
     appConfig.mainContainer.addEventListener("dragover", function (evt) {

@@ -82,6 +82,14 @@ class AnnotationEditorLayer {
     this.#accessibilityManager = options.accessibilityManager;
 
     this.#uiManager.addLayer(this);
+    // get annotations from page
+    const annotations = window.annotations.filter( item => item.pageIndex = this.pageIndex);
+    // loop through annotations
+    annotations.forEach( editor => {
+      this.#addAnnotation(editor);
+    });
+
+
   }
 
   get isEmpty() {
@@ -125,6 +133,7 @@ class AnnotationEditorLayer {
   }
 
   addInkEditorIfNeeded(isCommitting) {
+    console.log("addInkEditorIfNeeded");
     if (
       !isCommitting &&
       this.#uiManager.getMode() !== AnnotationEditorType.INK
@@ -353,11 +362,11 @@ class AnnotationEditorLayer {
    * @returns {AnnotationEditor}
    */
   #createNewEditor(params) {
+
     switch (this.#uiManager.getMode()) {
       case AnnotationEditorType.FREETEXT:
         return new FreeTextEditor(params);
       case AnnotationEditorType.INK:
-        console.log("create Ink :", params);
         return new InkEditor(params);
     }
     return null;
@@ -378,12 +387,17 @@ class AnnotationEditorLayer {
     return null;
   }
 
+  #addAnnotation(editor) {
+    this.add(editor);
+  }
+
   /**
    * Create and add a new editor.
    * @param {PointerEvent} event
    * @returns {AnnotationEditor}
    */
   #createAndAddNewEditor(event) {
+
     const id = this.getNextId();
     const editor = this.#createNewEditor({
       parent: this,

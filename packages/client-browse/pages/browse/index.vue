@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout >
         <page-container>
-        <div class="browsePageContainer">
+        <div v-if="data" class="browsePageContainer">
             <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
             <BrowseTable :path="routePath" :doc="data"/>
         </div>
@@ -18,10 +18,17 @@ import { GetDocDetail } from 'dp-api'
 const breadCrumb = ref();
 const icon = ref("");
 const route = useRoute();
+const data = ref();
+const loading = ref(false)
 
-const routePath = computed( () => route.query.path || '/')
-const { data, refresh, pending} = await useAsyncData(() => GetDocDetail(routePath.value));
-watch(route, () => refresh());
+const routePath = computed( () => (route.query.path as string) || '/')
+async function getDocDetail() {
+  loading.value = true;
+     data.value = await GetDocDetail(routePath.value);
+     loading.value = false;
+}
+watch(route, () => getDocDetail(),{immediate:true});
+
 
 
 function detailClosed() {
