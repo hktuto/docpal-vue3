@@ -56,6 +56,7 @@ class AnnotationEditorLayerBuilder {
    * @param {string} intent (default value is 'display')
    */
   async render(viewport, intent = "display") {
+    console.log("AnnotationEditorLayerBuilder.render()");
     if (intent !== "display") {
       return;
     }

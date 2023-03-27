@@ -164,15 +164,13 @@ function getViewerConfiguration() {
       editorInkOpacity: document.getElementById("editorInkOpacity"),
     },
     printContainer: document.getElementById("printContainer"),
-    openFileInput:
-      typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")
-        ? document.getElementById("fileInput")
-        : null,
+    openFileInput:  null,
     debuggerScriptPath: "./debugger.js",
   };
 }
 
 function webViewerLoad() {
+  // console.log("webViewerLoad");
   const config = getViewerConfiguration();
 
   if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("GENERIC")) {
@@ -191,7 +189,7 @@ function webViewerLoad() {
     } catch (ex) {
       // The viewer could be in e.g. a cross-origin <iframe> element,
       // fallback to dispatching the event at the current `document`.
-      console.error(`webviewerloaded: ${ex}`);
+      // console.error(`webviewerloaded: ${ex}`);
       document.dispatchEvent(event);
     }
   }
@@ -207,35 +205,46 @@ if (
   document.readyState === "complete"
 ) {
   // webViewerLoad();
-  if (parent) {
-    window.addEventListener("message", messageFromParent, false);
-    parent.postMessage({ type: "ready" }, "*");
-  }
+  window.addEventListener('message', messageFromParent, false)
+  sendMessageToParent("ready");
+
 } else {
   // document.addEventListener("DOMContentLoaded", webViewerLoad, true);
 }
 
+// get file and annotations from parent and set it into window
 function messageFromParent(ev) {
+  // console.log("Message from parent", ev);
   if (!ev || !ev.data) {
     return;
   }
-  const { blob, filename, annotations, locale, colorMode } = ev.data;
+  const { blob, filename, annotations=[], locale, colorMode } = ev.data;
   const urlCreator = window.URL || window.webkitURL;
   const url = urlCreator.createObjectURL(blob);
   const urlPath = new URL(window.location);
+  // change url path to file
   urlPath.searchParams.set("file", url);
   window.history.pushState({}, "", urlPath);
-  
+
   const newLocal = locale === "zh-HK" ? "zh-TW" : locale;
   if (colorMode === "dark") {
     document.getElementsByTagName("html")[0].classList.add("dark");
   }
-  console.log(filename, annotations, locale, colorMode);
+  console.log("annotations", annotations);
+  // save annotations to window
+  window.annotations = annotations;
   window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad();
 }
+
+function sendMessageToParent(type, data) {
+  parent.postMessage({ type, data }, "*");
+}
+
+
 function saveAnnotation() {
   // send annotation to parent
+  sendMessageToParent("annotation",window.annotation);
 }
 
 export {

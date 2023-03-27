@@ -941,6 +941,7 @@ class PDFPageView {
             if (!annotationEditorUIManager) {
               return;
             }
+            console.trace('create annotationEditorLayer');
             this.annotationEditorLayer = new AnnotationEditorLayerBuilder({
               uiManager: annotationEditorUIManager,
               pageDiv: div,

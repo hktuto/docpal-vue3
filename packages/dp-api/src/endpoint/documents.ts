@@ -33,10 +33,10 @@ export const GetDocumentPreview = async(idOrPath:string) => {
     }).then(res =>res.data)
 }
 
-export const GetAnnotation = async(idOrPath:string) => {
+export const GetAnnotation = async(idOrPath:string):Promise<any[]> => {
     return api.get('/nuxeo/annotation', {params:{
         idOrPath
-    }})
+    }}).then(res =>res.data);
 }
 
 // #region module: trash
