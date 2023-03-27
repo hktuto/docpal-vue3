@@ -82,14 +82,6 @@ class AnnotationEditorLayer {
     this.#accessibilityManager = options.accessibilityManager;
 
     this.#uiManager.addLayer(this);
-    // get annotations from page
-    const annotations = window.annotations.filter( item => item.pageIndex = this.pageIndex);
-    // loop through annotations
-    annotations.forEach( editor => {
-      this.#addAnnotation(editor);
-    });
-
-
   }
 
   get isEmpty() {
@@ -362,7 +354,6 @@ class AnnotationEditorLayer {
    * @returns {AnnotationEditor}
    */
   #createNewEditor(params) {
-
     switch (this.#uiManager.getMode()) {
       case AnnotationEditorType.FREETEXT:
         return new FreeTextEditor(params);
@@ -388,7 +379,18 @@ class AnnotationEditorLayer {
   }
 
   #addAnnotation(editor) {
-    this.add(editor);
+    let newEditor = null;
+    if (editor.annotationType === 15) {
+      console.log(this);
+      newEditor = new InkEditor({
+        parent: this,
+        uiManager: this.#uiManager,
+        ...editor,
+      });
+    }
+    if (newEditor) {
+      this.add(newEditor);
+    }
   }
 
   /**
@@ -397,7 +399,6 @@ class AnnotationEditorLayer {
    * @returns {AnnotationEditor}
    */
   #createAndAddNewEditor(event) {
-
     const id = this.getNextId();
     const editor = this.#createNewEditor({
       parent: this,
@@ -569,11 +570,22 @@ class AnnotationEditorLayer {
    */
   render({ viewport }) {
     this.viewport = viewport;
+    console.log("render", viewport);
+    
     setLayerDimensions(this.div, viewport);
+    const annotations = window.annotations.filter(
+      item => (item.pageIndex = this.pageIndex)
+    );
+    // loop through annotations
+    annotations.forEach(editor => {
+      this.#addAnnotation(editor);
+    });
     bindEvents(this, this.div, ["dragover", "drop"]);
     for (const editor of this.#uiManager.getEditors(this.pageIndex)) {
       this.add(editor);
     }
+    // get annotations from page
+    
     this.updateMode();
   }
 
