@@ -5,8 +5,6 @@
             <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
             <BrowseTable :path="routePath" :doc="data"/>
         </div>
-        <SvgIconSelector v-model:src="icon" />
-
         <Teleport v-if="data && !data.isFolder" to="body">
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" />
         </Teleport>
@@ -22,7 +20,7 @@ const icon = ref("");
 const route = useRoute();
 
 const routePath = computed( () => route.query.path || '/')
-const { data, refresh, pending} = await useAsyncData(() => GetDocDetail(route.query.path));
+const { data, refresh, pending} = await useAsyncData(() => GetDocDetail(routePath.value));
 watch(route, () => refresh());
 
 
