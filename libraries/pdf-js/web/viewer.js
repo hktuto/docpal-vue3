@@ -218,7 +218,7 @@ function messageFromParent(ev) {
   if (!ev || !ev.data) {
     return;
   }
-  const { blob, filename, annotations=[], locale, colorMode } = ev.data;
+  const { blob, filename , annotations, locale, colorMode } = ev.data;
   const urlCreator = window.URL || window.webkitURL;
   const url = urlCreator.createObjectURL(blob);
   const urlPath = new URL(window.location);
@@ -232,7 +232,11 @@ function messageFromParent(ev) {
   }
   console.log("annotations", annotations);
   // save annotations to window
-  window.annotations = annotations;
+  if (!Array.isArray(annotations)) {
+    window.annotations = [];
+  } else {
+    window.annotations = annotations;
+  }
   window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad();
 }

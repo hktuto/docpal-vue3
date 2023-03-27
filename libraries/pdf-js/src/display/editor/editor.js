@@ -302,7 +302,7 @@ class AnnotationEditor {
    * @returns {HTMLDivElement}
    */
   render() {
-    console.log("annotaiton editor render")
+    console.log("editor render");
     this.div = document.createElement("div");
     this.div.setAttribute("data-editor-rotation", (360 - this.rotation) % 360);
     this.div.className = this.name;
