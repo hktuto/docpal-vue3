@@ -6,7 +6,7 @@
     <template #dropdown>
         <el-dropdown-menu>
             <el-dropdown-item v-for="item in state.menuList" :key="item.id"
-                :command="item.id">{{item.label}}</el-dropdown-item>
+                :command="item.id">{{$t(item.label)}}</el-dropdown-item>
         </el-dropdown-menu>
     </template>
 </el-dropdown>

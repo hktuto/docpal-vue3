@@ -771,7 +771,7 @@ export const advancedFields = [
       showFileList: true,
       limit: 3,
       fileMaxSize: 5, //MB
-      fileTypes: ['jpg', 'jpeg', 'png'],
+      fileTypes: [],
       //headers: [],
       //-------------------
       customClass: '',  //自定义css类名
@@ -816,7 +816,7 @@ export const advancedFields = [
       showFileList: true,
       limit: 3,
       fileMaxSize: 5, //MB
-      fileTypes: ['doc', 'docx', 'xls', 'xlsx'],
+      fileTypes: [],
       //headers: [],
       //-------------------
       customClass: '',  //自定义css类名

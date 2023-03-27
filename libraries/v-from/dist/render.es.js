@@ -4919,7 +4919,9 @@ const _sfc_main$B = {
       this.dispatch("VFormRender", "filePreview", file);
     },
     handleUploadHeaders() {
-      const cookieToken = this.getCookie("docpal-token");
+      console.log({ sessionStorage });
+      const cookieToken = sessionStorage.getItem("token");
+      console.log({ cookieToken });
       if (cookieToken)
         this.uploadHeaders = { "Authorization": `Bearer ${cookieToken}` };
     },
@@ -4936,7 +4938,7 @@ const _sfc_main$B = {
     }
   }
 };
-const _withScopeId = (n) => (pushScopeId("data-v-2557ce3b"), n = n(), popScopeId(), n);
+const _withScopeId = (n) => (pushScopeId("data-v-634475b0"), n = n(), popScopeId(), n);
 const _hoisted_1$j = {
   key: 0,
   class: "el-upload__tip"
@@ -5011,7 +5013,7 @@ function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$B, [["render", _sfc_render$B], ["__scopeId", "data-v-2557ce3b"]]);
+var fileUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$B, [["render", _sfc_render$B], ["__scopeId", "data-v-634475b0"]]);
 var __glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": fileUploadWidget
@@ -5509,7 +5511,8 @@ const _sfc_main$x = {
       this.$refs["imageRef"].$el.children[0].click();
     },
     handleUploadHeaders() {
-      const cookieToken = this.getCookie("docpal-token");
+      const cookieToken = sessionStorage.getItem("token");
+      console.log({ cookieToken });
       if (cookieToken)
         this.uploadHeaders = { "Authorization": `Bearer ${cookieToken}` };
     },
@@ -5624,7 +5627,7 @@ function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["designer", "field", "rules", "design-state", "parent-widget", "parent-list", "index-of-parent-list", "sub-form-row-index", "sub-form-col-index", "sub-form-row-id"]);
 }
-var pictureUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$x, [["render", _sfc_render$x], ["__scopeId", "data-v-d070f2ae"]]);
+var pictureUploadWidget = /* @__PURE__ */ _export_sfc$1(_sfc_main$x, [["render", _sfc_render$x], ["__scopeId", "data-v-3197ffde"]]);
 var __glob_0_12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": pictureUploadWidget
@@ -20005,13 +20008,13 @@ function registerIcon(app) {
 if (typeof window !== "undefined") {
   let loadSvg = function() {
     var body = document.body;
-    var svgDom = document.getElementById("__svg__icons__dom__1679636397520__");
+    var svgDom = document.getElementById("__svg__icons__dom__1679883196419__");
     if (!svgDom) {
       svgDom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgDom.style.position = "absolute";
       svgDom.style.width = "0";
       svgDom.style.height = "0";
-      svgDom.id = "__svg__icons__dom__1679636397520__";
+      svgDom.id = "__svg__icons__dom__1679883196419__";
       svgDom.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       svgDom.setAttribute("xmlns:link", "http://www.w3.org/1999/xlink");
     }

@@ -75,7 +75,11 @@ const user = useUser();
 // #region module: search json
     const formJson = getJsonApi('workflowCompleteTaskSearch.json')
     function handleFormChange (data) {
-        state.extraParams = deepCopy(data.formModel)
+        const extraParams = Object.keys(data.formModel).reduce((prev,key) => {
+            if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
+            return prev
+        }, {})
+        state.extraParams = extraParams
         handlePaginationChange(1)
     }
 // #endregion

@@ -4,16 +4,21 @@
             <v-form-render ref="vFormRenderRef" :form-json="fromJsonNormalizer" :form-data="data" :option-data="options" @formChange="formChange" 
                 @file-preview="handleFilePreview"/>
         </client-only>
+        <Reader ref="ReaderRef" :blob="previewFile.blob" :name="previewFile.name" :id="previewFile.id"></Reader>
     </div>
 </template>
 
 <script lang="ts" setup>
+import { WorkflowAttachmentDownloadApi } from 'dp-api'
     const emits = defineEmits(['submit','clean','fail', 'formChange']);
-    const props = defineProps<{
+    const props = withDefaults(defineProps<{
         data?: Object,
         formJson?: Object,
         options?: Object,
-    }>();
+        attachmentDownloadApi: Function,
+    }>(), {
+        attachmentDownloadApi: (id: string) => WorkflowAttachmentDownloadApi(id)
+    });
     const vFormRenderRef = ref()
     const fromJsonNormalizer = computed(() => {
         if(!props.formJson) return {}
@@ -46,13 +51,19 @@
     function formChange(fieldName, newValue, oldValue, formModel) {
         emits('formChange', {fieldName,newValue,oldValue,formModel})
     }
-    function handleFilePreview() {
-        console.log('handleFilePreviewinnsnjsjsdhsdsdssdjkdskshkksdsdfhksdksuccess');
-        
-    }
-    function handleFilePreview2() {
-        console.log('handleFilePreview2');
-        
+
+    const ReaderRef = ref()
+    const previewFile = reactive({
+        blob: null,
+        name: '',
+        id: ''
+    })
+    async function handleFilePreview(fileInfo) {
+        ReaderRef.value.handleOpen()
+        const fileId = fileInfo.response && fileInfo.response.length > 0 ? fileInfo.response[0].contentId : fileInfo.id
+        previewFile.blob = await WorkflowAttachmentDownloadApi(fileId)
+        previewFile.name = fileInfo.name
+        previewFile.id = fileId
     }
     defineExpose({ vFormRenderRef, setFormJson })
 </script>

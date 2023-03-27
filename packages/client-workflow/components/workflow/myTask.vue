@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { getMyTask, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { getAllTask, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const user = useUser();
 // #region module: page
@@ -21,6 +21,7 @@ const user = useUser();
     const pageParams = {
         pageIndex: 0,
         pageSize: 20,
+        assignedUser: user.user.value.userId || user.user.value.username
         // userId: user.user.value.userId || user.user.value.username
     }
     const state = reactive<State>({
@@ -41,9 +42,8 @@ const user = useUser();
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
-        param.userId = user.user.value.userId || user.user.value.username
         state.loading = true
-        const res = await getMyTask({...param, ...state.extraParams})
+        const res = await getAllTask({...param, ...state.extraParams})
         
         state.tableData = res.entryList
         state.loading = false
@@ -74,7 +74,11 @@ const user = useUser();
 // #region module: search json
     const formJson = getJsonApi('workflowUncompleteTaskSearch.json')
     function handleFormChange (data) {
-        state.extraParams = deepCopy(data.formModel)
+        const extraParams = Object.keys(data.formModel).reduce((prev,key) => {
+            if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
+            return prev
+        }, {})
+        state.extraParams = extraParams
         handlePaginationChange(1)
     }
 // #endregion

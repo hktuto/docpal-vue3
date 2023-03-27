@@ -114,7 +114,7 @@
                 "onFocus": "",
                 "onBlur": "",
                 "onValidate": "",
-                "defaultTime": "0:00:00,23:59:59"
+                "defaultTime": ["2000-01-01 00:00:00","2000-01-01 23:59:00"]
               },
               "id": "daterange84711"
             }
@@ -178,7 +178,7 @@
                 "onFocus": "",
                 "onBlur": "",
                 "onValidate": "",
-                "defaultTime": "0:00:00,23:59:59"
+                "defaultTime": ["2000-01-01 00:00:00","2000-01-01 23:59:00"]
               },
               "id": "daterange105305"
             }

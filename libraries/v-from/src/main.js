@@ -19,12 +19,9 @@ import { loadExtension } from '@/extension/extension-loader'
 if (typeof window !== 'undefined') {
   window.axios = axios
 }
-// function tt (key) {
-//   return key
-// }
 const vfApp = createApp(App)
 
-vfApp.config.globalProperties.$t = (key) => (key)
+// vfApp.config.globalProperties.$t = (key) => (key)
 
 vfApp.use(ElementPlus)
 registerIcon(vfApp)

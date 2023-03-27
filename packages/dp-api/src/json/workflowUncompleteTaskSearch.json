@@ -98,8 +98,8 @@
                 "hidden": false,
                 "clearable": true,
                 "editable": false,
-                "format": "yyyy-MM-dd",
-                "valueFormat": "yyyy-MM-dd HH:mm:ss",
+                "format": "YYYY-MM-DD",
+                "valueFormat": "YYYY-MM-DDTHH:mm:ss.000Z",
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -114,7 +114,7 @@
                 "onFocus": "",
                 "onBlur": "",
                 "onValidate": "",
-                "defaultTime": "0:00:00,23:59:59"
+                "defaultTime": ["2000-01-01 00:00:00","2000-01-01 23:59:00"]
               },
               "id": "daterange86723"
             }
@@ -145,7 +145,7 @@
               "icon": "date-range-field",
               "formItemFlag": true,
               "options": {
-                "name": "dueDate",
+                "name": "dueDates",
                 "label": "tableHeader_dueDate",
                 "labelZh": "到期日",
                 "labelAlign": "",
@@ -162,8 +162,8 @@
                 "hidden": false,
                 "clearable": true,
                 "editable": false,
-                "format": "yyyy-MM-dd",
-                "valueFormat": "yyyy-MM-dd HH:mm:ss",
+                "format": "YYYY-MM-DD",
+                "valueFormat": "YYYY-MM-DDTHH:mm:ss.000Z",
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -178,7 +178,7 @@
                 "onFocus": "",
                 "onBlur": "",
                 "onValidate": "",
-                "defaultTime": "0:00:00,23:59:59"
+                "defaultTime": ["2000-01-01 00:00:00","2000-01-01 23:59:00"]
               },
               "id": "daterange105305"
             }

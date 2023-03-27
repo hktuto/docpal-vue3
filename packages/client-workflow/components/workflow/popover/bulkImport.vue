@@ -35,8 +35,6 @@ const formJson = getJsonApi('personalBulkImport.json')
     async function handleSubmit() {
         try {
             const data = await vFormRef.value.getFormData()
-            console.log({data});
-            
             if(!data) throw new Error(`${$i18n.t('incompleteData')}`);
             const param = {
                 processKey: data.processKey,

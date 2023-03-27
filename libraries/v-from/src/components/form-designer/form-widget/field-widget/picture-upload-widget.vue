@@ -284,7 +284,7 @@
         this.$refs['imageRef'].$el.children[0].click()
       },
       handleUploadHeaders() {
-        const cookieToken = this.getCookie('docpal-token');
+        const cookieToken = sessionStorage.getItem('token')
         if (cookieToken) this.uploadHeaders = { 'Authorization': `Bearer ${cookieToken}` }
       },
       getCookie(name) {

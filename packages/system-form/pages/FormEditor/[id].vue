@@ -17,10 +17,11 @@ async function handleSave () {
     const save = await $fetch(`/form/${route.params.id}`, { method:'post', body})
 }
 
-onMounted(() => fromDesignerRef.value.setFormJson(getJsonApi(route.params.id)))
 watch(() => route.params.id, (newJsonName) => {
-    fromDesignerRef.value.setFormJson(getJsonApi(newJsonName))
-}, { immediate: false })
+    setTimeout(() => {
+        fromDesignerRef.value.setFormJson(getJsonApi(newJsonName))
+    })
+}, { immediate: true })
 </script>
 <style lang="scss" scoped>
 :deep(.left-toolbar) {

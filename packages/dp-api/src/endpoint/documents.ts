@@ -38,6 +38,15 @@ export const GetAnnotation = async(idOrPath:string) => {
         idOrPath
     }})
 }
+export const GetTemplateListApi = async() => {
+    return api.post('/nuxeo/template/getTemplateList').then(res => res.data)
+}
+export const GetTemplateParamsApi = async(param) => {
+    return api.post('/nuxeo/template/getTemplateParams', param).then(res => res.data)
+}
+export const DownloadTemplateApi = async(param) => {
+    return api.post('/nuxeo/template/summitAndDownloadFile', param, {responseType: 'blob', timeout: 0}).then(res => res.data)
+}
 
 // #region module: trash
     export const GetTrashApi = async(params: pageParams) => {

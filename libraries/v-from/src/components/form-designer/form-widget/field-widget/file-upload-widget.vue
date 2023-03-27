@@ -268,7 +268,7 @@
         this.dispatch('VFormRender', 'filePreview', file)
       },
       handleUploadHeaders() {
-        const cookieToken = this.getCookie('docpal-token');
+        const cookieToken = sessionStorage.getItem('token')
         if (cookieToken) this.uploadHeaders = { 'Authorization': `Bearer ${cookieToken}` }
       },
       getCookie(name) {
