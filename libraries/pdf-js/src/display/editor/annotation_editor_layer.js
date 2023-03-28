@@ -125,7 +125,6 @@ class AnnotationEditorLayer {
   }
 
   addInkEditorIfNeeded(isCommitting) {
-    console.log("addInkEditorIfNeeded");
     if (
       !isCommitting &&
       this.#uiManager.getMode() !== AnnotationEditorType.INK
@@ -378,19 +377,9 @@ class AnnotationEditorLayer {
     return null;
   }
 
-  #addAnnotation(editor) {
-    let newEditor = null;
-    if (editor.annotationType === 15) {
-      console.log(this);
-      newEditor = new InkEditor({
-        parent: this,
-        uiManager: this.#uiManager,
-        ...editor,
-      });
-    }
-    if (newEditor) {
-      this.add(newEditor);
-    }
+  #addAnnotation(data) {
+    const newEditor = this.deserialize(data);
+    this.add(newEditor);
   }
 
   /**
@@ -570,22 +559,23 @@ class AnnotationEditorLayer {
    */
   render({ viewport }) {
     this.viewport = viewport;
-    console.log("render", viewport);
-    
+    // console.log("render", viewport);
+
     setLayerDimensions(this.div, viewport);
-    const annotations = window.annotations.filter(
-      item => (item.pageIndex = this.pageIndex)
+    const annotations =  Array.from(window.annotations).filter(
+      ([key,item]) => (item.pageIndex === this.pageIndex)
     );
     // loop through annotations
-    annotations.forEach(editor => {
+    annotations.forEach(([key,editor]) => {
       this.#addAnnotation(editor);
+      window.annotations.delete(key);
     });
     bindEvents(this, this.div, ["dragover", "drop"]);
     for (const editor of this.#uiManager.getEditors(this.pageIndex)) {
       this.add(editor);
     }
     // get annotations from page
-    
+
     this.updateMode();
   }
 

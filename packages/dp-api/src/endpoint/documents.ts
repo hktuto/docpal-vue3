@@ -39,6 +39,10 @@ export const GetAnnotation = async(idOrPath:string):Promise<any[]> => {
     }}).then(res =>res.data);
 }
 
+export const SaveAnnotation = async(data: any) => {
+    return api.post('/nuxeo/annotation', data).then(res => res.data);
+}
+
 // #region module: trash
     export const GetTrashApi = async(params: pageParams) => {
         const { entryList, totalSize }:any = await api.get('/nuxeo/document/trash',{ params }).then(res => res.data)

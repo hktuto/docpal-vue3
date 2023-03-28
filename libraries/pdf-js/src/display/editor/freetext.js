@@ -330,6 +330,8 @@ class FreeTextEditor extends AnnotationEditor {
 
     this.width = rect.width / parentWidth;
     this.height = rect.height / parentHeight;
+
+    window.annotations.set(this.id, this.serialize())
   }
 
   /**
@@ -353,6 +355,7 @@ class FreeTextEditor extends AnnotationEditor {
     this.#content = this.#extractText().trimEnd();
 
     this.#setEditorDimensions();
+
   }
 
   /** @inheritdoc */
@@ -475,7 +478,7 @@ class FreeTextEditor extends AnnotationEditor {
       this.div.draggable = false;
       this.editorDiv.contentEditable = true;
     }
-
+    window.annotations.set(this.id, this.serialize())
     return this.div;
   }
 
