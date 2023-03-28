@@ -13,12 +13,14 @@
 
 <script lang="ts" setup>
 import { Picture as IconPicture, Download } from '@element-plus/icons-vue'
+const emits = defineEmits(['download'])
 const props = defineProps<{
     id: string,
     blob: Blob,
     name: string,
     annotations?: Array,
     loading: Boolean,
+    noDownloadBlob: Boolean
 }>()
 const state = reactive({
     dialogVisible: false
@@ -28,7 +30,12 @@ function handleOpen() {
 }
 const ReaderRef = ref()
 function handleDownload() {
-    ReaderRef.handleDownload()
+    if (props.noDownloadBlob) {
+        emits('download', props)
+    }
+    else {
+        ReaderRef.value.handleDownload()
+    }
 }
 defineExpose({ handleOpen })
 </script>

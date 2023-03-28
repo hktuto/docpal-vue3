@@ -4,6 +4,7 @@ export * from './search.d'
 export * from './setting.d'
 export * from './workflow.d'
 export * from './Table'
+export * from './public-share.d'
 export type pageParams = {
     page ?: number,
     pageIndex ?: number,

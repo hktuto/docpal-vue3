@@ -33,7 +33,6 @@ const props = defineProps<{
     blob: Blob,
     name: string,
     annotations?: Array,
-
     loading: Boolean,
 }>()
 const state = reactive({

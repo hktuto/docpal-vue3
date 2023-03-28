@@ -74,7 +74,9 @@ export enum TABLE {
     CLIENT_WORKFLOW_ACTIVE_TASK = 'clientActiveTask',
     CLIENT_ADHOC_APPROVAL_TASK = 'clientAdhocApprovalTask',
     CLIENT_ADHOC_SUBMITTED_TASK = 'clientAdhocSubmittedTask',
-    CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask'
+    CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
+
+    PUBLIC_SHARE = 'publicShare'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -741,4 +743,48 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { pageSize: 20 }
     },
+
+
+    [TABLE.PUBLIC_SHARE]: {
+        columns: [
+            { label: 'tableHeader_name', prop: 'title' },
+            { label: 'tableHeader_modifiedDate', prop: 'lastModified',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "lastModified",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { label: 'tableHeader_type', prop: 'type' },
+            {
+                "type": "buttons",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "download",
+                        "command": "download",
+                        "type": "primary",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+                "id": "1678091777412"
+            }
+        ],
+        events: ['download'],
+        options: { pageSize: 20 }
+    }
 }

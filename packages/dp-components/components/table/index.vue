@@ -4,7 +4,8 @@
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-            <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton>
+            <TableSortButton v-if="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+            <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
         </div>
         <div class="dp-table-container--main">
             <el-table
