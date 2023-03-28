@@ -230,26 +230,30 @@ function messageFromParent(ev) {
   if (colorMode === "dark") {
     document.getElementsByTagName("html")[0].classList.add("dark");
   }
-  console.log("annotations", annotations);
-  // save annotations to window
-  if (!Array.isArray(annotations)) {
-    window.annotations = [];
-  } else {
+  // check if annotations is Map or not
+  if (annotations instanceof Map) {
     window.annotations = annotations;
+  } else {
+    window.annotations = new Map();
   }
+
   window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad();
+
+   // listen to save annotation event
+  const saveAnnotationButton = document.querySelectorAll(".saveAnnotationButton");
+  saveAnnotationButton.forEach(el => el.addEventListener("click", saveAnnotation));
+}
+
+function saveAnnotation() {
+  // send annotation to parent
+  sendMessageToParent("annotation", window.annotations);
 }
 
 function sendMessageToParent(type, data) {
   parent.postMessage({ type, data }, "*");
 }
 
-
-function saveAnnotation() {
-  // send annotation to parent
-  sendMessageToParent("annotation",window.annotation);
-}
 
 export {
   PDFViewerApplication,

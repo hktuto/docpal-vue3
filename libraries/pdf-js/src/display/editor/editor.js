@@ -56,7 +56,7 @@ class AnnotationEditor {
    * @param {AnnotationEditorParameters} parameters
    */
   constructor(parameters) {
-    console.log("AnnotationEditor constructor", parameters);
+    // console.log("AnnotationEditor constructor", parameters);
     if (this.constructor === AnnotationEditor) {
       unreachable("Cannot initialize AnnotationEditor.");
     }
@@ -302,7 +302,6 @@ class AnnotationEditor {
    * @returns {HTMLDivElement}
    */
   render() {
-    console.log("editor render");
     this.div = document.createElement("div");
     this.div.setAttribute("data-editor-rotation", (360 - this.rotation) % 360);
     this.div.className = this.name;
@@ -528,6 +527,7 @@ class AnnotationEditor {
       this.commit();
     }
     this.parent.remove(this);
+    window.annotations.delete(this.id);
   }
 
   /**

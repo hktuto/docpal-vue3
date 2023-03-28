@@ -76,35 +76,18 @@ class InkEditor extends AnnotationEditor {
   static _type = "ink";
 
   constructor(params) {
-    console.log("InkEditor constructor", params);
     super({ ...params, name: "inkEditor" });
     // if params have paths, it means that we are editing an existing annotation
-    if (params.paths) {
-      this.paths = params.paths;
-      this.color = params.color;
-      this.thickness = params.thickness;
-      this.opacity = params.opacity;
-      this.scaleFactor = params.scaleFactor;
-      this.translationX = params.translationX;
-      this.translationY = params.translationY;
-      this.bezierPath2D = [];
-      this.currentPath = [];
-      this.scaleFactor = params.translationY || 1;
-      this.x = 0;
-      this.y = 0;
-      this.render();
-    } else {
-      this.color = params.color || null;
-      this.thickness = params.thickness || null;
-      this.opacity = params.opacity || null;
-      this.paths = [];
-      this.bezierPath2D = [];
-      this.currentPath = [];
-      this.scaleFactor = 1;
-      this.translationX = this.translationY = 0;
-      this.x = 0;
-      this.y = 0;
-    }
+    this.color = params.color || null;
+    this.thickness = params.thickness || null;
+    this.opacity = params.opacity || null;
+    this.paths = [];
+    this.bezierPath2D = [];
+    this.currentPath = [];
+    this.scaleFactor = 1;
+    this.translationX = this.translationY = 0;
+    this.x = 0;
+    this.y = 0;
   }
 
   static initialize(l10n) {
@@ -510,16 +493,8 @@ class InkEditor extends AnnotationEditor {
     for (const path of this.bezierPath2D) {
       ctx.stroke(path);
     }
-    const index = window.annotations.findIndex( item => item.id === this.id);
-    const saveObj = {
-      id: this.id,
-      ...this.serialize(),
-    };
-    if (index !== -1) {
-      window.annotations[index] = saveObj;
-    } else {
-      window.annotations.push(saveObj);
-    }
+    const saveObj = this.serialize();
+    window.annotations.set(this.id,saveObj );
   }
 
   /**
@@ -680,6 +655,7 @@ class InkEditor extends AnnotationEditor {
 
   /** @inheritdoc */
   render() {
+    console.log("ink render")
     if (this.div) {
       return this.div;
     }
@@ -1006,6 +982,7 @@ class InkEditor extends AnnotationEditor {
    */
   #fitToContent(firstTime = false) {
     if (this.isEmpty()) {
+      console.log("render empty");
       return;
     }
 
