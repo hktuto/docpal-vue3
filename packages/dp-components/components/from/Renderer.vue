@@ -4,7 +4,7 @@
             <v-form-render ref="vFormRenderRef" :form-json="fromJsonNormalizer" :form-data="data" :option-data="options" @formChange="formChange" 
                 @file-preview="handleFilePreview"/>
         </client-only>
-        <Reader ref="ReaderRef" :blob="previewFile.blob" :name="previewFile.name" :id="previewFile.id"></Reader>
+        <ReaderDialog ref="ReaderRef" v-bind="previewFile" ></ReaderDialog>
     </div>
 </template>
 
