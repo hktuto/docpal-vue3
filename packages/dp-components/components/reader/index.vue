@@ -1,5 +1,8 @@
 <template>
-    <template v-if="state.fileType === 'application/pdf' && state.url" >
+    <template v-if="!state.url" >
+        <div v-if="id">{{$t('fileNoExist')}}</div>
+    </template>
+    <template v-else-if="state.fileType === 'application/pdf' && state.url" >
         <ReaderPdf v-bind="props"></ReaderPdf>
     </template>
     <audio v-else-if="state.fileType === 'audio/mpeg'" controls>
@@ -29,7 +32,9 @@ const props = defineProps<{
     id: string,
     blob: Blob,
     name: string,
-    annotations: Array
+    annotations?: Array,
+
+    loading: Boolean,
 }>()
 const state = reactive({
     url: '',
@@ -46,27 +51,3 @@ watch(() => props.blob, (newBlob:Blob) => {
 })
 defineExpose({ handleDownload })
 </script>
-
-<style scoped lang="scss">
-</style>
-<style lang="scss">
-.reader-dialog {
-    margin: unset;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    &-main{
-        height: 70vh;
-        width: 100%;
-        margin: auto;
-        overflow: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .el-dialog__body{
-        display: flex;
-    }
-}
-</style>

@@ -56,14 +56,21 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
     const previewFile = reactive({
         blob: null,
         name: '',
-        id: ''
+        id: '',
+        loading: false
     })
     async function handleFilePreview(fileInfo) {
         ReaderRef.value.handleOpen()
+        previewFile.loading = true
         const fileId = fileInfo.response && fileInfo.response.length > 0 ? fileInfo.response[0].contentId : fileInfo.id
-        previewFile.blob = await WorkflowAttachmentDownloadApi(fileId)
-        previewFile.name = fileInfo.name
+        try {
+            previewFile.blob = await WorkflowAttachmentDownloadApi(fileId)
+        } catch (error) {
+            
+        }
         previewFile.id = fileId
+        previewFile.name = fileInfo.name
+        previewFile.loading = false
     }
     defineExpose({ vFormRenderRef, setFormJson })
 </script>

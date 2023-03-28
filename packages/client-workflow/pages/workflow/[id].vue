@@ -69,7 +69,7 @@ async function getDetail() {
         default:
             state.taskDetail = await getTaskApi(processInstanceId)
     }
-    handleGetActivity(state.taskDetail.instanceId)
+    handleGetActivity(state.taskDetail.instanceId || state.taskDetail.processInstanceId)
     setTimeout(async() => {
         state.loading = true
         await handleFormDataGet()

@@ -1,12 +1,12 @@
 <template>
 <el-dialog v-model="state.dialogVisible" class="reader-dialog" :title="name"
     append-to-body >
-    <div class="reader-dialog-main" v-loading="state.loading">
+    <div class="reader-dialog-main" v-loading="loading">
         <Reader ref="ReaderRef" v-bind="props" ></Reader>
     </div>
 
     <template #footer>
-        <el-button :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+        <el-button v-if="!loading && blob"  :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
     </template>
 </el-dialog>
 </template>
@@ -17,24 +17,19 @@ const props = defineProps<{
     id: string,
     blob: Blob,
     name: string,
-    annotations: Array
+    annotations?: Array,
+    loading: Boolean,
 }>()
 const state = reactive({
-    dialogVisible: false,
-    loading: false
+    dialogVisible: false
 })
 function handleOpen() {
     state.dialogVisible = true 
-    state.loading = true
 }
 const ReaderRef = ref()
 function handleDownload() {
     ReaderRef.handleDownload()
 }
-watch(() => props.blob, (newBlob:Blob) => {
-    if( !newBlob ) return
-    state.loading = false
-})
 defineExpose({ handleOpen })
 </script>
 
