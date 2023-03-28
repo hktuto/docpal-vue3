@@ -19,7 +19,7 @@ import { vOnKeyStroke } from '@vueuse/components'
 import { onKeyStroke } from '@vueuse/core'
 
 const props = defineProps<{
-    doc: Object
+    doc: any
     show: boolean,
 }>();
 const {show} = toRefs(props);
@@ -29,7 +29,7 @@ const blobData = ref();
 const readerType = computed(() => {
     const properties = props.doc?.properties
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
-    // if(!mineType) return "unknown";
+    if(!mineType) return "pdf"; // set to pdf for testing
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text')  ) {
         return 'pdf';
     }
@@ -69,7 +69,7 @@ onKeyStroke("Escape", (e) => {
     display: flex;
     place-items: center;
     padding: var(--el-component-size-small);
-    
+
 }
 .header{
     width: 100%;

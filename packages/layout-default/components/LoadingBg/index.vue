@@ -53,7 +53,7 @@ onMounted(() => {
         opacity: 0;
         transition: opacity .3s ease-in-out;
         &.canvasInit{
-            opacity: 1;
+            opacity: 1 !important;
         }
     }
 }

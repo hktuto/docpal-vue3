@@ -41,6 +41,8 @@ class InkEditor extends AnnotationEditor {
 
   #baseWidth = 0;
 
+
+
   #boundCanvasPointermove = this.canvasPointermove.bind(this);
 
   #boundCanvasPointerleave = this.canvasPointerleave.bind(this);
@@ -75,6 +77,7 @@ class InkEditor extends AnnotationEditor {
 
   constructor(params) {
     super({ ...params, name: "inkEditor" });
+    // if params have paths, it means that we are editing an existing annotation
     this.color = params.color || null;
     this.thickness = params.thickness || null;
     this.opacity = params.opacity || null;
@@ -94,7 +97,6 @@ class InkEditor extends AnnotationEditor {
         l10n.get(str),
       ])
     );
-    console.log("lnk initialize");
   }
 
   static updateDefaultParams(type, value) {
@@ -487,18 +489,12 @@ class InkEditor extends AnnotationEditor {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.#updateTransform();
+    // save annotation to window
     for (const path of this.bezierPath2D) {
       ctx.stroke(path);
     }
-    console.log({
-      paths: this.paths,
-      color: this.color,
-      opacity: this.opacity,
-      pageDimensions: this.pageDimensions,
-      pageIndex: this.pageIndex,
-      bezierPath2D: this.bezierPath2D,
-    });
-    // console.log("redraw,", this);
+    const saveObj = this.serialize();
+    window.annotations.set(this.id,saveObj );
   }
 
   /**
@@ -659,6 +655,7 @@ class InkEditor extends AnnotationEditor {
 
   /** @inheritdoc */
   render() {
+    console.log("ink render")
     if (this.div) {
       return this.div;
     }
@@ -985,6 +982,7 @@ class InkEditor extends AnnotationEditor {
    */
   #fitToContent(firstTime = false) {
     if (this.isEmpty()) {
+      console.log("render empty");
       return;
     }
 

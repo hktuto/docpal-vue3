@@ -1,8 +1,7 @@
 import { api } from 'dp-api';
 
 export default defineNuxtPlugin(({$i18n}) => {
-    console.log($i18n);
-    
+
     if( typeof window !== undefined) {
         // @ts-ignore
         window.$api = api;

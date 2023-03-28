@@ -56,6 +56,7 @@ class AnnotationEditor {
    * @param {AnnotationEditorParameters} parameters
    */
   constructor(parameters) {
+    // console.log("AnnotationEditor constructor", parameters);
     if (this.constructor === AnnotationEditor) {
       unreachable("Cannot initialize AnnotationEditor.");
     }
@@ -526,6 +527,7 @@ class AnnotationEditor {
       this.commit();
     }
     this.parent.remove(this);
+    window.annotations.delete(this.id);
   }
 
   /**
