@@ -5,14 +5,15 @@
 </template>
 
 <script lang="ts" setup>
-import { GetDocumentPreview, GetAnnotation } from 'dp-api'
+import {GetDocumentPreview, GetAnnotation, SaveAnnotation} from 'dp-api'
 import {useI18n} from 'vue-i18n';
 import { useEventListener } from '@vueuse/core'
+
 const props = defineProps<{
-    doc: object
+    doc: any
 }>()
 
-const iframe = ref<HTMLElement>();
+const iframe = ref<HTMLIFrameElement>();
 const {public:{pdfReaderUrl}} = useRuntimeConfig();
 const loading = ref(false);
 // const colorMode = useColorMode();
@@ -20,13 +21,19 @@ const {locale} = useI18n()
 
 async function getAnnotation():Promise<Object> {
     const annotation = await GetAnnotation(props.doc.id )
-    let annotationObj = {}
+    console.log(annotation);
+    let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
-            annotationObj = JSON.parse(annotation[0].object.paths)
+            annotationObj = Array.isArray(JSON.parse(annotation[0].object.paths)) ? JSON.parse(annotation[0].object.paths) : []
         }
     }
-    return annotationObj;
+    console.log(annotationObj);
+    const annotationMap = new Map();
+    annotationObj.forEach((item:any) => {
+        annotationMap.set(item.id, item);
+    });
+    return annotationMap;
 }
 
 async function sendPdfAndAnnotation() {
@@ -34,8 +41,8 @@ async function sendPdfAndAnnotation() {
     try {
         const blob = await GetDocumentPreview(props.doc.id);
         const annotations = await getAnnotation()
-        const frame = iframe.value.contentWindow;
-        const sendMessage = frame.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*'); 
+        const frame = iframe.value?.contentWindow;
+        frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*');
     } catch (error) {
         console.log(error);
     }
@@ -43,17 +50,48 @@ async function sendPdfAndAnnotation() {
 }
 
 function gotMessageFromIframe(message:MessageEvent) {
+    console.log(message.data.type);
     const { data } = message;
     if(!data) return;
 
-    if(data.type === 'ready' ) {
-        sendPdfAndAnnotation()
+    switch(data.type) {
+        case 'ready':
+            sendPdfAndAnnotation()
+            break;
+        case 'annotation':
+            saveAnnotation(data.data)
+            break;
+        default:
+            break;
     }
+
+}
+
+async function saveAnnotation(annotation:Map<string, object>) {
+    //return if annotation is empty
+    if(!annotation || annotation.size === 0) return;
+
+    // convert Map to array of objects
+    const paths:any[] = [];
+    annotation.forEach((value:any, key:any) => {
+      paths.push({id: key, ...value});
+    });
+    const param = {
+        documentIdOrPath: props.doc.id,
+        object: {
+            paths: JSON.stringify(paths)
+        },
+        comments: []
+    }
+    await SaveAnnotation([param])
+    //  TODO : show notification
+    console.log("Annotation saved successfully");
+
 }
 
 useEventListener(window, 'message', gotMessageFromIframe)
 
-</script> 
+</script>
 
 <style lang="scss" scoped>
 .contentContainer{

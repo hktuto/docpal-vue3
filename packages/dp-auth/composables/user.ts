@@ -59,6 +59,7 @@ export const useUser = () => {
         if(!userColorValid) {
           delete userSetting.color;
         }
+        console.log(userSetting);
         userPreference.value = Object.assign(
             {
                 size: '14px',

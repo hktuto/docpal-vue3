@@ -33,10 +33,14 @@ export const GetDocumentPreview = async(idOrPath:string) => {
     }).then(res =>res.data)
 }
 
-export const GetAnnotation = async(idOrPath:string) => {
+export const GetAnnotation = async(idOrPath:string):Promise<any[]> => {
     return api.get('/nuxeo/annotation', {params:{
         idOrPath
-    }})
+    }}).then(res =>res.data);
+}
+
+export const SaveAnnotation = async(data: any) => {
+    return api.post('/nuxeo/annotation', data).then(res => res.data);
 }
 export const GetTemplateListApi = async() => {
     return api.post('/nuxeo/template/getTemplateList').then(res => res.data)

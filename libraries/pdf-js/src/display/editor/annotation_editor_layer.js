@@ -357,7 +357,6 @@ class AnnotationEditorLayer {
       case AnnotationEditorType.FREETEXT:
         return new FreeTextEditor(params);
       case AnnotationEditorType.INK:
-        console.log("create Ink :", params);
         return new InkEditor(params);
     }
     return null;
@@ -376,6 +375,11 @@ class AnnotationEditorLayer {
         return InkEditor.deserialize(data, this, this.#uiManager);
     }
     return null;
+  }
+
+  #addAnnotation(data) {
+    const newEditor = this.deserialize(data);
+    this.add(newEditor);
   }
 
   /**
@@ -555,11 +559,23 @@ class AnnotationEditorLayer {
    */
   render({ viewport }) {
     this.viewport = viewport;
+    // console.log("render", viewport);
+
     setLayerDimensions(this.div, viewport);
+    const annotations =  Array.from(window.annotations).filter(
+      ([key,item]) => (item.pageIndex === this.pageIndex)
+    );
+    // loop through annotations
+    annotations.forEach(([key,editor]) => {
+      this.#addAnnotation(editor);
+      window.annotations.delete(key);
+    });
     bindEvents(this, this.div, ["dragover", "drop"]);
     for (const editor of this.#uiManager.getEditors(this.pageIndex)) {
       this.add(editor);
     }
+    // get annotations from page
+
     this.updateMode();
   }
 

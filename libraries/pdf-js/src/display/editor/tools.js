@@ -422,6 +422,7 @@ class AnnotationEditorUIManager {
   ]);
 
   constructor(container, eventBus, annotationStorage) {
+    console.log("UIManager constructor");
     this.#container = container;
     this.#eventBus = eventBus;
     this.#eventBus._on("editingaction", this.#boundOnEditingAction);
