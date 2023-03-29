@@ -3,7 +3,7 @@
         <div v-if="id">{{$t('fileNoExist')}}</div>
     </template>
     <template v-else-if="state.fileType === 'application/pdf' && state.url" >
-        <ReaderPdf v-bind="props"></ReaderPdf>
+        <ReaderPdf v-bind="props" :no-annotation="!!annotations"></ReaderPdf>
     </template>
     <audio v-else-if="state.fileType === 'audio/mpeg'" controls>
         <source :src="state.url" :type="state.fileType" />

@@ -17,15 +17,17 @@ const iframe = ref<HTMLElement>();
 const { public:{ pdfReaderUrl } } = useRuntimeConfig();
 const { locale } = useI18n()
 
+const emits = defineEmits(['saveAnnotation'])
+
 async function sendPdfAndAnnotation() {
     const frame = iframe.value.contentWindow;
     const sendMessage = frame.postMessage({
         blob:props.blob,
         filename: props.name,
-        annotations: props.annotations,
+        annotations: props.annotations,  
         locale: locale.value,
     }, '*');
-}
+}  
 
 
 function gotMessageFromIframe(message:MessageEvent) {
@@ -44,10 +46,10 @@ function gotMessageFromIframe(message:MessageEvent) {
     };
     
 }
-
-function saveAnnotation(newAnnotation) {
-    // save Annotation to server
-    console.log(newAnnotation)
+function saveAnnotation(annotation:Map<string,any>) {
+    // this function is called when the user clicks the save button on the annotation form
+    // we send the annotation data to the server
+    emits("saveAnnotation",annotation)
 }
 useEventListener(window, 'message', gotMessageFromIframe)
 </script>
