@@ -8,7 +8,7 @@
 import {useI18n} from 'vue-i18n';
 import { useEventListener } from '@vueuse/core'
 const props = defineProps<{
-    annotations: Array,
+    annotations: Map,
     blob: Blob,
     name: String
 }>()
@@ -16,30 +16,45 @@ const props = defineProps<{
 const iframe = ref<HTMLElement>();
 const { public:{ pdfReaderUrl } } = useRuntimeConfig();
 const { locale } = useI18n()
+
 async function sendPdfAndAnnotation() {
     const frame = iframe.value.contentWindow;
-    const sendMessage = frame.postMessage({ 
-        blob:props.blob, 
-        filename: props.name, 
-        annotations: props.annotations, 
-        locale: locale.value, 
-    }, '*'); 
+    const sendMessage = frame.postMessage({
+        blob:props.blob,
+        filename: props.name,
+        annotations: props.annotations,
+        locale: locale.value,
+    }, '*');
 }
+
+
 function gotMessageFromIframe(message:MessageEvent) {
     const { data } = message;
     if(!data) return;
 
-    if(data.type === 'ready' ) {
-        sendPdfAndAnnotation()
-    }
+    switch(data.type) {
+        case 'ready':
+            sendPdfAndAnnotation()
+            break;
+        case 'annotation':
+            saveAnnotation(data.data)
+            break;
+        default:
+            break
+    };
+    
+}
+
+function saveAnnotation(newAnnotation) {
+    // save Annotation to server
+    console.log(newAnnotation)
 }
 useEventListener(window, 'message', gotMessageFromIframe)
-</script> 
+</script>
 
 <style lang="scss" scoped>
 .contentContainer{
     width: 100%;
-    max-width: 800px;
     height: 100%;
     margin: 0 auto;
     background: #fff;

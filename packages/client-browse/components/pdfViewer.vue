@@ -95,8 +95,7 @@ useEventListener(window, 'message', gotMessageFromIframe)
 
 <style lang="scss" scoped>
 .contentContainer{
-     width: 100%;
-    max-width: 800px;
+    width: 100%;
     height: 100%;
     margin: 0 auto;
     background: #fff;
