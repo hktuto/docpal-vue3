@@ -8,13 +8,15 @@ export function customLayer():string[] {
     // all stores
     
 
-
+    
     packages.push('../../packages/client-browse');
     packages.push('../../packages/client-trash');
     packages.push('../../packages/client-smart-folder');
+    packages.push('../../packages/client-file-request');
+    packages.push('../../packages/client-share-list');
     packages.push('../../packages/client-collection');
     packages.push('../../packages/client-workflow');
-
+    
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")
     

@@ -1,14 +1,18 @@
 <template>
     <div class="searchContainer" @mouseleave="blurInput" @mouseenter="elHoverHandler">
-        <div ref="wrapper" :class="{wrapper:true, dropdownOpened}">
-            <div :class="{inputContainer:true, dropdownOpened}" @mouseenter="focusInput">
+        <div ref="wrapper" :class="{wrapper:true, dropdownOpened: !!dropdownState}">
+            <div :class="{inputContainer:true, dropdownOpened: !!dropdownState}" @mouseenter="focusInput">
                 <ElIcon><Search /></ElIcon>
-                <input ref="inputEl" :value="searchFilter.keyword" :placeholder="$t('search_keyword')" @input="keywordInputHandler"  />
+                <input ref="inputEl" :value="state.keyword" :placeholder="$t('search_keyword')" 
+                    @input="keywordInputHandler"
+                    @keyup.enter="goRoute()" />
                 <ElIcon class="filterIcon" @click="openFilter"><Operation /></ElIcon>
             </div>
-            <div  :class="{popUpDialog:true, dropdownOpened}">
-                <SearchFilter v-if="filterOpened" @closed="filterOpened = false" @submit=""/>
-                <!-- <SearchShortResult v-if="optionOpened" /> -->
+            <div  :class="{popUpDialog:true, dropdownOpened: !!dropdownState}">
+                <SearchFilter v-show="dropdownState === 'filter'" 
+                    :searchParams="state.searchParams"
+                    @closed="dropdownState = ''" @submit="handleSubmit"/>
+                <!-- <SearchShortResult v-else-if="dropdownState === 'list'" /> -->
             </div>
         </div>
     </div>
@@ -17,29 +21,80 @@
 <script lang="ts" setup>
 import {Search, Operation} from '@element-plus/icons-vue';
 import { watchDebounced, onClickOutside } from '@vueuse/core'
-const show = ref(false);
-
+import { getSearchParamsArray } from 'dp-api'
+const router = useRouter()
+const route = useRoute()
 const inputEl = ref();
-const wrapper = ref();
-const {searchFilter, search} = useSearch();
-
-//#region  dialog 
-const optionOpened = ref(false);
-const filterOpened = ref(false);
-const dropdownOpened = computed(() => {
-    return optionOpened.value || filterOpened.value;
-})
-
-function openFilter(){
-    filterOpened.value = true;
-}
-onClickOutside(wrapper, (event) => {
-    if(dropdownOpened.value) {
-        optionOpened.value = false;
-        filterOpened.value = false;
+const state = reactive({
+    dropdownState: '', // '' || 'filter' || 'list'
+    formOpen: false, // 控制formChange带来的路由跳转
+    
+    keyword: '',
+    searchParams: {
+        // paramsInTextSearch: [],
+        // textSearchType: '',
+        // folderType: '',
+        // type: [],
+        // modified: '',
+        // authors: [],
+        // collections: [],
+        // tags: [],
+        // size: '',
+        // pageSize: 20,
+        // currentPageIndex: 1
     }
 })
-//#endregion
+const { dropdownState } = toRefs(state)
+// #region  dialog 
+    const wrapper = ref();
+
+    function openFilter(){
+        state.dropdownState =  'filter'
+        stopFormSubmit()
+    }
+    function stopFormSubmit () {
+        state.formOpen = true
+        setTimeout(() => {
+            state.formOpen = false
+        }, 2000)
+    }
+    onClickOutside(wrapper, (event) => {
+        if (isElPopover(event.path)) return
+        if(state.dropdownState) {
+            state.dropdownState = ''
+        }
+    })
+    function isElPopover(pathList: any) {
+        for(var index in pathList) {
+            const element = pathList[index]
+            if(element && 
+                element.className &&
+                typeof element.className === 'string' &&
+                element.className.includes('el-popper')) return true
+            if(index > 5) return false
+        }
+        return false
+    }
+// #endregion
+function handleSubmit (data) {
+    state.searchParams = {
+        ...data
+    }
+    if(state.formOpen) return
+    goRoute()
+}
+function goRoute() {
+    const searchBackPath = route.query.searchBackPath ? route.query.searchBackPath : route.fullPath
+    router.push({
+        path: '/search',
+        query: { 
+            ...state.searchParams, 
+            pageSize: 20,
+            currentPageIndex: 1,
+            searchBackPath 
+        }
+    })
+}
 function elHoverHandler() {
     
 }
@@ -50,13 +105,17 @@ function blurInput() {
     inputEl.value.blur();
 }
 
-
-
-function keywordInputHandler() {
-    keyword.value = inputEl.value.value;
+function keywordInputHandler(event) {
+    const value = event.target.value
+    state.searchParams.paramsInTextSearch = [value]
 }
-
-
+onMounted(() => {
+    state.searchParams = getSearchParamsArray(route.query)
+    if(state.searchParams.paramsInTextSearch) {
+        state.keyword = state.searchParams.paramsInTextSearch.join('')
+    }
+    stopFormSubmit()
+})
 
 </script>
 

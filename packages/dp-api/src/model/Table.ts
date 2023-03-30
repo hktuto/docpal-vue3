@@ -66,6 +66,7 @@ export enum TABLE {
     CLIENT_SMART_FOLDER = 'clientSmartFolder',
     CLIENT_COLLECTION = 'clientCollection',
     CLIENT_SHARE_LIST = 'clientShareList',
+    CLIENT_SEARCH = 'clientSearch',
     CLIENT_FILE_REQUEST = 'clientFileRequest',
     CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit',
     CLIENT_WORKFLOW_All_TASK = 'clientAllTask',
@@ -741,6 +742,32 @@ export const defaultTableSetting: TableColumnSetting = {
             },
         ],
         events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SEARCH] : {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
+            { id: '3', label: 'tableHeader_type', prop: 'type' },
+            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '5', slot: 'tags', label: 'dpTable_tags', prop: 'tags' },
+        ],
+        events: [],
+        slots: [
+            { slot: 'tags', label: 'dpTable_tags', prop: 'tags' },
+        ],
         options: { pageSize: 20 }
     },
 
