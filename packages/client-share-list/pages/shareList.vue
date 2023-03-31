@@ -84,9 +84,7 @@ const { t } = useI18n();
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 const shareInfoDialogRef = ref()
-const detailFile=ref<any>({
-    name: ''
-})
+
 function handleDblclick (row) {
     shareInfoDialogRef.value.handleOpen(row)
 }

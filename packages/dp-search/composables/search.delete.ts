@@ -1,3 +1,5 @@
+// 没有用到,建议删除
+
 import { ref } from 'vue';
 import { watchDebounced } from '@vueuse/core'
 type Command = {
@@ -28,16 +30,16 @@ export const useSearch = () => {
 
     const commands = ref<Command[]>([]);
 
-    const searchFilter = useState<SearchFilter>('searchFilter',() => ({
-        paramsInTextSearch: [],
-        textSearchType: '',
-        folderType: '',
-        type: [],
-        modified: '',
-        authors: [],
-        collections: [],
-        tags: [],
-        size: '',
+    const searchParams = useState<SearchFilter>('searchParams',() => ({
+        // paramsInTextSearch: [],
+        // textSearchType: '',
+        // folderType: '',
+        // type: [],
+        // modified: '',
+        // authors: [],
+        // collections: [],
+        // tags: [],
+        // size: '',
         pageSize: 20,
         currentPageIndex: 1
     }))
@@ -45,10 +47,12 @@ export const useSearch = () => {
     const searchResult = useState('searchResult',() => ([]));
 
     async function search(){
-
+        console.log({searchParams});
+        
     }
 
-    watchDebounced(searchFilter, (newFilter, oldFilter) => {
+    watchDebounced(searchParams, (newFilter, oldFilter) => {
+        console.log(newFilter, oldFilter, '???????????');
         search()
     },{ debounce: 200, maxWait: 500 },)
 
@@ -56,6 +60,6 @@ export const useSearch = () => {
         commands,
         searchResult,
         search,
-        searchFilter
+        searchParams
     }
 }
