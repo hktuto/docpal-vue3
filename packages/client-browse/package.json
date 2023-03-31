@@ -12,7 +12,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "v-form":"workspace:*"
   },
   "devDependencies": {
     "@nuxt/devtools": "^0.1.4",

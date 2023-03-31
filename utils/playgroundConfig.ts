@@ -1,9 +1,10 @@
+// @ts-ignore
 const ExcutingAnOrder = process.env.npm_lifecycle_script.split(' ')
 const env = ExcutingAnOrder[ExcutingAnOrder.length - 1];
 const defaultConfig = {
   plugins:[
 
-  ],
+  ] as any[],
   runtimeConfig:{
       env,
       public:{
@@ -26,7 +27,6 @@ type RuntimeOption = {
 
 
 const makeConfig = (options:RuntimeOption) => {
-  defaultConfig.vite.optimizeDeps.include.push('v-form/dist/designer.umd');
     defaultConfig.plugins.push({
       src:'../../../utils/formDesignerPlugin', mode: 'client'
     })

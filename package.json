@@ -11,6 +11,6 @@
   "scripts": {
   },
   "devDependencies": {
-    "v-form":"workspace:*"
+    "v-form": "github:hktuto/v-form-designer"
   }
 }
