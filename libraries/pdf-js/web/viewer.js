@@ -200,21 +200,25 @@ function webViewerLoad() {
 // works in Firefox; see https://bugzilla.mozilla.org/show_bug.cgi?id=1618553
 document.blockUnblockOnload?.(true);
 
-if (
-  document.readyState === "interactive" ||
-  document.readyState === "complete"
-) {
-  // webViewerLoad();
-  window.addEventListener('message', messageFromParent, false)
-  sendMessageToParent("ready");
+// wrap webViewerLoad in a function to be called after the document is ready
 
-} else {
-  // document.addEventListener("DOMContentLoaded", webViewerLoad, true);
-}
+document.onreadystatechange = function () {
+  if (
+    document.readyState === "interactive" ||
+    document.readyState === "complete"
+  ) {
+    console.log("Document ready");
+    // webViewerLoad();
+    window.addEventListener("message", messageFromParent, false);
+    sendMessageToParent("ready");
+  } else {
+    // document.addEventListener("DOMContentLoaded", webViewerLoad, true);
+  }
+};
 
 // get file and annotations from parent and set it into window
 function messageFromParent(ev) {
-  // console.log("Message from parent", ev);
+  console.log("Message from parent", ev);
   if (!ev || !ev.data) {
     return;
   }
@@ -251,9 +255,9 @@ function saveAnnotation() {
 }
 
 function sendMessageToParent(type, data) {
+  console.log("Send message to parent", type, data);
   parent.postMessage({ type, data }, "*");
 }
-
 
 export {
   PDFViewerApplication,
