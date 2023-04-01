@@ -4,17 +4,42 @@
         <div v-if="data" class="browsePageContainer">
             <div class="browseHeader">
                 <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
-                <div class="browseHeaderRight">
-                    <Teleport :disabled="data.isFolder" to="body">
-                        <BrowseActionsCopyPath :doc="data" />
-                    </Teleport>
+                <div id="browseHeaderRight" class="">
+                    
                 </div>
-
             </div>
-            <BrowseTable :path="routePath" :doc="data"/>
+            <div class="browseViewContainer">
+                <BrowseTable :path="routePath" :doc="data"/>
+            </div>
         </div>
-        <Teleport v-if="data && !data.isFolder" to="body">
-            <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" />
+        <Teleport v-if="data" :disabled="data.isFolder" to="body">  
+            <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" >
+                <div class="fileNameContainer">
+                    <div class="fileName">{{ data.name }}</div>
+                    <BrowseActionsEditName :doc="data" />
+                </div>
+                    <div class="actions">
+                        <Teleport :disabled="!data.isFolder" to="#browseHeaderRight">
+                            <BrowseActionsSubscribe  :doc="data" />
+                            <div class="actionDivider"></div>
+                            <BrowseActionsEdit v-if="!data.isFolder" :doc="data" />
+                            <BrowseActionsUpload v-if="data.isFolder" :path="data.path" />
+                            <BrowseActionsDownload v-if="!data.isFolder"  :doc="data" />
+                            <BrowseActionsNewFolder v-if="data.isFolder" :path="data.path" />
+                            <BrowseActionsDelete :doc="data" @delete="itemDeleted"/>
+                            <div class="actionDivider"></div>
+                            <BrowseActionsCopyPath :doc="data" />
+                            <BrowseActionsShare :doc="data" />
+                            <BrowseActionsUploadRequest v-if="data.isFolder" :path="data.path" />
+                        </Teleport>
+                        <div class="actionDivider"></div>
+                        <div class="actionIconContainer">
+                            <el-icon @click="detailClosed">
+                                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
+                            </el-icon>
+                        </div>
+                    </div>
+            </BrowseDetail>
         </Teleport>
         </page-container>
     </NuxtLayout>
@@ -24,14 +49,17 @@
 <script lang="ts" setup>
 import {watch, ref, computed} from 'vue'
 import { GetDocDetail, GetDocPermission } from 'dp-api'
+import { Close } from ''
+// #region refs
 const breadCrumb = ref();
 const icon = ref("");
 const route = useRoute();
 const data = ref();
 const loading = ref(false)
-
 const permission = ref({permission:"",print:false});
 const auth = useUser();
+const selectedFiles = ref([]); 
+// #endregion
 
 const routePath = computed( () => (route.query.path as string) || '/')
 
@@ -41,6 +69,13 @@ async function getPermission(){
 async function getDocDetail() {
      data.value = await GetDocDetail(routePath.value);
 }
+
+function itemDeleted(){
+    if(!data.value.isFolder){
+        breadCrumb.value.goParent();
+    }
+}
+
 watch(route, async() => {
     loading.value = true;
     await Promise.all([
@@ -61,10 +96,11 @@ function detailClosed() {
 <style lang="scss" scoped>
 .browsePageContainer{
     display: grid;
-    grid-template-rows: min-content min-content 1fr;
+    grid-template-rows: min-content 1fr;
     gap : var(--app-padding);
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
+    position: relative;
 }
 .browseHeader{
     display: grid;
@@ -72,5 +108,45 @@ function detailClosed() {
     justify-content: flex-start;
     align-items: center;
 
+}
+.fileName{
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #fff;
+}
+.actions, #browseHeaderRight{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--app-padding);
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 16px;
+    --icon-size: 16px;
+    
+}
+.actionDivider{
+    height: calc( var(--icon-size) + 16px);
+    width: 1px;
+    background: var(--color-grey-100);
+}
+.fileNameContainer{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--app-padding);
+    align-items: center;
+}
+:deep {
+    .actionIconContainer{
+        font-size: var(--icon-size);
+        background: var(--color-grey-150);
+        padding: 8px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--color-grey-950);
+        &:hover{
+            background: var(--color-grey-200);
+        }
+    }
 }
 </style>

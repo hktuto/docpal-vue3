@@ -1,10 +1,8 @@
 <template>
     <div class="browseDetailContainer">
-        <div v-if="show" class="dialog">
-            <div class="header">
-                <div id="fileDetailHeaderLeft" class="headerLeft"></div>
-                <div class="fileName">{{ doc.name }}</div>
-                <div id="fileDetailHeaderRight" class="headerRight"></div>
+        <div v-show="show" class="dialog">
+            <div id="modalHeader">
+                <slot />
             </div>
             <div class="content">
                 <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc"  />
@@ -39,6 +37,7 @@ const readerType = computed(() => {
 });
 
 onKeyStroke("Escape", (e) => {
+    console.log("Escape", e);
     if(props.show) {
         emit('close')
     }
@@ -53,11 +52,20 @@ onKeyStroke("Escape", (e) => {
     left:0;
     top:0;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     z-index: 5;
     background-color: rgba(0,0,0,0.8);
     display: grid;
     grid-template-rows: min-content 1fr;
+}
+#modalHeader{
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: var(--app-padding);
+    padding-inline: var(--el-component-size-small);
+    padding-top: var(--app-padding);
+    color: var(--color-grey-0000);
+    align-content: center;
 }
 .header{
     min-height: 40px;;
