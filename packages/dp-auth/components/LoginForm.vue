@@ -48,6 +48,7 @@ async function submit() {
     } catch (error) {
         console.log(error);
     }
+    loading.value = false;
 }
 </script>
 
