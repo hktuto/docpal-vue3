@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts" setup>
-import { vOnKeyStroke } from '@vueuse/components'
 import { onKeyStroke } from '@vueuse/core'
 
 const props = defineProps<{
