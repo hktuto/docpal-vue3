@@ -13,6 +13,9 @@ export const GetChildThumbnail = async(idOrPath: string):Promise<GetChildRespons
 export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {
     return api.post<DocDetail>('/nuxeo/document',{ idOrPath }).then(res => res.data);
 }
+export const GetDocPermission = async(idOrPath:string, userId:string):Promise<{permission:string,print:boolean}> => {
+    return api.get<{permission:string,print:boolean}>(`/nuxeo/document/acl/permission?docId=${idOrPath}&userId=${userId}`).then(res => res.data);
+}
 export const patchDocApi = async(params: DocDetail):Promise<DocDetail> => {
     return api.patch<DocDetail>('/nuxeo/document', params).then(res => res.data);
 }
