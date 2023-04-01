@@ -99,10 +99,10 @@ export const useUser = () => {
         const {access_token, refresh_token, isRequired2FA} = await Login({
             username,  password
         })
-
         token.value = access_token,
         refreshToken.value = refresh_token
         sessionStorage.setItem('token', access_token);
+        localStorage.setItem('refreshToken', refresh_token);
         api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
         if(!isRequired2FA) {
             await verify();
@@ -121,6 +121,7 @@ export const useUser = () => {
         if(sessionStorage){
             sessionStorage.removeItem('token');
         };
+        localStorage.removeItem('refreshToken');
     }
 
     return {
