@@ -11,7 +11,10 @@
         </div>
         <main id="mainContainer">
             <div id="topBarContainer">
+              <div class="headerLeft">
                   <PageTitle  :backPath="backPath"/>
+                  <slot name="headerLeft" />
+              </div>
                 <div class="expand">
                   <SmartSearch />
                   <slot name="postHeader" />
@@ -76,6 +79,13 @@ const { x, y } = useMouse()
     align-items: center;
     position: relative ; // some browser default position is static, will ignore z-index;
     z-index: 2;
+    .headerLeft{
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--app-padding);
+    }
     .expand{
       display: flex;
       flex-flow: row nowrap;
