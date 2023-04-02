@@ -1,5 +1,8 @@
 <template>
     <NuxtLayout >
+        <template #headerLeft>
+            <BrowseList :doc="data" :permission="permission" />
+        </template>
         <page-container>
         <div v-if="data" class="browsePageContainer">
             <div class="browseHeader">
@@ -8,8 +11,7 @@
                     
                 </div>
             </div>
-            <div class="browseViewContainer">
-                <BrowseTable :path="routePath" :doc="data"/>
+            <div class="browseViewContainer" id="mainView">
             </div>
         </div>
         <Teleport v-if="data" :disabled="data.isFolder" to="body">  
