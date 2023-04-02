@@ -1,6 +1,6 @@
 <template>
     <div class="tableContainer">
-        <ElTable v-loading="pending" :data="data" style="width:100%" @cell-dblclick="dbClickHandler">
+        <ElTable v-loading="loading" :data="data" style="width:100%" @cell-dblclick="dbClickHandler">
             <ElTableColumn :label="$t('tableHeader_name')" >
                  <template #default="scope">
                      <div class="nameContainer">
@@ -16,17 +16,15 @@
 </template>
 
 <script lang="ts" setup>
-import { GetChild } from 'dp-api'
 // setup
 const router = useRouter();
 
 const props = defineProps<{
-    path:string,
-    doc:Object
+    data?: any[],
+    loading?: boolean
 }>()
 const {doc} = toRefs(props)
 const emits = defineEmits(['selectedChanged'])
-const { data, refresh, pending } = useAsyncData(() => GetChild(props.doc.path));
 
 function dbClickHandler(row) {
     router.push({
@@ -37,13 +35,7 @@ function dbClickHandler(row) {
     })
 }
 
-watch(doc, (d:any) => {
-    if(d && d.isFolder) {
-        refresh()
-    }
-}, {
-    immediate: true
-})
+
 
 </script>
 
