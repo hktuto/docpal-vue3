@@ -78,7 +78,7 @@ const { x, y } = useMouse()
     gap: var(--app-padding);
     align-items: center;
     position: relative ; // some browser default position is static, will ignore z-index;
-    z-index: 2;
+    z-index: 4;
     .headerLeft{
       display: flex;
       flex-flow: row nowrap;

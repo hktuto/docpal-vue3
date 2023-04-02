@@ -1,7 +1,7 @@
 <template>
     <div class="actionIconContainer">
         <el-popover placement="bottom" trigger="click" @command="changeType">
-                <template #reference>
+            <template #reference>
                 <div class="clickCon" >
                 <el-tooltip content="View type">   
                     <el-icon class="actionIcon" >
@@ -13,7 +13,7 @@
              <div class="popoverContent">
                 <!-- TODO : add label -->
                 <div class="sectionLabel">View Type</div>
-                <el-select v-model="viewType">
+                <el-select v-model="options.viewType" >
                     <el-option label="Preview" value="preview"></el-option>
                     <el-option label="Table" value="table"></el-option>
                     <el-option label="Tree" value="tree"></el-option>
@@ -23,45 +23,20 @@
              </div>
             
         </el-popover>
-        
-        <Teleport v-if="data" to="#mainView">
-            <div v-if="viewType === 'table'">
-                <browse-table :data="data" :loading="pending" />
-            </div>
-            <!-- <div v-else-if="viewType === 'preview'">
-                <browse-preview :doc="doc" :permission="permission" :data="data" :pending="pending" />
-            </div>
-            <div v-else-if="viewType === 'tree'">
-                <browse-tree :doc="doc" :permission="permission" :data="data" :pending="pending" />
-            </div>
-            <div v-else-if="viewType === 'column'">
-                <browse-column :doc="doc" :permission="permission" :data="data" :pending="pending" />
-            </div> -->
-        </Teleport>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { GetChild } from 'dp-api'
-type ViewType = 'preview' | 'table' | 'tree' | 'column'
-
+import { BrowseOptions } from "../browseType"
 const props = defineProps<{
-    doc?: any,
-    permission?: any,
-}>()
-const {doc} = toRefs(props)
-const viewType = ref<ViewType>('table')
+    modelValue: BrowseOptions;
+}>();
+const emits = defineEmits<{
+    (event: 'update:modelValue', ...args: any[]): void;
+}>();
+const options = computed({ 
+      get: () => props.modelValue, 
+      set: (value) => emits('update:modelValue', value) 
+}) 
 
-const { data, refresh, pending } = useAsyncData(() => GetChild(props.doc.path));
-
-const changeType = (type: ViewType) => {
-    viewType.value = type
-}
-watch(doc, (d:any) => {
-    if(d && d.isFolder) {
-        refresh()
-    }
-}, {
-    immediate: true
-})
 </script>

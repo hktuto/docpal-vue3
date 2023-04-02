@@ -1,18 +1,16 @@
 <template>
     <NuxtLayout >
         <template #headerLeft>
-            <BrowseList :doc="data" :permission="permission" />
+            <browse-options v-model="pageOptions" />
         </template>
         <page-container>
         <div v-if="data" class="browsePageContainer">
             <div class="browseHeader">
                 <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
-                <div id="browseHeaderRight" class="">
-                    
+                 <div id="browseHeaderRight" class="">
                 </div>
             </div>
-            <div class="browseViewContainer" id="mainView">
-            </div>
+             <BrowseList :doc="data" :permission="permission" :viewType="pageOptions.viewType"/>
         </div>
         <Teleport v-if="data" :disabled="data.isFolder" to="body">  
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" >
@@ -51,7 +49,7 @@
 <script lang="ts" setup>
 import {watch, ref, computed} from 'vue'
 import { GetDocDetail, GetDocPermission } from 'dp-api'
-import { Close } from ''
+
 // #region refs
 const breadCrumb = ref();
 const icon = ref("");
@@ -61,6 +59,7 @@ const loading = ref(false)
 const permission = ref({permission:"",print:false});
 const auth = useUser();
 const selectedFiles = ref([]); 
+const pageOptions = ref<BrowseOptions>({viewType:'table'})
 // #endregion
 
 const routePath = computed( () => (route.query.path as string) || '/')
