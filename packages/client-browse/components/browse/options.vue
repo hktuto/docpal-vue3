@@ -16,8 +16,6 @@
                 <el-select v-model="options.viewType" >
                     <el-option label="Preview" value="preview"></el-option>
                     <el-option label="Table" value="table"></el-option>
-                    <el-option label="Tree" value="tree"></el-option>
-                    <el-option label="Column" value="column"></el-option>
                 </el-select>
                 <el-divider />
              </div>

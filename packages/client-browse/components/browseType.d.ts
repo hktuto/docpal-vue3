@@ -1,4 +1,4 @@
-export type ViewType = 'preview' | 'table' | 'tree' | 'column'
+export type ViewType = 'preview' | 'table' 
 export type BrowseOptions = {
     viewType: ViewType
 }
