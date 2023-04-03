@@ -453,9 +453,9 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
-            { label: 'dpTable_email', prop: 'email' },
-            { label: 'dpTable_location', prop: 'documentId' },
-            { label: 'dpTable_message', prop: 'message' },
+            { label: 'dpTable_email', prop: 'email', showOverflowTooltip: true },
+            { label: 'dpTable_location', prop: 'documentId', showOverflowTooltip: true },
+            { label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
             { label: 'dpTable_status', prop: 'status',
                 formatList: [
                     {

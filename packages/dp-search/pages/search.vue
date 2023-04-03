@@ -70,7 +70,12 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
 // #endregion
 
 function handleDblclick (row) {
-
+    router.push({
+        path: '/browse',
+        query: {
+            path: row.path,
+        },
+    })
 }
 </script>
 

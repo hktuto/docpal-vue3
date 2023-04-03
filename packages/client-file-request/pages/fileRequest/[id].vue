@@ -69,9 +69,13 @@
                     </template>
                 </Table>
             </div>
-            <div class="right">
-                {{curDoc}}
-            </div>
+            <el-card class="right">
+                <div class="flex-x-between">
+                    <div>{{previewFile.name}}</div>
+                    <el-button :icon="Download" :loading="previewFile.downloadLoading" @click="handleDownload(previewFile)">{{$t('download')}}</el-button>
+                </div>
+                <Reader ref="ReaderRef" v-bind="previewFile"></Reader>
+            </el-card>
         </div>
     </NuxtLayout>
 </template>
@@ -82,16 +86,17 @@ import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 import { 
+    WorkflowAttachmentDownloadApi,
     getFormPropsApi, 
     workflowAttachmentInfoGetApi, 
     getDocTypeListApi,
     metaValidationRuleGetApi,
     workflowFormSubmitApi,
+    WorkflowAttachmentPreviewApi,
     TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const route = useRoute()
 const state = reactive({
-    curDoc: {},
     curReaderType: '',
     documentType: '',
     fileTypes: [],
@@ -119,7 +124,7 @@ const state = reactive({
         const response = await getFormPropsApi({ taskId: route.params.id })
         const index = response.findIndex(item => item.id === 'files')
         if (index !== -1) tableData.value = await revertUploadFile( response[index].value)
-        if(tableData.value.length > 0) state.curDoc = tableData.value[0]
+        if(tableData.value.length > 0) handleDblclick(tableData.value[0])
         state.loading = false
         getRQDetail(['email','documentId', 'submittedDate'], response)
     }
@@ -293,15 +298,38 @@ const state = reactive({
         return false
     }
 // #endregion
-function handleDblclick (row) {
-    state.curDoc = row
+const previewFile = reactive({
+    blob: null,
+    name: '',
+    id: '',
+    loading: false,
+    downloadLoading: false
+})
+async function handleDblclick (row) {
+    previewFile.loading = true
+    try {
+        previewFile.blob = await WorkflowAttachmentPreviewApi(row.id)
+    } catch (error) {
+        
+    }
+    previewFile.loading = false
+    previewFile.id = row.id
+    previewFile.name = row.initName
 }
-
-const { curDoc, documentType, fileTypes, loading, defaultTime, options } = toRefs(state)
+async function handleDownload (file) {
+    file.downloadLoading = true
+    const blob = await WorkflowAttachmentDownloadApi(file.id)
+    setTimeout(() => { 
+        file.downloadLoading = false
+        downloadBlob(blob, file.name || file.title, blob.type)
+    }, 500)
+}
+const { documentType, fileTypes, loading, defaultTime, options } = toRefs(state)
 onMounted(async () => {
     getData()
     const res = await getDocTypeListApi()
     state.fileTypes = res.filter((item) => !item.isFolder)
+    
 })
 </script>
 
@@ -333,5 +361,10 @@ onMounted(async () => {
         grid-area: 2 / 2 / 3 / 3;
         min-width: 1px;
     }
+}
+.right :deep(.el-card__body){
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    gap: var(--app-padding);
 }
 </style>

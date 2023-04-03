@@ -311,12 +311,19 @@ defineExpose({ reorderColumn })
         margin-bottom: 10px;
     }
 }
+
 </style>
 <style lang="scss">
 .shiftSelect {
     background-color: red!important;
     td {
         background-color: red!important;
+    }
+}
+.dp-table-container--main {
+    .el-popper {
+        max-width: 80%;
+        line-height: 1.5rem;
     }
 }
 </style>
