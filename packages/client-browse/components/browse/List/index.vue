@@ -1,7 +1,7 @@
 <template>
     <div class="listContainer">
-         <div v-if="viewType === 'table'">
-            <browse-list-table :data="data" :loading="pending" />
+        <div v-if="viewType === 'table'" class="h100">
+            <browse-list-table :data="data" :loading="pending" @right-click="handleRightClick"/>
         </div>
         <!-- <div v-else-if="viewType === 'preview'">
             <browse-preview :doc="doc" :permission="permission" :data="data" :pending="pending" />
@@ -26,18 +26,16 @@ const props = withDefaults(defineProps<{
     viewType: 'table'
 })
 const {doc} = toRefs(props)
-
-
-const { data, refresh, pending } = useAsyncData(() => GetChild(props.doc.path));
-
-const changeType = (type: ViewType) => {
-    viewType.value = type
+function handleRightClick(data) {
+    console.log({data});
+    
 }
-watch(doc, (d:any) => {
-    if(d && d.isFolder) {
-        refresh()
-    }
-}, {
-    immediate: true
-})
 </script>
+<style lang="scss" scoped>
+.h100 {
+    height: 100%;
+}
+.listContainer {
+    overflow: hidden;
+}
+</style>

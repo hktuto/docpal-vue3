@@ -1,16 +1,16 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <el-container>
-            <el-aside width="200px">
-                <div class="collection-list" style="--color: #F56C6C">
-                    <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': curCollection.id === item.id}]" @click="handleTabClick(item)">
-                        <span class="ellipsis" :title="item.name">{{item.name}}</span>
-                        <el-icon class="color__danger__hover cursorPointer"
-                            @click.stop="handleDelete(item)"><Delete /></el-icon>
+                <el-card>
+                    <div class="collection-list" style="--color: #F56C6C">
+                        <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': curCollection.id === item.id}]" @click="handleTabClick(item)">
+                            <span class="ellipsis" :title="item.name">{{item.name}}</span>
+                            <el-icon class="color__danger__hover cursorPointer"
+                                @click.stop="handleDelete(item)"><Delete /></el-icon>
+                        </div>
                     </div>
-                </div>
-                <el-button :loading="fileFormAddLoading" @click="openDialog()">{{$t('collections_new')}}</el-button>
-            </el-aside>
+                    <el-button :loading="fileFormAddLoading" @click="openDialog()">{{$t('collections_new')}}</el-button>
+                </el-card>
             <el-container>
                 <el-header>
                     <div class="flex-x-start">{{curCollection.name}} 
@@ -219,7 +219,8 @@ onMounted(() => {
     height: 100%;
     overflow: hidden;
 }
-.el-aside {
+.el-card :deep(.el-card__body) {
+    width: 200px;
     display: grid;
     grid-template-rows: 1fr min-content;
     height: 100%;

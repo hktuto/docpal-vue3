@@ -3,11 +3,12 @@ import { BreadResponse, DocDetail, GetChildResponse,
     pageParams, collectionRemoveDocParams, collectionCreateParams,
     shareInfo,
     DocType,
-    Meta
+    Meta,
+    paginationData
 } from '../model';
 
-export const GetChildThumbnail = async(idOrPath: string):Promise<GetChildResponse> => {
-    return api.post<GetChildResponse>('/nuxeo/document/children/thumbnail',{ idOrPath }).then(res => res.data);
+export const GetChildThumbnail = async(params: pageParams):Promise<paginationData> => {
+    return api.post<paginationData>('/nuxeo/document/children/thumbnail', params ).then(res => res.data);
 }
 
 export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {

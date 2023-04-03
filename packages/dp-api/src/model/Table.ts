@@ -76,6 +76,7 @@ export enum TABLE {
     CLIENT_ADHOC_APPROVAL_TASK = 'clientAdhocApprovalTask',
     CLIENT_ADHOC_SUBMITTED_TASK = 'clientAdhocSubmittedTask',
     CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
+    CLIENT_BROWSE = 'clientBrowse',
 
     PUBLIC_SHARE = 'publicShare'
 }
@@ -382,6 +383,31 @@ export const defaultTableSetting: TableColumnSetting = {
             }
         ],
         events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_BROWSE] : {
+        columns: [
+            { slot: 'docName', label: 'table_name', prop: 'name' },
+            { label: 'table_name', prop: 'name' },
+            { label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            }
+        ],
+        events: [],
+        slots: [
+            { slot: 'docName', label: 'table_name', prop: 'name' },
+            { id: '3', label: 'tableHeader_type', prop: 'type' },
+        ],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_SHARE_LIST] : {

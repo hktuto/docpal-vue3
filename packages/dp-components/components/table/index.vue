@@ -13,6 +13,7 @@
                 :data="tableData"
                 :row-class-name="tableRowClassName"
                 v-bind="_options"
+                @row-contextmenu="handleRightClick"
                 @selection-change="handleSelectionChange"
                 @row-click="handleRowClick"
                 @row-dblclick="handleRowDblclick"
@@ -106,6 +107,7 @@ const emit = defineEmits([
     'selection-change', // 当选择项发生变化时会触发该事件
     'row-click', // 当某一行被点击时会触发该事件
     'row-dblclick', // 当某一行被双击时会触发该事件
+    'row-contextmenu',
     'cell-click', // 当某个单元格被点击时会触发该事件
     'command', // 按钮组事件
     'size-change', // pageSize事件
@@ -161,6 +163,9 @@ const indexMethod = (index: number) => {
     }
     const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
         emit('row-dblclick', row, column, event)
+    }
+    const handleRightClick = (row: any, column: any, event: MouseEvent) => {
+        emit('row-contextmenu', row, column, event)
     }
     // 当某个单元格被点击时会触发该事件
     const handleCellClick = (row: any, column: any, cell: any, event: MouseEvent) => {
