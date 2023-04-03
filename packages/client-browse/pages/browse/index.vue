@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout >
+        <!-- header actions  -->
         <template #headerLeft>
             <browse-options v-model="pageOptions" />
         </template>
@@ -7,10 +8,10 @@
         <div v-if="data" class="browsePageContainer">
             <div class="browseHeader">
                 <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
-                 <div id="browseHeaderRight" class="">
-                </div>
+                <!-- folder actions container -->
+                 <div id="browseHeaderRight" class=""></div>
             </div>
-             <BrowseList :doc="data" :permission="permission" :viewType="pageOptions.viewType"/>
+            <BrowseList :doc="data" :permission="permission" :viewType="pageOptions.viewType"/>
         </div>
         <Teleport v-if="data" :disabled="data.isFolder" to="body">  
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" >
@@ -31,6 +32,8 @@
                             <BrowseActionsCopyPath :doc="data" />
                             <BrowseActionsShare :doc="data" />
                             <BrowseActionsUploadRequest v-if="data.isFolder" :path="data.path" />
+                            <div class="actionDivider"></div>
+                            <BrowseActionsInfo :doc="data" />
                         </Teleport>
                         <div class="actionDivider"></div>
                         <div class="actionIconContainer">
