@@ -1,38 +1,29 @@
 <template>
-    <NuxtLayout >
-        <PageContainer>
+    <NuxtLayout class="fit-height withPadding">
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @pagination-change="handlePaginationChange"
-                @row-dblclick="handleDblclick"></Table>
-        <Drawer ref="DrawerRef" :modal="false" pointerModal>
-            <template #title>
-                <div class="grid__drawer__title">
-                <h3 v-if="detailFile">{{detailFile.name}}</h3>
-                <div class="flex">
-                    <el-button class="mg-r" size="mini" type="primary" :icon="RefreshLeft" @click="handleRestoreOne(detailFile.id)" circle></el-button>
-                    <el-popover  :visible="deleteOnePopoverShow"
-                            placement="bottom" width="20rem">
-                        <p>{{$t('msg_confirmWhetherToDelete')}}</p>
-                        <div style="text-align: right; margin: 0">
-                            <el-button @click="deleteOnePopoverShow = false">{{ $t('dpButtom_cancel')}}</el-button>
-                            <el-button @click="handleDeleteOne(detailFile.id)" type="primary">{{ $t('trash_actions_delete')}}</el-button>
-                        </div>
-                        <template #reference>
-                            <el-button  size="mini" type="danger" :icon="Delete" circle
-                                        @click="deleteOnePopoverShow = !deleteOnePopoverShow"></el-button>
-                        </template>
-                    </el-popover>
-                </div>
-                </div>
-            </template>
-        </Drawer>
-        </PageContainer>
+                @selection-change="handleSelectionChange"
+                @row-dblclick="handleDblclick">
+                <template #actions>
+                    <div>
+                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('restoreSelected')}} </el-button>
+                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('deleteSelected')}} </el-button>
+                    </div>
+                </template>    
+            </Table>
+            <ReaderDialog ref="ReaderRef" v-bind="previewFile">
+                <template #actions>
+                    <el-button @click="handleRestoreOne(previewFile.id)">{{$t('restore')}}</el-button>
+                    <el-button @click="handleDeleteOne(previewFile.id)"> {{$t('delete')}}</el-button>
+                </template>
+            </ReaderDialog>
+            
     </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
-import { GetTrashApi, DeleteByIdApi, RestoreByIdApi, TABLE, defaultTableSetting } from 'dp-api'
+import { GetTrashApi, DeleteByIdApi, RestoreByIdApi, GetDocumentPreview, TABLE, defaultTableSetting, Login } from 'dp-api'
 import { ElNotification } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 // #region module: page
@@ -46,6 +37,7 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
         loading: false,
         tableData: [],
         options: { 
+            multiSelect: true, 
             showPagination: true, 
             paginationConfig: {
                 total: 0,
@@ -85,17 +77,34 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
     )
     const { tableData, options, loading } = toRefs(state)
 // #endregion
-const detailFile=ref<any>({
-    name: ''
-})
-function handleDblclick (row) {
-    detailFile.value = row
-    if (!row.isFolder) DrawerRef.value.handleOpen()
-    else DrawerRef.value.handleClose()
-}
+const selectedRow = ref([])
 
+function handleSelectionChange (rows) {
+    selectedRow.value = rows
+}
+const ReaderRef = ref()
+const previewFile = reactive({
+    blob: null,
+    name: '',
+    id: '',
+    loading: false,
+    options: {
+        noDownload: true
+    }
+})
+async function handleDblclick (row) {
+    ReaderRef.value.handleOpen()
+    previewFile.loading = true
+    try {
+        previewFile.blob = await GetDocumentPreview(row.id)
+    } catch (error) {
+        
+    }
+    previewFile.loading = false
+    previewFile.id = row.id
+    previewFile.name = row.name
+}
 // #region module: delete
-    const DrawerRef = ref()
     const batchAction = ref('')
     const processDetail = ref({
         completeNum: 0,
@@ -110,20 +119,19 @@ function handleDblclick (row) {
     function handleDelete () {
         batchAction.value = 'delete'
         batchActionHandler()
-        deleteAllPopoverShow.value = false
     }
     const batchActionHandler = async () => {
         if (selectedRow.value.length === 0) {
-            ElNotification.error(i18n.t('dpTip_noSelection') as string)
+            ElNotification.error($i18n.t('dpTip_noSelection') as string)
             return
         }
         if (!batchAction.value) {
-            ElNotification.error(i18n.t('trash_error_noAction') as string)
+            ElNotification.error($i18n.t('trash_error_noAction') as string)
             return
         }
         processDetail.value.totalNum = selectedRow.value.length
         processDetail.value.completeNum = 0
-        ProgressDialogRef.value.openDialog()
+        // ProgressDialogRef.value.openDialog()
 
         const promises = []
         switch (batchAction.value) {
@@ -135,30 +143,30 @@ function handleDblclick (row) {
                 break
         }
         const res = await Promise.all(promises)
+        
         batchAction.value = null
         handleMsg(res)
         setTimeout(async() => {
-            await TableRef.value.tableDataGet()
-            TableRef.value.clearSelection()
+            await handlePaginationChange(pageParams.pageIndex + 1)
         }, 2000)
     }
     function handleMsg (ids) {
         let num = 0
         const fileNames = ids.reduce((p, id, index) => {
-        if (id) {
-            num++
-            p += ' <br/>' + TableRef.value.tableData.find(item => item.id === id).name
-        }
-        return p
+            if (id) {
+                num++
+                p += ' <br/>' + state.tableData.find(item => item.id === id).name
+            }
+            return p
         }, '')
         if (num !== 0) {
             ElNotification.error({
                 title: '',
                 dangerouslyUseHTMLString: true,
-                message: `${num} ${i18n.t('Fail')}: ${fileNames}`
+                message: `${num} ${$i18n.t('Fail')}: ${fileNames}`
             })
         } else {
-            ElNotification.success(`${i18n.t('commons_success')}` )
+            ElNotification.success(`${$i18n.t('commons_success')}` )
         }
     }
     const deleteOnePopoverShow = ref(false)
@@ -168,9 +176,9 @@ function handleDblclick (row) {
         loading.value = true
         await deleteOne(id)
         setTimeout(async () => {
+            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
-            DrawerRef.value.handleClose()
         }, 500)
     }
     async function handleRestoreOne (id) {
@@ -178,22 +186,31 @@ function handleDblclick (row) {
         await restore(id)
         // 系统会延时 还原
         setTimeout(async () => {
+            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
-            DrawerRef.value.handleClose()
         }, 500)
     }
     async function deleteOne(idOrPath) {
-        await DeleteByIdApi(idOrPath)
-        // processDetail.value.completeNum++
-        return idOrPath
+        const res = await DeleteByIdApi(idOrPath)
+        processDetail.value.completeNum++
+        return !!res ? '' : idOrPath
     }
     const restore = async (idOrPath: string) => {
-        await RestoreByIdApi(idOrPath)
-        // processDetail.value.completeNum++
-        return idOrPath
+        const res = await RestoreByIdApi(idOrPath)
+        processDetail.value.completeNum++
+        return !!res ? '' : idOrPath
     }
 // #endregion
+async function handleDownload (row: any) {
+    const params = {
+        token: route.query.token,
+        password: sessionStorage.getItem('sharePWD'),
+        documentId: row.id
+    }
+    const blob = await publicDownloadApi(params)
+    downloadBlob(blob, row.name || row.title, blob.type)
+}
 </script>
 
 <style lang="scss" scoped>

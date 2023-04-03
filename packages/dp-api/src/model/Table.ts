@@ -76,6 +76,7 @@ export enum TABLE {
     CLIENT_ADHOC_APPROVAL_TASK = 'clientAdhocApprovalTask',
     CLIENT_ADHOC_SUBMITTED_TASK = 'clientAdhocSubmittedTask',
     CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
+    CLIENT_BROWSE = 'clientBrowse',
 
     PUBLIC_SHARE = 'publicShare'
 }
@@ -337,30 +338,6 @@ export const defaultTableSetting: TableColumnSetting = {
                     "index": 0
                 }]
             },
-            {
-                "type": "buttons",
-                "label": "actions",
-                "prop": "",
-                "align": "left",
-                "hide": false,
-                "system": false,
-                "showOverflowTooltip": false,
-                "formatList": [],
-                "buttons": [
-                    {
-                        "name": "restored",
-                        "command": "restored",
-                        "size": "large",
-                        "type": "primary",
-                        "prefixIcon": "/icons/file-selected.svg",
-                        "suffixIcon": "/icons/menu/virtual.svg",
-                        "index": 0
-                    }
-                ],
-                "prefixIcon": "",
-                "suffixIcon": "",
-                "id": "1678091777412"
-            },
             
         ],
         events: ['delete', 'restored'],
@@ -406,6 +383,31 @@ export const defaultTableSetting: TableColumnSetting = {
             }
         ],
         events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_BROWSE] : {
+        columns: [
+            { slot: 'docName', label: 'table_name', prop: 'name' },
+            { label: 'table_name', prop: 'name' },
+            { label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            }
+        ],
+        events: [],
+        slots: [
+            { slot: 'docName', label: 'table_name', prop: 'name' },
+            { id: '3', label: 'tableHeader_type', prop: 'type' },
+        ],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_SHARE_LIST] : {
@@ -477,9 +479,9 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
-            { label: 'dpTable_email', prop: 'email' },
-            { label: 'dpTable_location', prop: 'documentId' },
-            { label: 'dpTable_message', prop: 'message' },
+            { label: 'dpTable_email', prop: 'email', showOverflowTooltip: true },
+            { label: 'dpTable_location', prop: 'documentId', showOverflowTooltip: true },
+            { label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
             { label: 'dpTable_status', prop: 'status',
                 formatList: [
                     {

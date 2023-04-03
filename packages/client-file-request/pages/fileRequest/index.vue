@@ -2,7 +2,8 @@
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @pagination-change="handlePaginationChange"
-                @row-dblclick="handleDblclick"></Table>
+                @row-dblclick="handleDblclick">
+        </Table>
     </NuxtLayout>
 </template>
 

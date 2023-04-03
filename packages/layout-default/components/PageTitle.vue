@@ -20,7 +20,7 @@ function getMenuItemFromPathName(name: string) {
     currentRouteMenuName.value = item?.name || "";
 }
 function handleBack () {
-    router.push(props.backPath)
+    if(props.backPath) router.push(props.backPath)
 }
 
 watch( route , (newRoute) => {

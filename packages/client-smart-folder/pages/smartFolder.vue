@@ -42,7 +42,7 @@ const state = reactive<State>({
         state.tabName = tab
         const time = new Date().valueOf().toString() + 1
         router.push({ 
-            query: { tab, page: 0, pageSize: pageParams.pageSize, time } 
+            query: { tab, page: 1, pageSize: pageParams.pageSize, time } 
         })
     }
 // #endregion
@@ -53,7 +53,7 @@ const state = reactive<State>({
     async function getList (param, tab) {
         state.loading = true
         const presetParams = getPresetParams(tab)
-        const res = await nestedSearchApi({...presetParams, currentPageIndex: param.pageIndex + 1, pageSize: param.pageSize})
+        const res = await nestedSearchApi({...presetParams, currentPageIndex: param.pageIndex, pageSize: param.pageSize})
         state.tableData = res.entryList
         state.options.paginationConfig.total = res.totalSize
         state.options.paginationConfig.pageSize = param.pageSize

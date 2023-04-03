@@ -103,6 +103,9 @@ export const attachmentInfoGetApi = async(attachmentId: string) => {
 export const WorkflowAttachmentDownloadApi = async(attachmentId: string) => {
     return api.get(`/docpal/workflow/task/attachment?attachmentId=${attachmentId}`, { responseType: 'blob', timeout: 0}).then(res => res.data)
 }
+export const WorkflowAttachmentPreviewApi = async(attachmentId: string) => {
+    return api.get(`/docpal/workflow/task/attachment/preview?attachmentId=${attachmentId}`, { responseType: 'blob', timeout: 0}).then(res => res.data)
+}
 export const getProcessCommentApi = async(processInstanceId: string) => {
     return await api.get("/docpal/workflow/comment/process", { params: { processInstanceId } }).then(res => res.data);
 }
