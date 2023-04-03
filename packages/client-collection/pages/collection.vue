@@ -144,7 +144,7 @@ const state = reactive<State>({
                     router.push({ 
                         query: { tab: state.curCollection.id, page: 0, pageSize: pageParams.pageSize, time } 
                     })
-                }, 500)
+                }, 1000) // 500的数据还没有更新
             })
     }
 // #endregion

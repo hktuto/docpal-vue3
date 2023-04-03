@@ -337,30 +337,6 @@ export const defaultTableSetting: TableColumnSetting = {
                     "index": 0
                 }]
             },
-            {
-                "type": "buttons",
-                "label": "actions",
-                "prop": "",
-                "align": "left",
-                "hide": false,
-                "system": false,
-                "showOverflowTooltip": false,
-                "formatList": [],
-                "buttons": [
-                    {
-                        "name": "restored",
-                        "command": "restored",
-                        "size": "large",
-                        "type": "primary",
-                        "prefixIcon": "/icons/file-selected.svg",
-                        "suffixIcon": "/icons/menu/virtual.svg",
-                        "index": 0
-                    }
-                ],
-                "prefixIcon": "",
-                "suffixIcon": "",
-                "id": "1678091777412"
-            },
             
         ],
         events: ['delete', 'restored'],

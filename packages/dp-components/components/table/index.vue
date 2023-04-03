@@ -55,6 +55,7 @@
         </div>
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
+            <slot name="actions"><div></div></slot>
             <el-pagination
                 v-bind="_paginationConfig"
                 @size-change="pageSizeChange"
@@ -288,6 +289,12 @@ defineExpose({ reorderColumn })
         .el-table {
             height: 100%;
         }
+    }
+    .mt20 {
+        margin-top: var(--app-padding);
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        align-items: center;
     }
 }
 

@@ -6,7 +6,8 @@
     </div>
 
     <template #footer>
-        <el-button v-if="!loading && blob"  :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+        <el-button v-if="!loading && blob && !options.noDownload"  :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+        <slot name="actions"></slot>
     </template>
 </el-dialog>
 </template>
@@ -14,13 +15,16 @@
 <script lang="ts" setup>
 import { Picture as IconPicture, Download } from '@element-plus/icons-vue'
 const emits = defineEmits(['download'])
+export type readerOptions = {
+    noDownload?: Boolean
+} 
 const props = defineProps<{
     id: string,
     blob: Blob,
     name: string,
     annotations?: Array,
     loading: Boolean,
-    noDownloadBlob: Boolean
+    options: readerOptions
 }>()
 const state = reactive({
     dialogVisible: false
@@ -28,16 +32,14 @@ const state = reactive({
 function handleOpen() {
     state.dialogVisible = true 
 }
+function handleClose() {
+    state.dialogVisible = false 
+}
 const ReaderRef = ref()
 function handleDownload() {
-    if (props.noDownloadBlob) {
-        emits('download', props)
-    }
-    else {
-        ReaderRef.value.handleDownload()
-    }
+    ReaderRef.value.handleDownload()
 }
-defineExpose({ handleOpen })
+defineExpose({ handleOpen, handleClose })
 </script>
 
 <style scoped lang="scss">
@@ -49,8 +51,9 @@ defineExpose({ handleOpen })
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    
     &-main{
-        height: 70vh;
+        max-height: 70vh;
         width: 100%;
         margin: auto;
         overflow: auto;
@@ -60,6 +63,7 @@ defineExpose({ handleOpen })
     }
     .el-dialog__body{
         display: flex;
+        padding: var(--app-padding) var(--el-dialog-padding-primary);
     }
 }
 </style>

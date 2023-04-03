@@ -2,7 +2,11 @@
     <Table  :columns="tableSetting.columns" :table-data="tableData" 
             @command="handleAction"
             @row-dblclick="handleDblclick"></Table>
-    <ReaderDialog class="yihuo" ref="ReaderRef" v-bind="previewFile" @download="handleDownload"></ReaderDialog>
+    <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
+        <template #actions>
+            <el-button :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+        </template>
+    </ReaderDialog>
 </template>
 
 
@@ -59,7 +63,9 @@ const previewFile = reactive({
     name: '',
     id: '',
     loading: false,
-    noDownloadBlob: true
+    options: {
+        noDownload: true
+    }
 })
 </script>
 
