@@ -74,7 +74,7 @@ watch(() => route.params, async (newval) => {
 <style lang="scss" scoped>
 .mainContent {
     --card-height: 520px;
-    --card-width: 280px;
+    --card-width: 400px;
     padding: var(--app-padding);
     display: grid;
     grid-template-rows: min-content 1fr;

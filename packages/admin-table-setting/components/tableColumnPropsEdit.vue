@@ -4,32 +4,36 @@
                 :model="form"
                 label-width="120px"
         >
-            <el-form-item :label="$t('prop')" prop="prop"
-                :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">
-                <el-select v-model="form.prop" clearable placeholder="please select prop"
-                    @change="formatItemPropChange">
-                    <el-option v-for="item in propList" :label="item.label" :value="item.value" />
-                </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('formatFun')" prop="formatFun">
-                <el-select v-model="form.formatFun" clearable placeholder="please select formatFun"
-                    @change="formatItemFunChange">
-                    <el-option v-for="item in formatFunList" :label="item.label" :value="item.value" />
-                </el-select>
-            </el-form-item>
+            <el-radio-group v-model="state.formatType" @change="formatTypeChange">
+                <el-radio label="">prop</el-radio>
+                <el-radio label="joiner">{{$t('joiner')}}</el-radio>
+            </el-radio-group>
+            <template v-if="!state.formatType">
+                <el-form-item :label="$t('prop')" prop="prop"
+                    :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">
+                    <el-select v-model="form.prop" clearable placeholder="please select prop"
+                        @change="formatItemPropChange">
+                        <el-option v-for="item in propList" :label="item.label" :value="item.value" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('formatFun')" prop="formatFun">
+                    <el-select v-model="form.formatFun" clearable placeholder="please select formatFun"
+                        @change="formatItemFunChange">
+                        <el-option v-for="item in formatFunList" :label="item.label" :value="item.value" />
+                    </el-select>
+                </el-form-item>
+            </template>
+            <template v-else>
+                <el-form-item :label="$t('joiner')" prop="joiner"
+                    :rules="[ { required: true, message: 'Please input joiner', trigger: 'change'}]">
+                    <el-input v-model="form.joiner"></el-input>
+                </el-form-item>
+            </template>
             <el-form-item v-for="(paramsValue, paramsKey) in form.params" :label="$t(paramsKey)" :prop="`params.${paramsKey}`">
                 <el-input v-model="form.params[paramsKey]" placeholder="please input"></el-input>
             </el-form-item>
         </el-form>
-        <!-- <TableSettingFormItem v-model="item.prop" :prop="`formatList.${index}.prop`" :label="$t('prop')"
-            type="select"
-            :fieldOptions="{ options: propList, clearable: true }"
-            @change="formatItemPropChange(item)"></TableSettingFormItem>
-        <TableSettingFormItem v-model="item.formatFun" :prop="`formatList.${index}.formatFun`" :label="$t('formatFun')" 
-            type="select"
-            :fieldOptions="{ options: item.formatFunList, clearable: true }"
-            @change="formatItemFunChange(item)"></TableSettingFormItem>
-        <TableSettingFormItem v-for="(value, key) in item.params" v-model="item.params[key]" :prop="`formatList.${index}.params.${key}`" :label="$t(key)" @change="handleChange"></TableSettingFormItem> -->
+        
         <template #footer>
             <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
             <el-button @click="handleSave">{{$t('save')}}</el-button>
@@ -43,6 +47,7 @@ const tableHelper = useTableHelper()
 const state = reactive({
     propList: tableHelper.propListGet(tableHelper.trashType),
     formatFunList: [],
+    formatType: '' // ''|'joiner'
 })
 const emit = defineEmits(['add', 'save'])
 // #region module: dialog
@@ -50,7 +55,8 @@ const emit = defineEmits(['add', 'save'])
     const isEdit = ref(false)
     function handleOpen(exitFormatItems, formatItem) {
         isEdit.value = formatItem ? true : false
-        initFormatItem(formatItem)
+        state.formatType = formatItem && formatItem.joiner ? 'joiner' : ''
+        initFormatItem({...formatItem})
         dialogVisible.value = true
     }
 // #endregion
@@ -87,6 +93,12 @@ const emit = defineEmits(['add', 'save'])
         if (isEdit.value) emit('save', deepCopy(form))
         else emit('add', deepCopy(form))
         dialogVisible.value = false
+    }
+    function formatTypeChange (value) {
+        Object.keys(meta).forEach(key => {
+            form[key] = meta[key]
+        })
+        formRef.value.resetFields()
     }
 // #endregion
 function initFormatItem (formatItem) {

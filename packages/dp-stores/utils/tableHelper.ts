@@ -176,13 +176,15 @@ export const useTableHelper = () => {
         if(!_col.formatList || _col.formatList.length === 0) return getProp(_row, _col.prop)
         else {
             const result = _col.formatList.reduce((prev: string, item:any) => {
-                if (item.formatFun) {
+                if (item.joiner) { // 连接符
+                    prev = prev + item.joiner
+                } else if (item.formatFun) {
                     item.params.row = _row
                     const value = getProp(_row, item.prop)
                     prev = prev + formatFuns[item.formatFun](value, deepCopy(item.params) )
-                } else {
+                } else if (item.prop) {
                     prev = prev + getProp(_row, item.prop)
-                }
+                } 
                 return prev
             }, '')
             return result

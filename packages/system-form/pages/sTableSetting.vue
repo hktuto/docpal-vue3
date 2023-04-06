@@ -27,14 +27,14 @@ function getClass (key) {
 }
 function setCurrentKey (key) {
     if (!key){ 
-        console.log();
-        
+        key = Object.keys(state.tableSettings)[0]
     }
     state.currentKey = key
     router.push(`/sTableSetting/${key}`)
 }
 onMounted(() => {
     state.tableSettings = deepCopy(tableSettingJson)
+    setCurrentKey(route.params?.id)
 })
 </script>
 

@@ -13,12 +13,15 @@
         <el-form-item :label="$t('header')" prop="label">
             <el-input v-model="form.label" />
         </el-form-item>
-                <el-form-item :label="$t('align')" prop="align">
+        <el-form-item :label="$t('align')" prop="align">
             <el-radio-group v-model="form.align">
                 <el-radio-button label="left" />
                 <el-radio-button label="center" />
                 <el-radio-button label="right" />
             </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="$t('width')" prop="width">
+            <el-input v-model="form.width" type="number" />
         </el-form-item>
         <el-form-item :label="$t('hide')">
             <el-switch v-model="form.hide" />
@@ -49,7 +52,7 @@
                 </el-select>
             </el-form-item>
         </template>
-        <TableColumnButtons v-else v-model:buttons="form.buttons"></TableColumnButtons>
+        <TableColumnButtons v-else-if="form.type === 'buttons'" v-model:buttons="form.buttons"></TableColumnButtons>
     </el-form>
 </div>
 </template>
@@ -73,6 +76,7 @@ const tableHelper = useTableHelper()
     const propList = tableHelper.propListGet(tableHelper.trashType)
     const tableClassList = tableHelper.tableClassList
     const form = reactive({
+        width: '',
         class: [],
         type: '',
         label: '',

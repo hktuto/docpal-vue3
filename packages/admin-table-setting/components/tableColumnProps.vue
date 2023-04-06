@@ -15,7 +15,7 @@
                     @click="showDialog(element)"
                     @close="handleDelete(element, index)"
                 >
-                    {{ element.prop }}
+                    {{ element.joiner || element.prop }}
                 </el-tag>
             </template>
     </draggable>
