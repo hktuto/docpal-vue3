@@ -8,7 +8,6 @@
             <el-button @click="handleSave">{{$t('save')}}</el-button>
         </div>
     </div>
-    {{state.tableColumns}}
     <TableColumnDrag ref="TableColumnDragRef" :tableColumns="tableColumns"></TableColumnDrag>
     <TablePreviewDialog ref="TablePreviewDialogRef"></TablePreviewDialog>
     <TableColumnAdd ref="tableColumnAddRef" :typeList="typeList"
