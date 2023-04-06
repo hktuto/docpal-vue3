@@ -24,6 +24,10 @@ const trashType = {
 }
 export const useTableHelper = () => {
     const { $i18n: {t} } = useNuxtApp()
+    const tableClassList = [
+        'tag', 'success-tag', 'info-tag', 'warning-tag', 'danger-tag', 
+        'round'
+    ]
     const tableFilters = <any>{
         dateFormat: {
             supportedType: ['date'],
@@ -198,6 +202,7 @@ export const useTableHelper = () => {
         }
     }
     return {
+        tableClassList,
         trashType,
         tableFilters,
         getTableFilters,

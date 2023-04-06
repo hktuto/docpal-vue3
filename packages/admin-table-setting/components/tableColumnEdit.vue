@@ -24,6 +24,14 @@
             <el-switch v-model="form.hide" />
         </el-form-item>
         <template v-if="form.type === ''">
+            <el-form-item :label="$t('showOverflowTooltip')">
+                <el-switch v-model="form.showOverflowTooltip" />
+            </el-form-item>
+            <el-form-item :label="$t('class')">
+                <el-select v-model="form.class" multiple clearable placeholder="please select class">
+                        <el-option v-for="item in tableClassList" :label="item" :value="item" />
+                </el-select>
+            </el-form-item>
             <el-form-item  :label="$t('primaryProp')" prop="prop" >
                 <el-select v-model="form.prop" placeholder="please select prop"
                     @change="formatItemPropChange">
@@ -63,7 +71,9 @@ const tableHelper = useTableHelper()
 // #region module: form
     const formRef = ref<FormInstance>()
     const propList = tableHelper.propListGet(tableHelper.trashType)
+    const tableClassList = tableHelper.tableClassList
     const form = reactive({
+        class: [],
         type: '',
         label: '',
         prop: '',
@@ -104,7 +114,9 @@ const tableHelper = useTableHelper()
     }
 // #endregion
 function getForm () {
-    return deepCopy(form)
+    const data = deepCopy(form)
+    data.class = data.class.join(' ')
+    return data
 }
 
 function initForm () {
@@ -112,7 +124,11 @@ function initForm () {
         form[key] = metaData[key]
     })
     if (props.column) Object.keys(props.column).forEach(key => {
-        form[key] = props.column[key]
+        if (key === 'class') {
+            form[key] = props.column[key].split(' ')
+        } else {
+            form[key] = props.column[key]
+        }
     })
     const defaultSlots = defaultTableSetting[route.params.id].slots
     if (defaultSlots) state.slotList = defaultSlots

@@ -1,41 +1,40 @@
 <template>
-    <NuxtLayout >
         <el-container>
             <el-aside width="200px">
-                <div :class="getClass(key)" v-for="(value,key) in tableColumnSetting"
+                <div :class="getClass(key)" v-for="(value,key) in tableSettings"
                     @click="setCurrentKey(key)">{{key}}</div>
                 <!-- <div :class="getClass('trash')" @click="setCurrentKey('trash')">trash</div> -->
             </el-aside>
             <el-main><NuxtPage /></el-main>
         </el-container>
-    </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
 import { tableSettingJson } from 'dp-api'
-const { tableColumnSetting } = toRefs(useSetting())
+
 const router = useRouter();
 const route = useRoute();
-
-const currentKey = ref('')
+const state = reactive({
+    tableSettings: {},
+    currentKey: '',
+})
+const { tableSettings, currentKey } = toRefs(state)
 function getClass (key) {
     let css = 'padding'
-    if (key === currentKey.value) css+= ' current'
+    if (key === state.currentKey) css+= ' current'
     return css
 }
 function setCurrentKey (key) {
     if (!key){ 
-        if(!tableColumnSetting.value || tableColumnSetting.value.length === 0) return
-        key = Object.keys(tableColumnSetting.value)[0]
+        console.log();
+        
     }
-    currentKey.value = key
-    router.push(`/tableSetting/${key}`)
+    state.currentKey = key
+    router.push(`/sTableSetting/${key}`)
 }
 onMounted(() => {
-    console.log({tableSettingJson});
-    
-    setCurrentKey(route.params?.id)
+    state.tableSettings = deepCopy(tableSettingJson)
 })
 </script>
 

@@ -1,4 +1,5 @@
 <template>
+<div>
 <div>{{$t('buttons')}}</div>
 <div class="tag-container">
     <draggable
@@ -28,6 +29,7 @@
     <TableColumnButtonsEdit ref="tableColumnButtonsEditRef"
         @add="handleAdd"
         @save="handleSave"></TableColumnButtonsEdit>
+</div>
 </template>
 
 <script lang="ts" setup>

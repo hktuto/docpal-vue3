@@ -1,7 +1,7 @@
 <template>
     <div class="listContainer">
         <div v-if="viewType === 'table'" class="h100">
-            <browse-list-table :data="data" :loading="pending" @right-click="handleRightClick"/>
+            <browse-list-table :doc="doc" :loading="pending" @right-click="handleRightClick"/>
         </div>
         <!-- <div v-else-if="viewType === 'preview'">
             <browse-preview :doc="doc" :permission="permission" :data="data" :pending="pending" />
@@ -27,6 +27,7 @@ const props = withDefaults(defineProps<{
 })
 const {doc} = toRefs(props)
 function handleRightClick(data) {
+    e.preventDefault() 
     console.log({data});
     
 }

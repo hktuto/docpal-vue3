@@ -28,6 +28,7 @@ export type TableColumnItem = {
     type?: string,
     hide?: boolean,
     system?: boolean,
+    class?: string,
     showOverflowTooltip?: boolean,
     formatList?: any[],
     buttons?: any[],
@@ -244,9 +245,9 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SMART_FOLDER] : {
         columns: [
-            { label: 'table_name', prop: 'name' },
-            { label: 'table_path', prop: 'logicalPath' },
-            { label: 'table_modifiedDate', prop: 'modifiedDate', 
+            { id: '1', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'table_path', prop: 'logicalPath' },
+            { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -259,18 +260,18 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { label: 'table_type', prop: 'type' },
+            { id: '4', label: 'table_type', prop: 'type' },
         ],
         events: [],
         options: { pageSize: 20 }
     },
     [TABLE.FILE_REQUEST_DETAIL] : {
         columns: [
-            { slot: 'selection' },
-            { slot: 'expand' },
-            { label: 'dpDocument_fileName', property: 'initName', sortable: true },
-            { slot: 'fileType', label: 'dpDocument_fileType', property: 'documentType', sortable: true },
-            { slot: 'approve',label: 'dpTool_approve', property: 'approve', sortable: true, align: 'center' },
+            { id: '1', slot: 'selection' },
+            { id: '2', slot: 'expand' },
+            { id: '3', label: 'dpDocument_fileName', property: 'initName', sortable: true },
+            { id: '4', slot: 'fileType', label: 'dpDocument_fileType', property: 'documentType', sortable: true },
+            { id: '5', slot: 'approve',label: 'dpTool_approve', property: 'approve', sortable: true, align: 'center' },
         ],
         events: [],
         options: { pageSize: 20 }
@@ -288,11 +289,11 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADHOC_Submitted_TASK] : {
         columns: [
-            { label: 'table_path', property: 'documentPath', sortable: true },
+            { id: '1', label: 'table_path', property: 'documentPath', sortable: true },
             // { label: 'info_version', property: 'documentStartVersion' },
             // { label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true },
-            { label: 'role.approvers', property: 'user_approver_id', sortable: true, isFilter: true },
-            { label: 'workflow_createDate', property: 'createDate', sortable: true },
+            { id: '2', label: 'role.approvers', property: 'user_approver_id', sortable: true, isFilter: true },
+            { id: '3', label: 'workflow_createDate', property: 'createDate', sortable: true },
             // { label: 'table_completeDate', property: 'completeDate', sortable: true },
             // { slot: 'duration', label: 'table_duration', property: 'duration' }
             // { label: 'table_duration', property: 'duration', align:"right", sortable: true },
@@ -302,21 +303,21 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADHOC_Approval_TASK] : {
         columns: [
-            { label: 'table_path', property: 'documentPath', sortable: true },
-            { label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true },
-            { label: 'workflow_createDate', property: 'createDate', sortable: true },
+            { id:'1', label: 'table_path', property: 'documentPath', sortable: true },
+            { id:'2', label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true },
+            { id:'3', label: 'workflow_createDate', property: 'createDate', sortable: true },
         ],
         events: [],
         options: { pageSize: 20 }
     },
     [TABLE.ADHOC_Completed_TASK] : {
         columns: [
-            { label: 'table_path', property: 'documentPath', sortable: true },
-            { label: 'info_version', property: 'documentApprovalVersion', align: 'right', width: '70' },
-            { label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true, width: '150' },
-            { label: 'workflow_createDate', property: 'createDate', sortable: true, align: 'center', width: '130' },
-            { label: 'role.approver', property: 'approvedBy', sortable: true, isFilter: true, width: '150' },
-            { label: 'dpTable_approvedDate', property: 'approvedDate', sortable: true, align: 'center', width: '130' },
+            { id: '1', label: 'table_path', property: 'documentPath', sortable: true },
+            { id: '2', label: 'info_version', property: 'documentApprovalVersion', align: 'right', width: '70' },
+            { id: '3', label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true, width: '150' },
+            { id: '4', label: 'workflow_createDate', property: 'createDate', sortable: true, align: 'center', width: '130' },
+            { id: '5', label: 'role.approver', property: 'approvedBy', sortable: true, isFilter: true, width: '150' },
+            { id: '6', label: 'dpTable_approvedDate', property: 'approvedDate', sortable: true, align: 'center', width: '130' },
         ],
         events: [],
         options: { pageSize: 20 }
@@ -345,8 +346,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_COLLECTION] : {
         columns: [
-            { label: 'table_name', prop: 'name' },
-            { label: 'table_modifiedDate', prop: 'modifiedDate', 
+            { id: '1', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -359,8 +360,9 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { label: 'table_type', prop: 'type' },
-            {
+            { id: '3', label: 'table_type', prop: 'type' },
+            {   
+                id: '4',
                 "type": "",
                 "label": "actions",
                 "prop": "",
@@ -379,7 +381,6 @@ export const defaultTableSetting: TableColumnSetting = {
                 ],
                 "prefixIcon": "",
                 "suffixIcon": "",
-                "id": "1678091777412"
             }
         ],
         events: ['delete'],
@@ -387,9 +388,9 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_BROWSE] : {
         columns: [
-            { slot: 'docName', label: 'table_name', prop: 'name' },
-            { label: 'table_name', prop: 'name' },
-            { label: 'table_modifiedDate', prop: 'modifiedDate', 
+            { id: '1', slot: 'docName', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'table_name', prop: 'name' },
+            { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -412,7 +413,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SHARE_LIST] : {
         columns: [
-            { label: 'tableHeader_emailList', prop: 'emailList', 
+            { id: '1', label: 'tableHeader_emailList', prop: 'emailList', 
                 formatList: [
                     {
                         "joiner": "",
@@ -425,8 +426,8 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { label: 'tableHeader_numberOfFiles', prop: 'documentSize' },
-            { label: 'tableHeader_creationDate', prop: 'created', 
+            { id: '2', label: 'tableHeader_numberOfFiles', prop: 'documentSize' },
+            { id: '3', label: 'tableHeader_creationDate', prop: 'created', 
                 formatList: [
                     {
                         "joiner": "",
@@ -439,7 +440,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { label: 'tableHeader_dueDate', prop: 'expiredDate', 
+            { id: '4', label: 'tableHeader_dueDate', prop: 'expiredDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -453,6 +454,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             {
+                id: '5',
                 "type": "",
                 "label": "actions",
                 "prop": "",
@@ -471,7 +473,6 @@ export const defaultTableSetting: TableColumnSetting = {
                 ],
                 "prefixIcon": "",
                 "suffixIcon": "",
-                "id": "1678091777412"
             }
         ],
         events: ['disabled'],
@@ -479,10 +480,10 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
-            { label: 'dpTable_email', prop: 'email', showOverflowTooltip: true },
-            { label: 'dpTable_location', prop: 'documentId', showOverflowTooltip: true },
-            { label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
-            { label: 'dpTable_status', prop: 'status',
+            { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true },
+            { id: '2', label: 'dpTable_location', prop: 'documentId', showOverflowTooltip: true },
+            { id: '3', label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
+            { id: '4', label: 'dpTable_status', prop: 'status',
                 formatList: [
                     {
                         "joiner": "",
@@ -494,7 +495,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { label: 'dpTable_createdDate', prop: 'createdDate',
+            { id: '5', label: 'dpTable_createdDate', prop: 'createdDate',
                 formatList: [
                     {
                         "joiner": "",
@@ -513,11 +514,11 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FILE_REQUEST_AUDIT] : {
         columns: [
-            { type: 'selection' },
-            { type: 'expand', slot: 'expand' },
-            { label: 'dpDocument_fileName', prop: 'initName', sortable: true },
-            { label: 'dpDocument_fileType', prop: 'documentType', slot: 'documentType', sortable: true },
-            { label: 'dpTool_approve', prop: 'approve', slot: 'approve', sortable: true, align: 'center' },
+            { id: '1', type: 'selection' },
+            { id: '2', type: 'expand', slot: 'expand' },
+            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true },
+            { id: '4', label: 'dpDocument_fileType', prop: 'documentType', slot: 'documentType', sortable: true },
+            { id: '5', label: 'dpTool_approve', prop: 'approve', slot: 'approve', sortable: true, align: 'center' },
         ],
         events: [],
         options: { }
@@ -525,8 +526,8 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_WORKFLOW_All_TASK] : {
         columns: [
             { id:1, label: 'table_name', prop: 'taskInstance.businessKey' },
-            { id:2, label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
-            { id:3, label: 'common_status', prop: 'name' },
+            { id:2, label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName', class: 'tag' },
+            { id:3, label: 'common_status', prop: 'name', class: 'danger-tag round', showOverflowTooltip: true },
             { id:4, label: 'workflow_assignee', prop: 'assignee', type: 'slot', slot: 'assignee' },
             { id:7, label: 'workflow_startUser', prop: 'taskInstance.startUserId' },
             { id:5, label: 'workflow_createDate', prop: 'createDate', 
@@ -564,11 +565,11 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_MY_TASK] : {
         columns: [
-            { label: 'table_name', prop: 'taskInstance.businessKey' },
-            { label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName'},
-            { label: 'common_status', prop: 'name', },
-            { label: 'workflow_assignee', prop: 'assignee', },
-            { label: 'workflow_createDate', prop: 'createDate', 
+            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName'},
+            { id: '3', label: 'common_status', prop: 'name', },
+            { id: '4', label: 'workflow_assignee', prop: 'assignee', },
+            { id: '5', label: 'workflow_createDate', prop: 'createDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -581,7 +582,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { label: 'workflow_dueDate', prop: 'dueDate', 
+            { id: '6', label: 'workflow_dueDate', prop: 'dueDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -600,10 +601,10 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_COMPLETE_TASK] : {
         columns: [
-            { label: 'table_name', prop: 'businessKey', sortable: true },
-            { label: 'workflow_workflow', prop: 'processDefinitionName' },
+            { id: '1', label: 'table_name', prop: 'businessKey', sortable: true },
+            { id: '2', label: 'workflow_workflow', prop: 'processDefinitionName' },
             // { label: 'workflow_workflow', property: 'name', sortable: true },
-            { label: 'workflow_createDate', prop: 'createDate', 
+            { id: '3', label: 'workflow_createDate', prop: 'createDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -616,7 +617,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { label: 'table_completeDate', prop: 'completeDate', 
+            { id: '4', label: 'table_completeDate', prop: 'completeDate', 
                 formatList: [
                     {
                         "joiner": "",
@@ -629,7 +630,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { label: 'table_duration', prop: 'duration', align: 'right',
+            { id: '5', label: 'table_duration', prop: 'duration', align: 'right',
                 formatList: [
                     {
                         "joiner": "",
@@ -648,10 +649,10 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_ACTIVE_TASK] : {
         columns: [
-            { label: 'table_name', prop: 'businessKey' },
-            { label: 'workflow_workflow', prop: 'processDefinitionName' },
-            { label: 'workflow_assignee', prop: 'name',  },
-            { label: 'workflow_createDate', prop: 'startTime', 
+            { id: '1', label: 'table_name', prop: 'businessKey' },
+            { id: '2', label: 'workflow_workflow', prop: 'processDefinitionName' },
+            { id: '3', label: 'workflow_assignee', prop: 'name',  },
+            { id: '4', label: 'workflow_createDate', prop: 'startTime', 
                 formatList: [
                     {
                         "joiner": "",
@@ -670,9 +671,9 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_ADHOC_SUBMITTED_TASK] : {
         columns: [
-            { label: 'table_path', prop: 'documentPath' },
-            { label: 'role.approvers', prop: 'user_approver_id' },
-            { label: 'workflow_createDate', prop: 'startTime',
+            { id: '1', label: 'table_path', prop: 'documentPath' },
+            { id: '2', label: 'role.approvers', prop: 'user_approver_id' },
+            { id: '3', label: 'workflow_createDate', prop: 'startTime',
                 formatList: [
                     {
                         "joiner": "",
@@ -691,9 +692,9 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_ADHOC_APPROVAL_TASK] : {
         columns: [
-            { label: 'table_path', prop: 'documentPath' },
-            { label: 'role.creator', prop: 'user_creator_id' },
-            { label: 'workflow_createDate', prop: 'startTime',
+            { id: '1', label: 'table_path', prop: 'documentPath' },
+            { id: '2', label: 'role.creator', prop: 'user_creator_id' },
+            { id: '3', label: 'workflow_createDate', prop: 'startTime',
                 formatList: [
                     {
                         "joiner": "",
@@ -712,10 +713,10 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_ADHOC_COMPLETED_TASK] : {
         columns: [
-            { label: 'table_path', prop: 'documentPath'},
-            { label: 'info_version', prop: 'documentApprovalVersion', align: 'right', width: '80' },
-            { label: 'role.creator', prop: 'user_creator_id', width: '150' },
-            { label: 'workflow_createDate', prop: 'startTime', align: 'center', width: '180',
+            { id: '1', label: 'table_path', prop: 'documentPath'},
+            { id: '2', label: 'info_version', prop: 'documentApprovalVersion', align: 'right', width: '80' },
+            { id: '3', label: 'role.creator', prop: 'user_creator_id', width: '150' },
+            { id: '4', label: 'workflow_createDate', prop: 'startTime', align: 'center', width: '180',
                 formatList: [
                     {
                         "joiner": "",
@@ -728,8 +729,8 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]  
             },
-            { label: 'role.approver', prop: 'approvedBy', width: '150' },
-            { label: 'dpTable_approvedDate', prop: 'approvedDate', align: 'center', width: '150',
+            { id: '5', label: 'role.approver', prop: 'approvedBy', width: '150' },
+            { id: '6', label: 'dpTable_approvedDate', prop: 'approvedDate', align: 'center', width: '150',
                 formatList: [
                     {
                         "joiner": "",
@@ -776,8 +777,8 @@ export const defaultTableSetting: TableColumnSetting = {
 
     [TABLE.PUBLIC_SHARE]: {
         columns: [
-            { label: 'tableHeader_name', prop: 'title' },
-            { label: 'tableHeader_modifiedDate', prop: 'lastModified',
+            { id: '1', label: 'tableHeader_name', prop: 'title' },
+            { id: '2', label: 'tableHeader_modifiedDate', prop: 'lastModified',
                 formatList: [
                     {
                         "joiner": "",
@@ -790,8 +791,9 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { label: 'tableHeader_type', prop: 'type' },
-            {
+            { id: '3', label: 'tableHeader_type', prop: 'type' },
+            {   
+                id: '4',
                 "type": "buttons",
                 "label": "tableHeader_actions",
                 "prop": "",
@@ -810,7 +812,6 @@ export const defaultTableSetting: TableColumnSetting = {
                 ],
                 "prefixIcon": "",
                 "suffixIcon": "",
-                "id": "1678091777412"
             }
         ],
         events: ['download'],

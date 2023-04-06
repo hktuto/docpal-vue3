@@ -91,6 +91,7 @@ function handleDblclick (row) {
     handlePaginationChange(1, pageParams.pageSize, row.path, row.isFolder)
 }
 function handleRightClick (row: any, column: any, event: MouseEvent) {
+    event.preventDefault()
     emit('right-click', {
         idOrPath: row.path,
         pageX: event.pageX,

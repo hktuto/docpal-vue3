@@ -17,7 +17,9 @@ const TableColumnEditRef = ref()
 const dialogVisible = ref(false)
 function handleOpen() {
     dialogVisible.value = true
-    TableColumnEditRef.value.initForm()
+    setTimeout(() => {
+        TableColumnEditRef.value.initForm()
+    })
 }
 const emit = defineEmits(['add'])
 function handleAdd () {

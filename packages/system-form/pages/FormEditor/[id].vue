@@ -11,9 +11,7 @@ import { getJsonApi } from 'dp-api'
 const route = useRoute()
 const fromDesignerRef = ref()
 async function handleSave () {
-    
     const body = fromDesignerRef.value.getFormJson()
-    dplog({body});
     const save = await $fetch(`/form/${route.params.id}`, { method:'post', body})
 }
 
