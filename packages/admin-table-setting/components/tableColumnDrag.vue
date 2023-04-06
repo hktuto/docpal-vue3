@@ -38,7 +38,8 @@ const tableColumnEditRefs = ref({})
 
 function getColumns () {
     const columns = []
-    Object.keys(tableColumnEditRefs.value).forEach(key => {
+    const orderKeys = props.tableColumns.map((item) => item.id)
+    orderKeys.forEach(key => {
         columns.push(tableColumnEditRefs.value[key].getForm())
     })
     return columns 
