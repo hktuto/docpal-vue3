@@ -7,7 +7,7 @@
         <page-container>
         <div v-if="data" class="browsePageContainer">
             <div class="browseHeader">
-                <BrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
+                <LazyBrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
                 <!-- folder actions container -->
                  <div id="browseHeaderRight" class=""></div>
             </div>
@@ -24,10 +24,10 @@
                             <BrowseActionsSubscribe  :doc="data" />
                             <div class="actionDivider"></div>
                             <BrowseActionsEdit v-if="!data.isFolder" :doc="data" />
-                            <BrowseActionsUpload v-if="data.isFolder" :path="data.path" />
+                            <BrowseActionsUpload v-if="data.isFolder" :doc="data" @success="handleRefresh"/>
                             <BrowseActionsDownload v-if="!data.isFolder"  :doc="data" />
-                            <BrowseActionsNewFolder v-if="data.isFolder" :path="data.path" />
-                            <BrowseActionsDelete :doc="data" @delete="itemDeleted"/>
+                            <BrowseActionsNewFolder v-if="data.isFolder" :path="data.path" @success="handleRefresh"/>
+                            <BrowseActionsDelete :doc="data" @delete="itemDeleted" @success="handleRefresh"/>
                             <div class="actionDivider"></div>
                             <BrowseActionsCopyPath :doc="data" />
                             <BrowseActionsShare :doc="data" />
@@ -36,6 +36,7 @@
                             <BrowseActionsInfo :doc="data" />
                         </Teleport>
                         <div class="actionDivider"></div>
+                        <!-- <SvgIcon src="/icons/close.svg" round @click="detailClosed"></SvgIcon> -->
                         <div class="actionIconContainer">
                             <el-icon @click="detailClosed">
                                 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
@@ -45,11 +46,14 @@
             </BrowseDetail>
         </Teleport>
         </page-container>
+        <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
+        <LazyBrowseRightClick :permission="permission"></LazyBrowseRightClick>
     </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
+import { useEventListener } from '@vueuse/core'
 import {watch, ref, computed} from 'vue'
 import { GetDocDetail, GetDocPermission } from 'dp-api'
 
@@ -57,6 +61,7 @@ import { GetDocDetail, GetDocPermission } from 'dp-api'
 const breadCrumb = ref();
 const icon = ref("");
 const route = useRoute();
+const router = useRouter();
 const data = ref();
 const loading = ref(false)
 const permission = ref({permission:"",print:false});
@@ -79,7 +84,12 @@ function itemDeleted(){
         breadCrumb.value.goParent();
     }
 }
-
+function handleRefresh (docId) {
+    const time = new Date().valueOf().toString()
+    router.push({ 
+        query: { ...route.query, time } 
+    })
+}
 watch(route, async() => {
     loading.value = true;
     await Promise.all([
@@ -95,6 +105,9 @@ watch(route, async() => {
 function detailClosed() {
     breadCrumb.value.goParent();
 }
+onMounted(() => {
+    useEventListener(document, 'docActionRefresh', (event) => handleRefresh(event.detail))  
+})
 </script>
 
 <style lang="scss" scoped>

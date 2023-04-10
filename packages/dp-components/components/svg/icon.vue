@@ -1,5 +1,18 @@
 <template>
-    <template v-if="round">
+<div>
+    <template v-if="content">
+        <el-tooltip :content="content">
+            <template v-if="round">
+                <span class="svg-icon-round">
+                    <component :is="InlineSvg" :class="svgClass" :src="src"></component>
+                </span>
+            </template>
+            <template v-else>
+                <component :is="InlineSvg" :class="svgClass" :src="src"></component>
+            </template>
+        </el-tooltip>
+    </template>
+    <template v-else-if="round">
         <span class="svg-icon-round">
             <component :is="InlineSvg" :class="svgClass" :src="src"></component>
         </span>
@@ -7,13 +20,15 @@
     <template v-else>
         <component :is="InlineSvg" :class="svgClass" :src="src"></component>
     </template>
+</div>
 </template>
 
 <script lang="ts" setup>
 import InlineSvg from 'vue-inline-svg';
 const props = defineProps<{
     src: string,
-    round?: boolean
+    round?: boolean,
+    content?: string
 }>()
 const svgClass = computed(() => {
     return 'svg-icon'
@@ -37,10 +52,12 @@ const svgClass = computed(() => {
 
 .svg-icon-round {
     cursor: pointer;
-    width: var(--icon-bg-size, 26px);
-    height: var(--icon-bg-size, 26px);
-    color: var(--icon-color, #AEB6BA);
-    background-color: var(--icon-background, #6D767A);
+    font-size: var(--icon-size);
+    padding: 8px;
+    width: var(--icon-bg-size, 32px);
+    height: var(--icon-bg-size, 32px);
+    color: var(--icon-color, #181a1b)!important;
+    background-color: var(--color-grey-150);
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -48,9 +65,12 @@ const svgClass = computed(() => {
         color: currentColor;
         width: var(--icon-size, 14px);
         height: var(--icon-size, 14px);
+        &:hover{
+            color: var(--icon-hover-color, white);
+        }
     }
     &:hover{
-        background-color: var(--icon-bg-hover-color, var(--primary-color));
+        background: var(--color-grey-200);
         color: var(--icon-hover-color, white);
     }
 }

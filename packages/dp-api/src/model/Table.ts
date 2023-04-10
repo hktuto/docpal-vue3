@@ -68,6 +68,7 @@ export enum TABLE {
     CLIENT_COLLECTION = 'clientCollection',
     CLIENT_SHARE_LIST = 'clientShareList',
     CLIENT_SEARCH = 'clientSearch',
+    CLIENT_FILE_UPLOAD = 'clientFileUpload',
     CLIENT_FILE_REQUEST = 'clientFileRequest',
     CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit',
     CLIENT_WORKFLOW_All_TASK = 'clientAllTask',
@@ -511,6 +512,37 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: [],
         options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_FILE_UPLOAD] : {
+        columns: [
+            { id: '1', type: 'selection' },
+            { id: '2', type: 'expand', slot: 'expand' },
+            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true },
+            { id: '4', label: 'dpDocument_fileType', prop: 'type', slot: 'documentType', sortable: true },
+            {   
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { }
     },
     [TABLE.CLIENT_FILE_REQUEST_AUDIT] : {
         columns: [

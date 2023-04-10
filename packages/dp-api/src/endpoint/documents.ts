@@ -4,7 +4,8 @@ import { BreadResponse, DocDetail, GetChildResponse,
     shareInfo,
     DocType,
     Meta,
-    paginationData
+    paginationData,
+    idOrPathParams
 } from '../model';
 
 export const GetChildThumbnail = async(params: pageParams):Promise<paginationData> => {
@@ -55,6 +56,23 @@ export const GetTemplateParamsApi = async(param) => {
 export const DownloadTemplateApi = async(param) => {
     return api.post('/nuxeo/template/summitAndDownloadFile', param, {responseType: 'blob', timeout: 0}).then(res => res.data)
 }
+// #region module: file
+    export const CreateFoldersApi = async(param) => {
+        return api.post('/nuxeo/document/createFolders', param).then(res => res.data)
+    }
+    export const CreateDocumentApi = async(param) => {
+        return api.post('/nuxeo/document/createDocument', param).then(res => res.data)
+    }
+    export const trashApi = async(param: idOrPathParams[]) => {
+        return api.delete('/nuxeo/document/trash', {data: param}).then(res => res.data)
+    }
+    export const copyDocumentApi = async(param: idOrPathParams[]) => {
+        return api.post('/nuxeo/document/copy', param).then(res => res.data)
+    }
+    export const moveDocumentApi = async(param: idOrPathParams[]) => {
+        return api.post('/nuxeo/document/move', param).then(res => res.data)
+    }
+// #endregion
 
 // #region module: trash
     export const GetTrashApi = async(params: pageParams) => {

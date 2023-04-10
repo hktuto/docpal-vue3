@@ -26,7 +26,7 @@ const emit = defineEmits([
     const router = useRouter()
     const pageParams = {
         pageIndex: 1,
-        pageSize: 20,
+        pageSize: 50,
         idOrPath: '/'
     }
     const state = reactive<State>({
@@ -92,11 +92,14 @@ function handleDblclick (row) {
 }
 function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.preventDefault()
-    emit('right-click', {
+    const data = {
+        isFolder: row.isFolder,
         idOrPath: row.path,
         pageX: event.pageX,
         pageY: event.pageY,
-    })
+    }
+    const ev = new CustomEvent('fileRightClick',{ detail: data })
+    document.dispatchEvent(ev)
 }
 function handleSelect (rows) {
     console.log(rows);
@@ -108,6 +111,7 @@ function handleSelect (rows) {
 .nameContainer{
     display: flex;
     flex-flow: row nowrap;
-    gap: var(--app-padding);
+    column-gap: var(--app-padding);
+    align-items: center;
 }
 </style>
