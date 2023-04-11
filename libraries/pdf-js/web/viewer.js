@@ -169,7 +169,7 @@ function getViewerConfiguration() {
   };
 }
 
-function webViewerLoad() {
+function webViewerLoad(url) {
   // console.log("webViewerLoad");
   const config = getViewerConfiguration();
 
@@ -193,7 +193,7 @@ function webViewerLoad() {
       document.dispatchEvent(event);
     }
   }
-  PDFViewerApplication.run(config);
+  PDFViewerApplication.run(config, url);
 }
 
 // Block the "load" event until all pages are loaded, to ensure that printing
@@ -207,7 +207,6 @@ document.onreadystatechange = function () {
     document.readyState === "interactive" ||
     document.readyState === "complete"
   ) {
-    console.log("Document ready");
     // webViewerLoad();
     window.addEventListener("message", messageFromParent, false);
     sendMessageToParent("ready");
@@ -225,10 +224,6 @@ function messageFromParent(ev) {
   const { blob, filename , annotations, locale, colorMode } = ev.data;
   const urlCreator = window.URL || window.webkitURL;
   const url = urlCreator.createObjectURL(blob);
-  const urlPath = new URL(window.location);
-  // change url path to file
-  urlPath.searchParams.set("file", url);
-  window.history.pushState({}, "", urlPath);
 
   const newLocal = locale === "zh-HK" ? "zh-TW" : locale;
   if (colorMode === "dark") {
@@ -242,11 +237,15 @@ function messageFromParent(ev) {
   }
 
   window.PDFViewerApplicationOptions.set("locale", newLocal);
-  webViewerLoad();
+  webViewerLoad(url);
 
-   // listen to save annotation event
-  const saveAnnotationButton = document.querySelectorAll(".saveAnnotationButton");
-  saveAnnotationButton.forEach(el => el.addEventListener("click", saveAnnotation));
+  // listen to save annotation event
+  const saveAnnotationButton = document.querySelectorAll(
+    ".saveAnnotationButton"
+  );
+  saveAnnotationButton.forEach(el =>
+    el.addEventListener("click", saveAnnotation)
+  );
 }
 
 function saveAnnotation() {
@@ -255,7 +254,6 @@ function saveAnnotation() {
 }
 
 function sendMessageToParent(type, data) {
-  console.log("Send message to parent", type, data);
   parent.postMessage({ type, data }, "*");
 }
 
