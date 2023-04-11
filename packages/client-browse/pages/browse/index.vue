@@ -76,7 +76,12 @@ async function getPermission(){
     permission.value = await GetDocPermission(routePath.value, auth.user.value.username);
 }
 async function getDocDetail() {
-     data.value = await GetDocDetail(routePath.value);
+    try{
+        console.log(data.value)
+        data.value = await GetDocDetail(routePath.value);
+    }catch(error){
+        console.log(error)
+    }
 }
 
 function itemDeleted(){
@@ -92,10 +97,14 @@ function handleRefresh (docId) {
 }
 watch(route, async() => {
     loading.value = true;
-    await Promise.all([
-        getPermission(),
-        getDocDetail()
-    ])
+    try{
+        await Promise.all([
+            getPermission(),
+            getDocDetail()
+        ])
+    }catch(error) {
+        console.log(error)
+    }
 
     loading.value = false;
 },{immediate:true});

@@ -1,5 +1,5 @@
 <template>
-    <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+    <Table v-if="tableData" v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
             @pagination-change="handlePaginationChange"
             @command="handleAction"
             @row-dblclick="handleDblclick"

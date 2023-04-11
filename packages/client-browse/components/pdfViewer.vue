@@ -37,6 +37,7 @@ async function getAnnotation():Promise<Object> {
 }
 
 async function sendPdfAndAnnotation() {
+    if(props.doc.isFolder) return; // 如果是文件夹，不要拿预览
     loading.value = true;
     try {
         const blob = await GetDocumentPreview(props.doc.id);
