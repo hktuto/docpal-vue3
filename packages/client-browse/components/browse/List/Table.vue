@@ -33,12 +33,16 @@ const emit = defineEmits([
         loading: false,
         tableData: [],
         options: { 
+            multiSelect: true, 
             showPagination: true, 
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
+            },
+            selectable: (row, index) => {
+                return !row.isFolder
+            } 
         }
     })
     const tableKey = TABLE.CLIENT_BROWSE
@@ -114,5 +118,8 @@ function handleSelect (rows) {
     flex-flow: row nowrap;
     column-gap: var(--app-padding);
     align-items: center;
+}
+:deep(.el-checkbox.is-disabled) {
+    display: none;
 }
 </style>

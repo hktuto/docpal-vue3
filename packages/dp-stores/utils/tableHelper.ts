@@ -220,3 +220,7 @@ export const formatDate = (time:any, format="YYYY-MM-DD HH:mm") => {
     if (!time) return '-'
     return dayjs(time).format(format)
 }
+const today = new Date();
+export const diffMinute = (date1:string | Date = today, date2:string | Date = today) => {
+    return dayjs(date1).diff(date2, 'minute')
+}

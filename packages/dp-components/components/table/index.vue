@@ -26,7 +26,8 @@
                             <el-table-column
                                 v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
                                 :index="indexMethod"
-                                v-bind="col">
+                                v-bind="col"
+                                :selectable="_options.selectable">
                                 <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
                                 <template #default="{ row, $index }">
                                     <!-- render函数 (START) : 使用内置的component组件可以支持h函数渲染和txs语法 -->
@@ -191,6 +192,7 @@ function reorderColumn (displayList) {
     let shiftOrAltDown = false
     const shiftSelectList = ref([])
     function handleShift (row) {
+        if (!_options.value.selectable(row)) return
         let refsElTable = tableRef.value
         if(CtrlDown) {
             refsElTable.toggleRowSelection(row); // ctrl多选 如果点击两次同样会取消选中
