@@ -37,8 +37,8 @@
                         </Teleport>
                         <div class="actionDivider"></div>
                         <!-- <SvgIcon src="/icons/close.svg" round @click="detailClosed"></SvgIcon> -->
-                        <div class="actionIconContainer">
-                            <el-icon @click="detailClosed">
+                        <div class="actionIconContainer" @click="detailClosed">
+                            <el-icon >
                                 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
                             </el-icon>
                         </div>
@@ -168,6 +168,7 @@ onMounted(() => {
         display: grid;
         place-items: center;
         color: var(--color-grey-950);
+        cursor: pointer;
         &:hover{
             background: var(--color-grey-200);
         }
