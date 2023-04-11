@@ -1,8 +1,9 @@
 <template>
-     <div class="actionIconContainer">
+    
         
         <el-popover placement="bottom" :width="260" trigger="click" >
             <template #reference>
+                 <div class="actionIconContainer">
                 <div class="clickCon" >
                     <!-- <SvgIcon src="/icons/file/download.svg" round content="download"
                         @click="deleteItem"></SvgIcon> -->
@@ -12,6 +13,7 @@
                         </el-icon>
                     </el-tooltip>
                 </div>
+                 </div>
             </template>
             <div class="popoverContent">
                 <!-- download button -->
@@ -23,7 +25,7 @@
             </div>
         </el-popover>
         
-    </div>
+
 </template>
 
 <script lang="ts" setup>
