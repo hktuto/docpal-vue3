@@ -98,10 +98,8 @@ function handleRefresh (docId) {
 watch(route, async() => {
     loading.value = true;
     try{
-        await Promise.all([
-            getPermission(),
-            getDocDetail()
-        ])
+        await getPermission(),
+        await getDocDetail()
     }catch(error) {
         console.log(error)
     }
