@@ -15,10 +15,10 @@
       <FileUpload class="sidebar" @change="tableDataAdd"></FileUpload>
       <div class="header">
         <span>{{$t('filePopover_batchTip')}}</span>
-        <el-select v-model="state.documentType" filterable default-first-option >
+        <el-select v-model="state.documentType" class="el-icon--right" filterable default-first-option >
           <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
         </el-select>
-        <el-button @click="applyToSelect('documentType', state.documentType)">{{$t('dpButtom_apply')}}</el-button>
+        <el-button class="el-icon--right" @click="applyToSelect('documentType', state.documentType)">{{$t('dpButtom_apply')}}</el-button>
       </div>
       <div class="main">
         <Table :columns="tableSetting.columns"
