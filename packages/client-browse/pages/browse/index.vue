@@ -76,12 +76,7 @@ async function getPermission(){
     permission.value = await GetDocPermission(routePath.value, auth.user.value.username);
 }
 async function getDocDetail() {
-    try{
-        console.log(data.value)
-        data.value = await GetDocDetail(routePath.value);
-    }catch(error){
-        console.log(error)
-    }
+    data.value = await GetDocDetail(routePath.value);
 }
 
 function itemDeleted(){
