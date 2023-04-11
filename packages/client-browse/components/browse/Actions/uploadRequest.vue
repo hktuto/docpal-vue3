@@ -44,8 +44,9 @@ function uploadDialog(){
   async function handleSubmit () {
     state.loading = true
     try {
-      const data = await vFormRef.value.getFormData(true, false)
+      const data = await FromRendererRef.value.getFormData(true, false)
       if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
+      data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
       const res = await saveFileRequestListApi(data)
       state.loading = false
       if (res.errorCode) throw new Error(res.message || 'error');
