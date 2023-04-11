@@ -19,16 +19,15 @@ const loading = ref(false);
 // const colorMode = useColorMode();
 const {locale} = useI18n()
 
+
 async function getAnnotation():Promise<Object> {
     const annotation = await GetAnnotation(props.doc.id )
-    console.log(annotation);
     let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
             annotationObj = Array.isArray(JSON.parse(annotation[0].object.paths)) ? JSON.parse(annotation[0].object.paths) : []
         }
     }
-    console.log(annotationObj);
     const annotationMap = new Map();
     annotationObj.forEach((item:any) => {
         annotationMap.set(item.id, item);
@@ -51,7 +50,6 @@ async function sendPdfAndAnnotation() {
 }
 
 function gotMessageFromIframe(message:MessageEvent) {
-    console.log(message.data.type);
     const { data } = message;
     if(!data) return;
 
