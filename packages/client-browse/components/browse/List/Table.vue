@@ -93,6 +93,7 @@ function handleDblclick (row) {
 function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.preventDefault()
     const data = {
+        doc: row,
         isFolder: row.isFolder,
         idOrPath: row.path,
         pageX: event.pageX,

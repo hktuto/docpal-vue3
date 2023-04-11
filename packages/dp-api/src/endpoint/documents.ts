@@ -63,6 +63,9 @@ export const DownloadTemplateApi = async(param) => {
     export const CreateDocumentApi = async(param) => {
         return api.post('/nuxeo/document/createDocument', param).then(res => res.data)
     }
+    export const patchDocumentApi = async(param) => {
+        return api.patch('/nuxeo/document', param).then(res => res.data)
+    }
     export const trashApi = async(param: idOrPathParams[]) => {
         return api.delete('/nuxeo/document/trash', {data: param}).then(res => res.data)
     }
@@ -125,6 +128,10 @@ export const patchShareInfoApi = async (params: shareInfo) => {
     export const getFileRequestListApi = async (params: pageParams) => {
         const res = await api.get('/nuxeo/filerequest', { params }).then(res =>res.data);
         return { entryList: res.requests, totalSize: res.total }
+    }
+    export const saveFileRequestListApi = async (params) => {
+        const res = await api.post('/nuxeo/filerequest', params).then(res =>res.data);
+        return res
     }
 // #endregion
 
