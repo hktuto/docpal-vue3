@@ -12,12 +12,13 @@ import { getJsonApi } from 'dp-api'
 const props = defineProps<{
     searchParams: any
 }>()
+const route = useRoute()
 const emits = defineEmits(['submit'])
 const filterJson = getJsonApi('search.json')
 const FromRendererRef = ref()
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
     // console.log(fieldName,newValue,oldValue,formModel)
-    emits('submit', formModel)
+    if(route.path === '/search') emits('submit', formModel)
 }
 function handleSubmit () {
     const data = FromRendererRef.value.vFormRenderRef.getFormData(false)
