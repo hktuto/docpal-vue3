@@ -34,10 +34,7 @@ const canWrite = computed(() => {
 })
 function handleRightClick (detail: any) {
     state.visible = true
-    state.doc = {
-        path: detail.idOrPath,
-        isFolder: detail.isFolder
-    }
+    state.doc = detail.doc
     setTimeout(() => {
         state.defaultActive = []
         FileRightClickPopoverRef.value.style.left = detail.pageX + 'px'
