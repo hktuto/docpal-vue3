@@ -221,7 +221,7 @@ function messageFromParent(ev) {
   if (!ev || !ev.data) {
     return;
   }
-  const { blob, filename , annotations, locale, colorMode } = ev.data;
+  const { blob,  annotations, locale, colorMode, options } = ev.data;
   const urlCreator = window.URL || window.webkitURL;
   const url = urlCreator.createObjectURL(blob);
 
@@ -234,6 +234,14 @@ function messageFromParent(ev) {
     window.annotations = annotations;
   } else {
     window.annotations = new Map();
+  }
+
+  // if options.print is false, hide print button
+  if (options && options.print === false) {
+    const printButton = document.querySelector("#secondaryPrint");
+    const printButton2 = document.querySelector("#print");
+    printButton.classList.add("hidden");
+    printButton2.classList.add("hidden");
   }
 
   window.PDFViewerApplicationOptions.set("locale", newLocal);
