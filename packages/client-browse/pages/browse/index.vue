@@ -11,7 +11,8 @@
                 <!-- folder actions container -->
                  <div id="browseHeaderRight" class=""></div>
             </div>
-            <BrowseList :doc="data" :permission="permission" :viewType="pageOptions.viewType"/>
+            <BrowseList :doc="data" :permission="permission" :viewType="pageOptions.viewType"
+                @select-change="handleSelectionChange"/>
         </div>
         <Teleport v-if="data" :disabled="data.isFolder" to="body">  
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" >
@@ -68,8 +69,10 @@ const permission = ref({permission:"",print:false});
 const auth = useUser();
 const selectedFiles = ref([]); 
 const pageOptions = ref<BrowseOptions>({viewType:'table'})
-// #endregion
 
+const selectList = ref([])
+// #endregion
+provide('selectList', selectList)
 const routePath = computed( () => (route.query.path as string) || '/')
 
 async function getPermission(){
@@ -89,6 +92,9 @@ function handleRefresh (docId) {
     router.push({ 
         query: { ...route.query, time } 
     })
+}
+function handleSelectionChange (rows) {
+    selectList.value = [...rows]
 }
 watch(route, async() => {
     loading.value = true;

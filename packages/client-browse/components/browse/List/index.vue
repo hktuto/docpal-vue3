@@ -1,7 +1,8 @@
 <template>
     <div class="listContainer">
         <div v-if="viewType === 'table'" class="h100">
-            <browse-list-table :doc="doc" :loading="pending" @right-click="handleRightClick"/>
+            <browse-list-table :doc="doc" :loading="pending" 
+                @select-change="handleSelectionChange"/>
         </div>
         <!-- <div v-else-if="viewType === 'preview'">
             <browse-preview :doc="doc" :permission="permission" :data="data" :pending="pending" />
@@ -18,6 +19,9 @@
 <script lang="ts" setup>
 import { GetChild } from 'dp-api'
 import { ViewType } from "../../browseType";
+const emit = defineEmits([
+    'select-change'
+])
 const props = withDefaults(defineProps<{
     doc?: any,
     permission?: any,
@@ -26,10 +30,8 @@ const props = withDefaults(defineProps<{
     viewType: 'table'
 })
 const {doc} = toRefs(props)
-function handleRightClick(data) {
-    e.preventDefault() 
-    console.log({data});
-    
+function handleSelectionChange (rows) {
+    emit('select-change', rows)
 }
 </script>
 <style lang="scss" scoped>

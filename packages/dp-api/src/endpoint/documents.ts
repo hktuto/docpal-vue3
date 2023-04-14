@@ -112,17 +112,21 @@ export const DownloadTemplateApi = async(param) => {
 // #endregion
 
 // #region module: share
-export const getShareListApi = async (params: pageParams) => {
-    const res = await api.post('/nuxeo/share/get', params).then(res =>res.data);
-    return { entryList: res.list, totalSize: res.total }
-}
-export const deleteShareListApi = async (params: string[]) => {
-    const res = await api.delete('/nuxeo/share', {data: params}).then(res =>res.data);
-    return { entryList: res.list, totalSize: res.total }
-}
-export const patchShareInfoApi = async (params: shareInfo) => {
-    return await api.patch('/nuxeo/share', params).then(res =>res.data);
-}
+    export const shareRequestApi= async (params) => {
+        const res = await api.post('/nuxeo/share/new', params).then(res =>res.data);
+        return res
+    }
+    export const getShareListApi = async (params: pageParams) => {
+        const res = await api.post('/nuxeo/share/get', params).then(res =>res.data);
+        return { entryList: res.list, totalSize: res.total }
+    }
+    export const deleteShareListApi = async (params: string[]) => {
+        const res = await api.delete('/nuxeo/share', {data: params}).then(res =>res.data);
+        return { entryList: res.list, totalSize: res.total }
+    }
+    export const patchShareInfoApi = async (params: shareInfo) => {
+        return await api.patch('/nuxeo/share', params).then(res =>res.data);
+    }
 // #endregion
 // #region module:fileRequest
     export const getFileRequestListApi = async (params: pageParams) => {
