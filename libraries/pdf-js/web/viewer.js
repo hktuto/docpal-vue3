@@ -235,13 +235,17 @@ function messageFromParent(ev) {
   } else {
     window.annotations = new Map();
   }
-
+  const els = [
+    document.querySelector("#secondaryPrint"),
+    document.querySelector("#print"),
+    document.querySelector("#secondaryDownload"),
+    document.querySelector("#download"),
+  ];
   // if options.print is false, hide print button
   if (!options || options.print === false) {
-    const printButton = document.querySelector("#secondaryPrint");
-    const printButton2 = document.querySelector("#print");
-    printButton.classList.add("hidden");
-    printButton2.classList.add("hidden");
+    els.forEach(el => el.classList.add("hidden"));
+  } else {
+    els.forEach(el => el.classList.remove("hidden"));
   }
 
   window.PDFViewerApplicationOptions.set("locale", newLocal);
