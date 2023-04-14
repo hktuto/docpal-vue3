@@ -237,7 +237,7 @@ function messageFromParent(ev) {
   }
 
   // if options.print is false, hide print button
-  if (options && options.print === false) {
+  if (!options || options.print === false) {
     const printButton = document.querySelector("#secondaryPrint");
     const printButton2 = document.querySelector("#print");
     printButton.classList.add("hidden");
