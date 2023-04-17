@@ -75,6 +75,12 @@ export const DownloadTemplateApi = async(param) => {
     export const moveDocumentApi = async(param: idOrPathParams[]) => {
         return api.post('/nuxeo/document/move', param).then(res => res.data)
     }
+    export const DocumentThumbnailGetApi = async(idOrPath:string) => {
+        return api.post('/nuxeo/document/thumbnail', {idOrPath},{
+            responseType: 'blob'
+        }).then(res =>res.data)
+    }
+    
 // #endregion
 
 // #region module: trash
