@@ -683,14 +683,14 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_ACTIVE_TASK] : {
         columns: [
-            { id: '1', label: 'table_name', prop: 'businessKey' },
-            { id: '2', label: 'workflow_workflow', prop: 'processDefinitionName' },
-            { id: '3', label: 'workflow_assignee', prop: 'name',  },
-            { id: '4', label: 'workflow_createDate', prop: 'startTime', 
+            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
+            { id: '3', label: 'workflow_assignee', prop: 'assignee',  },
+            { id: '4', label: 'workflow_createDate', prop: 'createDate', 
                 formatList: [
                     {
                         "joiner": "",
-                        "prop": "startTime",
+                        "prop": "createDate",
                         "formatFun": "dateFormat",
                         "params": {
                             "format": ""

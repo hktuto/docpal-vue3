@@ -45,7 +45,6 @@ const state = reactive({
     backState: route.query.state,
     processState: {
         'completeTask': 'completeTask', 
-        'activeTask': 'activeTask'
     },
     activeTab: 'form',
     taskDetail: {},
@@ -62,9 +61,6 @@ async function getDetail() {
     switch(state.backState) {
         case state.processState.completeTask:
             state.taskDetail = await historyProcessDetailGetApi({ processInstanceId, completed: true })
-            break
-        case state.processState.activeTask:
-            state.taskDetail = await activeProcessDetailGetApi(processInstanceId)
             break
         default:
             state.taskDetail = await getTaskApi(processInstanceId)
@@ -89,11 +85,6 @@ const isAssigneeUser = computed(() => {
         let formData
         switch(state.backState) {
             case state.processState.completeTask:
-            case state.processState.activeTask:
-                formData = formDataGet(state.taskDetail.processVariables)
-                formJson = await formJsonGet('complete', state.taskDetail.processDefinitionKey)
-                vFormRef.value.setForm(formJson, formData)
-                break
             default:
                 const properties = await getFormPropsApi({ taskId: route.params.id })
                 formData = formDataGetFromProps(properties)
