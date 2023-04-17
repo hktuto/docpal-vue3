@@ -1,5 +1,4 @@
 import {api} from '../';
-import { getPreviewParams } from '../model';
 export const logKey = 'ROOT'
 export type logParams = {
     service?: string,
