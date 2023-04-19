@@ -17,7 +17,8 @@
                 <WorkflowDetailActivity :activityList="state.activityList" />
             </el-tab-pane>
             <el-tab-pane :label="$t('workflow_graph')" name="graph">
-                <WorkflowDetailGraph :processDefinitionId="taskDetail.taskInstance?.processDefinitionId" :steps="getCurrentStep"/>
+                <!-- need to use v-if for bpmn, if not  svg graph will not show -->
+                <WorkflowDetailGraph v-if="activeTab === 'graph'" :processDefinitionId="taskDetail.taskInstance?.processDefinitionId" :steps="getCurrentStep"/>
             </el-tab-pane>
         </el-tabs>
         <WorkflowDetailDiscussionChannel :id="taskDetail.instanceId"/>
