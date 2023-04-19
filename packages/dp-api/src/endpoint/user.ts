@@ -24,3 +24,10 @@ export const getUserListApi = async(refresh: boolean = false):Promise<User[]> =>
     userListStore = [...response.sort((a,b)=> (a.username.localeCompare(b.username) ))]
     return userListStore
 }
+let groupListStore = []
+export const getGroupListApi = async(refresh: boolean = false) => {
+    if (groupListStore.length > 0 && !refresh) return groupListStore
+    let response = await api.post('/nuxeo/identity/groups', {}).then(res => res.data);
+    groupListStore = [...response.sort((a,b)=> (a.name.localeCompare(b.name) ))]
+    return groupListStore
+}

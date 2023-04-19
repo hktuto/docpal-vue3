@@ -11,9 +11,11 @@ import { BreadResponse, DocDetail, GetChildResponse,
 export const GetChildThumbnail = async(params: pageParams):Promise<paginationData> => {
     return api.post<paginationData>('/nuxeo/document/children/thumbnail', params ).then(res => res.data);
 }
-
 export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {
     return api.post<DocDetail>('/nuxeo/document',{ idOrPath }).then(res => res.data);
+}
+export const GetDocDetailApi = async(idOrPath:string = '/'):Promise<DocDetail> => {
+    return api.get('/nuxeo/document',{ params: { idOrPath } }).then(res => res.data);
 }
 export const GetDocPermission = async(idOrPath:string, userId:string):Promise<{permission:string,print:boolean}> => {
     return api.get<{permission:string,print:boolean}>(`/nuxeo/document/acl/permission?docId=${idOrPath}&userId=${userId}`).then(res => res.data);
