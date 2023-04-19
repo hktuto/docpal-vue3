@@ -1,13 +1,15 @@
 <template>
 <div class="bpmnContainer">
-    <client-only>
-        {{state.bpmn}}
-        {{state.options}}
-        <!-- <vue-bpmn ref="vBpmn" :url="state.bpmn" :options="state.options" @shown="handleShown" /> -->
-    </client-only>
+    <div ref="bpmnEl" id="modeler-container" ></div>
 </div>
 </template>
 <script lang="ts" setup>
+import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.production.min.js'
+
+import 'bpmn-js/dist/assets/diagram-js.css'
+import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
+import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'
+import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css'
 // import VueBpmn from 'vue-bpmn'
 import { getBpmnApi } from 'dp-api'
 const props = defineProps<{
@@ -25,39 +27,61 @@ const state = reactive({
         }
     }
 })
-const vBpmn = ref()
+const bpmnEl = ref()
+const viewer = ref<typeof BpmnViewer>(null);
+const modeler = ref<typeof BpmnModeler>(null);
+
+function init () {
+  const options = {
+    container: bpmnEl.value,
+    height: "100%",
+    width: "100%",
+    bpmnRenderer: {
+        defaultFillColor: 'var(--color-grey-000)',
+        defaultStrokeColor: 'var(--color-grey-900)',
+    }
+  }
+  modeler.value = new BpmnJS(options);
+  modeler.value.on('import.done', (event) => {
+        var error = event.error;
+        var warnings = event.warnings;
+        
+        modeler.value.get('canvas').zoom('fit-viewport');
+        handleShown()
+  })
+}
+
 const handleShown = () => {
+    console.log("handleShown")
     const steps = props.steps.length > 0 ? props.steps : props.step ? [props.step] : []
-    if (vBpmn.value.bpmnViewer && steps) {
-        const canvas = vBpmn.value.bpmnViewer.get('canvas')
-        for(const step of steps) {
-            canvas.addMarker(step, 'bpmn-highlight')
-        }
+    if (modeler.value && steps) {
+    const canvas = modeler.value.get('canvas')
+    for(const step of steps) {
+        console.log('step', step)
+        canvas.addMarker(step, 'bpmn-highlight')
+    }
+    
     }
 }
+
 const getBpmn = async (processDefinitionId: string, processKey: string) => {
+    console.log('getBpmn', processDefinitionId, processKey);
     if (!processDefinitionId && !processKey) return
     const data = processKey
     ? {
         processKey,
         }
     : { processDefinitionId }
-    const bpmn = await getBpmnApi(data)
-    console.log(bpmn);
-    const urlCreator = window.URL || window.webkitURL
-    const url = urlCreator.createObjectURL(bpmn)
-    console.log({url});
-    
-    return url
+    const blob = await getBpmnApi(data)
+    const text = await blob.text()
+
+    if(!modeler.value ) init();
+    modeler.value.importXML(text)
 }
-watch(props,() => {
-    console.log(props.steps, 'ssssssssssssssssssssssssssssssssssss')
-},{
-    immediate:true
-})
+
 watch(()=> [props.processKey, props.processDefinitionId], async([newKey, newId]) => {
     if (newKey || newId) {
-        state.bpmn = await getBpmn(newId, newKey)
+        await getBpmn(newId, newKey)
     }
 }, { immediate: true })
 </script>
@@ -65,5 +89,15 @@ watch(()=> [props.processKey, props.processDefinitionId], async([newKey, newId])
 .bpmnContainer {
     height: 100%;
     overflow: auto;
+}
+#modeler-container{
+    height: 100%;
+    width: 100%;
+}
+</style>
+
+<style >
+.bpmn-highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+  fill: rgb(49, 170, 49) !important; /* color elements as green */
 }
 </style>
