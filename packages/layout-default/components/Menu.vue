@@ -1,6 +1,6 @@
 <template>
 <!-- TODO color-->
-    <div class="menu" style="--icon-color: red;--icon-hover-color: white;">
+    <div class="menu">
         <div 
             v-for="item in displayMenu" 
             :key="item.name" 
@@ -50,7 +50,8 @@ const displayMenu = computed(
 
 <style lang="scss" scoped>
 .menu {
-  // border-right: 1px solid var(--color-grey-150);
+  --icon-color: var(--menu-color);
+  --icon-hover-color: var(--menu-color);
   white-space: nowrap;
   &__section {
     margin-bottom: calc(var(--app-padding) / 2);
@@ -86,10 +87,12 @@ const displayMenu = computed(
       }
     }
     &:hover {
+      --icon-color: #fff;
       color: #fff;
       // background: var(--menu-selected-bg);
     }
     &.selected {
+      --icon-color: var(--menu-selected-color);
       background: var(--menu-selected-bg);
       color: var(--menu-selected-color);
       font-weight: 700;
