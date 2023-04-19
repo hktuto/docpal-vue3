@@ -1,5 +1,6 @@
 <template>
-    <div class="menu">
+<!-- TODO color-->
+    <div class="menu" style="--icon-color: red;--icon-hover-color: white;">
         <div 
             v-for="item in displayMenu" 
             :key="item.name" 
@@ -11,7 +12,8 @@
             }"
             @click="$router.push({ path: item.url })"
             >
-            <InlineSvg :src="item.icon"/>
+            <SvgIcon :src="item.icon"></SvgIcon>
+            <!-- <InlineSvg :src="item.icon"/> -->
             <div v-if="opened" class="itemLabel">
                 {{ $t(item.name) }}
             </div>
@@ -20,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import InlineSvg from 'vue-inline-svg';
+// import InlineSvg from 'vue-inline-svg';
 
 const props = withDefaults(defineProps<{
     opened: boolean

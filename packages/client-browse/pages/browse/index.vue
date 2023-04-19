@@ -24,7 +24,7 @@
                         <Teleport :disabled="!data.isFolder" to="#browseHeaderRight">
                             <BrowseActionsSubscribe  :doc="data" />
                             <div class="actionDivider"></div>
-                            <BrowseActionsEdit v-if="!data.isFolder" :doc="data" />
+                            <BrowseActionsEdit v-show="!data.isFolder" :doc="data" />
                             <BrowseActionsUpload v-if="data.isFolder" :doc="data" @success="handleRefresh"/>
                             <BrowseActionsDownload v-if="!data.isFolder"  :doc="data" />
                             <BrowseActionsNewFolder v-if="data.isFolder" :path="data.path" @success="handleRefresh"/>

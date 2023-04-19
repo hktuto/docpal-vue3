@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { activeProcessGetApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { getAllTask, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const user = useUser();
 // #region module: page
@@ -21,6 +21,7 @@ const user = useUser();
     const pageParams = {
         pageIndex: 0,
         pageSize: 20,
+        interrelatedUserId: user.user.value.userId || user.user.value.username,
         // userId: user.user.value.userId || user.user.value.username
     }
     const state = reactive<State>({
@@ -43,7 +44,7 @@ const user = useUser();
     async function getList (param) {
         param.userId = user.user.value.userId || user.user.value.username
         state.loading = true
-        const res = await activeProcessGetApi({...param, ...state.extraParams})
+        const res = await getAllTask({...param, ...state.extraParams})
         
         state.tableData = res.entryList
         state.loading = false

@@ -4,10 +4,10 @@
             <browse-list-table :doc="doc" :loading="pending" 
                 @select-change="handleSelectionChange"/>
         </div>
-        <!-- <div v-else-if="viewType === 'preview'">
-            <browse-preview :doc="doc" :permission="permission" :data="data" :pending="pending" />
+        <div v-else-if="viewType === 'preview'" class="h100">
+            <browse-list-preview :doc="doc" :permission="permission" :data="data" />
         </div>
-        <div v-else-if="viewType === 'tree'">
+        <!-- <div v-else-if="viewType === 'tree'">
             <browse-tree :doc="doc" :permission="permission" :data="data" :pending="pending" />
         </div>
         <div v-else-if="viewType === 'column'">

@@ -71,6 +71,7 @@ function handleRightClick (item, event) {
         idOrPath: item.path,
         pageX: event.pageX,
         pageY: event.pageY,
+        doc: item
     }
     const ev = new CustomEvent('fileRightClick',{ detail: data })
     document.dispatchEvent(ev)

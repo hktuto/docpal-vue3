@@ -80,7 +80,8 @@ export enum TABLE {
     CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
     CLIENT_BROWSE = 'clientBrowse',
 
-    PUBLIC_SHARE = 'publicShare'
+    PUBLIC_SHARE = 'publicShare',
+    ADMIN_LOG_MANAGE = 'adminLogManage'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -682,14 +683,14 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_ACTIVE_TASK] : {
         columns: [
-            { id: '1', label: 'table_name', prop: 'businessKey' },
-            { id: '2', label: 'workflow_workflow', prop: 'processDefinitionName' },
-            { id: '3', label: 'workflow_assignee', prop: 'name',  },
-            { id: '4', label: 'workflow_createDate', prop: 'startTime', 
+            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
+            { id: '3', label: 'workflow_assignee', prop: 'assignee',  },
+            { id: '4', label: 'workflow_createDate', prop: 'createDate', 
                 formatList: [
                     {
                         "joiner": "",
-                        "prop": "startTime",
+                        "prop": "createDate",
                         "formatFun": "dateFormat",
                         "params": {
                             "format": ""
@@ -848,6 +849,19 @@ export const defaultTableSetting: TableColumnSetting = {
             }
         ],
         events: ['download'],
+        options: { pageSize: 20 }
+    },
+
+    [TABLE.ADMIN_LOG_MANAGE]: {
+        columns: [
+            { id: '1', label: 'service', prop: 'service' },
+            { id: '2', label: 'effectiveLevel', prop: 'effectiveLevel' },
+            { id: '3', label: 'configuredLevel', prop: 'configuredLevel', slot: 'configuredLevel' }
+        ],
+        events: [],
+        slots: [
+            { slot: 'configuredLevel', label: 'configuredLevel', prop: 'configuredLevel' },
+        ],
         options: { pageSize: 20 }
     }
 }
