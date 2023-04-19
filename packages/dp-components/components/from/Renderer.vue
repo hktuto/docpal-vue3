@@ -25,7 +25,6 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
         if(!props.formJson.formConfig) return {}
         
         let json = deepCopy(props.formJson)
-        console.log('fromJsonNormalizer', {json});
         // if(json.formConfig.jsonVersion === 3) return props.formJson;
         // normalize vue 2 form designer
         if(!json.formConfig) json.formConfig = { }
@@ -35,7 +34,6 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
         st = st.replaceAll('this.$cookies.get','$getCookie')
         st = st.replaceAll('yyyy-MM-dd','YYYY-MM-DD')
         json = JSON.parse(st);
-        console.log({json});
         
         return json
     })
