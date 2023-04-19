@@ -1,5 +1,4 @@
 <template>
-<!-- TODO color-->
     <div class="menu">
         <div 
             v-for="item in displayMenu" 
