@@ -1,0 +1,23 @@
+{
+  "name": "dp-notification",
+  "version": "1.1.3",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
+    "build": "nuxi build .playground",
+    "generate": "nuxi generate .playground",
+    "preview": "nuxi preview .playground",
+    "postinstall": "nuxi prepare",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "eslint": "^8.28.0",
+    "nuxt": "^3.0.0",
+    "typescript": "^4.9.3",
+    "dp-api":"workspace:*"
+  },
+  "author": "",
+  "license": "ISC"
+}
