@@ -8,9 +8,11 @@
     "apps/*",
     "packages/*"
   ],
-  "scripts": {
-  },
+  "scripts": {},
   "devDependencies": {
     "v-form": "github:hktuto/v-form-designer"
+  },
+  "dependencies": {
+    "pnpm": "^8.3.1"
   }
 }

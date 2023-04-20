@@ -4,7 +4,10 @@ importers:
 
   .:
     specifiers:
+      pnpm: ^8.3.1
       v-form: github:hktuto/v-form-designer
+    dependencies:
+      pnpm: 8.3.1
     devDependencies:
       v-form: github.com/hktuto/v-form-designer/2df345e2faaa86bbf9ecd2f09d8aaa88944e7665
 
@@ -181,6 +184,46 @@ importers:
       webpack-stream: 7.0.0_webpack@5.75.0
       wintersmith: 2.5.0
       yargs: 17.6.2
+
+  packages/admin-acl:
+    specifiers:
+      '@nuxt/devtools': ^0.1.4
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^9.12.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.0.0
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxt/devtools': 0.1.4_nuxt@3.2.3
+      '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 9.13.0
+      dp-api: link:../dp-api
+      eslint: 8.34.0
+      nuxt: 3.2.3_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
+
+  packages/admin-log-manage:
+    specifiers:
+      '@nuxt/devtools': ^0.1.4
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^9.12.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.0.0
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxt/devtools': 0.1.4_nuxt@3.2.3
+      '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 9.13.0
+      dp-api: link:../dp-api
+      eslint: 8.34.0
+      nuxt: 3.2.3_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
 
   packages/admin-table-setting:
     specifiers:
@@ -429,6 +472,20 @@ importers:
       '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
       eslint: 8.34.0
       nuxt: 3.1.1_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
+
+  packages/dp-notification:
+    specifiers:
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.0.0
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      dp-api: link:../dp-api
+      eslint: 8.34.0
+      nuxt: 3.2.3_7kw3g6rralp5ps6mg3uyzz6azm
       typescript: 4.9.5
 
   packages/dp-search:
@@ -2236,7 +2293,7 @@ packages:
   /@esbuild-kit/core-utils/3.1.0:
     resolution: {integrity: sha512-Uuk8RpCg/7fdHSceR1M6XbSZFSuMrxcePFuGgyvsBn+u339dk5OeL4jv2EojwTN2st/unJGsVm4qHWjWNmJ/tw==}
     dependencies:
-      esbuild: 0.17.9
+      esbuild: 0.17.11
       source-map-support: 0.5.21
     dev: true
 
@@ -3178,7 +3235,7 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       '@npmcli/promise-spawn': 6.0.2
-      lru-cache: 7.16.1
+      lru-cache: 7.18.3
       mkdirp: 1.0.4
       npm-pick-manifest: 8.0.1
       proc-log: 3.0.0
@@ -4929,7 +4986,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/plugin-transform-typescript': 7.20.13_@babel+core@7.20.12
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.12
-      vite: 4.1.4_f5vcjb3akvjdur4ffzogu2hewu
+      vite: 4.1.4
       vue: 3.2.47
     transitivePeerDependencies:
       - supports-color
@@ -4953,7 +5010,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.1.4_f5vcjb3akvjdur4ffzogu2hewu
+      vite: 4.1.4
       vue: 3.2.47
     dev: true
 
@@ -6155,7 +6212,7 @@ packages:
       fs-minipass: 2.1.0
       glob: 8.1.0
       infer-owner: 1.0.4
-      lru-cache: 7.16.1
+      lru-cache: 7.18.3
       minipass: 3.3.6
       minipass-collect: 1.0.2
       minipass-flush: 1.0.5
@@ -6178,7 +6235,7 @@ packages:
       '@npmcli/fs': 3.1.0
       fs-minipass: 3.0.1
       glob: 8.1.0
-      lru-cache: 7.16.1
+      lru-cache: 7.18.3
       minipass: 4.0.1
       minipass-collect: 1.0.2
       minipass-flush: 1.0.5
@@ -8133,7 +8190,7 @@ packages:
       eslint: '>=8.23.1'
     dependencies:
       '@babel/helper-validator-identifier': 7.19.1
-      ci-info: 3.7.1
+      ci-info: 3.8.0
       clean-regexp: 1.0.0
       eslint: 8.33.0
       eslint-utils: 3.0.0_eslint@8.33.0
@@ -8156,7 +8213,7 @@ packages:
       eslint: '>=8.23.1'
     dependencies:
       '@babel/helper-validator-identifier': 7.19.1
-      ci-info: 3.7.1
+      ci-info: 3.8.0
       clean-regexp: 1.0.0
       eslint: 8.34.0
       eslint-utils: 3.0.0_eslint@8.34.0
@@ -9509,7 +9566,7 @@ packages:
     resolution: {integrity: sha512-r0EI+HBMcXadMrugk0GCQ+6BQV39PiWAZVfq7oIckeGiN7sjRGyQxPdft3nQekFTCQbYxLBH+/axZMeH8UX6+w==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
-      lru-cache: 7.16.1
+      lru-cache: 7.18.3
     dev: true
 
   /html-tags/3.2.0:
@@ -10738,11 +10795,6 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lru-cache/7.16.1:
-    resolution: {integrity: sha512-9kkuMZHnLH/8qXARvYSjNvq8S1GYFFzynQTAfKeaJ0sIrR3PUPuu37Z+EiIANiZBvpfTf2B5y8ecDLSMWlLv+w==}
-    engines: {node: '>=12'}
-    dev: true
-
   /lru-cache/7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
@@ -10783,7 +10835,7 @@ packages:
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       is-lambda: 1.0.1
-      lru-cache: 7.16.1
+      lru-cache: 7.18.3
       minipass: 3.3.6
       minipass-collect: 1.0.2
       minipass-fetch: 2.1.2
@@ -10808,7 +10860,7 @@ packages:
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       is-lambda: 1.0.1
-      lru-cache: 7.16.1
+      lru-cache: 7.18.3
       minipass: 4.0.1
       minipass-fetch: 3.0.1
       minipass-flush: 1.0.5
@@ -12901,6 +12953,12 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
     dev: true
+
+  /pnpm/8.3.1:
+    resolution: {integrity: sha512-0mT2ZAv08J3nz8xUdWhRW88GE89IWgPo/xZhb6acQXK2+aCikl7kT7Bg31ZcnJqOrwYXSed68xjLd/ZoSnBR8w==}
+    engines: {node: '>=16.14'}
+    hasBin: true
+    dev: false
 
   /posix-character-classes/0.1.1:
     resolution: {integrity: sha512-xTgYBc3fuo7Yt7JbiuFxSYGToMoz8fLoE6TC9Wx1P/u+LfeThMOAqmuyECnlBaaJb+u1m9hHiXUEtwW4OzfUJg==}
