@@ -2,6 +2,9 @@
     <div class="preview-container"
         :style="`--img-size:${state.imgSize}px;`">
         <div class="preview-main">
+            <div v-if="state.tableData.length === 0" class="emptyList">
+                empty list
+            </div>
             <div v-for="item in state.tableData" :key="item.id"
                 class="doc-container"
                 @dblclick="handleDblclick(item)" 

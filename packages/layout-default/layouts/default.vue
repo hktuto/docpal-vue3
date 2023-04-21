@@ -22,6 +22,7 @@
                 <div class="actions">
                   <ColorSwitch />
                   <LanguageSwitch />
+                  <NotificationBadge />
                   <UserMiniDropdown />
                 </div>
             </div>
