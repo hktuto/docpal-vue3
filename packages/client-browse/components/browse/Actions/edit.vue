@@ -15,7 +15,7 @@
             </el-form-item>
           </el-form>
           <template #footer>
-            <el-button @click="handleSave">{{$t('save')}}</el-button>
+            <el-button @click="handleSave">{{$t('common_save')}}</el-button>
           </template>
         </el-dialog>
         <!-- <SvgIcon src="/icons/file/edit.svg" round content="edit"
