@@ -2,7 +2,7 @@
     <div class="pageContainer">
         <FromDesigner ref="fromDesignerRef"></FromDesigner>
         <el-button class="save-button" type="primary" 
-            @click="handleSave">{{$t('save')}}</el-button>
+            @click="handleSave">{{$t('common_save')}}</el-button>
     </div>
 </template>
 
