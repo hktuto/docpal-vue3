@@ -13,8 +13,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@interactjs/types": "^1.10.17",
     "bpmn-js": "^9.0.2",
+    "dayjs": "^1.11.7",
     "dp-api": "workspace:*",
+    "interactjs": "^1.10.17",
     "vue-inline-svg": "^3.1.2",
     "vuedraggable": "^4.1.0"
   },

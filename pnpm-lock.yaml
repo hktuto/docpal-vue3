@@ -434,20 +434,26 @@ importers:
 
   packages/dp-components:
     specifiers:
+      '@interactjs/types': ^1.10.17
       '@nuxt/devtools': ^0.1.4
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
       '@vueuse/core': ^9.12.0
       bpmn-js: ^9.0.2
+      dayjs: ^1.11.7
       dp-api: workspace:*
       eslint: ^8.28.0
+      interactjs: ^1.10.17
       nuxt: ^3.0.0
       typescript: ^4.9.3
       vue-inline-svg: ^3.1.2
       vuedraggable: ^4.1.0
     dependencies:
+      '@interactjs/types': 1.10.17
       bpmn-js: 9.4.1
+      dayjs: 1.11.7
       dp-api: link:../dp-api
+      interactjs: 1.10.17
       vue-inline-svg: 3.1.2
       vuedraggable: 4.1.0
     devDependencies:
@@ -3344,6 +3350,10 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
+
+  /@interactjs/types/1.10.17:
+    resolution: {integrity: sha512-X2JpoM7xUw0p9Me0tMaI0HNfcF/Hd07ZZlzpnpEMpGerUZOLoyeThrV9P+CrBHxZrluWJrigJbcdqXliFd0YMA==}
+    dev: false
 
   /@intlify/bundle-utils/4.0.0_vue-i18n@9.3.0-beta.16:
     resolution: {integrity: sha512-klXrYT9VXyKEXsD6UY3pShg0O5MPC07n0TZ5RrSs5ry6T1eZVolIFGJi9c3qcDrh1qjJxgikRnPBmD7qGDqbjw==}
@@ -10781,6 +10791,12 @@ packages:
       through: 2.3.8
       wrap-ansi: 8.1.0
     dev: true
+
+  /interactjs/1.10.17:
+    resolution: {integrity: sha512-grjHJgnWkCoQLmAlk2yalNd1r0ztUhXLJNVjSOfWn1wfNNgU2tx1cDEkro9WYerDNC9UG3MZTeD4O6zOM5gbIA==}
+    dependencies:
+      '@interactjs/types': 1.10.17
+    dev: false
 
   /internal-slot/1.0.4:
     resolution: {integrity: sha512-tA8URYccNzMo94s5MQZgH8NB/XTa6HsOo0MLfXTKKEnHVVdegzaQoFZ7Jp44bdvLvY2waT5dc+j5ICEswhi7UQ==}

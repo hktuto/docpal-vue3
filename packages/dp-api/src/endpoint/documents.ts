@@ -163,3 +163,8 @@ export const DownloadTemplateApi = async(param) => {
         return response
     }
 // #endregion
+
+
+export const getVersionsApi = (param: Object) => {
+    return api.post('/nuxeo/getVersions', param).then(res => res.data)
+}
