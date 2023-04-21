@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import { Select, CloseBold } from '@element-plus/icons-vue'
 import { formatDate } from '@vueuse/core'
-import { getJsonApi, getUserListApi, getGroupListApi } from 'dp-api'
+import { getJsonApi, getUserListApi, GetGroupListApi } from 'dp-api'
 import { addACLApi } from 'dp-api/src/endpoint/admin-acl'
 const props = defineProps<{
     doc: object,
@@ -74,7 +74,7 @@ onMounted(async() => {
         item.value = item.userId
         item.label = item.username
     });
-    state.groupList= await getGroupListApi()
+    state.groupList= await GetGroupListApi()
     state.groupList.forEach(item => {
         item.value = item.id
         item.label = item.name

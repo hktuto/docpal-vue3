@@ -81,7 +81,11 @@ export enum TABLE {
     CLIENT_BROWSE = 'clientBrowse',
 
     PUBLIC_SHARE = 'publicShare',
-    ADMIN_LOG_MANAGE = 'adminLogManage'
+    ADMIN_LOG_MANAGE = 'adminLogManage',
+    ADMIN_USER_MANAGE = 'adminUserManage',
+    ADMIN_USER_GROUP_MANAGE = 'adminUserGroupManage',
+    ADMIN_GROUP_MANAGE = 'adminGroupManage',
+    ADMIN_GROUP_USER_MANAGE = 'adminGroupUserManage'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -862,6 +866,80 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
             { slot: 'configuredLevel', label: 'configuredLevel', prop: 'configuredLevel' },
         ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_USER_MANAGE]: {
+        columns: [
+            { id: '1', label: 'username', prop: 'username' },
+            { id: '2', label: 'Identifer', prop: 'userId' },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_USER_GROUP_MANAGE]: {
+        columns: [
+            { id: '1', label: 'user_groupName', prop: 'name' },
+            { id: '2', label: 'user_groupIdentifer', prop: 'id' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_GROUP_MANAGE]: {
+        columns: [
+            { id: '1', label: 'name', prop: 'name' },
+            { id: '2', label: 'Identifer', prop: 'id' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_GROUP_USER_MANAGE]: {
+        columns: [
+            { id: '1', label: 'username', prop: 'username' },
+            { id: '2', label: 'user_groupIdentifer', prop: 'userId' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
         options: { pageSize: 20 }
     }
 }

@@ -9,6 +9,7 @@ import {
 import { OCR_SETTING } from 'dp-api/src/model/setting'
 
 export const useSetting = () => {
+  const isLdapMode = false
   const tableColumnSetting = useState<TableColumnSetting>('tableColumnSetting');
   const ocrSetting = useState<OCR_SETTING>('ocrSetting');
   const availableLanguage = useState('availableLanguage');
@@ -28,6 +29,7 @@ export const useSetting = () => {
     return ocrSetting.value.supportedInputFormats.includes(extension);
   } 
   return {
+    isLdapMode,
     tableColumnSetting,
     ocrSetting,
     availableLanguage,
