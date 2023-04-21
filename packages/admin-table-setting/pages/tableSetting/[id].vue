@@ -5,7 +5,7 @@
                 <div>
                     <el-button @click="handlePreview">{{$t('preview')}}</el-button>
                     <el-button @click="handleOpenAdd">{{$t('addColumn')}}</el-button>
-                    <el-button @click="handleSave">{{$t('save')}}</el-button>
+                    <el-button @click="handleSave">{{$t('common_save')}}</el-button>
                 </div>
             </div>
            <TableColumnDrag ref="TableColumnDragRef" :tableColumns="tableColumns"></TableColumnDrag>

@@ -15,7 +15,7 @@
             </el-form-item>
           </el-form>
           <template #footer>
-            <el-button @click="handleSave">{{$t('save')}}</el-button>
+            <el-button @click="handleSave">{{$t('common_save')}}</el-button>
           </template>
         </el-dialog>
         <!-- <SvgIcon src="/icons/file/edit.svg" round content="edit"
@@ -37,6 +37,7 @@ const form = ref({
     idOrPath: ''
 })
 function openDialog(doc){
+  console.log("openDialog");
   form.value.name = doc.name
   form.value.id = doc.id
   form.value.path = doc.path

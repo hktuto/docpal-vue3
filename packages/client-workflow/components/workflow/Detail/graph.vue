@@ -4,6 +4,7 @@
 </div>
 </template>
 <script lang="ts" setup>
+
 import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.production.min.js'
 
 import 'bpmn-js/dist/assets/diagram-js.css'

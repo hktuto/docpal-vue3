@@ -1,6 +1,6 @@
-type Permission = "Write" | "Read" | "Manage" | "Everything";
+type Permission = "Write" | "Edit" | "Manage" | "Everything";
 
-const PermissionArray:Permission[] = ["Write", "Read", "Manage", "Everything"];
+const PermissionArray:Permission[] = ["Write", "Edit", "Manage", "Everything"];
 
 type PermissionAllowArgs = {
     feature: Permission;

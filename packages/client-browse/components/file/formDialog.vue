@@ -12,8 +12,8 @@
         </el-form>
 
         <template #footer>
-            <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
-            <el-button @click="handleSubmit">{{$t('save')}}</el-button>
+            <el-button @click="dialogVisible = false">{{$t('cancelText')}}</el-button>
+            <el-button @click="handleSubmit">{{$t('common_save')}}</el-button>
         </template>
     </el-dialog>
 </template>

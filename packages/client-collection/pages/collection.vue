@@ -30,7 +30,7 @@
             </el-container>
         </el-container>
         <FileFormDialog ref="fileFormDialogAddRef" :title="$t('collections_new')" @submit="submitNewCollection"></FileFormDialog>
-        <FileFormDialog ref="fileFormDialogEditRef" :title="$t('editCollection')" @submit="saveCollection"></FileFormDialog>
+        <FileFormDialog ref="fileFormDialogEditRef" :title="$t('collections_edit')" @submit="saveCollection"></FileFormDialog>
     </NuxtLayout>
 </template>
 
