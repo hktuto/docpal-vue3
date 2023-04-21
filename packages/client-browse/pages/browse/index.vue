@@ -9,7 +9,9 @@
             <div class="browseHeader">
                 <LazyBrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
                 <!-- folder actions container -->
-                 <div id="browseHeaderRight" class=""></div>
+                 <div id="browseHeaderRight" class="">
+
+                 </div>
             </div>
             <BrowseList :doc="data" :permission="permission" :viewType="pageOptions.viewType"
                 @select-change="handleSelectionChange"/>
@@ -20,30 +22,30 @@
                     <div class="fileName">{{ data.name }}</div>
                     <BrowseActionsEditName :doc="data" />
                 </div>
-                    <div class="actions">
-                        <Teleport :disabled="!data.isFolder" to="#browseHeaderRight">
-                            <BrowseActionsSubscribe  :doc="data" />
-                            <div class="actionDivider"></div>
-                            <BrowseActionsEdit v-show="!data.isFolder" :doc="data" />
-                            <BrowseActionsUpload v-if="data.isFolder" :doc="data" @success="handleRefresh"/>
-                            <BrowseActionsDownload v-if="!data.isFolder"  :doc="data" />
-                            <BrowseActionsNewFolder v-if="data.isFolder" :path="data.path" @success="handleRefresh"/>
-                            <BrowseActionsDelete :doc="data" @delete="itemDeleted" @success="handleRefresh"/>
-                            <div class="actionDivider"></div>
-                            <BrowseActionsCopyPath :doc="data" />
-                            <BrowseActionsShare :doc="data" />
-                            <BrowseActionsUploadRequest v-if="data.isFolder" :path="data.path" />
-                            <div class="actionDivider"></div>
-                            <BrowseActionsInfo :doc="data" />
-                        </Teleport>
+                <div class="actions">
+                    <Teleport :disabled="!data.isFolder" to="#browseHeaderRight">
+                        <BrowseActionsSubscribe v-if="selectList.length === 0"  :doc="data" />
+                        <!-- <div class="actionDivider"></div> -->
+                        <BrowseActionsEdit v-if="selectList.length === 0 && !data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" />
+                        <BrowseActionsUpload v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
+                        <BrowseActionsDownload v-if="selectList.length === 0 && !data.isFolder && permissionAllow({feature:'Write', userPermission:permission.permission })"  :doc="data" />
+                        <BrowseActionsNewFolder v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :path="data.path" @success="handleRefresh"/>
+                        <BrowseActionsDelete v-if="selectList.length === 0 && permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" @delete="itemDeleted" @success="handleRefresh"/>
+                        <!-- <div class="actionDivider"></div> -->
+                        <BrowseActionsCopyPath v-if="selectList.length === 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
+                        <BrowseActionsShare v-if="selectList.length > 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
+                        <BrowseActionsUploadRequest v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :path="data.path" />
                         <div class="actionDivider"></div>
-                        <!-- <SvgIcon src="/icons/close.svg" round @click="detailClosed"></SvgIcon> -->
-                        <div class="actionIconContainer" @click="detailClosed">
-                            <el-icon >
-                                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
-                            </el-icon>
-                        </div>
+                        <BrowseActionsInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
+                    </Teleport>
+                    <div class="actionDivider"></div>
+                    <!-- <SvgIcon src="/icons/close.svg" round @click="detailClosed"></SvgIcon> -->
+                    <div class="actionIconContainer" @click="detailClosed">
+                        <el-icon >
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
+                        </el-icon>
                     </div>
+                </div>
             </BrowseDetail>
         </Teleport>
         </page-container>
