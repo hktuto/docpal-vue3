@@ -26,7 +26,7 @@
                     <Teleport :disabled="!data.isFolder" to="#browseHeaderRight">
                         <BrowseActionsSubscribe v-if="selectList.length === 0"  :doc="data" />
                         <!-- <div class="actionDivider"></div> -->
-                        <BrowseActionsEdit v-if="selectList.length === 0 && !data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" />
+                        <BrowseActionsEdit v-if="permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" />
                         <BrowseActionsUpload v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
                         <BrowseActionsDownload v-if="selectList.length === 0 && !data.isFolder && permissionAllow({feature:'Write', userPermission:permission.permission })"  :doc="data" />
                         <BrowseActionsNewFolder v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :path="data.path" @success="handleRefresh"/>
