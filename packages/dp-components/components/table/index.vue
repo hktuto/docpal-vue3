@@ -13,6 +13,7 @@
                 :data="tableData"
                 :row-class-name="tableRowClassName"
                 v-bind="_options"
+                :header-cell-style="{'background': 'var(--color-grey-050)'}"
                 @row-contextmenu="handleRightClick"
                 @selection-change="handleSelectionChange"
                 @row-click="handleRowClick"
@@ -333,5 +334,6 @@ defineExpose({ reorderColumn })
         line-height: 1.5rem;
     }
 }
+
 </style>
 
