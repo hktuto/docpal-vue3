@@ -12,6 +12,8 @@
     <BrowseInfoPicture :doc="doc" />
     <BrowseInfoMeta :doc="doc" />
     <BrowseInfoTag :doc="doc" />
+    <BrowseInfoCollection :doc="doc" />
+    <BrowseInfoAcl :doc="doc" />
 </Interact>
 </template>
 

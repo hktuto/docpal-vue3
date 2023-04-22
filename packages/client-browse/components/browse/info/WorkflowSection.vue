@@ -3,11 +3,11 @@
     <th class="tableItemTitle vertical-top">{{ $t('workflow_workflow') }}</th>
       <td class="tableItemContent">
         <div class="block">
-          <Button v-if="canAdhoc" type="primary" size="mini" @click="dialogShow = true">{{ $t('workflow_startAdhocWorkflow') }}</Button>
+          <el-button v-if="canAdhoc" type="primary" size="mini" @click="dialogShow = true">{{ $t('workflow_startAdhocWorkflow') }}</el-button>
 
           <template v-if="canApproval">
-            <Button type="primary" size="mini" :loading="loading" @click="handelAudit(true)">{{ $t('workflow_startAdhocWorkflow_approve') }}</Button>
-            <Button type="danger" size="mini" :loading="loading" @click="handelAudit(false)">{{ $t('workflow_startAdhocWorkflow_reject') }}</Button>
+            <el-button type="primary" size="mini" :loading="loading" @click="handelAudit(true)">{{ $t('workflow_startAdhocWorkflow_approve') }}</el-button>
+            <el-button type="danger" size="mini" :loading="loading" @click="handelAudit(false)">{{ $t('workflow_startAdhocWorkflow_reject') }}</el-button>
           </template>
         </div>
         <small>{{ displayStatus }}</small>   

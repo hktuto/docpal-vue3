@@ -17,14 +17,14 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{doc:any}>();
-const displayMeta = ref<object>({})
-
+    const props = defineProps<{doc:any}>();
+    const displayMeta = ref<object>({})
+    const { displayTime } = useTime();
     const { doc } = toRefs(props)
     const hasMeta = ref(false)
 
     const metaStructureByProperties = (metaList: any[], properties: string) => {
-      if(!properties) return {}
+      if(!properties || !metaList) return {}
       return  metaList.reduce((p, item) => {
                 if (item.display) p[item.metaData] = properties[item.metaData] || ''
                 if (item.dataType === 'date') p[item.metaData] = displayTime(p[item.metaData])

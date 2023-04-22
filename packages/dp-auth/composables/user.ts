@@ -1,7 +1,7 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
 
-import {GetSetting, UserSettingSaveApi, Login, api, Verify} from 'dp-api'
+import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
 
@@ -15,6 +15,7 @@ export const useUser = () => {
     const userPreference = useState<UserSetting>('userPreference');
     const settingStore = useSetting()
 
+    const userList = ref<User[]>([]);
     
     const colorModeOption = [
         {
@@ -124,6 +125,11 @@ export const useUser = () => {
         localStorage.removeItem('refreshToken');
     }
 
+    async function getUserList() {
+        const list = await getUserListApi();
+        userList.value = list;
+    }
+
     return {
         // data
         token,
@@ -135,5 +141,7 @@ export const useUser = () => {
         logout,
         getUserSetting,
         savePreference,
+        getUserList,
+        userList
     }
 }

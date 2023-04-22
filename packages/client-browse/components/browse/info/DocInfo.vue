@@ -49,7 +49,7 @@
             </div>
           </td>
         </tr>
-        <BrowseInfoWorkflowSection :doc="doc"></BrowseInfoWorkflowSection>
+        <BrowseInfoWorkflowSection v-if="!doc.isFolder" :doc="doc"></BrowseInfoWorkflowSection>
       </table>
     </div>
     </div>

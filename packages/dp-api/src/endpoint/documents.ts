@@ -20,8 +20,12 @@ export const GetDocDetailApi = async(idOrPath:string = '/'):Promise<DocDetail> =
 export const GetDocPermission = async(idOrPath:string, userId:string):Promise<{permission:string,print:boolean}> => {
     return api.get<{permission:string,print:boolean}>(`/nuxeo/document/acl/permission?docId=${idOrPath}&userId=${userId}`).then(res => res.data);
 }
-export const patchDocApi = async(params: DocDetail):Promise<DocDetail> => {
-    return api.patch<DocDetail>('/nuxeo/document', params).then(res => res.data);
+export const patchDocApi = async(idOrPath: DocDetail):Promise<DocDetail> => {
+    return api.patch<DocDetail>('/nuxeo/document', {idOrPath}).then(res => res.data);
+}
+
+export const getUserAndRights = async(idOrPath:string) => {
+    return api.post(`/nuxeo/document/acl`, {idOrPath}).then(res => res.data);
 }
 
 export const GetBreadcrumb = async(idOrPath:string):Promise<BreadResponse> => {
@@ -33,7 +37,7 @@ export const GetChild = async(idOrPath:string):Promise<GetChildResponse> => {
 }
 
 export const GetDocumentAdditionalApi = async(params) => {
-    return api.get('/docpal/workflow/queryMetaValidationRule', { params }).then(res => res.data)
+    return api.get('/docpal/workflow/queryMetaValidationRule', { params }).then(res => res.data.data)
 }
 
 export const GetDocumentPreview = async(idOrPath:string) => {
@@ -115,11 +119,15 @@ export const DownloadTemplateApi = async(param) => {
         return await api.post('/nuxeo/collection/create', params).then(res =>res.data);
     }
     export const getCollectionDocApi = async (idOrPath: string) => {
-        return await api.delete('/nuxeo/collection/remove', { data: {idOrPath} }).then(res =>res.data);
+        return await api.post('/nuxeo/document/collections', { data: {idOrPath} }).then(res =>res.data);
     }
     export const getCollectionDoc = async (idOrPath: string) => {
         const { entryList, totalSize } = await api.post('/nuxeo/collection/documents', { idOrPath }).then(res =>res.data);
         return {entryList, totalSize}
+    }
+
+    export const getAllCollection = async () => {
+        return await api.get('/nuxeo/collection/all').then(res =>res.data);
     }
 // #endregion
 
@@ -172,3 +180,28 @@ export const DownloadTemplateApi = async(param) => {
 export const getVersionsApi = (param: Object) => {
     return api.post('/nuxeo/getVersions', param).then(res => res.data)
 }
+
+// #region module: tag
+export const PatchTags = async (params) => {
+    return await api.patch('/nuxeo/tag', params).then(res => res.data)
+}
+
+export const DeleteTags = async (params) => {
+    return await api.delete('/nuxeo/tag', { data: params }).then(res => res.data)
+}
+
+export const DocumentAddTags = async (params) => {
+    return await api.post('/nuxeo/tag/add', params).then(res => res.data)
+}
+
+export const GetAllTags = async () => {
+    return await api.post('/nuxeo/tags/getAllTags', {  }).then(res => res.data)
+}
+
+export const SearchTagByName = async (keyword) => {
+    return await api.post('/nuxeo/tags/label', {keyword}).then(res => res.data)
+}
+
+// #endregion
+
+

@@ -32,15 +32,15 @@
                     <Teleport :disabled="!data.isFolder" to="#browseHeaderRight">
                         <BrowseActionsSubscribe v-if="selectList.length === 0"  :doc="data" />
                         <!-- <div class="actionDivider"></div> -->
-                        <BrowseActionsEdit v-if="permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" />
-                        <BrowseActionsUpload v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
+                        <BrowseActionsEdit v-if="permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" />
+                        <BrowseActionsUpload v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
                         <BrowseActionsDownload v-if="selectList.length === 0 && !data.isFolder && permissionAllow({feature:'Write', userPermission:permission.permission })"  :doc="data" />
-                        <BrowseActionsNewFolder v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :path="data.path" @success="handleRefresh"/>
-                        <BrowseActionsDelete v-if="selectList.length === 0 && permissionAllow({feature:'Edit', userPermission:permission.permission })" :doc="data" @delete="itemDeleted" @success="handleRefresh"/>
+                        <BrowseActionsNewFolder v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :path="data.path" @success="handleRefresh"/>
+                        <BrowseActionsDelete v-if="selectList.length === 0 && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @delete="itemDeleted" @success="handleRefresh"/>
                         <!-- <div class="actionDivider"></div> -->
                         <BrowseActionsCopyPath v-if="selectList.length === 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
                         <BrowseActionsShare v-if="selectList.length > 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
-                        <BrowseActionsUploadRequest v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'Edit', userPermission:permission.permission })" :path="data.path" />
+                        <BrowseActionsUploadRequest v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :path="data.path" />
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" @click="infoOpened = !infoOpened"/>
                     </Teleport>
@@ -93,8 +93,17 @@ async function getPermission(){
     permission.value = await GetDocPermission(routePath.value, auth.user.value.username);
 }
 async function getDocDetail() {
+    // step 1 get permission
+    await getPermission()
+    // step 2 get doc detail
     data.value = await GetDocDetail(routePath.value);
+    // step 3 get doc additional info
     data.value.displayMeta = await GetDocumentAdditionalApi({documentType:data.value.documentType})
+    // step 4 set permission helper to doc
+    data.value.canWrite = permissionAllow({feature:'Write', userPermission:permission.value.permission })
+    data.value.canEdit = permissionAllow({feature:'Edit', userPermission:permission.value.permission })
+    data.value.canContorl = permissionAllow({feature:'Manage', userPermission:permission.value.permission })
+    console.log(data.value.displayMeta)
 }
 
 function itemDeleted(){
@@ -114,7 +123,6 @@ function handleSelectionChange (rows) {
 watch(route, async() => {
     loading.value = true;
     try{
-        await getPermission(),
         await getDocDetail()
     }catch(error) {
         console.log(error)

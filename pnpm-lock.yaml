@@ -247,6 +247,26 @@ importers:
       typescript: 4.9.5
       vuedraggable: 4.1.0
 
+  packages/admin-user-manage:
+    specifiers:
+      '@nuxt/devtools': ^0.1.4
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^9.12.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.0.0
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxt/devtools': 0.1.4_nuxt@3.4.1
+      '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 9.13.0
+      dp-api: link:../dp-api
+      eslint: 8.34.0
+      nuxt: 3.4.1_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
+
   packages/client-browse:
     specifiers:
       '@nuxt/devtools': ^0.1.4
@@ -437,6 +457,7 @@ importers:
       '@interactjs/types': ^1.10.17
       '@nuxt/devtools': ^0.1.4
       '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@types/mime-types': ^2.1.1
       '@vueuse/components': ^9.13.0
       '@vueuse/core': ^9.12.0
       bpmn-js: ^9.0.2
@@ -444,6 +465,7 @@ importers:
       dp-api: workspace:*
       eslint: ^8.28.0
       interactjs: ^1.10.17
+      mime-types: ^2.1.35
       nuxt: ^3.0.0
       typescript: ^4.9.3
       vue-inline-svg: ^3.1.2
@@ -454,11 +476,13 @@ importers:
       dayjs: 1.11.7
       dp-api: link:../dp-api
       interactjs: 1.10.17
+      mime-types: 2.1.35
       vue-inline-svg: 3.1.2
       vuedraggable: 4.1.0
     devDependencies:
       '@nuxt/devtools': 0.1.4_nuxt@3.1.1
       '@nuxtjs/eslint-config-typescript': 12.0.0_7kw3g6rralp5ps6mg3uyzz6azm
+      '@types/mime-types': 2.1.1
       '@vueuse/components': 9.13.0
       '@vueuse/core': 9.13.0
       eslint: 8.34.0
@@ -5311,6 +5335,10 @@ packages:
 
   /@types/mdurl/1.0.2:
     resolution: {integrity: sha512-eC4U9MlIcu2q0KQmXszyn5Akca/0jrQmwDRgpAMJai7qBWq4amIQhZyNau4VYGtCeALvW1/NtjzJJ567aZxfKA==}
+    dev: true
+
+  /@types/mime-types/2.1.1:
+    resolution: {integrity: sha512-vXOTGVSLR2jMw440moWTC7H19iUyLtP3Z1YTj7cSsubOICinjMxFeb/V57v9QdyyPGbbWolUFSSmSiRSn94tFw==}
     dev: true
 
   /@types/minimist/1.2.2:
