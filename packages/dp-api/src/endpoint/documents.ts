@@ -29,7 +29,11 @@ export const GetBreadcrumb = async(idOrPath:string):Promise<BreadResponse> => {
 }
 
 export const GetChild = async(idOrPath:string):Promise<GetChildResponse> => {
-    return api.post<GetChildResponse>('/nuxeo/document/children', { idOrPath }).then(res => res.data);
+    return api.post('/nuxeo/document/children', { idOrPath }).then(res => res.data.data);
+}
+
+export const GetDocumentAdditionalApi = async(params) => {
+    return api.get('/docpal/workflow/queryMetaValidationRule', { params }).then(res => res.data)
 }
 
 export const GetDocumentPreview = async(idOrPath:string) => {

@@ -69,7 +69,7 @@
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
 import {watch, ref, computed} from 'vue'
-import { GetDocDetail, GetDocPermission } from 'dp-api'
+import { GetDocDetail, GetDocPermission, GetDocumentAdditionalApi } from 'dp-api'
 
 // #region refs
 const breadCrumb = ref();
@@ -94,6 +94,7 @@ async function getPermission(){
 }
 async function getDocDetail() {
     data.value = await GetDocDetail(routePath.value);
+    data.value.displayMeta = await GetDocumentAdditionalApi({documentType:data.value.documentType})
 }
 
 function itemDeleted(){

@@ -9,6 +9,9 @@
     @resizemove="resizeMove"
 >
     <BrowseInfoDocInfo :doc="doc" />
+    <BrowseInfoPicture :doc="doc" />
+    <BrowseInfoMeta :doc="doc" />
+    <BrowseInfoTag :doc="doc" />
 </Interact>
 </template>
 

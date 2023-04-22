@@ -49,7 +49,7 @@
             </div>
           </td>
         </tr>
-        <WorkflowSection :folderCurItem="folderCurItem"></WorkflowSection>
+        <BrowseInfoWorkflowSection :doc="doc"></BrowseInfoWorkflowSection>
       </table>
     </div>
     </div>
