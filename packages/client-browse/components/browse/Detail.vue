@@ -81,8 +81,11 @@ onKeyStroke("Escape", (e) => {
     display: grid;
     grid-template-columns: 1fr min-content;
     padding: var(--el-component-size-small);
+    overflow: hidden;
     .info {
         transition: width .2s ease-in-out;
+    overflow: hidden;
+
     }
 }
 .header{

@@ -1,0 +1,92 @@
+<template>
+    <div class="convert">
+    <div class="sectionHeader">
+      <span class="title">{{ $t('convert_convert') }}
+        <i  :class="[{loading: refreshLoading}, 'el-icon', 'el-icon-refresh', 'icon__hover', 'cursorPointer']"
+            @click="handleGetConversionHistory"></i>
+      </span>
+    </div>
+    <main class="">
+      <el-table v-loading="refreshLoading"
+              :data="tableList"
+              height="100%">
+        <el-table-column prop="fileName" :label="$t('filePopover_fileName')" sortable>
+          <template slot-scope="scope">
+            <div v-if="scope.row.fileName">{{scope.row.fileName}}</div>
+            <div v-else>{{filenameWithoutSuffix}}.{{scope.row.targetFileType}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="fileCreatedDate" :label="$t('filePopover_expiredDate')" sortable>
+          <template slot-scope="scope">
+            <div v-if="scope.row.fileCreatedDate">{{displayTime(dayjs(scope.row.fileCreatedDate).add(7, 'day'))}}</div>
+            <div v-else>{{filenameWithoutSuffix}}.{{scope.row.targetFileType}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('tableHeader_actions')" width="80" align="center">
+          <template slot-scope="scope">
+            <el-button v-if="scope.row.status === 'COMPLETED'" type="text" @click="handleDownload(scope.row, $event)">{{
+              $t('download_download')
+            }}</el-button>
+            <span v-else-if="scope.row.status === 'ERROR'">{{$t('commons_error')}}</span>
+            <i v-else class="el-icon-loading" ></i>
+          </template>
+        </el-table-column>
+      </el-table>
+    </main>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import {getConversionHistoryApi} from 'dp-api'
+import dayjs from 'dayjs'
+const props = defineProps<{
+    doc:any
+}>()
+const { t } = useI18n()
+const refreshLoading = ref(false)
+const tableList = ref([])
+const timeStamp = ref(new Date())
+const filenameWithoutSuffix = ref('')
+
+async function handleDownload (row) {
+    const noti = Notification({
+    title: '',
+    dangerouslyUseHTMLString: true,
+    message: `${row.fileName}<i class="el-icon-loading"></i>`,
+    showClose: false,
+    customClass: 'loading-notification',
+    duration: 0,
+    position: 'bottom-right'
+    });
+    try {
+    const response = await conversionDownloadFileApi([ row.documentPath ])
+    downloadBlob(response, row.fileName)
+    } catch (error) {
+    Message.error(i18n.t('download_noFile') as string)
+    }
+    noti.close()
+}
+const handleGetConversionHistory = async() => {
+    refreshLoading.value = true
+    timeStamp.value = new Date()
+    tableList.value = await getConversionHistoryApi({ idOrPath: props.doc.id })
+    setTimeout(() => { refreshLoading.value = false }, 300)
+}
+
+onMounted(() => {
+    handleGetConversionHistory()
+    window.addEventListener('refresh-conversion-history', handleGetConversionHistory)
+})
+onUnmounted(() => {
+    window.removeEventListener('refresh-conversion-history', handleGetConversionHistory)
+})
+    watch(() => props.doc.name, (newValue) => {
+      if(!newValue) return
+      if (props.doc.isFolder) emit('tabChange')
+      else handleGetConversionHistory()
+      const name = newValue.split('.').shift()
+      filenameWithoutSuffix.value = name
+    }, {
+      immediate: true
+    })
+</script>

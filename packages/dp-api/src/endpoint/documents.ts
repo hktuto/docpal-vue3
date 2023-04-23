@@ -204,4 +204,36 @@ export const SearchTagByName = async (keyword) => {
 
 // #endregion
 
+// #region module: activities
+
+export const getActivitiesApi = async (idOrPath: string) => {
+    return await api.post('/nuxeo/document/audit', { idOrPath }).then(res => res.data);
+}
+
+// #endregion
+
+// #region module: Convertsion
+
+export const getConversionHistoryApi = async(params) =>  {
+    return api.get('/nuxeo/conversion/getConversionHistory', {params}).then(res => res.data);
+}
+
+// #endregion
+
+
+// #region module: adHoc
+export const getAdHocHistory = async (documentId: string) => {
+    return await api.post(`/docpal/workflow/queryAdhocApprovalPage`, {
+        documentId,
+        "pageNum": 1,
+        "pageSize": 100
+    }).then(res => res.data.data);
+}
+
+export const canApprovalAdhocApi = async (documentId: string, userId:string) => {
+    return await api.get(`/docpal/workflow/isDocumetIdCanApproval`, {params: { documentId, userId }}).then(res => res.data.data);
+}
+
+
+
 

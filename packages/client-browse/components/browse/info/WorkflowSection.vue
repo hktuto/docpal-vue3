@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts" setup>
+import {getAdHocHistory, canApprovalAdhocApi }from 'dp-api'
 import { ElMessage } from 'element-plus'
 const props = defineProps<{ doc: any}>()
 const { doc } = toRefs(props)
@@ -72,7 +73,8 @@ const loading = ref(false)
 
     async function checkAdhocStatus(){
        await new Promise(resolve => setTimeout(resolve, 1000));
-       const { entryList: list }= await getAdHocHistory(props.folderCurItem.id);
+       const { entryList: list }= await getAdHocHistory(props.doc.id);
+
        adHocHistoryList.value = list.length > 0 ? list : [];
        adHocHistory.value = list.length > 0 ? list[0] : null;
     }
@@ -83,9 +85,9 @@ const loading = ref(false)
         if(valid) {
           const param = {
             processKey: "adhocApproval",
-            businessKey: `adhoc-${props.folderCurItem.name}`,
+            businessKey: `adhoc-${props.doc.name}`,
             properties: {
-              documentId: props.folderCurItem.id,
+              documentId: props.doc.id,
               user_creator_id: authStore.user?.userId,
               user_approver_id: form.value.user_approver_id.join(',')
             }
@@ -107,14 +109,14 @@ const loading = ref(false)
       const canApproval = ref(false)
 
       async function handelAudit (approved) {
-        if (!!approved && props.folderCurItem.isCheckedOut) {
+        if (!!approved && props.doc.isCheckedOut) {
 
           ElMessage.error(`${t('dpTip_versoionError')}`)
           return
         }
         const param = {
           properties: {
-            documentId: props.folderCurItem.id,
+            documentId: props.doc.id,
             userId: authStore.user?.userId,
             approved
           }
@@ -157,10 +159,10 @@ const loading = ref(false)
         }
       }
     // #endregion
-    // folderCurItem
+    // doc
     watch(doc, async(newValue) => {
         // TODO : add api
       await checkAdhocStatus()
-      canApproval.value = await canApprovalAdhocApi(newValue, authStore.user?.userId)
+      canApproval.value = await canApprovalAdhocApi(newValue.id, (authStore.user.value.userId || authStore.user.value.username) )
     }, { immediate: true })
 </script>

@@ -8,12 +8,25 @@
     :class="{infoContainer:true, infoOpened:!infoOpened}"
     @resizemove="resizeMove"
 >
-    <BrowseInfoDocInfo :doc="doc" />
-    <BrowseInfoPicture :doc="doc" />
-    <BrowseInfoMeta :doc="doc" />
-    <BrowseInfoTag :doc="doc" />
-    <BrowseInfoCollection :doc="doc" />
-    <BrowseInfoAcl :doc="doc" />
+<el-tabs class="tabContainer" v-model="currentTab" >
+    <el-tab-pane :label="$t('rightDetail_info')" name="info">
+        <BrowseInfoDocInfo :doc="doc" />
+        <BrowseInfoPicture :doc="doc" />
+        <BrowseInfoMeta :doc="doc" />
+        <BrowseInfoTag :doc="doc" />
+        <BrowseInfoCollection :doc="doc" />
+        <BrowseInfoAcl :doc="doc" />
+    </el-tab-pane>
+    <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
+        <BrowseInfoActivities :doc="doc" />
+    </el-tab-pane>
+    <el-tab-pane v-if="!doc.isFolder" :label="$t('convert_convert')" name="convert">
+        <BrowseInfoConvert :doc="doc" />
+    </el-tab-pane>
+    <el-tab-pane v-if="!doc.isFolder" :label="$t('rightDetail_related')" name="relate">
+        <BrowseInfoRelate :doc="doc" />
+    </el-tab-pane>
+</el-tabs>
 </Interact>
 </template>
 
@@ -25,7 +38,7 @@ const props = defineProps<{
     infoOpened:boolean
 }>()
 const { doc } = toRefs(props)
-
+const currentTab = ref('info')
 const dragSize = ref(200);
 const maxWidth = 600;
 const minWidth = 120;
@@ -78,6 +91,23 @@ const infoSize = computed(() => {
     overflow: hidden;
     &.infoOpened{
         padding:0;
+    }
+}
+.tabContainer{
+        height: 100%;
+    overflow: hidden;
+    position: relative;
+        display: grid;
+    grid-template-rows: min-content 1fr;
+    :deep {
+        .el-tab-pane{
+            height: 100%;
+            overflow: hidden;
+        }
+        .el-tabs__content{
+            height: 100%;
+            overflow: auto;
+        }
     }
 }
 </style>
