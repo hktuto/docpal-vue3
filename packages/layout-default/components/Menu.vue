@@ -11,7 +11,7 @@
             }"
             @click="$router.push({ path: item.url })"
             >
-            <SvgIcon :src="item.icon"></SvgIcon>
+            <SvgIcon class="icon" :src="item.icon"></SvgIcon>
             <!-- <InlineSvg :src="item.icon"/> -->
             <div v-if="opened" class="itemLabel">
                 {{ $t(item.name) }}
@@ -49,6 +49,7 @@ const displayMenu = computed(
 
 <style lang="scss" scoped>
 .menu {
+  --icon-size: 1rem;
   --icon-color: var(--menu-color);
   --icon-hover-color: var(--menu-color);
   white-space: nowrap;
@@ -90,12 +91,19 @@ const displayMenu = computed(
       color: #fff;
       // background: var(--menu-selected-bg);
     }
+    &.opened {
+      .icon {
+        margin-right: 12px;
+      }
+    }
     &.selected {
+      --icon-size: 1.4rem;
       --icon-color: var(--menu-selected-color);
       background: var(--menu-selected-bg);
       color: var(--menu-selected-color);
       font-weight: 700;
       box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+      margin-right: -24px;
     }
   }
 }
