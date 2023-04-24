@@ -3,7 +3,7 @@
     <div class="userGroupTitle">
       <span class="title">{{ $t('rightDetail_userGroup') }}</span>
       <div class="icon">
-        <img class="cursorPointer" src="/icons/add.svg" v-show="doc.canContorl" @click="handleAdd"/>
+        <img class="cursorPointer" :src="`/icons/add.svg`" v-show="doc.canContorl" @click="handleAdd"/>
         <!-- <img class="cursorPointer" src="/icons/fold.svg" /> -->
       </div>
     </div>

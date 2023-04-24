@@ -5,12 +5,12 @@
       <div class="icon">
         <img
           class="cursorPointer"
-          src="icons/list.svg"
+          :src="`/icons/list.svg`"
           @click="viewType = 'table'"
         />
         <img
           class="cursorPointer"
-          src="icons/tree.svg"
+          :src="`/icons/tree.svg`"
           @click="viewType = 'map'"
         />
       </div>
