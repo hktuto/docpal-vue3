@@ -2,7 +2,7 @@
     <NuxtLayout >
         <!-- header actions  -->
         <template #headerLeft>
-            <browse-options v-model="pageOptions" />
+            <!-- <browse-options v-model="pageOptions" /> -->
         </template>
         <page-container>
         <div v-if="data" class="browsePageContainer">
@@ -14,8 +14,7 @@
                  </div>
             </div>
             <div class="listContainer">
-
-                <BrowseList :doc="data" :permission="permission" :viewType="pageOptions.viewType"
+                <BrowseList :doc="data" :permission="permission" v-model:view="pageOptions.viewType"
                     @select-change="handleSelectionChange"/>
                 <div id="browseInfoSection">
                     
@@ -203,6 +202,13 @@ onMounted(() => {
         cursor: pointer;
         &:hover{
             background: var(--color-grey-200);
+        }
+    }
+}
+#browseInfoSection {
+    :deep {
+        .infoContainer {
+            padding-top: 0px;
         }
     }
 }
