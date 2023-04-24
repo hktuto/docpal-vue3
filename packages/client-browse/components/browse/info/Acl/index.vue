@@ -8,12 +8,12 @@
       </div>
     </div>
     <div class="userGroup--content">
-      <Tag  v-for="(ace, i) in aces" :key="i" :class="['userRightItem',{ cursorPointer: ace.type === 'local' && doc.canContorl }]" effect="dark"
+      <el-tag  v-for="(ace, i) in aces" :key="i" :class="['userRightItem',{ cursorPointer: ace.type === 'local' && doc.canContorl }]" effect="dark"
             :closable="ace.type === 'local' && doc.canContorl" 
             @close="handleRemove(ace)"
             @click="handleEdit(ace)">
             {{ ace.userId }}: {{ ace.permission }}
-      </Tag>
+      </el-tag>
     </div>
     <BrowseInfoAclEditDialog v-model="aclEditDialogShow" :detail="aclEditDetail" @handleSubmit="handleAddLocalAclSubmit" @handleUpdate="handleUpdateLocalAclSubmit"/>
   </div> 
@@ -117,4 +117,5 @@ watch(doc, async (val: String) => {
     }
   }
 }
+
 </style>

@@ -103,18 +103,18 @@ const contributors = computed(() => {
       color: var(--color-grey-500);
     }
   }
-  :deep{
-    .tableItem {
-    font-family: Roboto;
-    font-style: normal;
+  
+  .tableItem {
     font-size: 0.875rem;
     border-collapse: separate;
     border-spacing: 0.625rem;
     white-space: nowrap;
     .tableItemTitle {
-      font-weight: normal;
       color: var(--color-grey-500);
       text-align: left;
+      text-align: left;
+      vertical-align: baseline;
+      line-height: 1.375rem;
     }
     .vertical-top {
       vertical-align: text-top;
@@ -131,9 +131,23 @@ const contributors = computed(() => {
       font-weight: bold;
       margin: 0 calc(var(--app-padding) / 2) calc(var(--app-padding) / 2 ) 0;
       color: #ffffff;
-    }
-  } 
+    } 
   }
 }
 
+.tableItemTitle{
+    font-weight: normal;
+    color: var(--color-grey-500);
+    text-align: left;
+    vertical-align: baseline;
+    line-height: 1.375rem;
+  }
+.tableItemTags {
+      padding: 0.1rem 0.75rem;
+      background: var(--color-grey-300);
+      border-radius: 0.875rem;
+      font-weight: bold;
+      margin: 0 calc(var(--app-padding) / 2) calc(var(--app-padding) / 2 ) 0;
+      color: #ffffff;
+    }
 </style>

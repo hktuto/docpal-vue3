@@ -106,7 +106,8 @@ const infoSize = computed(() => {
         }
         .el-tabs__content{
             height: 100%;
-            overflow: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
     }
 }

@@ -152,6 +152,7 @@ onMounted(() => {
     .listContainer{
         display: grid;
         grid-template-columns: 1fr min-content;
+        overflow: hidden;
     }
 }
 .browseHeader{
@@ -186,6 +187,9 @@ onMounted(() => {
     flex-flow: row nowrap;
     gap: var(--app-padding);
     align-items: center;
+}
+#browseInfoSection{
+    overflow: hidden;
 }
 :deep {
     .actionIconContainer{

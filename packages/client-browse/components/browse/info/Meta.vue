@@ -74,7 +74,6 @@
   }
 }
 .tableItem {
-  font-family: Roboto;
   font-style: normal;
   font-size: 0.875rem;
   border-collapse: separate;
