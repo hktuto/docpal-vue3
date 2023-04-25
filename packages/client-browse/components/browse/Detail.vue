@@ -5,8 +5,13 @@
                 <slot />
             </div>
             <div class="content">
-                <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc"  />
-                <LazyVideoPlayer v-if="readerType === 'video'" :doc="doc" />
+                <div class="preview">
+                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc"  />
+                    <LazyVideoPlayer v-if="readerType === 'video'" :doc="doc" />
+                </div>
+                <div class="info">
+                    <slot name="info" />
+                </div>
             </div>
         </div>
     </div>
@@ -73,10 +78,15 @@ onKeyStroke("Escape", (e) => {
 .content{
     width: 100%;
     height: 100%;
-    display: flex;
-    place-items: center;
+    display: grid;
+    grid-template-columns: 1fr min-content;
     padding: var(--el-component-size-small);
+    overflow: hidden;
+    .info {
+        transition: width .2s ease-in-out;
+    overflow: hidden;
 
+    }
 }
 .header{
     width: 100%;

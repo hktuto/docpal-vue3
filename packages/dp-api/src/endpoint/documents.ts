@@ -20,8 +20,12 @@ export const GetDocDetailApi = async(idOrPath:string = '/'):Promise<DocDetail> =
 export const GetDocPermission = async(idOrPath:string, userId:string):Promise<{permission:string,print:boolean}> => {
     return api.get<{permission:string,print:boolean}>(`/nuxeo/document/acl/permission?docId=${idOrPath}&userId=${userId}`).then(res => res.data);
 }
-export const patchDocApi = async(params: DocDetail):Promise<DocDetail> => {
-    return api.patch<DocDetail>('/nuxeo/document', params).then(res => res.data);
+export const patchDocApi = async(idOrPath: DocDetail):Promise<DocDetail> => {
+    return api.patch<DocDetail>('/nuxeo/document', {idOrPath}).then(res => res.data);
+}
+
+export const getUserAndRights = async(idOrPath:string) => {
+    return api.post(`/nuxeo/document/acl`, {idOrPath}).then(res => res.data);
 }
 
 export const GetBreadcrumb = async(idOrPath:string):Promise<BreadResponse> => {
@@ -29,7 +33,11 @@ export const GetBreadcrumb = async(idOrPath:string):Promise<BreadResponse> => {
 }
 
 export const GetChild = async(idOrPath:string):Promise<GetChildResponse> => {
-    return api.post<GetChildResponse>('/nuxeo/document/children', { idOrPath }).then(res => res.data);
+    return api.post('/nuxeo/document/children', { idOrPath }).then(res => res.data.data);
+}
+
+export const GetDocumentAdditionalApi = async(params) => {
+    return api.get('/docpal/workflow/queryMetaValidationRule', { params }).then(res => res.data.data)
 }
 
 export const GetDocumentPreview = async(idOrPath:string) => {
@@ -111,11 +119,15 @@ export const DownloadTemplateApi = async(param) => {
         return await api.post('/nuxeo/collection/create', params).then(res =>res.data);
     }
     export const getCollectionDocApi = async (idOrPath: string) => {
-        return await api.delete('/nuxeo/collection/remove', { data: {idOrPath} }).then(res =>res.data);
+        return await api.post('/nuxeo/document/collections', { data: {idOrPath} }).then(res =>res.data);
     }
     export const getCollectionDoc = async (idOrPath: string) => {
         const { entryList, totalSize } = await api.post('/nuxeo/collection/documents', { idOrPath }).then(res =>res.data);
         return {entryList, totalSize}
+    }
+
+    export const getAllCollection = async () => {
+        return await api.get('/nuxeo/collection/all').then(res =>res.data);
     }
 // #endregion
 
@@ -163,3 +175,65 @@ export const DownloadTemplateApi = async(param) => {
         return response
     }
 // #endregion
+
+
+export const getVersionsApi = (param: Object) => {
+    return api.post('/nuxeo/getVersions', param).then(res => res.data)
+}
+
+// #region module: tag
+export const PatchTags = async (params) => {
+    return await api.patch('/nuxeo/tag', params).then(res => res.data)
+}
+
+export const DeleteTags = async (params) => {
+    return await api.delete('/nuxeo/tag', { data: params }).then(res => res.data)
+}
+
+export const DocumentAddTags = async (params) => {
+    return await api.post('/nuxeo/tag/add', params).then(res => res.data)
+}
+
+export const GetAllTags = async () => {
+    return await api.post('/nuxeo/tags/getAllTags', {  }).then(res => res.data)
+}
+
+export const SearchTagByName = async (keyword) => {
+    return await api.post('/nuxeo/tags/label', {keyword}).then(res => res.data)
+}
+
+// #endregion
+
+// #region module: activities
+
+export const getActivitiesApi = async (idOrPath: string) => {
+    return await api.post('/nuxeo/document/audit', { idOrPath }).then(res => res.data);
+}
+
+// #endregion
+
+// #region module: Convertsion
+
+export const getConversionHistoryApi = async(params) =>  {
+    return api.get('/nuxeo/conversion/getConversionHistory', {params}).then(res => res.data);
+}
+
+// #endregion
+
+
+// #region module: adHoc
+export const getAdHocHistory = async (documentId: string) => {
+    return await api.post(`/docpal/workflow/queryAdhocApprovalPage`, {
+        documentId,
+        "pageNum": 1,
+        "pageSize": 100
+    }).then(res => res.data.data);
+}
+
+export const canApprovalAdhocApi = async (documentId: string, userId:string) => {
+    return await api.get(`/docpal/workflow/isDocumetIdCanApproval`, {params: { documentId, userId }}).then(res => res.data.data);
+}
+
+
+
+

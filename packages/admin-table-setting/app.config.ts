@@ -6,7 +6,7 @@ export default defineAppConfig({
       name:"table_setting",
       routeName:"tableSetting",
       url:"/tableSetting",
-      icon: "/icons/menu/tableSetting.svg",
+      icon: "/icons/menu/userManage.svg",
       order: 999,
     }
   ],
