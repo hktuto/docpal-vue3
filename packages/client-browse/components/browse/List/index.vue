@@ -2,11 +2,11 @@
     <div class="listContainer">
         <el-tabs v-model="modelProps" @tab-click="tabChange">
         <el-tab-pane label="Table" name="table" class="h100">
-            <browse-list-table :doc="doc" :loading="pending" 
+            <browse-list-table v-if="modelProps === 'table'" :doc="doc" :loading="pending" 
                 @select-change="handleSelectionChange"/>
         </el-tab-pane>
         <el-tab-pane label="Preview" name="preview" class="h100">
-            <browse-list-preview :doc="doc" :permission="permission" :data="data" />
+            <browse-list-preview v-if="modelProps === 'preview'" :doc="doc" :permission="permission" :data="data" />
         </el-tab-pane>
         </el-tabs>
         <!-- <div v-else-if="viewType === 'tree'">

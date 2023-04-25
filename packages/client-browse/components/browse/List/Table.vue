@@ -1,4 +1,7 @@
 <template>
+<div class="tableContainer" @contextmenu="(event) => handleRootRightClick(doc, event)" >
+
+
     <Table v-if="tableData" v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
             @pagination-change="handlePaginationChange"
             @command="handleAction"
@@ -12,6 +15,7 @@
                 </div>
             </template>
     </Table>
+</div>
 </template>
 
 
@@ -21,6 +25,7 @@ const emit = defineEmits([
     'right-click',
     'select-change'
 ])
+const props = defineProps<{doc: any}>();
 // #region module: page
     const route = useRoute()
     const router = useRouter()
@@ -110,6 +115,19 @@ function handleSelect (rows) {
     console.log(rows);
     emit('select-change', rows)
 }
+
+function handleRootRightClick (item, event) {
+    event.preventDefault();
+    const data = {
+        isFolder: true,
+        idOrPath: item.path,
+        pageX: event.pageX,
+        pageY: event.pageY,
+        doc: item
+    }
+    const ev = new CustomEvent('fileRightClick',{ detail: data })
+    document.dispatchEvent(ev)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -121,5 +139,8 @@ function handleSelect (rows) {
 }
 :deep(.el-checkbox.is-disabled) {
     display: none;
+}
+.tableContainer{
+    height: 100%;
 }
 </style>

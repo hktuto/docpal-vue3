@@ -5,13 +5,13 @@
     </div>
     <div class="overflowHidden">
       <el-table :data="pictureViews" height="100%">
-        <el-table-column prop="filename" :label="$t('filePopover_fileName')" sortable></el-table-column>
+        <el-table-column fixed="left" prop="filename" :label="$t('filePopover_fileName')" ></el-table-column>
         <el-table-column prop="width*height" :label="$t('tableHeader_width*height')" align="center" :formatter="formatter"></el-table-column>
         <el-table-column prop="fileSize" :label="$t('tableHeader_fileSize')" align="center" :formatter="formatter"></el-table-column>
         <el-table-column prop="fileFormat" :label="$t('tableHeader_fileFormat')" align="center" :formatter="formatter"></el-table-column>
-        <el-table-column :label="$t('tableHeader_actions')" width="80" align="center" :formatter="formatter">
-            <template slot-scope="scope">
-              <Button type="text" icon="el-icon-download" @click="handleDownload(scope.row, $event)"></Button>
+        <el-table-column fixed="right"   width="40" align="center" :formatter="formatter">
+            <template #default="scope">
+              <el-button type="text" :icon="Download" @click="handleDownload(scope.row, $event)"></el-button>
             </template>
           </el-table-column>
       </el-table>
@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Download } from '@element-plus/icons-vue'
 const props = defineProps<{doc: any}>();
 
 const { displayTime } = useTime()
