@@ -33,3 +33,4 @@ export const tableDemoColumn: Table.Column[] = [
       ]
   }
 ]
+export default {}

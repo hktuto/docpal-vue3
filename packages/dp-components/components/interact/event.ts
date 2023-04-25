@@ -46,3 +46,5 @@ export const dragEvents = [
   export const bindDropEvents = bindEvents(dropEvents);
   export const bindResizeEvents = bindEvents(resizeEvents);
   export const bindGestureEvents = bindEvents(gestureEvents);
+  export default {}
+  

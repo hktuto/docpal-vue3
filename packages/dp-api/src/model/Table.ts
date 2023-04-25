@@ -990,7 +990,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "suffixIcon": "",
             }
         ],
-        events: [],
+        events: ['delete'],
         slots: [
             { slot: 'isRequire', label:'form_isRequire', width: 50 },
             { slot: 'display', label:'form_display', width: 50 },
@@ -999,12 +999,31 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_META_RELATED]: {
         columns: [
-            { id: '1', slot: 'icon', label: '', width: 50 },
-            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true },
-            { id: '3', slot: 'displayMeta', label: 'docType_displayMeta' },
-            { id: '4', slot: 'relatedDocument', label: 'docType_relatedDocument' },
+            { id: '1', label: 'dpTable_documentType', prop: 'type'},
+            { id: '2', label: 'rightDetail_meta', prop: 'meta' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
         ],
-        events: [],
+        events: ['delete'],
         options: { pageSize: 20 }
     }
     
