@@ -75,6 +75,13 @@ const infoSize = computed(() => {
     return props.infoOpened ? dragSize.value + 'px' : '0px'
 })
 
+watch(doc => {
+    // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
+    if(doc.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
+        currentTab.value = 'info'
+    }
+})
+
 </script>
 
 <style lang="scss" scoped>
