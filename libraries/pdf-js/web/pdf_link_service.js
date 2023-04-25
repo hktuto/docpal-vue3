@@ -115,7 +115,7 @@ class PDFLinkService {
     this.eventBus = eventBus;
     this.externalLinkTarget = externalLinkTarget;
     this.externalLinkRel = externalLinkRel;
-    this.externalLinkEnabled = true;
+    this.externalLinkEnabled = false;
     this._ignoreDestinationZoom = ignoreDestinationZoom;
 
     this.baseUrl = null;

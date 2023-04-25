@@ -868,7 +868,7 @@ const PDFViewerApplication = {
       this.pdfLinkService.setDocument(null);
       this.pdfDocumentProperties?.setDocument(null);
     }
-    this.pdfLinkService.externalLinkEnabled = true;
+    // this.pdfLinkService.externalLinkEnabled = true;
     this.store = null;
     this.isInitialViewSet = false;
     this.downloadComplete = false;
