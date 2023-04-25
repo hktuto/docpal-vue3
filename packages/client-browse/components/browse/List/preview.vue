@@ -1,6 +1,6 @@
 <template>
     <div class="preview-container"
-        :style="`--img-size:${state.imgSize}px;`">
+        :style="`--img-size:${state.imgSize}px;`" @contextmenu="(event) => handleRightClick(doc, event)">
         <div class="preview-main">
             <div v-if="state.tableData.length === 0" class="emptyList">
                 empty list
@@ -8,7 +8,7 @@
             <div v-for="item in state.tableData" :key="item.id"
                 class="doc-container"
                 @dblclick="handleDblclick(item)" 
-                @contextmenu="(event) => handleRightClick(item, event)">
+                @contextmenu.stop="(event) => handleRightClick(item, event)">
                 <template v-if="item.blobUrl">
                     <img :src="item.blobUrl" class="thumbnail"/>
                 </template>
@@ -32,6 +32,7 @@
 import { GetChildThumbnail, DocumentThumbnailGetApi, TABLE, defaultTableSetting } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
+const props = defineProps<{doc:true}>();
 const emit = defineEmits([
     'select-change'
 ])
