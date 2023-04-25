@@ -193,7 +193,7 @@ function reorderColumn (displayList) {
     let shiftOrAltDown = false
     const shiftSelectList = ref([])
     function handleShift (row) {
-        if (!_options.value.selectable(row)) return
+        if (_options.value.selectable && !_options.value.selectable(row)) return
         let refsElTable = tableRef.value
         if(CtrlDown) {
             refsElTable.toggleRowSelection(row); // ctrl多选 如果点击两次同样会取消选中
