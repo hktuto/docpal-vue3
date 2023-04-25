@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<{withPadding?:boolean}>(),{
     position: relative;
     overflow: hidden;
     &.withPadding {
-        padding: calc(var(--app-padding) * 2);
+        padding: var(--app-padding) calc(var(--app-padding) * 2);
     }
 }
 </style>

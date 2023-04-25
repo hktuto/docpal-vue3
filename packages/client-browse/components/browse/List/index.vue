@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { GetChild } from 'dp-api'
 import { ViewType } from "../../browseType";
-const emit = defineEmits([
+const emits = defineEmits([
     'select-change',
     'update:viewType'
 ])
@@ -42,7 +42,7 @@ function tabChange(tab: TabsPaneContext, event: Event) {
     modelProps.value = tab.paneName
 }
 function handleSelectionChange (rows) {
-    emit('select-change', rows)
+    emits('select-change', rows)
 }
 </script>
 <style lang="scss" scoped>

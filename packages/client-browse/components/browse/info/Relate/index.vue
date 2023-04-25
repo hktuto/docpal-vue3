@@ -39,7 +39,7 @@ const emit = defineEmits<{
     const viewType = ref('table')
 
     const getRelated = async () => {
-      const allChildren = await getRelatedChild(props.doc)
+      const allChildren = await getRelatedChild(props.doc.id)
       if (allChildren.length === 0) {
         emit('hide-relate')
       } else {
