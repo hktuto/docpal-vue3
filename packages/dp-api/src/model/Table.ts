@@ -85,7 +85,10 @@ export enum TABLE {
     ADMIN_USER_MANAGE = 'adminUserManage',
     ADMIN_USER_GROUP_MANAGE = 'adminUserGroupManage',
     ADMIN_GROUP_MANAGE = 'adminGroupManage',
-    ADMIN_GROUP_USER_MANAGE = 'adminGroupUserManage'
+    ADMIN_GROUP_USER_MANAGE = 'adminGroupUserManage',
+    ADMIN_META_MANAGE = 'adminMetaManage',
+    ADMIN_META_DISPLAY = 'adminMetaDisplay',
+    ADMIN_META_RELATED = 'adminMetaRelated'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -330,6 +333,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_TRASH] : {
         columns: [
+            { id: '6', type: 'selection' },
             { id: '1', label: 'tableHeader_name', prop: 'name' },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
@@ -941,5 +945,67 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: [],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_META_MANAGE]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true },
+            { id: '3', slot: 'displayMeta', label: 'docType_displayMeta' },
+            { id: '4', slot: 'relatedDocument', label: 'docType_relatedDocument' },
+        ],
+        events: [],
+        slots: [
+            { slot: 'icon', width: 50 },
+            { slot: 'displayMeta', label: 'docType_displayMeta' },
+            { slot: 'relatedDocument', label: 'docType_relatedDocument' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_META_DISPLAY]: {
+        columns: [
+            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true },
+            { id: '2', label: 'form_vocabulary', prop: 'vocabulary', showOverflowTooltip: true },
+            { id: '3', label: 'form_length', prop: 'length'},
+            { id: '4', slot: 'isRequire', label:'form_isRequire', width: 70 },
+            { id: '5', slot: 'display',label:'form_display', width: 70 },
+            {   
+                id: '6',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        slots: [
+            { slot: 'isRequire', label:'form_isRequire', width: 50 },
+            { slot: 'display', label:'form_display', width: 50 },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_META_RELATED]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true },
+            { id: '3', slot: 'displayMeta', label: 'docType_displayMeta' },
+            { id: '4', slot: 'relatedDocument', label: 'docType_relatedDocument' },
+        ],
+        events: [],
+        options: { pageSize: 20 }
     }
+    
 }
