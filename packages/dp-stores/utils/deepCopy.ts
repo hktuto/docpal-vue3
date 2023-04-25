@@ -1,1 +1,4 @@
-export const deepCopy  = (data:any) => JSON.parse(JSON.stringify(data));
+export const deepCopy  = (data:any) => {
+    if (!data) return {}
+    return JSON.parse(JSON.stringify(data));
+}

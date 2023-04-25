@@ -74,7 +74,7 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
 </script>
 
 <style scoped>
-:deep(.el-form-item__content div) {
+:deep(.el-form-item__content>div) {
     width: 100%;
     .el-date-editor {
         width: 100%;

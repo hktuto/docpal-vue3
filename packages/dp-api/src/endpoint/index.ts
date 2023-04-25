@@ -8,3 +8,5 @@ export * from './public-upload'
 export * from './virtual-folder'
 export * from './notification'
 export * from './admin-acl'
+export * from './admin-meta'
+
