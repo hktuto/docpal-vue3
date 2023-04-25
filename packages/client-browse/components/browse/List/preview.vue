@@ -113,11 +113,16 @@ function handleRightClick (item, event) {
     row-gap: var(--app-padding);
     .preview-main {
         overflow: auto;
-        display: inline-grid;
-        padding-inline: calc(var(--app-padding) * 3);
-        grid-template-columns: repeat(auto-fill, minmax(var(--img-size), 1fr)) ;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        align-content: flex-start;
         gap: calc(var(--app-padding) * 2);
         color: var(--color-grey-700);
+        > *{
+            width: calc(var(--img-size) + var(--app-padding) * 2);
+        }
     }
 }
 .footer {

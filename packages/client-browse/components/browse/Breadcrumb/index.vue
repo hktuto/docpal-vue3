@@ -15,8 +15,8 @@
             </div>
             <template v-for="(item,index) in displayBread" :key="displayBread.id">
                 <div  :class="{breadItem:true, pointer: index < displayBread.length - 1 }" 
-                        @click="navigate(item.path)"
-                        @contextmenu="(event) => handleRightClick(item, event)">
+                        @click="() => {if(index === displayBread.length - 1 )return; navigate(item.path)}"
+                        @contextmenu="(event) => {if(index < displayBread.length - 1 )return ; handleRightClick(item, event)}">
                     {{item.name}}
                 </div>
                 <div v-if="index < displayBread.length - 1" class="divider">
@@ -64,7 +64,6 @@ function navigate(path) {
     })
 }
 function handleRightClick (item, event) {
-    console.log('ssss');
     event.preventDefault();
     const data = {
         isFolder: true,
@@ -76,6 +75,8 @@ function handleRightClick (item, event) {
     const ev = new CustomEvent('fileRightClick',{ detail: data })
     document.dispatchEvent(ev)
 }
+
+
 defineExpose({
     goParent
 })
