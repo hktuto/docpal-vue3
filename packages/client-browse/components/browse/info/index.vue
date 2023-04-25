@@ -10,12 +10,14 @@
 >
 <el-tabs class="tabContainer" v-model="currentTab" >
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
-        <BrowseInfoDocInfo :doc="doc" />
-        <BrowseInfoPicture :doc="doc" />
-        <BrowseInfoMeta :doc="doc" />
-        <BrowseInfoTag :doc="doc" />
-        <BrowseInfoCollection :doc="doc" />
-        <BrowseInfoAcl :doc="doc" />
+        <div class="infoTagContainer">
+            <BrowseInfoDocInfo :doc="doc" />
+            <BrowseInfoPicture :doc="doc" />
+            <BrowseInfoMeta :doc="doc" />
+            <BrowseInfoTag :doc="doc" />
+            <BrowseInfoCollection :doc="doc" />
+            <BrowseInfoAcl :doc="doc" />
+        </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
         <BrowseInfoActivities :doc="doc" />
@@ -100,6 +102,10 @@ watch(doc, () => {
     &.infoOpened{
         padding:0;
     }
+}
+.infoTagContainer{
+    height: 100%;
+    overflow: auto;
 }
 .tabContainer{
         height: 100%;
