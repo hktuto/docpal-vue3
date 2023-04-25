@@ -237,3 +237,14 @@ export const canApprovalAdhocApi = async (documentId: string, userId:string) => 
 
 
 
+// replace file
+
+export const replaceFileDocumentApi = (params:any) => {
+    return api.patch('/nuxeo/document/replaceFile', params).then(res => res.data);
+}
+
+
+
+
+
+
