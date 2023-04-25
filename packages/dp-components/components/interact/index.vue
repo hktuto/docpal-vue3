@@ -79,7 +79,6 @@ const interactInstance = ref()
 // })
 function initInteract() {
         interactInstance.value = interact(el.value as Target);
-        console.log("interactInstance", interactInstance.value)
         bindPointerEvents(interactInstance.value, emit.bind(this));
         emit("ready", interactInstance.value);
       }
@@ -93,7 +92,6 @@ function initDrag() {
 
 function initResize() {
     interactInstance.value?.resizable(resizeOption.value);
-    console.log("interactInstance", interactInstance.value)
     bindResizeEvents(
         interactInstance.value,
         emit.bind(this)

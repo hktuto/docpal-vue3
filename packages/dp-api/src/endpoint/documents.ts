@@ -14,6 +14,9 @@ export const GetChildThumbnail = async(params: pageParams):Promise<paginationDat
 export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {
     return api.post<DocDetail>('/nuxeo/document',{ idOrPath }).then(res => res.data);
 }
+export const getSpecificVersionApi = async(params):Promise<DocDetail> => {
+    return api.post<DocDetail>('/nuxeo/getSpecificVersion',params).then(res => res.data);
+}
 export const GetDocDetailApi = async(idOrPath:string = '/'):Promise<DocDetail> => {
     return api.get('/nuxeo/document',{ params: { idOrPath } }).then(res => res.data);
 }
@@ -241,6 +244,11 @@ export const canApprovalAdhocApi = async (documentId: string, userId:string) => 
 
 export const replaceFileDocumentApi = (params:any) => {
     return api.patch('/nuxeo/document/replaceFile', params).then(res => res.data);
+}
+
+// Restore file
+export const restoreVersionApi = (params:any) => {
+    return api.post('/nuxeo/restoreVersion', params).then(res => res.data);
 }
 
 

@@ -35,7 +35,6 @@ const AppConstants =
 window.PDFViewerApplication = PDFViewerApplication;
 window.PDFViewerApplicationConstants = AppConstants;
 window.PDFViewerApplicationOptions = AppOptions;
-
 function getViewerConfiguration() {
   return {
     appContainer: document.body,
@@ -221,7 +220,7 @@ function messageFromParent(ev) {
   if (!ev || !ev.data) {
     return;
   }
-  const { blob,  annotations, locale, colorMode, options } = ev.data;
+  const { blob, annotations, locale, colorMode, options } = ev.data;
   const urlCreator = window.URL || window.webkitURL;
   const url = urlCreator.createObjectURL(blob);
 

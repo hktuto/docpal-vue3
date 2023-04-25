@@ -6,21 +6,31 @@
 
 <script lang="ts" setup>
 import {GetDocumentPreview, GetAnnotation, SaveAnnotation} from 'dp-api'
-import {useI18n} from 'vue-i18n';
-import { useEventListener } from '@vueuse/core'
 
-const props = defineProps<{
-    doc: any
-}>()
+import { useEventListener } from '@vueuse/core'
+type PdfJsOptions = {
+    print: boolean,
+    loadAnnotations: boolean,
+}
+const props = withDefaults(defineProps<{
+    doc?: any,
+    options: PdfJsOptions
+}>(),{
+    options:{
+        print: false,
+        loadAnnotations: false,
+    }
+})
 
 const iframe = ref<HTMLIFrameElement>();
 const {public:{pdfReaderUrl}} = useRuntimeConfig();
 const loading = ref(false);
 // const colorMode = useColorMode();
 const {locale} = useI18n()
-
+const { options } = toRefs(props)
 
 async function getAnnotation():Promise<Object> {
+    if(props.options.loadAnnotations === false) return new Map();
     const annotation = await GetAnnotation(props.doc.id )
     let annotationObj = []
     if(annotation.length > 0) {
@@ -42,7 +52,8 @@ async function sendPdfAndAnnotation() {
         const blob = await GetDocumentPreview(props.doc.id);
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
-        frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, }, '*');
+
+        frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
         console.log(error);
     }
@@ -50,15 +61,15 @@ async function sendPdfAndAnnotation() {
 }
 
 function gotMessageFromIframe(message:MessageEvent) {
-    const { data } = message;
-    if(!data) return;
-
-    switch(data.type) {
+    console.log(message)
+    const { data:{ data, type} } = message;
+    if(!data && !type ) return;
+    switch(type) {
         case 'ready':
             sendPdfAndAnnotation()
             break;
         case 'annotation':
-            saveAnnotation(data.data)
+            saveAnnotation(data)
             break;
         default:
             break;
