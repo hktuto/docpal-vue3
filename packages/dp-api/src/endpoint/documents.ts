@@ -186,15 +186,15 @@ export const getVersionsApi = (param: Object) => {
 
 // #region module: tag
 export const PatchTags = async (params) => {
-    return await api.patch('/nuxeo/tag', params).then(res => res.data)
+    return await api.patch('/nuxeo/tags', params).then(res => res.data)
 }
 
 export const DeleteTags = async (params) => {
-    return await api.delete('/nuxeo/tag', { data: params }).then(res => res.data)
+    return await api.delete('/nuxeo/tags', { data: params }).then(res => res.data)
 }
 
 export const DocumentAddTags = async (params) => {
-    return await api.post('/nuxeo/tag/add', params).then(res => res.data)
+    return await api.post('/nuxeo/tags', params).then(res => res.data)
 }
 
 export const GetAllTags = async () => {

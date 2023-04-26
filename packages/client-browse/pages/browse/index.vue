@@ -138,6 +138,7 @@ function detailClosed() {
 }
 onMounted(() => {
     useEventListener(document, 'docActionRefresh', (event) => handleRefresh(event.detail))  
+    useEventListener(document, 'tree-node-update', (event) => getDocDetail())  
 })
 </script>
 

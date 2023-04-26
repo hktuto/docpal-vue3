@@ -27,6 +27,7 @@
 import {SearchTagByName, DocumentAddTags} from 'dp-api';
 const props = defineProps<{doc:any}>();
 const { doc } = toRefs(props);
+const emit = defineEmits(['handleAdd'])
 const popoverShow = ref(false)
     const loading = ref(false)
 
