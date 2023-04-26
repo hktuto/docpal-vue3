@@ -37,7 +37,7 @@ const state = reactive({
 const FromRendererRef = ref()
 function iconClickHandler(doc){
     dialogOpened.value = true
-    state.docPath = doc.path || props.doc.path
+    state.docPath = props.doc.path
     // open upload dialog
     setTimeout(() => {
         handleReset()
