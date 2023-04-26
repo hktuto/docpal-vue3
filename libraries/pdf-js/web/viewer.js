@@ -203,12 +203,14 @@ document.blockUnblockOnload?.(true);
 
 document.onreadystatechange = function () {
   if (
-    document.readyState === "interactive" ||
-    document.readyState === "complete"
+    (document.readyState === "interactive" ||
+      document.readyState === "complete") &&
+    !window.pdfReady
   ) {
     // webViewerLoad();
     window.addEventListener("message", messageFromParent, false);
     sendMessageToParent("ready");
+    window.pdfReady = true;
   } else {
     // document.addEventListener("DOMContentLoaded", webViewerLoad, true);
   }
