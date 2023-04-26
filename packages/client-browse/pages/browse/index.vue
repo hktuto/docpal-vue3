@@ -35,7 +35,7 @@
                         <BrowseActionsReplace :doc="data" v-if="!data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" />
                         <BrowseActionsUpload v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
                         <BrowseActionsDownload v-if="selectList.length === 0 && !data.isFolder && permissionAllow({feature:'Write', userPermission:permission.permission })"  :doc="data" />
-                        <BrowseActionsNewFolder v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :path="data.path" @success="handleRefresh"/>
+                        <BrowseActionsNewFolder v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
                         <BrowseActionsDelete v-if="selectList.length === 0 && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @delete="itemDeleted" @success="handleRefresh"/>
                         <!-- <div class="actionDivider"></div> -->
                         <BrowseActionsCopyPath v-if="selectList.length === 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />

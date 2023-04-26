@@ -1,5 +1,5 @@
 <template>
-<div class="tableContainer" @contextmenu="(event) => handleRootRightClick(doc, event)" >
+<div class="tableContainer"  >
 
 
     <Table v-if="tableData" v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
@@ -101,6 +101,7 @@ function handleDblclick (row) {
 }
 function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.preventDefault()
+    event.stopPropagation();
     const data = {
         doc: row,
         isFolder: row.isFolder,
@@ -118,6 +119,7 @@ function handleSelect (rows) {
 
 function handleRootRightClick (item, event) {
     event.preventDefault();
+    event.stopPropagation();
     const data = {
         isFolder: true,
         idOrPath: item.path,
