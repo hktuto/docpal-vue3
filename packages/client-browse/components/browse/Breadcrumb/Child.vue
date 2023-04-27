@@ -9,7 +9,7 @@
 const props = defineProps<{doc : true}>()
 const loading = ref(false);
 
-function getChild() {
+async function getChild() {
     const param = {
         idOrPath: props.doc.path,
         pageNumber: 0,

@@ -1,5 +1,5 @@
 <template>
-  <div class="actionIconContainer" @click="uploadDialog">
+  <div class="actionIconContainer" @click="uploadDialog(doc)">
   <!-- <SvgIcon src="/icons/file/upload.svg" round content="upload"
           @click="uploadDialog"></SvgIcon> -->
     <el-tooltip content="upload">
@@ -10,7 +10,7 @@
     <el-dialog v-model="dialogOpened" append-to-body class="browseUploadDialog">
       <template #title>
           <strong class="primaryTitle">{{ $t('filePopover_newFiles') }}</strong>
-          {{ 'in ' + doc.path }}
+          {{ 'in ' + state._doc.path }}
       </template>
       <FileUpload class="sidebar" @change="tableDataAdd"></FileUpload>
       <div class="header">
@@ -106,11 +106,15 @@ const state = reactive({
   selectedRows: [],
   documentType: '',
   fileTypes: [],
-  tableData: []
+  tableData: [],
+  _doc: {
+    path: ''
+  }
 })
-function uploadDialog(){
+function uploadDialog(doc){
   dialogOpened.value = true
   state.tableData = []
+  state._doc = doc
 }
 // #region module: table
   const tableKey = TABLE.CLIENT_FILE_UPLOAD
@@ -222,7 +226,7 @@ function handleSubmit () {
 const handleCreateDocument = async(file) => {
   const document = {
     name: file.fileName,
-    idOrPath: `${props.doc.path}/${file.fileName}`,
+    idOrPath: `${state._doc.path}/${file.fileName}`,
     type: file.type,
     languages: file.languages,
     properties: file.metaList.reduce((prev, metaItem) => {
@@ -259,7 +263,7 @@ function waitAll (promiseList) {
       })
     }
     state.loading = false
-    emits('success', props.doc.path)
+    emits('success', state._doc.path)
   })
 }
 onMounted(async() => {

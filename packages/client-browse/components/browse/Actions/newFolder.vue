@@ -1,5 +1,5 @@
 <template>
-    <div class="actionIconContainer" @click="iconClickHandler">
+    <div class="actionIconContainer" @click="iconClickHandler(doc)">
     <!-- <SvgIcon src="/icons/file/newFolder.svg"  
             content="new folder"
             round
@@ -37,7 +37,7 @@ const state = reactive({
 const FromRendererRef = ref()
 function iconClickHandler(doc){
     dialogOpened.value = true
-    state.docPath = props.doc.path
+    state.docPath = doc.path
     // open upload dialog
     setTimeout(() => {
         handleReset()

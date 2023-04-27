@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" :title="$t('addButton')">
+    <el-dialog v-model="dialogVisible" :title="$t('menus_setting')">
         <el-form ref="formRef"
                 :model="form"
                 label-width="120px"
