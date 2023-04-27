@@ -6,7 +6,7 @@
         popper-class="collectionPopover popover_050"
     >
         <template #reference>
-            <img  class="cursorPointer" :src="'icons/add.svg'" />
+            <img  class="cursorPointer" :src="'/icons/add.svg'" />
         </template>
 
         <!-- 内容 -->

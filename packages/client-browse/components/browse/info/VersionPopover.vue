@@ -16,7 +16,7 @@
             </el-table-column>
           <el-table-column :label="$t('tableHeader_actions')" align="center" width="70">
             <template #default="scope">
-              <img v-if="scope.row.version !== version" class="cursorPointer" :src="'icons/version.svg'" round @click="toVersionComparison(scope.row)" />
+              <img v-if="scope.row.version !== version" class="cursorPointer" :src="'/icons/version.svg'" round @click="toVersionComparison(scope.row)" />
             </template>
           </el-table-column>
         </el-table>
