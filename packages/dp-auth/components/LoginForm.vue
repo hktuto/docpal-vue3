@@ -6,7 +6,8 @@
             :rules="rules"
             label-position="top">
             <ElFormItem label="username" :rules="rules.username">
-                <ElInput 
+                <ElInput
+                    ref="usernameEl" 
                     v-model="form.username" 
                     type="text" />
             </ElFormItem>
@@ -31,6 +32,7 @@ const form = reactive({
       username: '',
       password: '',
     })
+    const usernameEl = ref();
 const rules = {
       username: [
         { required: true, message: 'Please input Username', trigger: 'blur' },
@@ -50,6 +52,8 @@ async function submit() {
     }
     loading.value = false;
 }
+
+onMounted(() => usernameEl.value.focus());
 </script>
 
 <style lang="scss" scoped>
