@@ -41,9 +41,7 @@ const state = reactive<State>({
 // #region module:  fromDesigner
     const FromDesignerRef = ref()
     async function handleSubmit() {
-        console.log(FromDesignerRef.value.vFormDesignerRef);
         const json = FromDesignerRef.value.getFormJson()
-        console.log(json);
         const param = {
             processKey: state.workflowDetail.key,
             userTaskId: state.activeTaskId,
@@ -54,13 +52,11 @@ const state = reactive<State>({
     function handleFiledList () {
         // formProperties
         let taskDetail = state.workflowDetail.userTasks.find(item => item.id === route.query.taskId)
-        console.log({taskDetail});
         state.fieldListApi = {
             labelKey: 'id',
             nameKey: 'id',
             data: taskDetail.formProperties ? taskDetail.formProperties : state.workflowDetail.userTasks[0].formProperties
         }
-        console.log(state.fieldListApi, 'state.fieldListApi');
     }
     async function handleGetJson (taskId) {
         state.loading = true
