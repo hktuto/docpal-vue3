@@ -39,12 +39,10 @@ const state = reactive({
     _list: [],
 })
 const route = useRoute()
-const router = useRouter()
 const tableKey = TABLE.ADMIN_META_DISPLAY
 const tableSetting = defaultTableSetting[tableKey]
 function handleDblclick (row) {
     handleDialogShow(row)
-    // router.push(`/userManage/user?id=${row.userId}`)
 }
 function handleAction (command:sting, row: any, rowIndex: number) {
     switch (command) {
@@ -69,7 +67,6 @@ function handleDialogShow(data) {
 async function getTable(addMore: boolean = false) {
     state.list = await GetMetaValidationRuleApi({ documentType: route.params.id })
     state._list = state.list
-    console.log({addMore}, 'getTable');
     if (!!addMore) handleDialogShow()
 }
 async function handleDisplayChange(row) {
