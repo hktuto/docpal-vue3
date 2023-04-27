@@ -30,8 +30,9 @@ const {locale} = useI18n()
 const { options } = toRefs(props)
 
 async function getAnnotation():Promise<Object> {
-    if(props.options.loadAnnotations === false) return new Map();
-    const annotation = await GetAnnotation(props.doc.id )
+    console.log(props.options.loadAnnotations)
+    if(!props.options.loadAnnotations) return new Map();
+    const annotation = await GetAnnotation(props.doc.id);
     let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
@@ -52,7 +53,7 @@ async function sendPdfAndAnnotation() {
         const blob = await GetDocumentPreview(props.doc.id);
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
-
+        console.log(annotations)
         frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
         console.log(error);
