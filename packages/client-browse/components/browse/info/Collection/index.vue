@@ -12,11 +12,11 @@
       </div>
     </div>
     <div>
-      <Tag  v-for="(item) in collections" :key="item.path" effect="dark"
+      <el-tag  v-for="(item) in collections" :key="item.path" effect="dark"
             :closable="doc.canWrite" 
             @close="handleDelete(item)">
             {{ item.name }}
-      </Tag>
+      </el-tag>
     </div>
   </div>
 </template>
