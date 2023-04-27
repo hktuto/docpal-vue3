@@ -9,4 +9,4 @@ export * from './virtual-folder'
 export * from './notification'
 export * from './admin-acl'
 export * from './admin-meta'
-
+export * from './admin-workflow'

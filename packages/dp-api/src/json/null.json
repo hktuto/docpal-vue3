@@ -1,0 +1,25 @@
+{
+    "widgetList": [
+    ],
+    "formConfig": {
+      "modelName": "formData",
+      "refName": "vForm",
+      "rulesName": "rules",
+      "labelWidth": 80,
+      "labelPosition": "top",
+      "size": "",
+      "labelAlign": "label-left-align",
+      "saveRemoteOptions": "never",
+      "labelFormUniqueName": true,
+      "cssCode": "",
+      "customClass": "",
+      "functions": "",
+      "layoutType": "PC",
+      "onFormCreated": "",
+      "onFormMounted": "",
+      "onFormDataChange": "",
+      "jsonVersion": 3,
+      "onFormValidate": ""
+    }
+  }
+  
