@@ -79,11 +79,15 @@ function gotMessageFromIframe(message:MessageEvent) {
 
 async function saveAnnotation(annotation:Map<string, object>) {
     //return if annotation is empty
-    if(!annotation || annotation.size === 0) return;
 
     // convert Map to array of objects
     const paths:any[] = [];
+    const comments = [];
+
     annotation.forEach((value:any, key:any) => {
+        if(value.annotationType === 3){
+            comments.push(value.value);
+          }
       paths.push({id: key, ...value});
     });
     const param = {
@@ -91,7 +95,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
         object: {
             paths: JSON.stringify(paths)
         },
-        comments: []
+        comments
     }
     await SaveAnnotation([param])
     //  TODO : show notification
