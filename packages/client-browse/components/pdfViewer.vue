@@ -86,7 +86,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
 
     annotation.forEach((value:any, key:any) => {
         if(value.annotationType === 3){
-            comments.push(value.value);
+            comments.push({text:value.value});
           }
       paths.push({id: key, ...value});
     });
