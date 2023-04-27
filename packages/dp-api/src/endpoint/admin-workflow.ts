@@ -46,7 +46,7 @@ export const GetTaskFormJsonApi = async(param: GetTaskFormJsonParams):Promise<Ge
         }
     }
 }
-export const SaveTaskFormJsonApi = async(param: GetTaskFormJsonParams):Promise<GetTaskFormJsonRes> => {
+export const SaveTaskFormJsonApi = async(param: GetTaskFormJsonRes):Promise<GetTaskFormJsonRes> => {
     const res = await api.post('/docpal/relation/save', param).then(res => res.data)
     return res
 }
