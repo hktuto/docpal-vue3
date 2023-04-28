@@ -30,8 +30,9 @@ const {locale} = useI18n()
 const { options } = toRefs(props)
 
 async function getAnnotation():Promise<Object> {
-    if(props.options.loadAnnotations === false) return new Map();
-    const annotation = await GetAnnotation(props.doc.id )
+    console.log(props.options.loadAnnotations)
+    if(!props.options.loadAnnotations) return new Map();
+    const annotation = await GetAnnotation(props.doc.id);
     let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
@@ -52,7 +53,7 @@ async function sendPdfAndAnnotation() {
         const blob = await GetDocumentPreview(props.doc.id);
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
-
+        console.log(annotations)
         frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
         console.log(error);
@@ -79,11 +80,15 @@ function gotMessageFromIframe(message:MessageEvent) {
 
 async function saveAnnotation(annotation:Map<string, object>) {
     //return if annotation is empty
-    if(!annotation || annotation.size === 0) return;
 
     // convert Map to array of objects
     const paths:any[] = [];
+    const comments = [];
+
     annotation.forEach((value:any, key:any) => {
+        if(value.annotationType === 3){
+            comments.push({text:value.value});
+          }
       paths.push({id: key, ...value});
     });
     const param = {
@@ -91,7 +96,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
         object: {
             paths: JSON.stringify(paths)
         },
-        comments: []
+        comments
     }
     await SaveAnnotation([param])
     //  TODO : show notification

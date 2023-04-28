@@ -15,7 +15,7 @@
             <BrowseInfoPicture :doc="doc" />
             <BrowseInfoMeta :doc="doc" />
             <BrowseInfoTag :doc="doc" />
-            <BrowseInfoCollection :doc="doc" />
+            <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" />
             <BrowseInfoAcl :doc="doc" />
         </div>
     </el-tab-pane>
