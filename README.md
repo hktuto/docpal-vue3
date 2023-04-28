@@ -1,7 +1,6 @@
-
 ### 快速開始
 1. 在独立專案安裝包 
-在根目錄
+在对应專案
 ```bash
 pnpm i --shamefully-hoist
 ```
