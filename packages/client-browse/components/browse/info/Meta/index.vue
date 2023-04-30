@@ -2,7 +2,7 @@
     <div :class="{ meta: true, noContent: !hasMeta }" v-if="hasMeta">
     <div class="metaTitle">
       <span class="title">{{ $t('rightDetail_meta') }}</span>
-      <BrowsePopoverUpdateFileInfoButtom size="small" :doc="doc"></BrowsePopoverUpdateFileInfoButtom>
+      <BrowseMetaEditDialog :doc="doc" />
     </div>
     <div v-if="doc.displayMeta" style="overflow: hidden;">
       <table class="tableItem">
