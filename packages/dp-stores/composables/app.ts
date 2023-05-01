@@ -1,6 +1,6 @@
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from 'pinia'
-type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | 'offline' | ""
+type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | 'offline' | "forgetPassword"
 import { useOnline } from '@vueuse/core'
 
 export const useAppStore = defineStore('app', () => {

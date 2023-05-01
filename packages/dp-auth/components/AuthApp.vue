@@ -1,7 +1,10 @@
 <template>
     <div class="appThemeBg">
     <div v-if="appStore.displayState === 'needAuth'" ref="needAuthEl" class="LoginContainer">
-      <LoginForm  />
+      <LazyLoginForm  />
+    </div>
+    <div v-if="appStore.displayState === 'forgetPassword'" ref="forgetPassword" class="LoginContainer">
+      <LazyForgetPassword  />
     </div>
     <div v-else-if="appStore.displayState != 'ready'" ref="loadingEl" class="loadingContainer">
      
