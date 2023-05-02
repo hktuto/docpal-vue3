@@ -352,11 +352,10 @@ class AnnotationEditor {
     const [pageX, pageY] = this.pageTranslation;
     const shiftX = tx / scale;
     const shiftY = ty / scale;
-    const x = this.x * pageWidth;
-    const y = this.y * pageHeight;
+    const x = this.x * pageWidth - this.x;
+    const y = this.y * pageHeight - this.y;
     const width = this.width * pageWidth;
     const height = this.height * pageHeight;
-
     switch (this.rotation) {
       case 0:
         return [
@@ -505,8 +504,8 @@ class AnnotationEditor {
       data.rect,
       pageHeight
     );
-    editor.x = x / pageWidth;
-    editor.y = y / pageHeight;
+    editor.x = (x - width) / pageWidth;
+    editor.y = (y - height) / pageHeight;
     editor.width = width / pageWidth;
     editor.height = height / pageHeight;
 

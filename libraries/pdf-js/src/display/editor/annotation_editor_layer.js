@@ -562,7 +562,7 @@ class AnnotationEditorLayer {
     // console.log("render", viewport);
 
     setLayerDimensions(this.div, viewport);
-    const annotations =  Array.from(window.annotations).filter(
+    const annotations = Array.from(window.annotations).filter(
       ([key,item]) => (item.pageIndex === this.pageIndex)
     );
     // loop through annotations

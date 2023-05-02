@@ -292,6 +292,9 @@ class FreeTextEditor extends AnnotationEditor {
     this.parent.setEditingState(true);
     this.parent.div.classList.add("freeTextEditing");
     super.remove();
+    // remove the annotation from the set of annotations
+    const mySet = window.annotations[this.id];
+    window.annotations.delete(mySet);
   }
 
   /**
@@ -330,8 +333,7 @@ class FreeTextEditor extends AnnotationEditor {
 
     this.width = rect.width / parentWidth;
     this.height = rect.height / parentHeight;
-
-    window.annotations.set(this.id, this.serialize())
+    window.annotations.set(this.id, this.serialize());
   }
 
   /**
@@ -413,6 +415,7 @@ class FreeTextEditor extends AnnotationEditor {
 
   /** @inheritdoc */
   render() {
+    console.log("rendering");
     if (this.div) {
       return this.div;
     }
@@ -478,7 +481,7 @@ class FreeTextEditor extends AnnotationEditor {
       this.div.draggable = false;
       this.editorDiv.contentEditable = true;
     }
-    window.annotations.set(this.id, this.serialize())
+    window.annotations.set(this.id, this.serialize());
     return this.div;
   }
 
@@ -504,8 +507,10 @@ class FreeTextEditor extends AnnotationEditor {
     }
 
     const padding = FreeTextEditor._internalPadding * this.parentScale;
+    // console.log("this.parentScale", this.parentScale);
+    // console.log("_internalPadding", FreeTextEditor._internalPadding);
     const rect = this.getRect(padding, padding);
-
+    console.log(rect);
     const color = AnnotationEditor._colorManager.convert(
       this.isAttachedToDOM
         ? getComputedStyle(this.editorDiv).color

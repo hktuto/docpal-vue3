@@ -97,7 +97,6 @@ const displayMenu = computed(
       }
     }
     &.selected {
-      --icon-size: 1.4rem;
       --icon-color: var(--menu-selected-color);
       background: var(--menu-selected-bg);
       color: var(--menu-selected-color);

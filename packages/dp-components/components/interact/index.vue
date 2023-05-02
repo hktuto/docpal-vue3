@@ -54,6 +54,7 @@ const emit = defineEmits([
     "dragmove",
     "draginertiastart",
     "dragend",
+    "move",
     "resizestart",
     "resizemove",
     "resizeinertiastart",
