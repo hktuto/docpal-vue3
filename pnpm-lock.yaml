@@ -13,7 +13,7 @@ importers:
         version: 3.1.0
       v-form:
         specifier: github:hktuto/v-form-designer
-        version: github.com/hktuto/v-form-designer/9674834b4b54cec35546551360e20968b4d70fc3
+        version: github.com/hktuto/v-form-designer/0821ae06bd95d5e5e6a1c1de761ca75dca1d35ad
 
   apps/admin:
     devDependencies:
@@ -37,7 +37,7 @@ importers:
     dependencies:
       v-form:
         specifier: github:hktuto/v-form-designer
-        version: github.com/hktuto/v-form-designer/9674834b4b54cec35546551360e20968b4d70fc3
+        version: github.com/hktuto/v-form-designer/0821ae06bd95d5e5e6a1c1de761ca75dca1d35ad
     devDependencies:
       '@element-plus/nuxt':
         specifier: ^1.0.3
@@ -59,7 +59,7 @@ importers:
     dependencies:
       v-form:
         specifier: github:hktuto/v-form-designer
-        version: github.com/hktuto/v-form-designer/9674834b4b54cec35546551360e20968b4d70fc3
+        version: github.com/hktuto/v-form-designer/0821ae06bd95d5e5e6a1c1de761ca75dca1d35ad
     devDependencies:
       '@element-plus/nuxt':
         specifier: ^1.0.3
@@ -402,6 +402,37 @@ importers:
         version: 4.1.0
 
   packages/admin-user-manage:
+    devDependencies:
+      '@nuxt/devtools':
+        specifier: ^0.1.4
+        version: 0.1.4(nuxt@3.4.1)
+      '@nuxtjs/eslint-config-typescript':
+        specifier: ^12.0.0
+        version: 12.0.0(eslint@8.34.0)(typescript@4.9.5)
+      '@vueuse/components':
+        specifier: ^9.13.0
+        version: 9.13.0
+      '@vueuse/core':
+        specifier: ^9.12.0
+        version: 9.13.0
+      dp-api:
+        specifier: workspace:*
+        version: link:../dp-api
+      eslint:
+        specifier: ^8.28.0
+        version: 8.34.0
+      nuxt:
+        specifier: ^3.0.0
+        version: 3.4.1(eslint@8.34.0)(typescript@4.9.5)
+      typescript:
+        specifier: ^4.9.3
+        version: 4.9.5
+
+  packages/admin-workflow-form:
+    dependencies:
+      v-form:
+        specifier: github:hktuto/v-form-designer
+        version: github.com/hktuto/v-form-designer/0821ae06bd95d5e5e6a1c1de761ca75dca1d35ad
     devDependencies:
       '@nuxt/devtools':
         specifier: ^0.1.4
@@ -19290,8 +19321,8 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
-  github.com/hktuto/v-form-designer/9674834b4b54cec35546551360e20968b4d70fc3:
-    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/9674834b4b54cec35546551360e20968b4d70fc3}
+  github.com/hktuto/v-form-designer/0821ae06bd95d5e5e6a1c1de761ca75dca1d35ad:
+    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/0821ae06bd95d5e5e6a1c1de761ca75dca1d35ad}
     name: v-form
     version: 3.0.10
     dependencies:

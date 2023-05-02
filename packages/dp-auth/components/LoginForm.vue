@@ -22,6 +22,10 @@
                 <ElButton size="large"  type="primary" @click="submit" :loading="loading">Submit</ElButton>
             </ElFormItem>
         </ElForm>
+        <el-button @click="userStore.forgetPassword" link>
+            {{ $t('login_forgetPassword') }}
+        </el-button>
+       
     </div>
 </template>
 
@@ -48,10 +52,13 @@ async function submit() {
         form.username = "";
         form.password = "";
     } catch (error) {
+        form.username = "";
+        form.password = "";
         console.log(error);
     }
     loading.value = false;
 }
+
 
 onMounted(() => usernameEl.value.focus());
 </script>

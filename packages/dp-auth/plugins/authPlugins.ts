@@ -3,8 +3,10 @@ import jwt_decode from "jwt-decode";
 
 
 let refreshing = false;
-export default defineNuxtPlugin(({route, redirect}) => {
-    console.log("setup auth plugin", redirect);
+export default defineNuxtPlugin((nuxtApp) => {
+    const route = nuxtApp._route;
+    const router = nuxtApp.$router
+    console.log("setup auth plugin");
     // Doing something with nuxtApp
     // setup api for token refresh
     api.interceptors.request.use( async(config) => {
@@ -53,7 +55,7 @@ export default defineNuxtPlugin(({route, redirect}) => {
         const code = parseInt(error.response && error.response.status);
         if(code === 405 || code === 503) {
             const message = error.response?.data?.code || ""
-            redirect(`/error/${code}?message=${message}`);
+            router.replace(`/error/${code}?message=${message}`);
             return Promise.reject(error) 
         }else if(code === 401) {
             //get header token 

@@ -93,6 +93,10 @@ export const DownloadTemplateApi = async(param) => {
             responseType: 'blob'
         }).then(res =>res.data)
     }
+
+    export const duplicateDetectionApi = async(param) => {
+        return api.post('/nuxeo/document/isDuplicateName', param).then(res => res.data.titles || {}).catch(err => ({}))
+    }
     
 // #endregion
 
