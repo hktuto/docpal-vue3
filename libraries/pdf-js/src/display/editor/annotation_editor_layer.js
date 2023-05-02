@@ -510,6 +510,7 @@ class AnnotationEditorLayer {
 
     editor.translate(endX - editor.startX, endY - editor.startY);
     this.moveEditorInDOM(editor);
+    editor.saveAnnotation();
     editor.div.focus();
   }
 

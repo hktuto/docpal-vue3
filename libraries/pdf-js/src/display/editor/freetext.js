@@ -510,7 +510,6 @@ class FreeTextEditor extends AnnotationEditor {
     // console.log("this.parentScale", this.parentScale);
     // console.log("_internalPadding", FreeTextEditor._internalPadding);
     const rect = this.getRect(padding, padding);
-    console.log(rect);
     const color = AnnotationEditor._colorManager.convert(
       this.isAttachedToDOM
         ? getComputedStyle(this.editorDiv).color

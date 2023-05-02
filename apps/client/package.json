@@ -3,8 +3,8 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "build": "nuxt build --dotenv ../../.env.deploy.dev",
-    "dev": "nuxt dev --dotenv ../../.env.dev",
+    "build": "nuxt build --dotenv ../../.env.deploy.dev ",
+    "dev": "nuxt dev --dotenv ../../.env.dev --port 1234",
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "preview": "nuxt preview --dotenv ../../.env.deploy.dev"
   },

@@ -13,7 +13,11 @@
         <small>{{ displayStatus }}</small>   
         </td>
 
-      <el-dialog :title="$t('workflow_startAdhocWorkflow')" :visible.sync="dialogShow" append-to-body v-loading="loading">
+      
+    <!-- <template> -->
+
+  </tr> 
+  <el-dialog :title="$t('workflow_startAdhocWorkflow')" :visible.sync="dialogShow" append-to-body v-loading="loading">
         <el-form :model="form" ref="FormRef">
           <el-form-item :label="$t('role.auditor')">
             <el-select v-model="form.user_approver_id" multiple filterable clearable>
@@ -26,9 +30,6 @@
           <el-button type="primary" @click="handleStart">{{$t('dpButtom_confirm')}}</el-button>
         </div>
       </el-dialog>
-    <!-- <template> -->
-
-  </tr> 
 </template>
 
 <script lang="ts" setup>

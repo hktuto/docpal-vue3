@@ -1,5 +1,5 @@
 <template>
-    <el-badge :value="unreadCount" :hidden="unreadCount === 0" :max="99" class="actionIcons">
+    <el-badge :value="unreadCount" :hidden="unreadCount === 0" is-dot  class="actionIcons">
         <SvgIcon src="icons/notification.svg" @click="dialogOpened = true"></SvgIcon>
     </el-badge>
     <el-dialog v-model="dialogOpened" append-to-body>

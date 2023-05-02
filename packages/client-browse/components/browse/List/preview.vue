@@ -10,7 +10,7 @@
                 @dblclick="handleDblclick(item)" 
                 @contextmenu.stop="(event) => handleRightClick(item, event)">
                 <template v-if="item.blobUrl">
-                    <img :src="item.blobUrl" class="thumbnail"/>
+                    <img :src="item.blobUrl" class="thumbnail" @error="imgError"/>
                 </template>
                 <template v-else>
                     <BrowseItemIcon :type="item.isFolder ? 'folder' : 'file'"/>
@@ -41,6 +41,11 @@ const state = reactive<State>({
     tableData: [],
     imgSize: 100
 })
+
+function imgError(event) {
+    console.log(event);
+    event.target.src = '/icons/file-normal.svg'
+}
 // #region module: page 
     const pageParams = ref({
         idOrPath: '/',
@@ -135,7 +140,7 @@ function handleRightClick (item, event) {
 .doc-container {
     .thumbnail {
         aspect-ratio: 1/1;
-        background: var(--color-grey-200);
+        background: var(--color-grey-0000);
         border-radius: 0.5rem;
         overflow: hidden;
         width: 100%;

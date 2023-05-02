@@ -4,11 +4,7 @@
         <div v-loading="pending" class="breadContainer">
             
             <div class="breadItem pointer" @click="navigate(rootPath)" >
-                <img
-                    width="24"
-                    height="24"
-                    :src="'/icons/breadcrumb_home.svg'"
-                />
+                <SvgIcon :src="'/icons/breadcrumb_home.svg'" />
             </div>
             <div v-if="displayBread && displayBread.length > 0" class="divider">
                 <ElIcon><ArrowRight/></ElIcon>
@@ -98,10 +94,18 @@ defineExpose({
     gap: calc(var(--el-component-size-small) / 3 );
 }
 .breadItem{
-    padding: 6px;
+    padding: 4px;
+    margin: -4px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    color: var(--color-grey-400);
+    font-size: var(--el-font-size-small);
     &.pointer{
         border-radius: 4px;
         &:hover{
+            --icons-color: var(--el-color-white);
             background: var(--el-color-primary);
             color: var(--el-color-white);
         }

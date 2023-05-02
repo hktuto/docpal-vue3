@@ -182,6 +182,7 @@ class AnnotationEditor {
     this._uiManager.addToAnnotationStorage(this);
   }
 
+
   /**
    * We use drag-and-drop in order to move an editor on a page.
    * @param {DragEvent} event
@@ -207,7 +208,6 @@ class AnnotationEditor {
 
     this.x = (x + tx) / width;
     this.y = (y + ty) / height;
-
     this.div.style.left = `${100 * this.x}%`;
     this.div.style.top = `${100 * this.y}%`;
   }
@@ -220,10 +220,8 @@ class AnnotationEditor {
   translate(x, y) {
     const [width, height] = this.parentDimensions;
     [x, y] = this.screenToPageTranslation(x, y);
-
     this.x += x / width;
     this.y += y / height;
-
     this.div.style.left = `${100 * this.x}%`;
     this.div.style.top = `${100 * this.y}%`;
   }
@@ -347,6 +345,7 @@ class AnnotationEditor {
   }
 
   getRect(tx, ty) {
+    console.log("getRect", tx);
     const scale = this.parentScale;
     const [pageWidth, pageHeight] = this.pageDimensions;
     const [pageX, pageY] = this.pageTranslation;
@@ -356,6 +355,7 @@ class AnnotationEditor {
     const y = this.y * pageHeight - this.y;
     const width = this.width * pageWidth;
     const height = this.height * pageHeight;
+
     switch (this.rotation) {
       case 0:
         return [

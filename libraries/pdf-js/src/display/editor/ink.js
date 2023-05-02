@@ -479,6 +479,7 @@ class InkEditor extends AnnotationEditor {
    * Redraw all the paths.
    */
   #redraw() {
+    console.log("redraw");
     if (this.isEmpty()) {
       this.#updateTransform();
       return;
@@ -493,8 +494,12 @@ class InkEditor extends AnnotationEditor {
     for (const path of this.bezierPath2D) {
       ctx.stroke(path);
     }
+    this.saveAnnotation();
+  }
+
+  saveAnnotation() {
     const saveObj = this.serialize();
-    window.annotations.set(this.id,saveObj );
+    window.annotations.set(this.id, saveObj);
   }
 
   /**
@@ -526,6 +531,8 @@ class InkEditor extends AnnotationEditor {
     this.div.focus({
       preventScroll: true /* See issue #15744 */,
     });
+    console.log("Commit");
+    this.saveAnnotation();
   }
 
   /** @inheritdoc */
@@ -655,7 +662,7 @@ class InkEditor extends AnnotationEditor {
 
   /** @inheritdoc */
   render() {
-    console.log("ink render")
+    console.log("ink render");
     if (this.div) {
       return this.div;
     }
@@ -1093,8 +1100,9 @@ class InkEditor extends AnnotationEditor {
     if (this.isEmpty()) {
       return null;
     }
-
-    const rect = this.getRect(0, 0);
+    const padding = this.#getPadding();
+    const rect = this.getRect(padding, padding);
+    console.log(rect);
     const height =
       this.rotation % 180 === 0 ? rect[3] - rect[1] : rect[2] - rect[0];
 

@@ -146,7 +146,7 @@ onMounted(() => {
 .browsePageContainer{
     display: grid;
     grid-template-rows: min-content 1fr;
-    gap : var(--app-padding);
+    gap : 0;
     height: 100%;
     overflow: hidden;
     position: relative;
@@ -161,7 +161,6 @@ onMounted(() => {
     grid-template-columns: 1fr min-content;
     justify-content: flex-start;
     align-items: center;
-
 }
 .fileName{
     font-size: 1.5rem;
