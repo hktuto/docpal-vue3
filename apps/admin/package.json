@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv ../../.env.admin.dev --port 3333",
+    "dev": "nuxt dev --dotenv ../../.env.admin.dev --port 2222",
     "generate": "nuxt generate",
     "preview": "nuxt preview"
   },
@@ -17,5 +17,6 @@
     "dp-api":"workspace:*"
   },
   "dependencies": {
+    "v-form": "github:hktuto/v-form-designer"
   }
 }
