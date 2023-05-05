@@ -88,7 +88,11 @@ export enum TABLE {
     ADMIN_GROUP_USER_MANAGE = 'adminGroupUserManage',
     ADMIN_META_MANAGE = 'adminMetaManage',
     ADMIN_META_DISPLAY = 'adminMetaDisplay',
-    ADMIN_META_RELATED = 'adminMetaRelated'
+    ADMIN_META_RELATED = 'adminMetaRelated',
+    ADMIN_BULK_IMPORT = 'adminBulkImport',
+    ADMIN_BULK_IMPORT_META = 'adminBulkImportMeta',
+    ADMIN_BULK_IMPORT_CONFIG = 'adminBulkImportConfig',
+    ADMIN_BULK_IMPORT_CONFIG_FORM = 'adminBulkImportConfigForm',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1025,6 +1029,86 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: ['delete'],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true },
+            { id: '3', slot: 'metaMapping', label: 'docType_metaMapping' },
+            { id: '4', slot: 'bulkImportConfig', label: 'docType_captureProfile' },
+        ],
+        events: [],
+        slots: [
+            { slot: 'icon', width: 50 },
+            { slot: 'metaMapping', label: 'docType_metaMapping' },
+            { slot: 'bulkImportConfig', label: 'docType_captureProfile' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT_META]: {
+        columns: [
+            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true },
+            { id: '2', label: 'table_label', prop: 'label', showOverflowTooltip: true },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT_CONFIG]: {
+        columns: [
+            { id: '1', label: 'dpTable_id', prop: 'profileID' },
+            { id: '2', label: 'dpTable_name', prop: 'profileName' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "left",
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT_CONFIG_FORM]: {
+        columns: [
+            { id: '1', prop: 'title', label: 'title' },
+            { id: '2', prop: 'name', label: 'name' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
     }
-    
 }

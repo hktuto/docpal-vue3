@@ -7,8 +7,8 @@ export type metaSetting = {
     isFolder?: boolean,
     displayMeta?: metaRule[],
     related?: relatedMetaDoc[],
-    mappingMeta?: string [],
-    configFile?: string []
+    mappingMeta?: any,
+    bulkImportConfigs?: string []
 }
 export type relatedMetaDoc = {
     meta: string,
@@ -27,6 +27,21 @@ export type metaRule = {
     creatorName?: string,
     modifiedName?: string,
     modifiedId?: string
+}
+export type SaveMetadataMappingReq = {
+    documentType: metaMapping[]
+}
+export type metaMapping = {
+    createTime?: string,
+    createUserId?: string,
+    createUserName?: string,
+    id?: string | number,
+    metaDataMapper?: string,
+    name?: string,
+    updateTime?: string,
+    updateUserId?: string,
+    updateUserName?: string,
+    version?: string,
 }
 let metaSettingData: metaData = null
 export const GetMetaSettingsApi = async(refresh: boolean = false):Promise<metaData> => {
@@ -107,6 +122,79 @@ export const SaveMetaValidationRuleApi = async(params: metaRule) => {
     return api.post('/docpal/workflow/saveMetaValidationRule',  params ).then(res => res.data)
 } 
 
+// bulk import config
+/**
+ * GetMetaSettingsApi 获取 等待配置的列表
+ * GetMetaMappingApi 获取映射meta
+ * GetDocumentTypeProfileApi 获取 bulk import config
+ * @returns 
+ */
+export const GetBulkImportConfigList = async():Promise<metaSetting[]> => {
+    await GetMetaSettingsApi()
+    const metaList:metaSetting[] = []
+    Object.keys(metaSettingData).forEach(key => {
+        metaList.push({ ...metaSettingData[key], documentType: key })
+    })
+    const metaMappingList = await GetMetaMappingApi()
+    const documentTypeProfileList = await GetDocumentTypeProfileApi()
+    metaMappingList.forEach(item => {
+        if (!!item.metaDataMapper) {
+            const _item = metaList.find(metaItem => metaItem.documentType === item.name)
+            if (!!_item) {
+                _item.mappingMeta = JSON.parse(item.metaDataMapper)
+            }
+        }
+    })
+    documentTypeProfileList.forEach(item => {
+        if (item.profileName) {
+            const _item = metaList.find(metaItem => metaItem.documentType === item.documentType)
+            if (!!_item) {
+                if(!_item.bulkImportConfigs)  _item.bulkImportConfigs = []
+                _item.bulkImportConfigs.push(item.profileName)
+            }
+        }
+    })
+    return metaList.sort((a,b)=> (a.documentType.localeCompare(b.documentType) ))
+}
+export const GetMetaMappingApi = async(params?: metaRule) => {
+    try {
+        return api.get('/docpal/workflow/queryMetadataMapping', { params }).then(res => res.data.data)
+    } catch (error) {
+        return []
+    }
+} 
+export const GetDocumentTypeProfileApi = async(params?: metaRule) => {
+    try {
+        return api.get('/docpal/workflow/queryDocumentTypeProfile', { params }).then(res => res.data.data)
+    } catch (error) {
+        return []
+    }
+} 
+
+export const SaveMetadataMappingApi = async(params?: SaveMetadataMappingReq) => {
+    try {
+        return api.post('/docpal/workflow/saveMetadataMapping', params ).then(res => res.data)
+    } catch (error) {
+        return []
+    }
+} 
+export const SaveDocumentTypeProfileApi = async(params) => {
+    try {
+        return api.post('/docpal/workflow/saveDocumentTypeProfile', params ).then(res => res.data)
+    } catch (error) {
+        return []
+    }
+}
+export const DeleteDocumentTypeProfileApi = async(profileID) => {
+    return api.delete('/docpal/workflow/deleteDocumentTypeProfile', { params: { profileID } }).then(res => res.data)
+}
+export const checkNameOrTitleApi = async(params) => {
+    try {
+        return api.post('/docpal/workflow/checkNameOrTitle', params ).then(res => res.data)
+    } catch (error) {
+        return []
+    }
+}
 export const deepCopy  = (data:any) => {
     if (!data) return {}
     return JSON.parse(JSON.stringify(data));

@@ -67,6 +67,13 @@ html.dark {
         opacity: .8;
     }
 }
+.color__primary__hover {
+    color: var(--primary-color);
+    opacity: .5;
+    &:hover {
+        opacity: .8;
+    }
+}
 .icon__hover {
     font-size: 1.5rem;
     color: var(--color-grey-400);
