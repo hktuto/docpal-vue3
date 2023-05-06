@@ -2,8 +2,8 @@
     <NuxtLayout class="fit-height withPadding" backPath="/userManage">
        <div class="userDetailSection">
             <div class="list">
-                <UserFilter :list="state.userList" attr="username"
-                        @filter="handleUserFilter"></UserFilter>
+                <KeywordFilter :list="state.userList" attr="username"
+                        @filter="handleUserFilter"></KeywordFilter>
                 <div class="list-user">
                     <template v-for="item in state._userList" >
                         <!-- TODO 自动滚动 -->

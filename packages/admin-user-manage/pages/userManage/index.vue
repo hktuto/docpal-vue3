@@ -8,8 +8,8 @@
                         <el-button class="button" type="primary"
                             @click="handleUserDialogShow()">{{$t('user_newUser')}}</el-button>
                     </div>
-                    <UserFilter :list="state.userList" attr="username"
-                        @filter="handleUserFilter"></UserFilter>
+                    <KeywordFilter :list="state.userList" attr="username"
+                        @filter="handleUserFilter"></KeywordFilter>
                 </template>
                 <Table :columns="userTableSetting.columns" :table-data="state._userList"
                     @row-dblclick="handleUserDblclick"></Table>
@@ -21,8 +21,8 @@
                         <el-button class="button" type="primary" 
                             @click="handleGroupDialogShow()">{{$t('user_newGroup')}}</el-button>
                     </div>
-                    <UserFilter :list="state.groupList" attr="name"
-                        @filter="handleGroupFilter"></UserFilter>
+                    <KeywordFilter :list="state.groupList" attr="name"
+                        @filter="handleGroupFilter"></KeywordFilter>
                 </template>
                 <Table :columns="groupTableSetting.columns" :table-data="state._groupList"
                     @row-dblclick="handleGroupDblclick"></Table>
