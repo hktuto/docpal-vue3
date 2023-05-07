@@ -37,19 +37,19 @@ const props = defineProps<{
 }>()
 const visible = ref(false)
 function iconClickHandler(){
-    console.log('iconClickHandler');
+    dpLog('iconClickHandler');
     visible.value = true
     // open upload dialog
 }
 function downloadHandler(){
-    console.log('downloadHandler')
+    dpLog('downloadHandler')
 }
 function downloadAsPdfHandler(){
-    console.log('downloadAsPdfHandler')
+    dpLog('downloadAsPdfHandler')
 }
 
 function downloadPdfAndAnnotationHandler(){
-    console.log('downloadPdfAndAnnotationHandler')
+    dpLog('downloadPdfAndAnnotationHandler')
 }
 </script>
 

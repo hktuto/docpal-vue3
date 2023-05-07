@@ -82,7 +82,7 @@ async function clearanceLevelChange (value) {
                         'sec:clearanceLevel':value || null
             }
         }
-        console.log(form);
+        dpLog(form);
         await patchDocumentApi(form);
         if(state.doc.properties) state.doc.properties['sec:clearanceLevel'] = value || null;
         ElMessage.success('success')

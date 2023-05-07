@@ -52,7 +52,7 @@ const _options = computed(() => {
       else prev.push(prev[index - 1] + '/' + key)
       return prev
     }, [])
-    console.log({qPaths});
+    dpLog({qPaths});
     
     defaultExpandedKeys.push(...qPaths)
   }

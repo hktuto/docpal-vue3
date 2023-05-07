@@ -43,13 +43,13 @@ function handleOpen(exitList) {
     })
 }
 async function handleOptions (exitList) {
-    console.log({exitList});
+    dpLog({exitList});
     if(!state.userList || state.userList.length === 0) state.userList = await getUserListApi()
     const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('id')
-    console.log({idRef});
+    dpLog({idRef});
     
     const options = userListFilter()
-    console.log({options});
+    dpLog({options});
     
     idRef.loadOptions(options)
     function userListFilter() {

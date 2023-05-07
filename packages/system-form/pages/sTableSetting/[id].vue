@@ -28,7 +28,7 @@ const state = reactive({
 })
 
 function initTableColumns(tableKey) {
-    console.log({tableSettingJson});
+    dpLog({tableSettingJson});
     
     state.setting = deepCopy(tableSettingJson[tableKey])
     state.tableColumns = state.setting.columns
@@ -42,10 +42,10 @@ async function handleSave () {
     const columns = TableColumnDragRef.value.getColumns()
     const setting = deepCopy(tableSettingJson)
     setting[route.params.id].columns = columns
-    console.log({setting});
+    dpLog({setting});
     
     const save = await $fetch('/table/save', { method:'post', body: setting })
-    console.log({save});
+    dpLog({save});
 }
 function handleColumnAdd (column) {
     column.id = new Date().valueOf().toString()

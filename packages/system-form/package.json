@@ -16,10 +16,9 @@
     "dp-api": "workspace:*"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.1.4",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "eslint": "^8.28.0",
-    "nuxt": "^3.0.0",
+    "nuxt": "^3.4.3",
     "typescript": "^4.9.3"
   }
 }

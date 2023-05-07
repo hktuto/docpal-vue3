@@ -38,11 +38,11 @@ function initTableColumns(id) {
 
 const TableColumnDragRef = ref()
 function handleSave () {
-    console.log('save');
+    dpLog('save');
     const columns = TableColumnDragRef.value.getColumns()
     const setting = deepCopy(tableColumnSetting.value)
     setting[route.params.id].columns = columns
-    console.log({setting});
+    dpLog({setting});
     // SaveTableColumnSetting(setting)
 }
 function handleColumnAdd (column) {

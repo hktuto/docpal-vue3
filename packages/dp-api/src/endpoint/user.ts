@@ -39,6 +39,11 @@ export const PatchUserPasswordApi = async(param) => {
     return await api.patch(`/nuxeo/identity/user/password?userId=${param.userId}&password=${param.password}`).then(res => res.data);
 }
 
+export const ForgetPasswordApi = async(userId:string) => {
+    return await api.post(`/nuxeo/user/forgetPassword`,{}, {params:{userId}}).then(res => res.data);
+}
+
+
 export const DeleteUserApi = async(param) => {
     return await api.delete('/nuxeo/identity/user', {data: param}).then(res => res.data);
 }

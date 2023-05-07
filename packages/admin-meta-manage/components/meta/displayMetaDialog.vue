@@ -43,7 +43,7 @@ async function handleSubmit (addMore: boolean = false) {
     state.loading = false
     state.visible = false
     FromRendererRef.value.vFormRenderRef.resetForm()
-    console.log({addMore}, 'dialog');
+    dpLog({addMore}, 'dialog');
     
     emits('refresh', addMore)
 }

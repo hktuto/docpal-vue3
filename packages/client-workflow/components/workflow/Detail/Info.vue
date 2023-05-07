@@ -96,7 +96,7 @@ async function handleUnclaim () {
         const response = await taskUnClaimApi(route.params.id)
         emits('change', response, false)
         props.taskDetail.assignee = ''
-        console.log({response}, 'handleUnclaim');
+        dpLog({response}, 'handleUnclaim');
     } catch (error) {
         ElMessage.error(error.response.data.message)
     }

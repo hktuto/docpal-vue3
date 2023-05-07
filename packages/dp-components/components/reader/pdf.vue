@@ -38,7 +38,7 @@ async function sendPdfAndAnnotation() {
         annotations: new Map(props.annotations),  
         locale: locale.value
     }
-    console.log("frame",message);
+    dpLog("frame",message);
     frame.postMessage(message, '*');
 }  
 

@@ -62,7 +62,7 @@ const options = ref({
     showPagination:false,
 })
 function handlePopoverShow (e) {
-    console.log('handlePopoverShow')
+    dpLog('handlePopoverShow')
       popoverShow.value = !popoverShow.value
     }
 function handlerRowClick (row, column, event) {

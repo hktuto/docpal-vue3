@@ -30,7 +30,7 @@ const {locale} = useI18n()
 const { options } = toRefs(props)
 
 async function getAnnotation():Promise<Object> {
-    console.log(props.options.loadAnnotations)
+    dpLog(props.options.loadAnnotations)
     if(!props.options.loadAnnotations) return new Map();
     const annotation = await GetAnnotation(props.doc.id);
     let annotationObj = []
@@ -53,16 +53,16 @@ async function sendPdfAndAnnotation() {
         const blob = await GetDocumentPreview(props.doc.id);
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
-        console.log(annotations)
+        dpLog(annotations)
         frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
-        console.log(error);
+        dpLog(error);
     }
     loading.value = false;
 }
 
 function gotMessageFromIframe(message:MessageEvent) {
-    console.log(message)
+    dpLog(message)
     const { data:{ data, type} } = message;
     if(!data && !type ) return;
     switch(type) {
@@ -100,7 +100,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
     }
     await SaveAnnotation([param])
     //  TODO : show notification
-    console.log("Annotation saved successfully");
+    dpLog("Annotation saved successfully");
 
 }
 

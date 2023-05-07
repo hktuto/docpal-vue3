@@ -37,7 +37,7 @@ const tags = computed(() => {
     })
 
 const handleDocumentTagsAdd = (tagSelected) => {
-      console.log(tagSelected)
+      dpLog(tagSelected)
       const tags = props.doc.properties['nxtag:tags']
       tagSelected.forEach((item) => {
         tags.push({ label: item })

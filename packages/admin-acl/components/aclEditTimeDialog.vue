@@ -36,7 +36,7 @@ async function handleSubmit () {
         params.startDate = data.dateRange[0]
         params.endDate = data.dateRange[1]
     }
-    console.log(state.aclItem);
+    dpLog(state.aclItem);
     
     if (state.aclItem.aceId) {
         params.aceId = state.aclItem.aceId

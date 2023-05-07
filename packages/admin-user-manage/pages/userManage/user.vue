@@ -52,7 +52,7 @@ const state = reactive({
     curUser: null
 })
 function handleTabClick (row) {
-    console.log(row, 'handleTabClick');
+    dpLog(row, 'handleTabClick');
     
     router.push({query: { id: row.userId }})
     state.curUser = row

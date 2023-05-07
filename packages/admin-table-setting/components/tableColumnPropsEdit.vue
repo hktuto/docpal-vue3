@@ -75,7 +75,7 @@ const emit = defineEmits(['add', 'save'])
         form.params = {}
         state.formatFunList = []
         state.formatFunList = tableHelper.getTableFilters(tableHelper.getPropType(tableHelper.trashType, prop))
-        console.log(state.formatFunList, 'formatItemPropChange');
+        dpLog(state.formatFunList, 'formatItemPropChange');
         
     }
     function formatItemFunChange (fun) {
