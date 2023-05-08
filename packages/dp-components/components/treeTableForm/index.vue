@@ -1,15 +1,21 @@
 <template>
     <div class="dp-table-container">
         <div class="tableHeader">
-            <div>
-                <slot name="preButton"></slot>
+            <div class="tableHeader-title">
+                <slot name="title"></slot>
             </div>
-            <el-button type="primary" :icon="Plus" size="small" circle 
-                        :disabled="_options.childLen === 1"
-                        @click="handleAdd()"/>
+            <div class="flex-x-center">
+                <el-button @click="handleValid">
+                    {{$t('checkData')}}
+                </el-button>
+                <el-button type="primary" :icon="Plus" size="small" circle 
+                            :disabled="_options.childLen === 1"
+                            @click="handleAdd()"/>
+            </div>
         </div>
         <el-form ref="FormRef" class="table__content"
-                :model="state.formData" :rules="state.formRule">
+                :model="state.formData" :rules="state.formRule"
+                label-position="top">
             <el-table
                 ref="tableRef"
                 :data="state.tableData"
@@ -27,6 +33,7 @@
                             <el-table-column
                                 v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
                                 v-bind="col"
+                                :class-name="classComputed(col)"
                                 :selectable="_options.selectable">
                                 <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
                                 <template #default="{ row, $index }">
@@ -39,11 +46,11 @@
                                 </template>
                             </el-table-column>
                         <!---复选框, 序号 (END)-->
-                        <el-table-column v-else v-bind="col" @command="handleAction">
+                        <el-table-column v-else v-bind="col" :class-name="classComputed(col)" @command="handleAction">
                             <!-- 自定义列插槽 -->
-                                <template #default="{ slotName, row, index }">
+                                <template #default="{ row, $index }">
                                     <el-form-item :prop="`${row.dpRowId}.${col.prop}`">
-                                        <slot :name="slotName" :row="row" :index="index" >
+                                        <slot :name="col.slot" :row="row" :index="$index" >
                                             <el-input v-model="row[col.prop]"></el-input>
                                         </slot>
                                     </el-form-item>
@@ -52,15 +59,15 @@
                         </el-table-column>
                     </template>
                 </template>
-                <el-table-column :label="$t('dpTable_actions')" :min-width="100" :width="100"  align="center">
+                <el-table-column :label="$t('dpTable_actions')" :min-width="100" :width="100"  align="right">
                     <!-- <template slot="header" slot-scope="scope">
                         {{$t('dpTable_actions')}} -->
                         <!-- <CheckPopover ref="CheckPopover" :errData="errData" @click.native="handleValid"></CheckPopover> -->
-                            <!-- v-show="(_options.childLen > 0 && _options.childLen > row[_options.treeProps.children].length) || !_options.childLen" -->
-                    <!-- </template> -->
+                    <!-- </template> --> 
+                    <!-- :disabled="(_options.childLen <= row[_options.treeProps.children].length) && _options.childLen !== 0" -->
                     <template #default="{ slotName, row, $index }">
                         <el-button 
-                            :disabled="(_options.childLen <= row[_options.treeProps.children].length) && _options.childLen !== 0"
+                            v-show="_options.childDeep !== 0 && ((_options.childLen > 0 && _options.childLen > row[_options.treeProps.children].length) || !_options.childLen)"
                             type="primary" :icon="Plus" size="small" circle 
                             @click="handleAddChild(row, $index)"/>
                         <el-button type="danger" :icon="Minus" size="small" circle 
@@ -70,10 +77,10 @@
                 </el-table-column>
             </el-table>
         </el-form>
+        <TreeTableFormValidDialog ref="TreeTableFormValidDialogRef"></TreeTableFormValidDialog>
     </div>
 </template>
 <script lang="ts" setup>
-import { deepCopy } from 'dp-api';
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 
 import { Plus, Minus } from '@element-plus/icons-vue'
@@ -125,6 +132,11 @@ const state = reactive({
     unitRow: {}
 })
 const FormRef = ref()
+function classComputed(col) {
+    const slot = col.slot ? `column_${col.slot}` : ''
+    const prop = col.prop ? `column_${col.prop}` : ''
+    return `${slot} ${prop}`
+}
 // #region Event Handling
     // 按钮组事件
     const handleAction = (command: Table.Command, row: any, index: number) => {
@@ -199,6 +211,7 @@ const FormRef = ref()
         state.formData = {}
         handleId(tableData)
         state.tableData = deepCopy(tableData) 
+        getFormRule()
     }
     function handleId (list, dpRowParentId ='') {
       list.forEach((item, index) => {
@@ -206,7 +219,6 @@ const FormRef = ref()
         if (dpRowParentId) item.dpRowParentId = dpRowParentId
         state.formData[item.dpRowId] = item
         if (item[_options.value.treeProps.children]) handleId(item[_options.value.treeProps.children], item.dpRowId)
-        getFormRule()
       })
     }
     function handleAdd () {
@@ -240,17 +252,29 @@ const FormRef = ref()
         getFormRule()
     }
 // #endregion
-function initTable() {
+function initTable(data) {
+    const _tableData = data || props.tableData
     nextTick(() => {
-        if (!props.tableData || props.tableData.length === 0) {
+        if (!_tableData || _tableData.length === 0) {
             state.tableData = []
             handleAdd()
         }
         else {
-            setTableData(props.tableData)
+            setTableData(_tableData)
         }
     })
 }
+const TreeTableFormValidDialogRef = ref()
+async function handleValid () {
+    setTimeout(async () => {
+        let errorData = {}
+        await FormRef.value.validate((valid, fields) => {
+            errorData = fields || []
+        })
+        TreeTableFormValidDialogRef.value.handleOpen(errorData)
+    })
+}
+ 
 onMounted(() => {
     initTable()
 })
@@ -259,40 +283,53 @@ defineExpose({ getFormData, initTable })
 </script>
 <style lang="scss" scoped>
 .dp-table-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  .tableHeader{
-    display: grid;
-    grid-template-columns: 1fr min-content;
-    gap: var(--app-padding);
-    margin-bottom: 10px;
-    div:not(:first-child), button:not(:first-child) {
-      margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .tableHeader{
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        gap: var(--app-padding);
+        margin-bottom: 10px;
+        align-items: center;
+        &-title {
+            line-height: var(--el-dialog-font-line-height);
+            font-size: var(--el-dialog-title-font-size);
+            color: var(--el-text-color-primary)
+        }
+        div:not(:first-child), button:not(:first-child) {
+            margin-left: 1rem;
+        }
     }
-  }
-  .table__content{
-    flex: 1;
-    overflow: hidden;
-    ::v-deep .el-table__cell .cell{
-      display: flex;
-      align-items: center;
-      .el-form-item, .el-input {
-        flex: 1
-      }
+    .table__content{
+        flex: 1;
+        overflow: hidden;
+        :deep(.el-table__cell .cell){
+            display: flex;
+            align-items: center;
+            .el-form-item, .el-input {
+                flex: 1
+            }
+        }
+        :deep(.el-table__cell.is-right .cell){
+            justify-content: end;
+        }
+        :deep(.el-table__cell.is-center .cell), 
+        :deep(.el-table__cell.is-center .cell .el-form-item__content){
+            justify-content: center;
+        }
+        :deep(.table__hide-expand) {
+            .el-table__expand-icon {
+                display: none
+            }
+            .el-table__placeholder {
+                display: none
+            }
+        }
     }
-    ::v-deep .table__hide-expand {
-      .el-table__expand-icon {
-        display: none
-      }
-      .el-table__placeholder {
-        display: none
-      }
+    :deep(.el-form-item)  {
+        margin-bottom: unset;
     }
-  }
-  ::v-deep .el-form-item {
-    margin-bottom: unset;
-  }
 }
 </style>
 

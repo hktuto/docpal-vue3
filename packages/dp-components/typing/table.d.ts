@@ -36,6 +36,7 @@ declare namespace Table {
         slot?: string
         width?: string,
         align?: Align,
+        headerAlign?: Align,
         hide?: boolean,
         system?: boolean, // 后期兼容不允许删除
         dateFormat?: DateFormat, // 显示在页面中的日期格式，简单列举了几种格式， 可自行配置

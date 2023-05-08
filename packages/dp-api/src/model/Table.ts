@@ -10,7 +10,8 @@ export type TableColumnSettingItem = {
     options: TableColumnSettingOptions
 }
 export type TableColumnSettingOptions = {
-    pageSize?: number
+    pageSize?: number,
+    notEdit?: boolean
 }
 export type TableColumnItem = {
     id?: string | any,
@@ -93,6 +94,9 @@ export enum TABLE {
     ADMIN_BULK_IMPORT_META = 'adminBulkImportMeta',
     ADMIN_BULK_IMPORT_CONFIG = 'adminBulkImportConfig',
     ADMIN_BULK_IMPORT_CONFIG_FORM = 'adminBulkImportConfigForm',
+    ADMIN_SCHEMA_LIST = 'adminSchemaList',
+    ADMIN_SCHEMA_FIELDS_FORM = 'adminSchemaFieldsForm',
+    ADMIN_DOC_TYPE_LIST = 'adminDocTypeList',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -380,7 +384,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -388,6 +393,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -473,7 +479,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -481,6 +488,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "disabled",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -538,7 +546,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "dpTable_actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -546,6 +555,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -893,7 +903,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "tableHeader_actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -901,6 +912,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -930,7 +942,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "tableHeader_actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -938,6 +951,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -977,7 +991,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "tableHeader_actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -985,6 +1000,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -1010,7 +1026,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "tableHeader_actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -1018,6 +1035,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -1054,7 +1072,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "tableHeader_actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -1062,6 +1081,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -1083,7 +1103,8 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "tableHeader_actions",
                 "prop": "",
-                "align": "left",
+                "align": "center",
+                "width": 100,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
@@ -1091,6 +1112,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "buttons": [
                     {
                         "name": "",
+                        "type": "text",
                         "command": "delete",
                         "suffixIcon": "/icons/menu/trash.svg",
                         "index": 0
@@ -1107,6 +1129,78 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { id: '1', prop: 'title', label: 'title' },
             { id: '2', prop: 'name', label: 'name' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_SCHEMA_LIST]: {
+        columns: [
+            { id: '1', prop: 'name', label: 'name' },
+            {   
+                id: '2',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DOC_TYPE_LIST]: {
+        columns: [
+            { id: '1', prop: 'name', label: 'name' },
+            {   
+                id: '2',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_SCHEMA_FIELDS_FORM]: {
+        columns: [
+            { id: '1', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '3', slot: 'type', label: 'docType_type', prop: 'type' },
+            // { id: '4', slot: 'setting' },
+            { id: '5', prop: 'defaultValue', label: 'docType_defaultValue' },
+            { id: '6', slot: 'multiple', label: 'multiple', prop: 'isMultiValue', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
         ],
         events: [],
         options: { pageSize: 20 }
