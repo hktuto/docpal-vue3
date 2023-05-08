@@ -2,7 +2,11 @@
     <div class="formContainer">
         <client-only>
             <v-form-render ref="vFormRenderRef" :form-json="fromJsonNormalizer" :form-data="data" :option-data="options" @formChange="formChange" 
-                @file-preview="handleFilePreview"/>
+                @file-preview="handleFilePreview">
+                <template v-for="(idx, slotName) in $slots" #[slotName]>
+                    <slot :name="slotName"></slot>
+                </template> 
+            </v-form-render>
         </client-only>
         <ReaderDialog ref="ReaderRef" v-bind="previewFile" ></ReaderDialog>
     </div>
