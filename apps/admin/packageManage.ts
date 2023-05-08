@@ -11,6 +11,8 @@ export function customLayer():string[] {
     packages.push('../../packages/admin-user-manage');
     packages.push('../../packages/admin-workflow-form');
     packages.push('../../packages/admin-bulk-import-config');
+    packages.push('../../packages/admin-vocabulary');
+    packages.push('../../packages/admin-doc-type-manage');
     
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")

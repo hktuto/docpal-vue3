@@ -97,6 +97,9 @@ export enum TABLE {
     ADMIN_SCHEMA_LIST = 'adminSchemaList',
     ADMIN_SCHEMA_FIELDS_FORM = 'adminSchemaFieldsForm',
     ADMIN_DOC_TYPE_LIST = 'adminDocTypeList',
+    ADMIN_VOCABULARY_SIMPLE_FORM = 'adminVocabularySimpleForm',
+    ADMIN_VOCABULARY_CHILD_FORM = 'adminVocabularyChildForm',
+    ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1204,5 +1207,64 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: [],
         options: { pageSize: 20 }
-    }
+    },
+    [TABLE.ADMIN_SCHEMA_FIELDS_FORM]: {
+        columns: [
+            { id: '1', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '3', slot: 'type', label: 'docType_type', prop: 'type' },
+            // { id: '4', slot: 'setting' },
+            { id: '5', prop: 'defaultValue', label: 'docType_defaultValue' },
+            { id: '6', slot: 'multiple', label: 'multiple', prop: 'isMultiValue', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        events: [],
+        slots: [
+            { slot: 'type', label: 'docType_type', prop: 'type' },
+            { slot: 'multiple', label: 'multiple', prop: 'isMultiValue', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VOCABULARY_SIMPLE_FORM]: {
+        columns: [
+            { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        events: [],
+        slots: [
+            { slot: 'id', prop: 'id', label: 'docType_id' },
+            { slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VOCABULARY_CHILD_FORM]: {
+        columns: [
+            { id: '1', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '3', slot: 'parentEntryID', prop: 'parentEntryID', label: 'parentEntryID' },
+            
+            { id: '4', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
+            { id: '5', prop: 'order', label: 'order', defaultValue: 0 }
+        ],
+        events: [],
+        slots: [
+            { slot: 'id', prop: 'id', label: 'docType_id' },
+            { slot: 'parentEntryID', prop: 'parentEntryID', label: 'parentEntryID' },
+            { slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VOCABULARY_TREE_FORM]: {
+        columns: [
+            { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        events: [],
+        slots: [
+            { slot: 'id', prop: 'id', label: 'docType_id' },
+            { slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        options: { pageSize: 20 }
+    },
 }

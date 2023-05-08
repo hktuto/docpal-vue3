@@ -52,12 +52,11 @@ const svgClass = computed(() => {
 
 .svg-icon-round {
     cursor: pointer;
-    font-size: var(--icon-size);
-    padding: 8px;
+    font-size: var(--icon-size, 18px);
     width: var(--icon-bg-size, 32px);
     height: var(--icon-bg-size, 32px);
     color: var(--icon-color, #181a1b)!important;
-    background-color: var(--color-grey-150);
+    background-color: var(--icon-bg-color, --color-grey-150);
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -70,8 +69,11 @@ const svgClass = computed(() => {
         }
     }
     &:hover{
-        background: var(--color-grey-200);
+        opacity: 0.8;
         color: var(--icon-hover-color, white);
+        svg{
+            color: var(--icon-hover-color, white)!important;
+        }
     }
 }
 </style>
