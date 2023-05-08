@@ -2,10 +2,11 @@
 <el-dialog v-model="state.visible" class="scroll-dialog" :title="state.isEdit ? $t('docType_editDocumentType') : $t('docType_createDocumentType')"
     close-on-click-modal="false"
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
-    <!-- <Teleport to=".treeTableFormContainer">  -->
-        <SchemaFieldsTableForm ref="SchemaFieldsTableFormRef"></SchemaFieldsTableForm>
-    <!-- </Teleport> -->
+    <FromRenderer ref="FromRendererRef" :form-json="formJson" >
+        <template v-slot:tableForm>
+            <SchemaFieldsTableForm ref="SchemaFieldsTableFormRef"></SchemaFieldsTableForm>
+        </template>
+    </FromRenderer>
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
     </template>
@@ -85,7 +86,8 @@ function handleOpen(data) {
             docTypeDetail.extraSchemas = docTypeDetail.extraSchemas.map(item => (item.id))
             console.log(docTypeDetail.extraSchemas);
             
-            SchemaFieldsTableFormRef.value.TreeTableFormRef.initTable(revertFields(docTypeDetail.customSchema))
+      
+        SchemaFieldsTableFormRef.value.TreeTableFormRef.initTable(revertFields(docTypeDetail.customSchema))
             FromRendererRef.value.vFormRenderRef.setFormData(docTypeDetail)
             // FormRef.value.clearValidate()
         }

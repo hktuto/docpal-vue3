@@ -5,9 +5,10 @@
                 <slot name="title"></slot>
             </div>
             <div class="flex-x-center">
-                <el-button @click="handleValid">
-                    {{$t('checkData')}}
-                </el-button>
+                <SvgIcon src="/icons/check.svg" 
+                    style="--icon-bg-size: 24px; --icon-color: #fff;--icon-bg-color:var(--el-color-danger)"
+                round :content="$t('checkData')"
+                    @click="handleValid"></SvgIcon>
                 <el-button type="primary" :icon="Plus" size="small" circle 
                             :disabled="_options.childLen === 1"
                             @click="handleAdd()"/>
@@ -123,7 +124,8 @@ const emit = defineEmits([
     'current-change', // currentPage按钮组事件
     'pagination-change', // currentPage或者pageSize改变触发 
     'sort-change', // 列排序发生改变触发 
-    'expand-change'
+    'expand-change',
+    'delete-row'
 ])
 const state = reactive({
     formData: {}, // 校验
@@ -186,6 +188,22 @@ function classComputed(col) {
         })
         return result
     }
+    async function getFlatData (idKey: string = 'id', parentKey: string = 'parentId') {
+        const valid = await FormRef.value.validate((valid, fields) => {
+            return valid
+        })
+        if (!valid) return false
+        return Object.keys(state.formData).reduce((prev, key) => {
+            const _item = deepCopy(state.formData[key])
+            if (_item.dpRowParentId) {
+                _item[parentKey] = state.formData[_item.dpRowParentId][idKey]
+            }
+            delete _item.dpRowId
+            delete _item.dpRowParentId
+            prev.push(_item)
+            return prev
+        }, [])
+    }
     function getMeta () {
         state.unitRow = {}
         props.columns.forEach(item => { 
@@ -243,6 +261,8 @@ function classComputed(col) {
         let childList
         if(row.dpRowParentId) {
           childList = state.formData[row.dpRowParentId][_options.value.treeProps.children]
+            console.log({childList});
+            
         } else {
           childList = state.tableData
         }
@@ -250,6 +270,7 @@ function classComputed(col) {
         childList.splice(index, 1)
         delete state.formData[row.dpRowId];
         getFormRule()
+        emit('delete-row', row)
     }
 // #endregion
 function initTable(data) {
@@ -279,7 +300,7 @@ onMounted(() => {
     initTable()
 })
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
-defineExpose({ getFormData, initTable })
+defineExpose({ getFormData, getFlatData, initTable })
 </script>
 <style lang="scss" scoped>
 .dp-table-container {
