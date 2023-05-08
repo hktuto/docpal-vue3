@@ -1,7 +1,8 @@
 import playgroundConfig from '../../../utils/playgroundConfig'
 
 const config =  defineNuxtConfig({
-  extends: ['..'],
+  ssr:false,
+  extends: ['..', '../../dp-auth'],
   ...playgroundConfig({useFormDesigner:true}),
 })
 

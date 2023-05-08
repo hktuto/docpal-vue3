@@ -19,7 +19,7 @@
                   <SmartSearch />
                   <slot name="postHeader" />
                 </div>
-                <div class="actions">
+                <div v-if="user.isLogin" class="actions">
                   <ColorSwitch />
                   <LanguageSwitch />
                   <NotificationBadge />
@@ -40,7 +40,7 @@ const props = defineProps<{
 }>()
 const opened = ref(false);
 const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
-
+const user = useUser()
 function toggleOpen() {
      opened.value = !opened.value
 }

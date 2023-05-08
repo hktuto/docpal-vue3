@@ -1,8 +1,15 @@
 <template>
-  <div class="appThemeBg">
-
+  <div >
+    <NuxtPage />
   </div>
 </template>
+
+<script lang="ts" setup>
+// const appStore  = useAppStore()
+// import { api } from 'dp-api'
+// const user = useUser();
+
+</script>
 
 <style >
 .appThemeBg{

@@ -4,9 +4,7 @@ import jwt_decode from "jwt-decode";
 
 let refreshing = false;
 export default defineNuxtPlugin((nuxtApp) => {
-    const route = nuxtApp._route;
-    const router = nuxtApp.$router
-    console.log("setup auth plugin");
+  const router:any = nuxtApp.$router;
     // Doing something with nuxtApp
     // setup api for token refresh
     api.interceptors.request.use( async(config) => {
@@ -41,7 +39,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                     sessionStorage.removeItem('token');
                 };
                 localStorage.removeItem('refreshToken');
-                window.open(route.fullPath, '_self');
+                window.open(window.location.pathname, '_self');
 
             }
         }
@@ -84,7 +82,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 }
             }
         } else if (code === 403) {
-            if(!route.path.includes('/2fa') ) {
+            if(!window.location.href.includes('/2fa') ) {
                 api.defaults.headers.common['Authorization'] = "";
                 if(sessionStorage){
                     sessionStorage.removeItem('token');
