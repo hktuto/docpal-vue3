@@ -96,7 +96,7 @@ function handleDblclick (row) {
     router.push(`/workflow/${row.id}?state=${state.tabName}`)
 }
 async function claimTask(row) {
-    console.log(row, 'claimTask');
+    dpLog(row, 'claimTask');
     await taskClaimApi(row.id, user.user.value.userId || user.user.value.username)
     handlePaginationChange(pageParams.pageIndex)
 }

@@ -71,7 +71,7 @@ const FromRendererRef = ref()
             return false
         })
         if(!formData) return false
-        console.log({formData});
+        dpLog({formData});
         
         return onlyWritable ? writableDataDeArray(formData) : dataDeArray(formData)
     }
@@ -88,7 +88,7 @@ const FromRendererRef = ref()
             if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
                 prev[key] = formDatas[key]
             }
-            console.log(formDatas[key], 'formDatas[key]');
+            dpLog(formDatas[key], 'formDatas[key]');
             
             return prev
         }, {})

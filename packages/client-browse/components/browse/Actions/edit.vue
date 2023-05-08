@@ -37,7 +37,7 @@ const form = ref({
     idOrPath: ''
 })
 function openDialog(doc){
-  console.log("openDialog");
+  dpLog("openDialog");
   form.value.name = doc.name
   form.value.id = doc.id
   form.value.path = doc.path

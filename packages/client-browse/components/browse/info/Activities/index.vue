@@ -38,7 +38,7 @@ const getActivities = async (idOrPath: String) => {
             return dateB - dateA;
         })
     } catch(error) {
-        console.log(error)
+        dpLog(error)
     return null
     }
 }

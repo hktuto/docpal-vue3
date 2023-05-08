@@ -148,7 +148,7 @@ class Toolbar {
 
     // The buttons within the toolbar.
     for (const { element, eventName, eventDetails } of this.buttons) {
-      element.addEventListener("click", evt => {
+      const evHandler = () => {
         if (eventName !== null) {
           const details = { source: this };
           if (eventDetails) {
@@ -158,7 +158,33 @@ class Toolbar {
           }
           this.eventBus.dispatch(eventName, details);
         }
+      };
+      // if window._eventHandler is not defined , create and empty array
+      if (!window._eventHandler) {
+        window._eventHandler = [];
+      }
+      // check window._eventHandler for the element and eventHandler
+      // if found, remove the eventHandler from the element
+      // and remove the element from window._eventHandler
+      // this is to prevent duplicate eventHandlers
+      const eventHandlerIndex = window._eventHandler.findIndex(
+        item =>
+          item.element === element &&
+          item.evHandler.toString() === evHandler.toString()
+      );
+      if (eventHandlerIndex > -1) {
+        element.removeEventListener(
+          "click",
+          window._eventHandler[eventHandlerIndex].evHandler
+        );
+        window._eventHandler.splice(eventHandlerIndex, 1);
+      }
+      window._eventHandler.push({
+        element,
+        evHandler,
+        action: "click"
       });
+      element.addEventListener("click", evHandler);
     }
     // The non-button elements within the toolbar.
     pageNumber.addEventListener("click", function () {

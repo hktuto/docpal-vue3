@@ -42,7 +42,7 @@ const readerType = computed(() => {
 });
 
 onKeyStroke("Escape", (e) => {
-    console.log("Escape", e);
+    dpLog("Escape", e);
     if(props.show) {
         emit('close')
     }

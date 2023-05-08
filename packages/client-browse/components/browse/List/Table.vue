@@ -78,7 +78,7 @@ const props = defineProps<{doc: any}>();
         }
     }
     function handleDisabled (row) {
-        console.log({row});
+        dpLog({row});
     }
     watch(
         () => route.query,
@@ -113,7 +113,7 @@ function handleRightClick (row: any, column: any, event: MouseEvent) {
     document.dispatchEvent(ev)
 }
 function handleSelect (rows) {
-    console.log(rows);
+    dpLog(rows);
     emit('select-change', rows)
 }
 

@@ -65,10 +65,10 @@ function resizeMove(event:any) {
     x.value += event.deltaRect.left;
     y.value += event.deltaRect.top;
     if(w.value === maxWidth) {
-        console.log('reachMax')
+        dpLog('reachMax')
         emit('reachMax')
     }else if(w.value === minWidth) {
-        console.log('reachMin')
+        dpLog('reachMin')
         emit('reachMin')
     }
 }

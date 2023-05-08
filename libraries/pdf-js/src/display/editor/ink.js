@@ -662,7 +662,7 @@ class InkEditor extends AnnotationEditor {
 
   /** @inheritdoc */
   render() {
-    console.log("ink render");
+    console.trace("ink render");
     if (this.div) {
       return this.div;
     }

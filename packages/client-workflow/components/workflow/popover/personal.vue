@@ -32,11 +32,11 @@ const TemplateDialogRef = ref()
 function handleCommand(command) {
     switch (command) {
         case 'template':
-            console.log({TemplateDialogRef});
+            dpLog({TemplateDialogRef});
             TemplateDialogRef.value.handleOpen()
             break;
         case 'bulkImport':
-            console.log({BulkImportDialogRef});
+            dpLog({BulkImportDialogRef});
             
             BulkImportDialogRef.value.handleOpen()
             break;

@@ -80,7 +80,7 @@ import { ArrowRightBold } from '@element-plus/icons-vue'
     drawerShow.value = false
   }
   function handleOpen () {
-    console.log('handleOpen');
+    dpLog('handleOpen');
     
     drawerShow.value = true
   }

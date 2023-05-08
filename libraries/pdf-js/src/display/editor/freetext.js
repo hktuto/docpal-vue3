@@ -333,7 +333,7 @@ class FreeTextEditor extends AnnotationEditor {
 
     this.width = rect.width / parentWidth;
     this.height = rect.height / parentHeight;
-    window.annotations.set(this.id, this.serialize());
+    this.saveAnnotation();
   }
 
   /**
@@ -357,6 +357,7 @@ class FreeTextEditor extends AnnotationEditor {
     this.#content = this.#extractText().trimEnd();
 
     this.#setEditorDimensions();
+    this.saveAnnotation();
 
   }
 
@@ -481,8 +482,13 @@ class FreeTextEditor extends AnnotationEditor {
       this.div.draggable = false;
       this.editorDiv.contentEditable = true;
     }
-    window.annotations.set(this.id, this.serialize());
+    this.saveAnnotation();
     return this.div;
+  }
+
+  saveAnnotation() {
+    const saveObj = this.serialize();
+    window.annotations.set(this.id, saveObj);
   }
 
   get contentDiv() {

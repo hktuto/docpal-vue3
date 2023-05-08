@@ -17,7 +17,7 @@ const emits = defineEmits(['submit'])
 const filterJson = getJsonApi('search.json')
 const FromRendererRef = ref()
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
-    // console.log(fieldName,newValue,oldValue,formModel)
+    // dpLog(fieldName,newValue,oldValue,formModel)
     if(route.path === '/search') emits('submit', formModel)
 }
 function handleSubmit () {

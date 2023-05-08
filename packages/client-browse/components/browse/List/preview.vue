@@ -43,7 +43,7 @@ const state = reactive<State>({
 })
 
 function imgError(event) {
-    console.log(event);
+    dpLog(event);
     event.target.src = '/icons/file-normal.svg'
 }
 // #region module: page 

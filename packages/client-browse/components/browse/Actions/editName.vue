@@ -33,7 +33,7 @@ const {doc} = toRefs(props)
 const filename = ref(props.doc.name);
 
 function submitFileChange(){
-    console.log('submitFileChange')
+    dpLog('submitFileChange')
 }
 
 watch(doc,(newDoc) => {

@@ -882,7 +882,11 @@ const PDFViewerApplication = {
     this._saveInProgress = false;
     this._hasAnnotationEditors = false;
 
-    promises.push(this.pdfScriptingManager.destroyPromise);
+    // remove destoryPromise to prevwent build error;
+    if (this.pdfScriptingManager && this.pdfScriptingManager.destroyPromise) {
+      promises.push(this.pdfScriptingManager.destroyPromise);
+    }
+
 
     this.setTitle();
     this.pdfSidebar?.reset();
@@ -1622,14 +1626,16 @@ const PDFViewerApplication = {
     const { annotationStorage } = pdfDocument;
 
     annotationStorage.onSetModified = () => {
-      window.addEventListener("beforeunload", beforeUnload);
+      // remove "Are you sure you want to leave this page?" dialog;
+      // window.addEventListener("beforeunload", beforeUnload);
 
       if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
         this._annotationStorageModified = true;
       }
     };
     annotationStorage.onResetModified = () => {
-      window.removeEventListener("beforeunload", beforeUnload);
+      // remove "Are you sure you want to leave this page?" dialog;
+      // window.removeEventListener("beforeunload", beforeUnload);
 
       if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
         delete this._annotationStorageModified;
@@ -3260,6 +3266,7 @@ function webViewerKeyDown(evt) {
 }
 
 function beforeUnload(evt) {
+  console.log(evt);
   evt.preventDefault();
   evt.returnValue = "";
   return false;

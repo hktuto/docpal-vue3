@@ -73,7 +73,7 @@ const { t } = useI18n();
         () => route.query,
         async (newval) => {
             const { page, pageSize } = newval
-            console.log({pageSize});
+            dpLog({pageSize});
             
             pageParams.pageIndex = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize

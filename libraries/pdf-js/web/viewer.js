@@ -256,9 +256,11 @@ function messageFromParent(ev) {
   const saveAnnotationButton = document.querySelectorAll(
     ".saveAnnotationButton"
   );
-  saveAnnotationButton.forEach(el =>
-    el.addEventListener("click", saveAnnotation)
-  );
+
+  saveAnnotationButton.forEach(el => {
+    el.removeEventListener("click", saveAnnotation);
+    el.addEventListener("click", saveAnnotation);
+  });
 }
 
 function saveAnnotation() {
