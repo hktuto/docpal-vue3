@@ -49,7 +49,7 @@ function getColumns () {
     const dragEnabled = ref(true) // 为true时方可拖拽 
     const dragging = ref(false)
     function checkMove (e) {
-        console.log("Future index: " + e.draggedContext.futureIndex);
+        dpLog("Future index: " + e.draggedContext.futureIndex);
     }
 // #endregion
 

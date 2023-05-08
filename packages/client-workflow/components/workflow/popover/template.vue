@@ -71,7 +71,7 @@ async function handleSubmit() {
     }
 }
 async function templateParamGet (templateItem: Object) {
-    console.log({form}, 'form');
+    dpLog({form}, 'form');
     form.templatePath = templateItem.path
     try {
         const suffix = templateItem.name.split('.').pop()

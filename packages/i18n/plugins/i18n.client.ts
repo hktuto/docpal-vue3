@@ -1,4 +1,4 @@
-import { dplog } from './../../dp-log/utils/logs';
+import { dpLog } from './../../dp-log/utils/logs';
 // import { useAppStore } from './../../dp-stores/composables/app';
 
 import { availableLocales } from '../makeI18nSetting';
@@ -16,18 +16,18 @@ export default defineNuxtPlugin(async({
     const appStore = useAppStore($pinia);
     
     for ( const lang of availableLocales) {
-        appStore.appLoadingList.push( {key:`Set Langauge : ${lang}`, function:setLanuage($i18n, lang, localeKey, baseUrl)})
+        appStore.appLoadingList.push( {key:`Set Langauge : ${lang}`, function:setLanguage($i18n, lang, localeKey, baseUrl)})
         // get locale 
     }
     
 })
 
-async function setLanuage(i18n:any, lang:string, localeKey:string[], baseUrl:string) {
-    dplog("Set Language")
+async function setLanguage(i18n:any, lang:string, localeKey:string[], baseUrl:string) {
+    dpLog("Set Language")
     const language = await getLocalMessage(lang, localeKey, baseUrl);
-        if(language) {
-            i18n.setLocaleMessage(lang, language);
-        }
+    if(language) {
+        i18n.setLocaleMessage(lang, language);
+    }
 }
 
 async function getLocalMessage (locale:string, localeKey:string[], _baseUrl:string) {

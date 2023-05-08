@@ -60,7 +60,7 @@ function handleDialogShow(row) {
 async function getTable() {
     state.list = await GetDocumentTypeProfileApi({ documentType: route.params.id })
     state._list = state.list
-    console.log(state._list, 'state._list');
+    dpLog(state._list, 'state._list');
     
 }
 onMounted(async() => {

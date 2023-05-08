@@ -1,9 +1,9 @@
 
 
 
-export const dplog = (...args:any) => {
-    const {dev} = useRuntimeConfig()
-    if(dev){
+export const dpLog = (...args:any) => {
+    const {public:{mode}} = useRuntimeConfig()
+    if(mode === 'development'){
         console.log(...args)
     }
     // @ts-ignore

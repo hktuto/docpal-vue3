@@ -103,7 +103,7 @@ async function getDocDetail() {
     data.value.canWrite = permissionAllow({feature:'Write', userPermission:permission.value.permission })
     data.value.canEdit = permissionAllow({feature:'Edit', userPermission:permission.value.permission })
     data.value.canContorl = permissionAllow({feature:'Manage', userPermission:permission.value.permission })
-    console.log(data.value.displayMeta)
+    dpLog(data.value.displayMeta)
 }
 
 function itemDeleted(){
@@ -125,7 +125,7 @@ watch(route, async() => {
     try{
         await getDocDetail()
     }catch(error) {
-        console.log(error)
+        dpLog(error)
     }
 
     loading.value = false;

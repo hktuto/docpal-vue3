@@ -9,7 +9,7 @@ import { getJsonApi } from 'dp-api'
 const formJson = ref()
 onMounted(() => {
     formJson.value = getJsonApi('search.json')
-    console.log(formJson.value)
+    dpLog(formJson.value)
 })
 </script>
 

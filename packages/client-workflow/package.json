@@ -17,13 +17,12 @@
     "vue-bpmn": "^0.3.0"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.1.4",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@vueuse/components": "^9.13.0",
     "@vueuse/core": "^9.12.0",
     "dp-api": "workspace:*",
     "eslint": "^8.28.0",
-    "nuxt": "^3.0.0",
+    "nuxt": "^3.4.3",
     "typescript": "^4.9.3"
   }
 }

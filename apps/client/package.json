@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build --dotenv ../../.env.deploy.dev ",
-    "dev": "nuxt dev --dotenv ../../.env.dev --port 1234",
+    "dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "preview": "nuxt preview --dotenv ../../.env.deploy.dev"
   },
@@ -12,7 +12,7 @@
     "@element-plus/nuxt": "^1.0.3",
     "@types/node": "^18.11.18",
     "dp-api": "workspace:*",
-    "nuxt": "^3.0.0",
+    "nuxt": "^3.4.3",
     "sass": "^1.58.0"
   },
   "dependencies": {

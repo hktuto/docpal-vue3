@@ -48,10 +48,10 @@ const user = useUser();
 
     async function getList (param) {
         handleTableChange()
-        console.log(state.extraParams, 'extraParams');
+        dpLog(state.extraParams, 'extraParams');
         state.loading = true
         const res = await getAdHocPageApi({...param, ...state.extraParams})
-        console.log({res});
+        dpLog({res});
         
         state.tableData = res.entryList
         state.loading = false

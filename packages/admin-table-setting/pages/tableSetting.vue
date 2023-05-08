@@ -33,7 +33,7 @@ function setCurrentKey (key) {
     router.push(`/tableSetting/${key}`)
 }
 onMounted(() => {
-    console.log({tableSettingJson});
+    dpLog({tableSettingJson});
     
     setCurrentKey(route.params?.id)
 })

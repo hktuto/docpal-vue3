@@ -27,15 +27,15 @@ const FromRendererRef = ref()
 const formJson = getJsonApi('adminUserVFAddForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
-    console.log({data});
+    dpLog({data});
     
     state.loading = true
-    console.log(props.mode);
+    dpLog(props.mode);
     
     const id = props.mode === 'userAllowList' ? props.userOrGroup.userId : props.userOrGroup.id
     const vItem = state.vList.find(item => item.id === data.id)
     const _vItem = deepCopy(vItem)
-    console.log({vItem},_vItem[props.mode], id);
+    dpLog({vItem},_vItem[props.mode], id);
     _vItem[props.mode].push(id)
     const param = {
         id: vItem.id,
@@ -60,7 +60,7 @@ function handleOpen(selectableList) {
     })
 }
 function handleOptions (selectableList) {
-    console.log({selectableList});
+    dpLog({selectableList});
     
     const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('id')
     const options = selectableList.map(item => ({ label: item.name, value: item.id }))

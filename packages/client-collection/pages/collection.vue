@@ -159,7 +159,7 @@ const state = reactive<State>({
     }
     async function submitNewCollection(form) {
         fileFormAddLoading.value = true
-        console.log({form});
+        dpLog({form});
         await createCollectionApi(form)
         setTimeout(async() => {
             await getCollectionList()

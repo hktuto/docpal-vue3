@@ -216,7 +216,7 @@ function uploadDialog(doc){
 // #endregion
 function handleSubmit () {
   state.loading = true
-  console.log(state.tableData);
+  dpLog(state.tableData);
   const promiseList = []
   state.tableData.forEach(row => {
     promiseList.push(handleCreateDocument(row))

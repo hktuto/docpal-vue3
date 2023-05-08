@@ -19,7 +19,7 @@
                     show-password/>
             </ElFormItem>
             <ElFormItem >
-                <ElButton size="large"  type="primary" @click="submit" :loading="loading">Submit</ElButton>
+                <ElButton class="fullSize"  size="large"  type="primary" @click="submit" :loading="loading">Submit</ElButton>
             </ElFormItem>
         </ElForm>
         <el-button @click="userStore.forgetPassword" link>
@@ -54,7 +54,7 @@ async function submit() {
     } catch (error) {
         form.username = "";
         form.password = "";
-        console.log(error);
+        dpLog(error);
     }
     loading.value = false;
 }

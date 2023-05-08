@@ -73,7 +73,7 @@ const total = ref(0);
 const loading = ref(false);
 const {user} = useUser();
 function handleDelete(item: Notification, index: number) {
-    console.log(item, index);
+    dpLog(item, index);
 
     // TODO: delete notification
 }
@@ -91,7 +91,7 @@ async function getNotificationList() {
       pageNum: 0,
       pageSize: 20,
     }
-    console.log(user.value)
+    dpLog(user.value)
     const {result} = await getNotificationListApi(user.value.userId || user.value.username, param);
      result.content.forEach(item => {
         item.content = JSON.parse(item.content) || {}

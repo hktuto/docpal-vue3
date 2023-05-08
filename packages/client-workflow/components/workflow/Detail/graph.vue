@@ -53,12 +53,12 @@ function init () {
 }
 
 const handleShown = () => {
-    console.log("handleShown")
+    dpLog("handleShown")
     const steps = props.steps.length > 0 ? props.steps : props.step ? [props.step] : []
     if (modeler.value && steps) {
     const canvas = modeler.value.get('canvas')
     for(const step of steps) {
-        console.log('step', step)
+        dpLog('step', step)
         canvas.addMarker(step, 'bpmn-highlight')
     }
     
@@ -66,7 +66,7 @@ const handleShown = () => {
 }
 
 const getBpmn = async (processDefinitionId: string, processKey: string) => {
-    console.log('getBpmn', processDefinitionId, processKey);
+    dpLog('getBpmn', processDefinitionId, processKey);
     if (!processDefinitionId && !processKey) return
     const data = processKey
     ? {

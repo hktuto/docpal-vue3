@@ -32,7 +32,7 @@ export const useAppStore = defineStore('app', () => {
     }
 
     watch(state, (_newState, oldState ) => {
-        dplog(_newState)
+        dpLog(_newState)
         switch(oldState) {
             case 'loading':
                 if(loadingEl.value) {

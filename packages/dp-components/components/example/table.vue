@@ -70,13 +70,13 @@
     * 在事件回调中可以获取当前排序的字段名和排序顺序，从而向接口请求排序后的表格数据。
     */
 	const handleSortChange = ({ column, prop, order }: SortParams<User>) => {
-	    console.log(column, order)
+	    dpLog(column, order)
 	    if (prop) {
 	        ElMessage.success(`点击了【${prop}】排序`)
 	    }
 	}
     const handleSelection = (val: User[]) => {
-        console.log('父组件接收的多选数据', val)
+        dpLog('父组件接收的多选数据', val)
     }
     const handleAction = (command: Table.Command, row: User, index: number) => {
         switch (command) {
@@ -84,8 +84,8 @@
                 alert('点击了编辑')
                 break
             case 'delete':
-                console.log('row', row)
-                console.log('index', index)
+                dpLog('row', row)
+                dpLog('index', index)
                 ElMessageBox.confirm('确认删除吗？', '提示').then(() => {
                     ElMessage(JSON.stringify(row))
                 }).catch(() => null)
