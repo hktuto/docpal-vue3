@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('user_addGroups')"
+<el-dialog class="scroll-dialog" v-model="state.visible" :title="$t('smartFolder_create')"
     :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
@@ -9,34 +9,32 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, PatchUserPasswordApi } from 'dp-api'
-const props = defineProps<{
-    user: object,
-}>()
+import { UpdatePreSearchApi, getJsonApi } from 'dp-api'
+
 const emits = defineEmits([
     'refresh'
 ])
 const state = reactive({
     loading: false,
-    visible: false
+    visible: false,
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('adminUserPassword.json')
+const formJson = getJsonApi('adminPreSearch.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
-    state.loading = true
-    const param = {
-        password: data.password,
-        userId: props.user.userId,
-    }
-    await PatchUserPasswordApi(param)
-    state.loading = false
+    const param = deepCopy(data)
+    const name = param.name
+    if (!param.paramsInTextSearch) delete param.paramsInTextSearch
+    delete param.name
+    const res = await UpdatePreSearchApi({ name, json_value: JSON.stringify(param)})
+    emits('refresh', name)
     state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
-function handleOpen(exitList) {
+function handleOpen() {
     state.visible = true
+    setTimeout(() => {
+        FromRendererRef.value.vFormRenderRef.resetForm()
+    })
 }
 defineExpose({ handleOpen })
 </script>

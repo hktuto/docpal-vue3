@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editDisplayMeta') : $t('docType_addDisplayMeta')"
-    close-on-click-modal="false"
+    :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
     <template #footer>

@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" class="scroll-dialog" :title="state.isEdit ? $t('docType_editDocumentSchema') : $t('docType_createDocumentSchema')"
-    close-on-click-modal="false"
+    :close-on-click-modal="false"
     >
     <el-form :model="formData" ref="FormRef" label-position="top">
         <el-row :gutter="20">

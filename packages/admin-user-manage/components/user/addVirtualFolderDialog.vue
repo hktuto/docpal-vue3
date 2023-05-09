@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('VirtualFolder_add')"
-    close-on-click-modal="false"
+    :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
     <template #footer>

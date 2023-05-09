@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" class="scroll-dialog" :title="state.isEdit ? $t('docType_editDocumentType') : $t('docType_createDocumentType')"
-    close-on-click-modal="false"
+    :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" >
         <template v-slot:tableForm>

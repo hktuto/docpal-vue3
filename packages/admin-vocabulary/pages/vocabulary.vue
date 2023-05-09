@@ -152,6 +152,7 @@ onMounted(async() => {
     .list {
         display: grid;
         grid-template-rows: min-content 1fr;
+        gap: var(--app-padding);
         overflow: hidden;
         height: 100%;
         .list-user {

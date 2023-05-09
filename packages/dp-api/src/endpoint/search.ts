@@ -41,3 +41,21 @@ export const searchByMeta = (properties:any) => {
          })
         )
 }
+
+// pre-search-config
+export const GetPreSearchListApi = async() => {
+    const res = await api.get('/nuxeo/sfolder/').then(res => res.data)
+    return res
+}
+export const GetPreSearchApi = async(id: string) => {
+    const res = await api.get(`nuxeo/sfolder/${id}`).then(res => res.data)
+    return res
+}
+export const DeletePreSearchApi = async(id: string) => {
+    const res = await api.delete(`nuxeo/sfolder/${id}`).then(res => res.data)
+    return res
+}
+export const UpdatePreSearchApi = async(params) => {
+    const res = await api.patch('/nuxeo/sfolder/', params).then(res => res.data)
+    return res
+}

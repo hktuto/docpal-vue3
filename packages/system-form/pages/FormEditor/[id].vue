@@ -1,8 +1,11 @@
 <template>
     <div class="pageContainer">
+        <div class="flex-x-between">
+            {{route.params.id}}
+            <el-button class="save-button" type="primary" 
+                @click="handleSave">{{$t('common_save')}}</el-button>
+        </div>
         <FromDesigner ref="fromDesignerRef"></FromDesigner>
-        <el-button class="save-button" type="primary" 
-            @click="handleSave">{{$t('common_save')}}</el-button>
     </div>
 </template>
 
@@ -22,13 +25,32 @@ watch(() => route.params.id, (newJsonName) => {
 }, { immediate: true })
 </script>
 <style lang="scss" scoped>
+.pageContainer {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    height: 100%;
+    overflow: hidden;
+    padding: var(--app-padding) var(--app-padding) 0 0;
+    gap: var(--app-padding);
+}
 :deep(.left-toolbar) {
     display: none;
 }
-.save-button {
-    position: fixed;
-    top: 10px;
-    right: 20px;
-    z-index: 10;
+.flex-x-between {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: var(--app-padding);
 }
+:deep(.main-container .v-form-container .v-form-panel .el-tabs__content) {
+    overflow: hidden;
+    .el-tab-pane {
+        overflow: hidden;
+        height: 100%;
+    }
+}
+// .save-button {
+//     position: fixed;
+//     top: 10px;
+//     right: 20px;
+//     z-index: 10;
+// }
 </style>

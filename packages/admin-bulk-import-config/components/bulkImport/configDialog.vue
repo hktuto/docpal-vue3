@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editCaptureProfile') : $t('docType_addCaptureProfile')"
-    close-on-click-modal="false"
+    :close-on-click-modal="false"
     >
     <el-form v-loading="state.pathLoading" :model="formData" ref="FormRef" label-position="top">
         <el-form-item :label="$t('docType_profileName')"
