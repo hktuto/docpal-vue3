@@ -6,7 +6,7 @@
     </div>
 
     <template #footer>
-        <el-button v-if="!loading && blob && !options.noDownload"  :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+        <el-button v-if="!loading && blob && !_options.noDownload"  :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
         <slot name="actions"></slot>
     </template>
 </el-dialog>
@@ -26,6 +26,12 @@ const props = defineProps<{
     loading: Boolean,
     options: readerOptions
 }>()
+const _options = computed<readerOptions>(() => {
+    const option = {
+        noDownload: false
+    }
+    return Object.assign(option, props?.options)
+})
 const state = reactive({
     dialogVisible: false
 })
