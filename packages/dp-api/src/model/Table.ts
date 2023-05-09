@@ -99,7 +99,8 @@ export enum TABLE {
     ADMIN_DOC_TYPE_LIST = 'adminDocTypeList',
     ADMIN_VOCABULARY_SIMPLE_FORM = 'adminVocabularySimpleForm',
     ADMIN_VOCABULARY_CHILD_FORM = 'adminVocabularyChildForm',
-    ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm'
+    ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
+    ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1267,4 +1268,73 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.ADMIN_WORKFLOW_MANAGE]: {
+        columns: [
+            { id: '1', type: 'selection' },
+            { id: '2', label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id: '3', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
+            { id: '4', label: 'role.creator', prop: 'taskInstance.startUserId' },
+            { id: '5', label: 'workflow_assignee', prop: 'assignee' },
+            { id: '6', label: 'workflow_createDate', prop: 'createDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '7', label: 'workflow_dueDate', prop: 'dueDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "dueDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {   
+                id: '8',
+                "type": "",
+                "label": "dpTable_actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "reallocate",
+                        "suffixIcon": "/icons/allocate.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'reallocate'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    }
 }

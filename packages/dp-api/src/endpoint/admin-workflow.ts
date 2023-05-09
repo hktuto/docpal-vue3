@@ -50,3 +50,8 @@ export const SaveTaskFormJsonApi = async(param: GetTaskFormJsonRes):Promise<GetT
     const res = await api.post('/docpal/relation/save', param).then(res => res.data)
     return res
 }
+
+export const DeleteWorkflowProcessApi = async(params) => {
+    const res = await api.delete('/docpal/workflow/process', {params}).then(res => res.data)
+    return res
+}

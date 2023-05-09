@@ -58,11 +58,11 @@ function getIcon (row, position='prefixIcon') {
                     :key="index"
                     :size="btn.size"
                     :type="btn.type"
-                    @click="handleAction(btn.command, { row, $index })"
+                    @click.stop="handleAction(btn.command, { row, $index })"
                     >
                         <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
                         {{ btn.name }}
-                        <SvgIcon :src="btn.suffixIcon" ></SvgIcon>
+                        <SvgIcon class="el-icon--right" :src="btn.suffixIcon" ></SvgIcon>
                     </el-button
                 >
             </el-button-group>
