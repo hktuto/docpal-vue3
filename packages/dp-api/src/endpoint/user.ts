@@ -17,6 +17,7 @@ export const Login = async(data: LoginRequest):Promise<LoginResponse> => {
 }
 
 export const Verify = async():Promise<User> => {
+    console.log("Verify")
     return api.get<User>('/nuxeo/user/getApplication').then(res => res.data);
 }
 export const GetUserDetailApi = async (userId: string) => {
