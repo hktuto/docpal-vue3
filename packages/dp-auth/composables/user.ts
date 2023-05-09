@@ -85,6 +85,7 @@ export const useUser = () => {
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
+            dpLog("verify", error);
             appStore.state = 'needAuth';
             isLogin.value = false,
             token.value = "";
@@ -138,6 +139,7 @@ export const useUser = () => {
         token,
         user,
         userPreference,
+        isLogin,
         // function
         login,
         verify,

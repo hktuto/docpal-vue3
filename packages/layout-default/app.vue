@@ -1,6 +1,6 @@
 <template>
   <div >
-    <NuxtPage />
+    <AuthApp />
   </div>
 </template>
 
