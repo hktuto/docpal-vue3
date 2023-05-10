@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineEventHandler( async(event:any) => {
     let id = event.context.params.id as string
-    id = id.replace(/\-/g, '/')
+    id = id.replace(/\-\-/g, '/')
     
     const body = await readBody(event)
     const relativeToCurrent = '../../../../'; // get /packages path in dev, later may need to handle path from server

@@ -1,7 +1,7 @@
 <template>
     <div class="pageContainer">
         <div class="flex-x-between">
-            {{route.params.id}}
+            {{filterPath(route.params.id) }}
             <el-button class="save-button" type="primary" 
                 @click="handleSave">{{$t('common_save')}}</el-button>
         </div>
@@ -17,7 +17,9 @@ async function handleSave () {
     const body = fromDesignerRef.value.getFormJson()
     const save = await $fetch(`/form/${route.params.id}`, { method:'post', body})
 }
-
+function filterPath(path) {
+    return path.replace(/\-\-/g, '/')
+}
 watch(() => route.params.id, (newJsonName) => {
     setTimeout(() => {
         fromDesignerRef.value.setFormJson(getJsonApi(newJsonName))

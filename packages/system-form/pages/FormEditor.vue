@@ -42,13 +42,13 @@ function formatTree (obj) {
     const result = []
     let _result = []
     Object.keys(formJsonList).forEach((key, _index) => {
-        const _keys = key.split('-')
+        const _keys = key.split('--')
         _result = result
         _keys.forEach((keyItem, keyIndex) => {
             if(keyIndex === _keys.length - 1) {
                 if (_index  === 0) state.selectName = key
                 _result.push({
-                    name: key,
+                    name: keyItem,
                     index: key
                 })
             } else {
