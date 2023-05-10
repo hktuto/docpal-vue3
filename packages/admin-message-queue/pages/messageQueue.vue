@@ -40,8 +40,7 @@ import {
                 pageSize: pageParams.pageSize
             }
         },
-        extraParams: {},
-        tabName: 'allTask'
+        extraParams: {}
     })
     const tableKey = TABLE.ADMIN_MESSAGE_QUEUE
     const tableSetting = defaultTableSetting[tableKey]
@@ -61,7 +60,7 @@ import {
         if(!page && page !== 0) page = pageParams.pageNum + 1
         const time = new Date().valueOf().toString()
         router.push({ 
-            query: { page, pageSize, time, tab: state.tabName } 
+            query: { page, pageSize, time } 
         })
     }
 
