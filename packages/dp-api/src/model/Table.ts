@@ -101,6 +101,7 @@ export enum TABLE {
     ADMIN_VOCABULARY_CHILD_FORM = 'adminVocabularyChildForm',
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
+    ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1336,5 +1337,33 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
         ],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_MESSAGE_QUEUE]: {
+        columns: [
+            { id: '2', label: 'table_fileName', prop: 'fileName' },
+            { id: '3', label: 'table_path', prop: 'logicalPath', showOverflowTooltip: true },
+            { id: '4', label: 'category', prop: 'category' },
+            { id: '5', label: 'dpTable_status', prop: 'status' },
+            { id: '6', label: 'table_last_update', prop: 'lastUpdateDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "lastUpdateDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '7', slot: 'refreshAction', label: 'dpTable_actions' },
+        ],
+        events: [],
+        slots: [
+            { slot: 'refreshAction', label: 'dpTable_actions' },
+        ],
+        options: { pageSize: 20 }
     }
+    
 }

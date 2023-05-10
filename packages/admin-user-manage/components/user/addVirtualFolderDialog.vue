@@ -24,7 +24,7 @@ const state = reactive({
     vList: []
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('adminUserVFAddForm.json')
+const formJson = getJsonApi('admin-adminUserVFAddForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     dpLog({data});

@@ -19,7 +19,7 @@ const state = reactive({
     visible: false,
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('adminPreSearch.json')
+const formJson = getJsonApi('admin-adminPreSearch.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     const param = deepCopy(data)

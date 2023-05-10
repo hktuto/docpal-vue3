@@ -18,7 +18,7 @@ const state = reactive({
     visible: false,
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('adminGroupForm.json')
+const formJson = getJsonApi('admin-adminGroupForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true

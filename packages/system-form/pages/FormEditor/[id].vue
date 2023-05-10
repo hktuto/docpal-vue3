@@ -47,6 +47,9 @@ watch(() => route.params.id, (newJsonName) => {
         height: 100%;
     }
 }
+:deep(.form-widget-container) {
+    position: relative;
+}
 // .save-button {
 //     position: fixed;
 //     top: 10px;

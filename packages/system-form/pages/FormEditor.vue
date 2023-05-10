@@ -4,9 +4,7 @@
             <KeywordFilter :list="state.list" attr="name"
                 @filter="handleKeywordFilter"></KeywordFilter>
             <el-scrollbar>
-                <el-menu :default-active="state.selectName" @select="handleSelect">
-                    <el-menu-item v-for="(item,index) in state._list" :key="item.name" :index="item.name">{{item.name}}</el-menu-item>
-                </el-menu>
+                <TreeMenu :menu="state._list" :options="{defaultActive: state.selectName}" @select="handleSelect"></TreeMenu>
             </el-scrollbar>
         </aside>
         <main ><NuxtPage /></main>
@@ -30,15 +28,44 @@ function handleSelect (name) {
 function handleKeywordFilter(data) {
     state._list = data
 }
-onMounted(() => {
+function getList () {
     if (formJsonList.length === 0) return
-    state.list = Object.keys(formJsonList).map(key => ({ name: key}))
+    state.list = formatTree(formJsonList)
     state._list = state.list
     if (!route.params.id) {
-        handleSelect(state.list[0].name)
+        handleSelect(state.selectName)
     } else {
-        state.selectName= route.params.id
+        state.selectName = route.params.id
     }
+}
+function formatTree (obj) {
+    const result = []
+    let _result = []
+    Object.keys(formJsonList).forEach((key, _index) => {
+        const _keys = key.split('-')
+        _result = result
+        _keys.forEach((keyItem, keyIndex) => {
+            if(keyIndex === _keys.length - 1) {
+                if (_index  === 0) state.selectName = key
+                _result.push({
+                    name: key,
+                    index: key
+                })
+            } else {
+                const index = _result.findIndex(item => item.index === keyItem)
+                if(index === -1) _result.push({
+                    name: keyItem,
+                    index: keyItem,
+                    children: []
+                })
+                _result = _result[_result.length - 1].children
+            }
+        })
+    })
+    return result
+}
+onMounted(() => {
+    getList()
 })
 </script>
 
