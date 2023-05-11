@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --dotenv ../../.env.admin.dev --port 8088",
-    "generate": "nuxt generate",
+    "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "preview": "nuxt preview"
   },
   "devDependencies": {
