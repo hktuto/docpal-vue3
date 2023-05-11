@@ -24,7 +24,7 @@ const emits = defineEmits([
     'refresh'
 ])
 const FromRendererRef = ref()
-const formJson = getJsonApi('admin-adminDocTypeForm.json')
+const formJson = getJsonApi('admin/adminDocTypeForm.json')
 const SchemaFieldsTableFormRef = ref()
 const tableKey = TABLE.ADMIN_BULK_IMPORT_CONFIG_FORM
 const tableSetting = defaultTableSetting[tableKey]

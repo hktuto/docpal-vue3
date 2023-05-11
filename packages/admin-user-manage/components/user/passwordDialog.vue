@@ -21,7 +21,7 @@ const state = reactive({
     visible: false
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('admin-adminUserPassword.json')
+const formJson = getJsonApi('admin/adminUserPassword.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true

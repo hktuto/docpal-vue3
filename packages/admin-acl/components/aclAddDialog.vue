@@ -28,7 +28,7 @@ const state = reactive({
     groupList: []
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('admin-adminAclForm.json')
+const formJson = getJsonApi('admin/adminAclForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     const params = {

@@ -14,22 +14,23 @@
   },
   "dependencies": {
     "@interactjs/types": "^1.10.17",
-    "bpmn-js": "^9.0.2",
+    "bpmn-js": "^9.4.1",
     "dayjs": "^1.11.7",
-    "dp-api": "workspace:*",
+    "dp-api": "workspace:1.0.0",
     "interactjs": "^1.10.17",
     "mime-types": "^2.1.35",
-    "v-code-diff": "^1.3.2",
+    "v-code-diff": "^1.4.0",
     "vue-inline-svg": "^3.1.2",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "v-form": "github:hktuto/v-form-designer"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@types/mime-types": "^2.1.1",
     "@vueuse/components": "^9.13.0",
-    "@vueuse/core": "^9.12.0",
-    "eslint": "^8.28.0",
+    "@vueuse/core": "^9.13.0",
+    "eslint": "^8.40.0",
     "nuxt": "^3.4.3",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.5"
   }
 }

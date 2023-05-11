@@ -100,7 +100,7 @@ async function handleCheckNameOrTitle (rule, value, callback) {
         callback()
     }
 }
-const formJson = getJsonApi('admin-adminMetaRelated.json')
+const formJson = getJsonApi('admin/adminMetaRelated.json')
 async function handleSubmit () {
     state.loading = true
     const configTree = await TreeTableFormRef.value.getFormData()

@@ -77,7 +77,7 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
     defineExpose({ vFormRenderRef, setFormJson })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 :deep(.el-form-item__content>div) {
     width: 100%;
     .el-date-editor {
