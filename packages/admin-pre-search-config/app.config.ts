@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"preSearchConfig",
       url:"/preSearchConfig",
       icon: "/icons/menu/preSearchConfig.svg",
-      order:5,
+      order:11,
     }
   ],
 })

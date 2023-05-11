@@ -9,8 +9,8 @@ export const GetAuditEventApi = async(params: pageParams):Promise<paginationData
         const res = await api.post<paginationData>('/nuxeo/document/queryAuditEvent', params).then(res => res.data.data);
         return {
             entryList: res.entryList,
-            // totalSize: res.totalSize
-            totalSize: res.pageCount
+            totalSize: res.totalSize
+            // totalSize: res.pageCount
         }
     } catch (error) {
         return {

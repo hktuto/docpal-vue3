@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"logManage",
       url:"/logManage",
       icon: "/icons/menu/log.svg",
-      order:5,
+      order:15,
     }
   ],
 })

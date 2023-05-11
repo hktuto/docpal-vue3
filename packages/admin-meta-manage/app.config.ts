@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"meta",
       url:"/meta",
       icon: "/icons/menu/meta.svg",
-      order:5,
+      order:7,
     }
   ],
 })

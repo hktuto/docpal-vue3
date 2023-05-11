@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"messageQueue",
       url:"/messageQueue",
       icon: "/icons/menu/dockerLog.svg",
-      order:5,
+      order:999,
     }
   ],
 })

@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"userManage",
       url:"/userManage",
       icon: "/icons/menu/userManage.svg",
-      order:5,
+      order:4,
     }
   ],
 })

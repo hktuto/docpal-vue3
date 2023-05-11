@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"vocabularyManage",
       url:"/vocabulary",
       icon: "/icons/menu/vocabulary.svg",
-      order:5,
+      order:8,
     }
   ],
 })
