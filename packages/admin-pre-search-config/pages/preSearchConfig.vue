@@ -53,7 +53,7 @@ const state = reactive({
     addLoading: false
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('admin-adminPreSearch.json')
+const formJson = getJsonApi('admin/adminPreSearch.json')
 async function handleTabClick (row) {
     router.push({query: { id: row.name }})
     state.curPreSearch = row

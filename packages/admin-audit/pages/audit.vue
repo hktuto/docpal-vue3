@@ -2,15 +2,14 @@
     <NuxtLayout class="fit-height withPadding">
         <Table :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 v-loading="loading"
+                @command="handleAction"
                 @pagination-change="handlePaginationChange"
                 @row-dblclick="handleDblclick">
                 <template #preSortButton>
                     <FromRenderer :form-json="formJson" @formChange="handleFormChange"/>
                 </template>
-                <template #refreshAction="{ row, index }">
-                    <el-button text :loading="row.loading">
-                        <SvgIcon v-if="row.status === 'ERROR'" src="/icons/retry.svg"  style="--icon-color: var(--primary-color)" @click.stop="handleReSubmit(row)"></SvgIcon>
-                    </el-button>
+                <template #currentPath="{row}">
+                    <span v-if="row.currentPath" class="pathButton"  @click="goClientPath(row.currentPath)">{{ row.logicalPath }}</span>
                 </template>
         </Table>
     </NuxtLayout>
@@ -20,8 +19,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { 
-    GetMessageQueuePageApi, ReSubmitMessageQueueApi, 
-    getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+    GetAuditEventApi, 
+    getJsonApi, TABLE, defaultTableSetting, deepCopy } from 'dp-api'
 // #region module: page
     const route = useRoute()
     const router = useRouter()
@@ -42,13 +41,12 @@ import {
         },
         extraParams: {}
     })
-    const tableKey = TABLE.ADMIN_MESSAGE_QUEUE
+    const tableKey = TABLE.ADMIN_AUDIT
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
         state.loading = true
-        const res = await GetMessageQueuePageApi(param.pageNum, param.pageSize, {...state.extraParams})
-        
+        const res = await GetAuditEventApi({...param, ...state.extraParams})
         state.tableData = res.entryList
         state.loading = false
         state.options.paginationConfig.total = res.totalSize
@@ -77,29 +75,40 @@ import {
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 // #region module: search json
-    const formJson = getJsonApi('admin/adminMessageQueueSearch.json')
+    const formJson = getJsonApi('admin/auditSearch.json')
     function handleFormChange (data) {
         const extraParams = Object.keys(data.formModel).reduce((prev,key) => {
-            if(data.formModel[key]) prev[key] = data.formModel[key]
+            console.log(key, data.formModel[key]);
+            if (key === 'auditTemplate' && data.formModel[key]) {
+                if (data.formModel[key][0]) prev.eventCategory = data.formModel[key][0]
+                if (data.formModel[key][1]) prev.eventId = data.formModel[key][1]
+            } else if(key === 'dates' && data.formModel[key]) {
+                if (data.formModel[key][0]) prev.eventDateFrom = data.formModel[key][0].replace(/.000.*$/, '.000Z')
+                if (data.formModel[key][1]) prev.eventDateTo = data.formModel[key][1].replace(/.000.*$/, '.000Z')
+                // .replace(/.000.*$/, 'Z')
+            } else if(key === 'path' && data.formModel[key]) {
+                const p = deepCopy(data.formModel[key])
+                prev.documentId = p.pop()
+            }  else if(data.formModel[key]) prev[key] = data.formModel[key]
             return prev
         }, {})
         state.extraParams = extraParams
         handlePaginationChange(1)
     }
 // #endregion
-async function handleReSubmit (row) {
-    console.log(row);
-    row.loading = true
-    const res = await ReSubmitMessageQueueApi(row.messageId)
-    if (res.resultCode === 200) {
-        ElMessage.success('success')
-        handlePaginationChange()
+function handleAction (command:sting, row: any, rowIndex: number) {
+    switch (command) {
+        case 'goClientPath':
+            goClientPath(row)
+            break
     }
-    setTimeout(() => {
-        row.loading = false
-    }, 500)
 }
 function handleDblclick (row) {
+}
+
+function goClientPath (row) {
+    const p = (window.location.origin).replace('admin.', '');
+    window.open(p + '/file/browse?path=' + path, '_blank');
 }
 onMounted(async() => {
     
@@ -109,5 +118,8 @@ onMounted(async() => {
 <style lang="scss" scoped>
 :deep(.el-form-item--default) {
     margin-bottom: unset;
+}
+.pathButton{
+    cursor: pointer;
 }
 </style>

@@ -102,6 +102,7 @@ export enum TABLE {
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
+    ADMIN_AUDIT = 'adminAudit'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1362,6 +1363,32 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         slots: [
             { slot: 'refreshAction', label: 'dpTable_actions' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_AUDIT]: {
+        columns: [
+            { id: '1', label: 'User', prop: 'principalName' },
+            { id: '2', slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true },
+            { id: '3', label: 'category', prop: 'eventCategory' },
+            { id: '4', label: 'Event', prop: 'eventId' },
+            { id: '5', label: 'Date', prop: 'eventDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "eventDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+        ],
+        events: ['goClientPath'],
+        slots: [
+            { slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true }
         ],
         options: { pageSize: 20 }
     }
