@@ -6,7 +6,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineEventHandler( async(event:any) => {
-    const id = event.context.params.id as string
+    let id = event.context.params.id as string
+    id = id.replace(/\-\-/g, '/')
+    
     const body = await readBody(event)
     const relativeToCurrent = '../../../../'; // get /packages path in dev, later may need to handle path from server
     const p = path.join(__dirname, relativeToCurrent, `/dp-api/src/json/${id}` ); 

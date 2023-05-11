@@ -43,7 +43,7 @@ const svgClass = computed(() => {
     fill: currentColor;
     color: var(--icon-color, #AEB6BA);
     &:hover {
-        color: var(--icon-hover-color, --brand);
+        opacity: 0.7;
     }
     path {
         fill: currentColor;

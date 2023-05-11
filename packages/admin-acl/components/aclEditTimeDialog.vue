@@ -25,7 +25,7 @@ const state = reactive({
     aclItem: {}
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('adminAclTimeForm.json')
+const formJson = getJsonApi('admin-adminAclTimeForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     const params = {

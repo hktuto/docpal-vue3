@@ -22,7 +22,7 @@ const state = reactive({
     visible: false,
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('adminUserEditForm.json')
+const formJson = getJsonApi('admin-adminUserEditForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true

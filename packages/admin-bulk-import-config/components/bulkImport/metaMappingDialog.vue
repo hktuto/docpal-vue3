@@ -26,7 +26,7 @@ const state = reactive({
     isEdit: false
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('adminMetaMapping.json')
+const formJson = getJsonApi('admin-adminMetaMapping.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
