@@ -7,45 +7,33 @@ export default defineNuxtPlugin((nuxtApp) => {
   const router:any = nuxtApp.$router;
     // Doing something with nuxtApp
     // setup api for token refresh
-    // api.interceptors.request.use( async(config) => {
-    //     if(!config?.headers?.Authorization) return config;
-
-    //     const token = config.headers.Authorization.split(" ")[1];
-    //     if(refreshing){
-    //         return config;
-    //     }
-    //     const { exp } = jwt_decode(token) as any;
-    //     const tokenTime = (exp * 1000) - 30000;
-    //     const refreshToken = localStorage.getItem('refreshToken');
-    //     if(Date.now() > tokenTime  && !refreshing && refreshToken) {
-    //         refreshing = true;
-    //         try{
-    //             refreshing = false;
-    //             const {access_token, refresh_token} = await api.post('/auth/nuxeo/token',{},{
-    //                 headers:{
-    //                     Authorization : 'Bearer ' + refreshToken
-    //                 }
-    //             }).then( res => res.data);
-    //             config.headers.Authorization = 'Bearer ' + access_token
-    //             localStorage.setItem('refreshToken', refresh_token);
-    //             if(sessionStorage){
-    //                 sessionStorage.setItem('token', access_token);
-    //             };
-    //             refreshing = false;
-    //             return config;
-    //         }catch(error){
-    //             refreshing = false;
-    //             if(sessionStorage){
-    //                 sessionStorage.removeItem('token');
-    //             };
-    //             localStorage.removeItem('refreshToken');
-    //             window.open(window.location.pathname, '_self');
-
-    //         }
-    //     }
-
-    // })
-
+    api.interceptors.request.use( async(config) => {
+        const token = sessionStorage.getItem('token');
+        if(token) {
+          config.headers = {
+            ...config.headers,
+            Authorization: `Bearer ${token}`,
+          }
+        }
+        return config;
+    },(error) => Promise.reject(error));
+    api.interceptors.response.use( 
+      (response) => response, 
+      async(error) => {
+        const config = error?.config;
+        if (error?.response?.status === 401 && !config?.sent) {
+          config.sent = true;
+          const result = await memoizedRefreshToken();
+          if (result?.access_token) {
+            config.headers = {
+              ...config.headers,
+              authorization: `Bearer ${result?.access_token}`,
+            };
+          }
+          return api(config);
+        }
+        return Promise.reject(error);
+      });
     // // setup api for error handling
     // api.interceptors.response.use( async(response) => {
     //     return response;
