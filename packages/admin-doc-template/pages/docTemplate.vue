@@ -4,6 +4,7 @@
             <DocTemplateTree ref="treeRef" :rootDataGetApi="rootDataGet"
                     :leafDataGetApi="leafDataGet"
                     @loadFinish="handleClick"
+                    @rootLoadFinish="handleClick"
                     @handleNodeClick="handleClick"
                     @node-contextmenu="handleRightClick"
                     @contextmenu="(e)=>handleRightClick(e,state.rootDoc)">

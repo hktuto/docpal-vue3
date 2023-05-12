@@ -6,6 +6,7 @@ export function customLayer():string[] {
     // default style
     
     // all stores
+    packages.push('../../packages/client-browse');
     packages.push('../../packages/admin-acl');
     packages.push('../../packages/admin-audit');
     packages.push('../../packages/admin-bulk-import-config');
