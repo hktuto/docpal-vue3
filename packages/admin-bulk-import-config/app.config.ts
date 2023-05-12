@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"bulkImportConfig",
       url:"/bulkImport",
       icon: "/icons/menu/bulkImportConfig.svg",
-      order:5,
+      order:12,
     }
   ],
 })

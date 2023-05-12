@@ -106,7 +106,7 @@ function handleAction (command:sting, row: any, rowIndex: number) {
 function handleDblclick (row) {
 }
 
-function goClientPath (row) {
+function goClientPath (path) {
     const p = (window.location.origin).replace('admin.', '');
     window.open(p + '/file/browse?path=' + path, '_blank');
 }
