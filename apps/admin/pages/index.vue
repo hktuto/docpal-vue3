@@ -7,7 +7,7 @@
 const router = useRouter();
 
 router.push({
-    path:'/tableSetting'
+    path:'/userManage'
 })
 
 </script>
