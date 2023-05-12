@@ -10,11 +10,14 @@
             </el-icon>
         </el-tooltip>
         <el-dialog v-model="dialogOpened" append-to-body 
-                    :title="$t('filePopover_newFolder')"
                     :close-on-click-modal="false">
+            <template #title>
+                <strong class="primaryTitle">{{ $t('filePopover_newFolder') }}</strong>
+                {{ 'in ' + state.docPath }}
+            </template>
             <FromRenderer ref="FromRendererRef" :form-json="formJson" />
             <template #footer>
-                <el-button @click="handleSubmit">{{$t('submit')}}</el-button>
+                <el-button :loading="state.loading" @click="handleSubmit">{{$t('submit')}}</el-button>
             </template>
         </el-dialog>
     </div>
@@ -32,12 +35,15 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['success'])
 const state = reactive({
-    docPath: ''
+    loading: false,
+    docPath: '',
+    doc: {}
 })
 const FromRendererRef = ref()
 function iconClickHandler(doc){
     dialogOpened.value = true
     state.docPath = doc.path
+    state.doc = doc
     // open upload dialog
     setTimeout(() => {
         handleReset()
@@ -47,15 +53,20 @@ function iconClickHandler(doc){
 const formJson = getJsonApi('fileNewFolder.json')
 
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
-    const timestamp = new Date().valueOf()
-    const params = {
-        ...data,
-        idOrPath: `${state.docPath}/new Folder${timestamp}`,
+    state.loading = true
+    try {
+        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const timestamp = new Date().valueOf()
+        const params = {
+            ...data,
+            idOrPath: `${state.docPath}/new Folder${timestamp}`,
+        }
+        const res = await CreateFoldersApi(params)
+        dialogOpened.value = false
+        emits('success', state.doc)
+    } catch (error) {
     }
-    const res = await CreateFoldersApi(params)
-    dialogOpened.value = false
-    emits('success', state.docPath)
+    state.loading = false
 }
 function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()

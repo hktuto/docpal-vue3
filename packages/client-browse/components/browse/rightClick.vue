@@ -1,14 +1,14 @@
 <template>
     <div v-show="state.visible" ref="FileRightClickPopoverRef" class="fileRightClick-container">
         <el-menu :default-active="state.defaultActive" @select="handleSelect">
-            <el-menu-item index="docActionAddFolder" v-show="canWrite && state.doc.isFolder">{{$t('filePopover_newFolder')}}</el-menu-item>
-            <el-menu-item index="docActionAddFile" v-show="canWrite && state.doc.isFolder">{{$t('filePopover_uploadFolder')}}</el-menu-item>
-            <el-menu-item index="docActionRename">{{$t('filePopover_rename')}}</el-menu-item>
-            <el-menu-item index="docActionCopy">{{$t('filePopover_copy')}}</el-menu-item>
-            <el-menu-item index="docActionCut" v-show="canWrite">{{$t('filePopover_cut')}}</el-menu-item>
-            <el-menu-item index="docActionPaste" v-show="canWrite && state.copyItem.path">{{$t('filePopover_paste')}}</el-menu-item>
-            <el-menu-item index="docActionDelete" v-show="canWrite"> {{$t('filePopover_delete')}}</el-menu-item>
-            <el-menu-item index="docActionRefresh">{{$t('common_refresh')}}</el-menu-item>
+            <el-menu-item index="docActionAddFolder" v-show="canWrite && state.doc.isFolder && isRoot('docActionAddFolder')">{{$t('filePopover_newFolder')}}</el-menu-item>
+            <el-menu-item index="docActionAddFile" v-show="canWrite && state.doc.isFolder && isRoot('docActionAddFile')">{{$t('filePopover_uploadFolder')}}</el-menu-item>
+            <el-menu-item index="docActionRename" v-show="isRoot('docActionRename')">{{$t('filePopover_rename')}}</el-menu-item>
+            <el-menu-item index="docActionCopy" v-show="isRoot('docActionCopy')">{{$t('filePopover_copy')}}</el-menu-item>
+            <el-menu-item index="docActionCut" v-show="canWrite && isRoot('docActionCut')">{{$t('filePopover_cut')}}</el-menu-item>
+            <el-menu-item index="docActionPaste" v-show="canWrite && state.copyItem.path && isRoot('docActionPaste')">{{$t('filePopover_paste')}}</el-menu-item>
+            <el-menu-item index="docActionDelete" v-show="canWrite && isRoot('docActionDelete')"> {{$t('filePopover_delete')}}</el-menu-item>
+            <el-menu-item index="docActionRefresh" v-show="isRoot('docActionRefresh')">{{$t('common_refresh')}}</el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -16,8 +16,14 @@
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
 import { GetChild } from 'dp-api'
+export type  rightClickAction = 'docActionAddFolder' | 'docActionAddFile' | 'docActionRename' | 'docActionCopy' | 'docActionCut' | 'docActionPaste' | 'docActionDelete'  | 'docActionRefresh'
+export type rightClickRootOptions = {
+    path: string,
+    actions: rightClickAction[]
+}
 const props = defineProps<{
     permission?: any,
+    root?: rightClickRootOptions
 }>()
 const emits = defineEmits(['rightActionClick']);
 const state = reactive({
@@ -32,6 +38,14 @@ const canWrite = computed(() => {
     if(!props.permission) return false
     return state.canWriteList.includes(props.permission.permission)
 })
+function isRoot (action: rightClickAction) {
+    if(props.root && props.root.path && props.root.actions && state.doc.path === props.root.path) {
+        return props.root.actions.includes(action)
+    } else {
+        return true
+    }
+}
+
 function handleRightClick (detail: any) {
     state.visible = true
     state.doc = detail.doc

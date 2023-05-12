@@ -23,13 +23,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         const config = error?.config;
         if (error?.response?.status === 401 && !config?.sent) {
           config.sent = true;
-          const result = await memoizedRefreshToken();
-          if (result?.access_token) {
-            config.headers = {
-              ...config.headers,
-              authorization: `Bearer ${result?.access_token}`,
-            };
-          }
+          // const result = await memoizedRefreshToken();
+          // if (result?.access_token) {
+          //   config.headers = {
+          //     ...config.headers,
+          //     authorization: `Bearer ${result?.access_token}`,
+          //   };
+          // }
           return api(config);
         }
         return Promise.reject(error);

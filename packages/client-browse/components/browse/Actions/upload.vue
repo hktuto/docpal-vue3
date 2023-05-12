@@ -263,7 +263,9 @@ function waitAll (promiseList) {
       })
     }
     state.loading = false
-    emits('success', state._doc.path)
+    emits('success', state._doc)
+  }).catch((err) => {
+    state.loading = false
   })
 }
 onMounted(async() => {

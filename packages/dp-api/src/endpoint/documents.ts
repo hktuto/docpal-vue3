@@ -36,7 +36,7 @@ export const GetBreadcrumb = async(idOrPath:string):Promise<BreadResponse> => {
 }
 
 export const GetChild = async(idOrPath:string):Promise<GetChildResponse> => {
-    return api.post('/nuxeo/document/children', { idOrPath }).then(res => res.data.data);
+    return await api.post('/nuxeo/document/children', { idOrPath }).then(res => res.data);
 }
 
 export const GetDocumentAdditionalApi = async(params) => {
@@ -69,6 +69,10 @@ export const GetTemplateParamsApi = async(param) => {
 export const DownloadTemplateApi = async(param) => {
     return api.post('/nuxeo/template/summitAndDownloadFile', param, {responseType: 'blob', timeout: 0}).then(res => res.data)
 }
+export const DownloadDocApi = async(idOrPath:string) => {
+    return api.post('/nuxeo/document/download', {idOrPath}, {responseType: 'blob', timeout: 0}).then(res => res.data)
+}
+
 // #region module: file
     export const CreateFoldersApi = async(param) => {
         return api.post('/nuxeo/document/createFolders', param).then(res => res.data)

@@ -1,6 +1,7 @@
 <template>
     <!-- <SvgIcon src="/icons/file/delete.svg" round content="delete"
                 @click="deleteItem(doc)"></SvgIcon> -->
+    <div>
         <el-tooltip content="delete">
             <div class="actionIconContainer" @click="deleteItem(doc)">
 
@@ -9,6 +10,7 @@
             </el-icon>
             </div>
         </el-tooltip>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -26,7 +28,7 @@ function deleteItem(doc){
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
     .then(async() => {
         const response = await trashApi([{idOrPath}])
-        emits('success', idOrPath)
+        emits('success', doc)
         emits('delete', idOrPath)
         
         if (props.doc?.isFolder) {}

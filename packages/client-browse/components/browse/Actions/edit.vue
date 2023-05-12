@@ -1,5 +1,5 @@
 <template>
-   
+   <div>
         <el-tooltip content="edit">
            <div class="actionIconContainer" @click="openDialog(doc)">
               <el-icon >
@@ -20,7 +20,7 @@
         </el-dialog>
         <!-- <SvgIcon src="/icons/file/edit.svg" round content="edit"
                 @click="edit"></SvgIcon> -->
-
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -36,8 +36,12 @@ const form = ref({
     name: '',
     idOrPath: ''
 })
+const state = reactive({
+  doc: {}
+})
 function openDialog(doc){
   dpLog("openDialog");
+  state.doc = doc
   form.value.name = doc.name
   form.value.id = doc.id
   form.value.path = doc.path
@@ -50,7 +54,7 @@ async function handleSave(){
     properties: {},
   })
   dialogOpened.value = false
-  emits('success', form.value.path)
+  emits('success', state.doc)
 }
 onMounted(async() => {
   useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))  

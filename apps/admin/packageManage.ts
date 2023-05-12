@@ -9,7 +9,7 @@ export function customLayer():string[] {
     packages.push('../../packages/admin-acl');
     packages.push('../../packages/admin-audit');
     packages.push('../../packages/admin-bulk-import-config');
-    // packages.push('../../packages/admin-doc-template');
+    packages.push('../../packages/admin-doc-template');
     packages.push('../../packages/admin-doc-type-manage');
     packages.push('../../packages/admin-docker-log');
     packages.push('../../packages/admin-log-manage');

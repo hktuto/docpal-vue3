@@ -25,7 +25,7 @@ async function pasteItem(doc){
         // 删除Document
         await moveDocumentApi(param)
     }
-    emits('success', doc.path)
+    emits('success', doc, state.action)
 }
 onMounted(() => {
     useEventListener(document, 'docActionCopy', (event) => copyItem(event.detail))  
