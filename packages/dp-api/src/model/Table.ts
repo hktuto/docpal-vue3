@@ -1371,7 +1371,19 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '1', label: 'User', prop: 'principalName' },
             { id: '2', slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true },
             { id: '3', label: 'category', prop: 'eventCategory' },
-            { id: '4', label: 'Event', prop: 'eventId' },
+            { id: '4', label: 'Event', prop: 'eventId',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "eventId",
+                        "formatFun": "i18n",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
             { id: '5', label: 'Date', prop: 'eventDate',
                 formatList: [
                     {
