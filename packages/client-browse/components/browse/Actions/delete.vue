@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
+import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
 import { trashApi } from 'dp-api'
 const props = defineProps<{
@@ -27,10 +28,20 @@ function deleteItem(doc){
     
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
     .then(async() => {
+        const noti = ElNotification({
+            title: $i18n.t('delete'),
+            icon: Loading,
+            dangerouslyUseHTMLString: true,
+            message: `<div title="${doc.name}">${doc.name}</div>`,
+            showClose: true,
+            customClass: 'loading-notification',
+            duration: 0,
+            position: 'bottom-right'
+        });
         const response = await trashApi([{idOrPath}])
         emits('success', doc)
         emits('delete', idOrPath)
-        
+        noti.close()
         if (props.doc?.isFolder) {}
         ElNotification({
             title: 'Success',

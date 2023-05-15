@@ -1,6 +1,6 @@
 <template>
     <div class="preview-container"
-        :style="`--img-size:${state.imgSize}px;`" @contextmenu="(event) => handleRightClick(doc, event)">
+        :style="`--img-size:${state.imgSize}px;`" @contextmenu="(event) => handleRightClick(doc, event, true)">
         <div class="preview-main">
             <div v-if="state.tableData.length === 0" class="emptyList">
                 empty list
@@ -98,14 +98,20 @@ function imgError(event) {
 function handleDblclick (row) {
     handlePaginationChange(1, pageParams.value.pageSize, row.path, row.isFolder)
 }
-function handleRightClick (item, event) {
+function handleRightClick (item, event, isEmpty: boolean = false) {
     event.preventDefault();
     const data = {
         isFolder: true,
         idOrPath: item.path,
         pageX: event.pageX,
         pageY: event.pageY,
-        doc: item
+        doc: item,
+    }
+    if (isEmpty) data.actions = {
+        cut: false,
+        copy: false,
+        rename: false,
+        delete: false
     }
     const ev = new CustomEvent('fileRightClick',{ detail: data })
     document.dispatchEvent(ev)

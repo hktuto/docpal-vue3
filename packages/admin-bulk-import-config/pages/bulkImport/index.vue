@@ -2,6 +2,9 @@
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData"
                 @row-dblclick="handleDblclick">
+            <template #icon="{ row }">
+                <BrowseItemIcon class="el-icon--left" :type="row.isFolder ? 'folder' : 'file'"/>
+            </template>
             <template #metaMapping="{ row }">
                 <el-tag class="el-icon--left" v-for="(value, key) in row.mappingMeta" :key="key">{{value}}</el-tag>
             </template>

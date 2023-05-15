@@ -38,6 +38,8 @@
 
 <script lang="ts" setup>
 import {getConversionHistoryApi} from 'dp-api'
+import { Loading } from '@element-plus/icons-vue';
+import { ElNotification, ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 const props = defineProps<{
     doc:any
@@ -49,20 +51,26 @@ const timeStamp = ref(new Date())
 const filenameWithoutSuffix = ref('')
 
 async function handleDownload (row) {
-    const noti = Notification({
-    title: '',
-    dangerouslyUseHTMLString: true,
-    message: `${row.fileName}<i class="el-icon-loading"></i>`,
-    showClose: false,
-    customClass: 'loading-notification',
-    duration: 0,
-    position: 'bottom-right'
+    const noti = ElNotification({
+        title: $i18n.t('download'),
+        icon: Loading,
+        dangerouslyUseHTMLString: true,
+        message: `<div title="${row.fileName}">${row.fileName}</div>`,
+        showClose: true,
+        customClass: 'loading-notification',
+        duration: 0,
+        position: 'bottom-right'
     });
     try {
-    const response = await conversionDownloadFileApi([ row.documentPath ])
-    downloadBlob(response, row.fileName)
+        const response = await conversionDownloadFileApi([ row.documentPath ])
+        downloadBlob(response, row.fileName)
     } catch (error) {
-    Message.error(i18n.t('download_noFile') as string)
+        ElNotification({
+            title: '',
+            message: 'download_noFile',
+            type: 'error',
+            duration: 2000
+        });
     }
     noti.close()
 }

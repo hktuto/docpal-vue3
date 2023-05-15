@@ -20,8 +20,22 @@ export const getSpecificVersionApi = async(params):Promise<DocDetail> => {
 export const GetDocDetailApi = async(idOrPath:string = '/'):Promise<DocDetail> => {
     return api.get('/nuxeo/document',{ params: { idOrPath } }).then(res => res.data);
 }
-export const GetDocPermission = async(idOrPath:string, userId:string):Promise<{permission:string,print:boolean}> => {
-    return api.get<{permission:string,print:boolean}>(`/nuxeo/document/acl/permission?docId=${idOrPath}&userId=${userId}`).then(res => res.data);
+
+type permissionType = {
+   permission:string,
+   print:boolean
+}
+type permissionStoredType = {
+    [name: string]: permissionType
+} 
+const permissionStored:permissionStoredType = {}
+export const GetDocPermission = async(idOrPath:string, userId:string):Promise<permissionType> => {
+    if(!!permissionStored[`${idOrPath}-${userId}`]) {
+        return permissionStored[`${idOrPath}-${userId}`]
+    }
+    const res = await api.get<permissionType>(`/nuxeo/document/acl/permission?docId=${idOrPath}&userId=${userId}`).then(res => res.data);
+    permissionStored[`${idOrPath}-${userId}`] = res
+    return res
 }
 export const patchDocApi = async(idOrPath: DocDetail):Promise<DocDetail> => {
     return api.patch<DocDetail>('/nuxeo/document', {idOrPath}).then(res => res.data);

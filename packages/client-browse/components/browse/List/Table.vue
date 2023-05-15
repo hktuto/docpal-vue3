@@ -1,13 +1,12 @@
 <template>
 <div class="tableContainer"  >
-
-
     <Table v-if="tableData" v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
             @pagination-change="handlePaginationChange"
             @command="handleAction"
             @row-dblclick="handleDblclick"
             @row-contextmenu="handleRightClick"
-            @selection-change="handleSelect">
+            @selection-change="handleSelect"
+            @contextmenu="handleEmptyRightClick">
             <template #docName="{ row, index }">
                 <div class="nameContainer">
                     <BrowseItemIcon :type="row.isFolder ? 'folder' : 'file'"/>
@@ -20,11 +19,12 @@
 
 
 <script lang="ts" setup>
-import { GetChildThumbnail, TABLE, defaultTableSetting } from 'dp-api'
+import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting, GetDocPermission } from 'dp-api'
 const emit = defineEmits([
     'right-click',
     'select-change'
 ])
+
 const props = defineProps<{doc: any}>();
 // #region module: page
     const route = useRoute()
@@ -48,7 +48,8 @@ const props = defineProps<{doc: any}>();
             selectable: (row, index) => {
                 return !row.isFolder
             } 
-        }
+        },
+        curDoc: {}
     })
     const tableKey = TABLE.CLIENT_BROWSE
     const tableSetting = defaultTableSetting[tableKey]
@@ -97,7 +98,31 @@ const props = defineProps<{doc: any}>();
 // #endregion
 
 function handleDblclick (row) {
+    state.curDoc = row
     handlePaginationChange(1, pageParams.pageSize, row.path, row.isFolder)
+}
+async function handleEmptyRightClick(event: MouseEvent) {
+    event.preventDefault()
+    if(!state.curDoc.id) await getCurDoc()
+    const data = {
+        doc: state.curDoc,
+        isFolder: state.curDoc.isFolder,
+        idOrPath: state.curDoc.path,
+        pageX: event.pageX,
+        pageY: event.pageY,
+        actions: {
+            cut: false,
+            copy: false,
+            rename: false,
+            delete: false
+        }
+    }
+    const ev = new CustomEvent('fileRightClick',{ detail: data })
+    document.dispatchEvent(ev)
+}
+const routePath = computed( () => (route.query.path as string) || '/')
+async function getCurDoc () {
+    state.curDoc = await GetDocDetail(routePath.value);
 }
 function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.preventDefault()

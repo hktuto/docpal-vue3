@@ -1,54 +1,51 @@
 <template>
     <div v-show="state.visible" ref="FileRightClickPopoverRef" class="fileRightClick-container">
-        <el-menu :default-active="state.defaultActive" @select="handleSelect">
-            <el-menu-item index="docActionAddFolder" v-show="canWrite && state.doc.isFolder && isRoot('docActionAddFolder')">{{$t('filePopover_newFolder')}}</el-menu-item>
-            <el-menu-item index="docActionAddFile" v-show="canWrite && state.doc.isFolder && isRoot('docActionAddFile')">{{$t('filePopover_uploadFolder')}}</el-menu-item>
-            <el-menu-item index="docActionRename" v-show="isRoot('docActionRename')">{{$t('filePopover_rename')}}</el-menu-item>
-            <el-menu-item index="docActionCopy" v-show="isRoot('docActionCopy')">{{$t('filePopover_copy')}}</el-menu-item>
-            <el-menu-item index="docActionCut" v-show="canWrite && isRoot('docActionCut')">{{$t('filePopover_cut')}}</el-menu-item>
-            <el-menu-item index="docActionPaste" v-show="canWrite && state.copyItem.path && isRoot('docActionPaste')">{{$t('filePopover_paste')}}</el-menu-item>
-            <el-menu-item index="docActionDelete" v-show="canWrite && isRoot('docActionDelete')"> {{$t('filePopover_delete')}}</el-menu-item>
-            <el-menu-item index="docActionRefresh" v-show="isRoot('docActionRefresh')">{{$t('common_refresh')}}</el-menu-item>
+        <el-menu :default-active="state.defaultActive" @select="handleSelect" v-loading="state.loading">
+            <el-menu-item index="docActionAddFolder" v-show="state.canWrite && state.doc.isFolder && state.actions.addFolder" >{{$t('filePopover_newFolder')}}</el-menu-item>
+            <el-menu-item index="docActionAddFile" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >{{$t('filePopover_uploadFolder')}}</el-menu-item>
+            <el-menu-item index="docActionRename" v-show="state.canWrite && state.actions.rename">{{$t('filePopover_rename')}}</el-menu-item>
+            <el-menu-item index="docActionCopy" v-show="state.actions.copy">{{$t('filePopover_copy')}}</el-menu-item>
+            <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">{{$t('filePopover_cut')}}</el-menu-item>
+            <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">{{$t('filePopover_paste')}}</el-menu-item>
+            <el-menu-item index="docActionDelete" v-show="state.canWrite && state.actions.delete"> {{$t('filePopover_delete')}}</el-menu-item>
+            <el-menu-item index="docActionRefresh" v-show="state.actions.refresh">{{$t('common_refresh')}}</el-menu-item>
         </el-menu>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import { GetChild } from 'dp-api'
-export type  rightClickAction = 'docActionAddFolder' | 'docActionAddFile' | 'docActionRename' | 'docActionCopy' | 'docActionCut' | 'docActionPaste' | 'docActionDelete'  | 'docActionRefresh'
-export type rightClickRootOptions = {
-    path: string,
-    actions: rightClickAction[]
-}
+import { GetDocPermission } from 'dp-api'
 const props = defineProps<{
-    permission?: any,
-    root?: rightClickRootOptions
+    permission?: any
 }>()
 const emits = defineEmits(['rightActionClick']);
 const state = reactive({
     visible: false,
     defaultActive: [],
-    canWriteList: ['Everything', 'ManageLegalHold', 'ManageRecord', 'ReadWrite'],
     doc: {},
-    copyItem: {}
+    copyItem: {},
+    actions: {
+    },
+    _actions: {
+        addFolder: true,
+        addFile: true,
+        rename: true,
+        copy: true,
+        cut: true,
+        paste: true,
+        delete: true,
+        refresh: true,
+    },
+    canWrite: false,
+    loading: false
 })
 const FileRightClickPopoverRef = ref()
-const canWrite = computed(() => {
-    if(!props.permission) return false
-    return state.canWriteList.includes(props.permission.permission)
-})
-function isRoot (action: rightClickAction) {
-    if(props.root && props.root.path && props.root.actions && state.doc.path === props.root.path) {
-        return props.root.actions.includes(action)
-    } else {
-        return true
-    }
-}
-
-function handleRightClick (detail: any) {
+const auth = useUser();
+async function handleRightClick (detail: any) {
     state.visible = true
     state.doc = detail.doc
+    await handleAction(detail)
     setTimeout(() => {
         state.defaultActive = []
         FileRightClickPopoverRef.value.style.left = detail.pageX + 'px'
@@ -67,6 +64,18 @@ function handleRightClick (detail: any) {
             FileRightClickPopoverRef.value.style.left = left + 'px'
         }
     })
+}
+async function handleAction (detail) {
+    state.loading = true
+    if (detail.actions) state.actions = { ...state._actions,  ...detail.actions}
+    else state.actions = { ...state._actions }
+    try {
+        const permission = await GetDocPermission(detail.doc.id, auth.user.value.username);
+        state.canWrite = permissionAllow({feature:'Write', userPermission:permission.permission })
+    } catch (error) {
+        state.canWrite = false
+    }
+    state.loading = false
 }
 function hidePopover () {
     if (!state.visible) return
