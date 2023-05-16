@@ -10,7 +10,7 @@
                     @contextmenu="(e)=>handleRightClick(e,state.rootDoc, true)">
                 <template #default="{ node, data }">
                     <div class="doc-container ellipsis">
-                        <!-- <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'"/> -->
+                        <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'"/>
                         {{data.name}}
                     </div>
                 </template>
@@ -20,7 +20,7 @@
                     <div>{{state.doc.name}}</div>
                     <div class="flex-x-between" v-if="!state.doc.isFolder">
                         <el-button type="text" @click="handleDownload">Download original</el-button>
-                        <BrowseActionsDelete :doc="state.doc" @success="handleRefreshDelete"/>
+                        <!-- <BrowseActionsDelete :doc="state.doc" @success="handleRefreshDelete"/> -->
                     </div>
                     <!-- <el-button text :loading="state.loading"></el-button> -->
                 </div>
