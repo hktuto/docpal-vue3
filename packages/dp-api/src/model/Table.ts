@@ -1260,7 +1260,8 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
             { id: '2', prop: 'label', label: 'docType_label' },
-            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
+            { id: '4', prop: 'order', label: 'order', defaultValue: 0 }
         ],
         events: [],
         slots: [
@@ -1290,7 +1291,8 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
             { id: '2', prop: 'label', label: 'docType_label' },
-            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
+            { id: '4', prop: 'order', label: 'order', defaultValue: 0 }
         ],
         events: [],
         slots: [
