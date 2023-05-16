@@ -58,6 +58,14 @@ export const PutMetaSettingApi = async(params: metaData) => {
     }, 500))
     return res
 }
+export const AddMetaSettingApi = async(params: metaSetting) => {
+    await GetMetaSettingsApi()
+    metaSettingData[params.documentType] = {
+        isFolder: params.isFolder,
+        related: []
+    }
+    return await PutMetaSettingApi(metaSettingData)
+}
 /**
  * GetMetaSettingsApi 获取 related list
  * GetMetaValidationRuleApi 获取 displayMeta list

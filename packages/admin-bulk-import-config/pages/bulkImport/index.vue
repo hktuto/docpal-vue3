@@ -16,6 +16,7 @@
                 <el-tag class="el-icon--left" v-for="(item, index) in row.bulkImportConfigs" :key="index">{{item}}</el-tag>
             </template>
         </Table>
+        <MetaAddDocTypeDialog ref="MetaAddDocTypeDialogRef" @refresh="getList()"></MetaAddDocTypeDialog>
     </NuxtLayout>
 </template>
 
@@ -45,7 +46,10 @@ function handleDblclick (row) {
 }
 async function handleSubmit (shareInfo) {
 }
-function handleAdd() {}
+const MetaAddDocTypeDialogRef = ref()
+function handleAdd() {
+    MetaAddDocTypeDialogRef.value.handleOpen(state.tableData)
+}
 onMounted(async() => {
     getList()
 })
