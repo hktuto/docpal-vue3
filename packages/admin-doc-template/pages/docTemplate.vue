@@ -10,7 +10,7 @@
                     @contextmenu="(e)=>handleRightClick(e,state.rootDoc, true)">
                 <template #default="{ node, data }">
                     <div class="doc-container ellipsis">
-                        <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'"/>
+                        <!-- <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'"/> -->
                         {{data.name}}
                     </div>
                 </template>
