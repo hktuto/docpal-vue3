@@ -6,8 +6,8 @@
                     @loadFinish="handleClick"
                     @rootLoadFinish="handleClick"
                     @handleNodeClick="handleClick"
-                    @node-contextmenu="handleRightClick"
-                    @contextmenu="(e)=>handleRightClick(e,state.rootDoc)">
+                    @node-contextmenu="(e,d)=>handleRightClick(e,d)"
+                    @contextmenu="(e)=>handleRightClick(e,state.rootDoc, true)">
                 <template #default="{ node, data }">
                     <div class="doc-container ellipsis">
                         <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'"/>
@@ -20,7 +20,7 @@
                     <div>{{state.doc.name}}</div>
                     <div class="flex-x-between" v-if="!state.doc.isFolder">
                         <el-button type="text" @click="handleDownload">Download original</el-button>
-                        <!-- <BrowseActionsDelete :doc="state.doc" @success="handleRefreshDelete"/> -->
+                        <BrowseActionsDelete :doc="state.doc" @success="handleRefreshDelete"/>
                     </div>
                     <!-- <el-button text :loading="state.loading"></el-button> -->
                 </div>
@@ -32,7 +32,7 @@
                 </template>
             </div>
         </div>
-        <LazyBrowseRightClick :permission="state.permission" :root="state.rootRightClickActions"></LazyBrowseRightClick>
+        <LazyBrowseRightClick :permission="state.permission"></LazyBrowseRightClick>
         <BrowseActionsPaste v-show="false" @success="handleRefreshPaste"/>
         <BrowseActionsUpload v-show="false" @success="handleRefresh"/>
         <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
@@ -62,12 +62,10 @@ interface Tree {
 }
 const state = reactive({
     loading: false,
-    rootRightClickActions: {
-        path: '/default-domain/templates',
-        actions: ['docActionAddFolder','docActionAddFile', 'docActionPaste','docActionRefresh']
-    },
     doc: {},
-    rootDoc: {},
+    rootDoc: {
+        path: '/default-domain/templates'
+    },
     rightDoc: {},
     previewFile: {
         blob: null,
@@ -89,7 +87,7 @@ async function leafDataGet (pageParams) {
     return res
 }
 async function rootDataGet () {
-    const res = await GetDocDetailApi(state.rootRightClickActions.path)
+    const res = await GetDocDetailApi(state.rootDoc.path)
     state.rootDoc = res
     return [{ ...res }]
 }
@@ -138,9 +136,6 @@ async function handleRefreshPaste (doc, action) {
 }
 async function handleRefreshDelete(doc) {
     handleRefreshParent(doc)
-    console.log(doc.id);
-    console.log(treeRef.value.treeRef);
-    console.log(state.previewFile.id);
     if(doc.id === state.previewFile.id) {
         const nodesMap = treeRef.value.treeRef.store.nodesMap
         state.previewFile = {}
@@ -151,15 +146,21 @@ async function handleDownload () {
     const response = await DownloadDocApi(state.previewFile.id)
     downloadBlob(response, state.previewFile.name)
 }
-function handleRightClick (event, data) {
+function handleRightClick (event, data, isEmpty: boolean = false) {
     event.preventDefault()
     event.stopPropagation();
     const detail = {
-        doc: data,
+        doc: { ...data },
         isFolder: data.isFolder,
         idOrPath: data.path,
         pageX: event.pageX,
         pageY: event.pageY,
+    }
+    if (isEmpty || data.path === state.rootDoc.path) detail.actions = {
+        cut: false,
+        copy: false,
+        rename: false,
+        delete: false
     }
     state.rightDoc = data
     const ev = new CustomEvent('fileRightClick',{ detail })
