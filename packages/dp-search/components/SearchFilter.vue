@@ -1,6 +1,6 @@
 <template>
     <div class="filterContainer">
-        <FromRenderer ref="FromRendererRef" v-if="filterJson" :form-json="filterJson"  :data="searchParams" @form-change="formChangeHandler" />
+        <FromRenderer ref="FromRendererRef" :form-json="filterJson"  :data="searchParams" @form-change="formChangeHandler" />
         <el-button @click="$emit('closed')">{{$t('close')}}</el-button>
         <el-button @click="handleReset">{{$t('reset')}}</el-button>
         <el-button @click="handleSubmit">{{$t('submit')}}</el-button>

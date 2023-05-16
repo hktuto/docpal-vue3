@@ -39,11 +39,15 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
 
     async function getList (param) {
         state.loading = true
-        const res = await nestedSearchApi(param)
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.currentPageIndex + 1
+        try {
+            const res = await nestedSearchApi(param)
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.currentPageIndex + 1
+        } catch (error) {
+            state.tableData = []
+        }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {

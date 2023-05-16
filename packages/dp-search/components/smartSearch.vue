@@ -22,6 +22,7 @@
 import {Search, Operation} from '@element-plus/icons-vue';
 import { watchDebounced, onClickOutside } from '@vueuse/core'
 import { getSearchParamsArray } from 'dp-api'
+import { useMagicKeys, whenever } from '@vueuse/core'
 const router = useRouter()
 const route = useRoute()
 const inputEl = ref();
@@ -109,6 +110,24 @@ function keywordInputHandler(event) {
     const value = event.target.value
     state.searchParams.paramsInTextSearch = [value]
 }
+// #region module: 
+    const { ctrl_f, meta_a } = useMagicKeys({
+        passive: false,
+        onEventFired(e) {
+            if ((e.ctrlKey && e.key === 'f' && e.type === 'keydown') ||
+                (e.metaKey && e.key === 'f' && e.type === 'keydown')) 
+                e.preventDefault()
+        }
+    })
+    whenever(ctrl_f, () => {
+        openFilter()
+        focusInput()
+    })
+     whenever(ctrl_a, () => {
+        openFilter()
+        focusInput()
+    })
+// #endregion
 onMounted(() => {
     state.searchParams = getSearchParamsArray(route.query)
     if(state.searchParams.paramsInTextSearch) {
