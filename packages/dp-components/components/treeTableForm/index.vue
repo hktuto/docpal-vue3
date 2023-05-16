@@ -108,7 +108,7 @@ const _options = computed<Table.Options>(() => {
         showHeader: true,
         showPagination: false,
         height: '100%',
-        defaultExpandAll: true
+        defaultExpandAll: false
     }
     return Object.assign(option, props?.options)
 })
