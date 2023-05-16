@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <div class="grid-layout">
-            <el-tabs v-model="tabName" @tab-click="(VueComponent) => handleTabClick(VueComponent.name)">
+            <el-tabs v-model="state.tabName" @tab-click="(pane)=> handleTabClick(pane.paneName)">
                 <el-tab-pane v-for="(item) in sFolderList" :key="item.id" :label="item.name" :name="item.id"/>
             </el-tabs>
             <div style="overflow: hidden;">
