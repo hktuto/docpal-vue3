@@ -3,7 +3,7 @@
     <template #header>
         <div class="flex-x-between">
             <span>{{$t('user_users')}}</span>
-            <el-button v-show="group.isCanModified" class="button" type="primary"
+            <el-button v-show="group && group.isCanModified" class="button" type="primary"
                 @click="handleGroupAddMemberFormShow()">{{$t('user_addUser')}}</el-button>
         </div>
     </template>

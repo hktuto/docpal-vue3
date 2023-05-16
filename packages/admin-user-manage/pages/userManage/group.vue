@@ -17,10 +17,10 @@
             <div class="topArea" v-if="state.curGroup">
                 <div class="flex-x-center">
                     {{state.curGroup.name}}
-                    <SvgIcon v-show="curGroup.isCanModified" class="el-icon--right" src="/icons/file/edit.svg" round
+                    <SvgIcon v-show="state.curGroup.isCanModified" class="el-icon--right" src="/icons/file/edit.svg" round
                         @click="handleEdit"></SvgIcon>
                 </div>
-                <SvgIcon v-show="curGroup.isCanModified" src="/icons/file/delete.svg" round
+                <SvgIcon v-show="state.curGroup.isCanModified" src="/icons/file/delete.svg" round
                     @click="handleDelete"></SvgIcon>
             </div>
             <GroupUserTable class="group" :group="state.curGroup"></GroupUserTable>

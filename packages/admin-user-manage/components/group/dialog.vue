@@ -21,6 +21,7 @@ const FromRendererRef = ref()
 const formJson = getJsonApi('admin/adminGroupForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    data.groupName = data.groupName.trim()
     state.loading = true
     await CreateGroupApi(data)
     state.loading = false

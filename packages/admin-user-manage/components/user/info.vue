@@ -22,10 +22,10 @@
         <div class="rowTitle">{{ $t('user_company') }}</div>
         <div class="rowValue" :title="user.company">{{ user.company }}</div>
     </div>
-    <div class="row" v-if="state.userMeta">
+    <div class="row">
         <div class="rowTitle">{{ $t('user_SecurityProperty') }}</div>
-        <div class="rowValue" :title="state.userMeta.clearanceLevel">
-            <el-select v-model="state.userMeta.clearanceLevel" clearable
+        <div class="rowValue" :title="state.clearanceLevel">
+            <el-select v-model="state.clearanceLevel" clearable
                 @change="updateMeta">
                 <el-option v-for="item in state.options" :key="item" :label="item" :value="item"></el-option>
             </el-select>
@@ -44,7 +44,7 @@ const props = defineProps<{
     isLdapMode: boolean,
 }>()
 const state = reactive({
-    userMeta: null,
+    clearanceLevel: '',
     options: ['classified', 'confidential','normal']
 })
 async function updateMeta (value) {
@@ -65,7 +65,7 @@ function openDialog() {
 watch(() => props.user, async(user) => {
     if(!user || !user.userId) return
     const res = await GetUserDetailApi(user.userId)
-    state.userMeta = res
+    state.clearanceLevel = res.properties.clearanceLevel
 },{
     immediate:true
 })
