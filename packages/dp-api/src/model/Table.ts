@@ -379,7 +379,7 @@ export const defaultTableSetting: TableColumnSetting = {
                         "name": "",
                         "type": "text",
                         "command": "delete",
-                        "suffixIcon": "/icons/menu/trash.svg",
+                        "suffixIcon": "/icons/delete.svg",
                         "index": 0
                     },
                     {
