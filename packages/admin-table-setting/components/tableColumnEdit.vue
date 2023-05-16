@@ -5,6 +5,7 @@
             :model="form"
             :rules="rules"
             label-position="top"
+            @submit.native.prevent
     >   
         <el-radio-group v-if="typeList" v-model="form.type">
             <el-radio label="">prop</el-radio>

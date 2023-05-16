@@ -3,6 +3,7 @@
         <el-form ref="formRef"
                 :model="form"
                 label-width="120px"
+                @submit.native.prevent
         >
             <el-radio-group v-model="state.formatType" @change="formatTypeChange">
                 <el-radio label="">prop</el-radio>

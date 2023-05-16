@@ -7,7 +7,7 @@
         </div>
       </template>
       <template v-else>
-        <el-form label-position="top" ref="FormRef" size="small" :status-icon="true" :model="form">
+        <el-form label-position="top" ref="FormRef" size="small" :status-icon="true" :model="form" @submit.native.prevent>
           <template v-if="status === 'beforeSubmit'">
               <el-form-item :label="$t('login_username')" prop="userId" class="intro"
                         :rules="[{ required: true, message: $t('form_common_requird')}]">

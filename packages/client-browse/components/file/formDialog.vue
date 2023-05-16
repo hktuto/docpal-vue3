@@ -4,6 +4,7 @@
                 :model="form"
                 label-width="120px"
                 label-position="top"
+                @submit.native.prevent
         >
             <el-form-item :label="$t('tableHeader_name')" prop="name"
                 :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">

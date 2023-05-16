@@ -18,7 +18,7 @@
 
   </tr> 
   <el-dialog :title="$t('workflow_startAdhocWorkflow')" :visible.sync="dialogShow" append-to-body v-loading="loading">
-        <el-form :model="form" ref="FormRef">
+        <el-form :model="form" ref="FormRef" @submit.native.prevent>
           <el-form-item :label="$t('role.auditor')">
             <el-select v-model="form.user_approver_id" multiple filterable clearable>
               <el-option v-for="item in userListFilter" :key="item.userId" :label="item.userId" :value="item.userId" ></el-option>

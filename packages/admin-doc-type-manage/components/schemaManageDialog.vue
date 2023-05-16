@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" class="scroll-dialog" :title="state.isEdit ? $t('docType_editDocumentSchema') : $t('docType_createDocumentSchema')"
     :close-on-click-modal="false"
     >
-    <el-form :model="formData" ref="FormRef" label-position="top">
+    <el-form :model="formData" ref="FormRef" label-position="top" @submit.native.prevent>
         <el-row :gutter="20">
             <el-col :span="12">
                 <el-form-item :label="$t('docType_featureId')"

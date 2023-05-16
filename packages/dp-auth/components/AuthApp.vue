@@ -18,6 +18,7 @@
       <NuxtPage />
     </div>
      <LoadingBg v-if="appStore.displayState != 'ready'" />
+
   </div>
 </template>
 

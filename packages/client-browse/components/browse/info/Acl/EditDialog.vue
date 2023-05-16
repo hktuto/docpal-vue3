@@ -7,7 +7,7 @@
   <template #title>
     {{ isEdit ? $t('dpDocument_acl_editLocal'): $t('dpDocument_acl_addLocal')}}
   </template>
-  <el-form :model="aclForm" ref="FormRef" abel-position="top">
+  <el-form :model="aclForm" ref="FormRef" abel-position="top" @submit.native.prevent>
     <el-form-item
       :label="$t('user_username')"
       prop="userId"

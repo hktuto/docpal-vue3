@@ -8,7 +8,7 @@
             </div>
         </el-tooltip>
         <el-dialog v-model="dialogOpened" append-to-body :title="$t('filePopover_rename')" class="scroll-dialog">
-          <el-form ref="formRef" :model="form" label-width="120px" label-position="top">
+          <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
             <el-form-item :label="$t('name')" prop="name"
               :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">
               <el-input v-model="form.name" clearable />

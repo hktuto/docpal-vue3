@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editCaptureProfile') : $t('docType_addCaptureProfile')"
     :close-on-click-modal="false"
     >
-    <el-form v-loading="state.pathLoading" :model="formData" ref="FormRef" label-position="top">
+    <el-form v-loading="state.pathLoading" :model="formData" ref="FormRef" label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('docType_profileName')"
                 prop="profileName"
                 :rules="[{ required: true, message: $t('form_common_requird')}]"

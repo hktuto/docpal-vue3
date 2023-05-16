@@ -3,6 +3,7 @@
         <el-form ref="formRef"
                 :model="form"
                 label-width="120px"
+                @submit.native.prevent
         >
             <el-form-item :label="$t('content')" prop="name"
                 :rules="[ { required: false, message: 'Please input email address', trigger: 'change'}]">

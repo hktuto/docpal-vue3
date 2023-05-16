@@ -10,7 +10,7 @@
       :close-on-click-modal="false"
       custom-class="centerDialog">
       <div slot="title" class="title">{{ $t('file_updateDocument') }}</div>
-      <el-form :model="formData" ref="FormRef" abel-position="top" v-loading="loading">
+      <el-form :model="formData" ref="FormRef" abel-position="top" v-loading="loading" @submit.native.prevent>
         <el-form-item :label="$t('tableHeader_name')"
                   prop="name"
                   :rules="[{ required: true, message: $t('form_common_requird')}]"

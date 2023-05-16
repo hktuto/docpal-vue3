@@ -16,7 +16,7 @@
         </div>
         <el-form ref="FormRef" class="table__content"
                 :model="state.formData" :rules="state.formRule"
-                label-position="top">
+                label-position="top" @submit.native.prevent>
             <el-table
                 ref="tableRef"
                 :data="state.tableData"

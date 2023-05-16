@@ -2,7 +2,7 @@
     <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')"
         destroy-on-close append-to-body :close-on-click-modal="false">
         <el-form ref="FormRef" :model="form"
-            label-position="top" v-loading="state.loading">
+            label-position="top" v-loading="state.loading" @submit.native.prevent>
             <el-form-item :label="$t('file_template')" prop="templatePath"
                 :rules="[{ required: true, message: $t('form_common_requird')}]">
                 <el-select v-model="form.templatePath" clearable

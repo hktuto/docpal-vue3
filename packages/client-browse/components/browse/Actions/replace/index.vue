@@ -11,7 +11,7 @@
     </template>
     <div v-loading="loading">
       <div class="title">{{ $t('replaceFile') }}</div>
-      <el-form ref="formRef" :model="form"  label-position="top">
+      <el-form ref="formRef" :model="form"  label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('common_file')" prop="targetFile"
                   :rules="[{ required: true, message: $t('form_common_requird')}]">
                   <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1"></BrowseActionsReplaceUpload>
