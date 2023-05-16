@@ -2,6 +2,10 @@
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData"
                 @row-dblclick="handleDblclick">
+            <template #preSortButton>
+                <el-button class="button-add" type="primary"
+                    @click="handleAdd()">{{$t('common_add')}}</el-button>
+            </template>
             <template #icon="{ row }">
                 <BrowseItemIcon class="el-icon--left" :type="row.isFolder ? 'folder' : 'file'"/>
             </template>
@@ -41,10 +45,14 @@ function handleDblclick (row) {
 }
 async function handleSubmit (shareInfo) {
 }
+function handleAdd() {}
 onMounted(async() => {
     getList()
 })
 </script>
 
 <style lang="scss" scoped>
+.button-add {
+    margin: 0 0 var(--app-padding) 0;
+}
 </style>
