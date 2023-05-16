@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dpDocument_acl_addLocal')"
+<el-dialog v-model="state.visible" :title="`${$t('dpDocument_acl_editLocal')} (${state.aclItem.userId})`"
     :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />

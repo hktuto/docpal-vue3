@@ -49,6 +49,7 @@ async function handleSubmit () {
 function handleOpen() {
     state.visible = true
     setTimeout(() => {
+        FromRendererRef.value.vFormRenderRef.resetForm()
         handleOptions()
     })
 }
