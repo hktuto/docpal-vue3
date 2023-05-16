@@ -54,7 +54,7 @@
                 </div>
                 <template #info>
                     <Teleport :disabled="!data.isFolder" to="#browseInfoSection">
-                        <BrowseInfo :doc="data" :infoOpened="infoOpened"/>
+                        <BrowseInfo :doc="data"  :infoOpened="infoOpened" />
                     </Teleport>
                 </template>
             </BrowseDetail>
