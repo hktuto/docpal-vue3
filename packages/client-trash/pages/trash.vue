@@ -1,6 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                @command="handleAction"
                 @pagination-change="handlePaginationChange"
                 @selection-change="handleSelectionChange"
                 @row-dblclick="handleDblclick">
@@ -112,6 +113,16 @@ async function handleDblclick (row) {
         curName: '',
     })
     const ProgressDialogRef = ref()
+    function handleAction (command:sting, row: any, rowIndex: number) {
+        switch (command) {
+            case 'delete':
+                handleDeleteOne(row.id)
+                break
+            case 'restored':
+                handleRestoreOne(row.id)
+                break
+        }
+    }
     function handleRestore () {
         batchAction.value = 'restore'
         batchActionHandler()

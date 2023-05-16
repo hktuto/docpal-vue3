@@ -363,7 +363,36 @@ export const defaultTableSetting: TableColumnSetting = {
                     "index": 0
                 }]
             },
-            
+            {
+                id: '7',
+                "type": "",
+                "label": "actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "restored",
+                        "suffixIcon": "/icons/restored.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
         ],
         events: ['delete', 'restored'],
         options: { pageSize: 20 }
