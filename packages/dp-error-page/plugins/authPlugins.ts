@@ -12,7 +12,6 @@ export default defineNuxtPlugin((nuxtApp) => {
           return api(config);
         } else if (error?.response?.status === 500) {
           messageError(error)
-          return error.response
         }
         return Promise.reject(error);
       });
