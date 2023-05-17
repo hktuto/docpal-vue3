@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { GetChildThumbnail, GetDocDetailApi, patchDocumentApi } from 'dp-api'
+import { deepCopy, GetChildThumbnail, GetDocDetailApi, patchDocumentApi } from 'dp-api'
 
 import { getAclsApi } from 'dp-api/src/endpoint/admin-acl'
 import type Node from 'element-plus/es/components/tree/src/model/node'
@@ -72,7 +72,15 @@ async function handleClick (doc) {
     state.loading = false
 }
 async function getAcls () {
-    state.acls = await getAclsApi(state.doc.id)
+    try {
+        if(!state?.doc?.id) throw new Error("no id");
+        state.acls = await getAclsApi(state.doc.id)
+    } catch (error) {
+        state.acls = {
+            inherited: [],
+            local: []
+        }
+    }
 }
 async function clearanceLevelChange (value) {
     try { 
@@ -93,40 +101,47 @@ async function clearanceLevelChange (value) {
 
 // #region module: table data
     const inheritedList = computed(() => {
-        const result = state.acls.inherited.reduce((prev,item) => {
-        const exitItem = prev.find(prevItem => prevItem.userId === item.userId)
-        if (exitItem) {
-            exitItem.permission = item.permission
-            permissionFilter(exitItem, item.permission, item.id)
-        } else {
-            permissionFilter(item, item.permission, item.id)
-            prev.push(item)
+        try {
+            const result = state.acls.inherited.reduce((prev,item) => {
+                const exitItem = prev.find(prevItem => prevItem.userId === item.userId)
+                if (exitItem) {
+                    exitItem.permission = item.permission
+                    permissionFilter(exitItem, item.permission, item.id)
+                } else {
+                    permissionFilter(item, item.permission, item.id)
+                    prev.push(item)
+                }
+                return prev
+            }, [])
+            result.sort((a,b)=> (a.userId.localeCompare(b.userId) ));
+            return deepCopy(result)
+        } catch (error) {
+            return []
         }
-        return prev
-        }, [])
-        result.sort((a,b)=> (a.userId.localeCompare(b.userId) ));
-        return deepCopy(result)
     })
     const localList = computed(() => {
-      const result = state.acls.local.reduce((prev,item) => {
-        const exitItem = prev.find(prevItem => prevItem.userId === item.userId)
-        if (exitItem) {
-          permissionFilter(exitItem, item.permission, item.id)
-        } else {
-          item.print = false
-          item.read = false
-          item.write = false
-          item.manage = false
-          item.loading = false
-          item.printLoading = false
-          permissionFilter(item, item.permission, item.id)
-          prev.push(item)
+        try {
+            const result = state.acls.local.reduce((prev,item) => {
+                const exitItem = prev.find(prevItem => prevItem.userId === item.userId)
+                if (exitItem) {
+                permissionFilter(exitItem, item.permission, item.id)
+                } else {
+                item.print = false
+                item.read = false
+                item.write = false
+                item.manage = false
+                item.loading = false
+                item.printLoading = false
+                permissionFilter(item, item.permission, item.id)
+                prev.push(item)
+                }
+                return prev
+            }, [])
+            result.sort((a,b)=> (a.userId.localeCompare(b.userId) ));
+            return deepCopy(result)
+        } catch (error) {
+            return []
         }
-        return prev
-      }, [])
-      
-      result.sort((a,b)=> (a.userId.localeCompare(b.userId) ));
-      return JSON.parse(JSON.stringify(result)) 
     })
     function isRead (permission) {
       return ['Read', 'ReadWrite', 'ManageRecord', 'ManageLegalHold', 'Everything'].includes(permission)
