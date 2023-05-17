@@ -1,57 +1,40 @@
 <template>
     <div class="docInfoContainer">
-        <div class="infoTitle">
-      <span class="title">{{ $t('rightDetail_info') }}</span>
-      <!-- <img class="cursorPointer" src="/icons/fold.svg" /> -->
+      <div class="infoSection">
+        <div class="infoTitle">{{$t('info_type')}}</div>
+        <div class="infoContent">{{ info.type }}</div>
+      </div>
+      <div v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')" class="infoSection">
+        <div class="infoTitle">{{ $t('info_version') }}</div>
+        <div class="infoContent"><BrowseInfoVersionPopover v-if="info.id" :doc="info"></BrowseInfoVersionPopover></div>
+      </div>
+      <div class="infoSection">
+        <div class="infoTitle">{{ $t('info_modified') }}</div>
+        <div class="infoContent">{{
+            displayTime(info.modifiedDate) === 'Invalid Date'
+              ? displayTime(info.createdDate)
+              : displayTime(info.modifiedDate)
+          }}</div>
+      </div>
+      <div class="infoSection">
+        <div class="infoTitle">{{ $t('info_created') }}</div>
+        <div class="infoContent">{{ displayTime(info.createdDate) }}</div>
+      </div>
+      <div class="infoSection">
+        <div class="infoTitle">{{ $t('info_by') }}</div>
+        <div class="infoContent">{{ info.createdBy }}</div>
+      </div>
+      <div class="infoSection">
+        <div class="infoTitle">{{ $t('info_contributors') }}</div>
+        <div class="infoContent tagList">
+          <div v-for="(contributor, index) in contributors"
+               :key="index" class="tag tableItemTags">
+            {{ contributor }}
+          </div>
+        </div>
     </div>
-    <div class="infoDetail">
-      <table class="tableItem">
-        <tr>
-          <th class="tableItemTitle">{{ $t('info_type') }}</th>
-          <td class="tableItemContent">{{ info.type }}</td>
-        </tr>
-        <tr v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')">
-          <th class="tableItemTitle">{{ $t('info_version') }}</th>
-          <td class="tableItemContent">
-            <!-- <template v-if="version !== '0.0'"> 
-              {{ version }}
-              <template v-if="info.isCheckedOut">+ </template>
-            </template> -->
-            <!-- <CreateVersionButtom v-show="info.isCheckedOut" :doc="info" /> -->
-            <!-- {{info}} -->
-            <BrowseInfoVersionPopover v-if="info.id" :doc="info"></BrowseInfoVersionPopover>
-          </td>
-        </tr>
-        <tr>
-          <th class="tableItemTitle">{{ $t('info_modified') }}</th>
-          <td class="tableItemContent">
-            {{
-              displayTime(info.modifiedDate) === 'Invalid Date'
-                ? displayTime(info.createdDate)
-                : displayTime(info.modifiedDate)
-            }}
-          </td>
-        </tr>
-        <tr>
-          <th class="tableItemTitle">{{ $t('info_created') }}</th>
-          <td class="tableItemContent">{{ displayTime(info.createdDate) }}</td>
-        </tr>
-        <tr>
-          <th class="tableItemTitle">{{ $t('info_by') }}</th>
-          <td class="tableItemContent tableItemTags">{{ info.createdBy }}</td>
-        </tr>
-        <tr>
-          <th class="tableItemTitle vertical-top">{{ $t('info_contributors') }}</th>
-          <td class="tableItemContent" >
-            <div v-for="(contributor, index) in contributors"
-              :key="index" class="tagContainer tableItemTags">
-              {{ contributor }}
-            </div>
-          </td>
-        </tr>
-        <BrowseInfoWorkflowSection v-if="!doc.isFolder" :doc="doc"></BrowseInfoWorkflowSection>
-      </table>
-    </div>
+<!--      doc meta -->
+      <BrowseInfoMeta :doc="doc" />
     </div>
 </template>
 
@@ -85,69 +68,42 @@ const contributors = computed(() => {
 
 
 <style lang="scss" scoped>
-.info {
+.docInfoContainer{
   display: flex;
-  flex-direction: column;
-  margin-top: 10px;
-  // border-bottom: 1px solid var(--color-grey-200);
-  .infoTitle {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    .title {
-      font-family: Roboto;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 1.125rem;
-      line-height: 1.375rem;
-      color: var(--color-grey-500);
+  flex-flow: column nowrap;
+  gap: var(--app-padding);
+  color: var(--color-grey-600);
+
+  :deep {
+    > * {
+      flex: 1 0 auto;
     }
-  }
-  
-  .tableItem {
-    font-size: 0.875rem;
-    border-collapse: separate;
-    border-spacing: 0.625rem;
-    white-space: nowrap;
-    .tableItemTitle {
-      color: var(--color-grey-500);
-      text-align: left;
-      text-align: left;
-      vertical-align: baseline;
-      line-height: 1.375rem;
+
+    .infoSection{
+
+      margin-bottom: 6px;
     }
-    .vertical-top {
-      vertical-align: text-top;
+    .infoTitle {
+      font-size: 0.6rem;
+      display: block;
+      color: var(--color-grey-400);
+      margin-bottom: 4px;
     }
-    .tableItemContent {
-      font-weight: bold;
-      line-height: 1.375rem;
-      color: var(--color-grey-500);
+    .infoContent{
+      font-size: .8rem;
+      font-weight: 500;
+      display: block;
+      min-height: 1rem;
     }
-    .tableItemTags {
-      padding: 0.1rem 0.75rem;
-      background: var(--color-grey-300);
-      border-radius: 0.875rem;
-      font-weight: bold;
-      margin: 0 calc(var(--app-padding) / 2) calc(var(--app-padding) / 2 ) 0;
-      color: #ffffff;
-    } 
   }
 }
-
-.tableItemTitle{
-    font-weight: normal;
-    color: var(--color-grey-500);
-    text-align: left;
-    vertical-align: baseline;
-    line-height: 1.375rem;
+.tagList{
+  .tag{
+    display: inline-block;
+    background: var(--color-grey-050);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin: 0 4px 4px 0;
   }
-.tableItemTags {
-      padding: 0.1rem 0.75rem;
-      background: var(--color-grey-300);
-      border-radius: 0.875rem;
-      font-weight: bold;
-      margin: 0 calc(var(--app-padding) / 2) calc(var(--app-padding) / 2 ) 0;
-      color: #ffffff;
-    }
+}
 </style>

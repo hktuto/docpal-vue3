@@ -54,6 +54,7 @@ export const GetChild = async(idOrPath:string):Promise<GetChildResponse> => {
 }
 
 export const GetDocumentAdditionalApi = async(params) => {
+    console.log("GetDocumentAdditionalApi", params)
     return api.get('/docpal/workflow/queryMetaValidationRule', { params }).then(res => res.data.data)
 }
 
@@ -113,7 +114,7 @@ export const DownloadDocApi = async(idOrPath:string) => {
     }
 
     export const duplicateDetectionApi = async(param) => {
-        return api.post('/nuxeo/document/isDuplicateName', param).then(res => res.data.titles || {}).catch(err => ({}))
+        return api.post('/nuxeo/document/isDuplicateName', param).then(res => res.data.data.titles || {}).catch(err => ({}))
     }
     
 // #endregion
@@ -149,6 +150,10 @@ export const DownloadDocApi = async(idOrPath:string) => {
     export const getCollectionDoc = async (idOrPath: string) => {
         const { entryList, totalSize } = await api.post('/nuxeo/collection/documents', { idOrPath }).then(res =>res.data);
         return {entryList, totalSize}
+    }
+
+    export const addCollectionApi = async(param) => {
+        return await api.post('/nuxeo/collection/add', param).then(res =>res.data);
     }
 
     export const getAllCollection = async () => {

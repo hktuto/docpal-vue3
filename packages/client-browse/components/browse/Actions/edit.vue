@@ -26,8 +26,10 @@
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
 import { patchDocumentApi } from 'dp-api'
+import {ElMessage} from 'element-plus'
 const props = defineProps<{
-    doc: any
+    doc: any,
+    parentPath: string
 }>()
 const emits = defineEmits(['success'])
 const dialogOpened = ref()
@@ -39,6 +41,7 @@ const form = ref({
 const state = reactive({
   doc: {}
 })
+const { t} = useI18n() 
 function openDialog(doc){
   dpLog("openDialog");
   state.doc = doc
@@ -48,6 +51,16 @@ function openDialog(doc){
   dialogOpened.value = true
 }
 async function handleSave(){
+  // check if the name is exist in the folder
+  const {isDuplicate} = await duplicateNameFilter(getParentPath(props.doc.path), [props.doc]);
+
+  if(isDuplicate && form.value.name !== props.doc.name){
+    ElMessage({
+      message: t('dpTip_duplicateFileName') as string,
+      type: 'error'
+    })
+    return
+  }
   await patchDocumentApi({
     idOrPath: form.value.id,
     name: form.value.name,

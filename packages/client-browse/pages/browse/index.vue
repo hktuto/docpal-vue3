@@ -17,11 +17,11 @@
                 <BrowseList :doc="data" :permission="permission" v-model:view="pageOptions.viewType"
                     @select-change="handleSelectionChange"/>
                 <div id="browseInfoSection">
-                    
+
                 </div>
             </div>
         </div>
-        <Teleport v-if="data" :disabled="data.isFolder" to="body">  
+        <Teleport v-if="data" :disabled="data.isFolder" to="body">
             <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" >
                 <div class="fileNameContainer">
                     <div class="fileName">{{ data.name }}</div>
@@ -42,7 +42,7 @@
                         <BrowseActionsShare v-if="selectList.length > 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
                         <BrowseActionsUploadRequest v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :path="data.path" />
                         <div class="actionDivider"></div>
-                        <BrowseActionsInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" @click="infoOpened = !infoOpened"/>
+                        <BrowseActionsInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })  && selectList.length <= 1 " :doc="selectList.length === 1 ? selectList[0] : data" @click="infoOpened = !infoOpened"/>
                     </Teleport>
                     <div class="actionDivider"></div>
                     <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
@@ -54,7 +54,7 @@
                 </div>
                 <template #info>
                     <Teleport :disabled="!data.isFolder" to="#browseInfoSection">
-                        <BrowseInfo :doc="data"  :infoOpened="infoOpened" />
+                        <BrowseInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })  && selectList.length <= 1 " :doc="selectList.length === 1 ? selectList[0] : data"  :infoOpened="infoOpened" @close="infoOpened = false" />
                     </Teleport>
                 </template>
             </BrowseDetail>
@@ -70,6 +70,7 @@
 import { useEventListener } from '@vueuse/core'
 import {watch, ref, computed} from 'vue'
 import { GetDocDetail, GetDocPermission, GetDocumentAdditionalApi } from 'dp-api'
+import {getDocumentDetail} from "~/utils/browseHelper";
 
 // #region refs
 const breadCrumb = ref();
@@ -80,30 +81,19 @@ const data = ref();
 const loading = ref(false)
 const permission = ref({permission:"",print:false});
 const auth = useUser();
-const selectedFiles = ref([]); 
+const selectedFiles = ref([]);
 const pageOptions = ref<BrowseOptions>({viewType:'table'})
 
-const selectList = ref([])
+const selectList = ref<any[]>([])
 // #endregion
 provide('selectList', selectList)
 const routePath = computed( () => (route.query.path as string) || '/')
 const infoOpened = ref(false);
 
-async function getPermission(){
-    permission.value = await GetDocPermission(routePath.value, auth.user.value.username);
-}
 async function getDocDetail() {
-    // step 1 get permission
-    await getPermission()
-    // step 2 get doc detail
-    data.value = await GetDocDetail(routePath.value);
-    // step 3 get doc additional info
-    data.value.displayMeta = await GetDocumentAdditionalApi({documentType:data.value.documentType})
-    // step 4 set permission helper to doc
-    data.value.canWrite = permissionAllow({feature:'Write', userPermission:permission.value.permission })
-    data.value.canEdit = permissionAllow({feature:'Edit', userPermission:permission.value.permission })
-    data.value.canContorl = permissionAllow({feature:'Manage', userPermission:permission.value.permission })
-    dpLog(data.value.displayMeta)
+    const response = await getDocumentDetail(routePath.value, auth.user.value.username)
+    permission.value = response.permission;
+    data.value = response.doc;
 }
 
 function itemDeleted(){
@@ -111,23 +101,18 @@ function itemDeleted(){
         breadCrumb.value.goParent();
     }
 }
-function handleRefresh (docId) {
+function handleRefresh () {
     const time = new Date().valueOf().toString()
-    router.push({ 
-        query: { ...route.query, time } 
+    router.push({
+        query: { ...route.query, time }
     })
 }
-function handleSelectionChange (rows) {
+function handleSelectionChange (rows:any) {
     selectList.value = [...rows]
 }
 watch(route, async() => {
     loading.value = true;
-    try{
-        await getDocDetail()
-    }catch(error) {
-        dpLog(error)
-    }
-
+    await getDocDetail()
     loading.value = false;
 },{immediate:true});
 
@@ -137,8 +122,8 @@ function detailClosed() {
     breadCrumb.value.goParent();
 }
 onMounted(() => {
-    useEventListener(document, 'docActionRefresh', (event) => handleRefresh(event.detail))  
-    useEventListener(document, 'tree-node-update', (event) => getDocDetail())  
+    useEventListener(document, 'docActionRefresh', (event) => handleRefresh(event.detail))
+    useEventListener(document, 'tree-node-update', (event) => getDocDetail())
 })
 </script>
 
@@ -175,7 +160,7 @@ onMounted(() => {
     align-items: center;
     font-size: 16px;
     --icon-size: 16px;
-    
+
 }
 .actionDivider{
     height: calc( var(--icon-size) + 16px);

@@ -16,7 +16,7 @@
     </div>
     <el-select
       v-model="selected"
-      value-key="path"
+      value-key="path"  
       filterable
       allow-create
       default-first-option
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import {getAllCollection} from 'dp-api'
+import {getAllCollection, createCollectionApi, addCollectionApi} from 'dp-api'
 const props = defineProps<{
   doc: any,
   exitList: any
@@ -67,7 +67,7 @@ const popoverShow = ref(false)
         collection: { idOrPath: selected.value },
       }
 
-      addCollection(param).then((res) => {
+      addCollectionApi(param).then((res) => {
         selected.value = ''
         if (!res) return
         emit('handleAdd', props.doc.id)
@@ -78,13 +78,14 @@ const popoverShow = ref(false)
       const index = myCollection.value.findIndex(
         (item) => item.path === selected.value
       )
-      if (index !== -1) return 1
-        const newCollection = await createCollectionApi({ name: selected.value })
-        selected.value = newCollection.path
-        flag = 1
-      await getAllCollection()
+      if (index !== -1) {return 1}
+      const newCollection = await createCollectionApi({ name: selected.value })
+      selected.value = newCollection.path
+      flag = 1
+      allCollection.value = await getAllCollection()
       return flag
     }
+
     onMounted(async() => {
       allCollection.value = await getAllCollection()
     })

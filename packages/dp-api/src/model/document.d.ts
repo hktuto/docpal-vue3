@@ -43,7 +43,10 @@ export type DocDetail = {
     },
     type: string,
     version: string
-
+    displayMeta?: any
+    canWrite ?: boolean,
+    canEdit ?: boolean,
+    isDuplicate ?: boolean,
 }
 export type DocType = {
     isFolder: boolean,

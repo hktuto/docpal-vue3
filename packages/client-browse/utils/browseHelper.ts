@@ -1,7 +1,13 @@
-import { duplicateDetectionApi } from "dp-api";
+import {duplicateDetectionApi, GetDocDetail, GetDocPermission, GetDocumentAdditionalApi} from "dp-api";
 
 export const isRoot = (path:string):boolean => {
     return path === "/";
+};
+
+export const getParentPath = (path:string):string => {
+    const arr = path.split("/");
+    arr.pop();
+    return arr.join("/");
 };
 
 export const getUniqueName = async(file:any) => {
@@ -15,6 +21,12 @@ export const getUniqueName = async(file:any) => {
     }
 }
 
+/**
+ *
+ * @param idOrPath parent id or path
+ * @param list list of files to check for duplicates
+ * @returns {isDuplicate: boolean, list: any[]}
+ */
 export const duplicateNameFilter = async (idOrPath: string, list:any) => {
     try {
       let result = false
@@ -23,6 +35,7 @@ export const duplicateNameFilter = async (idOrPath: string, list:any) => {
         return prev
       }, [])
       const res = await duplicateDetectionApi({path:idOrPath, titles})
+      console.log(res);
       list.forEach((doc:any) => {
         if (res[doc.name]) {
           result = true
@@ -37,9 +50,33 @@ export const duplicateNameFilter = async (idOrPath: string, list:any) => {
         list,
       }
     } catch (error) {
+      console.log(error);
       return {
-        isDuplicate: false,
+        isDuplicate: true,
         list: []
       }
     }
+  }
+
+/**
+ *
+ * @param idOrPath document id or path to get details for
+ * @param userId user id to check permissions for, if null, no permissions will be returned
+ */
+export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
+    const response = await GetDocDetail(idOrPath);
+    response.displayMeta = await GetDocumentAdditionalApi({documentType: response.type})
+    if(userId) {
+      const permission:any = await GetDocPermission(idOrPath, userId);
+      response.canWrite = permissionAllow({feature:'ReadWrite', userPermission:permission.permission })
+      response.canEdit = permissionAllow({feature:'ReadWrite', userPermission:permission.permission })
+      return {
+        permission,
+        doc: response
+      }
+    }
+    return {
+      permission: null,
+      doc: response
+    };
   }

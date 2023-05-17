@@ -8,25 +8,33 @@
     :class="{infoContainer:true, infoOpened:!infoOpened}"
     @resizemove="resizeMove"
 >
-<el-tabs class="tabContainer" v-model="currentTab" >
+<!-- doc preview and name -->
+<div class="infoHeaderSection">
+    <div class="headerTopRow">
+        <div class="name">{{ doc.name }}</div>
+        <SvgIcon :src="'icons/close.svg'" @click="$emit('close')"/>
+    </div>
+</div>
+<el-tabs v-if="detail" class="tabContainer" v-model="currentTab" >
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
         <div class="infoTagContainer">
-            <BrowseInfoDocInfo :doc="doc" />
-            <BrowseInfoPicture :doc="doc" />
-            <BrowseInfoMeta :doc="doc" />
-            <BrowseInfoTag :doc="doc" />
-            <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" />
-            <BrowseInfoAcl :doc="doc" />
+            <BrowseInfoPreview :doc="detail" />
+            <BrowseInfoDocInfo :doc="detail" />
+            <BrowseInfoPicture :doc="detail" />
+            <BrowseInfoTag :doc="detail" />
+            <BrowseInfoCollection :doc="detail" />
+<!--            <BrowseInfoAcl :doc="detail" />-->
+            <BrowseInfoWorkflowSection v-if="!detail.isFolder" :doc="doc"></BrowseInfoWorkflowSection>
         </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
-        <BrowseInfoActivities :doc="doc" />
+        <BrowseInfoActivities :doc="detail" />
     </el-tab-pane>
-    <el-tab-pane v-if="!doc.isFolder" :label="$t('convert_convert')" name="convert">
-        <BrowseInfoConvert :doc="doc" />
+    <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
+        <BrowseInfoConvert :doc="detail" />
     </el-tab-pane>
-    <el-tab-pane v-if="!doc.isFolder" :label="$t('rightDetail_related')" name="relate">
-        <BrowseInfoRelate :doc="doc" />
+    <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">
+        <BrowseInfoRelate :doc="detail" />
     </el-tab-pane>
 </el-tabs>
 </Interact>
@@ -34,6 +42,8 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
+import {DocDetail} from "dp-api";
+import {getDocumentDetail} from "~/utils/browseHelper";
 
 const props = defineProps<{
     doc: any,
@@ -41,13 +51,13 @@ const props = defineProps<{
 }>()
 const { doc } = toRefs(props)
 const currentTab = ref('info')
-const dragSize = ref(200);
 const maxWidth = 600;
 const minWidth = 120;
 const w = ref(400);
 const h = ref(0);
 const x = ref(0);
 const y = ref(0);
+
 const style = computed(() => {
     if(!props.infoOpened) return {
         width: '0px',
@@ -64,41 +74,54 @@ function resizeMove(event:any) {
     w.value = maxWidth ? Math.min(min, maxWidth) : min;
     x.value += event.deltaRect.left;
     y.value += event.deltaRect.top;
-    if(w.value === maxWidth) {
-        dpLog('reachMax')
-        emit('reachMax')
-    }else if(w.value === minWidth) {
-        dpLog('reachMin')
-        emit('reachMin')
-    }
 }
 
-const infoSize = computed(() => {
-    return props.infoOpened ? dragSize.value + 'px' : '0px'
-})
+const detail = ref<DocDetail>();
 
-watch(doc, () => {
+
+watch(doc, async() => {
     if(!doc.value) return;
+
     // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
     if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
         currentTab.value = 'info'
     }
+
+    // get detail
+    const response = await getDocumentDetail(doc.value.id);
+    detail.value = response.doc;
+
+    //scroll to top
+    const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
+    if(tabContent) {
+        tabContent.scrollTop = 0;
+    }
+
 })
 
 </script>
 
 <style lang="scss" scoped>
-
+.infoHeaderSection{
+  padding-block: var(--app-padding);
+}
+.headerTopRow{
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  gap: 12px;
+}
 .infoContainer {
     margin-left: var(--app-padding);
     padding: var(--app-padding);
     background: var(--color-grey-0000);
     height: 100%;
-    border-radius: 12px;
     user-select: none;
     -ms-touch-action: none;
     touch-action: none;
     overflow: hidden;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    border-radius: 12px;
     &.infoOpened{
         padding:0;
     }

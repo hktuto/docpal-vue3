@@ -1,19 +1,8 @@
 <template>
-    <div :class="{ meta: true, noContent: !hasMeta }" v-if="hasMeta">
-    <div class="metaTitle">
-      <span class="title">{{ $t('rightDetail_meta') }}</span>
-      <BrowseMetaEditDialog :doc="doc" />
+    <div v-for="(value, key) in displayMeta" :key="key"  class="infoSection">
+      <div class="infoTitle">{{ $t(key)}}</div>
+      <div class="infoContent">{{ value }}</div>
     </div>
-    <div v-if="doc.displayMeta" style="overflow: hidden;">
-      <table class="tableItem">
-        <tr v-for="(value, key) in displayMeta" :key="key" v-show="value">
-          <th class="tableItemTitle">{{ $t(key)}}</th>
-          <td class="tableItemContent">{{ value }}</td>
-        </tr>
-      </table>
-    </div>
-     
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -25,13 +14,14 @@
 
     const metaStructureByProperties = (metaList: any[], properties: string) => {
       if(!properties || !metaList) return {}
+      console.log('metaList', metaList, doc);
       return  metaList.reduce((p, item) => {
                 if (item.display) p[item.metaData] = properties[item.metaData] || ''
                 if (item.dataType === 'date') p[item.metaData] = displayTime(p[item.metaData])
                 return p
               }, {})
     }
-    
+
     function updateDisplayMeta() {
       if(!doc.value.displayMeta) return;
       hasMeta.value = doc.value.displayMeta.length > 0
@@ -40,7 +30,7 @@
     watch(doc, async (newValue) => {
       if (newValue) updateDisplayMeta()
     }, { immediate: true, deep: true })
-    
+
 
 </script>
 
