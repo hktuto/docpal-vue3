@@ -98,7 +98,7 @@ async function handleUnclaim () {
         props.taskDetail.assignee = ''
         dpLog({response}, 'handleUnclaim');
     } catch (error) {
-        ElMessage.error(error.response.data.message)
+        // ElMessage.error(error.response.data.message)
     }
     setTimeout(() => {
         state.loading = false  
@@ -113,7 +113,7 @@ async function handleClaim () {
             emits('change', response, true)
         }    
     } catch (error) {
-        ElMessage.error(error.response.data.message)
+        // ElMessage.error(error.response.data.message)
     }   
     setTimeout(() => {
         state.loading = false  
@@ -127,7 +127,7 @@ async function handelDelete() {
     if(!!response) {
         router.push(`/workflow?tab=${route.query.state}`)
     } else {
-        ElMessage.error(error?.response?.data?.message)
+        // ElMessage.error(error?.response?.data?.message)
     }
 }
 </script>

@@ -87,7 +87,7 @@ async function clearanceLevelChange (value) {
         if(state.doc.properties) state.doc.properties['sec:clearanceLevel'] = value || null;
         ElMessage.success('success')
     } catch (error) {
-        ElMessage.error('error')
+        // ElMessage.error('error')
     }
 }
 

@@ -131,7 +131,7 @@ const isAssigneeUser = computed(() => {
             ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
             state.loading = false
         } catch (error) {
-            ElMessage.error(error)
+            // ElMessage.error(error)
         }
     }
     async function handleSubmit () {
@@ -148,7 +148,7 @@ const isAssigneeUser = computed(() => {
             ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
             router.push(`/workflow?tab=${state.backState}`)
         } catch (error) {
-            ElMessage.error(error.message)
+            // ElMessage.error(error.message)
         }
         state.loading = false
     }

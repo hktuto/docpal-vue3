@@ -54,7 +54,7 @@ function uploadDialog(){
       ElMessage.success($i18n.t('publicUpload_success'))
       emits('success')
     } catch (error) {
-      ElMessage.error(error.message)
+      // ElMessage.error(error.message)
     }
   }
 // #endregion

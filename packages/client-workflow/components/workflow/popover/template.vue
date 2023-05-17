@@ -67,7 +67,7 @@ async function handleSubmit() {
         if(!res || res.errorCode) throw new Error(`${$i18n.t('responseMsg_errorCode_2')}`);
         downloadBlob(res, 'template')
     } catch (error) {
-        ElMessage.error(error?.response?.data?.message || error.message)
+        // ElMessage.error(error?.response?.data?.message || error.message)
     }
 }
 async function templateParamGet (templateItem: Object) {
@@ -86,7 +86,7 @@ async function templateParamGet (templateItem: Object) {
         if(!res.paramsList || res.paramsList.length === 0) throw new Error(`${$i18n.t('requestDataIsEmpty')}`);
         form.paramList = [...new Set(res.paramsList)].map(item => ({ key: item, value: '' }))
     } catch (error) {
-        ElMessage.error(error?.response?.data?.message || error.message)
+        // ElMessage.error(error?.response?.data?.message || error.message)
     }
 }
 onMounted(async () => {

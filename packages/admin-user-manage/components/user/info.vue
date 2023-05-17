@@ -55,7 +55,7 @@ async function updateMeta (value) {
         })
         if (!!res) ElMessage.success('success')
     } catch (error) {
-        ElMessage.error('error')
+        // ElMessage.error('error')
     }
 }
 const UserPasswordDialogRef = ref()

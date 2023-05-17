@@ -84,7 +84,7 @@ async function handlePermissionChange (open:boolean, permission: string, row: an
         }
         if (res && res.errorCode)  throw new Error(res.message || 'error');
     } catch (error) {
-        ElMessage.error(error.message || 'error')
+        // ElMessage.error(error.message || 'error')
     }
     setTimeout(async() => {
          emits('refresh')

@@ -51,7 +51,7 @@ async function handleGetPublicDocument (formData) {
         }
     } catch (error) {
         state.shareState = ''
-        ElMessage.error(error?.response?.data?.message || error.message)
+        // ElMessage.error(error?.response?.data?.message || error.message)
     }
 }
 onMounted(() => {

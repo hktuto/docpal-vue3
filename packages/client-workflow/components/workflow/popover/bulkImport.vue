@@ -51,7 +51,7 @@ const formJson = getJsonApi('personalBulkImport.json')
             if(res.errorCode) throw new Error(res.message);
             state.dialogVisible = false
         } catch (error) {
-            ElMessage.error(error.message)
+            // ElMessage.error(error.message)
         }
     }
 // #endregion

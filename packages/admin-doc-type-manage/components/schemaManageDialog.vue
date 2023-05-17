@@ -71,7 +71,7 @@ async function handleSubmit () {
         state.visible = false
         emits('refresh')
     } catch (error) {
-        ElMessage.error(error.response.data.message || 'error')
+        // ElMessage.error(error.response.data.message || 'error')
     }
     state.loading = false
 }
