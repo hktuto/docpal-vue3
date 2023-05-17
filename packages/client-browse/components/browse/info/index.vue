@@ -21,7 +21,7 @@
             <BrowseInfoPreview :doc="detail" @update="docUpdated"/>
             <BrowseInfoDocInfo :doc="detail" :premission="premission"/>
 <!--     move info picture to it own tag or download tag       <BrowseInfoPicture :doc="detail" />-->
-            <BrowseInfoTag :doc="detail" />
+
             <BrowseInfoCollection :doc="detail" />
 <!--            <BrowseInfoAcl :doc="detail" />-->
 <!--            <BrowseInfoWorkflowSection v-if="!detail.isFolder" :doc="doc"></BrowseInfoWorkflowSection>-->

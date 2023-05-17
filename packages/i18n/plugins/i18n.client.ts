@@ -14,16 +14,15 @@ export default defineNuxtPlugin(async({
     const baseUrl = $config.public.PROXY;
     // @ts-ignore
     const appStore = useAppStore($pinia);
-    
+
     for ( const lang of availableLocales) {
         appStore.appLoadingList.push( {key:`Set Langauge : ${lang}`, function:setLanguage($i18n, lang, localeKey, baseUrl)})
-        // get locale 
+        // get locale
     }
-    
+
 })
 
 async function setLanguage(i18n:any, lang:string, localeKey:string[], baseUrl:string) {
-    dpLog("Set Language")
     const language = await getLocalMessage(lang, localeKey, baseUrl);
     if(language) {
         i18n.setLocaleMessage(lang, language);
@@ -41,7 +40,7 @@ async function getLocalMessage (locale:string, localeKey:string[], _baseUrl:stri
                 Object.assign(newLanguage, json);
             })
         } catch (error) {
-            
+
         }
         // const value = item.languageContent;
         // const json = JSON.parse(value);
