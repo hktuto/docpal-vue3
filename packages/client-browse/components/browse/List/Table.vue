@@ -1,18 +1,6 @@
 <template>
 <div class="tableContainer"  >
-    <el-auto-resizer>
-        <template #default="{ height, width }">
-            <el-table-v2
-            :columns="columns"
-            :data="tableData"
-            :width="width"
-                :height="height"
-                fixed
-            />
-        </template>
-    </el-auto-resizer>
-
-    <!-- <Table 
+    <Table 
         v-if="tableData" 
         v-loading="loading" 
         :columns="tableSetting.columns" 
@@ -29,12 +17,12 @@
                     <div class="label">{{row.name}}</div>
                 </div>
             </template>
-    </Table> -->
+    </Table>
 </div>
 </template>
 
 
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting, GetDocPermission } from 'dp-api'
 import {TableV2FixedDir} from 'element-plus'
 import type { Column, RowClassNameGetter } from 'element-plus'
@@ -74,7 +62,7 @@ const { t } = useI18n()
             return;
         }
         state.tableData.push(...res.entryList)
-        if(state.tableData.length <= res.totalSize) {
+        if(state.tableData.length < res.totalSize) {
             console.log('get more' );
             param.pageIndex++;
             return getList(param)
@@ -124,20 +112,6 @@ const { t } = useI18n()
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 
-const columns:Column<any>[] = [
-    {
-        key: "name",
-        title: t('table_name'),
-        dataKey: "name",
-        width:150,
-    },
-    {
-        key: 'modifiedDate',
-        title: t('table_modifiedDate'),
-        dataKey: 'modifiedDate',
-        width: 200,
-    },
-]
 
 function handleDblclick (row) {
     state.curDoc = row
@@ -169,6 +143,7 @@ async function handleEmptyRightClick(event: MouseEvent) {
 }
 
 function handleRightClick (row: any, column: any, event: MouseEvent) {
+    console.log(event);
     event.preventDefault()
     event.stopPropagation();
     const data = {
@@ -189,11 +164,14 @@ function handleSelect (rows) {
 </script>
 
 <style lang="scss" scoped>
-.nameContainer{
-    display: flex;
-    flex-flow: row nowrap;
-    column-gap: var(--app-padding);
-    align-items: center;
+:deep {
+
+    .nameContainer{
+        display: flex;
+        flex-flow: row nowrap;
+        column-gap: var(--app-padding);
+        align-items: center;
+    }
 }
 :deep(.el-checkbox.is-disabled) {
     display: none;
