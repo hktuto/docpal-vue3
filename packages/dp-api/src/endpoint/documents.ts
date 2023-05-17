@@ -54,9 +54,20 @@ export const GetChild = async(idOrPath:string):Promise<GetChildResponse> => {
 }
 
 export const GetDocumentAdditionalApi = async(params) => {
-    console.log("GetDocumentAdditionalApi", params)
-    return api.get('/docpal/workflow/queryMetaValidationRule', { params }).then(res => res.data.data)
+    if( window["docTypeCache"] && window["docTypeCache"][params.documentType]) {
+        return window["docTypeCache"][params.documentType]
+    }
+    // check if response is cached
+    const response = await api.get('/docpal/workflow/queryMetaValidationRule', { params }).then(res => res.data.data);
+    if(!window["docTypeCache"]) {
+        window["docTypeCache"] = {[params.documentType]: response}
+        } else {
+            window["docTypeCache"][params.documentType] = response
+        }
+    return response
+    
 }
+
 
 export const GetDocumentPreview = async(idOrPath:string) => {
     return api.post('/nuxeo/document/preview', {

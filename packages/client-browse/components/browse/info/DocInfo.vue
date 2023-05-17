@@ -34,7 +34,7 @@
         </div>
     </div>
 <!--      doc meta -->
-      <BrowseInfoMeta v-bind="$props" />
+      <BrowseInfoMeta v-bind="$props" @update="$emit('update')"/>
     </div>
 </template>
 
@@ -79,13 +79,13 @@ const contributors = computed(() => props.doc?.properties?.['dc:contributors'] |
 
     .infoSection{
 
-      margin-bottom: 6px;
+      margin-bottom: 2px;
     }
     .infoTitle {
       font-size: 0.6rem;
       display: block;
       color: var(--color-grey-400);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .infoContent{
       font-size: .8rem;

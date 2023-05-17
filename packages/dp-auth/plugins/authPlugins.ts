@@ -1,7 +1,6 @@
 import { api } from 'dp-api'
 import jwt_decode from "jwt-decode";
-
-
+import {memoizedRefreshToken} from "~/utils/refreshToken";
 let refreshing = false;
 export default defineNuxtPlugin((nuxtApp) => {
   const router:any = nuxtApp.$router;
@@ -17,19 +16,19 @@ export default defineNuxtPlugin((nuxtApp) => {
         }
         return config;
     },(error) => Promise.reject(error));
-    api.interceptors.response.use( 
-      (response) => response, 
+    api.interceptors.response.use(
+      (response) => response,
       async(error) => {
         const config = error?.config;
         if (error?.response?.status === 401 && !config?.sent) {
           config.sent = true;
-          // const result = await memoizedRefreshToken();
-          // if (result?.access_token) {
-          //   config.headers = {
-          //     ...config.headers,
-          //     authorization: `Bearer ${result?.access_token}`,
-          //   };
-          // }
+          const result = await memoizedRefreshToken();
+          if (result?.access_token) {
+            config.headers = {
+              ...config.headers,
+              authorization: `Bearer ${result?.access_token}`,
+            };
+          }
           return api(config);
         }
         return Promise.reject(error);
@@ -46,9 +45,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     //         const message = error.response?.data?.code || ""
     //         router.replace(`/error/${code}?message=${message}`);
     //         refreshing = false;
-    //         return Promise.reject(error) 
+    //         return Promise.reject(error)
     //     }else if(code === 401) {
-    //         //get header token 
+    //         //get header token
     //         const token = localStorage.getItem('refreshToken');
     //         dpLog("token", token)
     //         if(token) {

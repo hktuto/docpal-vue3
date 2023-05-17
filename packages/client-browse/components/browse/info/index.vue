@@ -15,10 +15,10 @@
         <SvgIcon :src="'icons/close.svg'" @click="$emit('close')"/>
     </div>
 </div>
-<el-tabs v-if="detail" class="tabContainer" v-model="currentTab" >
+<el-tabs v-if="detail"  class="tabContainer" v-model="currentTab" >
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
         <div class="infoTagContainer">
-            <BrowseInfoPreview :doc="detail" />
+            <BrowseInfoPreview :doc="detail" @update="docUpdated"/>
             <BrowseInfoDocInfo :doc="detail" :premission="premission"/>
 <!--     move info picture to it own tag or download tag       <BrowseInfoPicture :doc="detail" />-->
             <BrowseInfoTag :doc="detail" />
@@ -28,15 +28,16 @@
         </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
-        <BrowseInfoActivities :doc="detail" />
+        <BrowseInfoActivities v-if="currentTab === 'activities'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
-        <BrowseInfoConvert :doc="detail" />
+        <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">
-        <BrowseInfoRelate :doc="detail" />
+        <BrowseInfoRelate v-if="currentTab === 'relate'"  :doc="detail" />
     </el-tab-pane>
 </el-tabs>
+  <div v-else v-loading="loading" class="loadingContainer"></div>
 </Interact>
 </template>
 
@@ -76,28 +77,33 @@ function resizeMove(event:any) {
     x.value += event.deltaRect.left;
     y.value += event.deltaRect.top;
 }
-
+const loading = ref(false);
 const detail = ref<DocDetail>();
 const premission = ref<any>();
 
+async function docUpdated() {
+  loading.value = true;
+  detail.value = null; // set detail to null to reset all tab
+  // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
+  if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
+    currentTab.value = 'info'
+  }
+
+  // get detail
+  const response = await getDocumentDetail(doc.value.id, user.value.username);
+  detail.value = response.doc;
+  premission.value = response.permission;
+  //scroll to top
+  const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
+  if(tabContent) {
+    tabContent.scrollTop = 0;
+  }
+  loading.value = false;
+}
+
 watch(doc, async() => {
     if(!doc.value) return;
-
-    // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
-    if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
-        currentTab.value = 'info'
-    }
-
-    // get detail
-    const response = await getDocumentDetail(doc.value.id, user.value.username);
-    detail.value = response.doc;
-    premission.value = response.permission;
-    //scroll to top
-    const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
-    if(tabContent) {
-        tabContent.scrollTop = 0;
-    }
-
+  docUpdated()
 })
 
 </script>

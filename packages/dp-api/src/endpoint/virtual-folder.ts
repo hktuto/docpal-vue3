@@ -21,6 +21,12 @@ export const saveAdminVirtualfolder = async(param) => {
 }
 
 export const getRelatedChild = async(idOrPath: string) => {
-    const res = await api.get(`/nuxeo/document/${idOrPath}/relatedChild`).then(res => res.data)
-    return res
+
+    const res = await api.get(`/nuxeo/admin/virtualfolder/setting/${idOrPath}`).then(res => res.data)
+    if (res.jsonValue) {
+        return { id: res.id, ...JSON.parse(res.jsonValue)}
+    } else  {
+        return {
+        }
+    }
 }

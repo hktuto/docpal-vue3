@@ -10,7 +10,6 @@ async function getPreview(){
     return
   }
   const blob = await DocumentThumbnailGetApi(props.doc.id)
-  console.log("blob", blob)
   if (blob) {
     const urlCreator = window.URL || window.webkitURL;
     previewUrl.value = urlCreator.createObjectURL(blob)
@@ -26,7 +25,7 @@ watch(() => props.doc, () => {
 
 <template>
   <div class="previewContainer">
-    <img  :src="previewUrl" />
+    <img v-if="previewUrl"  :src="previewUrl" />
   </div>
 </template>
 
