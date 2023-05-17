@@ -3,7 +3,7 @@
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData"
                 @row-dblclick="handleDblclick">
             <template #configuredLevel="{ row }">
-                <el-select v-model="row.configuredLevel" size="small"  filterable default-first-option
+                <el-select v-model="row.configuredLevel" filterable default-first-option
                         :disabled="row.loading"
                         @change="(value) => handleLevelChange(value, row)">
                     <el-option v-for="level in row.levels" :key="level" :value="level" :label="$t(level)" ></el-option>

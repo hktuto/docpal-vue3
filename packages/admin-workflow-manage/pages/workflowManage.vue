@@ -84,8 +84,9 @@ import {
             .then(async() => {
                 state.loading = true
                 const pList = []
-                state.selectedRow.forEach((s) => pList.push(DeleteWorkflowProcessApi({processInstanceId: s.instanceId})))
-                await Promise.all(promises)
+                state.selectedRows.forEach((s) => pList.push(DeleteWorkflowProcessApi({processInstanceId: s.instanceId})))
+                
+                await Promise.all(pList)
                 handlePaginationChange(pageParams.pageIndex - 1, pageParams.pageSize)
                 state.loading = false
             })
