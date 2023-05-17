@@ -30,13 +30,19 @@ const { t} = useI18n()
 
 // TODO : add api
 // const { patchTags } = UseTags()
-
+const emit = defineEmits(['update'])
 async function handleTagsAdded(tagSelected:any) {
+  // if tagSelected is already in props.doc.properties['nxtag:tags'] return
+  if (props.doc.properties['nxtag:tags'].some((item:any) => item.label === tagSelected.value )) {
+    return
+  }
   const param = {
         documentIdOrPath: props.doc.id,
         labels: [tagSelected.value],
       }
   await DocumentAddTags(param)
+  ElMessage.success(t('msg_successfullyModified') as string)
+  emit('update')
 }
 async function handleTagsRemoved(e:any){
   console.log('handleDocumentTagsChange',tags.value)
@@ -46,6 +52,7 @@ async function handleTagsRemoved(e:any){
       }
   await PatchTags(param)
   ElMessage.success(t('msg_successfullyModified') as string)
+  emit('update')
 }
 const tags = ref([]);
 const allTags = ref([]);

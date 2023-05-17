@@ -52,7 +52,7 @@
       })
       emit('update')
       updateDisplayMeta()
-      ElMessage.success(t('rightDetail_meta_update_success'))
+      ElMessage.success(t('msg_successfullyModified'))
     }
 
     watch(doc, async (newValue) => {
