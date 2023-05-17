@@ -136,8 +136,8 @@ watch(doc, async() => {
 }
 .infoTagContainer{
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-flow: column nowrap;
     gap: 6px;
     overflow: auto;
 }
