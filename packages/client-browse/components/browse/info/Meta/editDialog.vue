@@ -3,9 +3,9 @@
     <SvgIcon :src="'/icons/left_edit.svg'"  :svg-class="`dp-svg-icon`"
                 class="cursorPointer headerIcons"
                 @click.native="handleDialogShow"/>
-    <el-dialog 
-      v-model="opened" 
-      :append-to-body="true" 
+    <el-dialog
+      v-model="opened"
+      :append-to-body="true"
       :modal-append-to-body="true"
       :close-on-click-modal="false"
       custom-class="centerDialog">
@@ -18,7 +18,7 @@
           <el-input type="text" v-model="formData.name" />
         </el-form-item>
         <div v-for="(item,index) in formData.metaList" :key="index">
-            <el-form-item 
+            <el-form-item
                     v-if="item.display"
                     :prop="`metaList.${index}.value`"
                     :label="$t(item.metaData)"
@@ -33,12 +33,12 @@
               </template>
               <template v-else-if="item.directoryEntries">
                  <el-cascader  v-model="item.value"
-                            :options="item.directoryEntries" 
+                            :options="item.directoryEntries"
                             :props="{ checkStrictly: item.hasChild, value: 'id', label: 'id' }"
                             clearable filterable popper-class="pc-el-cascader"></el-cascader>
               </template>
               <template v-else>
-                <el-input  v-model="item.value" type="text"  
+                <el-input  v-model="item.value" type="text"
                         :maxlength="item.length" show-word-limit/>
               </template>
             </el-form-item>
@@ -58,7 +58,7 @@ import { patchDocumentApi } from 'dp-api';
 const props = defineProps<{doc:any}>();
 
 const emits = defineEmits(['updated']);
-const { t} = useI18n();
+const { t } = useI18n();
 
 const loading = ref(false)
 const opened = ref(false)
@@ -132,7 +132,7 @@ function initForm () {
         if (item.directoryEntries) {
         item.directoryEntries = handleChildOptions(item.directoryEntries)
         item.isArray = Array.isArray(props.doc.properties[item.metaData])
-        item.value =  item.isArray ? 
+        item.value =  item.isArray ?
                         props.doc.properties[item.metaData] :
                         props.doc.properties[item.metaData] ? props.doc.properties[item.metaData].split(',') : []
         }
@@ -194,5 +194,5 @@ function handleChildOptions (list = []) {
 <style lang="scss">
 .pc-cascader .el-cascader-node label{
   margin: unset;
-} 
+}
 </style>

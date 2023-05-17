@@ -34,13 +34,14 @@
         </div>
     </div>
 <!--      doc meta -->
-      <BrowseInfoMeta :doc="doc" />
+      <BrowseInfoMeta v-bind="$props" />
     </div>
 </template>
 
 <script lang="ts" setup>
 const props = defineProps<{
-    doc: any
+    doc: any,
+    premission: any
 }>()
 const { displayTime } = useTime()
 
@@ -59,10 +60,7 @@ const version = computed(() => {
     const minorVersion = props.doc?.properties?.['uid:minor_version'] || 0
     return majorVersion + '.' + minorVersion
 })
-const contributors = computed(() => {
-      const data = props.doc?.properties?.['dc:contributors'] || []
-      return data
-    })
+const contributors = computed(() => props.doc?.properties?.['dc:contributors'] || [])
 </script>
 
 

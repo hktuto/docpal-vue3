@@ -19,12 +19,12 @@
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
         <div class="infoTagContainer">
             <BrowseInfoPreview :doc="detail" />
-            <BrowseInfoDocInfo :doc="detail" />
-            <BrowseInfoPicture :doc="detail" />
+            <BrowseInfoDocInfo :doc="detail" :premission="premission"/>
+<!--     move info picture to it own tag or download tag       <BrowseInfoPicture :doc="detail" />-->
             <BrowseInfoTag :doc="detail" />
             <BrowseInfoCollection :doc="detail" />
 <!--            <BrowseInfoAcl :doc="detail" />-->
-            <BrowseInfoWorkflowSection v-if="!detail.isFolder" :doc="doc"></BrowseInfoWorkflowSection>
+<!--            <BrowseInfoWorkflowSection v-if="!detail.isFolder" :doc="doc"></BrowseInfoWorkflowSection>-->
         </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
@@ -49,6 +49,7 @@ const props = defineProps<{
     doc: any,
     infoOpened:boolean
 }>()
+const {user} = useUser();
 const { doc } = toRefs(props)
 const currentTab = ref('info')
 const maxWidth = 600;
@@ -77,7 +78,7 @@ function resizeMove(event:any) {
 }
 
 const detail = ref<DocDetail>();
-
+const premission = ref<any>();
 
 watch(doc, async() => {
     if(!doc.value) return;
@@ -88,9 +89,9 @@ watch(doc, async() => {
     }
 
     // get detail
-    const response = await getDocumentDetail(doc.value.id);
+    const response = await getDocumentDetail(doc.value.id, user.value.username);
     detail.value = response.doc;
-
+    premission.value = response.permission;
     //scroll to top
     const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
     if(tabContent) {
@@ -128,6 +129,9 @@ watch(doc, async() => {
 }
 .infoTagContainer{
     height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
     overflow: auto;
 }
 .tabContainer{
