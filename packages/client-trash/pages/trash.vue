@@ -18,7 +18,8 @@
                     <el-button @click="handleDeleteOne(previewFile.id)"> {{$t('delete')}}</el-button>
                 </template>
             </ReaderDialog>
-            
+            <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
+            <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
     </NuxtLayout>
 </template>
 
@@ -107,12 +108,14 @@ async function handleDblclick (row) {
 }
 // #region module: delete
     const batchAction = ref('')
-    const processDetail = ref({
-        completeNum: 0,
-        totalNum: 0,
-        curName: '',
+    const processDetail = reactive({
+        completedNum: 0,
+        total: 0,
+        title: '',
+        delay: 1000
     })
-    const ProgressDialogRef = ref()
+    // const ProgressDialogRef = ref()
+    const ProgressNotificationRef = ref()
     function handleAction (command:sting, row: any, rowIndex: number) {
         switch (command) {
             case 'delete':
@@ -140,20 +143,20 @@ async function handleDblclick (row) {
             ElNotification.error($i18n.t('trash_error_noAction') as string)
             return
         }
-        processDetail.value.totalNum = selectedRow.value.length
-        processDetail.value.completeNum = 0
-        // ProgressDialogRef.value.openDialog()
-
-        const promises = []
+        processDetail.total = selectedRow.value.length
+        processDetail.completedNum = 0
+        // ProgressDialogRef.value.handleOpen()
+        ProgressNotificationRef.value.handleOpen()
+        const pList = []
         switch (batchAction.value) {
             case 'restore':
-                selectedRow.value.forEach((s) => promises.push(restore(s.id)))
+                selectedRow.value.forEach((s) => pList.push(restore(s.id)))
                 break
             case 'delete':
-                selectedRow.value.forEach((s) => promises.push(deleteOne(s.id)))
+                selectedRow.value.forEach((s) => pList.push(deleteOne(s.id)))
                 break
         }
-        const res = await Promise.all(promises)
+        const res = await Promise.all(pList)
         
         batchAction.value = null
         handleMsg(res)
@@ -162,6 +165,8 @@ async function handleDblclick (row) {
         }, 2000)
     }
     function handleMsg (ids) {
+        console.log({ids});
+        
         let num = 0
         const fileNames = ids.reduce((p, id, index) => {
             if (id) {
@@ -203,14 +208,24 @@ async function handleDblclick (row) {
         }, 500)
     }
     async function deleteOne(idOrPath) {
-        const res = await DeleteByIdApi(idOrPath)
-        processDetail.value.completeNum++
-        return !!res ? '' : idOrPath
+        try {
+            const res = await DeleteByIdApi(idOrPath)
+            processDetail.completedNum++
+            return ''
+        } catch (error) {
+            processDetail.completedNum++
+            return idOrPath
+        }
     }
     const restore = async (idOrPath: string) => {
-        const res = await RestoreByIdApi(idOrPath)
-        processDetail.value.completeNum++
-        return !!res ? '' : idOrPath
+        try {
+            const res = await RestoreByIdApi(idOrPath)
+            processDetail.completedNum++
+            return ''
+        } catch (error) {
+            processDetail.completedNum++
+            return idOrPath
+        }
     }
 // #endregion
 async function handleDownload (row: any) {
