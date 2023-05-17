@@ -1,7 +1,11 @@
 <template>
 <div class="tableContainer"  >
-    <Table v-if="tableData" v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-            @pagination-change="handlePaginationChange"
+    <Table 
+        v-if="tableData" 
+        v-loading="loading" 
+        :columns="tableSetting.columns" 
+        :table-data="tableData" 
+        :options="options"
             @command="handleAction"
             @row-dblclick="handleDblclick"
             @row-contextmenu="handleRightClick"
@@ -18,8 +22,10 @@
 </template>
 
 
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting, GetDocPermission } from 'dp-api'
+import {TableV2FixedDir} from 'element-plus'
+import type { Column, RowClassNameGetter } from 'element-plus'
 const emit = defineEmits([
     'right-click',
     'select-change'
@@ -27,24 +33,20 @@ const emit = defineEmits([
 
 const props = defineProps<{doc: any}>();
 // #region module: page
+const { t } = useI18n()
     const route = useRoute()
     const router = useRouter()
-    const pageParams = {
+    const pageParams = ref({
+        idOrPath: '/',
         pageIndex: 1,
-        pageSize: 50,
-        idOrPath: '/'
-    }
+        pageSize: 100
+    })
     const state = reactive<State>({
         loading: false,
         tableData: [],
         options: { 
             multiSelect: true, 
-            showPagination: true, 
-            paginationConfig: {
-                total: 0,
-                currentPage: 1,
-                pageSize: pageParams.pageSize
-            },
+            showPagination: false, 
             selectable: (row, index) => {
                 return !row.isFolder
             } 
@@ -55,22 +57,28 @@ const props = defineProps<{doc: any}>();
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
-        state.loading = true
         const res = await GetChildThumbnail(param)
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.pageNumber + 1
-        state.loading = false
+        if(res.totalSize === 0){
+            return;
+        }
+        state.tableData.push(...res.entryList)
+        if(state.tableData.length < res.totalSize) {
+            console.log('get more' );
+            param.pageIndex++;
+            return getList(param)
+        }else {
+            return
+        }
     }
-    function handlePaginationChange (page: number, pageSize: number, path?: string, isFolder?: boolean) {
-        if(!pageSize) pageSize = pageParams.pageSize
-        const time = new Date().valueOf().toString()
-        
-        router.push({ 
-            query: { page, pageSize, time, path: path || pageParams.idOrPath, isFolder} 
-        })
+
+    function getTableData(param) {
+        getList(param)
     }
+
+    async function cleanList () {
+        state.tableData = []
+    }
+
     function handleAction (command:sting, row: any, rowIndex: number) {
         switch (command) {
             case 'disabled':
@@ -78,36 +86,49 @@ const props = defineProps<{doc: any}>();
                 break
         }
     }
+
     function handleDisabled (row) {
         dpLog({row});
     }
     watch(
         () => route.query,
-        async (newval) => {
-            const { page, pageSize, path, isFolder } = newval
+        async (newVal) => {
+            
+            const { path, isFolder } = newVal
             // 点击导航头时，isFolder 为 undefined,需要排除 undefined 的情况
             if (isFolder === 'false') return
-            pageParams.idOrPath = path || pageParams.idOrPath
-            pageParams.pageIndex = page ? (Number(page) - 1) : 0
-            pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-            getList({pageNumber: pageParams.pageIndex, pageSize: pageParams.pageSize, idOrPath:  pageParams.idOrPath})
+            // 重置數據
+            cleanList()
+            pageParams.value = {
+                idOrPath: path || '/',
+                pageIndex: 1,
+                pageSize: 100
+            }
+            pageParams.idOrPath = path || '/'
+            getTableData(pageParams.value)
         },
         { immediate: true }
     )
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 
+
 function handleDblclick (row) {
     state.curDoc = row
-    handlePaginationChange(1, pageParams.pageSize, row.path, row.isFolder)
+    router.push({
+        path:'/browse',
+        query: {
+            path: row.path,
+            isFolder: row.isFolder
+        }
+    })
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()
-    if(!state.curDoc.id) await getCurDoc()
     const data = {
-        doc: state.curDoc,
-        isFolder: state.curDoc.isFolder,
-        idOrPath: state.curDoc.path,
+        doc: props.doc,
+        isFolder: props.doc.isFolder,
+        idOrPath: props.doc.path,
         pageX: event.pageX,
         pageY: event.pageY,
         actions: {
@@ -117,14 +138,12 @@ async function handleEmptyRightClick(event: MouseEvent) {
             delete: false
         }
     }
-    const ev = new CustomEvent('fileRightClick',{ detail: data })
+    const ev = new CustomEvent('fileRightClick',{ detail: prp })
     document.dispatchEvent(ev)
 }
-const routePath = computed( () => (route.query.path as string) || '/')
-async function getCurDoc () {
-    state.curDoc = await GetDocDetail(routePath.value);
-}
+
 function handleRightClick (row: any, column: any, event: MouseEvent) {
+    console.log(event);
     event.preventDefault()
     event.stopPropagation();
     const data = {
@@ -138,31 +157,21 @@ function handleRightClick (row: any, column: any, event: MouseEvent) {
     document.dispatchEvent(ev)
 }
 function handleSelect (rows) {
-    dpLog(rows);
     emit('select-change', rows)
 }
 
-function handleRootRightClick (item, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const data = {
-        isFolder: true,
-        idOrPath: item.path,
-        pageX: event.pageX,
-        pageY: event.pageY,
-        doc: item
-    }
-    const ev = new CustomEvent('fileRightClick',{ detail: data })
-    document.dispatchEvent(ev)
-}
+
 </script>
 
 <style lang="scss" scoped>
-.nameContainer{
-    display: flex;
-    flex-flow: row nowrap;
-    column-gap: var(--app-padding);
-    align-items: center;
+:deep {
+
+    .nameContainer{
+        display: flex;
+        flex-flow: row nowrap;
+        column-gap: var(--app-padding);
+        align-items: center;
+    }
 }
 :deep(.el-checkbox.is-disabled) {
     display: none;
