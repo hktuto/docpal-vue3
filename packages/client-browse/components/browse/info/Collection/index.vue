@@ -6,10 +6,10 @@
       <div class="infoContent">
         <div v-for="(item) in collections" :key="item.id" class="tag">
           <div class="label">{{item.name}}</div>
-          <SvgIcon :src="'icons/close.svg'" v-if="doc.canWrite" class="deleteIcon" @click="handleDelete(item)"/>
+          <SvgIcon :src="'/icons/close.svg'" v-if="doc.canWrite" class="deleteIcon" @click="handleDelete(item)"/>
         </div>
         <div class="addTagButton">
-          <SvgIcon :src="'icons/add.svg'" @click="handleAddCollection"/>
+          <SvgIcon :src="'/icons/add.svg'" @click="handleAddCollection"/>
         </div>
       </div>
       <ElDialog  v-model="dialogVisible" :title="$t('collections_add')" destroy-on-close append-to-body show-close :close-on-click-modal="false">

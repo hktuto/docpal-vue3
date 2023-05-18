@@ -1,6 +1,6 @@
 <template>
     <div class="iconContainer">
-         <img :src="`icons/${type}-${status}.svg`" />
+         <img :src="`/icons/${type}-${status}.svg`" />
     </div>
 </template>
 

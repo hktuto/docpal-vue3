@@ -3,7 +3,7 @@
         <div v-for="item in list" :key="item.id" class="listItemContainer">
             <el-badge is-dot :hidden="item.status === 'READED'">
                 <el-checkbox :label="item.id">{{item.createDate}} - {{$t(`notification.${item.functionPoint}`)}}</el-checkbox>
-                <SvgIcon src="icons/trash_pure.svg"  @click.native.stop="handleDelete(item, index)"></SvgIcon>
+                <SvgIcon src="/icons/trash_pure.svg"  @click.native.stop="handleDelete(item, index)"></SvgIcon>
             </el-badge>
             <div v-if="item.content.templateId">
                 {{$t(item.content.templateId)}}

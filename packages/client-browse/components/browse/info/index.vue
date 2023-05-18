@@ -12,7 +12,7 @@
 <div class="infoHeaderSection">
     <div class="headerTopRow">
         <div class="name">{{ doc.name }}</div>
-        <SvgIcon :src="'icons/close.svg'" @click="$emit('close')"/>
+        <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
     </div>
 </div>
 <el-tabs v-if="detail"  class="tabContainer" v-model="currentTab" >
