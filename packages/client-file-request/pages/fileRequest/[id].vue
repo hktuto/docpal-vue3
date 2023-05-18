@@ -231,11 +231,12 @@ const state = reactive({
             }
         })
         return JSON.stringify(result)
-        function getFileName(name) {
-            const result = '[' + formatDate(state.detail.submittedDate, 'YYYYMMDD-HHmm')+ ' ' + state.detail.email + ']' + name
-            return result
-        }
-      }
+        
+    }
+    function getFileName(name) {
+        const result = '[' + formatDate(state.detail.submittedDate, 'YYYYMMDD-HHmm')+ ' ' + state.detail.email + ']' + name
+        return result
+    }
     function validateForm () {
         let msg = ''
         for (const item of tableData.value) {
@@ -295,7 +296,43 @@ const state = reactive({
 // #endregion
 // #region module: checkDuplicate
     async function checkDuplicate () {
-        return false
+        const data = tableData.value.reduce((p, item) => {
+          p.push({ id: item.id, name: getFileName(item.name) })
+          return p
+        }, [])
+        const { list, isDuplicate } = await duplicateNameFilter(state.detail.documentId, data)
+        if (isDuplicate) handleDuplicate(list)
+        return isDuplicate
+    }
+    async function handleDuplicate (list) {
+        const action = await ElMessageBox.confirm(`${$i18n.t('dpTip_duplicateFileName')}`,{
+            confirmButtonText: `${$i18n.t('dpButtom_keepFile')}`,
+            cancelButtonText: `${$i18n.t('dpButtom_cancel')}`
+        }).catch((action) => { return action })
+        if (action === 'confirm') {
+            const result = {}
+            list.forEach(async(file) => {
+                if (!file.approved) return
+                if(file.isDuplicate) file.name = await getUniqueName(file)
+                result[file.id] = {
+                    approved: file.approved,
+                    documentType: file.documentType,
+                    properties: {
+                        ...getMeta(file.meta),
+                        'dc:title': file.name
+                    }
+                }
+            })
+            handleSubmitData(JSON.stringify(result))
+        }
+        function getMeta(obj) {
+            return  Object.entries(obj).reduce((p:any,[key,c]:any)=> {
+                        if(c.value){
+                            p[c.metaData] = c.value;
+                        }
+                        return p;
+                    },{})
+        }
     }
 // #endregion
 const previewFile = reactive({

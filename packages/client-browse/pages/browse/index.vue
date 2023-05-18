@@ -41,6 +41,7 @@
                         <!-- <div class="actionDivider"></div> -->
                         <BrowseActionsCopyPath v-if="selectList.length === 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
                         <BrowseActionsShare v-if="selectList.length > 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
+                        <BrowseActionsDeleteSelected v-if="selectList.length > 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :selected="selectList" @success="handleRefresh"/>
                         <BrowseActionsUploadRequest v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :path="data.path" />
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })  && selectList.length <= 1 " :doc="selectList.length === 1 ? selectList[0] : data" @click="infoOpened = !infoOpened"/>
