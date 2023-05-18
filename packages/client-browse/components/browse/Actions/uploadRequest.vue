@@ -9,7 +9,7 @@
         </el-tooltip>
         <el-dialog v-model="state.dialogOpened" class="scroll-dialog" append-to-body
             :close-on-click-modal="false"
-            :title="$t('publicUpload_requestFileUpload')"
+            :title="`${$t('publicUpload_requestFileUpload')}`"
             >
             <WorkflowDetailFormRender ref="FromRendererRef" :form-json="formJson"/>
             <template #footer>
@@ -47,6 +47,7 @@ function uploadDialog(){
       const data = await FromRendererRef.value.getFormData(true, false)
       if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
       data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
+      data.idOrPath = props.path
       const res = await saveFileRequestListApi(data)
       state.loading = false
       if (res.errorCode) throw new Error(res.message || 'error');
