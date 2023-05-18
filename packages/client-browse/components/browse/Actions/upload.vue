@@ -78,7 +78,7 @@
         </Table>
       </div>
       <template #footer>
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('confirmText') }}s</el-button>
+        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('confirmText') }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -220,7 +220,7 @@ function uploadDialog(doc){
 async function handleSubmit () {
   state.loading = true
   try {
-    const { list, isDuplicate } = await s(state._doc.path, state.tableData);
+    const { list, isDuplicate } = await duplicateNameFilter(state._doc.path, state.tableData);
     if(isDuplicate){
       state.loading = false
       handleDuplicate(list)

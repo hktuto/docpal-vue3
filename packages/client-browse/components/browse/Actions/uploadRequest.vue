@@ -56,6 +56,7 @@ function uploadDialog(){
     } catch (error) {
       // ElMessage.error(error.message)
     }
+    state.loading = false
   }
 // #endregion
 </script>
