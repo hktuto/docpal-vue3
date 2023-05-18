@@ -36,6 +36,7 @@
       <BrowseInfoMeta v-bind="$props" @update="$emit('update')"/>
       <BrowseInfoTag :doc="doc" @update="$emit('update')"/>
       <BrowseInfoCollection :doc="doc" @update="$emit('update')" />
+      <BrowseInfoWorkflowSection v-if="!doc.isFolder" :doc="doc"></BrowseInfoWorkflowSection>
     </div>
 </template>
 

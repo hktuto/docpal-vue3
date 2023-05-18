@@ -1,9 +1,11 @@
 <template>
-    <tr>
-    <th class="tableItemTitle vertical-top">{{ $t('workflow_workflow') }}</th>
-      <td class="tableItemContent">
+    <div class="infoSection vertical-top">
+      <div class="infoTitle">
+        {{ $t('workflow_workflow') }}
+      </div>
+      <div class="infoContetn">
         <div class="block">
-          <el-button v-if="canAdhoc" type="primary" size="mini" @click="dialogShow = true">{{ $t('workflow_startAdhocWorkflow') }}</el-button>
+          <el-button v-if="canAdhoc" type="primary" size="small" @click="dialogShow = true">{{ $t('workflow_startAdhocWorkflow') }}</el-button>
 
           <template v-if="canApproval">
             <el-button type="primary" size="mini" :loading="loading" @click="handelAudit(true)">{{ $t('workflow_startAdhocWorkflow_approve') }}</el-button>
@@ -11,13 +13,9 @@
           </template>
         </div>
         <small>{{ displayStatus }}</small>   
-        </td>
+      </div>
 
-      
-    <!-- <template> -->
-
-  </tr> 
-  <el-dialog :title="$t('workflow_startAdhocWorkflow')" :visible.sync="dialogShow" append-to-body v-loading="loading">
+    <el-dialog :title="$t('workflow_startAdhocWorkflow')" v-model="dialogShow" append-to-body v-loading="loading">
         <el-form :model="form" ref="FormRef" @submit.native.prevent>
           <el-form-item :label="$t('role.auditor')">
             <el-select v-model="form.user_approver_id" multiple filterable clearable>
@@ -30,6 +28,11 @@
           <el-button type="primary" @click="handleStart">{{$t('dpButtom_confirm')}}</el-button>
         </div>
       </el-dialog>
+      
+    <!-- <template> -->
+
+  </div> 
+
 </template>
 
 <script lang="ts" setup>
@@ -61,6 +64,7 @@ const loading = ref(false)
 
     // #region module: befor audit
     // TODO : add method to get UserList
+    const { userList, getUserList } = useUser();
     // const { userList } = toRefs(UseUser()) TODO : 
     const userListFilter = computed(() => {
       if (!userList) return []
@@ -166,4 +170,6 @@ const loading = ref(false)
       await checkAdhocStatus()
       canApproval.value = await canApprovalAdhocApi(newValue.id, (authStore.user.value.userId || authStore.user.value.username) )
     }, { immediate: true })
+
+    onMounted(() => getUserList())
 </script>

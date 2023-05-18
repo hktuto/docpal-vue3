@@ -22,17 +22,18 @@
                 <BrowseInfoPreview :doc="detail" @update="docUpdated"/>
             </div>
             <BrowseInfoDocInfo :doc="detail" :premission="premission"/>
-<!--     move info picture to it own tag or download tag       <BrowseInfoPicture :doc="detail" />-->
+<!--     move info picture to it own tag or download tag       -->
 
             
 <!--            <BrowseInfoAcl :doc="detail" />-->
-<!--            <BrowseInfoWorkflowSection v-if="!detail.isFolder" :doc="doc"></BrowseInfoWorkflowSection>-->
+<!--            -->
         </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
         <BrowseInfoActivities v-if="currentTab === 'activities'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
+        <BrowseInfoPicture :doc="detail" />
         <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">

@@ -1,14 +1,13 @@
 <template>
     <div class="convert">
     <div class="sectionHeader">
-      <span class="title">{{ $t('convert_convert') }}
-        <i  :class="[{loading: refreshLoading}, 'el-icon', 'el-icon-refresh', 'icon__hover', 'cursorPointer']"
+     <i  :class="[{loading: refreshLoading}, 'el-icon', 'el-icon-refresh', 'icon__hover', 'cursorPointer']"
             @click="handleGetConversionHistory"></i>
-      </span>
     </div>
     <main class="">
       <el-table v-loading="refreshLoading"
               :data="tableList"
+              size="small"
               height="100%">
         <el-table-column prop="fileName" :label="$t('filePopover_fileName')" sortable>
           <template slot-scope="scope">

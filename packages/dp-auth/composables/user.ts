@@ -15,7 +15,7 @@ export const useUser = () => {
     const userPreference = useState<UserSetting>('userPreference');
     const settingStore = useSetting()
 
-    const userList = ref<User[]>([]);
+    const userList = useState<User[]>('userList', () => ([]));
     
     const colorModeOption = [
         {
