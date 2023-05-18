@@ -78,16 +78,18 @@
         </Table>
       </div>
       <template #footer>
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('confirmText') }}</el-button>
+        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('confirmText') }}s</el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { 
     CreateDocumentApi,
+    replaceFileDocumentApi,
     getDocTypeListApi, 
     metaValidationRuleGetApi,
     TABLE,defaultTableSetting } from 'dp-api'
@@ -114,6 +116,7 @@ const state = reactive({
 function uploadDialog(doc){
   dialogOpened.value = true
   state.tableData = []
+  state.selectedRows = []
   state._doc = doc
 }
 // #region module: table
@@ -214,16 +217,54 @@ function uploadDialog(doc){
     setTimeout(() => {state.loading = false}, 500)
   }
 // #endregion
-function handleSubmit () {
+async function handleSubmit () {
   state.loading = true
-  dpLog(state.tableData);
-  const promiseList = []
-  state.tableData.forEach(row => {
-    promiseList.push(handleCreateDocument(row))
-  })
-  waitAll(promiseList)
+  try {
+    const { list, isDuplicate } = await s(state._doc.path, state.tableData);
+    if(isDuplicate){
+      state.loading = false
+      handleDuplicate(list)
+      return
+    }
+    const promiseList = []
+    state.tableData.forEach(row => {
+      promiseList.push(handleCreateDocument(row))
+    })
+    waitAll(promiseList)
+  } catch (error) {
+    if(error.message === 'dpTip_duplicateFileName') {
+        ElMessage({
+            message: $i18n.t(error.message) as string,
+            type: 'error'
+        })
+    }
+  }
+  state.loading = false
+}
+async function handleDuplicate(list) {
+  const action = await ElMessageBox.confirm($i18n.t('dpTip_duplicateFileName'),{
+    distinguishCancelAndClose: true,
+    confirmButtonText: $i18n.t('dpButtom_keepFile'),
+    cancelButtonText: $i18n.t('dpButtom_replace'),
+    class: 'customDriverBackdropPlus'
+  }).catch((action) => { return action })
+  const pList = []
+  state.loading = true
+  if (action === 'confirm') {
+    list.forEach((file) => {
+      pList.push(handleCreateDocument(file))
+    })
+  } 
+  else if (action === 'cancel') {
+    list.forEach(async(file) => {
+      if(file.isDuplicate) pList.push(handleReplaceDocument(file))
+      else pList.push(handleCreateDocument(file))
+    })
+  }
+  waitAll(pList)
 }
 const handleCreateDocument = async(file) => {
+  if(file.isDuplicate) file.fileName = await getUniqueName(file)
   const document = {
     name: file.fileName,
     idOrPath: `${state._doc.path}/${file.fileName}`,
@@ -242,13 +283,23 @@ const handleCreateDocument = async(file) => {
     return !!res
   })
 }
+async function handleReplaceDocument (file) {
+  const document = {
+    idOrPath: file.originalPath
+  }
+  const formData = new FormData()
+  formData.append('file', file.raw)
+  formData.append('document', JSON.stringify(document))
+  const res = await replaceFileDocumentApi(formData)
+  return !!res
+}
 function waitAll (promiseList) {
   Promise.all(promiseList).then((res) => {
     const successList = []
     res.forEach((item, index) => {
       if (item) successList.push(index)
       else
-        Message.error(
+        ElMessage.error(
           `${state.tableData[index].name} ${$i18n.t('msg_uploadFailed')}`
         )
     })

@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useEventListener } from '@vueuse/core'
 const emits = defineEmits(['change'])
 const state = reactive({
     active: false
@@ -160,6 +161,8 @@ const dragRef = ref(null)
 // #endregion
 
 function uploadHandler (e) {
+  console.log({e});
+  
   const files = Array.from(e.target.files) 
   const result = files.reduce((prev,file) => {
     prev.push({
@@ -171,6 +174,7 @@ function uploadHandler (e) {
     })
     return prev
   }, [])
+  e.target.value = '' // 解决不能上传相同文件问题
   emits("change", result)
 }
 function clickUpload (type) {
@@ -179,18 +183,16 @@ function clickUpload (type) {
   folderUploaderRef.value.click()
 }
 onMounted(() => {
-  dragRef.value.addEventListener('drop', handleDrop)
-  dragRef.value.addEventListener('dragleave', handleDragLeave)
-  dragRef.value.addEventListener('dragenter', handleDragEnter)
-  dragRef.value.addEventListener('dragover', handleDragOver)
+  useEventListener(dragRef, 'drop', handleDrop)  
+  useEventListener(dragRef, 'dragleave', handleDragLeave)  
+  useEventListener(dragRef, 'dragenter', handleDragEnter)  
+  useEventListener(dragRef, 'dragover', handleDragOver)  
+  // dragRef.value.addEventListener('drop', handleDrop)
+  // dragRef.value.addEventListener('dragleave', handleDragLeave)
+  // dragRef.value.addEventListener('dragenter', handleDragEnter)
+  // dragRef.value.addEventListener('dragover', handleDragOver)
 })
 
-onUnmounted(() => {
-  dragRef.value.removeEventListener('drop', handleDrop)
-  dragRef.value.removeEventListener('dragleave', handleDragLeave)
-  dragRef.value.removeEventListener('dragenter', handleDragEnter)
-  dragRef.value.removeEventListener('dragover', handleDragOver)
-})
 </script>
 <style lang="scss" scoped>
 .drag {

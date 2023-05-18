@@ -57,27 +57,26 @@ const formJson = getJsonApi('fileNewFolder.json')
 async function handleSubmit () {
     state.loading = true
     try {
-        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
-        console.log(state.doc.path);
-        
-        const { isDuplicate } = await duplicateNameFilter(state.doc.path, [data]);
-        if(isDuplicate){
-            ElMessage({
-                message: $i18n.t('dpTip_duplicateFileName') as string,
-                type: 'error'
-            })
-            state.loading = false
-            return
-        }
         const timestamp = new Date().valueOf()
         const params = {
             ...data,
             idOrPath: `${state.docPath}/new Folder${timestamp}`,
         }
+        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const { isDuplicate } = await duplicateNameFilter(state.doc.path, [data]);
+        if(isDuplicate){
+            throw new Error("dpTip_duplicateFileName");
+        }
         const res = await CreateFoldersApi(params)
         dialogOpened.value = false
         emits('success', state.doc)
     } catch (error) {
+        if(error.message === 'dpTip_duplicateFileName') {
+            ElMessage({
+                message: $i18n.t(error.message) as string,
+                type: 'error'
+            })
+        }
     }
     state.loading = false
 }

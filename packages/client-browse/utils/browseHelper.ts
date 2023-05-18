@@ -28,21 +28,21 @@ export const getUniqueName = async(file:any) => {
  * @returns {isDuplicate: boolean, list: any[]}
  */
 export const duplicateNameFilter = async (idOrPath: string, list:any) => {
-    try {
+  try {
       let result = false
       const titles = list.reduce((prev:any, item:any) => {
         prev.push(item.fileName || item.name)
         return prev
       }, [])
       const res = await duplicateDetectionApi({path:idOrPath, titles})
-      console.log(res);
       list.forEach((doc:any) => {
-        if (res[doc.name]) {
+        const name = doc.fileName || doc.name
+        if (res[name] || res[name]) {
           result = true
           doc.goPath = idOrPath
           doc.isDuplicate = true
-          doc.originalPath = res[doc.name].idOrPath
-          doc.uniqueName = res[doc.name].uniqueName
+          doc.originalPath = res[name].idOrPath
+          doc.uniqueName = res[name].uniqueName
         }
       })
       return {
@@ -80,3 +80,7 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
       doc: response
     };
   }
+const deepCopy  = (data:any) => {
+    if (!data) return {}
+    return JSON.parse(JSON.stringify(data));
+}
