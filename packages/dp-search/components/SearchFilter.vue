@@ -29,6 +29,7 @@ function handleReset() {
 }
 onMounted(async() => {
 })
+defineExpose({ handleSubmit })
 </script>
 
 <style lang="scss" scoped>

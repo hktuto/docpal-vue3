@@ -5,11 +5,11 @@
                 <ElIcon><Search /></ElIcon>
                 <input ref="inputEl" :value="state.keyword" :placeholder="$t('search_keyword')" 
                     @input="keywordInputHandler"
-                    @keyup.enter="goRoute()" />
+                    @keyup.enter="keywordEnter()" />
                 <ElIcon class="filterIcon" @click="openFilter"><Operation /></ElIcon>
             </div>
             <div  :class="{popUpDialog:true, dropdownOpened: !!dropdownState}">
-                <SearchFilter v-show="dropdownState === 'filter'" 
+                <SearchFilter ref="SearchFilterRef" v-show="dropdownState === 'filter'" 
                     :searchParams="state.searchParams"
                     @closed="dropdownState = ''" @submit="handleSubmit"/>
                 <!-- <SearchShortResult v-else-if="dropdownState === 'list'" /> -->
@@ -48,17 +48,14 @@ const state = reactive({
 const { dropdownState } = toRefs(state)
 // #region  dialog 
     const wrapper = ref();
-
+    const SearchFilterRef = ref()
+    function keywordEnter () {
+        SearchFilterRef.value.handleSubmit()
+    }
     function openFilter(){
         state.dropdownState =  'filter'
-        stopFormSubmit()
     }
-    function stopFormSubmit () {
-        state.formOpen = true
-        setTimeout(() => {
-            state.formOpen = false
-        }, 2000)
-    }
+
     onClickOutside(wrapper, (event) => {
         if (isElPopover(event.path)) return
         if(state.dropdownState) {
@@ -79,6 +76,7 @@ const { dropdownState } = toRefs(state)
 // #endregion
 function handleSubmit (data) {
     state.searchParams = {
+        ...state.searchParams,
         ...data
     }
     if(state.formOpen) return
@@ -133,7 +131,6 @@ onMounted(() => {
     if(state.searchParams.paramsInTextSearch) {
         state.keyword = state.searchParams.paramsInTextSearch.join('')
     }
-    stopFormSubmit()
 })
 
 </script>
