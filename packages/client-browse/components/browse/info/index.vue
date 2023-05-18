@@ -168,6 +168,9 @@ watch(doc, async() => {
             overflow-y: auto;
             overflow-x: hidden;
         }
+        .el-cascader{
+            width: 100%;
+        }
     }
 }
 </style>

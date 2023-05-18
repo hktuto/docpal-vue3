@@ -56,7 +56,7 @@
                 </div>
                 <template #info>
                     <Teleport :disabled="!data.isFolder" to="#browseInfoSection">
-                        <BrowseInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })  && selectList.length <= 1 " :doc="selectList.length === 1 ? selectList[0] : data"  :infoOpened="infoOpened" @close="infoOpened = false" />
+                        <BrowseInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="selectList.length === 1 ? selectList[0] : data"  :infoOpened="infoOpened" @close="infoOpened = false" />
                     </Teleport>
                 </template>
             </BrowseDetail>
