@@ -145,7 +145,7 @@ export const DownloadDocApi = async(idOrPath:string) => {
 // #endregion
 
 // #region module: collection
-    export const getCollectionApi = async (params: pageParams) => {
+    export const getCollectionApi = async (params: pageParams = {}) => {
         const { entryList, totalSize } = await api.get('/nuxeo/collection', { params }).then(res =>res.data);
         return {entryList, totalSize}
     }
@@ -156,7 +156,7 @@ export const DownloadDocApi = async(idOrPath:string) => {
         return await api.post('/nuxeo/collection/create', params).then(res =>res.data);
     }
     export const getCollectionDocApi = async (idOrPath: string) => {
-        return await api.post('/nuxeo/document/collections', { data: {idOrPath} }).then(res =>res.data);
+        return await api.post('/nuxeo/document/collections', {idOrPath}).then(res =>res.data);
     }
     export const getCollectionDoc = async (idOrPath: string) => {
         const { entryList, totalSize } = await api.post('/nuxeo/collection/documents', { idOrPath }).then(res =>res.data);

@@ -33,9 +33,9 @@
           </div>
         </div>
     </div>
-<!--      doc meta -->
       <BrowseInfoMeta v-bind="$props" @update="$emit('update')"/>
       <BrowseInfoTag :doc="doc" @update="$emit('update')"/>
+      <BrowseInfoCollection :doc="doc" @update="$emit('update')" />
     </div>
 </template>
 

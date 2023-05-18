@@ -36,8 +36,8 @@ watch(() => props.doc, () => {
   height: 100%;
   max-height: 200px;
   margin: 0 auto;
-  border: 1px solid var(--color-grey-400);
-  background: var(--color-grey-0000);
+  // border: 1px solid var(--color-grey-400);
+  background: #fff;
   img {
     width: 100%;
     height: 100%;

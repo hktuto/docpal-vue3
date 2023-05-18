@@ -1,64 +1,65 @@
 <template>
-    <div class="collection" v-show="doc && (collections.length > 0 || doc.canWrite)">
-    <div class="collectionTitle">
-      <span class="title">{{ $t('rightDetail_collection') }}</span>
-      <div class="icon" v-show="doc.canWrite">
-        <BrowseInfoCollectionAdd
-          :doc="doc"
-          :exitList="collections"
-          @handleAdd="(id) => documentCollectionGet(id)"
-        ></BrowseInfoCollectionAdd>
-        <!-- <img class="cursorPointer" src="/icons/fold.svg" /> -->
+    <div class="infoSection" >
+      <div class="infoTitle">
+        {{ $t('rightDetail_collection') }}
       </div>
-    </div>
-    <div>
-      <el-tag  v-for="(item) in collections" :key="item.path" effect="dark"
-            :closable="doc.canWrite" 
-            @close="handleDelete(item)">
-            {{ item.name }}
-      </el-tag>
-    </div>
+      <div class="infoContent">
+        <div v-for="(item) in collections" :key="item.id" class="tag">
+          <div class="label">{{item.name}}</div>
+          <SvgIcon :src="'icons/close.svg'" v-if="doc.canWrite" class="deleteIcon" @click="handleDelete(item)"/>
+        </div>
+        <div class="addTagButton">
+          <SvgIcon :src="'icons/add.svg'" @click="handleAddCollection"/>
+        </div>
+      </div>
+      <ElDialog  v-model="dialogVisible" :title="$t('collections_add')" destroy-on-close append-to-body show-close :close-on-click-modal="false">
+        <BrowseInfoCollectionAdd :doc="doc" :exitList="collections"  @handleAdd="() => {getCollection(); dialogVisible = false}"/>
+      </ElDialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {ElMessageBox } from 'element-plus'
-import {getCollectionDocApi } from 'dp-api'
+import {getCollectionDocApi, removeCollectionApi } from 'dp-api'
 const props = defineProps<{
     doc: any
 }>()
 const { doc } = toRefs(props)
 const { t } = useI18n()
-const collections = reactive([])
+const collections = ref([])
+const dialogVisible = ref(false);
 
     async function handleDelete (collection) {
       const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`,{
         confirmButtonText: `${t('dpButtom_confirm')}`,
         cancelButtonText: `${t('dpButtom_cancel')}`
       }).catch((action) => { return action })
+      console.log(action)
       if (action !== 'confirm') return
-      const index = collections.findIndex((item) => item.id === collection.id)
+      const index = collections.value.findIndex((item) => item.id === collection.id)
 
       const param = {
         documents: [{ idOrPath: props.doc.id }],
-        collection: { idOrPath: collection.path },
+        collection: { idOrPath: collection.id },
       }
       const res = await removeCollectionApi(param)
+      await getCollection()
       if (!res) return
-      collections.splice(index, 1)
     }
-    const documentCollectionGet = (idOrPath: string, isForce?: boolean) => {
-      collections.splice(0, collections.length)
 
-      getCollectionDocApi({ idOrPath }).then((res) => {
-        if (res instanceof Array) collections.push(...res)
-      })
+    function handleAddCollection() {
+      dialogVisible.value= true;
     }
+
+    async function getCollection() {
+      collections.value = await getCollectionDocApi(doc.value.id)
+    }
+
     watch(
       doc,
       (val) => {
         if (val) {
-          getCollectionDocApi(val.id)
+          getCollection()
         }
       },
       { immediate: true }
@@ -84,8 +85,29 @@ const collections = reactive([])
     }
   }
 }
-.el-tag {
-  border-radius: 15px;
+.infoContent{
+  display: flex !important;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+.tag {
+  border-radius: 4px;
   margin: calc(var(--app-padding) / 3) calc(var(--app-padding) / 2);
+  background: var(--color-grey-050);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 4px 8px;
+  --icon-size: 12px;
+  .deleteIcon{
+    margin-left: 4px;
+    margin-top: 2px;
+  }
+}
+.addTagButton{
+  --icon-size: 20px;
 }
 </style>
