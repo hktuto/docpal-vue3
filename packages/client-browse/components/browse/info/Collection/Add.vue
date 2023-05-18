@@ -1,45 +1,45 @@
 <template>
+<div>
     <el-popover
-    v-model="popoverShow"
-    width="300"
-    trigger="click"
-    popper-class="collectionPopover popover_050"
-  >
-  <template #reference>
-    <img  class="cursorPointer" :src="'/icons/add.svg'" />
-  </template>
-
-    <!-- 内容 -->
-    <div class="title">{{ $t('collections_add') }}</div>
-    <div class="subTitle">
-      {{ $t('collections_caption') }}
-    </div>
-    <el-select
-      v-model="selected"
-      value-key="path"  
-      filterable
-      allow-create
-      default-first-option
-      :placeholder="$t('choose')"
-      popper-class="popperSelect"
-      class="collectionSelect"
+        :visible="popoverShow"
+        width="300"
+        popper-class="collectionPopover popover_050"
     >
-      <option
-        v-for="item in myCollection"
-        :key="item.id"
-        :label="item.name"
-        :value="item.name"
-      >
-      </option>
-    </el-select>
-    <el-button type="primary" @click="handleConfirm">{{
-      $t('confirm')
-    }}</el-button>
-  </el-popover>
+        <template #reference>
+            <img  class="cursorPointer" :src="'/icons/add.svg'"  @click="popoverShow = !popoverShow"/>
+        </template>
+
+        <!-- 内容 -->
+        <div>
+            <div class="title"> {{ $t('collections_add') }} </div>
+            <div class="subTitle"> {{ $t('collections_caption') }} </div>
+            <el-select
+                v-model="selected"
+                value-key="id"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                :reserve-keyword="false"
+                :placeholder="$t('choose')"
+                class="collectionSelect"
+            >
+                <el-option
+                    v-for="item in myCollection"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item"
+                >
+                </el-option>
+            </el-select>
+            <el-button type="primary" @click="handleConfirm">{{ $t('confirm') }}</el-button>
+        </div>
+    </el-popover>
+</div>
 </template>
 
 <script lang="ts" setup>
-import {getAllCollection, createCollectionApi, addCollectionApi} from 'dp-api'
+import {getCollectionApi, createCollectionApi, addCollectionApi} from 'dp-api'
 const props = defineProps<{
   doc: any,
   exitList: any
@@ -48,11 +48,11 @@ const emit = defineEmits(['handleAdd']);
 const allCollection = ref([])
 const popoverShow = ref(false)
 
-    const selected = ref()
-    const myCollection = computed(() => {
-      return allCollection.value.filter((allItem:any) => 
-              !props.exitList.some((exitItem:any) => exitItem.name === allItem.name))
-    })
+const selected = ref()
+const myCollection = computed(() => {
+    return allCollection.value.filter((allItem:any) => 
+            !props.exitList.some((exitItem:any) => exitItem.name === allItem.name))
+})
 
     const handleConfirm = async () => {
       const flag = await handleAddCollection()
@@ -82,12 +82,37 @@ const popoverShow = ref(false)
       const newCollection = await createCollectionApi({ name: selected.value })
       selected.value = newCollection.path
       flag = 1
-      allCollection.value = await getAllCollection()
+      getCollection()
       return flag
     }
-
+    async function querySearchAsync (queryString, cb) {
+        let result = [ ...allCollection.value ]
+        console.log(props.exitList, '------------------------');
+        console.log({result});
+        // 过滤已存在的tag
+        if (props.exitList) {
+            
+            result = result.filter((allItem:any) => 
+                    !props.exitList.some((exitItem:any) => exitItem.label === allItem))
+        }
+        // 加上value
+        result = result.reduce((tags,item) => {
+            tags.push({ value: item })
+            return tags
+        }, [])
+        
+        cb(result)
+    }
+    async function getCollection () {
+        try {
+            const res = await getCollectionApi()
+            allCollection.value = res.entryList
+        } catch (error) {
+            allCollection.value = []
+        }
+    }
     onMounted(async() => {
-      allCollection.value = await getAllCollection()
+        getCollection()
     })
 </script>
 
