@@ -1,5 +1,6 @@
 
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
@@ -23,6 +24,14 @@ async function pasteItem(doc){
         { idOrPath: state.copyItem.path }, 
         {idOrPath: doc.path}
     ]
+    const { isDuplicate } = await duplicateNameFilter(doc.path, [state.copyItem]);
+    if (isDuplicate) {
+        ElMessage({
+            message: $i18n.t('dpTip_duplicateFileName') as string,
+            type: 'error'
+        })
+        return
+    }
     const noti = ElNotification({
         title: $i18n.t('paste'),
         icon: Loading,

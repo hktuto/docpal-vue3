@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ElMessage} from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { CreateFoldersApi, getJsonApi } from 'dp-api'
 const dialogOpened = ref(false)
