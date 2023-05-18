@@ -1,41 +1,28 @@
 <template>
 <div>
-    <el-popover
-        :visible="popoverShow"
-        width="300"
-        popper-class="collectionPopover popover_050"
-    >
-        <template #reference>
-            <img  class="cursorPointer" :src="'/icons/add.svg'"  @click="popoverShow = !popoverShow"/>
-        </template>
-
-        <!-- 内容 -->
-        <div>
-            <div class="title"> {{ $t('collections_add') }} </div>
-            <div class="subTitle"> {{ $t('collections_caption') }} </div>
-            <el-select
-                v-model="selected"
-                value-key="id"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                :reserve-keyword="false"
-                :placeholder="$t('choose')"
-                class="collectionSelect"
-            >
-                <el-option
-                    v-for="item in myCollection"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item"
-                >
-                </el-option>
-            </el-select>
-            <el-button type="primary" @click="handleConfirm">{{ $t('confirm') }}</el-button>
-        </div>
-    </el-popover>
-</div>
+  <div class="subTitle"> {{ $t('collections_caption') }} </div>
+      <el-select
+          v-model="selected"
+          value-key="id"
+          filterable
+          allow-create
+          default-first-option
+          :reserve-keyword="false"
+          :placeholder="$t('choose')"
+          class="collectionSelect"
+      >
+          <el-option
+              v-for="item in myCollection"
+              :key="item.id"
+              :label="item.name"
+              :value="item"
+          >
+          </el-option>
+      </el-select>
+      <div class="footer">
+        <el-button type="primary" @click="handleConfirm">{{ $t('confirm') }}</el-button>
+      </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -56,15 +43,13 @@ const myCollection = computed(() => {
 
     const handleConfirm = async () => {
       const flag = await handleAddCollection()
-
-      popoverShow.value = false
       if (!selected.value || !flag) {
         return
       }
 
       const param = {
         documents: [{ idOrPath: props.doc.id }],
-        collection: { idOrPath: selected.value },
+        collection: { idOrPath: selected.value.id },
       }
 
       addCollectionApi(param).then((res) => {
@@ -76,7 +61,7 @@ const myCollection = computed(() => {
     const handleAddCollection = async () => {
       let flag = 0
       const index = myCollection.value.findIndex(
-        (item) => item.path === selected.value
+        (item) => item.path === selected.value.path
       )
       if (index !== -1) {return 1}
       const newCollection = await createCollectionApi({ name: selected.value })
@@ -87,8 +72,6 @@ const myCollection = computed(() => {
     }
     async function querySearchAsync (queryString, cb) {
         let result = [ ...allCollection.value ]
-        console.log(props.exitList, '------------------------');
-        console.log({result});
         // 过滤已存在的tag
         if (props.exitList) {
             
@@ -119,36 +102,13 @@ const myCollection = computed(() => {
 
 
 <style lang="scss">
-.collectionPopover {
-  .title {
-    color: var(--color-grey-600);
-  }
-  .subTitle {
-    font-size: 0.6rem;
-    color: var(--color-grey-400);
-  }
-  .el-button {
-    width: 100%;
-    margin-top: 1rem;
-  }
-  .collectionSelect {
-    width: 100%;
-    .el-input__inner {
-      border: unset;
-    }
-  }
+.collectionSelect{
+  width: 100%;
 }
-.popperSelect {
-  .btn {
-    font-size: 0.8rem;
-    display: inline-block;
-    color: var(--color-grey-600);
-    margin: 1rem 0.5rem 0.5rem;
-    cursor: pointer;
-    // text-align: right;
-    &:hover {
-      background-color: wheat;
-    }
-  }
+.footer{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 </style>

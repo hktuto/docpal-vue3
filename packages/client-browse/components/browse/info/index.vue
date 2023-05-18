@@ -18,11 +18,13 @@
 <el-tabs v-if="detail"  class="tabContainer" v-model="currentTab" >
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
         <div class="infoTagContainer">
-            <BrowseInfoPreview :doc="detail" @update="docUpdated"/>
+            <div class="infoPreviewContainer">
+                <BrowseInfoPreview :doc="detail" @update="docUpdated"/>
+            </div>
             <BrowseInfoDocInfo :doc="detail" :premission="premission"/>
 <!--     move info picture to it own tag or download tag       <BrowseInfoPicture :doc="detail" />-->
 
-            <BrowseInfoCollection :doc="detail" />
+            
 <!--            <BrowseInfoAcl :doc="detail" />-->
 <!--            <BrowseInfoWorkflowSection v-if="!detail.isFolder" :doc="doc"></BrowseInfoWorkflowSection>-->
         </div>
@@ -110,6 +112,10 @@ watch(doc, async() => {
 </script>
 
 <style lang="scss" scoped>
+.infoPreviewContainer{
+    background: var(--color-grey-050);
+    padding: var(--app-padding);
+}
 .infoHeaderSection{
   padding-block: var(--app-padding);
 }
@@ -117,6 +123,10 @@ watch(doc, async() => {
   display: grid;
   grid-template-columns: 1fr min-content;
   gap: 12px;
+  .name {
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
 }
 .infoContainer {
     margin-left: var(--app-padding);
