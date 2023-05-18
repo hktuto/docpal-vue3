@@ -29,18 +29,17 @@ async function sendPdfAndAnnotation() {
     // return if no blob
     if(!props.blob) return;
     const frame = iframe.value?.contentWindow;
-    
+
     // return if no contentWindow
     if(!frame) return;
     const message = {
         blob:props.blob,
         filename: props.name,
-        annotations: new Map(props.annotations),  
+        annotations: new Map(props.annotations),
         locale: locale.value
     }
-    dpLog("frame",message);
     frame.postMessage(message, '*');
-}  
+}
 
 
 function gotMessageFromIframe(message:MessageEvent) {
@@ -57,7 +56,7 @@ function gotMessageFromIframe(message:MessageEvent) {
         default:
             break
     };
-    
+
 }
 function saveAnnotation(annotation:Map<string,any>) {
     // this function is called when the user clicks the save button on the annotation form

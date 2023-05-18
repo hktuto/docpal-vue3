@@ -69,7 +69,6 @@
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
 import {watch, ref, computed} from 'vue'
-import { GetDocDetail, GetDocPermission, GetDocumentAdditionalApi } from 'dp-api'
 import {getDocumentDetail} from "~/utils/browseHelper";
 
 // #region refs

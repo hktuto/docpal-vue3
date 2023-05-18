@@ -1,10 +1,10 @@
 <template>
 <div class="tableContainer"  >
-    <Table 
-        v-if="tableData" 
-        v-loading="loading" 
-        :columns="tableSetting.columns" 
-        :table-data="tableData" 
+    <Table
+        v-if="tableData"
+        v-loading="loading"
+        :columns="tableSetting.columns"
+        :table-data="tableData"
         :options="options"
             @command="handleAction"
             @row-dblclick="handleDblclick"
@@ -44,26 +44,25 @@ const { t } = useI18n()
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            multiSelect: true, 
-            showPagination: false, 
+        options: {
+            multiSelect: true,
+            showPagination: false,
             selectable: (row, index) => {
                 return !row.isFolder
-            } 
+            }
         },
         curDoc: {}
     })
     const tableKey = TABLE.CLIENT_BROWSE
     const tableSetting = defaultTableSetting[tableKey]
 
-    async function getList (param) {
+    async function getList (param:any) {
         const res = await GetChildThumbnail(param)
         if(res.totalSize === 0){
             return;
         }
         state.tableData.push(...res.entryList)
         if(state.tableData.length < res.totalSize) {
-            console.log('get more' );
             param.pageIndex++;
             return getList(param)
         }else {
@@ -71,7 +70,7 @@ const { t } = useI18n()
         }
     }
 
-    function getTableData(param) {
+    function getTableData(param:any) {
         getList(param)
     }
 
@@ -79,7 +78,7 @@ const { t } = useI18n()
         state.tableData = []
     }
 
-    function handleAction (command:sting, row: any, rowIndex: number) {
+    function handleAction (command:string, row: any, rowIndex: number) {
         switch (command) {
             case 'disabled':
                 handleDisabled(row)
@@ -87,13 +86,13 @@ const { t } = useI18n()
         }
     }
 
-    function handleDisabled (row) {
-        dpLog({row});
+    function handleDisabled (_row) {
+
     }
     watch(
         () => route.query,
         async (newVal) => {
-            
+
             const { path, isFolder } = newVal
             // 点击导航头时，isFolder 为 undefined,需要排除 undefined 的情况
             if (isFolder === 'false') return

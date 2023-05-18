@@ -5,10 +5,16 @@ const props = defineProps<{
 }>()
 const previewUrl = ref("");
 async function getPreview(){
+  if(props.doc.isFolder) {
+    previewUrl.value = "icons/folder-normal.svg"
+    return
+  }
   const blob = await DocumentThumbnailGetApi(props.doc.id)
   if (blob) {
     const urlCreator = window.URL || window.webkitURL;
     previewUrl.value = urlCreator.createObjectURL(blob)
+  }else {
+    previewUrl.value = "icons/file-normal.svg"
   }
 }
 
@@ -19,7 +25,7 @@ watch(() => props.doc, () => {
 
 <template>
   <div class="previewContainer">
-    <img v-if="!doc.isFolder" :src="previewUrl" />
+    <img v-if="previewUrl"  :src="previewUrl" />
   </div>
 </template>
 

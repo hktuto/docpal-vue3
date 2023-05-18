@@ -37,7 +37,8 @@ export const useTime = () => {
     }
     const formatDate = (time:string, format: string = 'YYYY-MM-DD HH:mm', isDefault:Boolean = false) => {
         const defaultTime = isDefault ? today : ''
-        return time ? dayjs(time).format(format) : defaultTime
+        const result = dayjs(time).format(format)
+        return result === 'Invalid Date' ? '' : result
     }
     const diffDay = (date1:string | Date = today, date2:string | Date = today, isDefault:Boolean = false) => {
         if (!date1) date1 = isDefault ? today : ''
