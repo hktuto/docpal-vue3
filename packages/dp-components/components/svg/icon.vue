@@ -56,14 +56,14 @@ const svgClass = computed(() => {
     width: var(--icon-bg-size, 32px);
     height: var(--icon-bg-size, 32px);
     color: var(--icon-color, #181a1b)!important;
-    background-color: var(--icon-bg-color, --color-grey-150);
+    background-color: var(--icon-bg-color, var(--color-grey-150));
     border-radius: 50%;
     display: grid;
     place-items: center;
     svg {
         color: currentColor;
-        width: var(--icon-size, 14px);
-        height: var(--icon-size, 14px);
+        width: var(--icon-size, 18px);
+        height: var(--icon-size, 18px);
         &:hover{
             color: var(--icon-hover-color, white);
         }

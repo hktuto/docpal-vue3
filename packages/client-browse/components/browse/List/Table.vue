@@ -137,7 +137,7 @@ async function handleEmptyRightClick(event: MouseEvent) {
             delete: false
         }
     }
-    const ev = new CustomEvent('fileRightClick',{ detail: prp })
+    const ev = new CustomEvent('fileRightClick',{ detail: data })
     document.dispatchEvent(ev)
 }
 
