@@ -44,7 +44,6 @@
 
 
     async function itemUpdate(metaData:object) {
-      console.log("update", metaData)
       await patchDocumentApi({
         idOrPath: doc.value.id,
         name: doc.value.name,

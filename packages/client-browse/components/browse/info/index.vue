@@ -19,9 +19,9 @@
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
         <div class="infoTagContainer">
             <div class="infoPreviewContainer">
-                <BrowseInfoPreview :doc="detail" @update="docUpdated"/>
+                <BrowseInfoPreview :doc="detail"  />
             </div>
-            <BrowseInfoDocInfo :doc="detail" :premission="premission"/>
+            <BrowseInfoDocInfo :doc="detail" :premission="premission" @update="docUpdated"/>
 <!--     move info picture to it own tag or download tag       -->
 
             
@@ -88,7 +88,7 @@ const detail = ref<DocDetail>();
 const premission = ref<any>();
 
 async function docUpdated() {
-    console.log('docUpdated}ccccccccccccccccccccccc');
+    console.log('docUpdated');
     
   loading.value = true;
   // @ts-ignore
