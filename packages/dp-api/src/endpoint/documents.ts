@@ -289,7 +289,18 @@ export const restoreVersionApi = (params:any) => {
     return api.post('/nuxeo/restoreVersion', params).then(res => res.data);
 }
 
+// comment
 
+// Restore file
+export const CommentsAddApi = (params:any) => {
+    return api.post('/nuxeo/comments/add', params).then(res => res.data);
+}
+export const CommentsDeleteApi = (params:any) => {
+    return api.delete('/nuxeo/comments/delete', { data: params}).then(res => res.data);
+}
+export const CommentsGetApi = (params:any) => {
+    return api.post('/nuxeo/comments', params).then(res => res.data);
+}
 
 
 

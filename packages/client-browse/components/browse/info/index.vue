@@ -32,6 +32,9 @@
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
         <BrowseInfoActivities v-if="currentTab === 'activities'" :doc="detail" />
     </el-tab-pane>
+    <el-tab-pane :label="$t('rightDetail_comments')" name="comments">
+        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" />
+    </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
         <BrowseInfoPicture :doc="detail" />
         <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
@@ -85,6 +88,8 @@ const detail = ref<DocDetail>();
 const premission = ref<any>();
 
 async function docUpdated() {
+    console.log('docUpdated}ccccccccccccccccccccccc');
+    
   loading.value = true;
   // @ts-ignore
   detail.value = null; // set detail to null to reset all tab
@@ -153,6 +158,7 @@ watch(doc, async() => {
     overflow: auto;
 }
 .tabContainer{
+    width: 100%;
         height: 100%;
     overflow: hidden;
     position: relative;
@@ -161,6 +167,9 @@ watch(doc, async() => {
     :deep {
         .el-tab-pane{
             height: 100%;
+            overflow: hidden;
+        }
+        .el-tabs__header {
             overflow: hidden;
         }
         .el-tabs__content{
