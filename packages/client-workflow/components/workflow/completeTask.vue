@@ -14,7 +14,7 @@
 import { useI18n } from "vue-i18n";
 import { historyProcessGetApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
-const user = useUser();
+const userId:string = useUser().getUserId()
 // #region module: page
     const route = useRoute()
     const router = useRouter()
@@ -22,7 +22,7 @@ const user = useUser();
         pageIndex: 0,
         pageSize: 20,
         completed: true,
-        userId: user.user.userId || user.user.username
+        userId
     }
     const state = reactive<State>({
         loading: false,
@@ -42,7 +42,7 @@ const user = useUser();
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
-        param.userId = user.user.value.userId || user.user.value.username
+        param.userId = userId
         state.loading = true
         const res = await historyProcessGetApi({...param, ...state.extraParams})
         

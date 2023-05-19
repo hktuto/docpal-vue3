@@ -84,7 +84,7 @@ const permission = ref({permission:"",print:false});
 const auth = useUser();
 const selectedFiles = ref([]);
 const pageOptions = ref<BrowseOptions>({viewType:'table'})
-
+const userId:string = useUser().getUserId()
 const selectList = ref<any[]>([])
 // #endregion
 provide('selectList', selectList)
@@ -92,7 +92,7 @@ const routePath = computed( () => (route.query.path as string) || '/')
 const infoOpened = ref(false);
 
 async function getDocDetail() {
-    const response = await getDocumentDetail(routePath.value, auth.user.value.username)
+    const response = await getDocumentDetail(routePath.value, userId)
     permission.value = response.permission;
     data.value = response.doc;
 }

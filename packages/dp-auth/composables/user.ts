@@ -133,8 +133,10 @@ export const useUser = () => {
     function forgetPassword() {
         appStore.state = 'forgetPassword';
     }
-
-    return {
+    function getUserId () {
+        return user.value.userId || user.value.username
+    }
+    return { 
         // data
         token,
         user,
@@ -147,6 +149,7 @@ export const useUser = () => {
         getUserSetting,
         savePreference,
         getUserList,
+        getUserId,
         userList,
         forgetPassword
     }

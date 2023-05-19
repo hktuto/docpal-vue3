@@ -28,7 +28,7 @@ const { doc } = toRefs(props);
 const { t } = useI18n();
 
 const aces = ref([])
-const { user } = useUser()
+const userId:string = useUser().getUserId()
 async function handleDataGet () {
     aces.value = []
     const res = await getUserAndRights(props.doc.id)
@@ -39,7 +39,7 @@ async function handleDataGet () {
             })
     })
     aces.value = aces.value.filter( a =>  (!a.id.includes('false')) && 
-                                        a.userId !== (user.value?.userId ||user.value?.username) )
+                                        a.userId !== userId )
 }
 
 // #region module: handle Edit

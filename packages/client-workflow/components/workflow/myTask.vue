@@ -14,15 +14,15 @@
 import { useI18n } from "vue-i18n";
 import { getAllTask, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
-const user = useUser();
+const userId:string = useUser().getUserId()
 // #region module: page
     const route = useRoute()
     const router = useRouter()
     const pageParams = {
         pageIndex: 0,
         pageSize: 20,
-        assignedUser: user.user.value.userId || user.user.value.username
-        // userId: user.user.value.userId || user.user.value.username
+        assignedUser: userId
+        // userId
     }
     const state = reactive<State>({
         loading: false,

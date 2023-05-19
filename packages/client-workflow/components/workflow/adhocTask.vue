@@ -20,7 +20,7 @@
 import { useI18n } from "vue-i18n";
 import { getAdHocPageApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
-const user = useUser();
+const userId:string = useUser().getUserId()
 // #region module: page
     const route = useRoute()
     const router = useRouter()
@@ -74,7 +74,7 @@ const user = useUser();
                 tKey = TABLE.CLIENT_ADHOC_SUBMITTED_TASK
                 tableSetting.value = defaultTableSetting[tKey]
                 state.extraParams = {
-                    user_creator_id: user.user.value.userId || user.user.value.username,
+                    user_creator_id: userId,
                     processInstanceStatus: 0
                 }
                 break
@@ -82,7 +82,7 @@ const user = useUser();
                 tKey = TABLE.CLIENT_ADHOC_APPROVAL_TASK
                 tableSetting.value = defaultTableSetting[tKey]
                 state.extraParams = {
-                    user_approver_id: user.user.value.userId || user.user.value.username,
+                    user_approver_id: userId,
                     processInstanceStatus: 0
                 }
                 break
@@ -90,7 +90,7 @@ const user = useUser();
                 tKey = TABLE.CLIENT_ADHOC_COMPLETED_TASK
                 tableSetting.value = defaultTableSetting[tKey]
                 state.extraParams = {
-                    participant: user.user.value.userId || user.user.value.username,
+                    participant: userId,
                     isComplete: true
                 }
                 break

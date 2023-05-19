@@ -53,7 +53,7 @@ const props = defineProps<{
     doc: any,
     infoOpened:boolean
 }>()
-const {user} = useUser();
+const userId:string = useUser().getUserId()
 const { doc } = toRefs(props)
 const currentTab = ref('info')
 const maxWidth = 600;
@@ -94,7 +94,7 @@ async function docUpdated() {
   }
 
   // get detail
-  const response = await getDocumentDetail(doc.value.id, user.value.username);
+  const response = await getDocumentDetail(doc.value.id, userId);
   detail.value = response.doc;
   premission.value = response.permission;
   //scroll to top

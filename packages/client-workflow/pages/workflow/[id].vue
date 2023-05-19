@@ -40,8 +40,8 @@ import {
 } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
-const userStore = useUser();
-const { user } = toRefs(userStore)
+
+const userId:string = useUser().getUserId()
 const state = reactive({
     backState: route.query.state,
     processState: {
@@ -75,7 +75,6 @@ async function getDetail() {
     }, 100)
 }
 const isAssigneeUser = computed(() => {
-    const userId = user.value.userId || user.value.username
     const id = state.taskDetail.assignee
     return id === userId
 })
@@ -114,7 +113,6 @@ const isAssigneeUser = computed(() => {
         return JSON.parse(response.data[0].jsonValue)
     }
     function handleDisabledForm() {
-        const userId = user.value.userId || user.value.username
         if(userId !== state.taskDetail.assignee) {
             vFormRef.value.disableForm()
         }

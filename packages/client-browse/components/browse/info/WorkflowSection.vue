@@ -40,7 +40,7 @@ import {getAdHocHistory, canApprovalAdhocApi }from 'dp-api'
 import { ElMessage } from 'element-plus'
 const props = defineProps<{ doc: any}>()
 const { doc } = toRefs(props)
-const authStore = useUser()
+const userId:string = useUser().getUserId()
 const {t} = useI18n()
 const loading = ref(false)
  const adHocHistory = ref<any>();
@@ -68,7 +68,7 @@ const loading = ref(false)
     // const { userList } = toRefs(UseUser()) TODO : 
     const userListFilter = computed(() => {
       if (!userList) return []
-      return userList.value.filter(item => item.userId !== authStore.user?.userId)
+      return userList.value.filter(item => item.userId !== userId)
     })
     // const canAdhoc = ref(false)
     const dialogShow = ref(false)
@@ -93,7 +93,7 @@ const loading = ref(false)
             businessKey: `adhoc-${props.doc.name}`,
             properties: {
               documentId: props.doc.id,
-              user_creator_id: authStore.user?.userId,
+              user_creator_id: userId,
               user_approver_id: form.value.user_approver_id.join(',')
             }
           }
@@ -122,7 +122,7 @@ const loading = ref(false)
         const param = {
           properties: {
             documentId: props.doc.id,
-            userId: authStore.user?.userId,
+            userId: userId,
             approved
           }
         }
@@ -168,7 +168,7 @@ const loading = ref(false)
     watch(doc, async(newValue) => {
         // TODO : add api
       await checkAdhocStatus()
-      canApproval.value = await canApprovalAdhocApi(newValue.id, (authStore.user.value.userId || authStore.user.value.username) )
+      canApproval.value = await canApprovalAdhocApi(newValue.id, (userId) )
     }, { immediate: true })
 
     onMounted(() => getUserList())

@@ -21,17 +21,17 @@
 import { useI18n } from "vue-i18n";
 import { getAllTask, taskClaimApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
-const user = useUser();
+const userId:string = useUser().getUserId()
 // #region module: page
     const route = useRoute()
     const router = useRouter()
     const pageParams = {
         pageIndex: 0,
         pageSize: 20,
-        candidateOrAssigned: user.user.value.userId || user.user.value.username,
-        // interrelatedUserId: user.user.value.userId || user.user.value.username,
-        // assignedUser: user.user.value.userId || user.user.value.username,
-        // userId: user.user.value.userId || user.user.value.username
+        candidateOrAssigned: userId,
+        // interrelatedUserId: userId,
+        // assignedUser: userId,
+        // userId
     }
     const state = reactive<State>({
         loading: false,
@@ -51,7 +51,7 @@ const user = useUser();
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
-        param.userId = user.user.value.userId || user.user.value.username
+        param.userId = userId
         state.loading = true
         const res = await getAllTask({...param, ...state.extraParams})
         
@@ -97,7 +97,7 @@ function handleDblclick (row) {
 }
 async function claimTask(row) {
     dpLog(row, 'claimTask');
-    await taskClaimApi(row.id, user.user.value.userId || user.user.value.username)
+    await taskClaimApi(row.id, userId)
     handlePaginationChange(pageParams.pageIndex)
 }
 onMounted(async() => {

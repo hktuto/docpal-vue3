@@ -19,7 +19,7 @@ import { ArrowLeftBold } from '@element-plus/icons-vue'
 const props = defineProps<{
     id: string
 }>()
-const user = useUser();
+const userId:string = useUser().getUserId()
 const state = reactive({
     expended: false,
     commentList: [],
@@ -30,7 +30,7 @@ function handelExpand () {
 async function handleAddComment (text, callback) {
     const param = {
         processInstanceId: props.id,
-        userId: user.user.value.userId || user.user.value.username,
+        userId,
         text
     }
     const res = await sendProcessCommentsApi(param)

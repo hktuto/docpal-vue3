@@ -71,7 +71,7 @@ const list = ref<Notification[]>([]);
 const total = ref(0);
 
 const loading = ref(false);
-const {user} = useUser();
+const userId:string = useUser().getUserId()
 function handleDelete(item: Notification, index: number) {
     dpLog(item, index);
 
@@ -92,7 +92,7 @@ async function getNotificationList() {
       pageSize: 20,
     }
     dpLog(user.value)
-    const {result} = await getNotificationListApi(user.value.userId || user.value.username, param);
+    const {result} = await getNotificationListApi(userId, param);
      result.content.forEach(item => {
         item.content = JSON.parse(item.content) || {}
         item.createDate = formatDate(item.createdDate) || null

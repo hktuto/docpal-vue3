@@ -74,19 +74,16 @@ const props = defineProps<{
 }>()
 const route = useRoute()
 const router = useRouter()
-const userStore = useUser();
-const { user } = toRefs(userStore)
+const userId:string = useUser().getUserId()
 const state = reactive({
     deletePopoverShow: false,
     loading: false
 })
 const isStartedUser = computed(() => {
-    const userId = user.value.userId || user.value.username
     const id = props.taskDetail.taskInstance.startUserId
     return id === userId
 })
 const isAssigneeUser = computed(() => {
-    const userId = user.value.userId || user.value.username
     const id = props.taskDetail.assignee
     return id === userId
 })
@@ -107,7 +104,6 @@ async function handleUnclaim () {
 async function handleClaim () {
     try{
         state.loading = true
-        const userId = user.value.userId || user.value.username
         const response = await taskClaimApi(route.params.id, userId)
         if (!response.errorCode) {
             emits('change', response, true)
@@ -120,7 +116,6 @@ async function handleClaim () {
     }, 200)
 }
 async function handelDelete() {
-    const userId = user.value.userId || user.value.username
     const processInstanceId = props.taskDetail.taskInstance.processInstanceId
 
     const response = await taskDeleteApi(processInstanceId,  userId)
