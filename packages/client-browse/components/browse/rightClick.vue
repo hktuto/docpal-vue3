@@ -40,8 +40,8 @@ const state = reactive({
     canWrite: false,
     loading: false
 })
+const userId:string = useUser().getUserId()
 const FileRightClickPopoverRef = ref()
-const auth = useUser();
 async function handleRightClick (detail: any) {
     state.visible = true
     state.doc = detail.doc
@@ -70,7 +70,7 @@ async function handleAction (detail) {
     if (detail.actions) state.actions = { ...state._actions,  ...detail.actions}
     else state.actions = { ...state._actions }
     try {
-        const permission = await GetDocPermission(detail.doc.id, auth.user.value.username);
+        const permission = await GetDocPermission(detail.doc.id, userId);
         state.canWrite = permissionAllow({feature:'Write', userPermission:permission.permission })
     } catch (error) {
         if (props.permission)
