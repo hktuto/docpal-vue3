@@ -72,16 +72,17 @@ function toVersionComparison (row) {
     const ev = new CustomEvent('close-file-detail');
     window.dispatchEvent(ev);
     const path = `versionComparison/${props.doc.id}`
+    PopoverRef.value.doClose()
     router.push({
         path,
         query:{
             oldVersion: row.version
         }
     })
-    PopoverRef.value.doClose()
+    
 
 }
-function hidePopover (e) {
+function hidePopover () {
     // let box = document.getElementById("popover__version")
     // if(!box.contains(e.target)){
     popoverShow.value = false
