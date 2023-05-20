@@ -82,7 +82,7 @@ async function downloadPdfAndAnnotation() {
     // REMARK : only work when frame is on same domain
     const html = frame?.document;
     if(!html) return;
-    const btn = html.getElementById('print');
+    const btn = html.getElementById('download');
     btn?.click();
 }
 
