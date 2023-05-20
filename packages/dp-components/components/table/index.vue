@@ -82,6 +82,8 @@ const props = defineProps<{
 }>()
 const tableRef = ref();
 
+var clickTimeoutId = ref<NodeJS.Timeout>();
+
 // 设置option默认值，如果传入自定义的配置则合并option配置项
 const _options = computed<Table.Options>(() => {
     const option = {
@@ -160,10 +162,16 @@ const indexMethod = (index: number) => {
     }
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-        if(_options.value.multiSelect) handleShift(row)
-        emit('row-click', row, column, event)
+        clearTimeout(clickTimeoutId.value);
+        clickTimeoutId.value = setTimeout(() => {
+            if(event.detail === 2) return; // 双击事件返回
+            if(_options.value.multiSelect) handleShift(row)
+            emit('row-click', row, column, event)
+        }, 100);
+        
     }
     const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
+        clearTimeout(clickTimeoutId.value);
         emit('row-dblclick', row, column, event)
     }
     const handleRightClick = (row: any, column: any, event: MouseEvent) => {
