@@ -121,10 +121,14 @@ async function getDocDetail() {
             console.log('same path do not refresh')
             return
         }
-        console.log("list updated")
         listData.value = response
         forceRefresh.value = false
     } else {
+        if(!listData.value) {
+            // split router path to get parent path
+            const parentPath = routePath.value.split('/').slice(0, -1).join('/')
+            listData.value =  await getDocumentDetail(parentPath, userId)
+        }
         detailData.value = response
     } 
 }
