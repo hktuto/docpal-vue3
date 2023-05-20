@@ -28,7 +28,7 @@ import {TableV2FixedDir} from 'element-plus'
 import type { Column, RowClassNameGetter } from 'element-plus'
 const emit = defineEmits([
     'right-click',
-    'select-change'
+    'select-change',
 ])
 
 const props = defineProps<{doc: any}>();
@@ -112,15 +112,18 @@ const { t } = useI18n()
 // #endregion
 
 
-function handleDblclick (row) {
-    state.curDoc = row
+function handleDblclick (row:any) {
+    state.curDoc = row;
     router.push({
-        path:'/browse',
-        query: {
-            path: row.path,
-            isFolder: row.isFolder
-        }
-    })
+            query: {
+                path: row.path,
+                isFolder: row.isFolder
+            }
+        });
+    // update query parmas and push to history
+    
+
+    
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()

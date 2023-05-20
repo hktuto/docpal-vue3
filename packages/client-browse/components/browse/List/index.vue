@@ -1,20 +1,19 @@
 <template>
     <div class="listContainer">
-        <el-tabs v-model="modelProps" @tab-click="tabChange">
-        <el-tab-pane label="Table" name="table" class="h100">
-            <browse-list-table v-if="modelProps === 'table'" :doc="doc" :loading="pending" 
-                @select-change="handleSelectionChange"/>
-        </el-tab-pane>
-        <el-tab-pane label="Preview" name="preview" class="h100">
-            <browse-list-preview v-if="modelProps === 'preview'" :doc="doc" :permission="permission" :data="data" />
-        </el-tab-pane>
-        </el-tabs>
-        <!-- <div v-else-if="viewType === 'tree'">
-            <browse-tree :doc="doc" :permission="permission" :data="data" :pending="pending" />
+        <div class="left">
+            <el-tabs v-model="modelProps" @tab-click="tabChange">
+            <el-tab-pane label="Table" name="table" class="h100">
+                <browse-list-table v-if="modelProps === 'table'" :doc="doc" :loading="pending" 
+                    @select-change="handleSelectionChange" />
+            </el-tab-pane>
+            <el-tab-pane label="Preview" name="preview" class="h100">
+                <browse-list-preview v-if="modelProps === 'preview'" :doc="doc" :permission="permission" />
+            </el-tab-pane>
+            </el-tabs>
         </div>
-        <div v-else-if="viewType === 'column'">
-            <browse-column :doc="doc" :permission="permission" :data="data" :pending="pending" />
-        </div> -->
+        <div class="right">
+            <slot :doc="doc" :permission="permission" />
+        </div>
     </div>
 </template>
 
@@ -23,7 +22,8 @@ import { GetChild } from 'dp-api'
 import { ViewType } from "../../browseType";
 const emits = defineEmits([
     'select-change',
-    'update:viewType'
+    'update:viewType',
+    'open-detail',
 ])
 const props = withDefaults(defineProps<{
     doc?: any,
@@ -33,10 +33,7 @@ const props = withDefaults(defineProps<{
     view: 'table'
 })
 const {doc} = toRefs(props)
-const modelProps = computed({
-    get: () => props.view, 
-    set: (value) => { emits('update:view', value) }
-})
+const modelProps = ref('table')
 
 function tabChange(tab: TabsPaneContext, event: Event) {
     modelProps.value = tab.paneName
@@ -49,14 +46,22 @@ function handleSelectionChange (rows) {
 .h100 {
     height: 100%;
 }
-.listContainer {
+.listContainer{
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    overflow: hidden;
+}
+.left, .right{
+    height: 100%;
     overflow: hidden;
 }
 :deep {
         .el-tabs {
+            height: 100%;
                 overflow: hidden;
-    display: flex;
-    flex-flow: column;
+                display: flex;
+                flex-flow: column;
+                position: relative;
         }
         .el-tab-pane{
             height: 100%;

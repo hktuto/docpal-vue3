@@ -2,11 +2,11 @@ type Permission = "Read" | "ReadWrite" | "ManageRecord" | "ManageLegalHold" | "E
 
 const PermissionArray:Permission[] = ["Read", "ReadWrite", "ManageRecord","ManageLegalHold", "Everything"];
 
-type PermissionAllowArgs = {
+type AllowToArgs = {
     feature: Permission;
     userPermission: Permission;
 }
-export const permissionAllow = ({feature, userPermission}:PermissionAllowArgs) => {
+export const AllowTo = ({feature, userPermission}:AllowToArgs) => {
     if (!userPermission) {
         return false;
     }

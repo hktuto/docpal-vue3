@@ -1,89 +1,107 @@
 <template>
     <NuxtLayout >
-        <!-- header actions  -->
-        <template #headerLeft>
-            <!-- <browse-options v-model="pageOptions" /> -->
-        </template>
-        <page-container>
-        <div v-if="data" class="browsePageContainer">
-            <div class="browseHeader">
-                <LazyBrowseBreadcrumb ref="breadCrumb" :path="routePath" rootPath="/" />
-                <!-- folder actions container -->
-                 <div id="browseHeaderRight" class="">
-
-                 </div>
-            </div>
-            <div class="listContainer">
-                <BrowseList :doc="data" :permission="permission" v-model:view="pageOptions.viewType"
-                    @select-change="handleSelectionChange"/>
-                <div id="browseInfoSection">
-
-                </div>
-            </div>
-        </div>
-        <Teleport v-if="data" :disabled="data.isFolder" to="body">
-            <BrowseDetail :show="!data.isFolder" :doc="data" @close="detailClosed" >
-                <div class="fileNameContainer">
-                    <div class="fileName">{{ data.name }}</div>
-                    <!-- <BrowseActionsEdit :doc="data" /> -->
-                    <BrowseActionsEdit v-if="permissionAllow({feature:'ReadWrite', userPermission:permission.permission }) && selectList.length <= 1" :doc="selectList.length === 1 ? selectList[0] : data" @success="handleRefresh"/>
-                </div>
-                <div class="actions">
-                    <Teleport :disabled="!data.isFolder" to="#browseHeaderRight">
-                        <BrowseActionsSubscribe v-if="selectList.length === 0"  :doc="data" />
-                        <!-- <div class="actionDivider"></div> -->
+    <page-container>
+        <div v-if="listData" class="browsePageContainer">
+            <BrowsePageHeader :doc="listData.doc" :permission="listData.permission" >
+                <template #default="{doc, permission}" >   
+                    <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
+                    <div v-if="selectList.length === 0" id="browseHeaderRight" class="folderAction">
+                        <BrowseActionsSubscribe  :doc="doc" />
+                        <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsNewFolder v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                        <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                        <BrowseActionsUploadRequest v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
                         
-                        <BrowseActionsReplace :doc="data" v-if="!data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" />
-                        <BrowseActionsUpload v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
-                        <BrowseActionsDownload v-if="selectList.length === 0 && !data.isFolder && permissionAllow({feature:'Write', userPermission:permission.permission })"  :doc="data" />
-                        <BrowseActionsNewFolder v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @success="handleRefresh"/>
-                        <BrowseActionsDelete v-if="selectList.length === 0 && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :doc="data" @delete="itemDeleted" @success="handleRefresh"/>
-                        <!-- <div class="actionDivider"></div> -->
-                        <BrowseActionsCopyPath v-if="selectList.length === 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
-                        <BrowseActionsShare v-if="selectList.length > 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="data" />
-                        <BrowseActionsDeleteSelected v-if="selectList.length > 0 && permissionAllow({feature:'Write', userPermission:permission.permission })" :selected="selectList" @success="handleRefresh"/>
-                        <BrowseActionsUploadRequest v-if="selectList.length === 0 && data.isFolder && permissionAllow({feature:'ReadWrite', userPermission:permission.permission })" :path="data.path" />
                         <div class="actionDivider"></div>
-                        <BrowseActionsInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })  && selectList.length <= 1 " :doc="selectList.length === 1 ? selectList[0] : data" @click="infoOpened = !infoOpened"/>
-                    </Teleport>
-                    <div class="actionDivider"></div>
-                    <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
-                    <div class="actionIconContainer" @click="detailClosed">
-                        <el-icon >
-                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
-                        </el-icon>
+                        <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
                     </div>
-                </div>
-                <template #info>
-                    <Teleport :disabled="!data.isFolder" to="#browseInfoSection">
-                        <BrowseInfo v-if="permissionAllow({feature:'Write', userPermission:permission.permission })" :doc="selectList.length === 1 ? selectList[0] : data"  :infoOpened="infoOpened" @close="infoOpened = false" />
-                    </Teleport>
+                    <div v-else id="browseHeaderRight" class="selectedAction">
+                        <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
+                        <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :selected="selectList" @success="handleRefresh"/>
+                        <div class="actionDivider"></div>
+                        <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
+                    </div>
+                </template>
+            </BrowsePageHeader>
+            <BrowseList 
+                :doc="listData.doc" 
+                :permission="listData.permission" 
+                @select-change="handleSelectionChange" 
+            >
+                <template #default="slotProps" >
+                    <BrowseInfo v-bind="slotProps" :infoOpened="infoOpened" @close="infoOpened = false" />
+                    <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
+                    <BrowseRightClick :permission="slotProps.permission"></BrowseRightClick>
+                </template>
+            </BrowseList>
+        </div>
+        <Teleport v-if="detailData && detailData.doc" to="body">
+            <BrowseDetail :show="detailData.doc" :doc="detailData.doc" :permission="detailData.permission" @close="detailClosed" >
+                <template #default="{doc , permission}" >
+                    <div class="fileNameContainer">
+                        <div class="fileName">{{ doc.name }}</div>
+                        <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                    </div>
+                    <div class="actions">
+                        <BrowseActionsSubscribe  :doc="doc" />
+                        <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" />
+                        <BrowseActionsUpload v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc" />
+                        <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                        <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                        <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
+                       
+                        <div class="actionDivider"></div>
+                        <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
+                        <div class="actionDivider"></div>
+                        <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
+                        <div class="actionIconContainer" @click="detailClosed">
+                            <el-icon >
+                                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
+                            </el-icon>
+                        </div>
+                    </div>
+                </template>
+                <template #info="{doc, permission}">
+                    <BrowseInfo :doc="doc" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false" />
                 </template>
             </BrowseDetail>
         </Teleport>
-        </page-container>
-        <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
-        <LazyBrowseRightClick :permission="permission"></LazyBrowseRightClick>
+    </page-container>
+        
     </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
+import { DocDetail } from 'dp-api';
 import {watch, ref, computed} from 'vue'
-import {getDocumentDetail} from "~/utils/browseHelper";
-
+import {getDocumentDetail, } from "~/utils/browseHelper";
+import {AllowTo} from '~/utils/permissionHelper'
 // #region refs
 const breadCrumb = ref();
-const icon = ref("");
+
 const route = useRoute();
 const router = useRouter();
-const data = ref();
+const listData = ref<{
+    doc: DocDetail;
+    permission: {
+        permission: string;
+        print: boolean;
+    }
+}>();
+const detailData = ref<{
+    doc: DocDetail;
+    permission: {
+        permission: string;
+        print: boolean;
+    }
+}>();
+
 const loading = ref(false)
-const permission = ref({permission:"",print:false});
 const auth = useUser();
-const selectedFiles = ref([]);
-const pageOptions = ref<BrowseOptions>({viewType:'table'})
 const userId:string = useUser().getUserId()
 const selectList = ref<any[]>([])
 // #endregion
@@ -93,14 +111,17 @@ const infoOpened = ref(false);
 
 async function getDocDetail() {
     const response = await getDocumentDetail(routePath.value, userId)
-    permission.value = response.permission;
-    data.value = response.doc;
+    if(response.doc.isFolder) {
+        detailData.value = null
+        listData.value = response
+    } else {
+        detailData.value = response
+    } 
 }
 
 function itemDeleted(){
-    if(!data.value.isFolder){
-        breadCrumb.value.goParent();
-    }
+     //  FIXME: item deleted may not be the current path
+     breadCrumb.value.goParent();
 }
 function handleRefresh () {
     const time = new Date().valueOf().toString()
@@ -111,7 +132,7 @@ function handleRefresh () {
 function handleSelectionChange (rows:any) {
     selectList.value = [...rows]
 }
-watch(route, async() => {
+watch(route, async(newRoute, oldRoute) => {
     loading.value = true;
     await getDocDetail()
     loading.value = false;
@@ -119,11 +140,13 @@ watch(route, async() => {
 
 
 
+
+
 function detailClosed() {
     breadCrumb.value.goParent();
 }
 onMounted(() => {
-    useEventListener(document, 'docActionRefresh', (event) => handleRefresh(event.detail))
+    useEventListener(document, 'docActionRefresh', (event) => handleRefresh())
     useEventListener(document, 'tree-node-update', (event) => getDocDetail())
 })
 </script>
@@ -136,11 +159,7 @@ onMounted(() => {
     height: 100%;
     overflow: hidden;
     position: relative;
-    .listContainer{
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        overflow: hidden;
-    }
+    
 }
 .browseHeader{
     display: grid;

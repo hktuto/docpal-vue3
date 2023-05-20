@@ -18,10 +18,10 @@
 <el-tabs v-if="detail"  class="tabContainer" v-model="currentTab" >
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
         <div class="infoTagContainer">
-            <div class="infoPreviewContainer">
+            <div v-if="!hidePreview" class="infoPreviewContainer">
                 <BrowseInfoPreview :doc="detail"  />
             </div>
-            <BrowseInfoDocInfo :doc="detail" :premission="premission" @update="docUpdated"/>
+            <BrowseInfoDocInfo :doc="detail" :premission="permission" @update="docUpdated"/>
 <!--     move info picture to it own tag or download tag       -->
 
             
@@ -43,7 +43,9 @@
         <BrowseInfoRelate v-if="currentTab === 'relate'"  :doc="detail" />
     </el-tab-pane>
 </el-tabs>
-  <div v-else v-loading="loading" class="loadingContainer"></div>
+  <div v-else v-loading="loading" class="loadingContainer">
+    {{ detail }}
+  </div>
 </Interact>
 </template>
 
@@ -54,7 +56,8 @@ import {getDocumentDetail} from "~/utils/browseHelper";
 
 const props = defineProps<{
     doc: any,
-    infoOpened:boolean
+    infoOpened:boolean,
+    hidePreview:boolean,
 }>()
 const userId:string = useUser().getUserId()
 const { doc } = toRefs(props)
@@ -85,10 +88,9 @@ function resizeMove(event:any) {
 }
 const loading = ref(false);
 const detail = ref<DocDetail>();
-const premission = ref<any>();
+const permission = ref<any>();
 
 async function docUpdated() {
-    console.log('docUpdated');
     
   loading.value = true;
   // @ts-ignore
@@ -101,7 +103,7 @@ async function docUpdated() {
   // get detail
   const response = await getDocumentDetail(doc.value.id, userId);
   detail.value = response.doc;
-  premission.value = response.permission;
+  permission.value = response.permission;
   //scroll to top
   const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
   if(tabContent) {
@@ -112,8 +114,8 @@ async function docUpdated() {
 
 watch(doc, async() => {
     if(!doc.value) return;
-  docUpdated()
-})
+    docUpdated()
+},{immediate:true})
 
 </script>
 

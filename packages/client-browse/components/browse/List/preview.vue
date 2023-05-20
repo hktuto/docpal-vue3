@@ -43,7 +43,7 @@ const state = reactive<State>({
 })
 
 function imgError(event) {
-    dpLog(event);
+
     event.target.src = '/icons/file-normal.svg'
 }
 // #region module: page 
@@ -55,7 +55,7 @@ function imgError(event) {
         pageSizes: [10, 20, 30, 40, 50, 100],
         layout: 'total, sizes, prev, pager, next, jumper',
     })
-    async function getList (param) {
+    async function getList (param:any) {
         state.loading = true
         const res = await GetChildThumbnail(param)
         state.tableData = []

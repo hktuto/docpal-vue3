@@ -26,6 +26,7 @@
 <script lang="ts" setup>
 import {Back, ArrowRight} from '@element-plus/icons-vue'
 import { GetBreadcrumb } from 'dp-api'
+import { EmitFlags } from 'typescript';
 const router = useRouter();
 const props = withDefaults(defineProps<{
     path:string,
@@ -34,21 +35,23 @@ const props = withDefaults(defineProps<{
     path:'/',
     rootPath: '/'
 })
-
+const emit = defineEmits(['go-parent'])
 const { data, refresh, pending } = useAsyncData(() => GetBreadcrumb(props.path));
 
 const displayBread = computed(() => data.value?.filter(d => d.isFolder)|| []);
 
 watch(props, () => refresh())
 
-function goParent() {
+async function goParent() {
     const path = data.value[data.value.length - 2]? data.value[data.value.length - 2].path : props.rootPath;
-    router.push({
+    
+    router.replace({
         path:'/browse',
         query:{
             path
         }
     })
+    emit('go-parent')
 }
 
 function navigate(path) {

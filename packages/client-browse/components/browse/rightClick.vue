@@ -15,7 +15,9 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import { GetDocPermission } from 'dp-api'
+import { DocDetail, GetDocPermission } from 'dp-api'
+import { AllowTo } from '~/utils/permissionHelper'
+
 const props = defineProps<{
     permission?: any
 }>()
@@ -23,10 +25,10 @@ const emits = defineEmits(['rightActionClick']);
 const state = reactive({
     visible: false,
     defaultActive: [],
-    doc: {},
-    copyItem: {},
+    doc: {} as DocDetail,
+    copyItem: {} as any,
     actions: {
-    },
+    } as any,
     _actions: {
         addFolder: true,
         addFile: true,
@@ -65,16 +67,16 @@ async function handleRightClick (detail: any) {
         }
     })
 }
-async function handleAction (detail) {
+async function handleAction (detail:any) {
     state.loading = true
     if (detail.actions) state.actions = { ...state._actions,  ...detail.actions}
     else state.actions = { ...state._actions }
     try {
         const permission = await GetDocPermission(detail.doc.id, userId);
-        state.canWrite = permissionAllow({feature:'Write', userPermission:permission.permission })
+        state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission.permission })
     } catch (error) {
         if (props.permission)
-            state.canWrite = permissionAllow({feature:'Write', userPermission: props.permission.permission })
+            state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission.permission })
         else state.canWrite = false
     }
     state.loading = false

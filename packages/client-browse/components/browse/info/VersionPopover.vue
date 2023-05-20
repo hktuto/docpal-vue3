@@ -61,13 +61,12 @@ const tableData = ref([])
 const options = ref({
     showPagination:false,
 })
-function handlePopoverShow (e) {
-    dpLog('handlePopoverShow')
+function handlePopoverShow () {
       popoverShow.value = !popoverShow.value
     }
-function handlerRowClick (row, column, event) {
+function handlerRowClick (_row:any, _column:any, _event:any) {
     }
-function toVersionComparison (row) {
+function toVersionComparison (row:any) {
     // close detail
     const ev = new CustomEvent('close-file-detail');
     window.dispatchEvent(ev);

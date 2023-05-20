@@ -2,15 +2,15 @@
     <div class="browseDetailContainer">
         <div v-show="show" class="dialog">
             <div id="modalHeader">
-                <slot />
+                <slot :doc="doc" :permission="permission" />
             </div>
             <div class="content">
                 <div class="preview">
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true}" />
+                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: true}" />
                     <LazyVideoPlayer v-if="readerType === 'video'" :doc="doc" />
                 </div>
                 <div class="info">
-                    <slot name="info" />
+                    <slot name="info" :doc="doc" :permission="permission" />
                 </div>
             </div>
         </div>
@@ -23,6 +23,10 @@ import { onKeyStroke } from '@vueuse/core'
 const props = defineProps<{
     doc: any
     show: boolean,
+    permission:{
+        permission: string;
+        print: boolean;
+    }
 }>();
 const {show} = toRefs(props);
 const emit = defineEmits(['close'])
