@@ -98,7 +98,9 @@ const detailData = ref<{
         permission: string;
         print: boolean;
     }
-}>();
+} | null>(null);
+
+const forceRefresh = ref(false)
 
 const loading = ref(false)
 const auth = useUser();
@@ -112,8 +114,16 @@ const infoOpened = ref(false);
 async function getDocDetail() {
     const response = await getDocumentDetail(routePath.value, userId)
     if(response.doc.isFolder) {
+        
         detailData.value = null
+        // check if the path is the same
+        if(listData.value && listData.value.doc.id === response.doc.id && !forceRefresh.value) {
+            console.log('same path do not refresh')
+            return
+        }
+        console.log("list updated")
         listData.value = response
+        forceRefresh.value = false
     } else {
         detailData.value = response
     } 
@@ -124,6 +134,7 @@ function itemDeleted(){
      breadCrumb.value.goParent();
 }
 function handleRefresh () {
+    forceRefresh.value = true
     const time = new Date().valueOf().toString()
     router.push({
         query: { ...route.query, time }
@@ -133,10 +144,11 @@ function handleSelectionChange (rows:any) {
     selectList.value = [...rows]
 }
 watch(route, async(newRoute, oldRoute) => {
+    console.log('route changed')
     loading.value = true;
     await getDocDetail()
     loading.value = false;
-},{immediate:true});
+},{immediate:true, deep: true});
 
 
 

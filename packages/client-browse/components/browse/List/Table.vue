@@ -32,6 +32,7 @@ const emit = defineEmits([
 ])
 
 const props = defineProps<{doc: any}>();
+const { doc } = toRefs(props) 
 // #region module: page
 const { t } = useI18n()
     const route = useRoute()
@@ -70,9 +71,6 @@ const { t } = useI18n()
         }
     }
 
-    function getTableData(param:any) {
-        getList(param)
-    }
 
     async function cleanList () {
         state.tableData = []
@@ -86,27 +84,23 @@ const { t } = useI18n()
         }
     }
 
-    function handleDisabled (_row) {
+    function handleDisabled (_row:any) {
 
     }
     watch(
-        () => route.query,
-        async (newVal) => {
-
-            const { path, isFolder } = newVal
-            // 点击导航头时，isFolder 为 undefined,需要排除 undefined 的情况
-            if (isFolder === 'false') return
+        doc,
+        async (newVal:any) => {
+            console.log('doc change', newVal)
             // 重置數據
             cleanList()
             pageParams.value = {
-                idOrPath: path || '/',
+                idOrPath: newVal.path || '/',
                 pageIndex: 1,
                 pageSize: 100
             }
-            pageParams.idOrPath = path || '/'
-            getTableData(pageParams.value)
+            getList(pageParams.value)
         },
-        { immediate: true }
+        { immediate: true, deep:true }
     )
     const { tableData, options, loading } = toRefs(state)
 // #endregion
@@ -115,15 +109,11 @@ const { t } = useI18n()
 function handleDblclick (row:any) {
     state.curDoc = row;
     router.push({
-            query: {
-                path: row.path,
-                isFolder: row.isFolder
-            }
-        });
-    // update query parmas and push to history
-    
-
-    
+        query: {
+            path: row.path,
+            isFolder: row.isFolder
+        }
+    });
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()
@@ -145,7 +135,6 @@ async function handleEmptyRightClick(event: MouseEvent) {
 }
 
 function handleRightClick (row: any, column: any, event: MouseEvent) {
-    console.log(event);
     event.preventDefault()
     event.stopPropagation();
     const data = {

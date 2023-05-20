@@ -82,8 +82,8 @@ const props = defineProps<{
 }>()
 const tableRef = ref();
 
-var clickTimeoutId = ref<NodeJS.Timeout>();
-
+const clickTimeoutId = ref<NodeJS.Timeout>();
+const selectChangeTimeoutId = ref<NodeJS.Timeout>();
 // 设置option默认值，如果传入自定义的配置则合并option配置项
 const _options = computed<Table.Options>(() => {
     const option = {
@@ -132,7 +132,7 @@ const tableRowClassName = ({ row, rowIndex }) => {
     }
     return rowName; //也可以再加上其他类名 如果有需求的话
 }
-const rowStyle = (row, rowIndex) => {
+const rowStyle = (row:any, rowIndex:any) => {
     
 }
 const indexMethod = (index: number) => {
@@ -157,21 +157,27 @@ const indexMethod = (index: number) => {
 
     // 多选事件
     const handleSelectionChange = (val: any) => {
-        shiftSelectList.value = val
-        emit('selection-change', val)
+        clearTimeout(selectChangeTimeoutId.value);
+        selectChangeTimeoutId.value = setTimeout(() => {
+            shiftSelectList.value = val
+            emit('selection-change', val)
+        }, 200);
     }
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
         clearTimeout(clickTimeoutId.value);
         clickTimeoutId.value = setTimeout(() => {
-            if(event.detail === 2) return; // 双击事件返回
+            console.log("single click")// 双击事件返回
             if(_options.value.multiSelect) handleShift(row)
             emit('row-click', row, column, event)
-        }, 100);
+        }, 200);
         
     }
     const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
+        // clean click adn selectChange timeout
         clearTimeout(clickTimeoutId.value);
+        clearTimeout(selectChangeTimeoutId.value);
+        console.log("db click")
         emit('row-dblclick', row, column, event)
     }
     const handleRightClick = (row: any, column: any, event: MouseEvent) => {
@@ -201,6 +207,7 @@ function reorderColumn (displayList) {
     let shiftOrAltDown = false
     const shiftSelectList = ref([])
     function handleShift (row) {
+        console.log("handleShift", CtrlDown, shiftOrAltDown)
         if (_options.value.selectable && !_options.value.selectable(row)) return
         let refsElTable = tableRef.value
         if(CtrlDown) {
@@ -219,6 +226,7 @@ function reorderColumn (displayList) {
             }
          } else {
             let findRow = shiftSelectList.value.find(c => c.rowIndex == row.rowIndex); //找出当前选中行
+            console.log("findRow", shiftSelectList.value, findRow)
             //如果只有一行且点击的也是这一行则取消选择 否则清空再选中当前点击行
             if (findRow&& shiftSelectList.value.length === 1 ) { 
                 refsElTable.toggleRowSelection(row, false);
