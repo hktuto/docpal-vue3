@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<{
     doc?: any,
     options: PdfJsOptions
 }>(),{
+    doc: null,
     options:{
         print: false,
         loadAnnotations: false,
@@ -30,7 +31,6 @@ const {locale} = useI18n()
 const { options } = toRefs(props)
 
 async function getAnnotation():Promise<Object> {
-    dpLog(props.options.loadAnnotations)
     if(!props.options.loadAnnotations) return new Map();
     const annotation = await GetAnnotation(props.doc.id);
     let annotationObj = []
@@ -53,7 +53,6 @@ async function sendPdfAndAnnotation() {
         const blob = await GetDocumentPreview(props.doc.id);
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
-        dpLog(annotations)
         frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
         dpLog(error);
@@ -62,7 +61,6 @@ async function sendPdfAndAnnotation() {
 }
 
 function gotMessageFromIframe(message:MessageEvent) {
-    dpLog(message)
     const { data:{ data, type} } = message;
     if(!data && !type ) return;
     switch(type) {
@@ -76,6 +74,16 @@ function gotMessageFromIframe(message:MessageEvent) {
             break;
     }
 
+}
+
+async function downloadPdfAndAnnotation() {
+    const frame = iframe.value?.contentWindow;
+    // get frame html content and trigger print button
+    // REMARK : only work when frame is on same domain
+    const html = frame?.document;
+    if(!html) return;
+    const btn = html.getElementById('print');
+    btn?.click();
 }
 
 async function saveAnnotation(annotation:Map<string, object>) {
@@ -105,7 +113,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
 }
 
 useEventListener(window, 'message', gotMessageFromIframe)
-
+useEventListener(window, 'downloadPdfAndAnnotation', downloadPdfAndAnnotation)
 </script>
 
 <style lang="scss" scoped>

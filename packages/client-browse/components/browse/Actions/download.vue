@@ -1,3 +1,5 @@
+
+
 <template>
     
         
@@ -29,27 +31,58 @@
 </template>
 
 <script lang="ts" setup>
-const dialogOpened = ref(false)
-
+import { DownloadDocApi, downloadDocRecord } from "dp-api"
+import { ElNotification, ElMessage} from 'element-plus'
+import { downloadBlob } from '~/utils/browseHelper'
 const props = defineProps<{
     doc: any,
     selected: any[]
 }>()
-const visible = ref(false)
-function iconClickHandler(){
-    dpLog('iconClickHandler');
-    visible.value = true
-    // open upload dialog
+const { t } = useI18n()
+
+async function downloadHandler(){
+    const notification = ElNotification({
+          title: '',
+          dangerouslyUseHTMLString: true,
+          message: `${props.doc.name}<i class="el-icon-loading"></i>`,
+          showClose: false,
+          customClass: 'loading-notification',
+          duration: 0,
+          position: 'bottom-right'
+        });
+    try{
+        const blob = await DownloadDocApi(props.doc.id)
+        await downloadBlob(blob, props.doc.name)
+    } catch(error:any) {
+        ElMessage.error(t('download_noFile') as string)
+    }
+    notification.close()
+   
 }
-function downloadHandler(){
-    dpLog('downloadHandler')
-}
-function downloadAsPdfHandler(){
-    dpLog('downloadAsPdfHandler')
+async function downloadAsPdfHandler(){
+    // TODO : impelment action
+    const notification = ElNotification({
+          title: '',
+          dangerouslyUseHTMLString: true,
+          message: `${props.doc.name}<i class="el-icon-loading"></i>`,
+          showClose: false,
+          customClass: 'loading-notification',
+          duration: 0,
+          position: 'bottom-right'
+        });
+    try{
+        const blob = await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDFAnnotation'})
+        await downloadBlob(blob, props.doc.name)
+    } catch(error:any) {
+        ElMessage.error(t('download_noFile') as string)
+    }
+    notification.close()
 }
 
-function downloadPdfAndAnnotationHandler(){
-    dpLog('downloadPdfAndAnnotationHandler')
+async function downloadPdfAndAnnotationHandler(){
+    // TODO : impelment action
+    const ev = new CustomEvent('downloadPdfAndAnnotation', { detail: props.doc })
+    window.dispatchEvent(ev);
 }
 </script>
 

@@ -98,6 +98,9 @@ export const DownloadTemplateApi = async(param) => {
 export const DownloadDocApi = async(idOrPath:string) => {
     return api.post('/nuxeo/document/download', {idOrPath}, {responseType: 'blob', timeout: 0}).then(res => res.data)
 }
+export const downloadDocRecord = async(params) => {
+    return api.post('/nuxeo/document/download', {params}, {responseType: 'blob', timeout: 0}).then(res => res.data)
+}
 
 // #region module: file
     export const CreateFoldersApi = async(param) => {

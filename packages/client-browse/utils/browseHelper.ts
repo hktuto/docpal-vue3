@@ -84,3 +84,10 @@ const deepCopy  = (data:any) => {
     if (!data) return {}
     return JSON.parse(JSON.stringify(data));
 }
+
+export function downloadBlob (blob, name, type = "application/octet-stream") {
+  const blobStream = new Blob([blob], { type })
+  const fileName = name.includes('.') ? name : calFileNameAndExt(blob.type, name);
+  const url = window.URL.createObjectURL(blobStream)
+  downloadUrl(url, fileName)
+}
