@@ -6,23 +6,23 @@ export function customLayer():string[] {
     // default style
     
     // all stores
-    packages.push('../../packages/client-browse');
-    packages.push('../../packages/admin-acl');
-    packages.push('../../packages/admin-audit');
-    packages.push('../../packages/admin-bulk-import-config');
-    packages.push('../../packages/admin-doc-template');
-    packages.push('../../packages/admin-doc-type-manage');
-    packages.push('../../packages/admin-docker-log');
-    packages.push('../../packages/admin-log-manage');
-    packages.push('../../packages/admin-message-queue');
-    packages.push('../../packages/admin-meta-manage');
-    packages.push('../../packages/admin-pre-search-config');
-    packages.push('../../packages/admin-share-list');
-    // packages.push('../../packages/admin-table-setting');
-    packages.push('../../packages/admin-user-manage');
-    packages.push('../../packages/admin-vocabulary');
-    packages.push('../../packages/admin-workflow-form');
-    packages.push('../../packages/admin-workflow-manage');
+    packages.push('../../pages/client-browse');
+    packages.push('../../pages/admin-acl');
+    packages.push('../../pages/admin-audit');
+    packages.push('../../pages/admin-bulk-import-config');
+    packages.push('../../pages/admin-doc-template');
+    packages.push('../../pages/admin-doc-type-manage');
+    packages.push('../../pages/admin-docker-log');
+    packages.push('../../pages/admin-log-manage');
+    packages.push('../../pages/admin-message-queue');
+    packages.push('../../pages/admin-meta-manage');
+    packages.push('../../pages/admin-pre-search-config');
+    packages.push('../../pages/admin-share-list');
+    // packages.push('../../pages/admin-table-setting');
+    packages.push('../../pages/admin-user-manage');
+    packages.push('../../pages/admin-vocabulary');
+    packages.push('../../pages/admin-workflow-form');
+    packages.push('../../pages/admin-workflow-manage');
     
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")

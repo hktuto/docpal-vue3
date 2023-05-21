@@ -9,13 +9,13 @@ export function customLayer():string[] {
     
 
     
-    packages.push('../../packages/client-browse');
-    packages.push('../../packages/client-trash');
-    packages.push('../../packages/client-smart-folder');
-    packages.push('../../packages/client-file-request');
-    packages.push('../../packages/client-share-list');
-    packages.push('../../packages/client-collection');
-    packages.push('../../packages/client-workflow');
+    packages.push('../../pages/client-browse');
+    packages.push('../../pages/client-trash');
+    packages.push('../../pages/client-smart-folder');
+    packages.push('../../pages/client-file-request');
+    packages.push('../../pages/client-share-list');
+    packages.push('../../pages/client-collection');
+    packages.push('../../pages/client-workflow');
     
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")

@@ -23,14 +23,15 @@ function createGradient() {
     canvasInit.value = false;
    const gradient = new Gradient()
     // Call `initGradient` with the selector to your canvas
+    // @ts-ignore
     gradient.initGradient('#gradient-canvas');
 }
-
-
-onMounted(() => {
-    useEventListener(window,'miniGLRender', canvasRender);
+onMounted(()=>{
+    console.log('canvasInit', canvasInit.value)
+    useEventListener(window, 'miniGLRender', canvasRender);
     createGradient()
 })
+
 </script>
 
 <style lang="scss" scoped>
