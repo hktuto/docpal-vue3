@@ -17,6 +17,7 @@ declare module '@nuxt/schema' {
         multiLanguage: boolean,
         notification: boolean,
         userAuth : boolean,
+        search: boolean,
       },
       appMenu:[] // set apps display menu
     }

@@ -16,7 +16,7 @@
                   <slot name="headerLeft" />
               </div>
                 <div class="expand">
-                  <SmartSearch />
+                  <SmartSearch v-if="feature.search"/>
                   <slot name="postHeader" />
                 </div>
                 
