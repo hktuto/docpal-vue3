@@ -21,10 +21,10 @@
                 </div>
                 
                 <div v-if="isLogin"  class="actions">
-                  <ColorSwitch />
-                  <LanguageSwitch />
-                  <NotificationBadge />
-                  <UserMiniDropdown />
+                  <ColorSwitch v-if="feature.darkMode"/>
+                  <LanguageSwitch v-if="feature.multiLanguage"/>
+                  <NotificationBadge v-if="feature.notification"/>
+                  <UserMiniDropdown v-if="feature.userAuth" />
                 </div>
             </div>
             <div id="mainContent">
@@ -41,6 +41,7 @@ const props = defineProps<{
 }>()
 const opened = ref(false);
 const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
+const { feature } = useAppConfig();
 const {isLogin} = useUser()
 function toggleOpen() {
      opened.value = !opened.value

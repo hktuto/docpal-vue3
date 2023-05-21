@@ -13,7 +13,10 @@ declare module '@nuxt/schema' {
       menu?: MenuItem[],
       pageSetting?: any,
       feature?: {
-        [key: string] : boolean
+        darkMode: boolean,
+        multiLanguage: boolean,
+        notification: boolean,
+        userAuth : boolean,
       },
       appMenu:[] // set apps display menu
     }
