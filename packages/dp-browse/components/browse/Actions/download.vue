@@ -45,7 +45,6 @@
 <script lang="ts" setup>
 import { DownloadDocApi, downloadDocRecord, getSupportedFormatApi, submitExportRequestApi } from "dp-api"
 import { ElNotification, ElMessage} from 'element-plus'
-import { downloadBlob } from '~/utils/browseHelper'
 const props = defineProps<{
     doc: any,
     selected: any[]

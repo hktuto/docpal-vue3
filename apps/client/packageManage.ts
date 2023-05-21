@@ -6,9 +6,6 @@ export function customLayer():string[] {
     // default style
     
     // all stores
-    
-
-    
     packages.push('../../pages/client-browse');
     packages.push('../../pages/client-trash');
     packages.push('../../pages/client-smart-folder');
@@ -16,6 +13,7 @@ export function customLayer():string[] {
     packages.push('../../pages/client-share-list');
     packages.push('../../pages/client-collection');
     packages.push('../../pages/client-workflow');
+
     
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")

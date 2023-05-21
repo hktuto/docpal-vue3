@@ -25,9 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-import { BrowseOptions } from "../browseType"
 const props = defineProps<{
-    modelValue: BrowseOptions;
+    modelValue: any;
 }>();
 const emits = defineEmits<{
     (event: 'update:modelValue', ...args: any[]): void;

@@ -52,7 +52,6 @@
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
 import {DocDetail} from "dp-api";
-import {getDocumentDetail} from "~/utils/browseHelper";
 
 const props = defineProps<{
     doc: any,

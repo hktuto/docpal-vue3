@@ -82,8 +82,6 @@
 import { useEventListener } from '@vueuse/core'
 import { DocDetail } from 'dp-api';
 import {watch, ref, computed} from 'vue'
-import {getDocumentDetail, } from "~/utils/browseHelper";
-import {AllowTo} from '~/utils/permissionHelper'
 // #region refs
 const breadCrumb = ref();
 

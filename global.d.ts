@@ -14,6 +14,7 @@ declare module '@nuxt/schema' {
       pageSetting?: any,
       feature?: {
         [key: string] : boolean
-      }
+      },
+      appMenu:[] // set apps display menu
     }
   }

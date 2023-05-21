@@ -8,7 +8,6 @@
 </template>
 
 <script lang="ts" setup>
-import { AllowTo } from '~/utils/permissionHelper';
 const props = defineProps<{ace:{userId: string, type:string},permission:any }>();
 const emit = defineEmits(['handleRemove', 'handleEdit']);
 function handleEdit(item:any) {

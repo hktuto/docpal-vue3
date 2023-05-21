@@ -44,7 +44,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import { getUserAndRights , removeACLApi, addACLApi, replaceACLApi} from 'dp-api'
-import { AllowTo } from '~/utils/permissionHelper';
 const props = defineProps<{doc: any, permission: any}>();
 const { doc, permission } = toRefs(props);
 const { t } = useI18n();

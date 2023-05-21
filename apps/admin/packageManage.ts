@@ -6,7 +6,7 @@ export function customLayer():string[] {
     // default style
     
     // all stores
-    packages.push('../../pages/client-browse');
+    
     packages.push('../../pages/admin-acl');
     packages.push('../../pages/admin-audit');
     packages.push('../../pages/admin-bulk-import-config');
@@ -24,6 +24,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-workflow-form');
     packages.push('../../pages/admin-workflow-manage');
     
+    packages.push('../../packages/dp-browse');
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")
     
