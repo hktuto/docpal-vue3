@@ -37,13 +37,14 @@
       <BrowseInfoTag :doc="doc" @update="$emit('update')"/>
       <BrowseInfoCollection :doc="doc" @update="$emit('update')" />
       <BrowseInfoWorkflowSection v-if="!doc.isFolder" :doc="doc"></BrowseInfoWorkflowSection>
+      <BrowseInfoAcl :doc="doc" :permission="permission" />
     </div>
 </template>
 
 <script lang="ts" setup>
 const props = defineProps<{
     doc: any,
-    premission: any
+    permission: any
 }>()
 const { displayTime } = useTime()
 

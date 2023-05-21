@@ -7,7 +7,7 @@
   <template #title>
     {{ isEdit ? $t('dpDocument_acl_editLocal'): $t('dpDocument_acl_addLocal')}}
   </template>
-  <el-form :model="aclForm" ref="FormRef" abel-position="top" @submit.native.prevent>
+  <el-form :model="aclForm" ref="FormRef" label-position="top" @submit.native.prevent>
     <el-form-item
       :label="$t('user_username')"
       prop="userId"
@@ -51,7 +51,7 @@
       </el-date-picker>
     </el-form-item>
     
-    <el-button @click="handleSubmit">{{$t('common_submit')}}</el-button>
+    <el-button :loading="loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
   </el-form>
 </el-dialog>
 </template>
@@ -60,15 +60,13 @@
 
 const props = defineProps<{
     modelValue: boolean,
-    doc: any,
-    exitList: string[]
+    detail: any
 }>()
 const emit = defineEmits(['input', 'handleUpdate', 'handleAdd', 'update:modelValue'])
 const {userList, getUserList} = useUser();
+const loading = ref(false)
 const FormRef = ref<Form>()
-    const isEdit = computed(() => {
-      return !!props.detail
-    })
+    const isEdit = ref(false)
     const aclForm = ref<any>({
       idOrPath: '',
       userId: '',
@@ -87,6 +85,7 @@ const permissionOption = ref([
 const handleSubmit = () => {
       FormRef.value.validate((valid) => {
         if(valid) {
+          loading.value = true;
           const result = { ...aclForm.value }
           if (result.isPermanent) {
             delete result.startDate
@@ -102,6 +101,7 @@ const handleSubmit = () => {
             emit('handleSubmit', result)
           }
           FormRef.value.resetFields()
+          loading.value = false;
         }
       })
     }
@@ -113,26 +113,30 @@ const handleSubmit = () => {
 
     useFetch( async() => await getUserList())
     watch(() => props.modelValue, (newValue: any) => {
-      if (newValue && isEdit.value) {
-      
+      if(!newValue) return
+      if (isEdit.value) {
+        
         aclForm.value = {...props.detail, 
             isPermanent: !props.detail.startDate && !props.detail.endDate,
             dateRange: (props.detail.startDate && props.detail.endDate) ? [props.detail.startDate, props.detail.endDate] : null
             }
-      } else {
-        nextTick(() => {
+            return
+      }
+      nextTick(() => {
           aclForm.value = {
             idOrPath: '',
             userId: '',
-            permission: '',
+            permission: props.detail.permission || "",
             isPermanent: true,
             dateRange: [],
           }
-          if(FormRef.value) {
-              FormRef.value.resetFields()
-          }
         })
-      }
+
+    })
+
+    defineExpose({
+      isEdit,
+      
     })
 </script>
 

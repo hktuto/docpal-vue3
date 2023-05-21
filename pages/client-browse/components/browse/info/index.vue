@@ -21,11 +21,11 @@
             <div v-if="!hidePreview" class="infoPreviewContainer">
                 <BrowseInfoPreview :doc="detail"  />
             </div>
-            <BrowseInfoDocInfo :doc="detail" :premission="permission" @update="docUpdated"/>
+            <BrowseInfoDocInfo :doc="detail" :permission="permission" @update="docUpdated"/>
 <!--     move info picture to it own tag or download tag       -->
 
             
-<!--            <BrowseInfoAcl :doc="detail" />-->
+           
 <!--            -->
         </div>
     </el-tab-pane>

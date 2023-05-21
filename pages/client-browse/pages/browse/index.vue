@@ -32,7 +32,7 @@
                 @select-change="handleSelectionChange" 
             >
                 <template #default="{doc, permission}" >
-                    <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :infoOpened="infoOpened" @close="infoOpened = false" />
+                    <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
                     <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
                     <BrowseRightClick :permission="permission"></BrowseRightClick>
                 </template>
