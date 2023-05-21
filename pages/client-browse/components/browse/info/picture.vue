@@ -4,7 +4,7 @@
       <span class="title">{{ $t('rightDetail_pictureViews') }}</span>
     </div>
     <div class="overflowHidden">
-      <el-table :data="pictureViews" height="100%">
+      <el-table :data="pictureViews" size="small">
         <el-table-column fixed="left" prop="filename" :label="$t('filePopover_fileName')" ></el-table-column>
         <el-table-column prop="width*height" :label="$t('tableHeader_width*height')" align="center" :formatter="formatter"></el-table-column>
         <el-table-column prop="fileSize" :label="$t('tableHeader_fileSize')" align="center" :formatter="formatter"></el-table-column>

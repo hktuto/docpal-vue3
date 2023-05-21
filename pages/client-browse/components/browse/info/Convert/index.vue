@@ -5,10 +5,12 @@
             @click="handleGetConversionHistory"></i>
     </div>
     <main class="">
+      <div class="section">
+        {{ $t('convert_convert') }}
+      </div>
       <el-table v-loading="refreshLoading"
               :data="tableList"
-              size="small"
-              height="100%">
+              size="small">
         <el-table-column prop="fileName" :label="$t('filePopover_fileName')" sortable>
           <template slot-scope="scope">
             <div v-if="scope.row.fileName">{{scope.row.fileName}}</div>

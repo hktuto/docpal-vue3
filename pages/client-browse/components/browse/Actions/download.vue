@@ -1,12 +1,8 @@
 
 
 <template>
-    
-        
-        <el-popover placement="bottom" :width="260" trigger="click" >
-            <template #reference>
-                 <div class="actionIconContainer">
-                <div class="clickCon" >
+            <div class="actionIconContainer">
+                <div class="clickCon" @click="popupOpened = true">
                     <!-- <SvgIcon src="/icons/file/download.svg" round content="download"
                         @click="deleteItem"></SvgIcon> -->
                     <el-tooltip content="download" >
@@ -15,8 +11,8 @@
                         </el-icon>
                     </el-tooltip>
                 </div>
-                 </div>
-            </template>
+            </div>
+            <ElDialog v-model="popupOpened" width="280" append-to-body>
             <div class="popoverContent">
                 <!-- download button -->
                 <el-button type="text" @click="downloadHandler">Download original</el-button>
@@ -24,22 +20,89 @@
                 <el-button type="text" @click="downloadAsPdfHandler">Download as PDF</el-button>
                 <!-- download pdf and annotation -->
                 <el-button type="text" @click="downloadPdfAndAnnotationHandler">Download PDF with annotation</el-button>
+                <ElDivider />
+                <ElForm
+                    ref="formRef"
+                    :model="form"
+                    class="downloadConvertForm"
+                    label-position="top"
+                >
+                    <ElFormItem :label="$t('convert_documentFormat')" prop="targetFile"
+                                :rules="[{ required: true, message: $t('form_common_requird')}]">
+                        <ElSelect v-model="form.targetFile" value-key="targetFileType">
+                            <ElOption v-for="item in supportedFormatList" :key="item.targetFileType" :label="item.targetFileType" :value="item"></ElOption>
+                        </ElSelect>
+                    </ElFormItem>
+                </ElForm>
+               
+                <ElButton type="primary" @click="handleConfirm">{{ $t('convert_convert') }}</ElButton>  
             </div>
-        </el-popover>
+            </ElDialog>
         
 
 </template>
 
 <script lang="ts" setup>
-import { DownloadDocApi, downloadDocRecord } from "dp-api"
+import { DownloadDocApi, downloadDocRecord, getSupportedFormatApi, submitExportRequestApi } from "dp-api"
 import { ElNotification, ElMessage} from 'element-plus'
 import { downloadBlob } from '~/utils/browseHelper'
 const props = defineProps<{
     doc: any,
     selected: any[]
 }>()
+const { doc } = toRefs(props)
 const { t } = useI18n()
+const popupOpened = ref(false)
+// #region new convert 
+const form = ref<any>({
+      targetFile: ''
+    })
+const formRef = ref()
+const supportedFormatObject = ref<any>({})
+const supportedFormatList = computed(() => {
+    const suffix = doc.value.name.split('.').pop()
+    if(!supportedFormatObject.value[suffix]) return []
+    return filterArrObj(supportedFormatObject.value[suffix], 'targetFileType')
+})
+const handleConfirm = async () => {
+    const vaild = await formRef.value.validate();
+      if(!vaild) return
 
+      const param = {
+        idOrPath: props.doc.id,
+        targetFileType: form.value.targetFile.targetFileType,
+        fileType: form.value.targetFile.type,
+      }
+      const response = await submitExportRequestApi([param])
+      if (response.resultMsg && response.resultMsg === 'Success') {
+        ElMessage.success(`${t('convert_transferring')}`)
+        formRef.value.resetFields()
+        popupOpened.value = false
+        // 刷新转档列表
+        const ev = new CustomEvent('refresh-conversion-history')
+        window.dispatchEvent(ev)
+      } else {
+        // Message.error(`${i18n.t('responseMsg_errorCode_2')}`)
+      }
+    }
+const handleGetSupportedFormat = async() => {
+    if (supportedFormatObject.value instanceof Object && Object.keys(supportedFormatObject.value).length !== 0) return
+    const response = await getSupportedFormatApi()
+    supportedFormatObject.value = response
+}
+const filterArrObj = (arr,filterField) =>{
+    const newArr = arr.reduce((pre,cur) => pre.some(item => item[filterField] === cur[filterField]) ?
+    pre : [...pre,cur],[])
+    return newArr
+}
+
+onMounted(async () => {
+    await handleGetSupportedFormat()
+})
+
+
+
+// #endregion
 async function downloadHandler(){
     const notification = ElNotification({
           title: '',

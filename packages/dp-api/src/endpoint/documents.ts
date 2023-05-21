@@ -262,6 +262,14 @@ export const getConversionHistoryApi = async(params) =>  {
     return api.get('/nuxeo/conversion/getConversionHistory', {params}).then(res => res.data);
 }
 
+export const getSupportedFormatApi = async() => {
+    return api.get('/nuxeo/conversion/getSupportedFormat').then(res => res.data);
+}
+
+export const submitExportRequestApi = async(params) => {
+    return api.post('/nuxeo/conversion/submitExportRequest', params).then(res => res.data);
+}
+
 // #endregion
 
 
