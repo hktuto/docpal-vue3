@@ -7,10 +7,12 @@
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
                     <div v-if="selectList.length === 0" id="browseHeaderRight" class="folderAction">
                         <BrowseActionsSubscribe  :doc="doc" />
+                        <div class="actionDivider"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsNewFolder v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                        <div class="actionDivider"></div>
                         <BrowseActionsUploadRequest v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
                         
                         <div class="actionDivider"></div>
@@ -45,11 +47,13 @@
                     </div>
                     <div class="actions">
                         <BrowseActionsSubscribe  :doc="doc" />
+                        <div class="actionDivider"></div>
                         <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" />
                         <BrowseActionsUpload v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc" />
                         <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                        <div class="actionDivider"></div>
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
                        
                         <div class="actionDivider"></div>
