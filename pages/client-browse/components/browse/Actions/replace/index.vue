@@ -81,10 +81,10 @@ const props = defineProps<{doc:any}>();
 
 
 <style lang="scss" scoped>
-::v-deep .el-form-item {
+:deep .el-form-item {
     margin-bottom: 5px;
 }
-::v-deep .el-select, ::v-deep .el-upload {
+:deep .el-select, :deep .el-upload {
   width: 100%;
 }
 .title {

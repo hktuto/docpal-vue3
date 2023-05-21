@@ -94,11 +94,11 @@ main {
     width: 48%;
     margin-right: 2%;
   }
-  ::v-deep .pdfContainer {
+  :deep .pdfContainer {
     height: calc(100vh - 170px);
     min-height: 300px;
   }
-  ::v-deep .preview__container {
+  :deep .preview__container {
     display: unset;
   }
 }

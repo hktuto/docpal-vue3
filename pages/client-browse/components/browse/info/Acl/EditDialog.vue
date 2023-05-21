@@ -140,10 +140,10 @@ const handleSubmit = () => {
 .el-select, .el-radio-group, .el-date-editor.el-input{
   width: 100%
 }
-::v-deep .el-dialog__body {
+:deep .el-dialog__body {
   padding: 0 20px 30px;
 }
-::v-deep .el-date-editor {
+:deep .el-date-editor {
   width: 100%;
   .el-range-separator {
     width: 2rem;

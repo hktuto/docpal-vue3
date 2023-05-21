@@ -116,11 +116,11 @@ onMounted(() => {
   overflow: auto;
   .infinite-list-item {
     margin: var(--app-padding);
-      ::v-deep .el-badge__content {
+      :deep .el-badge__content {
         left: 0;
         top: 5px;
       }
-    ::v-deep .el-card__header {
+    :deep .el-card__header {
       padding: unset;
       .el-badge {
         padding: var(--app-padding);

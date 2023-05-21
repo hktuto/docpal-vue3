@@ -75,7 +75,7 @@ const onChange = async(file, fileList) => {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .el-upload-dragger {
+:deep .el-upload-dragger {
   width: 100%;
 }
 </style>
