@@ -19,7 +19,7 @@ const displayName = computed(() => user.value.username.substring(0,2))
     display: grid;
     place-items: center;
     color: white;
-    font-weight: 900;
+    font-weight: 700;
     text-transform: capitalize;
     border: 1px solid var(--color-grey-000);
 

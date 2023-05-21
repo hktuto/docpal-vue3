@@ -1,9 +1,9 @@
 <template>
     <div class="breadCrumbContainer">
         <!-- {{data}} -->
-        <div v-loading="pending" class="breadContainer">
+        <div  class="breadContainer">
             
-            <div class="breadItem pointer home" @click="navigate(rootPath)" >
+            <div v-loading="pending" class="breadItem pointer home" @click="navigate(rootPath)" >
                 <SvgIcon :src="'/icons/breadcrumb_home.svg'" />
             </div>
             <div v-if="displayBread && displayBread.length > 0" class="divider">
@@ -106,7 +106,9 @@ defineExpose({
     font-size: var(--el-font-size-small);
     border-radius: 4px;
     &.home {
+        --icon-size: 24px;
         border-radius: 50%;
+        height: 32px;
         background: var(--color-grey-050);
     }
     &.pointer{

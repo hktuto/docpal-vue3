@@ -34,7 +34,7 @@ watch( route , (newRoute) => {
 .pageHeaderContainer{
     font-size: 1.4rem;
     line-height: 1.2;
-    font-weight: 900;
+    font-weight: 700;
     white-space: nowrap;
     background: linear-gradient( 45deg, var(--primary-color),  var(--secondary-color) , var(--primary-color));
     -webkit-background-clip: text;

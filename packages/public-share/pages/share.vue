@@ -88,7 +88,7 @@ main {
 .title {
     font-size: 1.4rem;
     line-height: 1.2;
-    font-weight: 900;
+    font-weight: 700;
     white-space: nowrap;
     color: var(--primary-color);
     padding: 1rem calc(var(--app-padding) * 3);

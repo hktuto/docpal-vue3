@@ -92,6 +92,6 @@ defineExpose({ getColumns })
 }
 .title{
     font-size: 1.6rem;
-    font-weight: 900;
+    font-weight: 700;
 }
 </style>
