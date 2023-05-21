@@ -29,10 +29,10 @@
                 :permission="listData.permission" 
                 @select-change="handleSelectionChange" 
             >
-                <template #default="slotProps" >
-                    <BrowseInfo v-bind="slotProps" :infoOpened="infoOpened" @close="infoOpened = false" />
+                <template #default="{doc, permission}" >
+                    <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :infoOpened="infoOpened" @close="infoOpened = false" />
                     <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
-                    <BrowseRightClick :permission="slotProps.permission"></BrowseRightClick>
+                    <BrowseRightClick :permission="permission"></BrowseRightClick>
                 </template>
             </BrowseList>
         </div>
