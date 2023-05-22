@@ -18,6 +18,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-meta-manage');
     packages.push('../../pages/admin-pre-search-config');
     packages.push('../../pages/admin-share-list');
+    packages.push('../../pages/admin-watermark');
     // packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');
     packages.push('../../pages/admin-vocabulary');
