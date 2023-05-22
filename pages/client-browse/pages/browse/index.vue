@@ -24,6 +24,7 @@
                         <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :selected="selectList" @success="handleRefresh"/>
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
+
                     </div>
                 </template>
             </BrowsePageHeader>
@@ -34,8 +35,10 @@
             >
                 <template #default="{doc, permission}" >
                     <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
-                    <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
+                    
                     <BrowseRightClick :permission="permission"></BrowseRightClick>
+                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" v-show="false" :doc="doc" @success="handleRefresh"/>
+
                 </template>
             </BrowseList>
         </div>
@@ -72,6 +75,8 @@
                 </template>
             </BrowseDetail>
         </Teleport>
+        <!-- global action -->
+        <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
     </page-container>
         
     </NuxtLayout>
@@ -134,12 +139,9 @@ function itemDeleted(){
      //  FIXME: item deleted may not be the current path
      breadCrumb.value.goParent();
 }
-function handleRefresh () {
+async function handleRefresh () {
     forceRefresh.value = true
-    const time = new Date().valueOf().toString()
-    router.push({
-        query: { ...route.query, time }
-    })
+    await getDocDetail()
 }
 function handleSelectionChange (rows:any) {
     selectList.value = [...rows]

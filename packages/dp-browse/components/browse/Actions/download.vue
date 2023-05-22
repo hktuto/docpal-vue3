@@ -133,7 +133,7 @@ async function downloadAsPdfHandler(){
           position: 'bottom-right'
         });
     try{
-        const blob = await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDFAnnotation'})
+        const blob = await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDF'})
         await downloadBlob(blob, props.doc.name)
     } catch(error:any) {
         ElMessage.error(t('download_noFile') as string)
