@@ -18,7 +18,7 @@
             </template>
             <FromRenderer ref="FromRendererRef" :form-json="formJson" />
             <template #footer>
-                <el-button :loading="state.loading" @click="handleSubmit">{{$t('submit')}}</el-button>
+                <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{$t('submit')}}</el-button>
             </template>
         </el-dialog>
     </div>
@@ -30,7 +30,7 @@ import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { CreateFoldersApi, getJsonApi } from 'dp-api'
 const dialogOpened = ref(false)
-
+const { t } = useI18n()
 const props = defineProps<{
     doc: any,
     selected: any[]
@@ -55,14 +55,16 @@ function iconClickHandler(doc){
 const formJson = getJsonApi('fileNewFolder.json')
 
 async function handleSubmit () {
+    console.log("handleSubmit")
     state.loading = true
     try {
         const timestamp = new Date().valueOf()
+        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
         const params = {
             ...data,
             idOrPath: `${state.docPath}/new Folder${timestamp}`,
         }
-        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        
         const { isDuplicate } = await duplicateNameFilter(state.doc.path, [data]);
         if(isDuplicate){
             throw new Error("dpTip_duplicateFileName");
@@ -70,15 +72,18 @@ async function handleSubmit () {
         const res = await CreateFoldersApi(params)
         dialogOpened.value = false
         emits('success', state.doc)
+        state.loading = false
     } catch (error) {
+        console.log(error)
         if(error.message === 'dpTip_duplicateFileName') {
             ElMessage({
-                message: $i18n.t(error.message) as string,
+                message: t(error.message) as string,
                 type: 'error'
             })
         }
+        state.loading = false
     }
-    state.loading = false
+    
 }
 function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()

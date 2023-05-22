@@ -329,6 +329,9 @@ importers:
       '@james090500/vue-tagsinput':
         specifier: ^3.1.4
         version: 3.1.4
+      mime-types:
+        specifier: ^2.1.35
+        version: 2.1.35
     devDependencies:
       '@nuxtjs/eslint-config-typescript':
         specifier: ^12.0.0
