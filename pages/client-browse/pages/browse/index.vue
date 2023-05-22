@@ -10,6 +10,7 @@
                         <div class="actionDivider"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsNewFolder v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsUpload v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                         <div class="actionDivider"></div>
@@ -49,7 +50,6 @@
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div class="actionDivider"></div>
                         <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" />
-                        <BrowseActionsUpload v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc" />
                         <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
@@ -82,6 +82,7 @@
 import { useEventListener } from '@vueuse/core'
 import { DocDetail } from 'dp-api';
 import {watch, ref, computed} from 'vue'
+import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
 // #region refs
 const breadCrumb = ref();
 
@@ -89,17 +90,11 @@ const route = useRoute();
 const router = useRouter();
 const listData = ref<{
     doc: DocDetail;
-    permission: {
-        permission: string;
-        print: boolean;
-    }
+    permission: Permission
 }>();
 const detailData = ref<{
     doc: DocDetail;
-    permission: {
-        permission: string;
-        print: boolean;
-    }
+    permission: Permission
 } | null>(null);
 
 const forceRefresh = ref(false)

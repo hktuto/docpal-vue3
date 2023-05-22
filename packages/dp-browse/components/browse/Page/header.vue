@@ -1,11 +1,9 @@
 <script lang="ts" setup>
 import { DocDetail } from "dp-api";
+import { Permission } from "~/utils/permissionHelper";
 const props = defineProps<{
     doc: DocDetail,
-    permission: {
-        permission: string;
-        print: boolean;
-    }
+    permission: Permission
 }>()
 </script>
 

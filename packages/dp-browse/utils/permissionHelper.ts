@@ -1,4 +1,4 @@
-type Permission = "Read" | "ReadWrite" | "ManageRecord" | "ManageLegalHold" | "Everything";
+export type Permission = "Read" | "ReadWrite" | "ManageRecord" | "ManageLegalHold" | "Everything";
 
 const PermissionArray:Permission[] = ["Read", "ReadWrite", "ManageRecord","ManageLegalHold", "Everything"];
 

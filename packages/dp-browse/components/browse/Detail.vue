@@ -19,14 +19,12 @@
 
 <script lang="ts" setup>
 import { onKeyStroke } from '@vueuse/core'
+import { Permission } from '~/utils/permissionHelper';
 
 const props = defineProps<{
     doc: any
     show: boolean,
-    permission:{
-        permission: string;
-        print: boolean;
-    }
+    permission:Permission
 }>();
 const {show} = toRefs(props);
 const emit = defineEmits(['close'])
