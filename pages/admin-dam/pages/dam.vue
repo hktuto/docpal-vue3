@@ -5,7 +5,7 @@
                 @row-dblclick="handleDblclick">
             <template #preSortButton>
                 <div class="filter-container">
-                    <KeywordFilter :list="state.tableData" attr="documentType"
+                    <KeywordFilter :list="state.tableData" attr="sourceType"
                         @filter="handleKeywordFilter"></KeywordFilter>
                     <el-button class="button-add" type="primary"
                         @click="handleDialog()">{{$t('common_add')}}</el-button>
