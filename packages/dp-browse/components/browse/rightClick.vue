@@ -76,7 +76,7 @@ async function handleAction (detail:any) {
         state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission.permission })
     } catch (error) {
         if (props.permission)
-            state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission })
+            state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission.permission })
         else state.canWrite = false
     }
     state.loading = false
