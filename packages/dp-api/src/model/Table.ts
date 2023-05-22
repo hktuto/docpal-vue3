@@ -94,6 +94,7 @@ export enum TABLE {
     ADMIN_BULK_IMPORT_META = 'adminBulkImportMeta',
     ADMIN_BULK_IMPORT_CONFIG = 'adminBulkImportConfig',
     ADMIN_BULK_IMPORT_CONFIG_FORM = 'adminBulkImportConfigForm',
+    ADMIN_DAM = 'adminDam',
     ADMIN_SCHEMA_LIST = 'adminSchemaList',
     ADMIN_SCHEMA_FIELDS_FORM = 'adminSchemaFieldsForm',
     ADMIN_DOC_TYPE_LIST = 'adminDocTypeList',
@@ -1166,6 +1167,40 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '2', prop: 'name', label: 'name' }
         ],
         events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DAM]: {
+        columns: [
+            { id: '2', label: 'DAM_fileType', prop: 'sourceType', width: 200, showOverflowTooltip: true },
+            { id: '3', slot: 'targetTypes', label: 'DAM_convertion' },
+            {   
+                id: '4',
+                "type": "",
+                "label": "tableHeader_actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "add",
+                        "suffixIcon": "/icons/add.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['add'],
+        slots: [
+            { slot: 'targetTypes', label: 'DAM_convertion' },
+        ],
         options: { pageSize: 20 }
     },
     [TABLE.ADMIN_SCHEMA_LIST]: {
