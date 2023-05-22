@@ -1,10 +1,14 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData"
+        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state._tableData"
                 @row-dblclick="handleDblclick">
             <template #preSortButton>
-                <el-button class="button-add" type="primary"
-                    @click="handleAdd()">{{$t('common_add')}}</el-button>
+                <div class="filter-container">
+                    <KeywordFilter :list="state.tableData" attr="documentType"
+                        @filter="handleKeywordFilter"></KeywordFilter>
+                    <el-button class="button-add" type="primary"
+                        @click="handleAdd()">{{$t('common_add')}}</el-button>
+                </div>
             </template>
             <template #icon="{ row }">
                 <BrowseItemIcon class="el-icon--left" :type="row.isFolder ? 'folder' : 'file'"/>
@@ -21,12 +25,14 @@
 </template>
 
 <script lang="ts" setup>
-import { GetBulkImportConfigList, TABLE, defaultTableSetting } from 'dp-api'
+import { set } from '@vueuse/core'
+import { GetBulkImportConfigList, TABLE, defaultTableSetting, deepCopy } from 'dp-api'
 // #region module: page
     const router = useRouter()
     const state = reactive<State>({
         loading: false,
-        tableData: []
+        tableData: [],
+        _tableData: []
     })
     const tableKey = TABLE.ADMIN_BULK_IMPORT
     const tableSetting = defaultTableSetting[tableKey]
@@ -34,6 +40,7 @@ import { GetBulkImportConfigList, TABLE, defaultTableSetting } from 'dp-api'
     async function getList () {
         state.loading = true
         state.tableData = await GetBulkImportConfigList()
+        state._tableData = deepCopy(state.tableData)
         state.loading = false
     }
 
@@ -43,6 +50,9 @@ const shareInfoDialogRef = ref()
 
 function handleDblclick (row) {
     router.push(`/bulkImport/${row.documentType}`)
+}
+function handleKeywordFilter(data) {
+    state._tableData = data
 }
 async function handleSubmit (shareInfo) {
 }
@@ -58,5 +68,10 @@ onMounted(async() => {
 <style lang="scss" scoped>
 .button-add {
     margin: 0 0 var(--app-padding) 0;
+}
+.filter-container {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: var(--app-padding);
 }
 </style>

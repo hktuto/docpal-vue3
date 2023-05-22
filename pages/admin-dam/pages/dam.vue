@@ -1,31 +1,31 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state._tableData"
+                @command="handleAction"
                 @row-dblclick="handleDblclick">
             <template #preSortButton>
                 <div class="filter-container">
-                    <KeywordFilter :list="state.tableData" attr="documentType"
+                    <KeywordFilter :list="state.tableData" attr="sourceType"
                         @filter="handleKeywordFilter"></KeywordFilter>
                     <el-button class="button-add" type="primary"
-                        @click="handleAdd()">{{$t('common_add')}}</el-button>
+                        @click="handleDialog()">{{$t('common_add')}}</el-button>
                 </div>
             </template>
-            <template #icon="{ row }">
-                <BrowseItemIcon class="el-icon--left" :type="row.isFolder ? 'folder' : 'file'"/>
-            </template>
-            <template #displayMeta="{ row }">
-                <el-tag class="el-icon--left" v-for="(item, index) in row.displayMeta" :key="index">{{item.meta}}</el-tag>
-            </template>
-            <template #relatedDocument="{ row }">
-                <el-tag class="el-icon--left" v-for="(item, index) in row.related" :key="index">{{item.type}}</el-tag>
+            <template #targetTypes="{ row }">
+                <el-tag v-for="(item, index) in row.list" :key="index"
+                    closable
+                    @close="handleDelete(item)"
+                    @click="handleDialog(item)">{{item.label}} ({{item.targetType}})
+                </el-tag>
             </template>
         </Table>
-        <MetaAddDocTypeDialog ref="MetaAddDocTypeDialogRef" @refresh="getList()"></MetaAddDocTypeDialog>
+        <DamDialog ref="DamDialogRef" @refresh="getList()"></DamDialog>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { GetMetaSettingList, TABLE, defaultTableSetting, deepCopy } from 'dp-api'
+import { ElMessageBox } from 'element-plus'
+import { GetDamsApi, DeleteDamApi, TABLE, defaultTableSetting } from 'dp-api'
 // #region module: page
     const router = useRouter()
     const state = reactive<State>({
@@ -33,12 +33,12 @@ import { GetMetaSettingList, TABLE, defaultTableSetting, deepCopy } from 'dp-api
         tableData: [],
         _tableData: []
     })
-    const tableKey = TABLE.ADMIN_META_MANAGE
+    const tableKey = TABLE.ADMIN_DAM
     const tableSetting = defaultTableSetting[tableKey]
 
     async function getList () {
         state.loading = true
-        state.tableData = await GetMetaSettingList()
+        state.tableData = await GetDamsApi()
         state._tableData = deepCopy(state.tableData)
         state.loading = false
     }
@@ -46,16 +46,30 @@ import { GetMetaSettingList, TABLE, defaultTableSetting, deepCopy } from 'dp-api
 const shareInfoDialogRef = ref()
 
 function handleDblclick (row) {
-    router.push(`/meta/${row.documentType}`)
 }
 async function handleSubmit (shareInfo) {
 }
-const MetaAddDocTypeDialogRef = ref()
-function handleAdd() {
-    MetaAddDocTypeDialogRef.value.handleOpen(state.tableData)
+const DamDialogRef = ref()
+function handleDialog(data) {
+    DamDialogRef.value.handleOpen(deepCopy(data))
 }
 function handleKeywordFilter(data) {
     state._tableData = data
+}
+const handleAction = (command: Table.Command, row: any, index: number) => {
+    switch (command) {
+        case 'add':
+            handleDialog(row)
+            break
+    }
+}
+async function handleDelete (tag) {
+    ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    .then(async() => {
+        console.log({tag});
+        await DeleteDamApi([tag.id])
+        getList()
+    })
 }
 onMounted(async() => {
     getList()
@@ -70,5 +84,8 @@ onMounted(async() => {
     display: grid;
     grid-template-columns: 1fr min-content;
     gap: var(--app-padding);
+}
+.el-tag +.el-tag {
+    margin-left: var(--app-padding);
 }
 </style>
