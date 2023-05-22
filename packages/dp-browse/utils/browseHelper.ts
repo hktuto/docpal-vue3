@@ -1,5 +1,5 @@
 import {duplicateDetectionApi, GetDocDetail, GetDocPermission, GetDocumentAdditionalApi} from "dp-api";
-
+import * as mime from 'mime-types'
 export const isRoot = (path:string):boolean => {
     return path === "/";
 };
@@ -85,7 +85,28 @@ const deepCopy  = (data:any) => {
     return JSON.parse(JSON.stringify(data));
 }
 
-export function downloadBlob (blob, name, type = "application/octet-stream") {
+export function downloadUrl(url:string, name:string){
+  const a = document.createElement('a')
+  a.id = 'file_' + Date.now();
+  a.href = url
+  a.download = name;
+  a.click()
+  window.URL.revokeObjectURL(url)
+  a.remove();
+}
+
+export function calFileNameAndExt(mimeType: string, name: string):string {
+  const ext = mime.extension(mimeType);
+  // check name include extension
+  if(ext){
+    return name + '.' + ext;
+  } else {
+    return name;
+  }
+  
+}
+
+export function downloadBlob (blob:any, name:string, type = "application/octet-stream") {
   const blobStream = new Blob([blob], { type })
   const fileName = name.includes('.') ? name : calFileNameAndExt(blob.type, name);
   const url = window.URL.createObjectURL(blobStream)
