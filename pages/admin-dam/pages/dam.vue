@@ -13,7 +13,7 @@
             </template>
             <template #targetTypes="{ row }">
                 <el-tag v-for="(item, index) in row.list" :key="index"
-                    closable
+                    closable size="large"
                     @close="handleDelete(item)"
                     @click="handleDialog(item)">{{item.label}} ({{item.targetType}})
                 </el-tag>
@@ -66,7 +66,6 @@ const handleAction = (command: Table.Command, row: any, index: number) => {
 async function handleDelete (tag) {
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
     .then(async() => {
-        console.log({tag});
         await DeleteDamApi([tag.id])
         getList()
     })
