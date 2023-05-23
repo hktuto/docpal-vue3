@@ -1,12 +1,12 @@
 <template>
     <div class="iconContainer">
-         <img :src="`/icons/${type}-${status}.svg`" />
+         <SvgIcon :src="`/icons/${type}-${status}.svg`" />
     </div>
 </template>
 
 <script lang="ts" setup>
 type IconType = 'folder' | 'file'
-type IconStatus = 'normal' | 'selected'
+type IconStatus = 'normal' | 'selected' | 'general'
  const props = withDefaults( defineProps<{
         type: IconType;
         status?: IconStatus;

@@ -20,7 +20,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-share-list');
     packages.push('../../pages/admin-watermark');
     packages.push('../../pages/admin-dam');
-    // packages.push('../../pages/admin-table-setting');
+    packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');
     packages.push('../../pages/admin-vocabulary');
     packages.push('../../pages/admin-workflow-form');

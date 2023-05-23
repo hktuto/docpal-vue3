@@ -30,12 +30,12 @@
                                 v-bind="col"
                                 :selectable="_options.selectable">
                                 <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
-                                <template #default="{ row, $index }">
+                                <template #default="slotData">
                                     <!-- render函数 (START) : 使用内置的component组件可以支持h函数渲染和txs语法 -->
-                                    <component v-if="col.render" :is="col.render" :row="row" :index="$index" />
+                                    <component v-if="col.render" :is="col.render" :row="slotData.row" :index="slotData.$index" />
                                     <!-- render函数 (END) -->
                                     <!-- 自定义slot (START) -->
-                                    <slot v-else-if="col.slot" name="expand" :row="row" :index="$index"></slot>
+                                    <slot v-else-if="col.slot" name="expand" :row="slotData.row" :index="slotData.$index"></slot>
                                     <!-- 自定义slot (END) -->
                                 </template>
                             </el-table-column>

@@ -6,7 +6,7 @@ const props = defineProps<{
 const previewUrl = ref("");
 async function getPreview(){
   if(props.doc.isFolder) {
-    previewUrl.value = "/icons/folder-normal.svg"
+    previewUrl.value = "/icons/folder-general.svg"
     return
   }
   const blob = await DocumentThumbnailGetApi(props.doc.id)
@@ -14,7 +14,7 @@ async function getPreview(){
     const urlCreator = window.URL || window.webkitURL;
     previewUrl.value = urlCreator.createObjectURL(blob)
   }else {
-    previewUrl.value = "/icons/file-normal.svg"
+    previewUrl.value = "/icons/file-general.svg"
   }
 }
 

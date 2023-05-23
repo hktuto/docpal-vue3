@@ -738,6 +738,30 @@ importers:
         specifier: ^4.9.3
         version: 4.9.5
 
+  pages/admin-dam:
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript':
+        specifier: ^12.0.0
+        version: 12.0.0(eslint@8.40.0)(typescript@4.9.5)
+      '@vueuse/components':
+        specifier: ^9.13.0
+        version: 9.13.0
+      '@vueuse/core':
+        specifier: ^9.12.0
+        version: 9.13.0
+      dp-api:
+        specifier: workspace:*
+        version: link:../../packages/dp-api
+      eslint:
+        specifier: ^8.28.0
+        version: 8.40.0
+      nuxt:
+        specifier: ^3.4.3
+        version: 3.4.3(eslint@8.40.0)(typescript@4.9.5)
+      typescript:
+        specifier: ^4.9.3
+        version: 4.9.5
+
   pages/admin-doc-template:
     devDependencies:
       '@nuxtjs/eslint-config-typescript':

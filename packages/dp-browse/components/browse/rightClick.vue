@@ -45,6 +45,9 @@ const state = reactive({
 const userId:string = useUser().getUserId()
 const FileRightClickPopoverRef = ref()
 async function handleRightClick (detail: any) {
+    if( state.visible) {
+        return false
+    };
     state.visible = true
     state.doc = detail.doc
     await handleAction(detail)
