@@ -39,7 +39,7 @@ const { t } = useI18n()
     const router = useRouter()
     const pageParams = ref({
         idOrPath: '/',
-        pageIndex: 1,
+        pageNumber: 0,
         pageSize: 100
     })
     const state = reactive<State>({
@@ -59,12 +59,12 @@ const { t } = useI18n()
 
     async function getList (param:any) {
         const res = await GetChildThumbnail(param)
-        if(res.totalSize === 0){
+        if(res.totalSize === 0 || res.entryList.length === 0){
             return;
         }
         state.tableData.push(...res.entryList)
-        if(state.tableData.length < res.totalSize) {
-            param.pageIndex++;
+        if(state.tableData.length < res.totalSize ) {
+            param.pageNumber++;
             return getList(param)
         }else {
             return
@@ -95,7 +95,7 @@ const { t } = useI18n()
             cleanList()
             pageParams.value = {
                 idOrPath: newVal.path || '/',
-                pageIndex: 1,
+                pageNumber: 0,
                 pageSize: 100
             }
             getList(pageParams.value)
