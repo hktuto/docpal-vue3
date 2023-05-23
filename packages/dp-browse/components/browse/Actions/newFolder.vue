@@ -16,7 +16,7 @@
                 <strong class="primaryTitle">{{ $t('filePopover_newFolder') }}</strong>
                 {{ 'in ' + state.docPath }}
             </template>
-            <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+            <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" />
             <template #footer>
                 <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{$t('submit')}}</el-button>
             </template>
@@ -42,7 +42,7 @@ const state = reactive({
     doc: {}
 })
 const FromRendererRef = ref()
-function iconClickHandler(doc){
+function iconClickHandler(doc:any){
     dialogOpened.value = true
     state.docPath = doc.path 
     state.doc = doc
@@ -86,9 +86,12 @@ async function handleSubmit () {
     
 }
 function handleReset() {
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    const typeRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('type')
-    typeRef.setValue('Folder')
+    if(FromRendererRef.value.vFormRenderRef) {
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        const typeRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('type')
+        typeRef.setValue('Folder')
+    }
+    
 }
 onMounted(() => {
     useEventListener(document, 'docActionAddFolder', (event) => iconClickHandler(event.detail))  
