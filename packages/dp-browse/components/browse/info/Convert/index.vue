@@ -12,19 +12,19 @@
               :data="tableList"
               size="small">
         <el-table-column prop="fileName" :label="$t('filePopover_fileName')" sortable>
-          <template slot-scope="scope">
+          <template #default="scope">
             <div v-if="scope.row.fileName">{{scope.row.fileName}}</div>
             <div v-else>{{filenameWithoutSuffix}}.{{scope.row.targetFileType}}</div>
           </template>
         </el-table-column>
         <el-table-column prop="fileCreatedDate" :label="$t('filePopover_expiredDate')" sortable>
-          <template slot-scope="scope">
+          <template #default="scope">
             <div v-if="scope.row.fileCreatedDate">{{displayTime(dayjs(scope.row.fileCreatedDate).add(7, 'day'))}}</div>
             <div v-else>{{filenameWithoutSuffix}}.{{scope.row.targetFileType}}</div>
           </template>
         </el-table-column>
         <el-table-column :label="$t('tableHeader_actions')" width="80" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <el-button v-if="scope.row.status === 'COMPLETED'" type="text" @click="handleDownload(scope.row, $event)">{{
               $t('download_download')
             }}</el-button>
@@ -48,6 +48,7 @@ const props = defineProps<{
 const { t } = useI18n()
 const refreshLoading = ref(false)
 const tableList = ref([])
+const {displayTime} = useTime()
 const timeStamp = ref(new Date())
 const filenameWithoutSuffix = ref('')
 
@@ -89,10 +90,9 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('refresh-conversion-history', handleGetConversionHistory)
 })
-    watch(() => props.doc.name, (newValue) => {
+    watch( () => props.doc.name, async(newValue) => {
       if(!newValue) return
-      if (props.doc.isFolder) emit('tabChange')
-      else handleGetConversionHistory()
+      await handleGetConversionHistory()
       const name = newValue.split('.').shift()
       filenameWithoutSuffix.value = name
     }, {

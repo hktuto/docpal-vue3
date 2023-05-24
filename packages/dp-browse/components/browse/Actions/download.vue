@@ -73,7 +73,8 @@ const handleConfirm = async () => {
         fileType: form.value.targetFile.type,
       }
       const response = await submitExportRequestApi([param])
-      if (response.resultMsg && response.resultMsg === 'Success') {
+      console.log(response)
+      if (response.result ) {
         ElMessage.success(`${t('convert_transferring')}`)
         formRef.value.resetFields()
         popupOpened.value = false
