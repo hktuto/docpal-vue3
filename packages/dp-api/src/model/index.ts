@@ -32,3 +32,10 @@ export type paginationResponseData= {
     entryList: any[],
     totalSize: number,
 }
+
+export type Response<T> = {
+    code: number,
+    data: T,
+    message: string,
+    result: boolean
+}

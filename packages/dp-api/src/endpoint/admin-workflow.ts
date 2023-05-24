@@ -32,7 +32,7 @@ export const GetWorkflowApi = async(processDefinitionKey: string) => {
 }
 export const GetTaskFormJsonApi = async(param: GetTaskFormJsonParams):Promise<GetTaskFormJsonRes> => {
     try {
-        const res = await api.get('/docpal/relation/query', { params: param }).then(res => res.data)
+        const res = await api.get('/docpal/relation/query', { params: param }).then(res => res.data.data)
         return {
             id: res.data[0].id,
             json: JSON.parse(res.data[0].jsonValue),
@@ -47,11 +47,11 @@ export const GetTaskFormJsonApi = async(param: GetTaskFormJsonParams):Promise<Ge
     }
 }
 export const SaveTaskFormJsonApi = async(param: GetTaskFormJsonRes):Promise<GetTaskFormJsonRes> => {
-    const res = await api.post('/docpal/relation/save', param).then(res => res.data)
+    const res = await api.post('/docpal/relation/save', param).then(res => res.data.data)
     return res
 }
 
 export const DeleteWorkflowProcessApi = async(params) => {
-    const res = await api.delete('/docpal/workflow/process', {params}).then(res => res.data)
+    const res = await api.delete('/docpal/workflow/process', {params}).then(res => res.data.data)
     return res
 }

@@ -1,7 +1,7 @@
 import {api} from '../';
-import { pageParams, SearchFilter, paginationResponse,sfloderDetail, paginationResponseData } from '../model';
+import { pageParams, SearchFilter, paginationResponse,sfloderDetail, paginationResponseData, Response } from '../model';
 export const sfolderGetApi = async():Promise<sfloderDetail[]> => {
-    return api.get<sfloderDetail[]>('/nuxeo/sfolder/').then(res => res.data);
+    return api.get<Response<sfloderDetail[]>>('/nuxeo/sfolder/').then(res => res.data.data);
 }
 export const nestedSearchApi = async(params: SearchFilter):Promise<paginationResponseData> => {
     const paramCopy = JSON.parse(JSON.stringify(params))
@@ -32,7 +32,7 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
 
 export const searchByMeta = (properties:any) => {
     return api.post('/nuxeo/document/searchByProperties', {properties})
-        .then(res => res.data)
+        .then(res => res.data.data)
         .then( data => data.items.map(i => {
             if(i.type === 'vendor'){
                 i.isFolder = true;
@@ -44,18 +44,18 @@ export const searchByMeta = (properties:any) => {
 
 // pre-search-config
 export const GetPreSearchListApi = async() => {
-    const res = await api.get('/nuxeo/sfolder/').then(res => res.data)
+    const res = await api.get('/nuxeo/sfolder/').then(res => res.data.data)
     return res
 }
 export const GetPreSearchApi = async(id: string) => {
-    const res = await api.get(`nuxeo/sfolder/${id}`).then(res => res.data)
+    const res = await api.get(`nuxeo/sfolder/${id}`).then(res => res.data.data)
     return res
 }
 export const DeletePreSearchApi = async(id: string) => {
-    const res = await api.delete(`nuxeo/sfolder/${id}`).then(res => res.data)
+    const res = await api.delete(`nuxeo/sfolder/${id}`).then(res => res.data.data)
     return res
 }
 export const UpdatePreSearchApi = async(params) => {
-    const res = await api.patch('/nuxeo/sfolder/', params).then(res => res.data)
+    const res = await api.patch('/nuxeo/sfolder/', params).then(res => res.data.data)
     return res
 }

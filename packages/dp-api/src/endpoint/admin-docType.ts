@@ -1,49 +1,49 @@
 import {api} from '../';
 // schema
 export const CreateSchemasApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/createSchemas', params).then(res => res.data)
+    const res = await api.post('/nuxeo/studio/createSchemas', params).then(res => res.data.data)
     return res
 }
 // 修改使用，只能修改自定义Schema，系统Schema不允许修改
 export const GetCustomSchemaListApi = async() => {
-    const res = await api.get('/nuxeo/studio/listCustomSchemaIDs').then(res => res.data)
+    const res = await api.get('/nuxeo/studio/listCustomSchemaIDs').then(res => res.data.data)
     return res.map(item => ({name: item }))
 }
 // 选择使用
 export const GetSchemaListApi = async() => {
-    const res = await api.get('/nuxeo/studio/listSchemaIDs').then(res => res.data)
+    const res = await api.get('/nuxeo/studio/listSchemaIDs').then(res => res.data.data)
     return res
 }
 export const GetSchemaApi = async(id: string) => {
-    const res = await api.get(`/nuxeo/studio/schema/${id}`).then(res => res.data)
+    const res = await api.get(`/nuxeo/studio/schema/${id}`).then(res => res.data.data)
     return res
 }
 export const UpdateSchemasApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/updateSchemas', params).then(res => res.data)
+    const res = await api.post('/nuxeo/studio/updateSchemas', params).then(res => res.data.data)
     return res
 }
 
 // docType
 export const CreateDocTypesApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/createDocTypes', params).then(res => res.data)
+    const res = await api.post('/nuxeo/studio/createDocTypes', params).then(res => res.data.data)
     return res
 }
 // 修改使用，只能修改自定义DocType，系统DocType不允许修改
 export const GetCustomDocTypeListApi = async() => {
-    const res = await api.get('/nuxeo/studio/listCustomDocTypeIDs').then(res => res.data)
+    const res = await api.get('/nuxeo/studio/listCustomDocTypeIDs').then(res => res.data.data)
     return res.map(item => ({name: item }))
 }
 // 选择使用
 export const GetFieldTypesListApi = async() => {
-    const res = await api.get('/nuxeo/studio/listFieldTypes').then(res => res.data)
+    const res = await api.get('/nuxeo/studio/listFieldTypes').then(res => res.data.data)
     return res
 }
 export const GetDocTypeApi = async(id: string) => {
-    const res = await api.get(`/nuxeo/studio/docType/${id}`).then(res => res.data)
+    const res = await api.get(`/nuxeo/studio/docType/${id}`).then(res => res.data.data)
     return res
 }
 export const UpdateDocTypesApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/updateDocTypes', params).then(res => res.data)
+    const res = await api.post('/nuxeo/studio/updateDocTypes', params).then(res => res.data.data)
     return res
 }
 
