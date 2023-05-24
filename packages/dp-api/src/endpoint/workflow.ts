@@ -114,3 +114,11 @@ export const sendProcessCommentsApi = async(params: workflowCommentSendReq) => {
     const response = await api.post('/docpal/workflow/comment/process', {}, {params})
     return response || []
 }
+
+export const startAdhocApi = async(params) => {
+    return await api.post('/docpal/workflow/process/start', params ).then(res => res.data.data);
+}
+
+export const auditAdhocApi = async(params) => {
+    return await api.post('/docpal/workflow/submitAdhocApproval', params ).then(res => res.data.data);
+}
