@@ -112,9 +112,7 @@ export const useUser = () => {
     }
 
     async function logout(){
-        await useFetch('/api/session', {
-            method:'DELETE'
-        });
+        await api.delete('/session');
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";

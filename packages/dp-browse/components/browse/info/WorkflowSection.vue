@@ -77,6 +77,7 @@ const loading = ref(false)
     })
 
     async function checkAdhocStatus(){
+      console.log("checkAdhocStatus")
        await new Promise(resolve => setTimeout(resolve, 1000));
        const { entryList: list }= await getAdHocHistory(props.doc.id);
 

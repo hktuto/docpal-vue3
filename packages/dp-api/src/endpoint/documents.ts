@@ -268,7 +268,7 @@ export const getSupportedFormatApi = async() => {
 }
 
 export const submitExportRequestApi = async(params) => {
-    return api.post('/nuxeo/conversion/submitExportRequest', params).then(res => res.data.data);
+    return api.post('/nuxeo/conversion/submitExportRequest', params).then(res => res.data);
 }
 
 // #endregion
