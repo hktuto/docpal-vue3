@@ -6,7 +6,7 @@ import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
 
     // @ts-ignore
-    const appStore = useAppStore();    
+    const appStore = useAppStore();
     const isLogin = useState<boolean>('isLogin',() => false);
     const token = useState<string>('userToken', () => "");
     const refreshToken = useState<string>('refreshToken', () => "");
@@ -16,7 +16,7 @@ export const useUser = () => {
     const settingStore = useSetting()
 
     const userList = useState<User[]>('userList', () => ([]));
-    
+
     const colorModeOption = [
         {
             id: '1',
@@ -76,7 +76,7 @@ export const useUser = () => {
 
     async function savePreference() {
         await UserSettingSaveApi(userPreference.value)
-        
+
     }
 
     async function verify() {
@@ -111,8 +111,8 @@ export const useUser = () => {
         return {isRequired2FA}
     }
 
-    async function logout(){
-        await api.delete('/session');
+    function logout(){
+        // await api.delete('/session');
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
@@ -134,7 +134,7 @@ export const useUser = () => {
     function getUserId () {
         return user.value.userId || user.value.username
     }
-    return { 
+    return {
         // data
         token,
         user,

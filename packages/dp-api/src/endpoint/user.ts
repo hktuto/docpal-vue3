@@ -14,7 +14,7 @@ export const UserSettingSaveApi = async(data:UserSetting) => {
 }
 
 export const Login = async(data: LoginRequest):Promise<LoginResponse> => {
-    return await api.post<LoginResponse>('/auth/nuxeo/login',data).then(res => res.data)
+    return await api.post<Response<LoginResponse>>('/auth/nuxeo/login',data).then(res => res.data.data)
 }
 
 export const Verify = async():Promise<User> => {
