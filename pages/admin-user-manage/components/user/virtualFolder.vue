@@ -3,7 +3,7 @@
     <template #header>
         <div class="flex-x-between">
             {{ $t('admin_Virtual Folder') }}
-            <SvgIcon :src="'/icons/add.svg/'" round
+            <SvgIcon :src="'/icons/add.svg'" round
                 @click="openDialog"></SvgIcon>
         </div>
     </template>

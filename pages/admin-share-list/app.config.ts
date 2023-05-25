@@ -3,7 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
-      name:"file_share",
+      name:"admin_share",
       routeName:"shareList",
       url:"/shareList",
       icon: "/icons/menu/share.svg",
