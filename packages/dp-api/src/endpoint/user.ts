@@ -31,7 +31,17 @@ export const getUserListApi = async(refresh: boolean = false):Promise<User[]> =>
     return userListStore
 }
 export const CreateUserApi = async(param) => {
-    return await api.post('/nuxeo/identity/user', param).then(res => res.data.data);
+    const response = await api.post('/nuxeo/identity/user', param).then(res => res.data.data);
+    await addUserToGroupTraverse(param.groupList, param.userId)
+    return response
+}
+const addUserToGroupTraverse = async(groupIds, userId) => {
+    const pList = []
+    for (const item of groupIds) {
+        const pItem = MembershipAddApi({ groupId: item, userId })
+        pList.push(pItem)
+    }
+    await Promise.all(pList)
 }
 export const PatchUserApi = async(param) => {
     return await api.patch('/nuxeo/identity/user', param).then(res => res.data.data);
