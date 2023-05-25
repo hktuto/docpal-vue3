@@ -39,9 +39,9 @@
         <BrowseInfoPicture :doc="detail" />
         <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
     </el-tab-pane>
-    <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">
+    <!-- <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">
         <BrowseInfoRelate v-if="currentTab === 'relate'"  :doc="detail" />
-    </el-tab-pane>
+    </el-tab-pane> -->
 </el-tabs>
   <div v-else v-loading="loading" class="loadingContainer">
     {{ detail }}

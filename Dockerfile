@@ -1,6 +1,7 @@
-FROM node:16-alpine3.16
+FROM nikolaik/python-nodejs AS base
 
-RUN apk add --no-cache git
 RUN npm i -g pnpm
+
+FROM base AS dependencies
 
 

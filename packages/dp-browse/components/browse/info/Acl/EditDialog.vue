@@ -111,7 +111,7 @@ const handleSubmit = () => {
       done()
     }
 
-    useFetch( async() => await getUserList())
+    onMounted( async() => await getUserList())
     watch(() => props.modelValue, (newValue: any) => {
       if(!newValue) return
       if (isEdit.value) {

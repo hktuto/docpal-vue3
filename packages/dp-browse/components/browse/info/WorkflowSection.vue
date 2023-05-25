@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import {getAdHocHistory, canApprovalAdhocApi }from 'dp-api'
+import {getAdHocHistory, canApprovalAdhocApi, startAdhocApi, auditAdhocApi }from 'dp-api'
 import { ElMessage } from 'element-plus'
 const props = defineProps<{ doc: any}>()
 const { doc } = toRefs(props)
@@ -77,6 +77,7 @@ const loading = ref(false)
     })
 
     async function checkAdhocStatus(){
+      console.log("checkAdhocStatus")
        await new Promise(resolve => setTimeout(resolve, 1000));
        const { entryList: list }= await getAdHocHistory(props.doc.id);
 
@@ -86,7 +87,7 @@ const loading = ref(false)
     const FormRef = ref()
 
     function handleStart () {
-      FormRef.value.validate(async (valid) => {
+      FormRef.value.validate(async (valid:boolean) => {
         if(valid) {
           const param = {
             processKey: "adhocApproval",
@@ -113,7 +114,7 @@ const loading = ref(false)
     // #region module: audit
       const canApproval = ref(false)
 
-      async function handelAudit (approved) {
+      async function handelAudit (approved:boolean) {
         if (!!approved && props.doc.isCheckedOut) {
 
           ElMessage.error(`${t('dpTip_versoionError')}`)
@@ -140,7 +141,7 @@ const loading = ref(false)
 
     // #region module: Collapse
       const collapseItems = ref(['1'])
-      function tagStatusFilter (status) {
+      function tagStatusFilter (status:number) {
         switch (status) {
           case 0:
             return ''
@@ -153,7 +154,7 @@ const loading = ref(false)
             break
         }
       }
-      function tagTextFilter (status) {
+      function tagTextFilter (status:number) {
         switch (status) {
           case 0:
             return t('status.underApproval')

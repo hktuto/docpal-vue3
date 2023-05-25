@@ -46,12 +46,12 @@ export type metaMapping = {
 let metaSettingData: metaData = null
 export const GetMetaSettingsApi = async(refresh: boolean = false):Promise<metaData> => {
     if(!!metaSettingData && !refresh) return deepCopy(metaSettingData) 
-    const res = await api.get<metaData>('/nuxeo/admin/setting').then(res => res.data)
+    const res = await api.get<{data:metaData}>('/nuxeo/admin/setting').then(res => res.data.data)
     metaSettingData = res
     return res
 }
 export const PutMetaSettingApi = async(params: metaData) => {
-    const res = api.put('/nuxeo/admin/setting', params).then(res => res.data)
+    const res = api.put('/nuxeo/admin/setting', params).then(res => res.data.data)
     await new Promise(resolve => setTimeout(async () => {
         await GetMetaSettingsApi(true)
         resolve(500)
@@ -124,10 +124,10 @@ export const GetMetaValidationRuleApi = async(params?: metaRule) => {
     }
 } 
 export const DeleteMetaValidationRuleApi = async(id: string) => {
-    return api.delete('/docpal/workflow/deleteMetaValidationRuleById', { params: { id } }).then(res => res.data)
+    return api.delete('/docpal/workflow/deleteMetaValidationRuleById', { params: { id } }).then(res => res.data.data)
 } 
 export const SaveMetaValidationRuleApi = async(params: metaRule) => {
-    return api.post('/docpal/workflow/saveMetaValidationRule',  params ).then(res => res.data)
+    return api.post('/docpal/workflow/saveMetaValidationRule',  params ).then(res => res.data.data)
 } 
 
 // bulk import config
@@ -181,24 +181,24 @@ export const GetDocumentTypeProfileApi = async(params?: metaRule) => {
 
 export const SaveMetadataMappingApi = async(params?: SaveMetadataMappingReq) => {
     try {
-        return api.post('/docpal/workflow/saveMetadataMapping', params ).then(res => res.data)
+        return api.post('/docpal/workflow/saveMetadataMapping', params ).then(res => res.data.data)
     } catch (error) {
         return []
     }
 } 
 export const SaveDocumentTypeProfileApi = async(params) => {
     try {
-        return api.post('/docpal/workflow/saveDocumentTypeProfile', params ).then(res => res.data)
+        return api.post('/docpal/workflow/saveDocumentTypeProfile', params ).then(res => res.data.data)
     } catch (error) {
         return []
     }
 }
 export const DeleteDocumentTypeProfileApi = async(profileID) => {
-    return api.delete('/docpal/workflow/deleteDocumentTypeProfile', { params: { profileID } }).then(res => res.data)
+    return api.delete('/docpal/workflow/deleteDocumentTypeProfile', { params: { profileID } }).then(res => res.data.data)
 }
 export const checkNameOrTitleApi = async(params) => {
     try {
-        return api.post('/docpal/workflow/checkNameOrTitle', params ).then(res => res.data)
+        return api.post('/docpal/workflow/checkNameOrTitle', params ).then(res => res.data.data)
     } catch (error) {
         return []
     }

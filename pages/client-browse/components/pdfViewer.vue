@@ -51,11 +51,12 @@ async function sendPdfAndAnnotation() {
     loading.value = true;
     try {
         const blob = await GetDocumentPreview(props.doc.id);
+        console.log(blob)
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
         frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
-        dpLog(error);
+        console.log(error);
     }
     loading.value = false;
 }

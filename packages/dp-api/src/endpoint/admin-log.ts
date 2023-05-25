@@ -6,7 +6,7 @@ export type logParams = {
     level?: string
   }
 export const getLoggersApi = async() => {
-    const res = await api.get('/docpal/management/loggers').then(res => res.data)
+    const res = await api.get('/docpal/management/loggers').then(res => res.data.data)
     return Object.keys(res).reduce((prev, key) => {
         prev.push({
           service: key, 
@@ -19,5 +19,5 @@ export const getLoggersApi = async() => {
       }, []);
 }
 export const setLoggersApi = async(params: logParams) => {
-    return api.post('/docpal/management/loggers', {}, { params }).then(res => res.data)
+    return api.post('/docpal/management/loggers', {}, { params }).then(res => res.data.data)
 }

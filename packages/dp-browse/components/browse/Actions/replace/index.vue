@@ -72,7 +72,7 @@ const props = defineProps<{doc:any}>();
         languages: []
       }
     }
-    useFetch(async() => {
+    onMounted(async() => {
       availableLanguage.value = await getOcrSupportedLanguage()
     })
 
