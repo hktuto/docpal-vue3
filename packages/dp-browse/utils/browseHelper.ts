@@ -64,10 +64,12 @@ export const duplicateNameFilter = async (idOrPath: string, list:any) => {
  * @param userId user id to check permissions for, if null, no permissions will be returned
  */
 export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
-    const response = await GetDocDetail(idOrPath);
+  const response = await GetDocDetail(idOrPath);
+  try {
     response.displayMeta = await GetDocumentAdditionalApi({documentType: response.type})
     if(userId) {
       const permission:any = await GetDocPermission(idOrPath, userId);
+      if(!permission) throw new Error("no permission");
       response.canWrite = AllowTo({feature:'ReadWrite', userPermission:permission.permission })
       response.canEdit = AllowTo({feature:'ReadWrite', userPermission:permission.permission })
       return {
@@ -75,10 +77,14 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
         doc: response
       }
     }
+    throw new Error("no userId");
+  } catch (error) {
     return {
-      permission: null,
+      permission: {},
       doc: response
     };
+  }  
+    
   }
 const deepCopy  = (data:any) => {
     if (!data) return {}

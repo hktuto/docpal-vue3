@@ -76,6 +76,7 @@ async function handleAction (detail:any) {
     else state.actions = { ...state._actions }
     try {
         const permission = await GetDocPermission(detail.doc.id, userId);
+        if(!permission) throw new Error("null");
         state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission.permission })
     } catch (error) {
         if (props.permission)

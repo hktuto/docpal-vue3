@@ -4,7 +4,9 @@
                 @pagination-change="handlePaginationChange"
                 @row-dblclick="handleDblclick">
                 <template #tags="{ row, index }">
-                    <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+                    <div v-if="row.properties && row.properties['nxtag:tags']">
+                        <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+                    </div>
                 </template>
             </Table>
     </NuxtLayout>
@@ -62,6 +64,7 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
         () => route.query,
         async (newVal) => {
             const { currentPageIndex, pageSize } = newVal
+            if(!currentPageIndex || !pageSize) return
             pageParams = getSearchParamsArray({...newVal})
             // pageParams = {...newVal}
             pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
@@ -84,4 +87,7 @@ function handleDblclick (row) {
 </script>
 
 <style lang="scss" scoped>
+.el-tag {
+    margin-left: calc(var(--app-padding) / 2);
+}
 </style>
