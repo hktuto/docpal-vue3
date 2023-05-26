@@ -28,7 +28,7 @@
 
 
 <script lang="tsx" setup>
-import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting, GetDocPermission } from 'dp-api'
+import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
 import {TableV2FixedDir} from 'element-plus'
 import type { Column, RowClassNameGetter } from 'element-plus'
 const emit = defineEmits([

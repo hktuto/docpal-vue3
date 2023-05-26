@@ -106,6 +106,7 @@ function blurInput() {
 
 function keywordInputHandler(event) {
     const value = event.target.value
+    state.keyword = value
     state.searchParams.paramsInTextSearch = [value]
 }
 // #region module: 
