@@ -7,15 +7,15 @@
                 @row-dblclick="handleDblclick">
                 <template #actions>
                     <div>
-                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('restoreSelected')}} </el-button>
-                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('deleteSelected')}} </el-button>
+                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
+                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
                     </div>
                 </template>    
             </Table>
             <ReaderDialog ref="ReaderRef" v-bind="previewFile">
                 <template #actions>
-                    <el-button @click="handleRestoreOne(previewFile.id)">{{$t('restore')}}</el-button>
-                    <el-button @click="handleDeleteOne(previewFile.id)"> {{$t('delete')}}</el-button>
+                    <el-button @click="handleRestoreOne(previewFile.id)">{{$t('trash_actions_restore')}}</el-button>
+                    <el-button @click="handleDeleteOne(previewFile.id)"> {{$t('trash_actions_delete')}}</el-button>
                 </template>
             </ReaderDialog>
             <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
