@@ -64,6 +64,8 @@ export const AddMetaSettingApi = async(params: metaSetting) => {
         isFolder: params.isFolder,
         related: []
     }
+    // 数据错误处理
+    // delete metaSettingData.ContractFile.displayMeta
     return await PutMetaSettingApi(metaSettingData)
 }
 /**
