@@ -46,9 +46,9 @@ export type metaMapping = {
 let metaSettingData: metaData = null
 export const GetMetaSettingsApi = async(refresh: boolean = false):Promise<metaData> => {
     if(!!metaSettingData && !refresh) return deepCopy(metaSettingData) 
-    const res = await api.get<{data:metaData}>('/nuxeo/admin/setting').then(res => res.data.data)
-    metaSettingData = res
-    return res
+    const res = await api.get('/nuxeo/admin/setting').then(res => res.data.data)
+    metaSettingData = JSON.parse(res) 
+    return deepCopy(metaSettingData)
 }
 export const PutMetaSettingApi = async(params: metaData) => {
     const res = api.put('/nuxeo/admin/setting', params).then(res => res.data.data)
@@ -64,6 +64,8 @@ export const AddMetaSettingApi = async(params: metaSetting) => {
         isFolder: params.isFolder,
         related: []
     }
+    // 数据错误处理
+    // delete metaSettingData.ContractFile.displayMeta
     return await PutMetaSettingApi(metaSettingData)
 }
 /**
