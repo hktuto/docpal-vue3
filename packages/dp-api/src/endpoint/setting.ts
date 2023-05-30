@@ -6,7 +6,7 @@ import { OCR_SETTING, ServerLanguageResponse,  } from '../model/setting';
 
 
 export const GetTableColumnSetting = async():Promise<TableColumnSetting> => {
-    const serverResponse = await api.get<TableColumnSetting>('/nuxeo/admin/setting/tableColumn').then((res:any) => JSON.parse(res.data.data));
+    const serverResponse = await api.get<TableColumnSetting>('/nuxeo/admin/setting/tableColumn').then((res:any) => res.data.data);
     const defaultTableSetting = GetDefaultTable()
     return Object.assign(defaultTableSetting, serverResponse);
   }
@@ -26,12 +26,12 @@ export const GetTableColumnSetting = async():Promise<TableColumnSetting> => {
   }
 
   export const GetOCRSetting = async():Promise<OCR_SETTING> => {
-    return await api.get('/nuxeo/admin/setting/OCR').then((res:any) => JSON.parse(res.data.data))
+    return await api.get('/nuxeo/admin/setting/OCR').then((res:any) => res.data.data)
   }
 
   export const GetExternalEndpoint = async() => {
     const res = await api.get('/nuxeo/admin/setting/configuration').then(res => res.data.data)
-    return JSON.parse(res).hosts.reduce((result:any, current:any) => {
+    return res.hosts.reduce((result:any, current:any) => {
         result = Object.assign(result, current)
         return result;
     }, {})

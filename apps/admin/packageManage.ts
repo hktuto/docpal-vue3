@@ -25,6 +25,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-vocabulary');
     packages.push('../../pages/admin-workflow-form');
     packages.push('../../pages/admin-workflow-manage');
+    packages.push('../../pages/admin-mail-config');
     
     packages.push('../../packages/dp-browse');
     packages.push("../../packages/dp-stores")
