@@ -4,7 +4,7 @@
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-            <TableSortButton v-if="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+            <TableSortButton ref="TableSortButtonRef" v-if="_options.sortKey" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
             <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
         </div>
         <div class="dp-table-container--main">
@@ -198,9 +198,12 @@ const indexMethod = (index: number) => {
         emit('sort-change', { column, prop, order })
     }
 // #endregion
-
+const TableSortButtonRef = ref()
 function reorderColumn (displayList) {
     columns__sub.value = deepCopy(displayList);
+    setTimeout(() => {
+        TableSortButtonRef.value.initColumn()
+    })
 }
 // #region module: sort
     let CtrlDown = false

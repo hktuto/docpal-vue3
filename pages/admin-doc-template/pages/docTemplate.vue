@@ -47,7 +47,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
     GetChild, 
     GetDocDetailApi, 
-    getPreviewApi, 
     GetDocumentPreview,
     patchDocumentApi,
     GetBreadcrumb,

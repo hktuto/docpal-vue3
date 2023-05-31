@@ -24,6 +24,8 @@ const userId:string = useUser().getUserId()
         assignedUser: userId
         // userId
     }
+    const tableKey = TABLE.CLIENT_WORKFLOW_MY_TASK
+    const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -33,14 +35,13 @@ const userId:string = useUser().getUserId()
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
+            },
+            sortKey: tableKey
         },
         extraParams: {},
         tabName: 'myTask'
     })
-    const tableKey = TABLE.CLIENT_WORKFLOW_MY_TASK
-    const tableSetting = defaultTableSetting[tableKey]
-
+    
     async function getList (param) {
         state.loading = true
         const res = await getAllTask({...param, ...state.extraParams})

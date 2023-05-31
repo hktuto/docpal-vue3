@@ -7,65 +7,108 @@
 <script lang="ts" setup>
 
 import { useEventListener } from '@vueuse/core'
-const props = defineProps<{
+import { SaveAnnotation, GetAnnotation } from 'dp-api'
+type PdfJsOptions = {
+    print: boolean,
+    loadAnnotations: boolean,
+}
+const props = withDefaults(defineProps<{
     annotations: Map<string,any>,
     blob: Blob,
-    name: String
-}>()
+    name: String,
+    options: PdfJsOptions,
+    loading: Boolean
+}>(),{
+    options:{
+        print: false,
+        loadAnnotations: false,
+    }
+})
 
 const { annotations, blob, name } = toRefs(props)
-
-const readerReady = ref(false);
 
 const iframe = ref<HTMLIFrameElement>();
 const { public:{ pdfReaderUrl } } = useRuntimeConfig();
 const { locale } = useI18n()
 const colorMode = useColorMode();
 
-const emits = defineEmits(['saveAnnotation'])
-
+const emits = defineEmits()
+async function getAnnotation():Promise<Object> {
+    if(!props.options.loadAnnotations) return new Map();
+    const annotation = await GetAnnotation(props.doc.id);
+    let annotationObj = []
+    if(annotation.length > 0) {
+        if(annotation[0].object.paths) {
+            annotationObj = Array.isArray(JSON.parse(annotation[0].object.paths)) ? JSON.parse(annotation[0].object.paths) : []
+        }
+    }
+    const annotationMap = new Map();
+    annotationObj.forEach((item:any) => {
+        annotationMap.set(item.id, item);
+    });
+    return annotationMap;
+}
 async function sendPdfAndAnnotation() {
-    readerReady.value = true;
-    // return if no blob
     if(!props.blob) return;
     const frame = iframe.value?.contentWindow;
-
-    // return if no contentWindow
+    const blob = structuredClone(toRaw(props.blob))
+    const annotations = await getAnnotation()
+    const options = structuredClone(toRaw(props.options))
     if(!frame) return;
-    const message = {
-        blob:props.blob,
+    frame.postMessage({
+        blob,
         filename: props.name,
-        annotations: new Map(props.annotations),
-        locale: locale.value
+        annotations,
+        locale: locale.value, 
+        options
+    }, '*');
+}
+async function saveAnnotation(annotation:Map<string, object>) {
+    //return if annotation is empty
+
+    // convert Map to array of objects
+    const paths:any[] = [];
+    const comments = [];
+
+    annotation.forEach((value:any, key:any) => {
+        if(value.annotationType === 3){
+            comments.push({text:value.value});
+          }
+      paths.push({id: key, ...value});
+    });
+    const param = {
+        documentIdOrPath: props.doc.id,
+        object: {
+            paths: JSON.stringify(paths)
+        },
+        comments
     }
-    frame.postMessage(message, '*');
+    await SaveAnnotation([param])
+    //  TODO : show notification
 }
 
 
 function gotMessageFromIframe(message:MessageEvent) {
-    const { data } = message;
-    if(!data) return;
-
-    switch(data.type) {
-        case 'ready':
-            sendPdfAndAnnotation()
-            break;
-        case 'annotation':
-            saveAnnotation(data.data)
-            break;
-        default:
-            break
-    };
-
-}
-function saveAnnotation(annotation:Map<string,any>) {
-    // this function is called when the user clicks the save button on the annotation form
-    // we send the annotation data to the server
-    emits("saveAnnotation",annotation)
+    const { data:{ data, type} } = message;
+    if(!data && !type ) return;
+    const interval = setInterval(() => {
+        if(!props.loading) {
+            clearInterval(interval)
+            switch(type) {
+                case 'ready':
+                    sendPdfAndAnnotation()
+                    break;
+                case 'annotation':
+                    saveAnnotation(data)
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, 500)
+    
 }
 useEventListener(window, 'message', gotMessageFromIframe)
-
-watch(blob, () => {sendPdfAndAnnotation()});
 </script>
 
 <style lang="scss" scoped>
