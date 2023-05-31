@@ -6,7 +6,7 @@
             <template #preSortButton>
                 <FromRenderer :form-json="formJson" @formChange="handleFormChange"/>
             </template>
-            </Table>
+    </Table>
 </template>
 
 
@@ -24,6 +24,8 @@ const userId:string = useUser().getUserId()
         interrelatedUserId: userId,
         // userId
     }
+    const tableKey = TABLE.CLIENT_WORKFLOW_ACTIVE_TASK
+    const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -33,13 +35,12 @@ const userId:string = useUser().getUserId()
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
+            },
+            sortKey: tableKey
         },
         extraParams: {},
         tabName: 'activeTask'
     })
-    const tableKey = TABLE.CLIENT_WORKFLOW_ACTIVE_TASK
-    const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
         param.userId = userId

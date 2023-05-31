@@ -126,8 +126,8 @@ async function handleSubmit () {
 
 function initColumn () {
   // check store default column setting
-  if(props.sortKey && tableColumnSetting) {
-    originalColumns.value = tableColumnSetting[props.sortKey] || props.columns;
+  if(props.sortKey && tableColumnSetting.value) {
+    originalColumns.value = tableColumnSetting.value[props.sortKey].columns || props.columns;
     // normalize user preference
     
     // set displayList and hideList
@@ -155,6 +155,7 @@ onMounted(() => {
   initColumn()
   emit('reorderColumn', showList.value)
 })
+defineExpose({ initColumn })
 </script>
 
 

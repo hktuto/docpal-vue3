@@ -24,6 +24,8 @@ const userId:string = useUser().getUserId()
         completed: true,
         userId
     }
+    const tableKey = TABLE.CLIENT_WORKFLOW_COMPLETE_TASK
+    const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -33,13 +35,13 @@ const userId:string = useUser().getUserId()
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
+            },
+            sortKey: tableKey
         },
         extraParams: {},
         tabName: 'completeTask'
     })
-    const tableKey = TABLE.CLIENT_WORKFLOW_COMPLETE_TASK
-    const tableSetting = defaultTableSetting[tableKey]
+    
 
     async function getList (param) {
         param.userId = userId

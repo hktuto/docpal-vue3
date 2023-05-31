@@ -14,18 +14,26 @@
 
 <script lang="ts" setup>
 import { Picture as IconPicture, Download } from '@element-plus/icons-vue'
+import { deepCopy } from 'dp-api'
 const emits = defineEmits(['download'])
 export type readerOptions = {
-    noDownload?: Boolean
+    noDownload?: Boolean,
+    print: false,
+    loadAnnotations: false,
 } 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     id: string,
     blob: Blob,
     name: string,
     annotations?: Array,
     loading: Boolean,
     options: readerOptions
-}>()
+}>(), {
+    options:{
+        print: false,
+        loadAnnotations: false,
+    }
+})
 const _options = computed<readerOptions>(() => {
     const option = {
         noDownload: false
@@ -45,6 +53,10 @@ const ReaderRef = ref()
 function handleDownload() {
     ReaderRef.value.handleDownload()
 }
+onMounted(() => {
+    
+    
+})
 defineExpose({ handleOpen, handleClose })
 </script>
 
@@ -57,12 +69,17 @@ defineExpose({ handleOpen, handleClose })
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    
+    min-height: 80vh;
+    max-height: 90vh;
+    width: 80vw;
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
     &-main{
         max-height: 70vh;
         width: 100%;
+        height: 100%;
         margin: auto;
-        overflow: auto;
+        overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;

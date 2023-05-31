@@ -29,6 +29,8 @@ const userId:string = useUser().getUserId()
         pageIndex: 0,
         pageSize: 20,
     }
+    const tableKey = TABLE.CLIENT_WORKFLOW_COMPLETE_TASK
+    const tableSetting = ref(defaultTableSetting[tableKey])
     const state = reactive<State>({
         loading: false,
         activeTab: 'pendingApproval',
@@ -39,13 +41,12 @@ const userId:string = useUser().getUserId()
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
+            },
+            sortKey: tableKey
         },
         extraParams: {}
     })
-    const tableKey = TABLE.CLIENT_WORKFLOW_COMPLETE_TASK
-    const tableSetting = ref(defaultTableSetting[tableKey])
-
+    
     async function getList (param) {
         handleTableChange()
         dpLog(state.extraParams, 'extraParams');
@@ -96,6 +97,7 @@ const userId:string = useUser().getUserId()
                 break
         }
         setTimeout(() => {
+            state.options.sortKey = tKey
             tableRef.value.reorderColumn(tableSetting.value.columns)
         })
     }

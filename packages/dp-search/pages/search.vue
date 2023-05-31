@@ -1,21 +1,25 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath">
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-                @pagination-change="handlePaginationChange"
-                @row-dblclick="handleDblclick">
-                <template #tags="{ row, index }">
-                    <div v-if="row.properties && row.properties['nxtag:tags']">
-                        <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
-                    </div>
-                </template>
+    <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" noSearch>
+        <div class="search-page">
+            <SearchFilterLeft :searchParams="state.searchParams" @submit=""></SearchFilterLeft>
+            <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                    @pagination-change="handlePaginationChange"
+                    @row-dblclick="handleDblclick">
+                    <template #tags="{ row, index }">
+                        <div v-if="row.properties && row.properties['nxtag:tags']">
+                            <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+                        </div>
+                    </template>
             </Table>
+        </div>
+        <ReaderDialog ref="ReaderRef" v-bind="previewFile" ></ReaderDialog>
     </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
 import { watchDebounced } from '@vueuse/core'
-import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from 'dp-api'
+import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaultTableSetting } from 'dp-api'
 
 // #region module: page
     const route = useRoute()
@@ -33,8 +37,10 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
-        }
+            },
+            sortKey: 'clientSearch'
+        },
+        searchParams: {}
     })
     const tableKey = TABLE.CLIENT_SEARCH
     const tableSetting = defaultTableSetting[tableKey]
@@ -42,7 +48,7 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
     async function getList (param) {
         state.loading = true
         try {
-            const res = await nestedSearchApi(param)
+            const res = await nestedSearchApi({ ...param, currentPageIndex: param.currentPageIndex + 1})
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -56,7 +62,7 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
         router.push({ 
-            query: { ...pageParams, currentPageIndex:page, pageSize, time } 
+            query: { ...route.query, ...pageParams, currentPageIndex:page, pageSize, time } 
         })
     }
 
@@ -66,6 +72,9 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return
             pageParams = getSearchParamsArray({...newVal})
+            console.log({pageParams});
+            
+            state.searchParams = pageParams
             // pageParams = {...newVal}
             pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
@@ -75,19 +84,51 @@ import { nestedSearchApi,getSearchParamsArray, TABLE, defaultTableSetting } from
     )
     const { tableData, options, loading } = toRefs(state)
 // #endregion
-
-function handleDblclick (row) {
-    router.push({
-        path: '/browse',
-        query: {
-            path: row.path,
-        },
-    })
+const ReaderRef = ref()
+const previewFile = reactive({
+    blob: null,
+    name: '',
+    id: '',
+    loading: false,
+    options: {
+        noDownload: true,
+        print: false,
+        loadAnnotations: false,
+    }
+})
+async function handleDblclick (row) {
+    if(row.isFolder) {
+        router.push({
+            path: '/browse',
+            query: {
+                path: row.path,
+            },
+        })
+    } else {
+        ReaderRef.value.handleOpen()
+        previewFile.loading = true
+        try {
+            previewFile.blob = await GetDocumentPreview(row.id)
+            console.log(previewFile.blob, 'previewFile.blobpreviewFile.blob');
+            
+        } catch (error) {
+            
+        }
+        previewFile.id = row.id
+        previewFile.name = row.name
+        previewFile.loading = false
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 .el-tag {
     margin-left: calc(var(--app-padding) / 2);
+}
+.search-page {
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(250px, min-content) 1fr;
+    gap: var(--app-padding);
 }
 </style>

@@ -28,13 +28,23 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{
+type PdfJsOptions = {
+    print: boolean,
+    loadAnnotations: boolean,
+}
+const props = withDefaults(defineProps<{
     id: string,
     blob: Blob,
     name: string,
     annotations?: Map<string, any>,
     loading: Boolean,
-}>()
+    options: PdfJsOptions
+}>(), {
+    options:{
+        print: false,
+        loadAnnotations: false,
+    }
+})
 const state = reactive({
     url: '',
     fileType: '',
