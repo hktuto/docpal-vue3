@@ -1,6 +1,6 @@
 <template>
   <div >
-    <AuthApp />
+    <AuthApp :showForgetPassword="false"/>
   </div>
 </template>
 
