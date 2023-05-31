@@ -1,7 +1,7 @@
 <template>
     <div class="appThemeBg">
     <div v-if="appStore.displayState === 'needAuth'" ref="needAuthEl" class="LoginContainer">
-      <LazyLoginForm  />
+      <LazyLoginForm :showForgetPassword="showForgetPassword" />
     </div>
     <div v-if="appStore.displayState === 'forgetPassword'" ref="forgetPassword" class="LoginContainer">
       <LazyForgetPassword  />
@@ -28,6 +28,12 @@
 const appStore  = useAppStore()
 import { api } from 'dp-api'
 const user = useUser();
+
+const props = withDefaults(defineProps<{
+    showForgetPassword: boolean,
+}>(), {
+  showForgetPassword: true
+})
 
 onMounted(async () => {
   await appStore.appInit();

@@ -22,7 +22,7 @@
                 <ElButton class="fullSize"  size="large"  type="primary" @click="submit" :loading="loading">Submit</ElButton>
             </ElFormItem>
         </ElForm>
-        <el-button @click="userStore.forgetPassword" link>
+        <el-button v-if="showForgetPassword" @click="userStore.forgetPassword" link>
             {{ $t('login_forgetPassword') }}
         </el-button>
        
@@ -32,6 +32,11 @@
 <script lang="ts" setup>
 const userStore = useUser();
 const loading = ref(false);
+const props = withDefaults(defineProps<{
+    showForgetPassword: boolean,
+}>(), {
+  showForgetPassword: true
+})
 const form = reactive({
       username: '',
       password: '',
