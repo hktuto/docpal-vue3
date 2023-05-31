@@ -16,7 +16,7 @@
                   <slot name="headerLeft" />
               </div>
                 <div class="expand">
-                  <SmartSearch v-if="feature.search"/>
+                  <SmartSearch v-if="feature.search && showSearch"/>
                   <slot name="postHeader" />
                 </div>
                 
@@ -36,9 +36,12 @@
 
 <script lang="ts" setup>
 import InlineSvg from 'vue-inline-svg'
-const props = defineProps<{
-    backPath?: string
-}>()
+const props = withDefaults(defineProps<{
+    backPath?: string,
+    showSearch: boolean,
+}>(), {
+  showSearch: true
+})
 const opened = ref(false);
 const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
 const { feature } = useAppConfig();
