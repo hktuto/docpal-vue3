@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" noSearch>
+    <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div class="search-page">
             <SearchFilterLeft :searchParams="state.searchParams" @submit=""></SearchFilterLeft>
             <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
