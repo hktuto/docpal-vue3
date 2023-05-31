@@ -48,7 +48,7 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
     async function getList (param) {
         state.loading = true
         try {
-            const res = await nestedSearchApi({ ...param, currentPageIndex: param.currentPageIndex + 1})
+            const res = await nestedSearchApi({ ...param })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -78,6 +78,7 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
             // pageParams = {...newVal}
             pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
+            
             getList(pageParams)
         },
         { debounce: 200, maxWait: 500, immediate: true }
