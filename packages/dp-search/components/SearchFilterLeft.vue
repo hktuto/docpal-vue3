@@ -1,6 +1,6 @@
 <template>
     <div class="filterContainer">
-        <FromRenderer ref="FromRendererRef" :form-json="filterJson"  :data="searchParams" @form-change="formChangeHandler" ></FromRenderer>
+        <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
         <div class="filterContainer-footer">
             <el-row :gutter="10">
                 <el-col :span="8">
@@ -58,14 +58,10 @@ function handleReset() {
 }
 function initForm () {
     setTimeout(async() => {
-        const keyWordRef = await FromRendererRef.value.vFormRenderRef.getWidgetRef('keyword')
-        keyWordRef.setHidden(false)
         const searchParams = deepCopy(props.searchParams)
-        console.log({searchParams});
-        
         let key = props.searchParams.paramsInTextSearch
-        if(!!key) keyWordRef.setValue(key.join(''))
-        else if(props.searchParams.keyword)  keyWordRef.setValue(props.searchParams.keyword)
+        if(!!key) searchParams.keyword = key.join('')
+        await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
         state.changeEvent = true
     }, 800)
 }
