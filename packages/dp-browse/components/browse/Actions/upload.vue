@@ -263,7 +263,10 @@ async function handleSubmit () {
         })
     }
   }
-  state.loading = false
+  setTimeout(() => { 
+    dialogOpened.value = false
+    state.loading = false
+  },100)
 }
 async function handleDuplicate(list) {
   const action = await ElMessageBox.confirm($i18n.t('dpTip_duplicateFileName'),{
