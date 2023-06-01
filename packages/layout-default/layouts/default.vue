@@ -23,7 +23,8 @@
                 <div v-if="isLogin"  class="actions">
                   <ColorSwitch v-if="feature.darkMode"/>
                   <LanguageSwitch v-if="feature.multiLanguage"/>
-                  <NotificationBadge v-if="feature.notification"/>
+                  <!-- <NotificationBadge v-if="feature.notification"/> -->
+                  <Notification v-if="feature.notification"/>
                   <UserMiniDropdown v-if="feature.userAuth" />
                 </div>
             </div>
