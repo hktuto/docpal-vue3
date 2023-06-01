@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import {getConversionHistoryApi} from 'dp-api'
+import { getConversionHistoryApi, conversionDownloadFileApi } from 'dp-api'
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
@@ -67,12 +67,6 @@ async function handleDownload (row) {
         const response = await conversionDownloadFileApi([ row.documentPath ])
         downloadBlob(response, row.fileName)
     } catch (error) {
-        ElNotification({
-            title: '',
-            message: 'download_noFile',
-            type: 'error',
-            duration: 2000
-        });
     }
     noti.close()
 }

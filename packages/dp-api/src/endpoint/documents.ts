@@ -74,7 +74,8 @@ export const GetDocumentPreview = async(idOrPath:string) => {
     return api.post('/nuxeo/document/preview', {
         idOrPath
     },{
-        responseType: 'blob'
+        responseType: 'blob',
+        timeout: 0
     }).then(res => res.data)
 }
 
@@ -124,7 +125,8 @@ export const downloadDocRecord = async(params) => {
     }
     export const DocumentThumbnailGetApi = async(idOrPath:string) => {
         return api.post('/nuxeo/document/thumbnail', {idOrPath},{
-            responseType: 'blob'
+            responseType: 'blob',
+            timeout: 0
         }).then(res =>res.data)
     }
 
@@ -269,6 +271,14 @@ export const getSupportedFormatApi = async() => {
 
 export const submitExportRequestApi = async(params) => {
     return api.post('/nuxeo/conversion/submitExportRequest', params).then(res => res.data);
+}
+export const conversionDownloadFileApi = async(idOrPath:string) => {
+    return api.post('/nuxeo/conversion/downloadFile', {
+        idOrPath
+    },{
+        responseType: 'blob',
+        timeout: 0
+    }).then(res => res.data)
 }
 
 // #endregion

@@ -14,7 +14,7 @@
                     :close-on-click-modal="false">
             <template #title>
                 <strong class="primaryTitle">{{ $t('filePopover_newFolder') }}</strong>
-                {{ 'in /' + state.docPath }}
+                {{ 'in /' + state.doc.name }}
             </template>
             <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" />
             <template #footer>
@@ -44,7 +44,7 @@ const state = reactive({
 const FromRendererRef = ref()
 function iconClickHandler(doc:any){
     dialogOpened.value = true
-    state.docPath = doc.name 
+    state.docPath = doc.path 
     state.doc = doc
     // open upload dialog
     setTimeout(() => {
