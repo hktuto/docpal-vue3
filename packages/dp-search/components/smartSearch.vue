@@ -1,6 +1,6 @@
 <template>
     <div class="searchContainer" @mouseleave="blurInput" @mouseenter="elHoverHandler">
-        <div ref="wrapper" :class="{wrapper:true, dropdownOpened: !!dropdownState}">
+        <div ref="wrapper" id="smartSearchContainer" :class="{wrapper:true, dropdownOpened: !!dropdownState}">
             <div :class="{inputContainer:true, dropdownOpened: !!dropdownState}" @mouseenter="focusInput">
                 <ElIcon><Search /></ElIcon>
                 <input ref="inputEl" :value="state.keyword" :placeholder="$t('search_keyword')" 
@@ -57,10 +57,19 @@ const { dropdownState } = toRefs(state)
     }
 
     onClickOutside(wrapper, (event) => {
-        if (isElPopover(event.path)) return
-        if(state.dropdownState) {
+        let el = (event.target as HTMLElement).parentNode as any;
+        let shouldClose = true;
+        while (el.parentNode) {
+            el = el.parentNode;
+            if(el.className && el.className.includes('el-popper')) {
+                shouldClose = false;
+                break;
+            }
+        }
+        if(shouldClose) {
             state.dropdownState = ''
         }
+        
     })
     function isElPopover(pathList: any) {
         for(var index in pathList) {
