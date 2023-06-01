@@ -4,6 +4,10 @@
     </el-badge>
     <el-dialog v-model="dialogOpened" append-to-body>
         <NotificationTable />
+        <!-- <NotificationNTable /> -->
+        <template  #footer>
+            <slot name="footer"></slot>
+        </template>
     </el-dialog>
 </template>
 

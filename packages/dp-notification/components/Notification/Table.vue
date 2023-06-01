@@ -91,15 +91,14 @@ async function getNotificationList() {
       pageNum: 0,
       pageSize: 20,
     }
-    dpLog(user.value)
-    const {result} = await getNotificationListApi(userId, param);
-     result.content.forEach(item => {
+    const res = await getNotificationListApi(userId, param);
+     res.content.forEach(item => {
         item.content = JSON.parse(item.content) || {}
         item.createDate = formatDate(item.createdDate) || null
       });
     
-    list.value = result.content;
-    total.value = result.totalElements;
+    list.value = res.content;
+    total.value = res.totalElements;
     loading.value = false;
 }
 
