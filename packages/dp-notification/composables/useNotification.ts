@@ -3,8 +3,6 @@ import {onMounted, useState} from '#import';
 import { useEventSource } from '@vueuse/core'
 import { watch } from 'vue'
 export const useNotification = (token:string, username:string, messageChangeCB) => {
-
-    
     useEventSource('/notification/api/v1/keepalive/_private/docpal/'+username, [], {
         withCredentials:true
     })

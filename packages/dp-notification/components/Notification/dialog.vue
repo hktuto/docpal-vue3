@@ -205,11 +205,14 @@ function handleCheckedNotisChange (value) {
 function handleOpen(searchParams) {
     state.visible = true
 }
-onMounted(() => {
+function initData () {
     state.notiList = []
     getNotiPage()
+}
+onMounted(() => {
+    initData()
 })
-defineExpose({ handleOpen })
+defineExpose({ handleOpen, initData })
 </script>
 <style lang="scss" scoped>
 .infinite-container {
