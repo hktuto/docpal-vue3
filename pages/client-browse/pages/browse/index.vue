@@ -5,21 +5,21 @@
             <BrowsePageHeader :doc="listData.doc" :permission="listData.permission" >
                 <template #default="{doc, permission}" >   
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
-                    <div v-if="selectList.length === 0" id="browseHeaderRight" class="folderAction">
+                    <div v-show="selectList.length === 0" id="browseHeaderRight" class="folderAction">
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div class="actionDivider"></div>
-                        <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
-                        <BrowseActionsNewFolder v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
-                        <BrowseActionsUpload v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
-                        <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                        <BrowseActionsEdit v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsNewFolder v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                         <div class="actionDivider"></div>
-                        <BrowseActionsUploadRequest v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
+                        <BrowseActionsUploadRequest v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
                         
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
                     </div>
-                    <div v-else id="browseHeaderRight" class="selectedAction">
+                    <div v-show="selectList.length !== 0" id="browseHeaderRight" class="selectedAction">
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
                         <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :selected="selectList" @success="handleRefresh"/>
                         <div class="actionDivider"></div>

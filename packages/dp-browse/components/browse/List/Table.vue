@@ -142,6 +142,7 @@ async function handleEmptyRightClick(event: MouseEvent) {
 function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.preventDefault()
     event.stopPropagation();
+    // handleSelect([])
     const data = {
         doc: row,
         isFolder: row.isFolder,
