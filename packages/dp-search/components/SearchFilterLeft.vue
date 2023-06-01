@@ -10,9 +10,10 @@
                     <el-button type="primary" @click="handleSubmit">{{$t('search')}}</el-button>
                 </el-col>
             </el-row>
-            <el-button v-if="false" type="info" @click="handleSubmit">{{$t('submit')}}</el-button>
+            <el-button type="info" @click="handleDownload">{{$t('submit')}}</el-button>
         </div>
         <WidthShrinker :targetDom="filterContainerRef"></WidthShrinker>
+        <SearchDownloadDialog ref="SearchDownloadDialogRef" />
     </div>
 </template>
 
@@ -39,6 +40,8 @@ function goRoute(formModel) {
     const searchBackPath = route.query.searchBackPath || ''
     const searchParams = getSearchParamsArray(formModel)
     const time = new Date().valueOf().toString()
+    searchParams.paramsInTextSearch = [ searchParams.keyword ]
+    delete searchParams.keyword
     router.push({
         query: { 
             ...searchParams, 
@@ -66,6 +69,11 @@ function initForm () {
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
         state.changeEvent = true
     }, 800)
+}
+const SearchDownloadDialogRef = ref()
+function handleDownload () {
+    const data = FromRendererRef.value.vFormRenderRef.getFormData(false)
+    SearchDownloadDialogRef.value.handleOpen(structuredClone(toRaw(data)))
 }
 onMounted(() => {
     initForm()

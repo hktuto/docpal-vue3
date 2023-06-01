@@ -11,13 +11,8 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
             && key !== 'currentPageIndex'
             && _params[key] != '0') delete _params[key]
     })
-    _params.textSearchType = _params.textSearchType || 'full text search'
-    _params.assetType = _params.assetType === 'All' ? "" : _params.assetType;
-    _params.includeFolder = _params.includeFolder === '1' || _params.includeFolder === 1;
-    _params.hight = !_params.hight ? null : Array.isArray(_params.hight)  ? _params.height : [_params.hight] ;
-    _params.width = !_params.width ? null : Array.isArray(_params.width)  ? _params.width : [_params.width] ;
-    _params.duration = !_params.duration ? null : Array.isArray(_params.duration)  ? param.duration : [param.duration];
-    _params.mimeType = !_params.mimeType ? null : Array.isArray(_params.mimeType)  ? param.mimeType : [param.mimeType];
+    delete _params.time
+    delete _params.searchBackPath
     const res = await api.post('/nuxeo/search/nestedSearch', _params).then(res => res.data.data)
     
     return { entryList: res.entryList || [], totalSize: res.totalSize }
@@ -25,7 +20,7 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
 
 export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     const arrParams = ['paramsInTextSearch' ,'or', 'type', 'authors', 'collections', 'tags']
-    const result = Object.keys(searchParams).reduce((prev, key) => {
+    const result:any = Object.keys(searchParams).reduce((prev, key) => {
         if(arrParams.includes(key) && typeof(searchParams[key]) === 'string' && searchParams[key]) {
             prev[key] = [searchParams[key]]
         }
@@ -34,6 +29,13 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
         }
         return prev
     }, {})
+    result.textSearchType = result.textSearchType || 'full text search'
+    result.assetType = result.assetType === 'All' ? "" : result.assetType;
+    result.includeFolder = result.includeFolder === '1' || result.includeFolder === 1;
+    result.hight = !result.hight ? null : Array.isArray(result.hight)  ? result.height : [result.hight] ;
+    result.width = !result.width ? null : Array.isArray(result.width)  ? result.width : [result.width] ;
+    result.duration = !result.duration ? null : Array.isArray(result.duration)  ? result.duration : [result.duration];
+    result.mimeType = !result.mimeType ? null : Array.isArray(result.mimeType)  ? result.mimeType : [result.mimeType];
     return result
 }
 
@@ -47,6 +49,19 @@ export const searchByMeta = (properties:any) => {
             return i
          })
         )
+}
+
+// export
+export const GetSearchExportHeaderApi = async() => {
+    const res = await api.get('/nuxeo/search/getExportHeader').then(res => res.data.data)
+    return res
+}
+export const ExportSearchCsvApi = async(params) => {
+    const res = await api.post('/nuxeo/search/exportCsv', params, {
+        responseType: 'blob',
+        timeout: 0
+    }).then(res => res.data)
+    return res
 }
 
 // pre-search-config
