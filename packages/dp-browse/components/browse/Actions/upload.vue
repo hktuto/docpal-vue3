@@ -253,7 +253,7 @@ async function handleSubmit () {
     state.tableData.forEach(row => {
       promiseList.push(handleCreateDocument(row))
     })
-    waitAll(promiseList)
+    await waitAll(promiseList)
   } catch (error) {
     if(error.message === 'dpTip_duplicateFileName') {
         ElMessage({
@@ -262,7 +262,7 @@ async function handleSubmit () {
         })
     }
   }
-  setTimeout(() => { state.loading = false },100)
+  state.loading = false
 }
 async function handleDuplicate(list) {
   const action = await ElMessageBox.confirm($i18n.t('dpTip_duplicateFileName'),{
@@ -284,7 +284,7 @@ async function handleDuplicate(list) {
       else pList.push(handleCreateDocument(file))
     })
   }
-  waitAll(pList)
+  await (pList)
 }
 const handleCreateDocument = async(file) => {
   if(file.isDuplicate) file.fileName = await getUniqueName(file)
@@ -316,9 +316,9 @@ async function handleReplaceDocument (file) {
   const res = await replaceFileDocumentApi(formData)
   return !!res
 }
-function waitAll (promiseList) {
-  Promise.all(promiseList).then((res) => {
-    const successList = []
+async function waitAll (promiseList:any) {
+  await Promise.all(promiseList)
+  const successList = []
     res.forEach((item, index) => {
       if (item) successList.push(index)
       else
@@ -338,9 +338,7 @@ function waitAll (promiseList) {
     }
     state.loading = false
     emits('success', state._doc)
-  }).catch((err) => {
     state.loading = false
-  })
 }
 onMounted(async() => {
   useEventListener(document, 'docActionAddFile', (event) => uploadDialog(event.detail))  
