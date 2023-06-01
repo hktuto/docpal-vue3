@@ -262,7 +262,10 @@ async function handleSubmit () {
         })
     }
   }
-  setTimeout(() => { state.loading = false },100)
+  setTimeout(() => { 
+    dialogOpened.value = false
+    state.loading = false
+  },100)
 }
 async function handleDuplicate(list) {
   const action = await ElMessageBox.confirm($i18n.t('dpTip_duplicateFileName'),{
@@ -336,8 +339,8 @@ function waitAll (promiseList) {
         flag++
       })
     }
-    state.loading = false
     emits('success', state._doc)
+    state.loading = false
   }).catch((err) => {
     state.loading = false
   })
