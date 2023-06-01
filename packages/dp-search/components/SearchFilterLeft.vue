@@ -66,6 +66,18 @@ function initForm () {
         const searchParams = deepCopy(props.searchParams)
         let key = props.searchParams.paramsInTextSearch
         if(!!key) searchParams.keyword = key.join('')
+        if(searchParams.hight) {
+            searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
+        }
+        if(searchParams.width) {
+            searchParams.width = Array.isArray(searchParams.width) ? searchParams.width.join('') : searchParams.width
+        }
+        if(searchParams.duration) {
+            searchParams.duration = Array.isArray(searchParams.duration) ? searchParams.duration.join('') : searchParams.duration
+        }
+        if(searchParams.mimeType) {
+            searchParams.mimeType = Array.isArray(searchParams.mimeType) ? searchParams.mimeType.join('') : searchParams.mimeType
+        }
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
         state.changeEvent = true
     }, 800)
