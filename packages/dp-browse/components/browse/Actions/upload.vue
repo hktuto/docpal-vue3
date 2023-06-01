@@ -255,6 +255,7 @@ async function handleSubmit () {
     })
     await waitAll(promiseList)
   } catch (error) {
+    console.log(error);
     if(error.message === 'dpTip_duplicateFileName') {
         ElMessage({
             message: $i18n.t(error.message) as string,
@@ -287,7 +288,7 @@ async function handleDuplicate(list) {
       else pList.push(handleCreateDocument(file))
     })
   }
-  await (pList)
+  await waitAll(pList)
 }
 const handleCreateDocument = async(file) => {
   if(file.isDuplicate) file.fileName = await getUniqueName(file)
@@ -320,29 +321,27 @@ async function handleReplaceDocument (file) {
   return !!res
 }
 async function waitAll (promiseList:any) {
-  await Promise.all(promiseList)
+  const res = await Promise.all(promiseList)
   const successList = []
-    res.forEach((item, index) => {
-      if (item) successList.push(index)
-      else
-        ElMessage.error(
-          `${state.tableData[index].name} ${$i18n.t('msg_uploadFailed')}`
-        )
+  res.forEach((item, index) => {
+    if (item) successList.push(index)
+    else
+      ElMessage.error(
+        `${state.tableData[index].name} ${$i18n.t('msg_uploadFailed')}`
+      )
+  })
+  if (successList.length === state.tableData.length) {
+    dialogOpened.value = false
+    state.tableData = []
+  } else {
+    let flag = 0
+    successList.forEach((index) => {
+      state.tableData.splice(index - flag, 1)
+      flag++
     })
-    if (successList.length === state.tableData.length) {
-      dialogOpened.value = false
-      state.tableData = []
-    } else {
-      let flag = 0
-      successList.forEach((index) => {
-        state.tableData.splice(index - flag, 1)
-        flag++
-      })
-    }
-    emits('success', state._doc)
-    state.loading = false
-  }).catch((err) => {
-    state.loading = false
+  }
+  emits('success', state._doc)
+  state.loading = false
 }
 onMounted(async() => {
   useEventListener(document, 'docActionAddFile', (event) => uploadDialog(event.detail))  

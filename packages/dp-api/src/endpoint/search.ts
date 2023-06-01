@@ -36,6 +36,11 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     result.width = !result.width ? null : Array.isArray(result.width)  ? result.width : [result.width] ;
     result.duration = !result.duration ? null : Array.isArray(result.duration)  ? result.duration : [result.duration];
     result.mimeType = !result.mimeType ? null : Array.isArray(result.mimeType)  ? result.mimeType : [result.mimeType];
+    if(result.keyword ) {
+        result.paramsInTextSearch = [ result.keyword ]
+        delete result.keyword
+    }
+
     return result
 }
 
