@@ -110,8 +110,6 @@ async function handleDblclick (row) {
         previewFile.loading = true
         try {
             previewFile.blob = await GetDocumentPreview(row.id)
-            console.log(previewFile.blob, 'previewFile.blobpreviewFile.blob');
-            
         } catch (error) {
             
         }
