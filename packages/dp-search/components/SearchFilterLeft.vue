@@ -10,7 +10,7 @@
                     <el-button type="primary" @click="handleSubmit">{{$t('search')}}</el-button>
                 </el-col>
             </el-row>
-            <el-button type="info" @click="handleDownload">{{$t('submit')}}</el-button>
+            <el-button type="info" @click="handleDownload">{{$t('export')}}</el-button>
         </div>
         <WidthShrinker :targetDom="filterContainerRef"></WidthShrinker>
         <SearchDownloadDialog ref="SearchDownloadDialogRef" />
@@ -84,8 +84,9 @@ function initForm () {
 }
 const SearchDownloadDialogRef = ref()
 function handleDownload () {
-    const data = FromRendererRef.value.vFormRenderRef.getFormData(false)
-    SearchDownloadDialogRef.value.handleOpen(structuredClone(toRaw(data)))
+    let data = FromRendererRef.value.vFormRenderRef.getFormData(false)
+    data = getSearchParamsArray(data)
+    SearchDownloadDialogRef.value.handleOpen(data)
 }
 onMounted(() => {
     initForm()

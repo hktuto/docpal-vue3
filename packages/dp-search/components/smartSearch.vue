@@ -61,7 +61,7 @@ const { dropdownState } = toRefs(state)
         let shouldClose = true;
         while (el.parentNode) {
             el = el.parentNode;
-            if(el.className && el.className.includes('el-popper')) {
+            if(el.className && el.className.includes && el.className.includes('el-popper')) {
                 shouldClose = false;
                 break;
             }

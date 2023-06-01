@@ -144,4 +144,6 @@ html.dark {
 .el-button.fullSize{
     width: 100%;
 }
-
+.el-button, .cell, .el-form-item__label {
+    text-transform: capitalize;
+}
