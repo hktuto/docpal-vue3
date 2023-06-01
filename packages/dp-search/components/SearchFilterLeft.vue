@@ -1,5 +1,5 @@
 <template>
-    <div class="filterContainer">
+    <div ref="filterContainerRef" class="filterContainer">
         <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
         <div class="filterContainer-footer">
             <el-row :gutter="10">
@@ -12,6 +12,7 @@
             </el-row>
             <el-button v-if="false" type="info" @click="handleSubmit">{{$t('submit')}}</el-button>
         </div>
+        <WidthShrinker :targetDom="filterContainerRef"></WidthShrinker>
     </div>
 </template>
 
@@ -25,6 +26,7 @@ const router = useRouter()
 const emits = defineEmits(['submit'])
 const filterJson = getJsonApi('search.json')
 const FromRendererRef = ref()
+const filterContainerRef = ref()
 const state = reactive({
     changeEvent: false
 })
@@ -77,6 +79,7 @@ defineExpose({ handleSubmit })
     display: grid;
     grid-template-rows: 1fr min-content;
     overflow: hidden;
+    min-width: 250px;
     .formContainer {
         overflow-x: hidden;
         overflow-y: auto;

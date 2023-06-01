@@ -124,7 +124,7 @@ function uploadDialog(doc){
   const tableSetting = defaultTableSetting[tableKey]
   function tableDataAdd (list: Array) {
     list.forEach(async(item, index) => {
-      const fileMetaList = await metaListGet('File')
+      const fileMetaList = await metaListGet('File', item.name)
       const tableItem = {
         id: new Date().valueOf() + '' + index,
         fileName: item.name,
@@ -162,15 +162,18 @@ function uploadDialog(doc){
     state.selectedRows = rows
   }
   async function handleDocTypeChange (row) {
-    const metaList =  await metaListGet(row.documentType)
+    const metaList =  await metaListGet(row.type, row.fileName)
     row.metaList = deepCopy(metaList)
   }
 
-  async function metaListGet(documentType: string) {
+  async function metaListGet(documentType: string, name) {
     const res = await metaValidationRuleGetApi(documentType)
     if(!res) return []
     res.forEach(item => {
-      if (item.directoryEntries) {
+      if (item.metaData === 'dc:title') {
+        item.value = name
+      }
+      else if (item.directoryEntries) {
         item.directoryEntries = handleChildOptions(item.directoryEntries)
         item.value = []
       }
@@ -202,7 +205,7 @@ function uploadDialog(doc){
     state.loading = true
     if (key === 'documentType') {
       state.selectedRows.forEach(async(item) => {
-        const metaList =  await metaListGet(value)
+        const metaList =  await metaListGet(value, item.fileName)
         item.type = value
         item.metaList = deepCopy(metaList)
       })
@@ -217,7 +220,27 @@ function uploadDialog(doc){
     setTimeout(() => {state.loading = false}, 500)
   }
 // #endregion
+function validateForm () {
+  let msg = ''
+  for (const item of state.tableData) {
+    if(!item.metaList) return
+    item.metaList.forEach(metaItem => {
+      if (!metaItem.display) return
+      if (metaItem.isRequire && !metaItem.value) msg += `${item.fileName}[${metaItem.metaData}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+    })
+  }
+  
+  if (msg.length > 0) {
+    ElMessageBox.confirm(msg, $i18n.t('dpTip_warning'), {
+      dangerouslyUseHTMLString: true,
+      confirmButtonText: $i18n.t('dpButtom_confirm'),
+    })
+  }
+  
+  return msg.length === 0
+}
 async function handleSubmit () {
+  if (!validateForm()) return
   state.loading = true
   try {
     const { list, isDuplicate } = await duplicateNameFilter(state._doc.path, state.tableData);
@@ -239,7 +262,7 @@ async function handleSubmit () {
         })
     }
   }
-  state.loading = false
+  setTimeout(() => { state.loading = false },100)
 }
 async function handleDuplicate(list) {
   const action = await ElMessageBox.confirm($i18n.t('dpTip_duplicateFileName'),{
@@ -271,7 +294,7 @@ const handleCreateDocument = async(file) => {
     type: file.type,
     languages: file.languages,
     properties: file.metaList.reduce((prev, metaItem) => {
-      prev[metaItem.metaData] = metaItem.value
+      if (metaItem.value) prev[metaItem.metaData] = metaItem.value
       return prev
     },{})
   }

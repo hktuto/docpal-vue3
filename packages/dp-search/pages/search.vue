@@ -129,7 +129,7 @@ async function handleDblclick (row) {
 .search-page {
     height: 100%;
     display: grid;
-    grid-template-columns: minmax(250px, min-content) 1fr;
+    grid-template-columns: min-content 1fr;
     gap: var(--app-padding);
 }
 </style>

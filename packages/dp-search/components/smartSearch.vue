@@ -110,19 +110,19 @@ function keywordInputHandler(event) {
     state.searchParams.paramsInTextSearch = [value]
 }
 // #region module: 
-    const { ctrl_f, meta_f } = useMagicKeys({
+    const { ctrl_k, meta_k } = useMagicKeys({
         passive: false,
         onEventFired(e) {
-            if ((e.ctrlKey && e.key === 'f' && e.type === 'keydown') ||
-                (e.metaKey && e.key === 'f' && e.type === 'keydown')) 
+            if ((e.ctrlKey && e.key === 'k' && e.type === 'keydown') ||
+                (e.metaKey && e.key === 'k' && e.type === 'keydown')) 
                 e.preventDefault()
         }
     })
-    whenever(ctrl_f, () => {
+    whenever(ctrl_k, () => {
         openFilter()
         focusInput()
     })
-     whenever(meta_f, () => {
+     whenever(meta_k, () => {
         openFilter()
         focusInput()
     })
