@@ -199,11 +199,13 @@ const indexMethod = (index: number) => {
     }
 // #endregion
 const TableSortButtonRef = ref()
-function reorderColumn (displayList) {
+function reorderColumn (displayList, initColumn: boolean = true) {
     columns__sub.value = deepCopy(displayList);
-    setTimeout(() => {
-        TableSortButtonRef.value.initColumn()
-    })
+    if(initColumn) {
+        setTimeout(() => {
+            TableSortButtonRef.value.initColumn()
+        })
+    }
 }
 // #region module: sort
     let CtrlDown = false

@@ -103,6 +103,7 @@ function handleRevert () {
       item.show = userColumns.includes(index)
       return item
     })
+  
   handleSubmit()
 }
 // 保存偏好设置
@@ -120,7 +121,7 @@ async function handleSubmit () {
   param.tableSettings[props.sortKey] = displayOrder
   await UserSettingSaveApi(param)
   await getUserSetting()
-  emit('reorderColumn', showList.value)
+  emit('reorderColumn', showList.value, false)
   loading.value = false
 }
 
@@ -141,6 +142,16 @@ function initColumn () {
       item.show = userColumns.includes(index)
       return item
     })
+    // const hideList = []
+    // displayList.value = []
+    // originalColumns.value.forEach( (item,index) => {
+    //   item.rowIndex = index;
+    //   item.show = userColumns.includes(index)
+    //   if(item.show) displayList.value.push(item)
+    //   else hideList.push(item)
+    // })
+    // displayList.value.push(...hideList)
+    emit('reorderColumn', showList.value, false)
   }
 }
 
@@ -153,7 +164,6 @@ function getDefaultColumns () {
 
 onMounted(() => {
   initColumn()
-  emit('reorderColumn', showList.value)
 })
 defineExpose({ initColumn })
 </script>
