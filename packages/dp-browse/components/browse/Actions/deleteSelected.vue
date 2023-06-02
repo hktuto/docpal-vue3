@@ -11,12 +11,12 @@ const props = defineProps<{
     selected: any
 }>()
 const emits = defineEmits(['success'])
-
+const { t } = useI18n()
 function deleteSelected () {
-    ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     .then(async() => {
         const noti = ElNotification({
-            title: $i18n.t('delete'),
+            title: t('delete'),
             icon: Loading,
             dangerouslyUseHTMLString: true,
             showClose: true,

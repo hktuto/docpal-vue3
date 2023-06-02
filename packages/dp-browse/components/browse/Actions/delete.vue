@@ -22,14 +22,14 @@ const props = defineProps<{
     doc: any
 }>()
 const emits = defineEmits(['delete'])
-
+const { t } = useI18n()
 function deleteItem(doc){
     const idOrPath = doc.path
     
-    ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     .then(async() => {
         const noti = ElNotification({
-            title: $i18n.t('delete'),
+            title: t('delete'),
             icon: Loading,
             dangerouslyUseHTMLString: true,
             message: `<div title="${doc.name}">${doc.name}</div>`,
@@ -54,4 +54,5 @@ function deleteItem(doc){
 onMounted(() => {
     useEventListener(document, 'docActionDelete', (event) => deleteItem(event.detail))  
 })
+
 </script>
