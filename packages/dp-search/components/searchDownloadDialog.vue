@@ -1,6 +1,7 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('export')"
     :close-on-click-modal="false"
+           append-to-body
     class="search-download-dialog"
     >
     <div class="search-download-container">
@@ -77,6 +78,7 @@ onMounted(async() => {
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
+
 .search-download-container {
     height: 40vh;
     display: grid;
@@ -87,15 +89,56 @@ defineExpose({ handleOpen })
         grid-template-rows: 52px 1fr;
         .list-group {
             padding: var(--app-padding);
-            border: 1px solid #ddd;
+            border: 1px solid var(--color-grey-050);
+            background: var(--color-grey-050);
+
+          .item{
+            color: var(--color-grey-600);
+            &.sortable-chosen{
+              background: var(--color-grey-600);
+              color: var(--color-grey-0000) !important;
+            }
+          }
         }
+        #first {
+          background: var(--color-grey-0000);
+          .list-group-item{
+            font-weight: 500;
+            color: var(--primary-color);
+            &.sortable-chosen{
+              background: var(--primary-color);
+              color: var(--color-grey-0000) !important;
+            }
+          }
+
+        }
+
+
+    }
+    .sortable-chosen {
+
+      padding: calc(var(--app-padding) / 4 );
     }
 }
+
 </style>
 <style lang="scss">
 .search-download-dialog {
     .el-dialog__body {
         padding: 0 20px;
     }
+}
+.el-dialog__title{
+  text-transform: capitalize;
+}
+.sortable-ghost {
+  animation: tilt-shaking 0.2s ease forwards;
+}
+@keyframes tilt-shaking {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
 }
 </style>

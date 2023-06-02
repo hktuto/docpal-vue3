@@ -50,18 +50,18 @@
                     </div>
                     <div class="actions">
                         <BrowseActionsSubscribe  :doc="doc" />
-                        <div class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" @success="handleRefresh"/>
                         <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc" />
                         <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                         <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                        <div class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
 
-                        <div class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
-                        <div class="actionDivider"></div>
+                        <div  class="actionDivider"></div>
                         <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
                         <div class="actionIconContainer" @click="detailClosed">
                             <el-icon >
@@ -130,7 +130,6 @@ async function getDocDetail() {
             // split router path to get parent path
             const parentPath = routePath.value.split('/').slice(0, -1).join('/')
             listData.value =  await getDocumentDetail(parentPath, userId)
-
         }
         detailData.value = response
       forceRefresh.value = false
