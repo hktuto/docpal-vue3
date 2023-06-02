@@ -13724,7 +13724,7 @@ var _app_options = __webpack_require__(5);
 var _pdf_link_service = __webpack_require__(7);
 var _app = __webpack_require__(2);
 const pdfjsVersion = '3.4.0';
-const pdfjsBuild = 'c11ba7d';
+const pdfjsBuild = 'bfbfa14';
 const AppConstants = {
   LinkTarget: _pdf_link_service.LinkTarget,
   RenderingStates: _ui_utils.RenderingStates,
