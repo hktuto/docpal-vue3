@@ -31,8 +31,7 @@ export const GetTableColumnSetting = async():Promise<TableColumnSetting> => {
 
   export const GetExternalEndpoint = async() => {
     const res = await api.get('/nuxeo/admin/setting/configuration').then(res => res.data.data)
-    const j = JSON.parse(res)
-    return j.hosts.reduce((result:any, current:any) => {
+    return res.hosts.reduce((result:any, current:any) => {
         result = Object.assign(result, current)
         return result;
     }, {})
