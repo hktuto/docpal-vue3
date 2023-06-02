@@ -1,23 +1,23 @@
 <template>
     <div>
-    <el-upload
-      action=""
-      name='files'
-      class="upload-demo"
-      drag
-      :file-list="value"
-      :limit="limit" :multiple="multiple" :disabled="disabled"
+        <el-upload
+            action=""
+            name='files'
+            class="upload-demo"
+            drag
+            :file-list="modelValue"
+            :limit="limit" :multiple="multiple" :disabled="disabled"
 
-      :on-change="onChange"
-      :before-remove="beforeRemove"
-      :on-remove="onRemove"
-      :auto-upload="false"
-      :accept="accept">
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">{{$t('common_dragFileHere')}}，{{$t('common_or')}} <em>{{$t('common_clickToUpload')}}</em></div>
-      <div class="el-upload__tip" slot="tip"> <slot name="tip"></slot> </div> 
-    </el-upload>
-  </div>
+            :on-change="onChange"
+            :before-remove="beforeRemove"
+            :on-remove="onRemove"
+            :auto-upload="false"
+            :accept="accept">
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">{{$t('common_dragFileHere')}}，{{$t('common_or')}} <em>{{$t('common_clickToUpload')}}</em></div>
+            <div class="el-upload__tip" slot="tip"> <slot name="tip"></slot> </div> 
+        </el-upload>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -25,14 +25,11 @@ const props = defineProps<{
     disabled: Boolean,
     multiple: Boolean,
     limit: Number,
-    value: Array,
+    modelValue: Array,
     defaultMeta: Object,
     accept: String
 }>();
-const emit = defineEmits<{
-    input: (value: any) => void;
-    change: (value: any) => void;
-}>();
+const emit = defineEmits(['update:modelValue', 'change'])
 
 const fileDetail = ref()
 
@@ -51,7 +48,7 @@ const onChange = async(file, fileList) => {
         }
         subFileList.push(newFile)
       });
-      emit('input', [...subFileList])
+      emit('update:modelValue', [...subFileList])
       emit('change', [...subFileList])
     }
 
@@ -59,11 +56,11 @@ const onChange = async(file, fileList) => {
      * file: 正在删除的文件,
     */
     const beforeRemove = (file, fileList) => {
-      const subFileList = [...props.value]
+      const subFileList = [...props.modelValue]
       // @ts-ignore
       const index = subFileList.findIndex(item => item.uid === file.uid)
       subFileList.splice(index, 1)
-      emit('input', [...subFileList])
+      emit('update:modelValue', [...subFileList])
       emit('change', [...subFileList])
     }
     /** 

@@ -52,7 +52,7 @@
                     <div class="actions">
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div class="actionDivider"></div>
-                        <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" />
+                        <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" @success="handleRefresh"/>
                         <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc" />
                         <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
@@ -140,6 +140,8 @@ function itemDeleted(){
      breadCrumb.value.goParent();
 }
 async function handleRefresh () {
+    console.log('handleRefresh');
+    
     forceRefresh.value = true
     await getDocDetail()
 }
@@ -147,7 +149,6 @@ function handleSelectionChange (rows:any) {
     selectList.value = [...rows]
 }
 watch(route, async(newRoute, oldRoute) => {
-    console.log('route changed')
     loading.value = true;
     await getDocDetail()
     loading.value = false;
