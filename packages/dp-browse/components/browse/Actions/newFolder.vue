@@ -60,9 +60,10 @@ async function handleSubmit () {
     try {
         const timestamp = new Date().valueOf()
         const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const parentPath = state.docPath === '/' ? '' : state.docPath
         const params = {
             ...data,
-            idOrPath: `${state.docPath}/new Folder${timestamp}`,
+            idOrPath: `${parentPath}/new Folder${timestamp}`,
         }
         
         const { isDuplicate } = await duplicateNameFilter(state.doc.path, [data]);

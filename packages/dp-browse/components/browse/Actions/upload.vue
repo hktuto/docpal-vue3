@@ -292,9 +292,10 @@ async function handleDuplicate(list) {
 }
 const handleCreateDocument = async(file) => {
   if(file.isDuplicate) file.fileName = await getUniqueName(file)
+  const parentPath = state._doc.path === '/' ? '' : state._doc.path
   const document = {
     name: file.fileName,
-    idOrPath: `${state._doc.path}/${file.fileName}`,
+    idOrPath: `${parentPath}/${file.fileName}`,
     type: file.type,
     languages: file.languages,
     properties: file.metaList.reduce((prev, metaItem) => {
