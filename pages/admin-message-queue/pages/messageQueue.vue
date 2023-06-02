@@ -19,8 +19,8 @@
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { 
-    GetMessageQueuePageApi, ReSubmitMessageQueueApi, 
+import {
+    GetMessageQueuePageApi, ReSubmitMessageQueueApi,
     getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 // #region module: page
     const route = useRoute()
@@ -32,8 +32,8 @@ import {
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            showPagination: true, 
+        options: {
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -48,10 +48,10 @@ import {
     async function getList (param) {
         state.loading = true
         const res = await GetMessageQueuePageApi(param.pageNum, param.pageSize, {...state.extraParams})
-        
-        state.tableData = res.entryList
+
+        state.tableData = res.content
         state.loading = false
-        state.options.paginationConfig.total = res.totalSize
+        state.options.paginationConfig.total = res.totalElements
         state.options.paginationConfig.pageSize = param.pageSize
         state.options.paginationConfig.currentPage = param.pageNum + 1
     }
@@ -59,8 +59,8 @@ import {
         if(!pageSize) pageSize = pageParams.pageSize
         if(!page && page !== 0) page = pageParams.pageNum + 1
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { page, pageSize, time } 
+        router.push({
+            query: { page, pageSize, time }
         })
     }
 
@@ -102,7 +102,7 @@ async function handleReSubmit (row) {
 function handleDblclick (row) {
 }
 onMounted(async() => {
-    
+
 })
 </script>
 
