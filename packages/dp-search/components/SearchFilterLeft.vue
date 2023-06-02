@@ -67,6 +67,7 @@ function initForm () {
         const searchParams = deepCopy(props.searchParams)
         let key = props.searchParams.paramsInTextSearch
         if(!!key) searchParams.keyword = key
+        searchParams.includeFolder = searchParams.includeFolder ? '1' : '0'
         if(searchParams.hight) {
             searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
         }
@@ -79,6 +80,9 @@ function initForm () {
         if(searchParams.mimeType) {
             searchParams.mimeType = Array.isArray(searchParams.mimeType) ? searchParams.mimeType.join('') : searchParams.mimeType
         }
+        console.log({searchParams}, searchParams.includeFolder, 'ssssssssssssssssssssssssss');
+        
+        // searchParams.includeFolder = searchParams.includeFolder === '1' || searchParams.includeFolder === 1;
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
         state.changeEvent = true
     }, 800)
@@ -97,6 +101,8 @@ function handleDownload () {
     SearchDownloadDialogRef.value.handleOpen(_data)
 }
 onMounted(() => {
+    console.log('??????????');
+    
     initForm()
 })
 defineExpose({ handleSubmit })

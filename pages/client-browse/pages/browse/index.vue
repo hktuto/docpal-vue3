@@ -5,7 +5,7 @@
             <BrowsePageHeader :doc="listData.doc" :permission="listData.permission" >
                 <template #default="{doc, permission}" >
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
-                    <div v-show="selectList.length === 0" id="browseHeaderRight" class="folderAction">
+                    <div v-show="selectList.length === 0 && doc.path !== '/'" id="browseHeaderRight" class="folderAction">
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>

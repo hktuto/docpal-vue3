@@ -31,7 +31,7 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     }, {})
     result.textSearchType = result.textSearchType || 'full text search'
     result.assetType = result.assetType === 'All' ? "" : result.assetType;
-    result.includeFolder = result.includeFolder === '1' || result.includeFolder === 1;
+    result.includeFolder = result.includeFolder === '1' || result.includeFolder === 1 || result.includeFolder === true|| result.includeFolder === 'true';
     result.hight = !result.hight ? null : Array.isArray(result.hight)  ? result.height : [result.hight] ;
     result.width = !result.width ? null : Array.isArray(result.width)  ? result.width : [result.width] ;
     result.duration = !result.duration ? null : Array.isArray(result.duration)  ? result.duration : [result.duration];
