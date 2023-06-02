@@ -50,14 +50,14 @@ async function handleConfirm () {
         popoverShow.value = false
         return
     }
-    const document = {
+    const d = {
         idOrPath: props.doc.id,
         languages: form.value.languages
     }
     const formData = new FormData()
     
     formData.append('file', form.value.fileList[0].blob)
-    formData.append('document', JSON.stringify(document))
+    formData.append('document', JSON.stringify(d))
     loading.value = true
     const res = await replaceFileDocumentApi(formData)
     loading.value = false
@@ -66,7 +66,8 @@ async function handleConfirm () {
         fileList: [],
         languages: []
     }
-    
+    const ev = new CustomEvent('handleRefresh');
+    document.dispatchEvent(ev);
     router.push({
         path: '/browse',
         query: {
