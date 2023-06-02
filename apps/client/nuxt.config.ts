@@ -4,7 +4,7 @@ import playgroundConfig from '../../utils/playgroundConfig'
 export default defineNuxtConfig({
     ssr:false,
     components: true,
-    devtools: true,
+    devtools: false,
     // color mode setting
     extends: [
         ...customLayer()
