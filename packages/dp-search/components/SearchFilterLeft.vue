@@ -33,10 +33,8 @@ const state = reactive({
 })
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
     if(!state.changeEvent) return
-    const data = deepCopy(formModel)
-    data.paramsInTextSearch = data.keyword
-    delete data.keyword
-    goRoute(data)
+    const _data = dataHandle(formModel)
+    goRoute(_data)
     // emits('submit', formModel)
 }
 function goRoute(formModel) {
@@ -56,7 +54,8 @@ function goRoute(formModel) {
 }
 function handleSubmit () {
     const data = FromRendererRef.value.vFormRenderRef.getFormData(false)
-    goRoute(data)
+    const _data = dataHandle(data)
+    goRoute(_data)
     emits('submit', data)
 }
 
@@ -85,11 +84,15 @@ function initForm () {
     }, 800)
 }
 const SearchDownloadDialogRef = ref()
+function dataHandle (formModel) {
+    let _formModel = deepCopy(formModel)
+    _formModel.paramsInTextSearch = _formModel.keyword
+    delete _formModel.keyword
+    return _formModel
+}
 function handleDownload () {
     let data = FromRendererRef.value.vFormRenderRef.getFormData(false)
-    let _data = deepCopy(data)
-    _data.paramsInTextSearch = _data.keyword
-    delete _data.keyword
+    let _data = dataHandle(data)
     _data = getSearchParamsArray(_data)
     SearchDownloadDialogRef.value.handleOpen(_data)
 }
