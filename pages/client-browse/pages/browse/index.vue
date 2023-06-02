@@ -139,7 +139,7 @@ async function getDocDetail() {
 
 function itemDeleted(){
      //  FIXME: item deleted may not be the current path
-     // breadCrumb.value.goParent();
+     breadCrumb.value.goParent();
 }
 async function handleRefresh () {
     console.log('handleRefresh');
