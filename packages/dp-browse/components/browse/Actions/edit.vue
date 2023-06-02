@@ -34,7 +34,7 @@ const props = defineProps<{
     parentPath: string
 }>()
 const emits = defineEmits(['success'])
-const dialogOpened = ref()
+const dialogOpened = ref(false)
 const formRef = ref()
 const form = ref({
     name: '',
@@ -46,7 +46,6 @@ const state = reactive({
 })
 const { t} = useI18n() 
 function openDialog(doc){
-    dpLog("openDialog");
     state.doc = doc
     form.value.name = doc.name
     form.value.id = doc.id
@@ -71,6 +70,7 @@ async function handleSave(){
         name: form.value.name,
         properties: {},
     })
+    
     dialogOpened.value = false
     state.loading = false
     emits('success', state.doc)
