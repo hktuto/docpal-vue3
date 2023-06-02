@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.dialogVisible" class="reader-dialog" :title="name"
-    append-to-body >
+    append-to-body destroy-on-close>
     <div class="reader-dialog-main" v-loading="loading">
         <Reader ref="ReaderRef" v-bind="props" ></Reader>
     </div>
@@ -20,7 +20,7 @@ export type readerOptions = {
     noDownload?: Boolean,
     print: false,
     loadAnnotations: false,
-} 
+}
 const props = withDefaults(defineProps<{
     id: string,
     blob: Blob,
@@ -44,18 +44,18 @@ const state = reactive({
     dialogVisible: false
 })
 function handleOpen() {
-    state.dialogVisible = true 
+    state.dialogVisible = true
 }
 function handleClose() {
-    state.dialogVisible = false 
+    state.dialogVisible = false
 }
 const ReaderRef = ref()
 function handleDownload() {
     ReaderRef.value.handleDownload()
 }
 onMounted(() => {
-    
-    
+
+
 })
 defineExpose({ handleOpen, handleClose })
 </script>
