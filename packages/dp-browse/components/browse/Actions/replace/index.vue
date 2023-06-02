@@ -66,7 +66,7 @@ async function handleConfirm () {
         fileList: [],
         languages: []
     }
-    const ev = new CustomEvent('handleRefresh');
+    const ev = new CustomEvent('docActionRefresh');
     document.dispatchEvent(ev);
     router.push({
         path: '/browse',
