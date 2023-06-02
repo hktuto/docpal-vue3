@@ -38,8 +38,8 @@ export const GetDocPermission = async(idOrPath:string, userId:string):Promise<pe
     permissionStored[`${idOrPath}-${userId}`] = res
     return res
 }
-export const patchDocApi = async(idOrPath: DocDetail):Promise<DocDetail> => {
-    return api.patch<Response<DocDetail>>('/nuxeo/document', {idOrPath}).then(res => res.data.data);
+export const patchDocApi = async(params: DocDetail):Promise<DocDetail> => {
+    return api.patch<Response<DocDetail>>('/nuxeo/document', params).then(res => res.data.data);
 }
 
 export const getUserAndRights = async(idOrPath:string) => {

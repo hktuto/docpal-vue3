@@ -54,7 +54,7 @@ function init () {
 
 const handleShown = () => {
     dpLog("handleShown")
-    const steps = props.steps.length > 0 ? props.steps : props.step ? [props.step] : []
+    const steps = props.steps && props.steps.length > 0 ? props.steps : props.step ? [props.step] : []
     if (modeler.value && steps) {
     const canvas = modeler.value.get('canvas')
     for(const step of steps) {

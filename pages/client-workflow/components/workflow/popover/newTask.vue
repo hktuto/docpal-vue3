@@ -89,9 +89,9 @@ async function workflowClickHandler (item: Workflow) {
     }
     async function formJsonGet (userTaskId:string, processKey:string) {
         const response = await taskFormJsonGetApi({userTaskId, processKey})
-        if (!response.data[0] ||
-            response.data[0] && !response.data[0].jsonValue) return {}
-        return JSON.parse(response.data[0].jsonValue)
+        if (!response[0] ||
+            response[0] && !response[0].jsonValue) return {}
+        return JSON.parse(response[0].jsonValue)
     }
 // #endregion
 onMounted(() => {
