@@ -12,6 +12,6 @@ type IconStatus = 'normal' | 'selected' | 'general'
         status?: IconStatus;
     }>() , {
         type: 'folder',
-        status: 'normal'
+        status: 'general'
     })
 </script>
