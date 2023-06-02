@@ -11,7 +11,7 @@ type Command = {
 }
 
 type SearchFilter = {
-    paramsInTextSearch?: string[]
+    paramsInTextSearch?: string[] | string,
     textSearchType?: string,
     // paramsInTextSearch?: string[][]
     or?: string[]
@@ -25,5 +25,6 @@ type SearchFilter = {
     folderType?: string,
 
     pageSize: number,
-    currentPageIndex: number
+    currentPageIndex: number,
+    keyword: string
 }

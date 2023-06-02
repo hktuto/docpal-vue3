@@ -33,15 +33,17 @@ const state = reactive({
 })
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
     if(!state.changeEvent) return
-    goRoute(formModel)
-    emits('submit', formModel)
+    const data = deepCopy(formModel)
+    data.paramsInTextSearch = data.keyword
+    delete data.keyword
+    goRoute(data)
+    // emits('submit', formModel)
 }
 function goRoute(formModel) {
     const searchBackPath = route.query.searchBackPath || ''
     const searchParams = getSearchParamsArray(formModel)
     const time = new Date().valueOf().toString()
-    searchParams.paramsInTextSearch = [ searchParams.keyword ]
-    delete searchParams.keyword
+    
     router.push({
         query: { 
             ...searchParams, 
@@ -65,7 +67,7 @@ function initForm () {
     setTimeout(async() => {
         const searchParams = deepCopy(props.searchParams)
         let key = props.searchParams.paramsInTextSearch
-        if(!!key) searchParams.keyword = key.join('')
+        if(!!key) searchParams.keyword = key
         if(searchParams.hight) {
             searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
         }
@@ -85,8 +87,11 @@ function initForm () {
 const SearchDownloadDialogRef = ref()
 function handleDownload () {
     let data = FromRendererRef.value.vFormRenderRef.getFormData(false)
-    data = getSearchParamsArray(data)
-    SearchDownloadDialogRef.value.handleOpen(data)
+    let _data = deepCopy(data)
+    _data.paramsInTextSearch = _data.keyword
+    delete _data.keyword
+    _data = getSearchParamsArray(_data)
+    SearchDownloadDialogRef.value.handleOpen(_data)
 }
 onMounted(() => {
     initForm()
