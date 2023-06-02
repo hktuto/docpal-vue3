@@ -7,13 +7,13 @@
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
                     <div v-show="selectList.length === 0" id="browseHeaderRight" class="folderAction">
                         <BrowseActionsSubscribe  :doc="doc" />
-                        <div class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsEdit v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsNewFolder v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                        <div class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsUploadRequest v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
                         
                         <div class="actionDivider"></div>
