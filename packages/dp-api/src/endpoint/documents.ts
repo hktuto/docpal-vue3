@@ -324,6 +324,10 @@ export const CommentsGetApi = (params:any) => {
     return api.post('/nuxeo/comments', params).then(res => res.data.data);
 }
 
+// get doc office 
+export const getOfficeTokenApi = (documentId) => {
+    return api.get(`/nuxeo/getOfficeToken/${documentId}`).then(res => res.data.data);
+}
 
 
 
