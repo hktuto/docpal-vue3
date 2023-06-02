@@ -3,7 +3,7 @@
     <page-container>
         <div v-if="listData" class="browsePageContainer">
             <BrowsePageHeader :doc="listData.doc" :permission="listData.permission" >
-                <template #default="{doc, permission}" >   
+                <template #default="{doc, permission}" >
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
                     <div v-show="selectList.length === 0" id="browseHeaderRight" class="folderAction">
                         <BrowseActionsSubscribe  :doc="doc" />
@@ -15,7 +15,7 @@
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsUploadRequest v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
-                        
+
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
                     </div>
@@ -28,21 +28,21 @@
                     </div>
                 </template>
             </BrowsePageHeader>
-            <BrowseList 
-                :doc="listData.doc" 
-                :permission="listData.permission" 
-                @select-change="handleSelectionChange" 
+            <BrowseList
+                :doc="listData.doc"
+                :permission="listData.permission"
+                @select-change="handleSelectionChange"
             >
                 <template #default="{doc, permission}" >
                     <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
-                    
+
                     <BrowseRightClick :permission="permission"></BrowseRightClick>
                     <!-- <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" v-show="false" :doc="doc" @success="handleRefresh"/> -->
                 </template>
             </BrowseList>
         </div>
         <Teleport v-if="detailData && detailData.doc" to="body">
-            <BrowseDetail :show="detailData.doc" :doc="detailData.doc" :permission="detailData.permission" @close="detailClosed" >
+            <BrowseDetail v-if="!forceRefresh" :show="detailData.doc" :doc="detailData.doc" :permission="detailData.permission" @close="detailClosed" >
                 <template #default="{doc , permission}" >
                     <div class="fileNameContainer">
                         <div class="fileName">{{ doc.name }}</div>
@@ -57,7 +57,7 @@
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                         <div class="actionDivider"></div>
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
-                       
+
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
                         <div class="actionDivider"></div>
@@ -77,7 +77,7 @@
         <!-- global action -->
         <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
     </page-container>
-        
+
     </NuxtLayout>
 </template>
 
@@ -115,7 +115,7 @@ const infoOpened = ref(false);
 async function getDocDetail() {
     const response = await getDocumentDetail(routePath.value, userId)
     if(response.doc.isFolder) {
-        
+
         detailData.value = null
         // check if the path is the same
         if(listData.value && listData.value.doc.id === response.doc.id && !forceRefresh.value) {
@@ -129,9 +129,11 @@ async function getDocDetail() {
             // split router path to get parent path
             const parentPath = routePath.value.split('/').slice(0, -1).join('/')
             listData.value =  await getDocumentDetail(parentPath, userId)
+
         }
         detailData.value = response
-    } 
+      forceRefresh.value = false
+    }
 }
 
 function itemDeleted(){
@@ -140,7 +142,7 @@ function itemDeleted(){
 }
 async function handleRefresh () {
     console.log('handleRefresh');
-    
+
     forceRefresh.value = true
     await getDocDetail()
 }
@@ -174,7 +176,7 @@ onMounted(() => {
     height: 100%;
     overflow: hidden;
     position: relative;
-    
+
 }
 .browseHeader{
     display: grid;

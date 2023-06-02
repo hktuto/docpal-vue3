@@ -31,6 +31,7 @@ const emit = defineEmits(['close'])
 const blobData = ref();
 
 const readerType = computed(() => {
+  console.log("renderType Computed")
     const properties = props.doc?.properties
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
     if(!mineType) return "pdf"; // set to pdf for testing
@@ -44,7 +45,6 @@ const readerType = computed(() => {
 });
 
 onKeyStroke("Escape", (e) => {
-    dpLog("Escape", e);
     if(props.show) {
         emit('close')
     }
