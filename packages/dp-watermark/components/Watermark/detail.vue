@@ -25,7 +25,7 @@
         </div>
 
         <div class="detail__footer">
-          <Button type="primary" @click="save">Save</Button>
+          <ElButton type="primary" @click="save">Save</ElButton>
         </div>
     </div>
 </template>

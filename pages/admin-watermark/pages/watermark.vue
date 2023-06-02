@@ -50,3 +50,16 @@ watch(() => route.query.id, (newId) => {
 })
 
 </script>
+
+<style lang="scss" scoped>
+.listContainer{
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  gap: var(--app-padding);
+  overflow: hidden;
+  position: relative;
+}
+</style>

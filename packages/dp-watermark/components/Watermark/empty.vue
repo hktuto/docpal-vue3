@@ -22,7 +22,6 @@
 import InlineSvg from 'vue-inline-svg';
 const emit = defineEmits(['update'])
 import { useWatermark } from '../../composables/Watermark'
-const { localePath } = useContext()
 const router = useRouter()
 const form = ref({
   name: ''

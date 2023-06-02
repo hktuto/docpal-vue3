@@ -2,8 +2,8 @@
 
 <template>
   <WatermarkUiProperties @delete="$emit('delete')">
-    <ElForm>
-      <ElFormItem :label="$t('admin_watermark_content_type')">
+    <ElForm label-position="top">
+      <ElFormItem :label="$t('admin_watermark_content_type')" >
         <ElSelect  v-model="modelValue.contentType" size="small" @change="typeChange">
           <ElOption
             v-for="type in textTypes"

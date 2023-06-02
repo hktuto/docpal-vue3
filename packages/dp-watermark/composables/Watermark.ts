@@ -73,10 +73,9 @@ const defaultTextWatermark = {
   snapAngle: 1,
 }
 export type Response<T> = {
-  resultCode: number
-  resultMsg: string,
-  result : T
-  timeStamp: string
+  code: number
+  message: string,
+  data : T
 }
 export const useWatermark = () => {
 
@@ -89,31 +88,31 @@ export const useWatermark = () => {
     return type === 'text' || type === 'dynamic';
   }
   async function getWatermarkTemplates():Promise<WatermarkTemplate[]> {
-     const { result } = await api.get<Response<WatermarkTemplate[]>>("/docpal/watermark/templates/all/").then(res => res.data)
-      return result;
+     const { data } = await api.get<Response<WatermarkTemplate[]>>("/docpal/watermark/templates/all/").then(res => res.data)
+      return data;
   }
 
   async function createWatermarkTemplate(template: {name:string}) {
-    const { result } = await api.post<Response<WatermarkTemplate>>("/docpal/watermark/templates", template).then(res => res.data)
-    return result;
+    const { data } = await api.post<Response<WatermarkTemplate>>("/docpal/watermark/templates", template).then(res => res.data)
+    return data;
   }
 
   async function removeWatermarkTemplate(id:string) {
-    const { result } = await api.delete<Response<boolean>>(`/docpal/watermark/templates/${id}`).then(res => res.data)
-    return result;
+    const { data } = await api.delete<Response<boolean>>(`/docpal/watermark/templates/${id}`).then(res => res.data)
+    return data;
   }
 
   async function removeWatermarkApi(id:string) {
-    const { result } = await api.delete<Response<boolean>>(`/docpal/watermark/settings/${id}`).then(res => res.data)
-    return result;
+    const { data } = await api.delete<Response<boolean>>(`/docpal/watermark/settings/${id}`).then(res => res.data)
+    return data;
   }
   async function getWatermarkTemplateDetail(id:string):Promise<WatermarkTemplateDetail> {
-    const { result } = await api.get<Response<WatermarkTemplateDetail>>(`/docpal/watermark/templates/${id}`).then(res => res.data);
-    return result
+    const { data } = await api.get<Response<WatermarkTemplateDetail>>(`/docpal/watermark/templates/${id}`).then(res => res.data);
+    return data
   }
   async function updateWatermarkTemplateDetail(template:WatermarkTemplateDetail) {
-    const { result } = await api.patch<Response<WatermarkTemplateDetail>>(`/docpal/watermark/templates`, template).then(res => res.data);
-    return result
+    const { data } = await api.patch<Response<WatermarkTemplateDetail>>(`/docpal/watermark/templates`, template).then(res => res.data);
+    return data
   }
 
   function fontSizeConverter(size, height) {

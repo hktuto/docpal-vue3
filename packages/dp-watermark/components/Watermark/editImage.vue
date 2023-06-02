@@ -2,19 +2,19 @@
 
 <template>
     <WatermarkUiProperties @delete="$emit('delete')">
-    <ElForm>
+    <ElForm label-position="top">
       <ElUpload :limit="1" :auto-upload="false" action="#" :on-change="fileChange"  accept="image/jpeg, image/png" :show-file-list="false">
         <ElButton size="small" type="primary">{{ $t('admin_watermark_replace')}}</ElButton>
         <div slot="tip" class="el-upload__tip">{{ $t('admin_watermark_upload_limit')}}</div>
       </ElUpload>
       <ElFormItem :label="$t('admin_watermark_rotate')">
-        <ElInputNumber v-model="value.angle" :min="0" :max="360" size="small" @change="$emit('change', value)" />
+        <ElInputNumber v-model="modelValue.angle" :min="0" :max="360" size="small" @change="$emit('update:modelValue', value)" />
       </ElFormItem>
       <ElFormItem :label="$t('admin_watermark_opacity')">
-        <ElInputNumber v-model="value.opacity" size="small" :min="0.1" :max="1" :step="0.1" @change="$emit('change', value)" />
+        <ElInputNumber v-model="modelValue.opacity" size="small" :min="0.1" :max="1" :step="0.1" @change="$emit('update:modelValue', value)" />
       </ElFormItem>
 
-      <WatermarkAnchor v-model="value.position" @change="(val) => {$emit('anchorChange', val); value.postion = val;}"/>
+      <WatermarkAnchor v-model="modelValue.position" @change="(val) => {$emit('anchorChange', val); value.postion = val;}"/>
     </ElForm>
     </WatermarkUiProperties>
 </template>
@@ -25,10 +25,10 @@ import InlineSvg from "vue-inline-svg";
 import { ElMessage } from 'element-plus'
 
 const props = defineProps<{
-  value: any
+  modelValue: any
 }>()
 
-const emit = defineEmits(['change', 'delete', 'anchorChange'])
+const emit = defineEmits(['update:modelValue', 'delete', 'anchorChange'])
 
 function fileChange(e) {
   const file = e.raw;
@@ -52,7 +52,7 @@ function fileChange(e) {
     ob.scaleY = imgEL.width > 300 ? 300 / imgEL.width : 1;
 
     ob.setSrc(imgEL.src)
-    emit('change', ob)
+    emit('update:modelValue', ob)
   }
   imgEL.src = URL.createObjectURL(e.raw);
 }
