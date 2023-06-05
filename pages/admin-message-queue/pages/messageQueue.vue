@@ -48,8 +48,8 @@ import {
     async function getList (param) {
         state.loading = true
         const res = await GetMessageQueuePageApi(param.pageNum, param.pageSize, {...state.extraParams})
-
-        state.tableData = res.content
+    
+        state.tableData = res.entryList
         state.loading = false
         state.options.paginationConfig.total = res.totalElements
         state.options.paginationConfig.pageSize = param.pageSize
