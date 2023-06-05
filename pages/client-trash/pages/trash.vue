@@ -53,11 +53,15 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 
     async function getList (param) {
         state.loading = true
-        const res = await GetTrashApi(param)
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.pageIndex + 1
+        try {
+            const res = await GetTrashApi(param)
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.pageIndex + 1
+        } catch (error) {
+            
+        }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
@@ -102,9 +106,9 @@ async function handleDblclick (row) {
     } catch (error) {
         
     }
-    previewFile.loading = false
     previewFile.id = row.id
     previewFile.name = row.name
+    previewFile.loading = false
 }
 // #region module: delete
     const batchAction = ref('')
@@ -190,7 +194,11 @@ async function handleDblclick (row) {
         if(!!row) row.deleteOnePopoverShow = false
         deleteOnePopoverShow.value = false
         loading.value = true
-        await deleteOne(id)
+        try {
+            await deleteOne(id)
+        } catch (error) {
+            
+        }
         setTimeout(async () => {
             ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
@@ -199,7 +207,11 @@ async function handleDblclick (row) {
     }
     async function handleRestoreOne (id) {
         loading.value = true
-        await restore(id)
+        try {
+            await restore(id)
+        } catch (error) {
+            
+        }
         // 系统会延时 还原
         setTimeout(async () => {
             ReaderRef.value.handleClose()

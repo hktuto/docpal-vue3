@@ -54,26 +54,29 @@ function openDialog(doc){
 }
 async function handleSave(){
     state.loading = true
-    // check if the name is exist in the folder
-    const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
+    try {
+        // check if the name is exist in the folder
+        const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
 
-    if(isDuplicate && form.value.name !== props.doc.name){
-        ElMessage({
-            message: t('dpTip_duplicateFileName') as string,
-            type: 'error'
+        if(isDuplicate && form.value.name !== props.doc.name){
+            ElMessage({
+                message: t('dpTip_duplicateFileName') as string,
+                type: 'error'
+            })
+            state.loading = false
+            return
+        }
+        await patchDocumentApi({
+            idOrPath: form.value.id,
+            name: form.value.name,
+            properties: {},
         })
-        state.loading = false
-        return
+        dialogOpened.value = false
+        emits('success', state.doc)
+    } catch (error) {
+        
     }
-    await patchDocumentApi({
-        idOrPath: form.value.id,
-        name: form.value.name,
-        properties: {},
-    })
-    
-    dialogOpened.value = false
     state.loading = false
-    emits('success', state.doc)
 }
 onMounted(async() => {
     useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))  

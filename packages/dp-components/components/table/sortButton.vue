@@ -109,19 +109,23 @@ function handleRevert () {
 // 保存偏好设置
 async function handleSubmit () {
   loading.value = true
-  const param = { ...userPreference.value }
-  if (!param.tableSettings) {
-    param.tableSettings = {}
-  }
-  const displayOrder = displayList.value.reduce((prev,item,index) => {
-    if(item.show){
-      prev.push(item.rowIndex)
+  try {
+    const param = { ...userPreference.value }
+    if (!param.tableSettings) {
+      param.tableSettings = {}
     }
-    return prev},[])
-  param.tableSettings[props.sortKey] = displayOrder
-  await UserSettingSaveApi(param)
-  await getUserSetting()
-  emit('reorderColumn', showList.value, false)
+    const displayOrder = displayList.value.reduce((prev,item,index) => {
+      if(item.show){
+        prev.push(item.rowIndex)
+      }
+      return prev},[])
+    param.tableSettings[props.sortKey] = displayOrder
+    await UserSettingSaveApi(param)
+    await getUserSetting()
+    emit('reorderColumn', showList.value, false)
+  } catch (error) {
+    
+  }
   loading.value = false
 }
 

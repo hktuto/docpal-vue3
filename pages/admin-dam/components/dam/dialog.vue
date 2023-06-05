@@ -117,19 +117,23 @@ const state = reactive({
 })
 const FormRef = ref()
 async function handleSubmit () {
-    const data = await getFormData()
-    data.operation = JSON.stringify(data.operation)
-    switch (state.title) {
-        case 'addNewDAM':
-        case 'addNewConvertion':
-            await AddDamApi(data)
-            break;
-        case 'editNewConvertion':
-            await EditDamApi(data)
+    try {
+        const data = await getFormData()
+        data.operation = JSON.stringify(data.operation)
+        switch (state.title) {
+            case 'addNewDAM':
+            case 'addNewConvertion':
+                await AddDamApi(data)
+                break;
+            case 'editNewConvertion':
+                await EditDamApi(data)
+        }
+        emits('refresh')
+        state.visible = false
+    } catch (error) {
+        
     }
-    emits('refresh')
     state.loading = false
-    state.visible = false
 }
 async function getFormData () {
     const valid = await FormRef.value.validate((valid, fields) => {

@@ -87,7 +87,8 @@ async function handlePermissionChange (open:boolean, permission: string, row: an
         // ElMessage.error(error.message || 'error')
     }
     setTimeout(async() => {
-         emits('refresh')
+        row.loading = false
+        emits('refresh')
     }, 500);
 }
 const AclAddDialogRef = ref()
@@ -110,9 +111,13 @@ function permissionRevert (open: boolean, permission) {
 }
 async function removeLocalAcl (row: any) {
     row.loading = true
-    await removeACLApi({ idOrPath: props.doc.id, userId: row.userId})
+    try {
+        await removeACLApi({ idOrPath: props.doc.id, userId: row.userId})
+        emits('refresh')
+    } catch (error) {
+        
+    }
     row.loading = false
-    emits('refresh')
 }
 </script>
 <style lang="scss" scoped>

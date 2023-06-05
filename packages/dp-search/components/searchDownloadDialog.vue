@@ -55,14 +55,18 @@ function handleOpen(searchParams) {
 }
 async function handleSubmit() {
     state.loading = true
-    const hideIds = state.hideList.reduce((prev,item) => {
-        prev.push(item.id)
-        return prev
-    }, [])
-    const blob = await ExportSearchCsvApi({ ...state.searchParams, hiddenList: hideIds })
-    await downloadBlob(blob, 'search.csv')
+    try {
+      const hideIds = state.hideList.reduce((prev,item) => {
+          prev.push(item.id)
+          return prev
+      }, [])
+      const blob = await ExportSearchCsvApi({ ...state.searchParams, hiddenList: hideIds })
+      await downloadBlob(blob, 'search.csv')
+      state.visible = false
+    } catch (error) {
+      
+    }
     state.loading = false
-    state.visible = false
 }
 
 async function getExportList () {

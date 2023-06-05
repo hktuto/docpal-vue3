@@ -99,13 +99,16 @@ const loading = ref(false)
             }
           }
           loading.value = true
-          // TODO : add api
-          await startAdhocApi(param)
+          try {
+            // TODO : add api
+            await startAdhocApi(param)
+            dialogShow.value = false
+            FormRef.value.resetFields()
+            // TODO : add api
+            await checkAdhocStatus();
+          } catch (error) {
+          }
           loading.value = false
-          dialogShow.value = false
-          FormRef.value.resetFields()
-          // TODO : add api
-          await checkAdhocStatus();
         }
       })
     }

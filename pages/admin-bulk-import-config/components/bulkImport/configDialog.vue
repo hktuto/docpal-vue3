@@ -103,22 +103,22 @@ async function handleCheckNameOrTitle (rule, value, callback) {
 const formJson = getJsonApi('admin/adminMetaRelated.json')
 async function handleSubmit () {
     state.loading = true
-    const configTree = await TreeTableFormRef.value.getFormData()
-    const configData = await getFormData()
-    if (!configTree || !configData) return false
-    const params = {
-        folder: getFolder(configTree),
-        documentType: route.params.id,
-        profileName: configData.profileName,
-        rootPath: configData.rootPath.pop(),
-    }
-    if(state.profileID) params.profileID = state.profileID
     try {
+        const configTree = await TreeTableFormRef.value.getFormData()
+        const configData = await getFormData()
+        if (!configTree || !configData) return false
+        const params = {
+            folder: getFolder(configTree),
+            documentType: route.params.id,
+            profileName: configData.profileName,
+            rootPath: configData.rootPath.pop(),
+        }
+        if(state.profileID) params.profileID = state.profileID
         await SaveDocumentTypeProfileApi(params)
         state.visible = false
         emits('refresh')
     } catch (error) {
-        // ElMessage.error(error.response.data.message || 'error')
+        
     }
     state.loading = false
 }

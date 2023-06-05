@@ -147,18 +147,22 @@ function handleCheckedNotisChange (value) {
     async function handleDelete(item, index) {
         if (item.loading) return 
         item.loading = true
-        const res = await notiDeleteApi([item.id])
-        item.loading = false
-        if (res) {
-            state.notiList.splice(index, 1)
-            const notiIndex = state.checkedNotis.findIndex(notiId => notiId === item.id)
-            if (notiIndex) state.checkedNotis.splice(notiIndex, 1)
-            if(state.notiList.length < state.notiPageParam.pageSize) {
-                state.notiList = []
-                state.notiPageParam.pageNum = 0
-                await getNotiPage()
+        try {
+            const res = await notiDeleteApi([item.id])
+            if (res) {
+                state.notiList.splice(index, 1)
+                const notiIndex = state.checkedNotis.findIndex(notiId => notiId === item.id)
+                if (notiIndex) state.checkedNotis.splice(notiIndex, 1)
+                if(state.notiList.length < state.notiPageParam.pageSize) {
+                    state.notiList = []
+                    state.notiPageParam.pageNum = 0
+                    await getNotiPage()
+                }
             }
+        } catch (error) {
+            
         }
+        item.loading = false
     }
 // #endregion
 

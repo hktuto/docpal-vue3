@@ -25,15 +25,19 @@ const formJson = getJsonApi('admin/adminUserPassword.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
-    const param = {
-        password: data.password,
-        userId: props.user.userId,
+    try {
+        const param = {
+            password: data.password,
+            userId: props.user.userId,
+        }
+        await PatchUserPasswordApi(param)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+        
     }
-    await PatchUserPasswordApi(param)
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen(exitList) {
     state.visible = true

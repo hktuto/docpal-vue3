@@ -91,14 +91,18 @@ async function getNotificationList() {
       pageNum: 0,
       pageSize: 20,
     }
-    const res = await getNotificationListApi(userId, param);
-     res.content.forEach(item => {
-        item.content = JSON.parse(item.content) || {}
-        item.createDate = formatDate(item.createdDate) || null
-      });
-    
-    list.value = res.content;
-    total.value = res.totalElements;
+    try {
+      const res = await getNotificationListApi(userId, param);
+       res.content.forEach(item => {
+          item.content = JSON.parse(item.content) || {}
+          item.createDate = formatDate(item.createdDate) || null
+        });
+      
+      list.value = res.content;
+      total.value = res.totalElements;
+    } catch (error) {
+      
+    }
     loading.value = false;
 }
 

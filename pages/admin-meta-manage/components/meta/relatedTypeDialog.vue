@@ -30,11 +30,14 @@ const formJson = getJsonApi('admin/adminMetaRelated.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
-    await SetRelatedTypeApi(data, state.docType.name)
+    try {
+        await SetRelatedTypeApi(data, state.docType.name)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+    }
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen(exitList, data) {
     state.visible = true

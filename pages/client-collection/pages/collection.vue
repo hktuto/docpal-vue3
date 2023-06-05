@@ -95,11 +95,15 @@ const state = reactive<State>({
     const tableSetting = defaultTableSetting[tableKey]
     async function getList (param, tab) {
         state.loading = true
-        const res = await getCollectionDoc(state.curCollection.id)
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.pageIndex + 1
+        try {
+            const res = await getCollectionDoc(state.curCollection.id)
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.pageIndex + 1
+        } catch (error) {
+            
+        }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
@@ -138,13 +142,18 @@ const state = reactive<State>({
         ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
                 state.loading = true
-                const res = await removeCollectionApi(param)
-                setTimeout(() => {
-                    const time = new Date().valueOf().toString() + 1
-                    router.push({ 
-                        query: { tab: state.curCollection.id, page: 0, pageSize: pageParams.pageSize, time } 
-                    })
-                }, 1000) // 500的数据还没有更新
+                try {
+                    const res = await removeCollectionApi(param)
+                    setTimeout(() => {
+                        const time = new Date().valueOf().toString() + 1
+                        router.push({ 
+                            query: { tab: state.curCollection.id, page: 0, pageSize: pageParams.pageSize, time } 
+                        })
+                    }, 1000) // 500的数据还没有更新
+                } catch (error) {
+                    
+                }
+                state.loading = false
             })
     }
 // #endregion

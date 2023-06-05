@@ -38,7 +38,11 @@ const { t } = useI18n();
 
     async function getList () {
         state.loading = true
-        state.tableData = await getLoggersApi()
+        try {
+            state.tableData = await getLoggersApi()
+        } catch (error) {
+            
+        }
         state.loading = false
     }
 
@@ -47,11 +51,15 @@ const { t } = useI18n();
 const shareInfoDialogRef = ref()
 async function handleLevelChange (level, row) {
     row.loading = true
-    await setLoggersApi({
-        service: row.service,
-        level
-    })
-    await getList()
+    try {
+        await setLoggersApi({
+            service: row.service,
+            level
+        })
+        await getList()
+    } catch (error) {
+        
+    }
     row.loading = false
 }
 function handleDblclick (row) {

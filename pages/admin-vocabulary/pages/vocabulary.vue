@@ -63,7 +63,10 @@ async function handleTabClick (row) {
 }
 async function getVocabularyDetail (row) {
     state.loading = true
-    state.curVocabulary = await GetVocabularyApi(row.id)
+    try {
+        state.curVocabulary = await GetVocabularyApi(row.id)
+    } catch (error) {
+    }
     state.loading = false
 }
 const VocabularyTableRef = ref()
@@ -129,8 +132,12 @@ function handleUserFilter(data) {
 // #region module: action
     async function handleDeleteRow (row) {
         state.loading = true
-        if (row.exist) await DeleteVocabularyApi(state.curVocabulary.id, row)
-        await getVocabularyDetail({id: state.curVocabulary.id})
+        try {
+            if (row.exist) await DeleteVocabularyApi(state.curVocabulary.id, row)
+            await getVocabularyDetail({id: state.curVocabulary.id})
+        } catch (error) {
+            
+        }
         state.loading = false
     }
 // #endregion

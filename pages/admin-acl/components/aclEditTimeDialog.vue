@@ -27,29 +27,33 @@ const state = reactive({
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/adminAclTimeForm.json')
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
-    const params = {
-        idOrPath: props.doc.id,
-        userId: state.aclItem.userId
+    try {
+        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const params = {
+            idOrPath: props.doc.id,
+            userId: state.aclItem.userId
+        }
+        if(data.time === 'dateBase') {
+            params.startDate = data.dateRange[0]
+            params.endDate = data.dateRange[1]
+        }
+        dpLog(state.aclItem);
+        
+        if (state.aclItem.aceId) {
+            params.aceId = state.aclItem.aceId
+            params.permission = state.aclItem.acePermission
+        }
+        if (state.aclItem && state.aclItem.length > 0) {
+            params.dpId = state.aclItem.dpId
+        }
+        state.loading = true
+        await replaceACLApi(params)
+        state.visible = false
+        emits('refresh')
+    } catch (error) {
+        
     }
-    if(data.time === 'dateBase') {
-        params.startDate = data.dateRange[0]
-        params.endDate = data.dateRange[1]
-    }
-    dpLog(state.aclItem);
-    
-    if (state.aclItem.aceId) {
-        params.aceId = state.aclItem.aceId
-        params.permission = state.aclItem.acePermission
-    }
-    if (state.aclItem && state.aclItem.length > 0) {
-        params.dpId = state.aclItem.dpId
-    }
-    state.loading = true
-    await replaceACLApi(params)
     state.loading = false
-    state.visible = false
-    emits('refresh')
 }
 function handleOpen(aclItem) {
     state.visible = true

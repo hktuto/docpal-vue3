@@ -23,11 +23,15 @@ const formJson = getJsonApi('admin/adminUserForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
-    await CreateUserApi(data)
+    try {
+        await CreateUserApi(data)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+        
+    }
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen() {
     state.visible = true

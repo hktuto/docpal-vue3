@@ -60,13 +60,17 @@ const state = reactive<State>({
     }
     async function handleGetJson (taskId) {
         state.loading = true
-        const res = await GetTaskFormJsonApi({
-            processKey: state.workflowDetail.key,
-            userTaskId: taskId,
-        })
-        setTimeout(() => {
-            FromDesignerRef.value.setFormJson(res.json)
-        })
+        try {
+            const res = await GetTaskFormJsonApi({
+                processKey: state.workflowDetail.key,
+                userTaskId: taskId,
+            })
+            setTimeout(() => {
+                FromDesignerRef.value.setFormJson(res.json)
+            })
+        } catch (error) {
+            
+        }
         state.loading = false
     }
 // #endregion

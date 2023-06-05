@@ -50,16 +50,20 @@ async function handleReplyDelete (item, parentItem) {
 }
 async function handleCommentsGet () {
     state.loading = true
-    const res = await CommentsGetApi({ documentIdOrPath: props.doc.id}) 
-    if (!res) return
-    for(const item of res) {
-        if (item.parentId === props.doc.id) item.parentId = ''
-        item.children = []
-        item.children = await CommentsGetApi({ documentIdOrPath: props.doc.id, parentId: item.id }) 
+    try {
+        const res = await CommentsGetApi({ documentIdOrPath: props.doc.id}) 
+        if (!res) return
+        for(const item of res) {
+            if (item.parentId === props.doc.id) item.parentId = ''
+            item.children = []
+            item.children = await CommentsGetApi({ documentIdOrPath: props.doc.id, parentId: item.id }) 
+        }
+        state.commentList = res
+        handleScroll()
+    } catch (error) {
+        
     }
-    state.commentList = res
     state.loading = false
-    handleScroll()
 }
 function handleScroll () {
     nextTick(() => {

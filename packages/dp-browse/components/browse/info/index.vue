@@ -92,21 +92,25 @@ const permission = ref<any>();
 async function docUpdated() {
     
   loading.value = true;
-  // @ts-ignore
-  detail.value = null; // set detail to null to reset all tab
-  // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
-  if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
-    currentTab.value = 'info'
-  }
-
-  // get detail
-  const response = await getDocumentDetail(doc.value.id, userId);
-  detail.value = response.doc;
-  permission.value = response.permission;
-  //scroll to top
-  const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
-  if(tabContent) {
-    tabContent.scrollTop = 0;
+  try {
+      // @ts-ignore
+      detail.value = null; // set detail to null to reset all tab
+      // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
+      if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
+        currentTab.value = 'info'
+      }
+    
+      // get detail
+      const response = await getDocumentDetail(doc.value.id, userId);
+      detail.value = response.doc;
+      permission.value = response.permission;
+      //scroll to top
+      const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
+      if(tabContent) {
+        tabContent.scrollTop = 0;
+      }
+  } catch (error) {
+    
   }
   loading.value = false;
 }

@@ -48,11 +48,15 @@ import {
 
     async function getList (param) {
         state.loading = true
-        const res = await getAllTask(param)
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.size
-        state.options.paginationConfig.currentPage = param.page + 1
+        try {
+            const res = await getAllTask(param)
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.size
+            state.options.paginationConfig.currentPage = param.page + 1
+        } catch (error) {
+            
+        }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
@@ -83,11 +87,15 @@ import {
         ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
                 state.loading = true
-                const pList = []
-                state.selectedRows.forEach((s) => pList.push(DeleteWorkflowProcessApi({processInstanceId: s.instanceId})))
-                
-                await Promise.all(pList)
-                handlePaginationChange(pageParams.pageIndex - 1, pageParams.pageSize)
+                try {
+                    const pList = []
+                    state.selectedRows.forEach((s) => pList.push(DeleteWorkflowProcessApi({processInstanceId: s.instanceId})))
+                    
+                    await Promise.all(pList)
+                    handlePaginationChange(pageParams.pageIndex - 1, pageParams.pageSize)
+                } catch (error) {
+                    
+                }
                 state.loading = false
             })
     }

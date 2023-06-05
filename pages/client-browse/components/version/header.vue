@@ -45,9 +45,13 @@ const props = defineProps<{
     } 
     async function handleRestore () {
       loading.value = true
-      await restoreVersionApi({ idOrPath: props.doc.id, increment: "MAJOR" })
+      try {
+        await restoreVersionApi({ idOrPath: props.doc.id, increment: "MAJOR" })
+        popoverShow.value = false
+      } catch (error) {
+        
+      }
       loading.value = false
-      popoverShow.value = false
     }
 
 </script>

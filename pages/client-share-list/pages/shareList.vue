@@ -39,11 +39,15 @@ const { t } = useI18n();
 
     async function getList (param) {
         state.loading = true
-        const res = await getShareListApi(param)
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.size
-        state.options.paginationConfig.currentPage = param.page + 1
+        try {
+            const res = await getShareListApi(param)
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.size
+            state.options.paginationConfig.currentPage = param.page + 1
+        } catch (error) {
+            
+        }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {

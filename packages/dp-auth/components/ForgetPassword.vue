@@ -46,8 +46,12 @@ async function handleSubmit () {
     if(!valid) return
 
     loading.value = true
-    const res = await ForgetPasswordApi(form.value.userId)
-    if (res) status.value = 'submitted'
+    try {
+      const res = await ForgetPasswordApi(form.value.userId)
+      if (res) status.value = 'submitted'
+    } catch (error) {
+      
+    }
     loading.value = false
 }
 

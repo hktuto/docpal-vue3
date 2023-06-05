@@ -30,18 +30,21 @@ const formJson = getJsonApi('admin/adminMetaMapping.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
-    const param = {
-        name: props.metaMapping.name,
-        metaDataMapper: {
-            ...props.metaMapping.metaDataMapper,
-            [data.metaData]: data.label
+    try {
+        const param = {
+            name: props.metaMapping.name,
+            metaDataMapper: {
+                ...props.metaMapping.metaDataMapper,
+                [data.metaData]: data.label
+            }
         }
+        await SaveMetadataMappingApi({documentType: [param]})
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
     }
-    await SaveMetadataMappingApi({documentType: [param]})
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen(exitList, data) {
     state.visible = true

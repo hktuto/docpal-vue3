@@ -49,8 +49,12 @@ async function handleDelete(row) {
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
         .then(async() => {
             state.loading = true
-            const res = await DeleteRelatedTypeApi(row, route.params.id)
-            await getTable()
+            try {
+                const res = await DeleteRelatedTypeApi(row, route.params.id)
+                await getTable()
+            } catch (error) {
+                
+            }
             state.loading = false
         })
 }

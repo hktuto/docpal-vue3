@@ -45,13 +45,17 @@ const userId:string = useUser().getUserId()
     async function getList (param) {
         // param.userId = userId
         state.loading = true
-        const res = await getAllTask({...param, ...state.extraParams})
-        
-        state.tableData = res.entryList
+        try {
+            const res = await getAllTask({...param, ...state.extraParams})
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.pageIndex + 1
+            
+        } catch (error) {
+            
+        }
         state.loading = false
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.pageIndex + 1
     }
     function handlePaginationChange (page: number, pageSize: number = pageParams.pageSize) {
         if(!pageSize) pageSize = pageParams.pageSize

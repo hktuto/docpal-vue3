@@ -41,10 +41,14 @@ async function handleSubmit () {
         params.endDate = data.dateRange[1]
     }
     state.loading = true
-    await addACLApi(params)
+
+    try {
+        await addACLApi(params)
+        state.visible = false
+        emits('refresh')
+    } catch (error) {
+    }
     state.loading = false
-    state.visible = false
-    emits('refresh')
 }
 function handleOpen() {
     state.visible = true

@@ -39,8 +39,12 @@ import { GetBulkImportConfigList, TABLE, defaultTableSetting, deepCopy } from 'd
 
     async function getList () {
         state.loading = true
-        state.tableData = await GetBulkImportConfigList()
-        state._tableData = deepCopy(state.tableData)
+        try {
+            state.tableData = await GetBulkImportConfigList()
+            state._tableData = deepCopy(state.tableData)
+        } catch (error) {
+            
+        }
         state.loading = false
     }
 

@@ -58,20 +58,29 @@ function tabChange (tab) {
     router.push({query: { tab, state: state.backState }})
 }
 async function getDetail() {
-    const processInstanceId = route.params.id
-    switch(state.backState) {
-        case state.processState.completeTask:
-            state.taskDetail = await historyProcessDetailGetApi({ processInstanceId, completed: true })
-            break
-        default:
-            state.taskDetail = await getTaskApi(processInstanceId)
-    }
-    handleGetActivity(state.taskDetail.instanceId || state.taskDetail.processInstanceId)
-    setTimeout(async() => {
+    try {
         state.loading = true
-        await handleFormDataGet()
+        const processInstanceId = route.params.id
+        switch(state.backState) {
+            case state.processState.completeTask:
+                state.taskDetail = await historyProcessDetailGetApi({ processInstanceId, completed: true })
+                break
+            default:
+                state.taskDetail = await getTaskApi(processInstanceId)
+        }
+        handleGetActivity(state.taskDetail.instanceId || state.taskDetail.processInstanceId)
+        
+    } catch (error) {
+        
+    }
+    setTimeout(async() => {
+        try {
+            await handleFormDataGet()
+            handleDisabledForm()
+        } catch (error) {
+            
+        }
         state.loading = false
-        handleDisabledForm()
     }, 100)
 }
 const isAssigneeUser = computed(() => {
@@ -127,10 +136,10 @@ const isAssigneeUser = computed(() => {
             }
             await propertiesSaveApi(param)
             ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
-            state.loading = false
         } catch (error) {
             // ElMessage.error(error)
         }
+        state.loading = false
     }
     async function handleSubmit () {
         state.loading = true
@@ -162,15 +171,19 @@ const isAssigneeUser = computed(() => {
 
  // taskClaim后 处理taskDetail并重新请求getActivity
 const handleTaskInfoChange = async (taskDetailRes, isClaim) => {
-    taskDetail.value = { ...taskDetailRes }
-    handleGetActivity( taskDetail.value.taskInstance?.processInstanceId)
-    if (isClaim) {
-        state.loading = true
-        await handleFormDataGet()
-        state.loading = false
-    } else {
-        vFormRef.value.disableForm()
+    try {
+        taskDetail.value = { ...taskDetailRes }
+        handleGetActivity( taskDetail.value.taskInstance?.processInstanceId)
+        if (isClaim) {
+            state.loading = true
+            await handleFormDataGet()
+        } else {
+            vFormRef.value.disableForm()
+        }
+    } catch (error) {
+        
     }
+    state.loading = false
 }
 onMounted(() => {
     getDetail()

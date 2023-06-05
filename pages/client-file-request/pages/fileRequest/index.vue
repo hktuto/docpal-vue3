@@ -45,11 +45,15 @@ const { t } = useI18n();
 
     async function getList (param) {
         state.loading = true
-        const res = await getFileRequestListApi(param)
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.pageIndex + 1
+        try {
+            const res = await getFileRequestListApi(param)
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.pageIndex + 1
+        } catch (error) {
+            
+        }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {

@@ -25,12 +25,16 @@ const formJson = getJsonApi('admin/adminGroupEditForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
-    data.groupId = props.group.id
-    await PatchGroupApi(data)
+    try {
+        data.groupId = props.group.id
+        await PatchGroupApi(data)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+        
+    }
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen() {
     state.visible = true

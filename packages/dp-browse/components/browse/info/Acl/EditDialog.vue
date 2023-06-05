@@ -86,21 +86,25 @@ const handleSubmit = () => {
       FormRef.value.validate((valid) => {
         if(valid) {
           loading.value = true;
-          const result = { ...aclForm.value }
-          if (result.isPermanent) {
-            delete result.startDate
-            delete result.endDate
-          } else {
-            result.startDate = result.dateRange[0]
-            result.endDate = result.dateRange[1]
+          try {
+            const result = { ...aclForm.value }
+            if (result.isPermanent) {
+              delete result.startDate
+              delete result.endDate
+            } else {
+              result.startDate = result.dateRange[0]
+              result.endDate = result.dateRange[1]
+            }
+            emit('input', false)
+            if(isEdit.value) {
+              emit('handleUpdate', result)
+            } else {
+              emit('handleSubmit', result)
+            }
+            FormRef.value.resetFields()
+          } catch (error) {
+            
           }
-          emit('input', false)
-          if(isEdit.value) {
-            emit('handleUpdate', result)
-          } else {
-            emit('handleSubmit', result)
-          }
-          FormRef.value.resetFields()
           loading.value = false;
         }
       })

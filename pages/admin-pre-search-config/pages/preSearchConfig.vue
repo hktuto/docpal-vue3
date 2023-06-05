@@ -66,16 +66,20 @@ async function handleTabClick (row) {
 }
 async function handleSubmit () {
     state.loading = true
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
-    const param = deepCopy(data)
-    state.curPreSearch.name = param.name
-    if (!param.paramsInTextSearch) delete param.paramsInTextSearch
-    delete param.name
-    const res = await UpdatePreSearchApi({ ...state.curPreSearch, json_value: JSON.stringify(param)})
-    if (!res.errorCode) {
-        router.push({query: { id: state.curPreSearch.name }})
-    } else {
-        await getPreSearchList(true)
+    try {
+        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const param = deepCopy(data)
+        state.curPreSearch.name = param.name
+        if (!param.paramsInTextSearch) delete param.paramsInTextSearch
+        delete param.name
+        const res = await UpdatePreSearchApi({ ...state.curPreSearch, json_value: JSON.stringify(param)})
+        if (!res.errorCode) {
+            router.push({query: { id: state.curPreSearch.name }})
+        } else {
+            await getPreSearchList(true)
+        }
+    } catch (error) {
+        
     }
     state.loading = false
 }
@@ -84,14 +88,18 @@ function handleAdd () {
 }
 async function getPreSearchList(refresh: boolean = false, routeName: string = '') {
     state.listLoading = true
-    const res = await GetPreSearchListApi(refresh)
-    state.preSearchList = res.map(item => ({ id: item.id, name: item.name, detail: JSON.parse(item.json_value) })).sort((a,b)=> (a.name.localeCompare(b.name) ))
-    state._preSearchList = state.preSearchList
-    if(state._preSearchList.length > 0) {
-        routeName = routeName ? routeName : route.query.id
-        const index = state._preSearchList.findIndex(item => item.name === routeName)
-        const item = index !== -1 ? state._preSearchList[index] : state._preSearchList[0]
-        handleTabClick(item)
+    try {
+        const res = await GetPreSearchListApi(refresh)
+        state.preSearchList = res.map(item => ({ id: item.id, name: item.name, detail: JSON.parse(item.json_value) })).sort((a,b)=> (a.name.localeCompare(b.name) ))
+        state._preSearchList = state.preSearchList
+        if(state._preSearchList.length > 0) {
+            routeName = routeName ? routeName : route.query.id
+            const index = state._preSearchList.findIndex(item => item.name === routeName)
+            const item = index !== -1 ? state._preSearchList[index] : state._preSearchList[0]
+            handleTabClick(item)
+        }
+    } catch (error) {
+        
     }
     state.listLoading = false
 }

@@ -30,11 +30,15 @@ async function handleSubmit () {
         groupId: data.id,
         userId: props.user.userId,
     }
-    await MembershipAddApi(param)
+    try {
+        await MembershipAddApi(param)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+        
+    }
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen(exitList) {
     state.visible = true

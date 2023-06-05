@@ -26,15 +26,19 @@ const formJson = getJsonApi('admin/adminGroupUserForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
-    const param = {
-        userId: data.id,
-        groupId: props.group.id,
+    try {
+        const param = {
+            userId: data.id,
+            groupId: props.group.id,
+        }
+        await MembershipAddApi(param)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+        
     }
-    await MembershipAddApi(param)
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen(exitList) {
     state.visible = true

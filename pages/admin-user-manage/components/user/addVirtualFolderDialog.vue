@@ -27,30 +27,29 @@ const FromRendererRef = ref()
 const formJson = getJsonApi('admin/adminUserVFAddForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
-    dpLog({data});
-    
     state.loading = true
-    dpLog(props.mode);
-    
-    const id = props.mode === 'userAllowList' ? props.userOrGroup.userId : props.userOrGroup.id
-    const vItem = state.vList.find(item => item.id === data.id)
-    const _vItem = deepCopy(vItem)
-    dpLog({vItem},_vItem[props.mode], id);
-    _vItem[props.mode].push(id)
-    const param = {
-        id: vItem.id,
-        jsonValue: JSON.stringify(_vItem),
-        usr: id,
-        userAllowList: _vItem.userAllowList,
-        groupAllowList: _vItem.groupAllowList,
-        type: 'applyToUser'
+    try {
+        const id = props.mode === 'userAllowList' ? props.userOrGroup.userId : props.userOrGroup.id
+        const vItem = state.vList.find(item => item.id === data.id)
+        const _vItem = deepCopy(vItem)
+        _vItem[props.mode].push(id)
+        const param = {
+            id: vItem.id,
+            jsonValue: JSON.stringify(_vItem),
+            usr: id,
+            userAllowList: _vItem.userAllowList,
+            groupAllowList: _vItem.groupAllowList,
+            type: 'applyToUser'
+        }
+        
+        await saveAdminVirtualfolder(param)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh', vItem, id)
+    } catch (error) {
+        
     }
-    
-    await saveAdminVirtualfolder(param)
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh', vItem, id)
 }
 function handleOpen(selectableList) {
     state.visible = true

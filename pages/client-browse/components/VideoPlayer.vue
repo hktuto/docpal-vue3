@@ -14,9 +14,13 @@ const videoSrc = ref();
 const loading = ref(false);
 async function getData() {
     loading.value = true;
-    const blob = await GetDocumentPreview(props.doc.id);
-    const url = window.URL.createObjectURL(blob);
-    videoSrc.value = url;
+    try {
+        const blob = await GetDocumentPreview(props.doc.id);
+        const url = window.URL.createObjectURL(blob);
+        videoSrc.value = url;
+    } catch (error) {
+        
+    }
     loading.value = false;
 }
 

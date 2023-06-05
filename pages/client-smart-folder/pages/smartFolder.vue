@@ -52,12 +52,16 @@ const state = reactive<State>({
     const tableSetting = defaultTableSetting[tableKey]
     async function getList (param, tab) {
         state.loading = true
-        const presetParams = getPresetParams(tab)
-        const res = await nestedSearchApi({...presetParams, currentPageIndex: param.pageIndex, pageSize: param.pageSize})
-        state.tableData = res.entryList
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.pageIndex + 1
+        try {
+            const presetParams = getPresetParams(tab)
+            const res = await nestedSearchApi({...presetParams, currentPageIndex: param.pageIndex, pageSize: param.pageSize})
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.pageIndex + 1
+        } catch (error) {
+            
+        }
         state.loading = false
     }
     function getPresetParams (tab) {

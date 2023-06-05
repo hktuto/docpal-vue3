@@ -38,8 +38,12 @@ import { GetMetaSettingList, TABLE, defaultTableSetting, deepCopy } from 'dp-api
 
     async function getList () {
         state.loading = true
-        state.tableData = await GetMetaSettingList()
-        state._tableData = deepCopy(state.tableData)
+        try {
+            state.tableData = await GetMetaSettingList()
+            state._tableData = deepCopy(state.tableData)
+        } catch (error) {
+            
+        }
         state.loading = false
     }
 // #endregion

@@ -23,11 +23,15 @@ async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     data.groupName = data.groupName.trim()
     state.loading = true
-    await CreateGroupApi(data)
+    try {
+        await CreateGroupApi(data)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+        
+    }
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
 }
 function handleOpen() {
     state.visible = true

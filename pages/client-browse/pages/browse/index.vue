@@ -151,7 +151,11 @@ function handleSelectionChange (rows:any) {
 }
 watch(route, async(newRoute, oldRoute) => {
     loading.value = true;
-    await getDocDetail()
+    try {
+        await getDocDetail()
+    } catch (error) {
+        
+    }
     loading.value = false;
 },{immediate:true, deep: true});
 

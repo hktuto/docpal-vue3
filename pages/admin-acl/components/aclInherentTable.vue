@@ -39,15 +39,22 @@ const state = reactive({
 })
 async function unBlockInherited () {
     state.loading = true
-    await aclUnblockApi(props.doc.id)
+    try {
+        await aclUnblockApi(props.doc.id)
+        emits('refresh')
+    } catch (error) {
+    }
     state.loading = false
-    emits('refresh')
 }
 async function blockInherited () {
     state.loading = true
-    await aclBlockApi(props.doc.id)
+    try {
+        await aclBlockApi(props.doc.id)
+        emits('refresh')
+    } catch (error) {
+        
+    }
     state.loading = false
-    emits('refresh')
 }
 </script>
 <style lang="scss" scoped>

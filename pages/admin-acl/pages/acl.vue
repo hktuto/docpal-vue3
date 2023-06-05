@@ -65,10 +65,14 @@ async function rootDataGet () {
 async function handleClick (doc) {
     treeRef.value.treeRef.setCurrentKey(doc.logicPath)
     state.loading = true
-    state.doc = deepCopy(doc)
-    const res = await GetDocDetailApi(state.doc.id)
-    state.doc = { ...res, ...doc }
-    await getAcls()
+    try {
+        state.doc = deepCopy(doc)
+        const res = await GetDocDetailApi(state.doc.id)
+        state.doc = { ...res, ...doc }
+        await getAcls()
+    } catch (error) {
+        
+    }
     state.loading = false
 }
 async function getAcls () {
@@ -124,16 +128,16 @@ async function clearanceLevelChange (value) {
             const result = state.acls.local.reduce((prev,item) => {
                 const exitItem = prev.find(prevItem => prevItem.userId === item.userId)
                 if (exitItem) {
-                permissionFilter(exitItem, item.permission, item.id)
+                    permissionFilter(exitItem, item.permission, item.id)
                 } else {
-                item.print = false
-                item.read = false
-                item.write = false
-                item.manage = false
-                item.loading = false
-                item.printLoading = false
-                permissionFilter(item, item.permission, item.id)
-                prev.push(item)
+                    item.print = false
+                    item.read = false
+                    item.write = false
+                    item.manage = false
+                    item.loading = false
+                    item.printLoading = false
+                    permissionFilter(item, item.permission, item.id)
+                    prev.push(item)
                 }
                 return prev
             }, [])
@@ -142,6 +146,7 @@ async function clearanceLevelChange (value) {
         } catch (error) {
             return []
         }
+        item.loading = false
     })
     function isRead (permission) {
       return ['Read', 'ReadWrite', 'ManageRecord', 'ManageLegalHold', 'Everything'].includes(permission)

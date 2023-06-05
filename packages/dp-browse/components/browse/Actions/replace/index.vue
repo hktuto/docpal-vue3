@@ -59,23 +59,20 @@ async function handleConfirm () {
     formData.append('file', form.value.fileList[0].blob)
     formData.append('document', JSON.stringify(d))
     loading.value = true
-    const res = await replaceFileDocumentApi(formData)
-    loading.value = false
-    popoverShow.value = false
-    form.value = {
-        fileList: [],
-        languages: []
-    }
-    const ev = new CustomEvent('docActionRefresh');
-    document.dispatchEvent(ev);
-    router.push({
-        path: '/browse',
-        query: {
-            ...route.query,
-            time: 555
+    try {
+        const res = await replaceFileDocumentApi(formData)
+        popoverShow.value = false
+        form.value = {
+            fileList: [],
+            languages: []
         }
-    })
-    // emits('success')
+        const ev = new CustomEvent('docActionRefresh');
+        document.dispatchEvent(ev);
+        // emits('success')
+    } catch (error) {
+        
+    }
+    loading.value = false
 }
 onMounted(async() => {
     availableLanguage.value = await getOcrSupportedLanguage()

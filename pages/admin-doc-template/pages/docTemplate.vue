@@ -91,11 +91,15 @@ async function rootDataGet () {
     return [{ ...res }]
 }
 async function handleClick (doc) {
-    treeRef.value.treeRef.setCurrentKey(doc.id)
-    state.doc = deepCopy(doc)
-    if(!state.doc.isFolder) {
-        state.loading = true
-        await getPreviewFile(state.doc)
+    try {
+        treeRef.value.treeRef.setCurrentKey(doc.id)
+        state.doc = deepCopy(doc)
+        if(!state.doc.isFolder) {
+            state.loading = true
+            await getPreviewFile(state.doc)
+        }
+    } catch (error) {
+        
     }
     setTimeout(() => {
         state.loading = false
@@ -105,12 +109,12 @@ const ReaderRef = ref()
 async function getPreviewFile (doc) {
     state.previewFile.loading = true
     try {
+        state.previewFile.id = doc.id
+        state.previewFile.name = doc.name
         state.previewFile.blob = await GetDocumentPreview(doc.id)
     } catch (error) {
     }
     state.previewFile.loading = false
-    state.previewFile.id = doc.id
-    state.previewFile.name = doc.name
 }
 async function getParentPath (path) {
     const res = await GetBreadcrumb(path)

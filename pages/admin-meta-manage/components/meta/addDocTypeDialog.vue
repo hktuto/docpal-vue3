@@ -36,10 +36,10 @@ async function handleSubmit () {
         await AddMetaSettingApi(param)
         FromRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
+        state.visible = false
     } catch (error) {
     }
     state.loading = false
-    state.visible = false
 }
 function getIsFolder (type: string) {
     try {

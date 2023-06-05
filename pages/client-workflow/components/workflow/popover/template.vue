@@ -19,7 +19,7 @@
         </el-form>
         <template #footer>
             <el-button @click="state.dialogVisible = false">{{$t('cancel')}}</el-button>
-            <el-button @click="handleSubmit">{{$t('common_download')}}</el-button>
+            <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_download')}}</el-button>
         </template>
     </el-dialog>
 </template>
@@ -59,6 +59,7 @@ const form = reactive({
 // #endregion
 async function handleSubmit() {
     try {
+        state.loading = true
         const valid = await FormRef.value.validate((valid, fields) => valid)
         if (!valid) throw new Error(`${$i18n.t('incompleteData')}`);
         const params = {  ...state.params, paramsMap: {} }
@@ -69,6 +70,7 @@ async function handleSubmit() {
     } catch (error) {
         // ElMessage.error(error?.response?.data?.message || error.message)
     }
+    state.loading = false
 }
 async function templateParamGet (templateItem: Object) {
     dpLog({form}, 'form');

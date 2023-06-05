@@ -57,20 +57,24 @@ function imgError(event) {
     })
     async function getList (param:any) {
         state.loading = true
-        const res = await GetChildThumbnail(param)
-        state.tableData = []
-        res.entryList.forEach(async (item) => {
-            if (!item.isFolder) {
-                const blob = await DocumentThumbnailGetApi(item.id)
-                if (!!blob) {
-                    const urlCreator = window.URL || window.webkitURL
-                    item.blobUrl = urlCreator.createObjectURL(blob)
-                } 
-            }
-            state.tableData.push({...item})
-        })
-        pageParams.value.currentPage = param.pageNumber + 1
-        pageParams.value.total = res.totalSize
+        try {
+            const res = await GetChildThumbnail(param)
+            state.tableData = []
+            res.entryList.forEach(async (item) => {
+                if (!item.isFolder) {
+                    const blob = await DocumentThumbnailGetApi(item.id)
+                    if (!!blob) {
+                        const urlCreator = window.URL || window.webkitURL
+                        item.blobUrl = urlCreator.createObjectURL(blob)
+                    } 
+                }
+                state.tableData.push({...item})
+            })
+            pageParams.value.currentPage = param.pageNumber + 1
+            pageParams.value.total = res.totalSize
+        } catch (error) {
+            
+        }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number, path?: string, isFolder?: boolean) {

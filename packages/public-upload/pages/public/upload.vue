@@ -43,15 +43,19 @@ function getFormData (properties) {
 
 async function handleWorkflow(fileList: any) {
     state.loading = true
-    const formData = new FormData()
-    formData.append('taskId', state.fileRequestDetail.task.id)
-    formData.append('password', state.password)
-    formData.append('token', route.query.token)
-    fileList.forEach((file) => {
-        formData.append('files', file.raw)
-    })
-    const res = await publicFileRequestSaveApi(formData)
-    if (res) router.push('/public/uploadTip?tip=uploadedSuccessfully')
+    try {
+        const formData = new FormData()
+        formData.append('taskId', state.fileRequestDetail.task.id)
+        formData.append('password', state.password)
+        formData.append('token', route.query.token)
+        fileList.forEach((file) => {
+            formData.append('files', file.raw)
+        })
+        const res = await publicFileRequestSaveApi(formData)
+        if (res) router.push('/public/uploadTip?tip=uploadedSuccessfully')
+    } catch (error) {
+        
+    }
     setTimeout(() => { state.loading = false }, 100)
 }
 </script>

@@ -121,12 +121,16 @@ const state = reactive({
     async function getData () {
         let result = []
         state.loading = true
-        const response = await getFormPropsApi({ taskId: route.params.id })
-        const index = response.findIndex(item => item.id === 'files')
-        if (index !== -1) tableData.value = await revertUploadFile( response[index].value)
-        if(tableData.value.length > 0) handleDblclick(tableData.value[0])
+        try {
+            const response = await getFormPropsApi({ taskId: route.params.id })
+            const index = response.findIndex(item => item.id === 'files')
+            if (index !== -1) tableData.value = await revertUploadFile( response[index].value)
+            if(tableData.value.length > 0) handleDblclick(tableData.value[0])
+            getRQDetail(['email','documentId', 'submittedDate'], response)
+        } catch (error) {
+            
+        }
         state.loading = false
-        getRQDetail(['email','documentId', 'submittedDate'], response)
     }
     function getRQDetail (keys: any[], propsArr: any[]) {
         keys.forEach(key => {
@@ -206,15 +210,19 @@ const state = reactive({
     }
     async function handleSubmitData (propertiesJson) {
         loading.value = true
-        const param = {
-            taskId: route.params.id,
-            properties: {
-                approved: propertiesJson
+        try {
+            const param = {
+                taskId: route.params.id,
+                properties: {
+                    approved: propertiesJson
+                }
             }
+            const res = await workflowFormSubmitApi(param)
+            if (!!res) router.push('/fileRequest')
+        } catch (error) {
+            
         }
-        const res = await workflowFormSubmitApi(param)
         loading.value = false
-        if (!!res) router.push('/fileRequest')
     }
     function getParams () {
         const result = {}
@@ -277,19 +285,23 @@ const state = reactive({
     }
     function applyToSelect (key:string, value:string, docType?:string) {
         state.loading = true
-        if (key === 'documentType') {
-            state.selectedRow.forEach(async(item) => {
-                const metaList =  await metaListGet(value)
-                item.documentType = value
-                item.metaList = deepCopy(metaList)
-            })
-        } else {
-            tableData.value.forEach((item) => {
-                if (item.documentType === docType) {
-                    const index = item.metaList.findIndex(metaItem => metaItem.metaData === key)
-                    if (index !== -1) item.metaList[index].value = value
-                }
-            })
+        try {
+            if (key === 'documentType') {
+                state.selectedRow.forEach(async(item) => {
+                    const metaList =  await metaListGet(value)
+                    item.documentType = value
+                    item.metaList = deepCopy(metaList)
+                })
+            } else {
+                tableData.value.forEach((item) => {
+                    if (item.documentType === docType) {
+                        const index = item.metaList.findIndex(metaItem => metaItem.metaData === key)
+                        if (index !== -1) item.metaList[index].value = value
+                    }
+                })
+            }
+        } catch (error) {
+            
         }
         setTimeout(() => {state.loading = false}, 500)
     }

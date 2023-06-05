@@ -39,13 +39,15 @@ async function handleSubmit (addMore: boolean = false) {
         modifiedName: user.user.userId,
         modifiedId: user.user.userId,
     }
-    await SaveMetaValidationRuleApi(param)
+    try {
+        await SaveMetaValidationRuleApi(param)
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh', addMore)
+    } catch (error) {
+        
+    }
     state.loading = false
-    state.visible = false
-    FromRendererRef.value.vFormRenderRef.resetForm()
-    dpLog({addMore}, 'dialog');
-    
-    emits('refresh', addMore)
 }
 function handleOpen(exitList, data) {
     state.visible = true

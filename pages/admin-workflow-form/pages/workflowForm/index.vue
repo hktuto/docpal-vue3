@@ -23,9 +23,13 @@ import { GetProcessDefinitionListApi } from 'dp-api'
 
     async function getList () {
         state.loading = true
-        const res = await GetProcessDefinitionListApi()
-        state.list = res
-        state._list = deepCopy(state.list)
+        try {
+            const res = await GetProcessDefinitionListApi()
+            state.list = res
+            state._list = deepCopy(state.list)
+        } catch (error) {
+            
+        }
         state.loading = false
     }
 // #endregion

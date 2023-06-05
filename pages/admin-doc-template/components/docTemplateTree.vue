@@ -127,17 +127,21 @@ const router = useRouter()
     // 加载更多，插入到父节点
     async function getMore (node) {
       node.data.loading = true
-      const docsPage = await props.leafDataGetApi(node.data.params)
-      docsPage.entryList.push(...handleGetMoreNode(docsPage.entryList, node.data.params, node.data.id))
-       // TODO parentLogicPath
-      const parentLogicPath = node.data.parentRef
-      docsPage.entryList.forEach(docItem => {
-        if (parentLogicPath !== 'Root') {
-          treeRef.value.append(docItem, parentLogicPath)
-        }
-        // @ts-ignore
-        else treeRef.value.append(docItem, treeRef.value.root)
-      });
+      try {
+        const docsPage = await props.leafDataGetApi(node.data.params)
+        docsPage.entryList.push(...handleGetMoreNode(docsPage.entryList, node.data.params, node.data.id))
+         // TODO parentLogicPath
+        const parentLogicPath = node.data.parentRef
+        docsPage.entryList.forEach(docItem => {
+          if (parentLogicPath !== 'Root') {
+            treeRef.value.append(docItem, parentLogicPath)
+          }
+          // @ts-ignore
+          else treeRef.value.append(docItem, treeRef.value.root)
+        });
+      } catch (error) {
+        
+      }
       node.data.loading = false
     } 
   // #endregion

@@ -46,8 +46,11 @@ async function handleDelete(row) {
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
         .then(async() => {
             state.loading = true
-            const res = await DeleteDocumentTypeProfileApi(row.profileID)
-            await getTable()
+            try {
+                const res = await DeleteDocumentTypeProfileApi(row.profileID)
+                await getTable()
+            } catch (error) {
+            }
             state.loading = false
         })
 }
