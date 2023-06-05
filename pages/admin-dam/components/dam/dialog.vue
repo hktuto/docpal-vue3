@@ -99,6 +99,7 @@
 import { InfoFilled } from '@element-plus/icons-vue';
 import { 
     AddDamApi,
+    deepCopy,
     EditDamApi,
     GetDamSupportedFormat, 
 } from 'dp-api'
@@ -147,7 +148,7 @@ function handleOpen(data) {
     } else if(data.targetType) {
         state.title = 'editNewConvertion'
         state.data = data
-        handleSourceTypeChange(state.data.sourceType)
+        editSourceTypeChange(state.data.sourceType)
     } else {
         state.title = 'addNewDAM'
         state.data = {
@@ -162,13 +163,14 @@ const handleTargetTypeChange = (value) => {
     const targetItem = state.targetList.find(item => item.targetFileType === value)
     if(targetItem) {
         state.data.operation = { ...targetItem.operation }
-        state.data.name = targetList.value[index].type
+        state.data.name = targetItem.name
     } else {
         state.data.operation = {}
         state.data.name = ''
     }
 }
-function handleActionChange () {
+function handleActionChange (clearAction: boolean = true) {
+    if(!clearAction) return
     state.data.operation.width = ''
     state.data.operation.height = ''
     state.data.operation.dub = ''
@@ -179,14 +181,18 @@ const handleTypeListGet = async() => {
     if(!res) return
     Object.keys(res).forEach(key => {
         state.typeList.push({name: key, targetList: res[key]})
-    }) 
+    })
 }
-const handleSourceTypeChange = (value) => {
+const handleSourceTypeChange = async(value, clearTargetType:boolean = true) => {
     const item = state.typeList.find(item => item.name === value)
     state.targetList = item.targetList
-    state.data.targetType = ''
+    if(clearTargetType) state.data.targetType = ''
     handleTargetTypeChange()
     handleActionChange()
+}
+const editSourceTypeChange = async(value) => {
+    const item = state.typeList.find(item => item.name === value)
+    state.targetList = item.targetList
 }
 // #region module: validate 
     function numberValidate (_rule, value, callback) {
@@ -213,7 +219,7 @@ const handleSourceTypeChange = (value) => {
     }
 // #endregion
 onMounted(async() => {
-    handleTypeListGet()
+    await handleTypeListGet()
 })
 defineExpose({ handleOpen })
 </script>

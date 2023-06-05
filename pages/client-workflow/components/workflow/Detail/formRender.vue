@@ -88,24 +88,24 @@ const FromRendererRef = ref()
             if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
                 prev[key] = formDatas[key]
             }
-            dpLog(formDatas[key], 'formDatas[key]');
-            
             return prev
         }, {})
         // const data = deepCopy(formDatas)
         Object.keys(data).forEach((key, _index) => {
-            if (data[key] instanceof Array) {
-            const idArrs = []
-            if(data[key].length > 0 && (!!data[key][0].response || !!data[key][0].id)) {
-                data[key].forEach(item => {
-                idArrs.push(item.response ? item.response[0].contentId : item.id)
-                })
-            } else {
-                data[key].forEach(item => {
-                idArrs.push(item)
-                })
-            }
-            data[key] = idArrs.join(',')
+            const _data = toRaw(data[key])
+            if (_data instanceof Array) {
+                const idArrs = []
+                if(_data.length > 0 && (!!_data[0].response || !!_data[0].id)) {
+                    _data.forEach(item => {
+                        item.response = item.response.data ? item.response.data : item.response
+                        idArrs.push(item.response ? item.response[0].contentId : item.id)
+                    })
+                } else {
+                    _data.forEach(item => {
+                        idArrs.push(item)
+                    })
+                }
+                data[key] = idArrs.join(',')
             }
         })
         return data

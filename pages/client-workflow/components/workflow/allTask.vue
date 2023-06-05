@@ -53,7 +53,7 @@ const userId:string = useUser().getUserId()
     
 
     async function getList (param) {
-        param.userId = userId
+        // param.userId = userId
         state.loading = true
         const res = await getAllTask({...param, ...state.extraParams})
         

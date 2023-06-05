@@ -1,6 +1,6 @@
 import { api } from 'dp-api'
 import { ElMessage } from 'element-plus'
-const noRouteErrorPages = ['/FormEditor/']
+const noRouteErrorPages = ['/FormEditor/', '/workflowForm/']
 export default defineNuxtPlugin((nuxtApp) => {
   const router:any = nuxtApp.$router;
   const route:any = nuxtApp._route;

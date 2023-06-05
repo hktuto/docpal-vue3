@@ -12,7 +12,11 @@
                     </template>
             </Table>
         </div>
-        <ReaderDialog ref="ReaderRef" v-bind="previewFile" ></ReaderDialog>
+        <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
+            <template #header>
+                <SvgIcon src="/icons/file/position.svg" round :content="$t('jump to browse')"
+                    @click="goRoute(previewFile.path)"></SvgIcon></template>
+        </ReaderDialog>
     </NuxtLayout>
 </template>
 
@@ -90,6 +94,7 @@ const previewFile = reactive({
     blob: null,
     name: '',
     id: '',
+    path: '',
     loading: false,
     options: {
         noDownload: true,
@@ -99,13 +104,10 @@ const previewFile = reactive({
 })
 async function handleDblclick (row) {
     if(row.isFolder) {
-        router.push({
-            path: '/browse',
-            query: {
-                path: row.path,
-            },
-        })
-    } else {
+        goRoute(row.path)
+    } else if(row.type === 'Collection') {
+        goRoute(row.id, '/collection', 'tab')
+    } else{
         ReaderRef.value.handleOpen()
         previewFile.loading = true
         try {
@@ -114,9 +116,18 @@ async function handleDblclick (row) {
             
         }
         previewFile.id = row.id
+        previewFile.path = row.path
         previewFile.name = row.name
         previewFile.loading = false
     }
+}
+function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
+    router.push({
+        path,
+        query: {
+            [qPathKey]: qPath,
+        },
+    })
 }
 </script>
 

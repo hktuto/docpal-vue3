@@ -34,10 +34,10 @@ export const GetTaskFormJsonApi = async(param: GetTaskFormJsonParams):Promise<Ge
     try {
         const res = await api.get('/docpal/relation/query', { params: param }).then(res => res.data.data)
         return {
-            id: res.data[0].id,
-            json: JSON.parse(res.data[0].jsonValue),
-            processKey: res.data[0].processKey,
-            userTaskId: res.data[0].userTaskId
+            id: res[0].id,
+            json: JSON.parse(res[0].jsonValue),
+            processKey: res[0].processKey,
+            userTaskId: res[0].userTaskId
         }
     } catch (error) {
         const json = getJsonApi('null.json')

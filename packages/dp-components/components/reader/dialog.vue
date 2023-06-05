@@ -1,6 +1,14 @@
 <template>
-<el-dialog v-model="state.dialogVisible" class="reader-dialog" :title="name"
+<el-dialog v-model="state.dialogVisible" class="reader-dialog"
     append-to-body destroy-on-close>
+    <template #header>
+        <div class="flex-x-between">
+            <div>{{name}}</div>
+            <div style="padding: 0 var(--app-padding)">
+                <slot name="header"></slot>
+            </div>
+        </div>
+    </template>
     <div class="reader-dialog-main" v-loading="loading">
         <Reader ref="ReaderRef" v-bind="props" ></Reader>
     </div>

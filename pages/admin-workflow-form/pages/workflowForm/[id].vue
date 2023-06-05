@@ -15,7 +15,7 @@
                 </template>
             </el-dropdown>
         </template>
-        <div>
+        <div style="height: 100%; overflow: hidden;">
             <FromDesigner ref="FromDesignerRef" :fieldListApi="state.fieldListApi">
                 <template #submit>
                     <el-button type="text" @click="handleSubmit">{{$t('submit')}}</el-button>
