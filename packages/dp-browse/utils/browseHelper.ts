@@ -68,7 +68,8 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
   try {
     response.displayMeta = await GetDocumentAdditionalApi({documentType: response.type})
     if(userId) {
-      const permission:any = await GetDocPermission(idOrPath, userId);
+      const idPath = response.path === '/' ? '/' : idOrPath
+      const permission:any = await GetDocPermission(idPath, userId);
       if(!permission) throw new Error("no permission");
       response.canWrite = AllowTo({feature:'ReadWrite', userPermission:permission.permission })
       response.canEdit = AllowTo({feature:'ReadWrite', userPermission:permission.permission })

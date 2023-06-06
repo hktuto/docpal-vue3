@@ -86,7 +86,7 @@ export const propertiesSaveApi = async(params: propertiesSaveReq) => {
     return await api.post('/docpal/workflow/properties/save', params).then(res => res.data.data);
 }
 export const propertiesSubmitApi = async(params: propertiesSaveReq) => {
-    return await api.post('/docpal/workflow/form/submit', params).then(res => res.data.data);
+    return await api.post('/docpal/workflow/form/submit', params).then(res => res.data.result);
 }
 export const getActivityApi = async(processInstanceId:string) => {
     const response = await api.post('/docpal/workflow/history/activity', { processInstanceId, pageSize:-1 }).then(res => res.data.data);

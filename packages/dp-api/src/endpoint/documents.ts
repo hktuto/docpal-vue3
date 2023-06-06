@@ -288,7 +288,7 @@ export const conversionDownloadFileApi = async(idOrPath:string) => {
 export const getAdHocHistory = async (documentId: string) => {
     return await api.post(`/docpal/workflow/queryAdhocApprovalPage`, {
         documentId,
-        "pageNum": 1,
+        "pageNum": 0,
         "pageSize": 100
     }).then(res => res.data.data);
 }

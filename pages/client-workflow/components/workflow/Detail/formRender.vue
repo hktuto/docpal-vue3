@@ -26,7 +26,10 @@ const FromRendererRef = ref()
         }
     }
     async function handleData(data) {
-        const result = deepCopy(data)
+        const result = Object.keys(data).reduce((prev, key) => {
+            if (data[key]!== null) prev[key] = data[key]
+            return prev
+        }, {})
         const widgets = FromRendererRef.value.vFormRenderRef.getFieldWidgets()
         
         for(let i = 0; i < widgets.length; i++) {
