@@ -200,7 +200,7 @@ export const DeleteDocumentTypeProfileApi = async(profileID) => {
 }
 export const checkNameOrTitleApi = async(params) => {
     try {
-        return api.post('/docpal/workflow/checkNameOrTitle', params ).then(res => res.data.data)
+        return api.post('/docpal/workflow/checkNameOrTitle', params ).then(res => res.data.result)
     } catch (error) {
         return []
     }

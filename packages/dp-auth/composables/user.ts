@@ -1,10 +1,9 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
-
 import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
-
+    // const Cookies = useCookie('token')
     // @ts-ignore
     const appStore = useAppStore();
     const isLogin = useState<boolean>('isLogin',() => false);
@@ -100,7 +99,9 @@ export const useUser = () => {
         const {access_token, refresh_token, isRequired2FA} = await Login({
             username,  password
         })
+        
         token.value = access_token,
+        // Cookies.value = access_token || ''
         refreshToken.value = refresh_token
         sessionStorage.setItem('token', access_token);
         localStorage.setItem('refreshToken', refresh_token);

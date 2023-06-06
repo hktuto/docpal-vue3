@@ -11,6 +11,8 @@ const unreadCount = ref(0);
 const notificationStore = ref()
 const NotificationDialogRef = ref();
 const { isLogin, token } = useUser();
+const Cookies = useCookie('messageToken')
+
 const userId:string = useUser().getUserId()
 function handleOpen () {
     NotificationDialogRef.value.handleOpen()
@@ -31,15 +33,18 @@ onMounted(() => {
     getUnreadCount();
 })
 watch( () => isLogin.value, (newValue) => {
+    Cookies.value = token.value || ''
     if(newValue) {
         if(notificationStore && notificationStore.value){
             console.log("close last notification")
+            
+            
             notificationStore.value.close();
             notificationStore.value = useNotification(token.value, userId, messageChange)
             return;
         }
         notificationStore.value = useNotification(token.value, userId, messageChange)
-    }else if(notificationStore  && notificationStore.value){
+    } else if(notificationStore  && notificationStore.value){
         console.log("user logout, close last notification")
         notificationStore.value.close();
             notificationStore.value = null;
