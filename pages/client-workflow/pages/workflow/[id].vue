@@ -100,6 +100,7 @@ const isAssigneeUser = computed(() => {
                 formJson = await formJsonGet(state.taskDetail.taskDefinitionKey,
                                 state.taskDetail.taskInstance.processDefinitionKey)
                 vFormRef.value.setForm(formJson, formData)
+                
                 break
         }
     }
@@ -117,9 +118,9 @@ const isAssigneeUser = computed(() => {
     }
     async function formJsonGet (userTaskId:string, processKey:string) {
         const response = await taskFormJsonGetApi({userTaskId, processKey})
-        if (!response.data[0] ||
-            response.data[0] && !response.data[0].jsonValue) return {}
-        return JSON.parse(response.data[0].jsonValue)
+        if (!response[0] ||
+            response[0] && !response[0].jsonValue) return {}
+        return JSON.parse(response[0].jsonValue)
     }
     function handleDisabledForm() {
         if(userId !== state.taskDetail.assignee) {
