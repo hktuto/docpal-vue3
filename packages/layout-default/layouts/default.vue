@@ -21,6 +21,7 @@
                 </div>
                 
                 <div v-if="isLogin"  class="actions">
+                  <Language />
                   <ColorSwitch v-if="feature.darkMode"/>
                   <LanguageSwitch v-if="feature.multiLanguage"/>
                   <!-- <NotificationBadge v-if="feature.notification"/> -->
