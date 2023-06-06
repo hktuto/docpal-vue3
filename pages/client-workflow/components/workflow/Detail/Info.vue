@@ -46,7 +46,7 @@
             @click="handleUnclaim">
             {{ $t('workflow_Unclaim') }}
         </el-button>
-        <el-button v-else type="primary" :loading="loading"
+        <el-button v-else-if="!props.taskDetail.assignee" type="primary" :loading="loading"
             @click="handleClaim">
             {{$t('workflow_claim')}}
         </el-button>
