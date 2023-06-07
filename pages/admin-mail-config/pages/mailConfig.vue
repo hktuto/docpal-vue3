@@ -18,7 +18,7 @@ const FromRendererRef = ref()
 function handleFormChange () {}
 async function handleGet() {
     const res = await GetMailConfigApi()
-    FromRendererRef.value.vFormRenderRef.setFormData(res.result)
+    FromRendererRef.value.vFormRenderRef.setFormData(res)
 }
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
