@@ -129,6 +129,9 @@ export const downloadDocRecord = async(params) => {
             timeout: 0
         }).then(res =>res.data)
     }
+    export const DocumentThumbnailListGetApi = async(idOrPaths:string []) => {
+        return api.post('/nuxeo/document/thumbnail/list', idOrPaths).then(res =>res.data.data)
+    }
 
     export const duplicateDetectionApi = async(param) => {
         return api.post('/nuxeo/document/isDuplicateName', param).then(res => res.data.data.titles || {}).catch(err => ({}))
@@ -193,6 +196,12 @@ export const downloadDocRecord = async(params) => {
     }
     export const patchShareInfoApi = async (params: shareInfo) => {
         return await api.patch('/nuxeo/share', params).then(res =>res.data.data);
+    }
+    export const prepareShareDownloadApi = async (docIds: string[]) => {
+        return await api.post('/nuxeo/share/prepare/download', docIds).then(res =>res.data.data);
+    }
+    export const getPrepareShareDownloadUrlApi = async (docId: string) => {
+        return await api.get(`/nuxeo/share/prepare/download/${docId}`).then(res =>res.data.data);
     }
 // #endregion
 // #region module:fileRequest

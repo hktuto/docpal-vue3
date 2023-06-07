@@ -8,7 +8,7 @@ export default defineNuxtPlugin(({$i18n}) => {
         // @ts-ignore
         window.$getCookie = (name) => {
             const cookie = useCookie(name)
-            return toRaw(cookie.value)
+            return cookie.value || {}
         }
         // @ts-ignore
         window.$i18n = $i18n

@@ -80,6 +80,7 @@ export enum TABLE {
     CLIENT_ADHOC_SUBMITTED_TASK = 'clientAdhocSubmittedTask',
     CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
     CLIENT_BROWSE = 'clientBrowse',
+    CLIENT_SHARE_SET = 'clientShareSet',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -465,6 +466,55 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
             { slot: 'docName', label: 'table_name', prop: 'name' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SHARE_SET] : {
+        columns: [
+            // { id: '1', type: 'selection' },
+            // { id: '4', type: 'selection' },
+            { id: '2', label: 'table_name', prop: 'name' },
+            { id: '3', slot: 'watermark', label: 'watermark' },
+            { id: '4', label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        slots: [
+            { slot: 'watermark', label: 'watermark' }
         ],
         options: { pageSize: 20 }
     },

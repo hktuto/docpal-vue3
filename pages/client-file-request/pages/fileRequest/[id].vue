@@ -415,5 +415,6 @@ onMounted(async () => {
     display: grid;
     grid-template-rows: min-content 1fr;
     gap: var(--app-padding);
+    height: 100%;
 }
 </style>
