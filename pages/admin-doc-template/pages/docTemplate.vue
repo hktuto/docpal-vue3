@@ -72,7 +72,9 @@ const state = reactive({
         id: '',
         loading: false,
         options: {
-            noDownload: true
+            noDownload: true,
+            print: false,
+            loadAnnotations: false,
         }
     },
     permission: {
