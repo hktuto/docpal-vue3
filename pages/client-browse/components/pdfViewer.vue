@@ -1,6 +1,6 @@
 <template>
     <div class="contentContainer" v-loading="loading">
-        <iframe ref="iframe" :src="pdfReaderUrl" allowfullscreen />
+        <iframe ref="iframe" :src="_pdfReaderUrl" allowfullscreen />
     </div>
 </template>
 
@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<{
 
 const iframe = ref<HTMLIFrameElement>();
 const {public:{pdfReaderUrl}} = useRuntimeConfig();
+const _pdfReaderUrl = pdfReaderUrl.replace('upload.', '')
 const loading = ref(false);
 // const colorMode = useColorMode();
 const {locale} = useI18n()
