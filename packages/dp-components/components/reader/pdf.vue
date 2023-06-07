@@ -1,7 +1,7 @@
 <template>
     <div class="iframeContainer" v-if="!props.loading">
-        {{pdfReaderUrl}}
-        <iframe ref="iframe" :src="pdfReaderUrl" allowfullscreen />
+        {{_pdfReaderUrl}}
+        <iframe ref="iframe" :src="_pdfReaderUrl" allowfullscreen />
     </div>
 </template>
 
@@ -30,6 +30,7 @@ const { annotations, blob, name } = toRefs(props)
 
 const iframe = ref<HTMLIFrameElement>();
 const { public:{ pdfReaderUrl } } = useRuntimeConfig();
+const _pdfReaderUrl = ref()
 const { locale } = useI18n()
 const colorMode = useColorMode();
 
@@ -109,6 +110,17 @@ function gotMessageFromIframe(message:MessageEvent) {
     }, 500)
     
 }
+function getPdfReaderUrl () {
+    const host = window.location.host;
+    if(!host.includes('upload.')){
+        _pdfReaderUrl.value = host + pdfReaderUrl
+    }
+    _pdfReaderUrl.value = _pdfReaderUrl.value.replace('upload.app4', 'app4')
+}
+onMounted(() => {
+  console.log({_pdfReaderUrl});
+   getPdfReaderUrl()
+})
 useEventListener(window, 'message', gotMessageFromIframe)
 </script>
 
