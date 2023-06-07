@@ -112,10 +112,10 @@ function gotMessageFromIframe(message:MessageEvent) {
 }
 function getPdfReaderUrl () {
     const host = window.location.host;
-    if(!host.includes('upload.')){
+    if(host.includes('upload.')){
         _pdfReaderUrl.value = host + pdfReaderUrl
+        _pdfReaderUrl.value = _pdfReaderUrl.value.replace('upload.app4', 'app4')
     }
-    _pdfReaderUrl.value = _pdfReaderUrl.value.replace('upload.app4', 'app4')
 }
 onMounted(() => {
   console.log({_pdfReaderUrl});
