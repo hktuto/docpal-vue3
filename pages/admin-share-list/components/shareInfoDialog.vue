@@ -86,13 +86,15 @@ const state = reactive({
                 return date
             },
         },
-    ]
+    ],
+    shareId: ''
 })
 const value1 = ref()
 const emit = defineEmits(['submit'])
 // #region module: dialog
     const dialogVisible = ref(false)
     function handleOpen(shareInfo) {
+        state.shareId = shareInfo.shareID
         initFormatItem(shareInfo)
         dialogVisible.value = true
     }
@@ -107,7 +109,13 @@ const emit = defineEmits(['submit'])
     async function handleSubmit() {
         const valid = await formRef.value.validate((valid, fields) => valid)
         if (!valid) return
-        emit('submit', deepCopy(form))
+        const param = { 
+            // emailList: shareInfoForm.value.emailList,
+            password: form.password,
+            tokenLiveInMinutes: diffMinute(form.dueDate),
+            shareId: state.shareId
+        }
+        emit('submit', param)
         dialogVisible.value = false
     }
 // #endregion

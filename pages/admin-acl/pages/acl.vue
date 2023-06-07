@@ -126,6 +126,7 @@ async function clearanceLevelChange (value) {
     const localList = computed(() => {
         try {
             const result = state.acls.local.reduce((prev,item) => {
+                if (item.userId === 'Everyone') return prev
                 const exitItem = prev.find(prevItem => prevItem.userId === item.userId)
                 if (exitItem) {
                     permissionFilter(exitItem, item.permission, item.id)
