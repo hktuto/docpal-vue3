@@ -210,7 +210,6 @@ function renderWatermark() {
 
       const obj = watermarkToFabricObject(item, fabricCanvas.value);
       fabricStore.value.push(obj);
-      fabricCanvas.value.add(obj);
     } else {
       // set img
       const url = item.content;
@@ -235,13 +234,30 @@ function renderWatermark() {
           centerOffset: item.centerOffset,
           snapAngle: 1,
         })
-        fabricCanvas.value.add(fabricImage);
-        fabricCanvas.value.setActiveObject(fabricImage);
         fabricStore.value.push(fabricImage);
       }
       imgEL.src = url;
     }
+    
+  })
+  fabricStore.value.forEach( item => {
+    if(isTextWatermark(item.type)){
+      item.set({
+        left: item.offset.x * fabricCanvas.value.getWidth(),
+        top: item.offset.y * fabricCanvas.value.getHeight(),
+        fontSize: fontSizeConverter(item.font.size, fabricCanvas.value.getHeight()),
+      })
+    }else{
 
+      item.set({
+        left: item.offset.x * fabricCanvas.value.getWidth(),
+        top: item.offset.y * fabricCanvas.value.getHeight(),
+        scaleX: item.scaleX ,
+        scaleY: item.scaleY ,
+      })
+      item.setSrc(item.data);
+    }
+    fabricCanvas.value.add(item);
   })
 }
 
