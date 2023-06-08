@@ -17,9 +17,9 @@
             <div class="detail__canvas__container">
                 <canvas id="canvas" ref="canvasEl" :class="{'detail__canvas':true, orientation:true}"></canvas>
             </div>
-            <div v-if="selectedObject" class="detail__property">
-                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model="selectedObject" @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor" @anchorChange="anchorChangeHandler" @delete="removeWatermark" />
-                <WatermarkEditImage v-else v-model="selectedObject" @change="objectUpdated" @delete="removeWatermark" @anchorChange="anchorChangeHandler" />
+            <div v-if="selectedObject && state.watermarkEditShow" class="detail__property">
+                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model:modelValue="selectedObject" @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor" @anchorChange="anchorChangeHandler" @delete="removeWatermark" />
+                <WatermarkEditImage v-else v-model:modelValue="selectedObject" @change="objectUpdated" @delete="removeWatermark" @anchorChange="anchorChangeHandler" />
                 <WatermarkPreset v-model="selectedObject" @change="objectUpdated" />
             </div>
         </div>
@@ -41,6 +41,9 @@ const emits = defineEmits(['update','change', 'delete', 'anchorChange'])
 const props = defineProps<{
     detail: any
 }>();
+const state = reactive({
+  watermarkEditShow: true
+})
 const {detail} = toRefs(props)
 const i18n = useI18n()
 const orientation = ref<'ver' | 'hoz'>('ver');
@@ -153,6 +156,8 @@ function setUpFabric() {
 
   // listen to select change event
   fabricCanvas.value.on('selection:updated', (e) => {
+    console.log('selection:updated');
+    
     objectSelected(e);
   })
 
@@ -163,7 +168,10 @@ function setUpFabric() {
 
   // fabric object modified event
   fabricCanvas.value.on('object:modified', (e) => {
+    console.log('object:modified');
+    
     objectModified(e);
+    // objectSelected(e);
   })
 }
 function initFabric() {
@@ -304,6 +312,8 @@ function fontUpdate(size) {
 }
 
 function objectModified({target}) {
+  console.log({target}, target.angle, '??');
+  
   target.offset = {
     x : target.left / fabricCanvas.value.getWidth(),
     y : target.top / fabricCanvas.value.getHeight()
@@ -312,9 +322,17 @@ function objectModified({target}) {
     x : target.getCenterPoint().x / fabricCanvas.value.getWidth(),
     y : target.getCenterPoint().y / fabricCanvas.value.getHeight()
   };
+    updateData()
 }
-
+function updateData () {
+  state.watermarkEditShow = false
+  setTimeout(() => {
+    state.watermarkEditShow = true
+  })
+}
 function objectSelected({selected}) {
+  console.log(selected[0], selected.angle,'selected');
+  
   if (selected.length === 1) {
     selectedObject.value = selected[0];
   }

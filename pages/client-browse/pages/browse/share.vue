@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="route.query.backPath">
-        <main class="share-main">
+        <main class="share-main" v-loading="state.loading">
             <FromRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
             <div class="div2" v-loading="previewFile.loading">
                 <template v-if="previewFile.name">
@@ -42,7 +42,8 @@ const formJson = getJsonApi('shareRequest.json')
 const FromRendererRef = ref()
 const state = reactive({
     minTypeShareList: [],
-    interval: null
+    interval: null,
+    loading: false
 })
 
 const previewFile = reactive({
@@ -80,6 +81,7 @@ async function handleDblclick (row) {
     previewFile.id = row.id
 }
 async function handleSubmit () {
+    state.loading = true
     const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
     const param = {
         emailList: formData.emailList,
@@ -96,6 +98,7 @@ async function handleSubmit () {
     } catch (error) {
         // ElMessage.error(error.message)
     }
+    state.loading = false
     function watermarkListGet() {
         return state.minTypeShareList.reduce((prev,item) => {
             if (item.watermark) prev[item.id] = item.watermark

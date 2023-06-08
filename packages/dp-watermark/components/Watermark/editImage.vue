@@ -43,8 +43,9 @@ function fileChange(e) {
         ElMessage.error('Image size can not exceed 100kb!');
     }
     if(!isJPG || !isLt100k) return;
-    const ob:any = props.value;
+    const ob:any = props.modelValue;
     const imgEL = new Image();
+    
     imgEL.onload = (ev) => {
         console.log("file loaded")
         ob.width = imgEL.width;
@@ -53,7 +54,7 @@ function fileChange(e) {
         ob.scaleY = imgEL.width > 300 ? 300 / imgEL.width : 1;
 
         ob.setSrc(imgEL.src)
-        emit('update:modelValue', ob)
+        emit('change', ob)
     }
     imgEL.src = URL.createObjectURL(e.raw);
 }
