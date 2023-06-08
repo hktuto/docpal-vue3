@@ -1,0 +1,24 @@
+
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #17B2C0,
+    ),
+  ),
+  $common-component-size: (
+    'large': 40px,
+    'default': 32px,
+    'small': 24px,
+  ),
+  $font-size: (
+    'extra-large': 2rem,
+    'large': 1.25rem,
+    'medium': 1.2rem,
+    'base': 0.9rem,
+    'small': 0.8rem,
+    'extra-small': 0.75rem,
+  ),
+  $table: (
+    'current-row-bg-color': var(--el-color-primary-light-7),
+  )
+);

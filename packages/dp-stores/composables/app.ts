@@ -1,25 +1,38 @@
 import { useDebounceFn } from "@vueuse/core";
+import { defineStore } from 'pinia'
+type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | 'offline' | "forgetPassword"
+import { useOnline } from '@vueuse/core'
 
-type AppState = 'loading' | 'needAuth' | 'ready' 
+export const useAppStore = defineStore('app', () => {
 
-export const useAppStore = () => {
-
-    const state = useState<AppState>('appState', () => 'loading');
+    const state = ref<AppState>('loading');
     const noEvent = ref(false);
-    const displayState = useState<AppState>('displayState', () => 'loading');
+    const displayState = ref<AppState>('loading');
 
     const loadingEl = ref<HTMLElement>();
     const needAuthEl = ref<HTMLElement>();
     const readyElement = ref<HTMLElement>();
 
+    
+    const online = useOnline();
+    const user = useUser();
+
     const fadeOutClass = "fadeOut"
 
     const debounceChangeState = useDebounceFn(() => {
         displayState.value = state.value
-    }, 1000)
+    }, 500)
+
+    const appLoadingList = ref<any[]>([]);
+    async function appInit(){
+        for await ( const item of appLoadingList.value) {
+            state.value = item.key;
+            await item.function;
+        }
+    }
 
     watch(state, (_newState, oldState ) => {
-        console.log(_newState, oldState)
+        dpLog(_newState)
         switch(oldState) {
             case 'loading':
                 if(loadingEl.value) {
@@ -40,13 +53,24 @@ export const useAppStore = () => {
         debounceChangeState();
     })
 
+    watch(online, async(bool) => {
+        if(!bool) {
+            state.value = 'offline';
+        }else{
+            await appInit();
+            await user.verify();
+        }
+    })
     return {
         state,
         noEvent,
         loadingEl,
         needAuthEl,
         readyElement,
-        displayState
+        displayState,
+
+        appLoadingList,
+        appInit
     }
     
-}
+})

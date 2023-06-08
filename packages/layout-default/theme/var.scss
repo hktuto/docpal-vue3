@@ -1,0 +1,24 @@
+$--color-primary: #17B2C0;
+$--color-second: #239CE0;
+
+$main-hue: 209deg;
+$text-saturation: 5%;
+
+$color-grey-1000: hsl($main-hue, $text-saturation, 0%);
+$color-grey-950: hsl($main-hue, $text-saturation, 5%);
+$color-grey-900: hsl($main-hue, $text-saturation, 10%);
+$color-grey-850: hsl($main-hue, $text-saturation, 15%);
+$color-grey-800: hsl($main-hue, $text-saturation, 20%);
+$color-grey-700: hsl($main-hue, $text-saturation, 30%);
+$color-grey-600: hsl($main-hue, $text-saturation, 40%);
+$color-grey-500: hsl($main-hue, $text-saturation, 50%);
+$color-grey-400: hsl($main-hue, $text-saturation, 60%);
+$color-grey-300: hsl($main-hue, $text-saturation, 70%);
+$color-grey-200: hsl($main-hue, $text-saturation, 80%);
+$color-grey-150: hsl($main-hue, $text-saturation, 85%);
+$color-grey-100: hsl($main-hue, $text-saturation, 90%);
+$color-grey-050: hsl($main-hue, $text-saturation, 92%);
+$color-grey-000: hsl($main-hue, $text-saturation, 96%);
+$color-grey-0000: #fff;
+
+$--font-size-base: 1rem;

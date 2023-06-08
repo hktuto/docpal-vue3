@@ -1,0 +1,150 @@
+@import './var.scss';
+
+:root {
+  --brand: #17B2C0;
+  // Color
+  --primary-color: #{$--color-primary};
+  --secondary-color: #{$--color-second};
+  --hover-text-color: #{$color-grey-050};
+  --background-color: #{$color-grey-0000};
+  --hover-text-color: #{$color-grey-050};
+  --font-size-base: #{$--font-size-base};
+  --header-height: 60px;
+  --tag-border-radius: 4px;
+
+  
+
+  --primary-gradient: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  --second-background-color: linear-gradient(180deg, #F2F8FA 0%, #E6EDF7 100%);
+
+  // font-color
+  --color-grey-950: #{$color-grey-950};
+  --color-grey-900: #{$color-grey-900};
+  --color-grey-800: #{$color-grey-800};
+  --color-grey-700: #{$color-grey-700};
+  --color-grey-600: #{$color-grey-600};
+  --color-grey-500: #{$color-grey-500};
+  --color-grey-400: #{$color-grey-400};
+  --color-grey-300: #{$color-grey-300};
+  --color-grey-200: #{$color-grey-200};
+  --color-grey-150: #{$color-grey-150};
+  --color-grey-100: #{$color-grey-100};
+  --color-grey-050: #{$color-grey-050};
+  --color-grey-000: #{$color-grey-000};
+  --color-grey-0000: #{$color-grey-0000};
+  --card-bg: #fff;
+  --sidebar-bg: #{$--color-primary};
+
+  --color-p1 : #26C7D6;
+  --color-p2 : #B4EEF3;
+  --color-p3 : #EFF9F9;
+
+  --color-s1 : #2681D6;
+  --color-s2 : #6DABE5;
+  --color-s3 : #E3ECF3;
+
+  --color-b1 : #373D43;
+  --color-b2 : #5F676F;
+  --color-b3 : #8796A4;
+  --color-b4 : #fff;
+  
+  // Size
+  --app-padding: 0.75rem;
+  --app-input-padding: 0.25rem;
+
+  --color-overlay: rgba(23,48,97,0.02);
+  --color-lighten: rgba(255,255,255,0.5);
+
+  --color-glass: rgba(255,255,255,0.9);
+  --color-glass-border: rgba(255, 255, 255, 0.3);
+  --header-bg: var(--color-s3);
+
+  --menu-color: var(--color-b4);
+  --menu-selected-color: var(--secondary-color);
+  --menu-selected-bg: var(--color-b4);
+  --left-bg: #F7FDFE;
+
+  --outline-color: rgba(255,255,255,0.5);
+
+  
+  
+
+  // app color 
+  @for $i from 1 through 9 {
+    --primary-color-0#{$i} : #{rgba($--color-primary,  $i * 10%)};
+  }
+
+}
+#gradient-canvas{
+  --gradient-color-1: #119de9;
+  --gradient-color-2: #637fdc;
+  --gradient-color-3: #1dd6c3;
+  --gradient-color-4: #9adfee;
+}
+
+html.dark{
+  
+  --background-color: rgb(30, 31, 32);
+  --second-background-color: linear-gradient(180deg, #3F484F 0%, #2B3138 100%);
+
+  
+  #gradient-canvas{
+    --gradient-color-1: #1088c9;
+    --gradient-color-2: #4963bb;
+    --gradient-color-3: #12a294;
+    --gradient-color-4: #63b8cb;
+  }
+  // font-color
+  --color-grey-0000: #000;
+  --color-grey-000: #{$color-grey-950};
+  --color-grey-050: #{$color-grey-900};
+  --color-grey-100: #{$color-grey-800};
+  --color-grey-150: #{$color-grey-700};
+  --color-grey-200: #{$color-grey-600};
+  --color-grey-300: #{$color-grey-500};
+  --color-grey-400: #{$color-grey-400};
+  --color-grey-500: #{$color-grey-300};
+  --color-grey-600: #{$color-grey-200};
+  --color-grey-700: #{$color-grey-150};
+  --color-grey-800: #{$color-grey-100};
+  --color-grey-900: #{$color-grey-050};
+  --color-grey-950: #{$color-grey-0000};
+  --color-overlay: rgba(169, 186, 218, 0.02);
+  --color-lighten: rgb(37 44 50 / 50%);
+  --card-bg: #{$color-grey-900};
+
+  --sidebar-bg: var(--color-b1);
+
+  --header-bg: #282a2a;
+
+  --menu-color: var(--color-b3);
+  --menu-selected-color: var(--primary-color);
+  --menu-selected-bg: #191919;
+  --left-bg: #191919;
+  
+  --color-glass: rgba(0,0,0,0.8);
+  --color-glass-border: rgba(92, 92, 92, 0.6);
+}
+
+.highContract-mode{
+  --primary-color: #000;
+  --background-color: #fff;
+  --secondary-color: #000;
+  --background-color: #fff;
+  --second-background-color: #fff;
+  --font-size-base: 1.5rem;
+  // font-color
+  --color-grey-000: #fff;
+  --color-grey-050: #fff;
+  --color-grey-100: #fff;
+  --color-grey-150: #fff;
+  --color-grey-200: #fff;
+  --color-grey-300: #fff;
+  --color-grey-400: #fff;
+  --color-grey-500: #000;
+  --color-grey-600: #000;
+  --color-grey-700: #000;
+  --color-grey-800: #000;
+  --color-grey-900: #000;
+  --color-grey-950: #000;
+}

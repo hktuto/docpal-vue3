@@ -1,0 +1,25 @@
+{
+  "name": "color-mode",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "scripts": {
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
+    "build": "nuxi build .playground",
+    "generate": "nuxi generate .playground",
+    "preview": "nuxi preview .playground",
+    "postinstall": "nuxi prepare",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@nuxtjs/color-mode": "^3.2.0",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "eslint": "^8.28.0",
+    "nuxt": "^3.4.3",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10"
+  }
+}

@@ -1,16 +1,15 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
-import i18nSetting from './makeI18nSetting'
-import { createResolver } from '@nuxt/kit'
-const { resolve } = createResolver(import.meta.url)
-
-const styles = resolve('./assets/editLanguageStyle.scss')
+import i18nSetting, {availableLocales} from './makeI18nSetting'
 
 export default defineNuxtConfig({
-    css:[
-      styles
-    ],
     modules: [
-        '@intlify/nuxt3',
+      '@nuxtjs/i18n',
       ],
-      intlify: i18nSetting()
+      // @ts-ignore
+      i18n: i18nSetting(),
+      runtimeConfig:{
+        public: {
+          availableLocales
+        }
+      }
 })

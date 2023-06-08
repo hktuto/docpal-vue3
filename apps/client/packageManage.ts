@@ -3,26 +3,24 @@
 export function customLayer():string[] {
     const packages:string[] = [];
 
-    // all stores
-    packages.push("../../packages/dp-stores")
-
-    // i18n 
-    packages.push('../../packages/i18n');
-
-    // all components
-    packages.push("../../packages/dp-components")
-
     // default style
-    packages.push(`../../packages/${process.env.STYLE || 'defaultAssets'}`)
-
-    packages.push('../../packages/dp-browse');
     
+    // all stores
+    packages.push('../../pages/client-browse');
+    packages.push('../../pages/client-trash');
+    packages.push('../../pages/client-smart-folder');
+    packages.push('../../pages/client-file-request');
+    packages.push('../../pages/client-share-list');
+    packages.push('../../pages/client-collection');
+    packages.push('../../pages/client-workflow');
+
+    
+    packages.push("../../packages/dp-stores")
+    packages.push("../../packages/dp-auth")
+    packages.push(`../../packages/dp-search`) 
+    packages.push(`../../packages/layout-default`) // 有其它 extends 的要最後加入，不然會被改了
+
 
     return packages;
 
-}
-
-export function makeMenu():string[] {
-    const menu:string[] = [];
-    return menu;
 }

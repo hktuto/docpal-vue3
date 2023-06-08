@@ -5,19 +5,24 @@
   "type": "module",
   "main": "./nuxt.config.ts",
   "scripts": {
-    "dev": "nuxi prepare & nuxi dev .playground",
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
+    "postinstall": "nuxi prepare",
     "preview": "nuxi preview .playground",
-    "postinstall": "nuxt prepare",
     "lint": "eslint ."
   },
+  "dependencies": {
+    "@james090500/vue-tagsinput": "^3.1.4",
+    "mime-types": "^2.1.35"
+  },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.2.0",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@vueuse/components": "^9.13.0",
+    "@vueuse/core": "^9.12.0",
+    "dp-api": "workspace:*",
     "eslint": "^8.28.0",
-    "nuxt": "^3.0.0",
-    "typescript": "^4.9.3",
-    "vitest": "^0.28.4"
+    "nuxt": "^3.4.3",
+    "typescript": "^4.9.3"
   }
 }

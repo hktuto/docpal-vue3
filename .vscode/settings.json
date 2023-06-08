@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
-        "intlify"
+        "intlify",
+        "vform"
     ],
     "i18n-ally.localesPaths": [
         "packages/i18n"
