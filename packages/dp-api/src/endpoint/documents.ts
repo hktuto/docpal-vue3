@@ -13,7 +13,7 @@ export const GetChildThumbnail = async(params: pageParams):Promise<paginationDat
     return api.post<Response<paginationData>>('/nuxeo/document/children/thumbnail', params ).then(res => res.data.data);
 }
 export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {
-    return api.post<Response<DocDetail>>('/nuxeo/document',{ idOrPath }).then(res => res.data.data);
+    return api.post<Response<DocDetail>>('/nuxeo/document',{ idOrPath }, { headers: { browseErrorHandle: 'true' } }).then(res => res.data.data);
 }
 export const getSpecificVersionApi = async(params):Promise<DocDetail> => {
     return api.post<Response<DocDetail>>('/nuxeo/getSpecificVersion',params).then(res => res.data.data);
