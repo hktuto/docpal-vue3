@@ -94,6 +94,10 @@ const isAssigneeUser = computed(() => {
         let formData
         switch(state.backState) {
             case state.processState.completeTask:
+                formData = state.taskDetail.processVariables
+                formJson = await formJsonGet('complete',state.taskDetail.processDefinitionKey)
+                vFormRef.value.setForm(formJson, formData)
+                break
             default:
                 const properties = await getFormPropsApi({ taskId: route.params.id })
                 formData = formDataGetFromProps(properties)
