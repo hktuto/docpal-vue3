@@ -6,12 +6,12 @@
           </div>
             <div class="detail__tools">
                 <div class="actions">
-                    <InlineSvg :class="{icon:true, selected: orientation === 'ver'}" src="/icons/ver.svg" @click="changeOrientation('ver')" />
-                    <InlineSvg :class="{icon:true, selected: orientation === 'hoz'}" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}" :content="$t('Click to switch vertical screen')" src="/icons/ver.svg" @click="changeOrientation('ver')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}" :content="$t('Click to switch to landscape')" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
                 </div>
                 <div class="actions">
-                  <InlineSvg class="icon tools text" src="/icons/newText.svg" @click="newWatermark('text')"/>
-                  <InlineSvg class="icon tools image" src="/icons/newImage.svg" @click="newWatermark('image')"/>
+                  <SvgIcon class="icon tools text" :content="$t('Click to add Text')" src="/icons/newText.svg" @click="newWatermark('text')"/>
+                  <SvgIcon class="icon tools image" :content="$t('Click to add Image')" src="/icons/newImage.svg" @click="newWatermark('image')"/>
                 </div>
             </div>
             <div class="detail__canvas__container">
@@ -34,10 +34,9 @@
 import { ElMessage } from 'element-plus'
 import { fabric } from "fabric";
 import { useEventListener } from '@vueuse/core'
-import InlineSvg from 'vue-inline-svg';
 import {useWatermark, WatermarkTemplateDetail, Watermark} from '../../composables/Watermark'
 
-const emits = defineEmits(['change', 'delete', 'anchorChange'])
+const emits = defineEmits(['update','change', 'delete', 'anchorChange'])
 
 const props = defineProps<{
     detail: any
@@ -394,10 +393,10 @@ async function save() {
   })
   try {
     await Promise.all(promise);
-    emit('update');
+    emits('update');
     ElMessage.success(i18n.t('msg_successfullyModified') as string);
   } catch (error) {
-    emit('update');
+    emits('update');
   }
 }
 

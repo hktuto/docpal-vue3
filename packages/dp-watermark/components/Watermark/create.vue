@@ -17,8 +17,7 @@ import { ElMessage} from 'element-plus';
 import {useWatermark, WatermarkTemplate} from '../../composables/Watermark'
 
 const emits = defineEmits(['submit'])
-
-const props = defeineProps<{
+const props = defineProps<{
   list: WatermarkTemplate[]
 }>()
 const i18n = useI18n()
@@ -26,7 +25,6 @@ const i18n = useI18n()
 const form = ref({
   name: ''
 })
-const { localePath } = useContext()
 const { createWatermarkTemplate, list } = useWatermark()
 const router = useRouter();
 
@@ -41,9 +39,9 @@ async function submit() {
     return;
   }
   const newItem = await createWatermarkTemplate(form.value);
-  emit('submit', form.value)
+  emits('submit', form.value)
   router.push( {
-    path: localePath('/watermark'),
+    path: '/watermark',
     query: {
       id: newItem.id
     }
