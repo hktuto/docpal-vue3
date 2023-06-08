@@ -7,7 +7,8 @@
             <div class="content">
                 <div class="preview" v-if="readerType">
                     <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: true}" />
-                    <LazyVideoPlayer v-if="readerType === 'video'" :doc="doc" />
+                    <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
+                    <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
                 </div>
                 <h2 v-else class="noSupportContainer" >
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
@@ -43,8 +44,11 @@ const readerType = computed(() => {
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text')  ) {
         return 'pdf';
     }
-    if(mineType.includes('video')) {
+    else if(mineType.includes('video')) {
         return 'video';
+    }
+    else if (mineType.includes('audio')) {
+        return 'other';
     }
     return '';
 });

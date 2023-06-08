@@ -1,6 +1,8 @@
 <template>
-    <div v-loading="loading" class="videoPlayerContainer" >
-        <video :src="videoSrc" controls />
+    <div v-loading="state.loading" class="videoPlayerContainer" >
+        <audio v-if="state.type.includes('audio')" controls>
+            <source :src="state.src" :type="state.type" />
+        </audio>
     </div>
 </template>
 
@@ -9,19 +11,23 @@ import { GetDocumentPreview } from 'dp-api'
 const props = defineProps<{
     doc:any
 }>()
+const state = reactive({
+    type: '',
+    src: '',
+    loading: false
+})
 const {doc} = toRefs(props);
-const videoSrc = ref();
-const loading = ref(false);
 async function getData() {
-    loading.value = true;
+    state.loading = true;
     try {
         const blob = await GetDocumentPreview(props.doc.id);
         const url = window.URL.createObjectURL(blob);
-        videoSrc.value = url;
+        state.type = blob.type;
+        state.src = url;
     } catch (error) {
         
     }
-    loading.value = false;
+    state.loading = false;
 }
 
 watch(doc, () => {
