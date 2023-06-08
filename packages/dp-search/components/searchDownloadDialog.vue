@@ -35,7 +35,7 @@
         </div>
     </div>
     <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('export')}}</el-button>
+        <el-button :disabled="state.exportList.length === 0" :loading="state.loading" @click="handleSubmit()">{{$t('export')}}</el-button>
     </template>
 </el-dialog>
 </template>
