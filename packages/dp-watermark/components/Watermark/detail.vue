@@ -156,8 +156,6 @@ function setUpFabric() {
 
   // listen to select change event
   fabricCanvas.value.on('selection:updated', (e) => {
-    console.log('selection:updated');
-    
     objectSelected(e);
   })
 
@@ -168,10 +166,7 @@ function setUpFabric() {
 
   // fabric object modified event
   fabricCanvas.value.on('object:modified', (e) => {
-    console.log('object:modified');
-    
     objectModified(e);
-    // objectSelected(e);
   })
 }
 function initFabric() {
@@ -312,8 +307,6 @@ function fontUpdate(size) {
 }
 
 function objectModified({target}) {
-  console.log({target}, target.angle, '??');
-  
   target.offset = {
     x : target.left / fabricCanvas.value.getWidth(),
     y : target.top / fabricCanvas.value.getHeight()
@@ -331,8 +324,6 @@ function updateData () {
   })
 }
 function objectSelected({selected}) {
-  console.log(selected[0], selected.angle,'selected');
-  
   if (selected.length === 1) {
     selectedObject.value = selected[0];
   }

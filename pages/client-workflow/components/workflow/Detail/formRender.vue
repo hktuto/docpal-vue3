@@ -20,6 +20,7 @@ const FromRendererRef = ref()
         FromRendererRef.value.setFormJson(json)
         if (data && properties) {
             const _data = await handleData(data)
+            
             state.formData = _data
             FromRendererRef.value.vFormRenderRef.setFormData(_data)
             handleTypeIds(properties)
@@ -100,8 +101,12 @@ const FromRendererRef = ref()
                 const idArrs = []
                 if(_data.length > 0 && (!!_data[0].response || !!_data[0].id)) {
                     _data.forEach(item => {
-                        item.response = item.response.data ? item.response.data : item.response
-                        idArrs.push(item.response ? item.response[0].contentId : item.id)
+                        if(item.response) {
+                            item.response = item.response.data ? item.response.data : item.response
+                            idArrs.push(item.response[0].contentId)
+                        } else {
+                            idArrs.push(item.id)
+                        }
                     })
                 } else {
                     _data.forEach(item => {
