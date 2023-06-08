@@ -4,7 +4,7 @@
             @row-dblclick="handleDblclick"></Table>
     <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
         <template #actions>
-            <el-button :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+            <el-button :icon="Download" @click="handleDownload(previewFile)">{{$t('download')}}</el-button>
         </template>
     </ReaderDialog>
 </template>
