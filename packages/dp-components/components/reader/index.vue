@@ -21,9 +21,9 @@
         </template>
     </el-image>
     <template v-else-if="state.fileType">
-        <div class="noSupportContainer">
+        <h2 class="noSupportContainer">
             {{ $t('msg_thisFormatFileIsNotSupported') }}
-        </div>
+        </h2>
     </template>
 </template>
 
