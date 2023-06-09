@@ -63,7 +63,6 @@ function newWatermark(type: 'text' | 'image') {
   switch (type) {
     case 'text':
       const text = newTextWatermark(fabricCanvas);
-      console.log(text);
       fabricCanvas.add(text);
       // fabricCanvas.setActiveObject(text);
       // fabricStore.value.push(text);
@@ -164,11 +163,6 @@ function setUpFabric() {
   // fabric deselected event
   fabricCanvas.on('selection:cleared', (e) => {
     selectedObject.value = null;
-  })
-  fabricCanvas.on('object:removed', (e) => {
-    console.log(e, 'object:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:remove');
-    
-    // selectedObject.value = null;
   })
   // fabric object modified event
   fabricCanvas.on('object:modified', (e) => {
@@ -341,18 +335,14 @@ function removeWatermark(){
   if(selectedObject.value){
     // check selected object is in props.detail
     const index = props.detail.watermarkSettings.findIndex( (item:any) => item.id === selectedObject.value.id);
-    console.log(index);
     
     if(index > -1){
       // if in props.detail, push to itemToDelete
       itemToDelete.value.push(selectedObject.value.id)
     }
-    console.log(toRaw(selectedObject.value), 'selectedObject.value');
     let objects = fabricCanvas.getObjects();
-    console.log({objects});
     
     fabricCanvas.remove(toRaw(selectedObject.value));
-    console.log(fabricCanvas);
     
     selectedObject.value = null;
     fabricCanvas.renderAll();
