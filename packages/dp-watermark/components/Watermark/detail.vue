@@ -366,6 +366,10 @@ async function save() {
     const { id, type , position ,  text} = obj;
     // if no id skip
     if (!id) return;
+    const _centerOffset = {
+      x : obj.getCenterPoint().x / fabricCanvas.value.getWidth(),
+      y : obj.getCenterPoint().y / fabricCanvas.value.getHeight()
+    }
     if(isTextWatermark(type)) {
       // convert text and dynamic fabric to watermark
       const textObj:any = {
@@ -378,7 +382,7 @@ async function save() {
         content: text,
         opacity: obj.opacity,
         font: obj.font,
-        centerOffset: obj.centerOffset,
+        centerOffset: obj.centerOffset || _centerOffset,
       }
       watermarks.push(textObj)
     }else {
@@ -399,7 +403,7 @@ async function save() {
         opacity: obj.opacity,
         scale: obj.scaleX,
         data: base64,
-        centerOffset: obj.centerOffset,
+        centerOffset: obj.centerOffset || _centerOffset,
       }
       watermarks.push(imgObj);
     }
