@@ -51,7 +51,7 @@ const bgImg = computed(() => orientation.value === 'ver' ? '/images/watermark/ve
 const {updateWatermarkTemplateDetail, isTextWatermark, removeWatermarkApi, fontSizeConverter, newTextWatermark, newImageWatermark, watermarkToFabricObject} = useWatermark()
 // store watermark fabric object
 const fabricStore = ref<any[]>([]);
-const fabricCanvas = ref<any>(null);
+let fabricCanvas;
 const canvasEl = ref<any>(null);
 const containerEl = ref<any>(null);
 const itemToDelete = ref([]);
@@ -61,10 +61,11 @@ const canvasScale = ref(1);
 function newWatermark(type: 'text' | 'image') {
   switch (type) {
     case 'text':
-      const text = newTextWatermark(fabricCanvas.value);
-      fabricCanvas.value.add(text);
-      fabricCanvas.value.setActiveObject(text);
-      fabricStore.value.push(text);
+      const text = newTextWatermark(fabricCanvas);
+      console.log(text);
+      fabricCanvas.add(text);
+      // fabricCanvas.setActiveObject(text);
+      // fabricStore.value.push(text);
       break;
     case 'image':
       const url = '/images/copy-stamp.png';
@@ -88,8 +89,8 @@ function newWatermark(type: 'text' | 'image') {
             y:0,
           }
         })
-        fabricCanvas.value.add(fabricImage);
-        fabricCanvas.value.setActiveObject(fabricImage);
+        fabricCanvas.add(fabricImage);
+        fabricCanvas.setActiveObject(fabricImage);
         fabricStore.value.push(fabricImage);
       }
       imgEL.src = url;
@@ -106,8 +107,8 @@ function changeOrientation(newOrientation: "ver" | "hoz") {
 }
 
 function setUpFabric() {
-  if (fabricCanvas.value) {
-    fabricCanvas.value.dispose();
+  if (fabricCanvas) {
+    fabricCanvas.dispose();
   }
   const containerSize = containerEl.value.getBoundingClientRect();
   const containerOrientation = containerSize.width > containerSize.height ? 'hoz' : 'ver';
@@ -134,38 +135,38 @@ function setUpFabric() {
   // use height to calculate because font resize is based on height
   canvasScale.value = height / (orientation.value === 'ver' ? 640 : 960 )
   // init fabric canvas
-  fabricCanvas.value = new fabric.Canvas('canvas');
+  fabricCanvas = new fabric.Canvas('canvas');
 
   fabric.Image.fromURL(bgImg.value, (img) => {
     img.set({
       selectable: false,
       width: img.width,
       height: img.height,
-      scaleX: fabricCanvas.value.getWidth() / img.width,
-      scaleY: fabricCanvas.value.getHeight() / img.height,
+      scaleX: fabricCanvas.getWidth() / img.width,
+      scaleY: fabricCanvas.getHeight() / img.height,
     });
-    fabricCanvas.value.add(img);
+    fabricCanvas.add(img);
     img.sendToBack();
   });
   // draw watermark
 
   // setup event select listener
-  fabricCanvas.value.on('selection:created', (e) => {
+  fabricCanvas.on('selection:created', (e) => {
     objectSelected(e);
   })
 
   // listen to select change event
-  fabricCanvas.value.on('selection:updated', (e) => {
+  fabricCanvas.on('selection:updated', (e) => {
     objectSelected(e);
   })
 
   // fabric deselected event
-  fabricCanvas.value.on('selection:cleared', (e) => {
+  fabricCanvas.on('selection:cleared', (e) => {
     selectedObject.value = null;
   })
 
   // fabric object modified event
-  fabricCanvas.value.on('object:modified', (e) => {
+  fabricCanvas.on('object:modified', (e) => {
     objectModified(e);
   })
 }
@@ -187,28 +188,28 @@ function resizeFabric() {
   fabricStore.value.forEach( item => {
     if(isTextWatermark(item.type)){
       item.set({
-        left: item.offset.x * fabricCanvas.value.getWidth(),
-        top: item.offset.y * fabricCanvas.value.getHeight(),
-        fontSize: fontSizeConverter(item.font.size, fabricCanvas.value.getHeight()),
+        left: item.offset.x * fabricCanvas.getWidth(),
+        top: item.offset.y * fabricCanvas.getHeight(),
+        fontSize: fontSizeConverter(item.font.size, fabricCanvas.getHeight()),
       })
     }else{
 
       item.set({
-        left: item.offset.x * fabricCanvas.value.getWidth(),
-        top: item.offset.y * fabricCanvas.value.getHeight(),
+        left: item.offset.x * fabricCanvas.getWidth(),
+        top: item.offset.y * fabricCanvas.getHeight(),
         scaleX: item.scaleX ,
         scaleY: item.scaleY ,
       })
       item.setSrc(item.data);
     }
-    fabricCanvas.value.add(item);
+    fabricCanvas.add(item);
   })
 }
 function renderWatermark() {
   props.detail.watermarkSettings.forEach( (item:any) => {
     if(isTextWatermark(item.type)){
 
-      const obj = watermarkToFabricObject(item, fabricCanvas.value);
+      const obj = watermarkToFabricObject(item, fabricCanvas);
       fabricStore.value.push(obj);
     } else {
       // set img
@@ -226,8 +227,8 @@ function renderWatermark() {
           scaleX: Number(item.scale),
           scaleY: Number(item.scale),
           angle: item.rotate || 0,
-          left: item.offset.x * fabricCanvas.value.getWidth() ,
-          top: item.offset.y * fabricCanvas.value.getHeight() ,
+          left: item.offset.x * fabricCanvas.getWidth() ,
+          top: item.offset.y * fabricCanvas.getHeight() ,
           offset:item.offset,
           data: item.content,
           position: item.position,
@@ -243,21 +244,21 @@ function renderWatermark() {
   fabricStore.value.forEach( item => {
     if(isTextWatermark(item.type)){
       item.set({
-        left: item.offset.x * fabricCanvas.value.getWidth(),
-        top: item.offset.y * fabricCanvas.value.getHeight(),
-        fontSize: fontSizeConverter(item.font.size, fabricCanvas.value.getHeight()),
+        left: item.offset.x * fabricCanvas.getWidth(),
+        top: item.offset.y * fabricCanvas.getHeight(),
+        fontSize: fontSizeConverter(item.font.size, fabricCanvas.getHeight()),
       })
     }else{
 
       item.set({
-        left: item.offset.x * fabricCanvas.value.getWidth(),
-        top: item.offset.y * fabricCanvas.value.getHeight(),
+        left: item.offset.x * fabricCanvas.getWidth(),
+        top: item.offset.y * fabricCanvas.getHeight(),
         scaleX: item.scaleX ,
         scaleY: item.scaleY ,
       })
       item.setSrc(item.data);
     }
-    fabricCanvas.value.add(item);
+    fabricCanvas.add(item);
   })
 }
 
@@ -265,7 +266,7 @@ function changeFillColor(color: string) {
   if (selectedObject.value) {
     selectedObject.value.set('fill', color);
     selectedObject.value.font.color = color;
-    fabricCanvas.value.renderAll();
+    fabricCanvas.renderAll();
   }
 }
 
@@ -279,57 +280,57 @@ function anchorChangeHandler(newAnchor: string) {
       break;
     case 'tRight':
       selectedObject.value.set({
-        left: fabricCanvas.value.getWidth() - selectedObject.value.width,
+        left: fabricCanvas.getWidth() - selectedObject.value.width,
         top: 0,
       });
       break;
     case 'bLeft' :
       selectedObject.value.set({
         left: 0,
-        top: fabricCanvas.value.getHeight() - selectedObject.value.height
+        top: fabricCanvas.getHeight() - selectedObject.value.height
       });
       break;
     case 'bRight':
       selectedObject.value.set({
-        left: fabricCanvas.value.getWidth() - selectedObject.value.width,
-        top: fabricCanvas.value.getHeight() - selectedObject.value.height,
+        left: fabricCanvas.getWidth() - selectedObject.value.width,
+        top: fabricCanvas.getHeight() - selectedObject.value.height,
       });
       break;
     case 'center':
       selectedObject.value.set({
-        left: fabricCanvas.value.getWidth() / 2 - selectedObject.value.width / 2,
-        top: fabricCanvas.value.getHeight() / 2 - selectedObject.value.height / 2,
+        left: fabricCanvas.getWidth() / 2 - selectedObject.value.width / 2,
+        top: fabricCanvas.getHeight() / 2 - selectedObject.value.height / 2,
       });
       break;
   }
   selectedObject.value.position = newAnchor;
   selectedObject.value.offset = {
-    x : selectedObject.value.left / fabricCanvas.value.getWidth(),
-    y : selectedObject.value.top / fabricCanvas.value.getHeight()
+    x : selectedObject.value.left / fabricCanvas.getWidth(),
+    y : selectedObject.value.top / fabricCanvas.getHeight()
   }
-  fabricCanvas.value.renderAll()
+  fabricCanvas.renderAll()
 
 }
 function objectUpdated() {
-  fabricCanvas.value.renderAll()
+  fabricCanvas.renderAll()
 }
 
 function fontUpdate(size) {
   if (selectedObject.value) {
-    selectedObject.value.fontSize = fontSizeConverter(size, fabricCanvas.value.getHeight())
+    selectedObject.value.fontSize = fontSizeConverter(size, fabricCanvas.getHeight())
     selectedObject.value.font.size = size;
-    fabricCanvas.value.renderAll()
+    fabricCanvas.renderAll()
   }
 }
 
 function objectModified({target}) {
   target.offset = {
-    x : target.left / fabricCanvas.value.getWidth(),
-    y : target.top / fabricCanvas.value.getHeight()
+    x : target.left / fabricCanvas.getWidth(),
+    y : target.top / fabricCanvas.getHeight()
   }
   target.centerOffset = {
-    x : target.getCenterPoint().x / fabricCanvas.value.getWidth(),
-    y : target.getCenterPoint().y / fabricCanvas.value.getHeight()
+    x : target.getCenterPoint().x / fabricCanvas.getWidth(),
+    y : target.getCenterPoint().y / fabricCanvas.getHeight()
   };
     updateData()
 }
@@ -341,7 +342,10 @@ function updateData () {
 }
 function objectSelected({selected}) {
   if (selected.length === 1) {
+    console.log(selected[0])
     selectedObject.value = selected[0];
+  }else{
+    selectedObject.value = null;
   }
 }
 
@@ -353,22 +357,22 @@ function removeWatermark(){
       // if in props.detail, push to itemToDelete
       itemToDelete.value.push(selectedObject.value.id)
     }
-    fabricCanvas.value.remove(selectedObject.value);
+    fabricCanvas.remove(selectedObject.value);
     selectedObject.value = null;
-    fabricCanvas.value.renderAll();
+    fabricCanvas.renderAll();
   }
 }
 
 async function save() {
   // convert all fabric object to watermark
   const watermarks:Watermark[] = []
-  fabricCanvas.value.getObjects().forEach((obj,index) => {
+  fabricCanvas.getObjects().forEach((obj,index) => {
     const { id, type , position ,  text} = obj;
     // if no id skip
     if (!id) return;
     const _centerOffset = {
-      x : obj.getCenterPoint().x / fabricCanvas.value.getWidth(),
-      y : obj.getCenterPoint().y / fabricCanvas.value.getHeight()
+      x : obj.getCenterPoint().x / fabricCanvas.getWidth(),
+      y : obj.getCenterPoint().y / fabricCanvas.getHeight()
     }
     if(isTextWatermark(type)) {
       // convert text and dynamic fabric to watermark
