@@ -81,6 +81,7 @@ export const useUser = () => {
     async function verify() {
         try {
             user.value = await Verify();
+            Cookies.value = JSON.stringify(user.value) 
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
@@ -100,7 +101,7 @@ export const useUser = () => {
             username,  password
         })
         token.value = access_token,
-        Cookies.value = JSON.stringify(user.value) 
+       
         // Cookies.value = access_token || ''
         refreshToken.value = refresh_token
         sessionStorage.setItem('token', access_token);
