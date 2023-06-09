@@ -25,7 +25,7 @@
         </div>
 
         <div class="detail__footer">
-          <ElButton type="primary" @click="save">Save</ElButton>
+          <ElButton type="primary" :loading="state.loading" @click="save">Save</ElButton>
         </div>
     </div>
 </template>
@@ -42,7 +42,8 @@ const props = defineProps<{
     detail: any
 }>();
 const state = reactive({
-  watermarkEditShow: true
+  watermarkEditShow: true,
+  loading: false
 })
 const {detail} = toRefs(props)
 const i18n = useI18n()
@@ -164,7 +165,11 @@ function setUpFabric() {
   fabricCanvas.on('selection:cleared', (e) => {
     selectedObject.value = null;
   })
-
+  fabricCanvas.on('object:removed', (e) => {
+    console.log(e, 'object:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:removeobject:remove');
+    
+    // selectedObject.value = null;
+  })
   // fabric object modified event
   fabricCanvas.on('object:modified', (e) => {
     objectModified(e);
@@ -336,11 +341,19 @@ function removeWatermark(){
   if(selectedObject.value){
     // check selected object is in props.detail
     const index = props.detail.watermarkSettings.findIndex( (item:any) => item.id === selectedObject.value.id);
+    console.log(index);
+    
     if(index > -1){
       // if in props.detail, push to itemToDelete
       itemToDelete.value.push(selectedObject.value.id)
     }
-    fabricCanvas.remove(selectedObject.value);
+    console.log(toRaw(selectedObject.value), 'selectedObject.value');
+    let objects = fabricCanvas.getObjects();
+    console.log({objects});
+    
+    fabricCanvas.remove(toRaw(selectedObject.value));
+    console.log(fabricCanvas);
+    
     selectedObject.value = null;
     fabricCanvas.renderAll();
   }
@@ -348,6 +361,8 @@ function removeWatermark(){
 
 async function save() {
   // convert all fabric object to watermark
+  state.loading = true
+
   const watermarks:Watermark[] = []
   fabricCanvas.getObjects().forEach((obj,index) => {
     const { id, type , position ,  text} = obj;
@@ -414,6 +429,7 @@ async function save() {
   } catch (error) {
     emits('update');
   }
+  state.loading = false
 }
 
 watch(detail, (newVal) => {
