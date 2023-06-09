@@ -96,6 +96,7 @@ import {
     TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const route = useRoute()
+const router = useRouter()
 const state = reactive({
     curReaderType: '',
     documentType: '',
@@ -218,6 +219,8 @@ const state = reactive({
                 }
             }
             const res = await workflowFormSubmitApi(param)
+            console.log(res);
+            
             if (!!res) router.push('/fileRequest')
         } catch (error) {
             
