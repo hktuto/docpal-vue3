@@ -205,7 +205,7 @@ const state = reactive({
     }
     async function handleSubmit () {
         if(!validateForm()) return
-        if (await checkDuplicate()) return
+        // if (await checkDuplicate()) return
         handleSubmitData(getParams())
     }
     async function handleSubmitData (propertiesJson) {
