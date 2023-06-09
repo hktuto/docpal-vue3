@@ -211,6 +211,7 @@ function renderWatermark() {
 
       const obj = watermarkToFabricObject(item, fabricCanvas);
       fabricStore.value.push(obj);
+      fabricCanvas.add(obj);
     } else {
       // set img
       const url = item.content;
@@ -235,31 +236,14 @@ function renderWatermark() {
           centerOffset: item.centerOffset,
           snapAngle: 1,
         })
+        fabricCanvas.add(fabricImage);
         fabricStore.value.push(fabricImage);
       }
       imgEL.src = url;
     }
     
   })
-  fabricStore.value.forEach( item => {
-    if(isTextWatermark(item.type)){
-      item.set({
-        left: item.offset.x * fabricCanvas.getWidth(),
-        top: item.offset.y * fabricCanvas.getHeight(),
-        fontSize: fontSizeConverter(item.font.size, fabricCanvas.getHeight()),
-      })
-    }else{
-
-      item.set({
-        left: item.offset.x * fabricCanvas.getWidth(),
-        top: item.offset.y * fabricCanvas.getHeight(),
-        scaleX: item.scaleX ,
-        scaleY: item.scaleY ,
-      })
-      item.setSrc(item.data);
-    }
-    fabricCanvas.add(item);
-  })
+  
 }
 
 function changeFillColor(color: string) {
@@ -342,7 +326,6 @@ function updateData () {
 }
 function objectSelected({selected}) {
   if (selected.length === 1) {
-    console.log(selected[0])
     selectedObject.value = selected[0];
   }else{
     selectedObject.value = null;
