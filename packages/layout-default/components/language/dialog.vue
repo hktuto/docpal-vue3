@@ -2,6 +2,14 @@
 <el-dialog v-model="state.visible" class="scroll-dialog" :title="$t('languageSet')"
     :close-on-click-modal="false"
     >
+    <Table :columns="tableSetting.columns" :table-data="state.tableData"
+            v-loading="state.loading"
+            @command="handleAction"
+            @row-dblclick="handleDblclick">
+            <template #currentPath="{row}">
+                <span v-if="row.currentPath" class="pathButton"  @click="goClientPath(row.currentPath)">{{ row.logicalPath }}</span>
+            </template>
+    </Table>
     <div v-for="item in state.languageKeys">
         <b>{{item}}</b>： {{$t(item)}}
         <el-button>{{$t('set')}}</el-button>
@@ -17,8 +25,13 @@ const emits = defineEmits([
 const state = reactive({
     loading: false,
     visible: false,
-    languageKeys: []
+    languageKeys: [],
+    tableData: []
 })
+const tableKey = TABLE.CLIENT_FILE_UPLOAD
+const tableSetting = defaultTableSetting[tableKey]
+function handleAction () {}
+function handleDblclick () {}
 function handleOpen () {
     state.visible = true
     state.languageKeys = getLanguageKeys()
