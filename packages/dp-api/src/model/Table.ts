@@ -934,27 +934,31 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
-            {   
-                id: '4',
-                "type": "buttons",
-                "label": "tableHeader_actions",
-                "prop": "",
-                "align": "left",
-                "hide": false,
-                "system": false,
-                "showOverflowTooltip": false,
-                "formatList": [],
-                "buttons": [
-                    {
-                        "name": "download",
-                        "command": "download",
-                        "type": "primary",
-                        "index": 0
-                    }
-                ],
-                "prefixIcon": "",
-                "suffixIcon": "",
-            }
+            { id: '4', slot: 'actions', label: 'tableHeader_actions' }
+            // {   
+            //     id: '4',
+            //     "type": "buttons",
+            //     "label": "tableHeader_actions",
+            //     "prop": "",
+            //     "align": "left",
+            //     "hide": false,
+            //     "system": false,
+            //     "showOverflowTooltip": false,
+            //     "formatList": [],
+            //     "buttons": [
+            //         {
+            //             "name": "download",
+            //             "command": "download",
+            //             "type": "primary",
+            //             "index": 0
+            //         }
+            //     ],
+            //     "prefixIcon": "",
+            //     "suffixIcon": "",
+            // }
+        ],
+        slots: [
+            { slot: 'actions', label: 'tableHeader_actions' }
         ],
         events: ['download'],
         options: { pageSize: 20 }

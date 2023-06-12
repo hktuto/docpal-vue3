@@ -9,3 +9,6 @@ export const getPreviewApi = async(params: getPreviewParams) => {
 export const publicDownloadApi = async(params: getPreviewParams) => {
     return api.get(`/nuxeo/public/share/download?token=${params.token}&password=${params.password}&documentId=${params.documentId}`, { responseType: 'blob', timeout: 0 }).then(res => res.data)
 }
+export const checkWatermarkStatusApi = async(params: getPreviewParams) => {
+    return api.get(`/nuxeo/public/document/${params.documentId}?token=${params.token}&password=${params.password}&documentId=${params.documentId}`).then(res => res.data.data)
+}
