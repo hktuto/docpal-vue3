@@ -60,7 +60,11 @@ async function handleSubmit() {
           prev.push(item.id)
           return prev
       }, [])
-      const blob = await ExportSearchCsvApi({ ...state.searchParams, hiddenList: hideIds })
+      const orderList = state.exportList.reduce((prev,item) => {
+          prev.push(item.id)
+          return prev
+      }, [])
+      const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList, hiddenList: hideIds })
       await downloadBlob(blob, 'search.csv')
       state.visible = false
     } catch (error) {
