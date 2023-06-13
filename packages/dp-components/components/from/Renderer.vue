@@ -59,7 +59,12 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
         blob: null,
         name: '',
         id: '',
-        loading: false
+        loading: false,
+        options: {
+            noDownload: true,
+            print: false,
+            loadAnnotations: false,
+        }
     })
     async function handleFilePreview(fileInfo) {
         ReaderRef.value.handleOpen()

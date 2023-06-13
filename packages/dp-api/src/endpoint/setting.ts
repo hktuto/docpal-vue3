@@ -45,7 +45,6 @@ export const GetTableColumnSetting = async():Promise<TableColumnSetting> => {
     return locale
   }
 
-
 // # get OCR setting
 export const getOcrSupportedLanguage = () => {
   return api.get('/nuxeo/ocr/supportedLanguage').then(res => res.data.data.languages);

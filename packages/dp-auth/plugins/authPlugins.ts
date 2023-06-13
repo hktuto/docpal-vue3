@@ -6,12 +6,15 @@ export default defineNuxtPlugin((nuxtApp) => {
   const router:any = nuxtApp.$router;
     // Doing something with nuxtApp
     // setup api for token refresh
+    // @ts-ignore
+    const { locale } = nuxtApp.$i18n
     api.interceptors.request.use( async(config) => {
         const token = sessionStorage.getItem('token');
         if(token) {
           config.headers = {
             ...config.headers,
             Authorization: `Bearer ${token}`,
+            'Accept-Language': locale.value
           }
         }
         return config;

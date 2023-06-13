@@ -6,26 +6,26 @@
           </div>
             <div class="detail__tools">
                 <div class="actions">
-                    <InlineSvg :class="{icon:true, selected: orientation === 'ver'}" src="/icons/ver.svg" @click="changeOrientation('ver')" />
-                    <InlineSvg :class="{icon:true, selected: orientation === 'hoz'}" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}" :content="$t('Click to switch vertical screen')" src="/icons/ver.svg" @click="changeOrientation('ver')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}" :content="$t('Click to switch to landscape')" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
                 </div>
                 <div class="actions">
-                  <InlineSvg class="icon tools text" src="/icons/newText.svg" @click="newWatermark('text')"/>
-                  <InlineSvg class="icon tools image" src="/icons/newImage.svg" @click="newWatermark('image')"/>
+                  <SvgIcon class="icon tools text" :content="$t('Click to add Text')" src="/icons/newText.svg" @click="newWatermark('text')"/>
+                  <SvgIcon class="icon tools image" :content="$t('Click to add Image')" src="/icons/newImage.svg" @click="newWatermark('image')"/>
                 </div>
             </div>
             <div class="detail__canvas__container">
                 <canvas id="canvas" ref="canvasEl" :class="{'detail__canvas':true, orientation:true}"></canvas>
             </div>
-            <div v-if="selectedObject" class="detail__property">
-                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model="selectedObject" @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor" @anchorChange="anchorChangeHandler" @delete="removeWatermark" />
-                <WatermarkEditImage v-else v-model="selectedObject" @change="objectUpdated" @delete="removeWatermark" @anchorChange="anchorChangeHandler" />
+            <div v-if="selectedObject && state.watermarkEditShow" class="detail__property">
+                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model:modelValue="selectedObject" @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor" @anchorChange="anchorChangeHandler" @delete="removeWatermark" />
+                <WatermarkEditImage v-else v-model:modelValue="selectedObject" @change="objectUpdated" @delete="removeWatermark" @anchorChange="anchorChangeHandler" />
                 <WatermarkPreset v-model="selectedObject" @change="objectUpdated" />
             </div>
         </div>
 
         <div class="detail__footer">
-          <ElButton type="primary" @click="save">Save</ElButton>
+          <ElButton type="primary" :loading="state.loading" @click="save">Save</ElButton>
         </div>
     </div>
 </template>
@@ -34,14 +34,17 @@
 import { ElMessage } from 'element-plus'
 import { fabric } from "fabric";
 import { useEventListener } from '@vueuse/core'
-import InlineSvg from 'vue-inline-svg';
 import {useWatermark, WatermarkTemplateDetail, Watermark} from '../../composables/Watermark'
 
-const emits = defineEmits(['change', 'delete', 'anchorChange'])
+const emits = defineEmits(['update','change', 'delete', 'anchorChange'])
 
 const props = defineProps<{
     detail: any
 }>();
+const state = reactive({
+  watermarkEditShow: true,
+  loading: false
+})
 const {detail} = toRefs(props)
 const i18n = useI18n()
 const orientation = ref<'ver' | 'hoz'>('ver');
@@ -49,7 +52,7 @@ const bgImg = computed(() => orientation.value === 'ver' ? '/images/watermark/ve
 const {updateWatermarkTemplateDetail, isTextWatermark, removeWatermarkApi, fontSizeConverter, newTextWatermark, newImageWatermark, watermarkToFabricObject} = useWatermark()
 // store watermark fabric object
 const fabricStore = ref<any[]>([]);
-const fabricCanvas = ref<any>(null);
+let fabricCanvas;
 const canvasEl = ref<any>(null);
 const containerEl = ref<any>(null);
 const itemToDelete = ref([]);
@@ -59,10 +62,10 @@ const canvasScale = ref(1);
 function newWatermark(type: 'text' | 'image') {
   switch (type) {
     case 'text':
-      const text = newTextWatermark(fabricCanvas.value);
-      fabricCanvas.value.add(text);
-      fabricCanvas.value.setActiveObject(text);
-      fabricStore.value.push(text);
+      const text = newTextWatermark(fabricCanvas);
+      fabricCanvas.add(text);
+      // fabricCanvas.setActiveObject(text);
+      // fabricStore.value.push(text);
       break;
     case 'image':
       const url = '/images/copy-stamp.png';
@@ -86,8 +89,8 @@ function newWatermark(type: 'text' | 'image') {
             y:0,
           }
         })
-        fabricCanvas.value.add(fabricImage);
-        fabricCanvas.value.setActiveObject(fabricImage);
+        fabricCanvas.add(fabricImage);
+        fabricCanvas.setActiveObject(fabricImage);
         fabricStore.value.push(fabricImage);
       }
       imgEL.src = url;
@@ -104,8 +107,8 @@ function changeOrientation(newOrientation: "ver" | "hoz") {
 }
 
 function setUpFabric() {
-  if (fabricCanvas.value) {
-    fabricCanvas.value.dispose();
+  if (fabricCanvas) {
+    fabricCanvas.dispose();
   }
   const containerSize = containerEl.value.getBoundingClientRect();
   const containerOrientation = containerSize.width > containerSize.height ? 'hoz' : 'ver';
@@ -132,38 +135,37 @@ function setUpFabric() {
   // use height to calculate because font resize is based on height
   canvasScale.value = height / (orientation.value === 'ver' ? 640 : 960 )
   // init fabric canvas
-  fabricCanvas.value = new fabric.Canvas('canvas');
+  fabricCanvas = new fabric.Canvas('canvas');
 
   fabric.Image.fromURL(bgImg.value, (img) => {
     img.set({
       selectable: false,
       width: img.width,
       height: img.height,
-      scaleX: fabricCanvas.value.getWidth() / img.width,
-      scaleY: fabricCanvas.value.getHeight() / img.height,
+      scaleX: fabricCanvas.getWidth() / img.width,
+      scaleY: fabricCanvas.getHeight() / img.height,
     });
-    fabricCanvas.value.add(img);
+    fabricCanvas.add(img);
     img.sendToBack();
   });
   // draw watermark
 
   // setup event select listener
-  fabricCanvas.value.on('selection:created', (e) => {
+  fabricCanvas.on('selection:created', (e) => {
     objectSelected(e);
   })
 
   // listen to select change event
-  fabricCanvas.value.on('selection:updated', (e) => {
+  fabricCanvas.on('selection:updated', (e) => {
     objectSelected(e);
   })
 
   // fabric deselected event
-  fabricCanvas.value.on('selection:cleared', (e) => {
+  fabricCanvas.on('selection:cleared', (e) => {
     selectedObject.value = null;
   })
-
   // fabric object modified event
-  fabricCanvas.value.on('object:modified', (e) => {
+  fabricCanvas.on('object:modified', (e) => {
     objectModified(e);
   })
 }
@@ -185,30 +187,30 @@ function resizeFabric() {
   fabricStore.value.forEach( item => {
     if(isTextWatermark(item.type)){
       item.set({
-        left: item.offset.x * fabricCanvas.value.getWidth(),
-        top: item.offset.y * fabricCanvas.value.getHeight(),
-        fontSize: fontSizeConverter(item.font.size, fabricCanvas.value.getHeight()),
+        left: item.offset.x * fabricCanvas.getWidth(),
+        top: item.offset.y * fabricCanvas.getHeight(),
+        fontSize: fontSizeConverter(item.font.size, fabricCanvas.getHeight()),
       })
     }else{
 
       item.set({
-        left: item.offset.x * fabricCanvas.value.getWidth(),
-        top: item.offset.y * fabricCanvas.value.getHeight(),
+        left: item.offset.x * fabricCanvas.getWidth(),
+        top: item.offset.y * fabricCanvas.getHeight(),
         scaleX: item.scaleX ,
         scaleY: item.scaleY ,
       })
       item.setSrc(item.data);
     }
-    fabricCanvas.value.add(item);
+    fabricCanvas.add(item);
   })
 }
 function renderWatermark() {
   props.detail.watermarkSettings.forEach( (item:any) => {
     if(isTextWatermark(item.type)){
 
-      const obj = watermarkToFabricObject(item, fabricCanvas.value);
+      const obj = watermarkToFabricObject(item, fabricCanvas);
       fabricStore.value.push(obj);
-      fabricCanvas.value.add(obj);
+      fabricCanvas.add(obj);
     } else {
       // set img
       const url = item.content;
@@ -225,29 +227,29 @@ function renderWatermark() {
           scaleX: Number(item.scale),
           scaleY: Number(item.scale),
           angle: item.rotate || 0,
-          left: item.offset.x * fabricCanvas.value.getWidth() ,
-          top: item.offset.y * fabricCanvas.value.getHeight() ,
+          left: item.offset.x * fabricCanvas.getWidth() ,
+          top: item.offset.y * fabricCanvas.getHeight() ,
           offset:item.offset,
           data: item.content,
           position: item.position,
           centerOffset: item.centerOffset,
           snapAngle: 1,
         })
-        fabricCanvas.value.add(fabricImage);
-        fabricCanvas.value.setActiveObject(fabricImage);
+        fabricCanvas.add(fabricImage);
         fabricStore.value.push(fabricImage);
       }
       imgEL.src = url;
     }
-
+    
   })
+  
 }
 
 function changeFillColor(color: string) {
   if (selectedObject.value) {
     selectedObject.value.set('fill', color);
     selectedObject.value.font.color = color;
-    fabricCanvas.value.renderAll();
+    fabricCanvas.renderAll();
   }
 }
 
@@ -261,63 +263,71 @@ function anchorChangeHandler(newAnchor: string) {
       break;
     case 'tRight':
       selectedObject.value.set({
-        left: fabricCanvas.value.getWidth() - selectedObject.value.width,
+        left: fabricCanvas.getWidth() - selectedObject.value.width,
         top: 0,
       });
       break;
     case 'bLeft' :
       selectedObject.value.set({
         left: 0,
-        top: fabricCanvas.value.getHeight() - selectedObject.value.height
+        top: fabricCanvas.getHeight() - selectedObject.value.height
       });
       break;
     case 'bRight':
       selectedObject.value.set({
-        left: fabricCanvas.value.getWidth() - selectedObject.value.width,
-        top: fabricCanvas.value.getHeight() - selectedObject.value.height,
+        left: fabricCanvas.getWidth() - selectedObject.value.width,
+        top: fabricCanvas.getHeight() - selectedObject.value.height,
       });
       break;
     case 'center':
       selectedObject.value.set({
-        left: fabricCanvas.value.getWidth() / 2 - selectedObject.value.width / 2,
-        top: fabricCanvas.value.getHeight() / 2 - selectedObject.value.height / 2,
+        left: fabricCanvas.getWidth() / 2 - selectedObject.value.width / 2,
+        top: fabricCanvas.getHeight() / 2 - selectedObject.value.height / 2,
       });
       break;
   }
   selectedObject.value.position = newAnchor;
   selectedObject.value.offset = {
-    x : selectedObject.value.left / fabricCanvas.value.getWidth(),
-    y : selectedObject.value.top / fabricCanvas.value.getHeight()
+    x : selectedObject.value.left / fabricCanvas.getWidth(),
+    y : selectedObject.value.top / fabricCanvas.getHeight()
   }
-  fabricCanvas.value.renderAll()
+  fabricCanvas.renderAll()
 
 }
 function objectUpdated() {
-  fabricCanvas.value.renderAll()
+  fabricCanvas.renderAll()
 }
 
 function fontUpdate(size) {
   if (selectedObject.value) {
-    selectedObject.value.fontSize = fontSizeConverter(size, fabricCanvas.value.getHeight())
+    selectedObject.value.fontSize = fontSizeConverter(size, fabricCanvas.getHeight())
     selectedObject.value.font.size = size;
-    fabricCanvas.value.renderAll()
+    fabricCanvas.renderAll()
   }
 }
 
 function objectModified({target}) {
   target.offset = {
-    x : target.left / fabricCanvas.value.getWidth(),
-    y : target.top / fabricCanvas.value.getHeight()
+    x : target.left / fabricCanvas.getWidth(),
+    y : target.top / fabricCanvas.getHeight()
   }
   target.centerOffset = {
-    x : target.getCenterPoint().x / fabricCanvas.value.getWidth(),
-    y : target.getCenterPoint().y / fabricCanvas.value.getHeight()
+    x : target.getCenterPoint().x / fabricCanvas.getWidth(),
+    y : target.getCenterPoint().y / fabricCanvas.getHeight()
   };
+    updateData()
 }
-
+function updateData () {
+  state.watermarkEditShow = false
+  setTimeout(() => {
+    state.watermarkEditShow = true
+  })
+}
 function objectSelected({selected}) {
   if (selected.length === 1) {
     selectedObject.value = selected[0];
+  }else{
+    selectedObject.value = null;
   }
 }
 
@@ -325,23 +335,33 @@ function removeWatermark(){
   if(selectedObject.value){
     // check selected object is in props.detail
     const index = props.detail.watermarkSettings.findIndex( (item:any) => item.id === selectedObject.value.id);
+    
     if(index > -1){
       // if in props.detail, push to itemToDelete
       itemToDelete.value.push(selectedObject.value.id)
     }
-    fabricCanvas.value.remove(selectedObject.value);
+    let objects = fabricCanvas.getObjects();
+    
+    fabricCanvas.remove(toRaw(selectedObject.value));
+    
     selectedObject.value = null;
-    fabricCanvas.value.renderAll();
+    fabricCanvas.renderAll();
   }
 }
 
 async function save() {
   // convert all fabric object to watermark
+  state.loading = true
+
   const watermarks:Watermark[] = []
-  fabricCanvas.value.getObjects().forEach((obj,index) => {
+  fabricCanvas.getObjects().forEach((obj,index) => {
     const { id, type , position ,  text} = obj;
     // if no id skip
     if (!id) return;
+    const _centerOffset = {
+      x : obj.getCenterPoint().x / fabricCanvas.getWidth(),
+      y : obj.getCenterPoint().y / fabricCanvas.getHeight()
+    }
     if(isTextWatermark(type)) {
       // convert text and dynamic fabric to watermark
       const textObj:any = {
@@ -354,7 +374,7 @@ async function save() {
         content: text,
         opacity: obj.opacity,
         font: obj.font,
-        centerOffset: obj.centerOffset,
+        centerOffset: obj.centerOffset || _centerOffset,
       }
       watermarks.push(textObj)
     }else {
@@ -375,7 +395,7 @@ async function save() {
         opacity: obj.opacity,
         scale: obj.scaleX,
         data: base64,
-        centerOffset: obj.centerOffset,
+        centerOffset: obj.centerOffset || _centerOffset,
       }
       watermarks.push(imgObj);
     }
@@ -394,11 +414,12 @@ async function save() {
   })
   try {
     await Promise.all(promise);
-    emit('update');
+    emits('update');
     ElMessage.success(i18n.t('msg_successfullyModified') as string);
   } catch (error) {
-    emit('update');
+    emits('update');
   }
+  state.loading = false
 }
 
 watch(detail, (newVal) => {

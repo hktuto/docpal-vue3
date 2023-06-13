@@ -32,7 +32,7 @@ async function handleSubmit () {
     state.loading = true
     try {
         const param = {
-            name: props.metaMapping.name,
+            name: state.docType.name,
             metaDataMapper: {
                 ...props.metaMapping.metaDataMapper,
                 [data.metaData]: data.label

@@ -91,9 +91,13 @@ const userId:string = useUser().getUserId()
 function handleDblclick (row) {
     router.push(`/workflow/${row.id}?state=${state.tabName}`)
 }
-onMounted(async() => {
-    
-})
+function getDownloadParams () {
+    return {
+        interrelatedUserId: userId,
+        ...deepCopy(state.extraParams)
+    }
+}
+defineExpose({ getDownloadParams })
 </script>
 
 <style lang="scss" scoped>

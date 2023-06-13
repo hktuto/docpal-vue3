@@ -22,8 +22,8 @@ export const getAvailableWorkflowApi = async () => {
     return await api.post('/docpal/workflow/process/list',{}).then(res => res.data.data);
 }
 export const workflowFormSubmitApi = async(params: workflowFormReq) => {
-    const response = await api.post('/docpal/workflow/form/submit', params).then(res => res.data.data);
-    return response || true
+    const response = await api.post('/docpal/workflow/form/submit', params).then(res => res.data.result);
+    return response
 }
 export const getTaskApi = async(taskId:string) => {
     return await api.post('/docpal/workflow/task', { taskId }).then(res => res.data.data);
@@ -35,6 +35,13 @@ export const getMyTask = async(params: pageParams) =>{
 export const taskClaimApi = async(taskId:string, userId:string) => {
     return await api.post('/docpal/workflow/task/claim', { taskId, userId }).then(res => res.data.data);
 }
+export const exportProcessHistoryApi = async(params: any) => {
+    return await api.post('/docpal/workflow/history/exportProcessHistory', params, {
+        responseType: 'blob',
+        timeout: 0
+    }).then(res => res.data);
+}
+
 export const taskUnClaimApi = async(taskId:string) => {
     const response = await api.post('/docpal/workflow/task/unclaim', { taskId }).then(res => res.data.data);
     return response
@@ -86,7 +93,7 @@ export const propertiesSaveApi = async(params: propertiesSaveReq) => {
     return await api.post('/docpal/workflow/properties/save', params).then(res => res.data.data);
 }
 export const propertiesSubmitApi = async(params: propertiesSaveReq) => {
-    return await api.post('/docpal/workflow/form/submit', params).then(res => res.data.data);
+    return await api.post('/docpal/workflow/form/submit', params).then(res => res.data.result);
 }
 export const getActivityApi = async(processInstanceId:string) => {
     const response = await api.post('/docpal/workflow/history/activity', { processInstanceId, pageSize:-1 }).then(res => res.data.data);

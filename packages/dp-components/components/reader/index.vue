@@ -21,9 +21,9 @@
         </template>
     </el-image>
     <template v-else-if="state.fileType">
-        <div class="noSupportContainer">
+        <h2 class="noSupportContainer">
             {{ $t('msg_thisFormatFileIsNotSupported') }}
-        </div>
+        </h2>
     </template>
 </template>
 
@@ -55,8 +55,10 @@ function handleDownload() {
 watch(() => props.blob, (newBlob:Blob) => {
     if( !newBlob ) return
     state.fileType = newBlob.type
+    console.log(state.fileType);
+    
     const urlCreator = window.URL || window.webkitURL
     state.url = urlCreator.createObjectURL(newBlob)
-})
+}, { immediate: true })
 defineExpose({ handleDownload })
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="iframeContainer" >
+    <div class="iframeContainer" v-if="!props.loading">
         <iframe ref="iframe" :src="pdfReaderUrl" allowfullscreen />
     </div>
 </template>
@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<{
         loadAnnotations: false,
     }
 })
-
+const display = ref(false)
 const { annotations, blob, name } = toRefs(props)
 
 const iframe = ref<HTMLIFrameElement>();

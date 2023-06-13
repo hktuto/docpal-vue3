@@ -6,20 +6,19 @@
       :key="anchor"
       class="anchor"
       :class="anchor"
-      @click="$emit('update:modelValue', anchor)"
+      @click="$emit('change', anchor)"
     >
-      <InlineSvg :src="`/icons/anchor-${anchor}.svg`" />
+      <SvgIcon :src="`/icons/anchor-${anchor}.svg`" />
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import InlineSvg from 'vue-inline-svg';
 
 const props = defineProps<{
   modelValue: string
 }>();
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'change'])
 
 const anchors = [
   'tLeft' , 'tRight' , 'bLeft' , 'bRight' ,  'center'

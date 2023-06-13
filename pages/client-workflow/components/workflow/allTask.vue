@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { getAllTask, taskClaimApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { getAllTask, taskClaimApi, getJsonApi, TABLE, defaultTableSetting, deepCopy } from 'dp-api'
 const { t } = useI18n();
 const userId:string = useUser().getUserId()
 // #region module: page
@@ -105,9 +105,13 @@ async function claimTask(row) {
     await taskClaimApi(row.id, userId)
     handlePaginationChange(pageParams.pageIndex)
 }
-onMounted(async() => {
-    
-})
+function getDownloadParams () {
+    return {
+        candidateOrAssigned: userId,
+        ...deepCopy(state.extraParams)
+    }
+}
+defineExpose({ getDownloadParams })
 </script>
 
 <style lang="scss" scoped>

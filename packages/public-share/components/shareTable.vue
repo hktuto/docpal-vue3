@@ -1,17 +1,22 @@
 <template>
     <Table  :columns="tableSetting.columns" :table-data="tableData" 
-            @command="handleAction"
-            @row-dblclick="handleDblclick"></Table>
+            @row-dblclick="handleDblclick">
+            <template #actions="{ row, $index }">
+                <el-button v-if="row.watermarkStatus === 'NO'" type="primary" text>{{$t('Converting')}}...</el-button>
+                <el-button v-else-if="!row.watermarkStatus || row.watermarkStatus === 'YES'" type="primary" :loading="row.downloading" @click="handleAction('download', row, $index)">{{$t('download')}}</el-button>
+                <el-button v-else text type="danger">{{$t('Conversion failed')}}</el-button>
+            </template>    
+        </Table>
     <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
         <template #actions>
-            <el-button :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+            <el-button :icon="Download" :loading="previewFile.downloading" @click="handleAction('download', previewFile)">{{$t('download')}}</el-button>
         </template>
     </ReaderDialog>
 </template>
 
 
 <script lang="ts" setup>
-import { getPreviewApi, publicDownloadApi, TABLE, defaultTableSetting } from 'dp-api'
+import { getPreviewApi, publicDownloadApi, checkWatermarkStatusApi, TABLE, defaultTableSetting } from 'dp-api'
 const route = useRoute()
 const props = withDefaults( defineProps<{
     tableData: Array;
@@ -40,10 +45,18 @@ async function handleDblclick (row) {
     previewFile.name = row.title
     previewFile.loading = false
 }
-function handleAction (command, row: any, index: number) {
+async function handleAction (command: string, row: any, index: number) {
     switch(command) {
         case 'download':
-            handleDownload(row)
+            row.downloading = true
+            try {
+                await handleDownload(row)
+                row.downloading = false
+            } catch (error) {
+                row.downloading = false
+            }
+            break
+        default:
             break
     }
 }
@@ -55,7 +68,6 @@ async function handleDownload (row: any) {
     }
     const blob = await publicDownloadApi(params)
     downloadBlob(blob, row.name || row.title, blob.type)
-    
 }
 const ReaderRef = ref()
 const previewFile = reactive({
@@ -64,7 +76,9 @@ const previewFile = reactive({
     id: '',
     loading: false,
     options: {
-        noDownload: true
+        noDownload: true,
+        print: false,
+        loadAnnotations: false,
     }
 })
 </script>

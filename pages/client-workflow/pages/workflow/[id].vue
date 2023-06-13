@@ -94,12 +94,17 @@ const isAssigneeUser = computed(() => {
         let formData
         switch(state.backState) {
             case state.processState.completeTask:
+                formData = state.taskDetail.processVariables
+                formJson = await formJsonGet('complete',state.taskDetail.processDefinitionKey)
+                vFormRef.value.setForm(formJson, formData)
+                break
             default:
                 const properties = await getFormPropsApi({ taskId: route.params.id })
                 formData = formDataGetFromProps(properties)
                 formJson = await formJsonGet(state.taskDetail.taskDefinitionKey,
                                 state.taskDetail.taskInstance.processDefinitionKey)
                 vFormRef.value.setForm(formJson, formData)
+                
                 break
         }
     }
@@ -117,9 +122,9 @@ const isAssigneeUser = computed(() => {
     }
     async function formJsonGet (userTaskId:string, processKey:string) {
         const response = await taskFormJsonGetApi({userTaskId, processKey})
-        if (!response.data[0] ||
-            response.data[0] && !response.data[0].jsonValue) return {}
-        return JSON.parse(response.data[0].jsonValue)
+        if (!response[0] ||
+            response[0] && !response[0].jsonValue) return {}
+        return JSON.parse(response[0].jsonValue)
     }
     function handleDisabledForm() {
         if(userId !== state.taskDetail.assignee) {
@@ -155,7 +160,7 @@ const isAssigneeUser = computed(() => {
             ElMessage.success(`${$i18n.t('msg_successfulOperation')}`)
             router.push(`/workflow?tab=${state.backState}`)
         } catch (error) {
-            // ElMessage.error(error.message)
+            ElMessage.error(error.message)
         }
         state.loading = false
     }

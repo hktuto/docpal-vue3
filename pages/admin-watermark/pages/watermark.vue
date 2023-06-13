@@ -13,12 +13,11 @@
 </template>
 
 <script lang="ts" setup>
-
+import { getWatermarkTemplates } from 'dp-api'
 const route = useRoute();
 const router = useRouter()
 const detail = ref<WatermarkTemplateDetail>(null);
-
-const { getWatermarkTemplates, getWatermarkTemplateDetail, removeWatermarkTemplate, list } = useWatermark()
+const { getWatermarkTemplateDetail, removeWatermarkTemplate, list } = useWatermark()
 async function getList(dummy: boolean = false) {
   list.value = await getWatermarkTemplates();
 }
@@ -35,6 +34,7 @@ async function deleteItem(id: string) {
 async function getDetail(id: string) {
   try {
     detail.value = await getWatermarkTemplateDetail(id);
+    if(detail.value.type === 'dynamic') detail.value.contentType = detail.value.content
   }catch(error) {
     detail.value = null
   }

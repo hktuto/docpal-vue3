@@ -13,7 +13,7 @@ export const GetChildThumbnail = async(params: pageParams):Promise<paginationDat
     return api.post<Response<paginationData>>('/nuxeo/document/children/thumbnail', params ).then(res => res.data.data);
 }
 export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {
-    return api.post<Response<DocDetail>>('/nuxeo/document',{ idOrPath }).then(res => res.data.data);
+    return api.post<Response<DocDetail>>('/nuxeo/document',{ idOrPath }, { headers: { browseErrorHandle: 'true' } }).then(res => res.data.data);
 }
 export const getSpecificVersionApi = async(params):Promise<DocDetail> => {
     return api.post<Response<DocDetail>>('/nuxeo/getSpecificVersion',params).then(res => res.data.data);
@@ -129,6 +129,9 @@ export const downloadDocRecord = async(params) => {
             timeout: 0
         }).then(res =>res.data)
     }
+    export const DocumentThumbnailListGetApi = async(idOrPaths:string []) => {
+        return api.post('/nuxeo/document/thumbnail/list', idOrPaths).then(res =>res.data.data)
+    }
 
     export const duplicateDetectionApi = async(param) => {
         return api.post('/nuxeo/document/isDuplicateName', param).then(res => res.data.data.titles || {}).catch(err => ({}))
@@ -193,6 +196,12 @@ export const downloadDocRecord = async(params) => {
     }
     export const patchShareInfoApi = async (params: shareInfo) => {
         return await api.patch('/nuxeo/share', params).then(res =>res.data.data);
+    }
+    export const prepareShareDownloadApi = async (docIds: string[]) => {
+        return await api.post('/nuxeo/share/prepare/download', docIds).then(res =>res.data.data);
+    }
+    export const getPrepareShareDownloadUrlApi = async (docId: string) => {
+        return await api.get(`/nuxeo/share/prepare/download/${docId}`).then(res =>res.data.data);
     }
 // #endregion
 // #region module:fileRequest
@@ -273,9 +282,7 @@ export const submitExportRequestApi = async(params) => {
     return api.post('/nuxeo/conversion/submitExportRequest', params).then(res => res.data);
 }
 export const conversionDownloadFileApi = async(idOrPath:string) => {
-    return api.post('/nuxeo/conversion/downloadFile', {
-        idOrPath
-    },{
+    return api.post('/nuxeo/conversion/downloadFile',idOrPath,{
         responseType: 'blob',
         timeout: 0
     }).then(res => res.data)
@@ -288,7 +295,7 @@ export const conversionDownloadFileApi = async(idOrPath:string) => {
 export const getAdHocHistory = async (documentId: string) => {
     return await api.post(`/docpal/workflow/queryAdhocApprovalPage`, {
         documentId,
-        "pageNum": 1,
+        "pageNum": 0,
         "pageSize": 100
     }).then(res => res.data.data);
 }

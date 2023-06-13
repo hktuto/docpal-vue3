@@ -87,10 +87,7 @@ export const useWatermark = () => {
   function isTextWatermark(type: string) {
     return type === 'text' || type === 'dynamic';
   }
-  async function getWatermarkTemplates():Promise<WatermarkTemplate[]> {
-     const { data } = await api.get<Response<WatermarkTemplate[]>>("/docpal/watermark/templates/all/").then(res => res.data)
-      return data;
-  }
+
 
   async function createWatermarkTemplate(template: {name:string}) {
     const { data } = await api.post<Response<WatermarkTemplate>>("/docpal/watermark/templates", template).then(res => res.data)
@@ -187,13 +184,13 @@ export const useWatermark = () => {
         ...defaultTextWatermark,
         // @ts-ignore
         id: 'object_' + Date.now(),
-        fontSize: fontSizeConverter(3, canvas.getHeight()),
+        fontSize: fontSizeConverter(20, canvas.getHeight()),
         offset:{
           x:0,
           y:0,
         },
         font:{
-          size: 3,
+          size: 20,
           color: '#000000',
           name: ''
         }
@@ -217,7 +214,6 @@ export const useWatermark = () => {
     removeWatermarkTemplate,
     getWatermarkTemplateDetail,
     updateWatermarkTemplateDetail,
-    getWatermarkTemplates,
     list,
     isTextWatermark,
     removeWatermarkApi,

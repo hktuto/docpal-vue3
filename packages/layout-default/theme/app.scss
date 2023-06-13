@@ -147,3 +147,10 @@ html.dark {
 .el-button, .el-form-item__label {
     text-transform: capitalize;
 }
+.v-form-panel .el-form-item__label {
+    position: relative;
+}
+.el-cascader-panel {
+    max-width: 60vw;
+    overflow-x: auto;
+}

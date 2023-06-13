@@ -1,6 +1,6 @@
 <template>
     <div v-loading="loading" class="videoPlayerContainer" >
-        <video  :src="videoSrc" controls />
+        <video :src="videoSrc" controls />
     </div>
 </template>
 

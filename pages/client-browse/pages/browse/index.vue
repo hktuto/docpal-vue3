@@ -36,7 +36,7 @@
                 <template #default="{doc, permission}" >
                     <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
 
-                    <BrowseRightClick :permission="permission"></BrowseRightClick>
+                    <BrowseRightClick></BrowseRightClick>
                     <!-- <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" v-show="false" :doc="doc" @success="handleRefresh"/> -->
                 </template>
             </BrowseList>
@@ -90,7 +90,7 @@ import {watch, ref, computed} from 'vue'
 import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
 // #region refs
 const breadCrumb = ref();
-
+const shareStore = useShareStore()
 const route = useRoute();
 const router = useRouter();
 const listData = ref<{
@@ -141,13 +141,13 @@ function itemDeleted(){
      breadCrumb.value.goParent();
 }
 async function handleRefresh () {
-    console.log('handleRefresh');
-
     forceRefresh.value = true
     await getDocDetail()
 }
+
 function handleSelectionChange (rows:any) {
     selectList.value = [...rows]
+    shareStore.updateShareList([...rows])
 }
 watch(route, async(newRoute, oldRoute) => {
     loading.value = true;

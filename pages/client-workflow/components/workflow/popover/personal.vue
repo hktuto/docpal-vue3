@@ -1,6 +1,6 @@
 <template>
 <el-dropdown @command="handleCommand">
-    <el-button type="primary" class="mg-r">
+    <el-button type="primary" class="el-icon--left">
         {{$t('workflow_personalWorkflow')}}<el-icon class="el-icon--right"><arrow-down /></el-icon>
     </el-button>
     <template #dropdown>

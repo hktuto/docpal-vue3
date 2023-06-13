@@ -53,7 +53,6 @@ import {
     DownloadDocApi } from 'dp-api'
 
 import { getAclsApi } from 'dp-api/src/endpoint/admin-acl'
-import type Node from 'element-plus/es/components/tree/src/model/node'
 import { useEventListener } from '@vueuse/core'
 interface Tree {
   name: string,
@@ -72,7 +71,9 @@ const state = reactive({
         id: '',
         loading: false,
         options: {
-            noDownload: true
+            noDownload: true,
+            print: false,
+            loadAnnotations: false,
         }
     },
     permission: {

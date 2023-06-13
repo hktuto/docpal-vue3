@@ -3,7 +3,8 @@ import { api } from 'dp-api'
 
 const refreshTokenFn = async () => {
     const refreshToken = localStorage.getItem('refreshToken');
-
+    const Cookies = useCookie('docpal-user')
+    const {user} = useUser()
     try {
       const {access_token, refresh_token} = await api.post('/auth/nuxeo/token',{},{
             headers:{
@@ -15,7 +16,8 @@ const refreshTokenFn = async () => {
         localStorage.removeItem("refreshToken");
         sessionStorage.removeItem("token");
       }
-
+      
+      Cookies.value = JSON.stringify(user.value) 
       localStorage.setItem("refreshToken", refresh_token);
       sessionStorage.setItem("token", access_token);
       return {

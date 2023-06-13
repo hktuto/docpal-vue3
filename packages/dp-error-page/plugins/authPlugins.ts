@@ -16,7 +16,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 router.push(`/error/${error.response.status}`)
                 return
             } else if (error?.response?.status === 500) {
-                messageError(error)
+                messageError(error, { router, route })
             }
             return Promise.reject(error);
         });
@@ -34,10 +34,18 @@ function routeMatcher (path, routeList) {
  * @param error 
  * @returns 
  * if no noThrowError, add params: { headers: { noThrowError: 'true' } }
+ * if need browseErrorHandle, add params: { headers: { browseErrorHandle: 'true' } }
  */
-function messageError (error: any) {
+function messageError (error: any, { router, route }) {
     if (error.config.headers.noThrowError) return
+    else if (error.config.headers.browseErrorHandle) {
+        browseErrorHandle(error.response.data.code, { router, route })
+        return
+    }
     // @ts-ignore
     const message = error.response?.data?.message ? error.response.data.message : $i18n.t('responseMsg_errorCode_2')
     ElMessage.error(message)
+}
+function browseErrorHandle(code, { router, route }) {
+    router.push(`/browse/error?code=${code}&path=${route.query.path}`)
 }

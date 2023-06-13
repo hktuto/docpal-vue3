@@ -96,6 +96,7 @@ import {
     TABLE, defaultTableSetting } from 'dp-api'
 const { t } = useI18n();
 const route = useRoute()
+const router = useRouter()
 const state = reactive({
     curReaderType: '',
     documentType: '',
@@ -205,7 +206,7 @@ const state = reactive({
     }
     async function handleSubmit () {
         if(!validateForm()) return
-        if (await checkDuplicate()) return
+        // if (await checkDuplicate()) return
         handleSubmitData(getParams())
     }
     async function handleSubmitData (propertiesJson) {
@@ -218,6 +219,8 @@ const state = reactive({
                 }
             }
             const res = await workflowFormSubmitApi(param)
+            console.log(res);
+            
             if (!!res) router.push('/fileRequest')
         } catch (error) {
             
@@ -415,5 +418,6 @@ onMounted(async () => {
     display: grid;
     grid-template-rows: min-content 1fr;
     gap: var(--app-padding);
+    height: 100%;
 }
 </style>

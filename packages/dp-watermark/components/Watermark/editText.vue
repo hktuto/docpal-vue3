@@ -16,22 +16,22 @@
         </ElSelect>
       </ElFormItem >
       <ElFormItem v-if="modelValue.type === 'text'" :label="$t('admin_watermark_text')">
-        <ElInput v-model="modelValue.text" :readonly="!modelValue.editable" size="small" @change="$emit('update:modelValue', value)" />
+        <ElInput v-model="modelValue.text" :readonly="!modelValue.editable" size="small" @change="$emit('change', value)" />
       </ElFormItem>
 
       <ElFormItem :label="$t('admin_watermark_font_size')">
         <ElInputNumber v-model="modelValue.font.size" size="small" @change="(val) =>$emit('fontUpdate', val)" />
       </ElFormItem>
       <ElFormItem :label="$t('admin_watermark_rotate')">
-        <ElInputNumber v-model="modelValue.angle" :min="0" :max="360" size="small" @change="$emit('update:modelValue', value)" />
+        <ElInputNumber v-model="modelValue.angle" :min="0" :max="360" size="small" @change="$emit('change', value)" />
       </ElFormItem>
       <ElFormItem :label="$t('admin_watermark_opacity')">
-        <ElInputNumber v-model="modelValue.opacity" size="small" :min="0.1" :max="1" :step="0.1" @change="$emit('update:modelValue', value)" />
+        <ElInputNumber v-model="modelValue.opacity" size="small" :min="0.1" :max="1" :step="0.1" @change="$emit('change', value)" />
       </ElFormItem>
       <ElFormItem :label="$t('admin_watermark_color')">
         <ElColorPicker :value="modelValue.fill" @change="(val) => $emit('fillChange', val)" />
       </ElFormItem>
-      <WatermarkAnchor v-model="modelValue.position" @change="(val) => {$emit('anchorChange', val); value.postion = val;}"/>
+      <WatermarkAnchor v-model="modelValue.position" @change="(val) => {$emit('anchorChange', val);}"/>
     </ElForm>
   </WatermarkUiProperties>
 </template>
@@ -43,7 +43,7 @@ const { watermarkTypes, textTypes } = useWatermark()
 const props = defineProps<{
   modelValue:any
 }>();
-const emit = defineEmits(['update:modelValue', 'delete', 'anchorChange', "fillChange"]);
+const emit = defineEmits(['update:modelValue', 'change', 'delete', 'anchorChange', "fillChange"]);
 const { t } = useI18n()
 
 function typeChange(newType) {
@@ -56,7 +56,7 @@ function typeChange(newType) {
     ob.type = 'text'
     ob.editable = true
   }
-  emit('update:modelValue', ob)
+  emit('change', ob)
 }
 </script>
 

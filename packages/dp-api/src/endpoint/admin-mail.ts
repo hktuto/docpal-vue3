@@ -1,7 +1,7 @@
 import {api} from '../';
 
 export const GetMailConfigApi = async() => {
-    const res = await api.get(`/docpal/oauth2/setting`).then(res => res.data)
+    const res = await api.get(`/docpal/oauth2/setting`).then(res => res.data.data)
     return res
 }
 

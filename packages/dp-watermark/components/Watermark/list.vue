@@ -1,32 +1,34 @@
 <template>
     <div class="watermarkListContainer">
         <div class="listActionContainer">
-            <InlineSvg src="/icons/add.svg" class="addButton" @click="createItem"/>
+            <SvgIcon src="/icons/add.svg" class="addButton" @click="createItem"/>
         </div>
-        <div class="listItemsContainer">
+        <div class="listItemsContainer" style="--icon-size: 12px;">
             <div v-for="item in list" :key="item.id" :class="{listItem:true, selected: item.id === selectedId}">
-                <div class="listItemLabel" @click="switchDetail(item.id)">
+                <div class="listItemLabel ellipsis" :title="item.name" @click="switchDetail(item.id)">
                     {{item.name}}
                 </div>
                 <!-- TODO : icon size and style -->
                 <div class="listAction listItemEdit" @click="editItem(item.id)">
-                    <InlineSvg src="/icons/edit_1.svg" />
+                    <SvgIcon src="/icons/edit_1.svg" />
                 </div>
                 <ElPopconfirm @confirm="deleteItem(item.id)">
-                    <div slot="reference" class="listAction listItemDelete" >
-                        <InlineSvg src="/icons/trash.svg" />
-                    </div>
+                    <template #reference>
+                        <div class="listAction listItemDelete" >
+                            <SvgIcon src="/icons/menu/trash.svg" />
+                        </div>
+                    </template>
                 </ElPopconfirm>
             </div>
         </div>
         <!-- Edit dialog -->
-        <ElDialog v-model="editDialog" destroy-on-close>
+        <el-dialog v-model="editDialog" destroy-on-close>
             <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler" />
-        </ElDialog>
+        </el-dialog>
         <!-- New dialog -->
-        <ElDialog v-model="newDialog" destroy-on-close>
+        <el-dialog v-model="newDialog" destroy-on-close>
             <WatermarkCreate :list="list"  @submit="itemChangeHandler" />
-        </ElDialog>
+        </el-dialog>
     </div>
 </template>
 
@@ -92,14 +94,13 @@ function switchDetail(id:string) {
     display: flex;
     flex-flow: column nowrap;
     overflow-y: auto;
-    flex: 1 0 auto;
     gap: 8px;
 }
 .listItem{
     --color: #8796A4;
     --bg: transparent;
-    display: flex;
-    flex-flow: row nowrap;
+    display: grid;
+    grid-template-columns: 1fr min-content min-content;
     gap: 0;
     padding: calc( var(--app-padding) / 2);
     color: var(--color);
@@ -107,7 +108,6 @@ function switchDetail(id:string) {
     border-radius: 4px;
     cursor: pointer;
     .listItemLabel{
-        flex: 1 0 auto;
     }
     &.selected {
         --color: #fff;

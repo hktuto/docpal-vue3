@@ -111,13 +111,13 @@ async function handleDblclick (row) {
         ReaderRef.value.handleOpen()
         previewFile.loading = true
         try {
+            previewFile.id = row.id
+            previewFile.path = row.path
+            previewFile.name = row.name
             previewFile.blob = await GetDocumentPreview(row.id)
         } catch (error) {
             
         }
-        previewFile.id = row.id
-        previewFile.path = row.path
-        previewFile.name = row.name
         previewFile.loading = false
     }
 }

@@ -5,10 +5,14 @@
                 <slot :doc="doc" :permission="permission" />
             </div>
             <div class="content">
-                <div class="preview">
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: true}" />
-                    <LazyVideoPlayer v-if="readerType === 'video'" :doc="doc" />
+                <div class="preview" v-if="readerType">
+                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print}" />
+                    <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
+                    <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
                 </div>
+                <h2 v-else class="noSupportContainer" >
+                    {{ $t('msg_thisFormatFileIsNotSupported') }}
+                </h2>
                 <div class="info">
                     <slot name="info" :doc="doc" :permission="permission" />
                 </div>
@@ -35,13 +39,18 @@ const readerType = computed(() => {
     const properties = props.doc?.properties
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
     if(!mineType) return "pdf"; // set to pdf for testing
+    console.log({mineType}, 'mineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineType');
+    
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text')  ) {
         return 'pdf';
     }
-    if(mineType.includes('video')) {
+    else if(mineType.includes('video')) {
         return 'video';
     }
-    return 'pdf';
+    else if (mineType.includes('audio')) {
+        return 'other';
+    }
+    return '';
 });
 
 onKeyStroke("Escape", (e) => {
@@ -89,6 +98,12 @@ onKeyStroke("Escape", (e) => {
     overflow: hidden;
 
     }
+}
+.noSupportContainer {
+    color: var(--color-grey-0000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .header{
     width: 100%;

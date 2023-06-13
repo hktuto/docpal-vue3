@@ -4,20 +4,19 @@
   <div class="editFormContainer">
     <div class="header">
       <span class="header__title">{{ $t('admin_watermark_properties')}}</span>
-      <ElPopconfirm @confirm="$emit('delete')">
-        <div slot="reference" class="listItemDelete" >
-          <InlineSvg class="deleteIcon" src="/icons/trash.svg" />
-        </div>
-      </ElPopconfirm>
+      <el-popconfirm @confirm="$emit('delete')">
+        <template #reference>
+          <div class="listItemDelete" >
+            <SvgIcon class="deleteIcon" src="/icons/menu/trash.svg" />
+          </div>
+        </template>
+      </el-popconfirm>
     </div>
     <slot />
   </div>
 </template>
 
-<script  lang="ts" setup>
-
-import InlineSvg from "vue-inline-svg";
-
+<script lang="ts" setup>
 const emit = defineEmits(['delete'])
 
 </script>

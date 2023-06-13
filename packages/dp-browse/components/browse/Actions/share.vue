@@ -21,8 +21,11 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
-import { shareRequestApi, getJsonApi } from 'dp-api'
-const shareList = inject('selectList')
+import { getJsonApi } from 'dp-api'
+const router = useRouter()
+const route = useRoute()
+const { state:shareState, updateShareList } = useShareStore()
+// const shareList = inject('selectList')
 const props = defineProps<{
     doc: any,
 }>()
@@ -30,32 +33,42 @@ const state = reactive({
     dialogOpened: false
 })
 function iconClickHandler(){
-    if (shareList.value.length === 0) {
-         ElNotification.warning($i18n.t('dpTip_noSelection'))
+    if (!props.doc.isFolder) {
+        updateShareList([props.doc])
+    }
+    else if (shareState.shareList.length === 0) {
+        ElNotification.warning($i18n.t('dpTip_noSelection'))
         return
     }
-    state.dialogOpened = true
+    
+    router.push({
+        path: '/browse/share',
+        query: {
+            backPath: route.fullPath
+        }
+    })
+    // state.dialogOpened = true
     // open upload dialog
 
 }
 const formJson = getJsonApi('shareRequest.json')
 const FromRendererRef = ref()
-async function handleSubmit () {
-    const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
-    const param = {
-        emailList: formData.emailList,
-        documentIdList: shareList.value.map(item => (item.id)),
-        password: formData.password ? formData.password : '',
-        tokenLiveInMinutes: diffMinute(formData.dueDate)
-        // tokenTime: handleTokenTime(form.value.time,form.value.timeUnit)
-    }
-    try {
-        const response = await shareRequestApi(param)
-        if(response.errorCode) throw new Error(res.message || 'error');
-        ElMessage.success($i18n.t('share_success'))
-        state.dialogOpened = false
-    } catch (error) {
-        // ElMessage.error(error.message)
-    }
-}
+// async function handleSubmit () {
+//     const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
+//     const param = {
+//         emailList: formData.emailList,
+//         documentIdList: shareList.value.map(item => (item.id)),
+//         password: formData.password ? formData.password : '',
+//         tokenLiveInMinutes: diffMinute(formData.dueDate)
+//         // tokenTime: handleTokenTime(form.value.time,form.value.timeUnit)
+//     }
+//     try {
+//         const response = await shareRequestApi(param)
+//         if(response.errorCode) throw new Error(res.message || 'error');
+//         ElMessage.success($i18n.t('share_success'))
+//         state.dialogOpened = false
+//     } catch (error) {
+//         // ElMessage.error(error.message)
+//     }
+// }
 </script>
