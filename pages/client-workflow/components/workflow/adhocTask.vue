@@ -118,13 +118,16 @@ const userId:string = useUser().getUserId()
 function handleDblclick (row) {
     router.push(`/file/browse?path=${row.documentPath}`)
 }
-onMounted(async() => {
-    
-})
+function getDownloadParams () {
+    return {
+        ...deepCopy(state.extraParams)
+    }
+}
 watch(() => route.query.subTab, (newTab) => {
     if(!newTab) newTab = 'pendingApproval'
     state.activeTab = newTab
 }, { immediate: true })
+defineExpose({ getDownloadParams })
 </script>
 
 <style lang="scss" scoped>

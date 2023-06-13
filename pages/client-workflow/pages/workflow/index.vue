@@ -1,24 +1,25 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
     <div class="buttons--absolute">
+        <el-button class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
         <WorkflowPopoverPersonal />
         <WorkflowPopoverNewTask @created="tabChange(activeTab)"/>
     </div>
-    <el-tabs v-model="activeTab" class="grid-layout" @tab-change="tabChange">
+    <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
         <el-tab-pane :label="$t('workflow_allTask')" name="allTask">
-            <WorkflowAllTask v-if="activeTab === 'allTask'"/>
+            <WorkflowAllTask v-if="activeTab === 'allTask'" ref="WorkflowRef"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_myTask')" name="myTask">
-            <WorkflowMyTask v-if="activeTab === 'myTask'"/>
+            <WorkflowMyTask v-if="activeTab === 'myTask'" ref="WorkflowRef"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_completedTask')" name="completeTask">
-            <WorkflowCompleteTask v-if="activeTab === 'completeTask'"/>
+            <WorkflowCompleteTask v-if="activeTab === 'completeTask'" ref="WorkflowRef"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_ActiveTask')" name="activeTask">
-            <WorkflowActiveTask v-if="activeTab === 'activeTask'"/>
+            <WorkflowActiveTask v-if="activeTab === 'activeTask'" ref="WorkflowRef"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('workflow_adhocTask')" name="adhocTask">
-            <WorkflowAdhocTask v-if="activeTab === 'adhocTask'"/>
+            <WorkflowAdhocTask v-if="activeTab === 'adhocTask'" ref="WorkflowRef"/>
         </el-tab-pane>
     </el-tabs>
 </NuxtLayout>
@@ -26,12 +27,14 @@
 
 
 <script lang="ts" setup>
+import { exportProcessHistoryApi } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
 const state = reactive({
     activeTab: 'completeTask'
 })
 const { activeTab } = toRefs(state)
+const WorkflowRef = ref()
 function tabChange (tab) {
     const refreshList = ['allTask', 'myTask', 'activeTask']
     if(refreshList.includes(tab)) {
@@ -40,6 +43,11 @@ function tabChange (tab) {
     } else {
         router.push({query: { tab }})
     }
+}
+async function handleDownload () {
+    const params = WorkflowRef.value.getDownloadParams()
+    const blob = await exportProcessHistoryApi(params)
+    await downloadBlob(blob, 'workflow.csv')
 }
 watch(() => route.query, (q) => {
     if(!q.tab) q.tab = 'myTask'
@@ -62,5 +70,25 @@ watch(() => route.query, (q) => {
     right: calc(var(--app-padding) * 2);
     top: calc(var(--app-padding) * 2);
     z-index: 2;
+}
+.tag-container {
+    :deep .el-tabs__nav-wrap:first {
+        width: calc(100% - 338px);
+        &::after {
+            display: none;
+        }
+    }
+    :deep .el-tabs__header:first {
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--el-border-color-light);
+            z-index: var(--el-index-normal);
+        }
+    }
 }
 </style>

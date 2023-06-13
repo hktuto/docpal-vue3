@@ -35,6 +35,13 @@ export const getMyTask = async(params: pageParams) =>{
 export const taskClaimApi = async(taskId:string, userId:string) => {
     return await api.post('/docpal/workflow/task/claim', { taskId, userId }).then(res => res.data.data);
 }
+export const exportProcessHistoryApi = async(params: any) => {
+    return await api.post('/docpal/workflow/history/exportProcessHistory', params, {
+        responseType: 'blob',
+        timeout: 0
+    }).then(res => res.data);
+}
+
 export const taskUnClaimApi = async(taskId:string) => {
     const response = await api.post('/docpal/workflow/task/unclaim', { taskId }).then(res => res.data.data);
     return response
