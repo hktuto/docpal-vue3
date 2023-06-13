@@ -56,15 +56,11 @@ function handleOpen(searchParams) {
 async function handleSubmit() {
     state.loading = true
     try {
-      const hideIds = state.hideList.reduce((prev,item) => {
-          prev.push(item.id)
-          return prev
-      }, [])
       const orderList = state.exportList.reduce((prev,item) => {
           prev.push(item.id)
           return prev
       }, [])
-      const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList, hiddenList: hideIds })
+      const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList })
       await downloadBlob(blob, 'search.csv')
       state.visible = false
     } catch (error) {
