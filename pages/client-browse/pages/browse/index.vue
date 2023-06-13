@@ -36,7 +36,7 @@
                 <template #default="{doc, permission}" >
                     <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
 
-                    <BrowseRightClick :permission="permission"></BrowseRightClick>
+                    <BrowseRightClick></BrowseRightClick>
                     <!-- <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" v-show="false" :doc="doc" @success="handleRefresh"/> -->
                 </template>
             </BrowseList>

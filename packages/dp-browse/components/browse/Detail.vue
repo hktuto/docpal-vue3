@@ -6,7 +6,7 @@
             </div>
             <div class="content">
                 <div class="preview" v-if="readerType">
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: true}" />
+                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
                 </div>

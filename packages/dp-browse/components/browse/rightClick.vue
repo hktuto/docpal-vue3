@@ -45,35 +45,35 @@ const state = reactive({
 const userId:string = useUser().getUserId()
 const FileRightClickPopoverRef = ref()
 async function handleRightClick (detail: any) {
-    if( state.visible) {
-        return false
-    };
+
     state.visible = true
     state.doc = detail.doc
     await handleAction(detail)
-    setTimeout(() => {
-        state.defaultActive = []
-        FileRightClickPopoverRef.value.style.left = detail.pageX + 'px'
-        FileRightClickPopoverRef.value.style.top = detail.pageY + 'px'
-        const popoverHeight = FileRightClickPopoverRef.value.offsetHeight
-        const popoverWidth = FileRightClickPopoverRef.value.offsetWidth
-        const windowHeight = window.innerHeight
-        const windowWidth = window.innerWidth
-        // 如果鼠标下边放不下菜单，就把top的值的改了
-        if (detail.pageY + popoverHeight > windowHeight) {
-            const top = detail.pageY - popoverHeight
-            FileRightClickPopoverRef.value.style.top = top + 'px'
-        }
-        if (detail.pageX + popoverWidth > windowHeight) {
-            const left = detail.pageX - popoverWidth
-            FileRightClickPopoverRef.value.style.left = left + 'px'
-        }
-    })
+    state.defaultActive = []
+    FileRightClickPopoverRef.value.style.left = detail.pageX + 'px'
+    FileRightClickPopoverRef.value.style.top = detail.pageY + 'px'
+    const popoverHeight = FileRightClickPopoverRef.value.offsetHeight
+    const popoverWidth = FileRightClickPopoverRef.value.offsetWidth
+    const windowHeight = window.innerHeight
+    const windowWidth = window.innerWidth
+    // 如果鼠标下边放不下菜单，就把top的值的改了
+    if (detail.pageY + popoverHeight > windowHeight) {
+        const top = detail.pageY - popoverHeight
+        FileRightClickPopoverRef.value.style.top = top + 'px'
+    }
+    if (detail.pageX + popoverWidth > windowHeight) {
+        const left = detail.pageX - popoverWidth
+        FileRightClickPopoverRef.value.style.left = left + 'px'
+    }
 }
 async function handleAction (detail:any) {
-    state.loading = true
     if (detail.actions) state.actions = { ...state._actions,  ...detail.actions}
     else state.actions = { ...state._actions }
+    if (props.permission) {
+        state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission.permission })
+        return
+    }
+    state.loading = true
     try {
         const idOrPath = detail.doc.path === '/' ? '/' : detail.doc.id
         const permission = await GetDocPermission(idOrPath, userId);

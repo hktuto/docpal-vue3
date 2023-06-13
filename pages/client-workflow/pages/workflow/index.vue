@@ -1,7 +1,7 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
     <div class="buttons--absolute">
-        <el-button class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
+        <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
         <WorkflowPopoverPersonal />
         <WorkflowPopoverNewTask @created="tabChange(activeTab)"/>
     </div>
