@@ -2,7 +2,9 @@
     <Table  :columns="tableSetting.columns" :table-data="tableData" 
             @row-dblclick="handleDblclick">
             <template #actions="{ row, $index }">
-                <el-button type="primary" :loading="row.downloading" @click="handleAction('download', row, $index)">{{$t('download')}}</el-button>
+                <el-button v-if="row.watermarkStatus === 'NO'" type="primary" text>{{$t('Converting')}}...</el-button>
+                <el-button v-else-if="!row.watermarkStatus || row.watermarkStatus === 'YES'" type="primary" :loading="row.downloading" @click="handleAction('download', row, $index)">{{$t('download')}}</el-button>
+                <el-button v-else text type="danger">{{$t('Conversion failed')}}</el-button>
             </template>    
         </Table>
     <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
@@ -48,28 +50,13 @@ async function handleAction (command: string, row: any, index: number) {
         case 'download':
             row.downloading = true
             try {
-                if (row.watermarkTemplateId && row.watermarkStatus !== 'YES') {
-                    row.interval = setInterval(async() => {
-                        const params = {
-                            token: route.query.token,
-                            password: sessionStorage.getItem('sharePWD'),
-                            documentId: row.id
-                        }
-                        const data = await checkWatermarkStatusApi(params)
-                        if(data.watermarkStatus === 'YES') {
-                            clearInterval(row.interval)
-                            row.watermarkStatus = 'YES'
-                            await handleDownload(row)
-                            row.downloading = false
-                        }
-                    },1000)
-                } else {
-                    await handleDownload(row)
-                    row.downloading = false
-                }
+                await handleDownload(row)
+                row.downloading = false
             } catch (error) {
                 row.downloading = false
             }
+            break
+        default:
             break
     }
 }

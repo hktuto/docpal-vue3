@@ -3,7 +3,10 @@
     <div class="pageContent">
         <template v-if="shareState === 'list'">
             <h3 class="title">{{$t('share_shareFiles')}}</h3>
-            <main>
+            <main v-loading="state.loading">
+                <div class="flex-x-end">
+                    <el-button @click="getData()"> {{$t('refresh')}} </el-button>
+                </div>
                 <ShareTable :tableData="state.shareList"></ShareTable>
             </main>
         </template>
@@ -22,11 +25,17 @@ import { getPublicDocumentApi, TABLE, defaultTableSetting } from 'dp-api'
 const route = useRoute()
 const state = reactive({
     shareState: '' ,
-    shareList: []
+    shareList: [],
+    loading: false
 })
 const { shareState, shareList } = toRefs(state)
+function getData() {
+    const password = sessionStorage.getItem('sharePWD')
+    if(password) handleGetPublicDocument({ password })
+}
 async function handleGetPublicDocument (formData) {
     try {
+        state.loading = true
         formData.token = route.query.token
         if(!formData.token) throw new Error(`${$i18n.t('responseMsg_errorCode_2')}`);
         const res = await getPublicDocumentApi(formData)
@@ -53,10 +62,10 @@ async function handleGetPublicDocument (formData) {
         state.shareState = ''
         // ElMessage.error(error?.response?.data?.message || error.message)
     }
+    state.loading = false
 }
 onMounted(() => {
-    const password = sessionStorage.getItem('sharePWD')
-    if(password) handleGetPublicDocument({ password })
+    getData()
 })
 </script>
 
@@ -70,7 +79,10 @@ onMounted(() => {
 main {
     overflow: hidden;
     width: 100%;
-    padding: 0 calc(var(--app-padding) * 3) 1rem;
+    padding: var(--app-padding) calc(var(--app-padding) * 3) 1rem;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    gap: var(--app-padding);
 }
 .expired {
     padding-top: 10%;
