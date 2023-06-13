@@ -19,6 +19,7 @@
 <script lang="ts" setup>
 const { getLanguageKeys } = useLanguage()
 import { } from 'dp-api'
+import { TABLE, defaultTableSetting } from 'dp-api'
 const emits = defineEmits([
     'refresh'
 ])
