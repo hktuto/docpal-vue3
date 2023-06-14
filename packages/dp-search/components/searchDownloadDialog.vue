@@ -127,6 +127,7 @@ defineExpose({ handleOpen })
 
 </style>
 <style lang="scss">
+
 .search-download-dialog {
     .el-dialog__body {
         padding: 0 20px;
