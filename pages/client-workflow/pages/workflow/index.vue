@@ -27,11 +27,12 @@
 
 
 <script lang="ts" setup>
-import { exportProcessHistoryApi } from 'dp-api'
+import { exportProcessHistoryApi, exportTasksUserApi } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
 const state = reactive({
-    activeTab: 'completeTask'
+    activeTab: 'completeTask',
+    loading: false
 })
 const { activeTab } = toRefs(state)
 const WorkflowRef = ref()
@@ -45,9 +46,17 @@ function tabChange (tab) {
     }
 }
 async function handleDownload () {
+    state.loading = true
     const params = WorkflowRef.value.getDownloadParams()
-    const blob = await exportProcessHistoryApi(params)
-    await downloadBlob(blob, 'workflow.csv')
+    try {
+        let blob
+        if(state.activeTab === 'completeTask') blob = await exportProcessHistoryApi(params)
+        else blob = await exportTasksUserApi(params)
+        await downloadBlob(blob, 'workflow.csv')
+    } catch (error) {
+        
+    }
+    state.loading = false
 }
 watch(() => route.query, (q) => {
     if(!q.tab) q.tab = 'myTask'

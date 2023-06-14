@@ -41,6 +41,12 @@ export const exportProcessHistoryApi = async(params: any) => {
         timeout: 0
     }).then(res => res.data);
 }
+export const exportTasksUserApi = async(params: any) => {
+    return await api.post('/docpal/workflow/tasks/exportTasksUser', params, {
+        responseType: 'blob',
+        timeout: 0
+    }).then(res => res.data);
+}
 
 export const taskUnClaimApi = async(taskId:string) => {
     const response = await api.post('/docpal/workflow/task/unclaim', { taskId }).then(res => res.data.data);
