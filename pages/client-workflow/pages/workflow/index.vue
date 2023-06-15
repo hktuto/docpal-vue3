@@ -50,7 +50,6 @@ async function handleDownload () {
     const params = WorkflowRef.value.getDownloadParams()
     try {
         let blob
-        params.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
         if(state.activeTab === 'completeTask') blob = await exportProcessHistoryApi(params)
         else blob = await exportTasksUserApi(params)
         await downloadBlob(blob, 'workflow.csv')

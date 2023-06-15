@@ -57,9 +57,11 @@ export const GetSearchExportHeaderApi = async() => {
     return res
 }
 export const ExportSearchCsvApi = async(params) => {
+    const TimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const res = await api.post('/nuxeo/search/exportCsv', params, {
         responseType: 'blob',
-        timeout: 0
+        timeout: 0,
+        headers: { TimeZone }
     }).then(res => res.data)
     return res
 }
