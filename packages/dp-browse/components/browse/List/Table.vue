@@ -1,11 +1,15 @@
 <template>
-<div class="tableContainer"  >
+<div :class="['tableContainer', { 'forbidden-childe-pointer-events': state.dragActive }]" 
+    >
     <Table
         v-if="tableData"
         v-loading="loading"
         :columns="tableSetting.columns"
         :table-data="tableData"
         :options="options"
+        @drop.prevent="handleDrop"
+        @dragenter.prevent="handleDragEnter"
+        @dragleave.prevent="handleDragLeave"
             @command="handleAction"
             @row-dblclick="handleDblclick"
             @row-contextmenu="handleRightClick"
@@ -23,7 +27,9 @@
                 </div>
             </template>
     </Table>
+    <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2"></BrowseUpload2>
 </div>
+
 </template>
 
 
@@ -57,7 +63,9 @@ const state = reactive<State>({
             return !row.isFolder
         }
     },
-    curDoc: {}
+    curDoc: {},
+
+    dragActive: false
 })
 const tableKey = TABLE.CLIENT_BROWSE
 const tableSetting = defaultTableSetting[tableKey]
@@ -168,6 +176,29 @@ function handleSelect (rows:any) {
     emit('select-change', rows)
 }
 
+// #region module: drag-upload
+    const FileUpload2Ref = ref()
+    function handleDragLeave (e) {
+        e.preventDefault()
+        state.dragActive = false
+        FileUpload2Ref.value.setActive(false)
+        console.log('handleDragLeave', FileUpload2Ref.value.state.active);
+    }
+    function handleDragEnter (e) {
+        e.preventDefault()
+        state.dragActive = true
+        FileUpload2Ref.value.setActive(true)
+        console.log('handleDragEnter',FileUpload2Ref.value.state.active);
+    }
+    function handleDrop (e) {
+        console.log(e, 'handleDropssss');
+        state.dragActive = false
+        FileUpload2Ref.value.setActive(false)
+        FileUpload2Ref.value.handleDrop(e)
+    }
+// #endregion
+onMounted(() => {
+})
 
 </script>
 
@@ -244,5 +275,15 @@ function handleSelect (rows:any) {
             height: var(--icon-size);
         }
     }
+}
+.FileUpload2 {
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+</style>
+<style lang="scss">
+.forbidden-childe-pointer-events * {
+    pointer-events: none;
 }
 </style>
