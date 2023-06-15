@@ -8,9 +8,9 @@
             </template>    
         </Table>
     <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
-        <template #actions>
+        <!-- <template #actions>
             <el-button :icon="Download" :loading="previewFile.downloading" @click="handleAction('download', previewFile)">{{$t('download')}}</el-button>
-        </template>
+        </template> -->
     </ReaderDialog>
 </template>
 
