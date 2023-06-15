@@ -35,6 +35,14 @@ export const getMyTask = async(params: pageParams) =>{
 export const taskClaimApi = async(taskId:string, userId:string) => {
     return await api.post('/docpal/workflow/task/claim', { taskId, userId }).then(res => res.data.data);
 }
+export const GetTasksUserExportHeaderApi = async() => {
+    const res = await api.get('/nuxeo/search/getExportHeader').then(res => res.data.data)
+    return res
+}
+export const GetProcessHistoryExportHeaderApi = async() => {
+    const res = await api.get('/nuxeo/search/getExportHeader').then(res => res.data.data)
+    return res
+}
 export const exportProcessHistoryApi = async(params: any) => {
     const TimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     return await api.post('/docpal/workflow/history/exportProcessHistory', params, {
