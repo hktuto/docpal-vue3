@@ -104,7 +104,9 @@ export enum TABLE {
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
-    ADMIN_AUDIT = 'adminAudit'
+    ADMIN_AUDIT = 'adminAudit',
+
+    PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1522,6 +1524,17 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
             { slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true }
         ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.PUBLIC_LANGUAGE_SET]: {
+        columns: [
+            { id: '1', label: 'key', prop: 'key' },
+            { id: '2', label: 'en-US', prop: 'en-US', slot: 'en-US' },
+            { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zh-CN' },
+            { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zh-HK' },
+            { id: '5', label: 'dpTable_actions', slot: 'actions' }
+        ],
+        events: [],
         options: { pageSize: 20 }
     }
     

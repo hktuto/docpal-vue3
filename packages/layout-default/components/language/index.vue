@@ -1,6 +1,6 @@
 <template>
-     <img :class="classes" :src="`/images/logo-${mode}-${$colorMode.value === 'system' ? 'dark' : $colorMode.value}.svg`"  alt="logo" 
-        @click="handleClick"/>
+    <SvgIcon src="/icons/language.svg" round :content="$t('languageSet')"
+                @click="handleClick"></SvgIcon>
     <LanguageDialog ref="LanguageDialogRef"></LanguageDialog>
 </template>
 
@@ -8,9 +8,7 @@
 
 const LanguageDialogRef = ref()
 function handleClick() {
-    
     LanguageDialogRef.value.handleOpen()
-    console.log({data});
 }
 
 </script>

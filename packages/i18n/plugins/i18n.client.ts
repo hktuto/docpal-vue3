@@ -4,7 +4,6 @@ import { dpLog } from './../../dp-log/utils/logs';
 import { availableLocales } from '../makeI18nSetting';
 import { api } from 'dp-api'
 
-
 export default defineNuxtPlugin(async({
     $i18n,
     $config,

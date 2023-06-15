@@ -17,9 +17,9 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-const { getLanguageKeys } = useLanguage()
 import { } from 'dp-api'
 import { TABLE, defaultTableSetting } from 'dp-api'
+const { getLanguageKeys, getLanguageListStore, getLanguageList } = useLanguage()
 const emits = defineEmits([
     'refresh'
 ])
@@ -29,14 +29,18 @@ const state = reactive({
     languageKeys: [],
     tableData: []
 })
-const tableKey = TABLE.CLIENT_FILE_UPLOAD
+const tableKey = TABLE.PUBLIC_LANGUAGE_SET
 const tableSetting = defaultTableSetting[tableKey]
 function handleAction () {}
 function handleDblclick () {}
 function handleOpen () {
     state.visible = true
     state.languageKeys = getLanguageKeys()
+    state.tableData = getLanguageList(state.languageKeys)
 }
+onMounted(async() => {
+    const data = await getLanguageListStore()
+})
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
