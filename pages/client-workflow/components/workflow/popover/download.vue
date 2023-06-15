@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('export')"
     :close-on-click-modal="false"
            append-to-body
-    class="search-download-dialog"
+    class="workflow-download-dialog"
     >
     <div class="search-download-container">
         <div class="search-download-container-box">
@@ -41,17 +41,25 @@
 </template>
 <script lang="ts" setup>
 import draggable from 'vuedraggable'
-import { GetSearchExportHeaderApi, ExportSearchCsvApi} from 'dp-api'
+import { 
+  GetTasksUserExportHeaderApi,
+  GetProcessHistoryExportHeaderApi,
+  exportProcessHistoryApi,
+  exportTasksUserApi} from 'dp-api'
+const route = useRoute()
 const state = reactive({
     loading: false,
     visible: false,
     exportList: [],
-    searchParams: {},
-    hideList: [ ]
+    extraParams: {},
+    hideList: [ ],
+    activeTab: ''
 })
-function handleOpen(searchParams) {
+function handleOpen(extraParams) {
     state.visible = true
-    state.searchParams = searchParams
+    state.extraParams = extraParams
+    state.activeTab = route.query.tab
+    getExportList()
 }
 async function handleSubmit() {
     state.loading = true
@@ -60,24 +68,27 @@ async function handleSubmit() {
           prev.push(item.id)
           return prev
       }, [])
-      const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList })
-      await downloadBlob(blob, 'search.csv')
+      let blob
+      if(state.activeTab === 'completeTask') blob = await exportProcessHistoryApi({ ...state.extraParams, orderList })
+      else blob = await exportTasksUserApi({ ...state.extraParams, orderList })
+      await downloadBlob(blob, 'workflow.csv')
       state.visible = false
     } catch (error) {
-      
     }
     state.loading = false
 }
 
 async function getExportList () {
-  const res = await GetSearchExportHeaderApi()
+  let res
+  if (state.activeTab === 'completeTask') res = await GetProcessHistoryExportHeaderApi()
+  else res = await GetTasksUserExportHeaderApi(state.extraParams)
   state.exportList = []
+  state.hideList = []
   Object.keys(res).forEach(key => {
     state.exportList.push({ id: key, name: res[key]})
   })
 }
 onMounted(async() => {
-   getExportList()
 })
 defineExpose({ handleOpen })
 </script>
@@ -127,22 +138,12 @@ defineExpose({ handleOpen })
 
 </style>
 <style lang="scss">
-.search-download-dialog {
+.workflow-download-dialog {
     .el-dialog__body {
         padding: 0 20px;
     }
 }
 .el-dialog__title{
   text-transform: capitalize;
-}
-.sortable-ghost {
-  animation: tilt-shaking 0.2s ease forwards;
-}
-@keyframes tilt-shaking {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(2deg); }
-  50% { transform: rotate(0deg); }
-  75% { transform: rotate(-2deg); }
-  100% { transform: rotate(0deg); }
 }
 </style>

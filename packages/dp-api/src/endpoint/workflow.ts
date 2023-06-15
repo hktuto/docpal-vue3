@@ -35,10 +35,28 @@ export const getMyTask = async(params: pageParams) =>{
 export const taskClaimApi = async(taskId:string, userId:string) => {
     return await api.post('/docpal/workflow/task/claim', { taskId, userId }).then(res => res.data.data);
 }
+export const GetTasksUserExportHeaderApi = async(params) => {
+    const res = await api.post('/docpal/workflow/tasks/getUsersExportHeader', params).then(res => res.data.data)
+    return res
+}
+export const GetProcessHistoryExportHeaderApi = async() => {
+    const res = await api.get('/docpal/workflow/history/getHistoryExportHeader').then(res => res.data.data)
+    return res
+}
 export const exportProcessHistoryApi = async(params: any) => {
+    const TimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     return await api.post('/docpal/workflow/history/exportProcessHistory', params, {
         responseType: 'blob',
-        timeout: 0
+        timeout: 0,
+        headers: { TimeZone }
+    }).then(res => res.data);
+}
+export const exportTasksUserApi = async(params: any) => {
+    const TimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    return await api.post('/docpal/workflow/tasks/exportTasksUser', params, {
+        responseType: 'blob',
+        timeout: 0,
+        headers: { TimeZone }
     }).then(res => res.data);
 }
 
