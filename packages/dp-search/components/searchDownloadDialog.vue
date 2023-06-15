@@ -60,7 +60,8 @@ async function handleSubmit() {
           prev.push(item.id)
           return prev
       }, [])
-      const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList })
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+      const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList, timeZone })
       await downloadBlob(blob, 'search.csv')
       state.visible = false
     } catch (error) {
