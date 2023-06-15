@@ -46,16 +46,20 @@ import {
   GetProcessHistoryExportHeaderApi,
   exportProcessHistoryApi,
   exportTasksUserApi} from 'dp-api'
+const route = useRoute()
 const state = reactive({
     loading: false,
     visible: false,
     exportList: [],
     extraParams: {},
-    hideList: [ ]
+    hideList: [ ],
+    activeTab: ''
 })
 function handleOpen(extraParams) {
     state.visible = true
     state.extraParams = extraParams
+    state.activeTab = route.query.tab
+    getExportList()
 }
 async function handleSubmit() {
     state.loading = true
@@ -67,10 +71,9 @@ async function handleSubmit() {
       let blob
       if(state.activeTab === 'completeTask') blob = await exportProcessHistoryApi({ ...state.extraParams, orderList })
       else blob = await exportTasksUserApi({ ...state.extraParams, orderList })
-      await downloadBlob(blob, 'search.csv')
+      await downloadBlob(blob, 'workflow.csv')
       state.visible = false
     } catch (error) {
-      
     }
     state.loading = false
 }
@@ -78,14 +81,14 @@ async function handleSubmit() {
 async function getExportList () {
   let res
   if (state.activeTab === 'completeTask') res = await GetProcessHistoryExportHeaderApi()
-  else res = await GetTasksUserExportHeaderApi()
+  else res = await GetTasksUserExportHeaderApi(state.extraParams)
   state.exportList = []
+  state.hideList = []
   Object.keys(res).forEach(key => {
     state.exportList.push({ id: key, name: res[key]})
   })
 }
 onMounted(async() => {
-   getExportList()
 })
 defineExpose({ handleOpen })
 </script>

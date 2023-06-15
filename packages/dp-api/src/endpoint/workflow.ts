@@ -35,12 +35,12 @@ export const getMyTask = async(params: pageParams) =>{
 export const taskClaimApi = async(taskId:string, userId:string) => {
     return await api.post('/docpal/workflow/task/claim', { taskId, userId }).then(res => res.data.data);
 }
-export const GetTasksUserExportHeaderApi = async() => {
-    const res = await api.get('/nuxeo/search/getExportHeader').then(res => res.data.data)
+export const GetTasksUserExportHeaderApi = async(params) => {
+    const res = await api.post('/docpal/workflow/tasks/getUsersExportHeader', params).then(res => res.data.data)
     return res
 }
 export const GetProcessHistoryExportHeaderApi = async() => {
-    const res = await api.get('/nuxeo/search/getExportHeader').then(res => res.data.data)
+    const res = await api.get('/docpal/workflow/history/getHistoryExportHeader').then(res => res.data.data)
     return res
 }
 export const exportProcessHistoryApi = async(params: any) => {
