@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <div class="workflowCardContainer">
+        <div class="workflowCardContainer">{{$t('role.creator')}}
             <template v-for="(item,index) in state._list" :key="index">
                 <WorkflowFormCard :data="item"  />
             </template>

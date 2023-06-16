@@ -9,16 +9,16 @@
                 @command="handleAction"
                 @row-dblclick="handleDblclick">
                 <template #enUS="{row}">
-                    <el-input v-model="row['en-US']"> </el-input>
+                    <el-input v-if="!!row" v-model="row['en-US']"> </el-input>
                 </template>
                 <template #zhCN="{row}">
-                    <el-input v-model="row['zh-CN']"> </el-input>
+                    <el-input v-if="!!row" v-model="row['zh-CN']"> </el-input>
                 </template>
                 <template #zhHK="{row}">
-                    <el-input v-model="row['zh-HK']"> </el-input>
+                    <el-input v-if="!!row" v-model="row['zh-HK']"> </el-input>
                 </template>
                 <template #actions="{row}">
-                    <el-button type="primary" :loading="row.loading" @click="handleSubmit(row)">{{$t('submit')}}</el-button>
+                    <el-button v-if="!!row" type="primary" :loading="row.loading" @click="handleSubmit(row)">{{$t('submit')}}</el-button>
                 </template>
         </Table>
     </div>

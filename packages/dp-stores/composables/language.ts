@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { availableLocales } from 'i18n/makeI18nSetting';
 import { GetLanguageApi, SetLanguageApi } from 'dp-api'
+import {ElNotification } from 'element-plus'
 const pageKeys: any = {
     '/trash': ['commons_success', 'Fail', 'trash_error_noAction', 'dpTip_noSelection']
 }
@@ -53,19 +54,48 @@ export const useLanguage = defineStore('Language', () => {
     }
     async function getLanguage (code:string, section:string) {
         const res = await GetLanguageApi(code, section)
-        languageStores.set(getStoreKey(code, section), res)
-        Object.keys(res.languageContent).forEach((key: string) => {
+        const flattenData = flattenJSON(res.languageContent, {})
+        languageStores.set(getStoreKey(code, section), { ...res, _languageContent: flattenData })
+        Object.keys(flattenData).forEach((key: string) => {
             if (languageKeysStores.has(key)) {
                 const data = languageKeysStores.get(key)
-                data[code] = res.languageContent[key]
+                data[code] = flattenData[key]
             } else {
                 languageKeysStores.set(key, {
                     key,
-                    [code]: res.languageContent[key],
+                    [code]: flattenData[key],
                     section
                 })
             }
         })
+    }
+    function flattenJSON (obj: any = {}, res: any = {}, extraKey = '') {
+        Object.keys(obj).forEach(key => {
+            if(typeof obj[key] !== 'object'){
+            if(!res[extraKey + key]) res[extraKey + key] = {}
+                res[extraKey + key] = obj[key];
+            }else{
+                flattenJSON(obj[key], res, `${extraKey}${key}.`);
+            }
+        })
+        return res;
+    }
+    function restoreChainJson (json: any) {
+        const result = {}
+        let _result: any = {}
+        Object.keys(json).forEach(key => {
+            const keys = key.split('.')
+            _result = result
+            keys.forEach((item, index) => {
+                if(index === keys.length - 1) {
+                    _result[item] = json[key]
+                } else {
+                if(!_result[item]) _result[item] = {}
+                    _result = _result[item]
+                }
+            })
+        })
+        return result
     }
     function getStoreKey (code:string, section:string) {
         return code + '-' + section
@@ -76,20 +106,36 @@ export const useLanguage = defineStore('Language', () => {
         
         availableLocales.forEach((code) => {
             const data = languageStores.get(getStoreKey(code, row.section))
-            if(data.languageContent[row.key] !== row[code]) {
-                data.languageContent[row.key] = row[code]
-                data.languageContent = JSON.stringify(data.languageContent)
-                pList.push(handleSetLanguage(data, {code, section: row.section}))
+            
+            
+            if(data._languageContent[row.key] !== row[code]) {
+                data._languageContent[row.key] = row[code]
+                pList.push(handleSetLanguage(data, {code, section: row.section, key: row[code]}))
             }
         })
         if (pList.length === 0) return
         let result = await Promise.all(pList)
         const locales: string[] = []
         const sections: string[] = []
+        let errorMessage = ''
         result.forEach(item => {
             locales.push(item.code)
             sections.push(item.section)
+            if (!item.result) {
+                // @ts-ignore
+                errorMessage += `${item.code}-${item.key}: ${$t('dpMsg_error')}<br/>`
+            }
         })
+        if(errorMessage.length > 0) {
+            console.error({errorMessage});
+            ElNotification({
+                title: '',
+                message: errorMessage,
+                dangerouslyUseHTMLString: true,
+                type: 'error',
+                duration: 5000
+            });
+        }
         // 后端有延时
         await new Promise((resolve:any) => setTimeout(async() => {
             // 仅重加载变更的语言
@@ -100,7 +146,6 @@ export const useLanguage = defineStore('Language', () => {
     async function restored (locales: string[], sections: string[]) {
         const i18n: any = useNuxtApp().$i18n
         await getLanguageListStore(locales, sections)
-        // console.log(languageStores);
         locales.forEach(locale => {
             const newLanguage = {}
             localeSectionKeys.forEach( (section:any) => {
@@ -110,9 +155,19 @@ export const useLanguage = defineStore('Language', () => {
             i18n.setLocaleMessage(locale, newLanguage);
         })
     }
-    function handleSetLanguage (data: any, params: any) {
-        const res = SetLanguageApi(data)
-        return params
+    async function handleSetLanguage (data: any, result: any) {
+        try {
+            const params = {
+                ...data,
+                languageContent: JSON.stringify(restoreChainJson(data._languageContent)) 
+            }
+            
+            delete params._languageContent
+            const res = await SetLanguageApi(params)
+            return { ...result, result: res}
+        } catch (error) {
+            return { ...result, result: false}
+        }
     }
     watch(() => route.path, () => {
         languageKeys.clear()
