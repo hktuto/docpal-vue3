@@ -29,6 +29,8 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
         }
         return prev
     }, {})
+    console.log({result}, 2);
+    
     result.textSearchType = result.textSearchType || 'full text search'
     result.assetType = result.assetType === 'All' ? "" : result.assetType;
     result.includeFolder = result.includeFolder === '1' || result.includeFolder === 1 || result.includeFolder === true|| result.includeFolder === 'true';
