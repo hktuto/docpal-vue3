@@ -2,8 +2,8 @@
 <el-dialog v-model="state.visible" class="" :title="$t('languageSet')"
     :close-on-click-modal="false" draggable :modal="false"
     >
+    <el-input v-model="filter" placeholder="Search"></el-input>
     <div class="table-container" v-loading="state.loading">
-        <el-input v-model="filter" placeholder="Search"></el-input>
         <Table :columns="tableSetting.columns" :table-data="filterTable"
                 v-loading="state.loading"
                 @command="handleAction"
@@ -75,5 +75,6 @@ defineExpose({ handleOpen })
 .table-container {
     height: 50vh;
     overflow: hidden;
+    margin-top: var(--app-padding);
 }
 </style>
