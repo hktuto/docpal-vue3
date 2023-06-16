@@ -1529,9 +1529,9 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.PUBLIC_LANGUAGE_SET]: {
         columns: [
             { id: '1', label: 'key', prop: 'key' },
-            { id: '2', label: 'en-US', prop: 'en-US', slot: 'en-US' },
-            { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zh-CN' },
-            { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zh-HK' },
+            { id: '2', label: 'en-US', prop: 'en-US', slot: 'enUS' },
+            { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zhCN' },
+            { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zhHK' },
             { id: '5', label: 'dpTable_actions', slot: 'actions' }
         ],
         events: [],
