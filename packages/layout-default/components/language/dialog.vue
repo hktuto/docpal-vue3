@@ -3,7 +3,8 @@
     :close-on-click-modal="false" draggable :modal="false"
     >
     <div class="table-container" v-loading="state.loading">
-        <Table :columns="tableSetting.columns" :table-data="state.tableData"
+        <el-input v-model="filter" placeholder="Search"></el-input>
+        <Table :columns="tableSetting.columns" :table-data="filterTable"
                 v-loading="state.loading"
                 @command="handleAction"
                 @row-dblclick="handleDblclick">
@@ -39,6 +40,13 @@ const state = reactive({
     visible: false,
     languageKeys: [],
     tableData: [],
+})
+const filter = ref('');
+const filterTable = computed(() => {
+    if(!filter.value) return state.tableData
+    return state.tableData.filter(item => {
+        return item['en-US'].includes(filter.value) || item['zh-CN'].includes(filter.value) || item['zh-HK'].includes(filter.value)
+    })
 })
 const tableKey = TABLE.PUBLIC_LANGUAGE_SET
 const tableSetting = defaultTableSetting[tableKey]
