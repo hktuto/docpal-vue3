@@ -17,7 +17,6 @@
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/i18n": "8.0.0-beta.10",
     "dp-api": "workspace:*",
-    "dp-stores": "workspace:*",
     "eslint": "^8.28.0",
     "nuxt": "^3.4.3",
     "typescript": "^4.9.3"
