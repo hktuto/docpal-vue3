@@ -29,6 +29,8 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
         }
         return prev
     }, {})
+    console.log({result}, 2);
+    
     result.textSearchType = result.textSearchType || 'full text search'
     result.assetType = result.assetType === 'All' ? "" : result.assetType;
     result.includeFolder = result.includeFolder === '1' || result.includeFolder === 1 || result.includeFolder === true|| result.includeFolder === 'true';
@@ -57,9 +59,11 @@ export const GetSearchExportHeaderApi = async() => {
     return res
 }
 export const ExportSearchCsvApi = async(params) => {
+    const TimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const res = await api.post('/nuxeo/search/exportCsv', params, {
         responseType: 'blob',
-        timeout: 0
+        timeout: 0,
+        headers: { TimeZone }
     }).then(res => res.data)
     return res
 }
