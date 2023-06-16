@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" class="" :title="$t('languageSet')"
-    :close-on-click-modal="false" draggable
+    :close-on-click-modal="false" draggable :modal="false"
     >
     <div class="table-container" v-loading="state.loading">
         <Table :columns="tableSetting.columns" :table-data="state.tableData"
