@@ -10,18 +10,28 @@ export const useLanguage = defineStore('Language', () => {
     
     const languageStores = new Map();
     const languageKeysStores = new Map();
-
+    // 步骤1：添加key
     function addLanguageKeys (key: string) {
         languageKeys.add(key)
     }
+    // 步骤2：获取过滤ignoreList的key列表
     function getLanguageKeys () {
-        return [...languageKeys].filter(key => !ignoreList.includes(key))
+        return [...languageKeys].filter(key => !ignoreList.includes(key) && key)
     }
+    // 步骤3：获取key的翻译列表
     function getLanguageList (keys: string[]) {
         return keys.reduce((prev: any[], key: string) => {
-            if (languageKeysStores.has(key)) {
-                prev.push(languageKeysStores.get(key))
-            }
+            if (!languageKeysStores.has(key)) {
+                const data: any = {
+                    key,
+                    section: localeSectionKeys[0]
+                }
+                availableLocales.forEach(item => {
+                    data[item] = key
+                })
+                languageKeysStores.set(key, data)
+            } 
+            prev.push(languageKeysStores.get(key))
             return prev
         }, [])
     }
@@ -55,6 +65,7 @@ export const useLanguage = defineStore('Language', () => {
     function getStoreKey (code:string, section:string) {
         return code + '-' + section
     }
+    // 步骤四：保存设置，并且重新加载语言
     async function setLanguageStores (row: any) {
         let pList: any = []
         
@@ -74,7 +85,9 @@ export const useLanguage = defineStore('Language', () => {
             locales.push(item.code)
             sections.push(item.section)
         })
+        // 后端有延时
         await new Promise((resolve:any) => setTimeout(async() => {
+            // 仅重加载变更的语言
             await restored(locales, sections)
             resolve()
         }, 800)) 
