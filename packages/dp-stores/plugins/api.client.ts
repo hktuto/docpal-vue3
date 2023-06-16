@@ -12,6 +12,12 @@ export default defineNuxtPlugin(({$i18n,_route}) => {
         }
         // @ts-ignore
         window.$i18n = $i18n
+        // @ts-ignore
+        window.$t = (key: string) => {
+            addLanguageKeys(key)
+            // @ts-ignore
+            return $i18n.t(key)
+        }
     }
     return {
         provide: {

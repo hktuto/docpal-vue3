@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 import { availableLocales } from 'i18n/makeI18nSetting';
 import { GetLanguageApi, SetLanguageApi } from 'dp-api'
+const pageKeys: any = {
+    '/trash': ['commons_success', 'Fail', 'trash_error_noAction', 'dpTip_noSelection']
+}
 export const useLanguage = defineStore('Language', () => {
 // export const useLanguage = () => {
     const ignoreList:string[] = ['en-US', 'zh-CN', 'zh-HK']
@@ -16,7 +19,9 @@ export const useLanguage = defineStore('Language', () => {
     }
     // 步骤2：获取过滤ignoreList的key列表
     function getLanguageKeys () {
-        return [...languageKeys].filter(key => !ignoreList.includes(key) && key)
+        const list = [...languageKeys]
+        if(!!pageKeys[route.path]) list.push(...pageKeys[route.path])
+        return list.filter(key => !ignoreList.includes(key) && key)
     }
     // 步骤3：获取key的翻译列表
     function getLanguageList (keys: string[]) {
