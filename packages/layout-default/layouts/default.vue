@@ -1,5 +1,5 @@
 <template>
-    <div id="pageContainer" :style="`--mouse-x:${x}px; --mouse-y:${y}px;`">
+    <div id="pageContainer" :class="{isMobile}" :style="`--mouse-x:${x}px; --mouse-y:${y}px;`">
         <div id="fullPage"></div>
         <div id="sidebarContainer">
             <Logo class="logo" :mode="logo"/>
@@ -9,28 +9,24 @@
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
         </div>
-        <main id="mainContainer">
-            <div id="topBarContainer">
-              <div class="headerLeft">
-                  <PageTitle  :backPath="backPath"/>
-                  <slot name="headerLeft" />
-              </div>
-                <div class="expand">
-                  <SmartSearch v-if="feature.search && showSearch"/>
-                  <slot name="postHeader" />
-                </div>
+        <div id="topBarContainer">
+        <div class="headerLeft">
+          <PageTitle  :backPath="backPath"/>
+          <slot name="headerLeft" />
+        </div>
+        <div class="expand">
+          <SmartSearch v-if="feature.search && showSearch"/>
+          <slot name="postHeader" />
+        </div>
 
-                <div v-if="isLogin"  class="actions">
-                  <ColorSwitch v-if="feature.darkMode"/>
-                  <LanguageSwitch v-if="feature.multiLanguage"/>
-                  <!-- <NotificationBadge v-if="feature.notification"/> -->
-                  <Notification v-if="feature.notification"/>
-                  <UserMiniDropdown v-if="feature.userAuth" />
-                </div>
-            </div>
-            <div id="mainContent">
-                <slot />
-            </div>
+        <div v-if="isLogin"  class="actions">
+          <!-- <NotificationBadge v-if="feature.notification"/> -->
+          <Notification v-if="feature.notification"/>
+          <UserMiniDropdown v-if="feature.userAuth" />
+        </div>
+      </div>
+        <main id="mainContainer">
+          <slot />
         </main>
     </div>
 </template>
@@ -47,11 +43,14 @@ const opened = ref(false);
 const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
 const { feature } = useAppConfig();
 const {isLogin} = useUser()
+
+const { isMobile } = useDevice();
 function toggleOpen() {
      opened.value = !opened.value
 }
 // #region get mouse position
 import { useMouse } from '@vueuse/core'
+import {useResponsive} from "~/composables/responsive";
 const { x, y } = useMouse()
 // #endregion
 
@@ -64,58 +63,27 @@ const { x, y } = useMouse()
     position: relative;
     overflow: hidden;
     display: grid;
+    grid-template-areas: "menu header"
+                          "menu content";
     grid-template-columns: min-content 1fr;
-}
-
-#mainContainer{
-    background: var(--el-bg-color);
-    height: 100%;
-    overflow: hidden;
-    display: grid;
     grid-template-rows: min-content 1fr;
-    z-index: 1;
-}
-#topBarContainer{
-    background: var(--header-bg);
-    height: 100%;
-    min-height: 40px;
-    display: grid;
-    grid-template-columns: min-content 1fr min-content;
-    padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
-    gap: var(--app-padding);
-    align-items: center;
-    position: relative ; // some browser default position is static, will ignore z-index;
-    z-index: 4;
-    .headerLeft{
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: flex-start;
-      align-items: center;
-      gap: var(--app-padding);
+    &.isMobile{
+      grid-template-areas: "header "
+                            "content ";
+      grid-template-columns: 1fr;
+      grid-template-rows: min-content 1fr;
+
+      #sidebarContainer{
+        position: absolute;
+        transform: translateX(-100vw);
+        width: 100vw;
+        height: 100vh;
+      }
     }
-    .expand{
-      margin: var(--app-padding);
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: center;
-      align-items: center;
-      gap: var(--app-padding);
-    }
-    .actions{
-      display: flex;
-      flex-flow: row nowrap;
-      gap : var(--app-padding);
-      justify-content: flex-start;
-      align-items: center;
-    }
-}
-#mainContent{
-    overflow: hidden;
 }
 
-
-#sidebarContainer {
-  // height: 100vh;
+#sidebarContainer{
+  grid-area: menu;
   display: grid;
   grid-template-rows: 60px 1fr 30px;
   grid-template-areas: "logo"
@@ -130,35 +98,15 @@ const { x, y } = useMouse()
   transform: scale(1);
   box-shadow: 2px 0px 10px rgb(0 0 0 / 30%);
   z-index: 3;
+
   .logo{
+    height: 30px;
+    grid-area: logo;
+    transition: all 0.2s ease-in-out;
     margin: var(--app-padding);
   }
   .expand {
     margin-inline: var(--app-padding);
-  }
-  &:after{
-    --size: 250px;
-    position: fixed;
-    left: calc(var(--mouse-x) - var(--size) / 2 );
-    top: calc(var(--mouse-y) - var(--size) / 2 );
-    content: "";
-    background-color: var(--effect-color);
-    width: var(--size);
-    height: var(--size);
-    filter: blur(50px);
-    border-radius: var(--size);
-    pointer-events: none;
-  }
-  // block safari for after effect
-  @supports (-webkit-appearance:none){
-    &:after{
-      content:none;
-    }
-  }
-  .logo{
-   height: 30px;
-   grid-area: logo;
-   transition: all 0.2s ease-in-out;
   }
   .menu{
     grid-area: menu;
@@ -166,16 +114,6 @@ const { x, y } = useMouse()
   .expand{
     grid-area: toggle;
     color: #fff;
-    @media (max-width: 640px) {
-      position: absolute;
-      bottom: 0;
-      right: -56px;
-      padding: 8px;
-      background-color: var(--primary-color);
-      &.opened{
-        right: 0px;
-      }
-    }
   }
   &.opened {
 
@@ -185,6 +123,50 @@ const { x, y } = useMouse()
     }
   }
 }
+
+#topBarContainer{
+  background: var(--header-bg);
+  min-height: 40px;
+  grid-area: header;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
+  gap: var(--app-padding);
+  align-items: center;
+  position: relative ; // some browser default position is static, will ignore z-index;
+  z-index: 4;
+  .headerLeft{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-padding);
+  }
+  .expand{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--app-padding);
+  }
+  .actions{
+    display: flex;
+    flex-flow: row nowrap;
+    gap : var(--app-padding);
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+#mainContainer{
+  background: var(--el-bg-color);
+  overflow: hidden;
+  grid-area: content;
+  z-index: 1;
+}
+
+
+
 .fit-height {
   #mainContent{
     width: 100%;
