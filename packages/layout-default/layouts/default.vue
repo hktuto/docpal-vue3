@@ -19,7 +19,7 @@
                   <SmartSearch v-if="feature.search && showSearch"/>
                   <slot name="postHeader" />
                 </div>
-                
+
                 <div v-if="isLogin"  class="actions">
                   <ColorSwitch v-if="feature.darkMode"/>
                   <LanguageSwitch v-if="feature.multiLanguage"/>
@@ -94,6 +94,7 @@ const { x, y } = useMouse()
       gap: var(--app-padding);
     }
     .expand{
+      margin: var(--app-padding);
       display: flex;
       flex-flow: row nowrap;
       justify-content: center;
@@ -116,12 +117,11 @@ const { x, y } = useMouse()
 #sidebarContainer {
   // height: 100vh;
   display: grid;
-  grid-template-rows: 60px auto 30px;
+  grid-template-rows: 60px 1fr 30px;
   grid-template-areas: "logo"
                         "menu"
                         "toggle";
   background: var(--sidebar-bg);
-  padding: calc(var(--app-padding) * 1.2);
   transition: all 0.3s ease-in-out;
   color: var(--sidebar-color);
   position: relative;
@@ -130,7 +130,12 @@ const { x, y } = useMouse()
   transform: scale(1);
   box-shadow: 2px 0px 10px rgb(0 0 0 / 30%);
   z-index: 3;
-  
+  .logo{
+    margin: var(--app-padding);
+  }
+  .expand {
+    margin-inline: var(--app-padding);
+  }
   &:after{
     --size: 250px;
     position: fixed;
@@ -141,8 +146,7 @@ const { x, y } = useMouse()
     width: var(--size);
     height: var(--size);
     filter: blur(50px);
-    z-index: -1;
-    border-radius: 1e5px;
+    border-radius: var(--size);
     pointer-events: none;
   }
   // block safari for after effect
@@ -174,7 +178,7 @@ const { x, y } = useMouse()
     }
   }
   &.opened {
-    
+
     .logo{
       margin-left : 0px;
       width: 100%;

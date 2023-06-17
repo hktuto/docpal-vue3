@@ -1,8 +1,8 @@
 <template>
     <div class="menu">
-        <div 
-            v-for="item in displayMenu" 
-            :key="item.name" 
+        <div
+            v-for="item in displayMenu"
+            :key="item.name"
             :class="{
                 menu__item: true,
                 selected: $route.fullPath.includes(item.url),
@@ -53,6 +53,12 @@ const displayMenu = computed(
   --icon-color: var(--menu-color);
   --icon-hover-color: var(--menu-color);
   white-space: nowrap;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition : width .2s ease-in-out;
+  &.opened {
+    width: max-content;
+  }
   &__section {
     margin-bottom: calc(var(--app-padding) / 2);
     padding: 0;
@@ -62,6 +68,7 @@ const displayMenu = computed(
     align-items: stretch;
   }
   &__item{
+    margin-inline: var(--app-padding);
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
@@ -92,6 +99,7 @@ const displayMenu = computed(
       // background: var(--menu-selected-bg);
     }
     &.opened {
+
       .icon {
         margin-right: 12px;
       }
