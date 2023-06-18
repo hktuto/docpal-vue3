@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<{
 })
 
 //#region Set Menu
-const { menu } = useAppConfig();
+const { menu, feature } = useAppConfig();
 const {user} = useUser();
 /**
  * filter Menu to difference role
@@ -38,6 +38,7 @@ const {user} = useUser();
 const displayMenu = computed(
     () => menu
         .filter(m => m.role ? m.role.includes(user.value.role) : true)
+        .filter(m => m.condition ? feature[m.condition] : true)
         .sort((a,b) => a.order - b.order)
 )
 //#endregion
