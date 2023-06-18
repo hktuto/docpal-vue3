@@ -6,7 +6,7 @@ export default defineAppConfig({
       name:"file_virtual_folder",
       routeName:"virtual-folder",
       url:"/virtual-folder",
-      icon: "/icons/menu/trash.svg",
+      icon: "/icons/menu/virtual.svg",
       order:5,
     }
   ],

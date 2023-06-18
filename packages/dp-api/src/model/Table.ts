@@ -104,7 +104,8 @@ export enum TABLE {
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
-    ADMIN_AUDIT = 'adminAudit'
+    ADMIN_AUDIT = 'adminAudit',
+    ADMIN_VIRTUAL = 'adminVirtualFolder'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1523,6 +1524,30 @@ export const defaultTableSetting: TableColumnSetting = {
             { slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true }
         ],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VIRTUAL] : {
+        columns:[
+            { id: '1', label: 'Name', prop: 'name' },
+            {
+                id:'2', label:"User", prop: 'userList', slot: 'users'
+            },{
+                id:'3', label:"Groups", prop: 'groupsList', slot: 'groups'
+            },
+            {
+                id: '7',
+                "type": "",
+                "label": "actions",
+                slot: "actions",
+                "prop": "",
+                "width": 120,
+            }
+        ],
+        events: [],
+        slots:[
+            { slot: 'users', label: 'Users', prop: 'userList' },
+            { slot: 'groups', label: 'Groups', prop: 'groupList' },
+        ],
+        options: {  }
     }
     
 }

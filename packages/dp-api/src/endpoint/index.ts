@@ -19,4 +19,5 @@ export * from './admin-message-queue'
 export * from './admin-audit'
 export * from './admin-dam'
 export * from './admin-mail'
+export * from './admin-virtual-folder'
 
