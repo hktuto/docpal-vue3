@@ -104,7 +104,8 @@ export enum TABLE {
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
-    ADMIN_AUDIT = 'adminAudit'
+    ADMIN_AUDIT = 'adminAudit',
+    ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1521,6 +1522,39 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['goClientPath'],
         slots: [
             { slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_FOLDER_CABINET]: {
+        columns: [
+            { id: '1', label: 'docType_label', prop: 'label' },
+            { id: '2', label: 'docType_documentType', prop: 'documentType' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "dpTable_actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [
         ],
         options: { pageSize: 20 }
     }

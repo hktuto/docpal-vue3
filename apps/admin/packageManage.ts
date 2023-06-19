@@ -19,6 +19,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-pre-search-config');
     packages.push('../../pages/admin-share-list');
     packages.push('../../pages/admin-watermark');
+    packages.push('../../pages/admin-folder-cabinet');
     packages.push('../../pages/admin-dam');
     packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');
