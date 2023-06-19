@@ -5,6 +5,7 @@ export * from './setting.d'
 export * from './workflow.d'
 export * from './Table'
 export * from './public-share.d'
+export * from './virtual-folder.d'
 export type pageParams = {
     page ?: number,
     pageIndex ?: number,
