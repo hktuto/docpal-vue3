@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <template v-if="state.list.length === 0">
+      <template v-if="!state.loading && state.list.length === 0">
         <FolderCabinetEmpty @update="getList" />
       </template>
       <template v-else>
@@ -31,16 +31,19 @@ import {
 const route = useRoute();
 const router = useRouter()
 const state = reactive({
-    list: []
+    list: [],
+    loading: false
 })
 const tableKey = TABLE.ADMIN_FOLDER_CABINET
 const tableSetting = defaultTableSetting[tableKey]
 async function getList(dummy: boolean = false) {
+    state.loading = true
     try {
         state.list = await GetCabinetListApi()
     } catch (error) {
         state.list = []
     }
+    state.loading = false
 }
 
 const FolderCabinetAddDialogRef = ref()
