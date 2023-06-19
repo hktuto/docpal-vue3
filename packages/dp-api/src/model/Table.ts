@@ -105,7 +105,7 @@ export enum TABLE {
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
-    ADMIN_VIRTUAL = 'adminVirtualFolder'
+    ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1525,29 +1525,38 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
-    [TABLE.ADMIN_VIRTUAL] : {
-        columns:[
-            { id: '1', label: 'Name', prop: 'name' },
-            {
-                id:'2', label:"User", prop: 'userList', slot: 'users'
-            },{
-                id:'3', label:"Groups", prop: 'groupsList', slot: 'groups'
-            },
-            {
-                id: '7',
+    [TABLE.ADMIN_FOLDER_CABINET]: {
+        columns: [
+            { id: '1', label: 'docType_label', prop: 'label' },
+            { id: '2', label: 'docType_documentType', prop: 'documentType' },
+            {   
+                id: '3',
                 "type": "",
-                "label": "actions",
-                slot: "actions",
+                "label": "dpTable_actions",
                 "prop": "",
-                "width": 120,
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
             }
         ],
-        events: [],
-        slots:[
-            { slot: 'users', label: 'Users', prop: 'userList' },
-            { slot: 'groups', label: 'Groups', prop: 'groupList' },
+        events: ['delete'],
+        slots: [
         ],
-        options: {  }
+        options: { pageSize: 20 }
     }
     
 }
