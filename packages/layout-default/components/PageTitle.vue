@@ -1,14 +1,15 @@
 <template>
     <div class="pageHeaderContainer">
         <el-icon v-if="backPath" class="el-icon--left cursorPointer icon__hover" @click="handleBack"><ArrowLeftBold /></el-icon>
-        {{$t(currentRouteMenuName)}}
+        {{$t(title || currentRouteMenuName)}}
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 const props = defineProps<{
-    backPath?: string
+    backPath?: string,
+    title?:string,
 }>()
 const route = useRoute();
 const router = useRouter()

@@ -4,7 +4,7 @@
         <div id="sidebarContainer">
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
-            <div :class="{expand:true, opened}" @click="toggleOpen">
+            <div v-if="menu.length > 0" :class="{expand:true, opened}" @click="toggleOpen">
                 <InlineSvg :src="opened ? '/icons/menu/closed.svg' : '/icons/menu/expanded.svg'" />
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<{
 })
 const opened = ref(false);
 const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
-const { feature } = useAppConfig();
+const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 
 const { isMobile } = useDevice();

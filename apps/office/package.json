@@ -1,0 +1,21 @@
+{
+  "name": "office",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build  --dotenv ../../.env.deploy.dev",
+    "dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
+    "generate": "nuxt generate  --dotenv ../../.env.deploy.dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@types/node": "^18",
+    "@types/office-js": "^1.0.330",
+    "nuxt": "^3.5.2",
+    "dp-api":"workspace:*"
+  },
+  "dependencies": {
+    "@microsoft/office-js": "^1.1.86"
+  }
+}
