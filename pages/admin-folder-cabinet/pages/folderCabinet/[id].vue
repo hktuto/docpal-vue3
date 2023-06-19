@@ -49,8 +49,6 @@ const route = useRoute()
     function handleEdit (setting, isRoot: boolean = false) {
         setting.isEdit = true
         if(!!isRoot) {
-            console.log(setting, 'handleEdit');
-            
             FolderCabinetAddDialogRef.value.handleOpen(setting)
         } else {
             FolderCabinetAddChildDialogRef.value.handleOpen(setting)
