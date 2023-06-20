@@ -6,6 +6,7 @@ export const useUpload = () => {
     const status = useState<Stage>("uploadStatus", () => "NOT_STARTED")
     const uploadStatus = ref("");
     const mineType = useState('mineType', () => "");
+    const ext = useState('ext', () => "");
     const result = useState<any>('uploadResult', () => ({}));
     const docTypeList = ref<DocType[]>([])
     
@@ -88,14 +89,14 @@ export const useUpload = () => {
         if(!data) throw new Error('no data')
         const file = new File(
             [new Uint8Array(data)],
-            form.fileName,
+            form.fileName + ext.value,
             { type: mineType.value }
         );
         const formData = new FormData()
         const document = {
             name: form.fileName,
             idOrPath: `${form.path}/${form.fileName}`,
-            type: form.docType,
+            type: form.docType ,
             properties: form.metadata
         }
         formData.append('files', file)
@@ -125,7 +126,8 @@ export const useUpload = () => {
         Upload,
         docTypeList,
         docTypeChange,
-        result
+        result,
+        mineType
     }
     
     
