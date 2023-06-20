@@ -5,6 +5,8 @@ export const useUpload = () => {
     const status = ref<Stage>("NOT_STARTED")
     const uploadStatus = ref("");
     
+    const fileBuffer = ref();
+    
     const form = reactive({
         fileName: "",
         path: "",
@@ -14,13 +16,9 @@ export const useUpload = () => {
         
     }
     
-    async function createDocument() {
-        
-    }
     async function Upload() {
         try {
             await CheckDuplicate()
-            await createDocument()
             Office.context.document.getFileAsync("compressed",
                 {sliceCount: 1},
                 (result:any) => {
@@ -52,9 +50,27 @@ export const useUpload = () => {
     }
     
     async function sendSlice(slice, state) {
-        var data = slice.data;
-        console.log(data);
+        const data = slice.data;
+        console.log(data, state);
         if(!data) throw new Error('no data')
+        const file = new File(
+            [new Uint8Array(data)],
+            'testfile.docx',
+            { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+        );
+        const formData = new FormData()
+        // const document = {
+        //     name: file.fileName,
+        //     idOrPath: `${parentPath}/${file.fileName}`,
+        //     type: file.type,
+        //     languages: file.languages,
+        //     properties: file.metaList.reduce((prev, metaItem) => {
+        //         if (metaItem.value) prev[metaItem.metaData] = metaItem.value
+        //         return prev
+        //     },{})
+        // }
+        formData.append('files', file)
+        formData.append('document', JSON.stringify({}))
         // const parentPath = state._doc.path === '/' ? '' : state._doc.path
         // const document = {
         //     name: file.fileName,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 const state = ref<'Upload' | 'info'>('Upload');
-
+const ready = ref(false);
 onMounted(() => {
   Office.onReady(() => {
     wordInit()
@@ -9,14 +9,13 @@ onMounted(() => {
 })
 
 function wordInit() {
-  console.log("wordInit")
+  ready.value = true;
 }
 </script>
 
 <template>
   <NuxtLayout name="addin" pageTitle="Word">
-    <div class="contentContainer">
-      
+    <div v-if="ready" class="contentContainer">
       <OfficeAddinUpload />
     </div>
   </NuxtLayout>
