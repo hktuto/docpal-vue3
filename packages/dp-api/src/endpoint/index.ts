@@ -1,5 +1,5 @@
 export * from './user';
-export * from './documents'
+export * from './duplicateDetectionApi'
 export * from './setting'
 export * from './search'
 export * from './workflow'

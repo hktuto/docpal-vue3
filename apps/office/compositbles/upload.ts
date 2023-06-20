@@ -1,19 +1,51 @@
 
-import {CreateDocumentApi } from 'dp-api'
+import {CreateDocumentApi, DocType, duplicateDetectionApi, getDocTypeListApi, GetDocumentAdditionalApi} from 'dp-api'
+import { ElNotification } from 'element-plus'
 export const useUpload = () => {
     type Stage = 'NOT_STARTED' | 'UPLOADING' | 'VERIFY' | 'SUCCESS' | "FAIL"
-    const status = ref<Stage>("NOT_STARTED")
+    const status = useState<Stage>("uploadStatus", () => "NOT_STARTED")
     const uploadStatus = ref("");
+    
+    const result = useState<any>('uploadResult', () => ({}));
+    const docTypeList = ref<DocType[]>([])
     
     const fileBuffer = ref();
     
     const form = reactive({
         fileName: "",
         path: "",
-        documentType: ""
+        docType: null as any,
+        displayMeta: [],
+        metadata:{} as any,
     })
+    
+    async function docTypeChange(){
+        form.metadata = {};
+        if(!form.docType) form.displayMeta = [];
+        const metaList =  await GetDocumentAdditionalApi({documentType: form.docType})
+        form.displayMeta = metaList.reduce((p:any, item:any) => {
+            if (item.display) {
+                item.value = null;
+                p.push(item)
+            }
+            return p
+        }, [])
+    }
+    
+    async function getDocTypeList() {
+     const list = await getDocTypeListApi()
+        docTypeList.value = list.filter( item => !item.isFolder && item.name !== 'Audio' && item.name !== 'Video' && item.name !== 'Picture')
+    }
     async function CheckDuplicate() {
-        
+        const res = await duplicateDetectionApi({path:form.path, titles:[form.fileName]})
+        if(res[form.fileName]) {
+            ElNotification({
+                title: 'Duplicate File',
+                message: `A file with the name ${form.fileName} already exists in this folder. Please rename the file and try again.`,
+                type: 'warning'
+            })
+            throw new Error('not implemented')
+        }
     }
     
     async function Upload() {
@@ -35,11 +67,12 @@ export const useUpload = () => {
                 }
                 )
         }catch( err ) {
-            
+            console.log(err)
+            throw new Error('not implemented')
         }
     }
     
-    function getSlice(state) {
+    function getSlice(state:any) {
         state.file.getSliceAsync(state.counter, function (result) {
             if (result.status == Office.AsyncResultStatus.Succeeded) {
                 sendSlice(result.value, state);
@@ -49,7 +82,7 @@ export const useUpload = () => {
         });
     }
     
-    async function sendSlice(slice, state) {
+    async function sendSlice(slice:any, state:any) {
         const data = slice.data;
         console.log(data, state);
         if(!data) throw new Error('no data')
@@ -59,42 +92,40 @@ export const useUpload = () => {
             { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
         );
         const formData = new FormData()
-        // const document = {
-        //     name: file.fileName,
-        //     idOrPath: `${parentPath}/${file.fileName}`,
-        //     type: file.type,
-        //     languages: file.languages,
-        //     properties: file.metaList.reduce((prev, metaItem) => {
-        //         if (metaItem.value) prev[metaItem.metaData] = metaItem.value
-        //         return prev
-        //     },{})
-        // }
+        const document = {
+            name: form.fileName,
+            idOrPath: `${form.path}/${form.fileName}`,
+            type: form.docType,
+            properties: form.metadata
+        }
         formData.append('files', file)
-        formData.append('document', JSON.stringify({}))
-        // const parentPath = state._doc.path === '/' ? '' : state._doc.path
-        // const document = {
-        //     name: file.fileName,
-        //     idOrPath: `${parentPath}/${file.fileName}`,
-        //     type: file.type,
-        //     languages: file.languages,
-        //     properties: file.metaList.reduce((prev, metaItem) => {
-        //         if (metaItem.value) prev[metaItem.metaData] = metaItem.value
-        //         return prev
-        //     },{})
-        // }
-        // const formData = new FormData()
-        // formData.append('files', data)
-        // formData.append('document', JSON.stringify(document))
-        //
-        // await CreateDocumentApi(formData).then((res) => {
-        //     return !!res
-        // })
-    }   
+        formData.append('document', JSON.stringify(document))
+        result.value = await CreateDocumentApi(formData)
+        closeFile(state);
+        status.value = 'SUCCESS'
+    }
     
+    function closeFile(state:any){
+        state.file.closeAsync(function (result:any) {
+
+            // If the result returns as a success, the
+            // file has been successfully closed.
+            if (result.status === Office.AsyncResultStatus.Succeeded) {
+                status.value = 'SUCCESS'
+            } else {
+            }
+        });
+    }
+    
+    
+    onMounted(() => getDocTypeList());
     return {
         status,
         form,
-        Upload
+        Upload,
+        docTypeList,
+        docTypeChange,
+        result
     }
     
     

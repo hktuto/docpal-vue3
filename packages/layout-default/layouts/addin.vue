@@ -2,7 +2,6 @@
 
 const props = withDefaults(defineProps<{
   backPath?: string,
-  showSearch: boolean,
   pageTitle?: string
 }>(), {
   showSearch: true
@@ -22,7 +21,6 @@ const {isLogin} = useUser()
         <slot name="headerLeft" />
       </div>
       <div class="expand">
-        <SmartSearch v-if="feature.search && showSearch"/>
         <slot name="postHeader" />
       </div>
 

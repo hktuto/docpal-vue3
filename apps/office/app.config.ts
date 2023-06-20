@@ -6,7 +6,7 @@ export default defineAppConfig({
     multiLanguage: true,
     notification: false,
     userAuth: true,
-    search: true
+    search: false
   },
   menu:[]
 })
