@@ -5,7 +5,7 @@ export const useUpload = () => {
     type Stage = 'NOT_STARTED' | 'UPLOADING' | 'VERIFY' | 'SUCCESS' | "FAIL"
     const status = useState<Stage>("uploadStatus", () => "NOT_STARTED")
     const uploadStatus = ref("");
-    
+    const mineType = useState('mineType', () => "");
     const result = useState<any>('uploadResult', () => ({}));
     const docTypeList = ref<DocType[]>([])
     
@@ -88,8 +88,8 @@ export const useUpload = () => {
         if(!data) throw new Error('no data')
         const file = new File(
             [new Uint8Array(data)],
-            'testfile.docx',
-            { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+            form.fileName,
+            { type: mineType.value }
         );
         const formData = new FormData()
         const document = {
