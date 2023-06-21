@@ -1,4 +1,9 @@
 import { api } from '../';
+import {
+    pageParams,
+    paginationData,
+    Response
+} from '../model';
 export type tpFolderCabinetSetting = {
     id: string,
     parentId?: string,
@@ -33,6 +38,32 @@ export const CreateCabinetTemplateApi = async(params: tpFolderCabinetSetting) =>
     return res
 }
 export const DeleteCabinetTemplateApi = async(id: string) => {
-    const res = await api.delete(`docpal/cabinet/${id}`).then(res => res.data.data)
+    const res = await api.delete(`/docpal/cabinet/${id}`).then(res => res.data.data)
+    return res
+}
+export const GetCabinetPageApi = async(params: pageParams):Promise<paginationData> => {
+    const res = await api.post<Response<paginationData>>('/docpal/cabinet/page', params).then(res => res.data.data)
+    return res
+}
+export const GetCabinetSubDocumentsApi = async(params: pageParams):Promise<paginationData> => {
+    const res = await api.post<Response<paginationData>>(`/docpal/cabinet/sub/documents?pageNum=${params.pageNum}&pageSize=${params.pageSize}`, params).then(res => res.data.data)
+    return res
+}
+
+
+export const GetCabinetLoginUserListApi = async() => {
+    const res = await api.get(`/docpal/cabinet/loginUser/list`).then(res => res.data.data)
+    return res
+}
+export const GetCabinetResultApi = async(id: string) => {
+    const res = await api.get(`/docpal/cabinet/${id}/loginUser/sublist`).then(res => res.data.data)
+    return res
+}
+export const GetCabinetHeaderApi = async() => {
+    const res = await api.get('/docpal/cabinet/header/list').then(res => res.data.data)
+    return res
+}
+export const ExportCabinetApi = async() => {
+    const res = await api.get('/api/docpal/cabinet/export').then(res => res.data.data)
     return res
 }

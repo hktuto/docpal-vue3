@@ -6,6 +6,9 @@
             </div>
             <TableSortButton ref="TableSortButtonRef" v-if="_options.sortKey" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
             <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
+            <div>
+                <slot name="suffixSortButton"></slot>
+            </div>
         </div>
         <div class="dp-table-container--main">
             <el-table
@@ -331,7 +334,7 @@ defineExpose({ reorderColumn })
     width: 100%;
     display: grid;
     align-items: flex-end;
-    grid-template-columns: 1fr min-content;
+    grid-template-columns: 1fr min-content min-content;
     gap: var(--app-padding);
     .headerLeftExpand {
         overflow: hidden;
