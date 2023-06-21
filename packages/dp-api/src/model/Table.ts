@@ -81,6 +81,7 @@ export enum TABLE {
     CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
     CLIENT_BROWSE = 'clientBrowse',
     CLIENT_SHARE_SET = 'clientShareSet',
+    CLIENT_FOLDER_CABINET = 'clientFolderCabinet',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -517,6 +518,28 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
             { slot: 'watermark', label: 'watermark' }
         ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_FOLDER_CABINET]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_modifiedDate', prop: 'modifiedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'tableHeader_type', prop: 'type' }
+        ],
+        events: [],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_SHARE_LIST] : {
