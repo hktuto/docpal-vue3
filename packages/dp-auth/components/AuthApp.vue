@@ -27,7 +27,7 @@
 // check app ready, if no go to login
 const appStore  = useAppStore()
 import { api } from 'dp-api'
-const user = useUser();
+const {token, verify} = useUser();
 
 const props = withDefaults(defineProps<{
     showForgetPassword: boolean,
@@ -37,11 +37,12 @@ const props = withDefaults(defineProps<{
 
 onMounted(async () => {
   await appStore.appInit();
-  if(localStorage) {
-    api.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-    user.token.value = localStorage.getItem('token');
+  const t = localStorage.getItem('token') as string;
+  if(localStorage && t) {
+    api.defaults.headers.common['Authorization'] = 'Bearer ' + t;
+    token.value = t;
   }
-  user.verify();
+  verify();
 })
 
 </script>
