@@ -127,7 +127,8 @@ export const useUpload = () => {
         docTypeList,
         docTypeChange,
         result,
-        mineType
+        mineType,
+        ext
     }
     
     
