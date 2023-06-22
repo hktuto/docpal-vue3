@@ -25,7 +25,6 @@ function handleBack () {
 }
 
 watch( route , (newRoute) => {
-  console.log(route.name)
     getMenuItemFromPathName(route.name)
 },{
     immediate: true

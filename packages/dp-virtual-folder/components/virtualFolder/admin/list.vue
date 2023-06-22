@@ -32,9 +32,10 @@ async function handleDelete(id:string){
         <div class="filter">
           <el-input v-model="filterText" :placeholder="$t('common_filter')"/>
         </div>
-        <el-button type="primary" size="small" round style="--icon-color: #fff;--icon-size: 16px;" @click="$router.push('/virtual-folder/new')">
-          <SvgIcon src="/icons/add.svg" />
-        </el-button>
+        <div class="headerSlot">
+          <slot name="header" />
+        </div>
+        
       </div>
       <Table
           :columns="tableSetting.columns"

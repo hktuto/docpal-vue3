@@ -27,5 +27,7 @@ watch(route, ()=> {
 <style lang="scss" scoped>
 .pageContainer{
   padding: calc( var(--app-padding) * 2);
+  height: 100%;
+  position: relative;
 }
 </style>

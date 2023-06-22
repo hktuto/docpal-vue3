@@ -1,18 +1,12 @@
 
 
 <script lang="ts" setup>
-import { VirtualFolderItemFile } from "dp-api"
+import {VirtualFolderDetail, VirtualFolderItemFile, VirtualFolderItemType} from "dp-api"
 const props = defineProps<{
     isRoot: boolean
 }>()
 
-const form = ref<VirtualFolderItemFile>({
-    name: '',
-    doctype: 'folder',
-    isFolder: false,
-    children: [],
-    showChildren: false,
-})
+const newItemTypeOption = ref<VirtualFolderItemType[]>(['doc', 'folder'])
 </script>
 
 <template>
@@ -29,7 +23,7 @@ const form = ref<VirtualFolderItemFile>({
                     <el-option ></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="form.isFolder && form.doctype">
+            <el-form-item v-if="form.isFolder ">
                 <el-switch v-model="form.isFolder" active-color="#13ce66" inactive-color="var(--primary-color)" />
             </el-form-item>
         </el-form>
