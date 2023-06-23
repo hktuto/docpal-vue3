@@ -18,7 +18,7 @@ const currentRouteMenuName = ref("");
 
 function getMenuItemFromPathName(name: string) {
     const item = menu.find( (item:any) => item.routeName === name);
-    console.log(item);
+
     currentRouteMenuName.value = item?.name || "";
 }
 function handleBack () {
@@ -26,7 +26,6 @@ function handleBack () {
 }
 
 watch( route , (newRoute) => {
-  console.log(route.name)
     getMenuItemFromPathName(route.name)
 },{
     immediate: true
