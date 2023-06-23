@@ -3,7 +3,7 @@
       <div class="pageContainer">
 
 
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state._tableData"
+        <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state._tableData"
                 @command="handleAction"
                 @row-dblclick="handleDblclick">
             <template #preSortButton>
