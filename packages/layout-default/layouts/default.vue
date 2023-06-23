@@ -99,7 +99,7 @@ const { x, y } = useMouse()
   overflow: hidden;
   transform: scale(1);
   box-shadow: 2px 0px 10px rgb(0 0 0 / 30%);
-  z-index: 3;
+  z-index: 5;
 
   .logo{
     height: 30px;
