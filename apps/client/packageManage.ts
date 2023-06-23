@@ -13,7 +13,7 @@ export function customLayer():string[] {
     packages.push('../../pages/client-share-list');
     packages.push('../../pages/client-collection');
     packages.push('../../pages/client-workflow');
-    packages.push('../../pages/client-folder-cabinet');
+    // packages.push('../../pages/client-folder-cabinet');
     
     
     packages.push("../../packages/dp-stores")
