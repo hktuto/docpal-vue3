@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/workflowForm">
+
         <template #headerLeft>
             <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
@@ -15,6 +16,7 @@
                 </template>
             </el-dropdown>
         </template>
+      <div class="pageContainer">
         <div style="height: 100%; overflow: hidden;">
             <FromDesigner ref="FromDesignerRef" :fieldListApi="state.fieldListApi">
                 <template #submit>
@@ -22,6 +24,7 @@
                 </template>
             </FromDesigner>
         </div>
+      </div>
     </NuxtLayout>
 </template>
 
@@ -69,7 +72,7 @@ const state = reactive<State>({
                 FromDesignerRef.value.setFormJson(res.json)
             })
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -77,7 +80,7 @@ const state = reactive<State>({
 // const shareInfoDialogRef = ref()
 async function getWorkflowDetail() {
     state.workflowDetail = await GetWorkflowApi(route.params.id)
-    
+
 }
 function handleCommand(command: string){
     router.push({
@@ -94,6 +97,11 @@ watch(() => route.query.taskId, async(newValue) => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  padding: calc( var(--app-padding) * 2);
+  height: 100%;
+  position: relative;
+}
 .el-dropdown-link {
     display: grid;
     grid-template-columns: min-content min-content;

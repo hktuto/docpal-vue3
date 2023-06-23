@@ -1,5 +1,8 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
+      <div class="pageContainer">
+
+
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state._tableData"
                 @command="handleAction"
                 @row-dblclick="handleDblclick">
@@ -20,6 +23,7 @@
             </template>
         </Table>
         <DamDialog ref="DamDialogRef" @refresh="getList()"></DamDialog>
+      </div>
     </NuxtLayout>
 </template>
 
@@ -42,7 +46,7 @@ import { GetDamsApi, DeleteDamApi, TABLE, defaultTableSetting } from 'dp-api'
             state.tableData = await GetDamsApi()
             state._tableData = deepCopy(state.tableData)
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -80,6 +84,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 .button-add {
     margin: 0 0 var(--app-padding) 0;
 }

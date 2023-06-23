@@ -1,5 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
+      <div class="pageContainer">
+
         <Table :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 v-loading="loading"
                 @pagination-change="handlePaginationChange"
@@ -13,6 +15,7 @@
                     </el-button>
                 </template>
         </Table>
+      </div>
     </NuxtLayout>
 </template>
 
@@ -49,13 +52,13 @@ import {
         state.loading = true
         try {
             const res = await GetMessageQueuePageApi(param.pageNum, param.pageSize, {...state.extraParams})
-        
+
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalElements
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageNum + 1
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -101,7 +104,7 @@ async function handleReSubmit (row) {
             handlePaginationChange()
         }
     } catch (error) {
-        
+
     }
     setTimeout(() => {
         row.loading = false
@@ -115,6 +118,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  padding: calc( var(--app-padding) * 2);
+  height: 100%;
+  position: relative;
+}
 :deep(.el-form-item--default) {
     margin-bottom: unset;
 }

@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
 import { Delete } from '@element-plus/icons-vue'
-import { 
+import {
     GetPreSearchListApi,
     UpdatePreSearchApi,
     DeletePreSearchApi,
@@ -79,7 +79,7 @@ async function handleSubmit () {
             await getPreSearchList(true)
         }
     } catch (error) {
-        
+
     }
     state.loading = false
 }
@@ -99,14 +99,14 @@ async function getPreSearchList(refresh: boolean = false, routeName: string = ''
             handleTabClick(item)
         }
     } catch (error) {
-        
+
     }
     state.listLoading = false
 }
 function handleKeywordFilter(data) {
     state._preSearchList = data
 }
-const PreSearchConfigAddDialogRef = ref() 
+const PreSearchConfigAddDialogRef = ref()
 function openDialog () {
     PreSearchConfigAddDialogRef.value.handleOpen()
 }
@@ -124,6 +124,7 @@ onMounted(async() => {
 
 <style lang="scss" scoped>
 .section {
+  padding: calc( var(--app-padding) * 2);
     overflow: hidden;
     height: 100%;
     display: grid;
@@ -162,5 +163,5 @@ onMounted(async() => {
             overflow-x: hidden;
         }
     }
-}   
+}
 </style>

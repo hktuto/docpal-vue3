@@ -1,5 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
+      <div class="pageContainer">
+
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData"
                 @row-dblclick="handleDblclick">
             <template #configuredLevel="{ row }">
@@ -11,6 +13,7 @@
                 <el-button type="text" :loading="row.loading" ></el-button>
             </template>
         </Table>
+      </div>
     </NuxtLayout>
 </template>
 
@@ -41,7 +44,7 @@ const { t } = useI18n();
         try {
             state.tableData = await getLoggersApi()
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -58,7 +61,7 @@ async function handleLevelChange (level, row) {
         })
         await getList()
     } catch (error) {
-        
+
     }
     row.loading = false
 }
@@ -73,4 +76,9 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  padding: calc( var(--app-padding) * 2);
+  height: 100%;
+  position: relative;
+}
 </style>

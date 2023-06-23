@@ -17,8 +17,8 @@
                     <h3>{{state.doc.name}}
                         <!-- <ExportButton v-show="folderCurItem.isFolder" class="el-icon--right" :export-id="folderCurItem.id" :export-name="folderCurItem.name"></ExportButton> -->
                     </h3>
-                    <el-select v-if="state.doc.properties" 
-                        v-model="state.doc.properties['sec:clearanceLevel']" clearable 
+                    <el-select v-if="state.doc.properties"
+                        v-model="state.doc.properties['sec:clearanceLevel']" clearable
                         placeholder="Clearance Level"
                         @change="clearanceLevelChange" >
                         <el-option v-for="o in state.options" :key="o" :label="o" :value="o"/>
@@ -71,7 +71,7 @@ async function handleClick (doc) {
         state.doc = { ...res, ...doc }
         await getAcls()
     } catch (error) {
-        
+
     }
     state.loading = false
 }
@@ -87,7 +87,7 @@ async function getAcls () {
     }
 }
 async function clearanceLevelChange (value) {
-    try { 
+    try {
         const form = {
             idOrPath: state.doc.id,
             properties: {
@@ -179,7 +179,13 @@ async function clearanceLevelChange (value) {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 .grid-layout{
+    padding: calc( var(--app-padding) * 2);
     height: 100%;
     overflow: hidden;
     display: grid;
@@ -212,7 +218,7 @@ async function clearanceLevelChange (value) {
             justify-content: space-between;
         }
         &-content {
-           overflow: auto; 
+           overflow: auto;
            padding: var(--app-padding);
         }
     }

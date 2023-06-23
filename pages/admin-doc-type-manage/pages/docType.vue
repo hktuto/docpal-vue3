@@ -19,7 +19,7 @@
                 <template #header>
                     <div class="card-header">
                         <span>{{$t('docType_documentType')}}({{ state.docTypeList.length }})</span>
-                        <el-button class="button" type="primary" 
+                        <el-button class="button" type="primary"
                             @click="handleDocTypeDialogShow()">{{$t('common_new')}}</el-button>
                     </div>
                     <KeywordFilter :list="state.docTypeList" attr="name"
@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 // import { getLoggersApi, setLoggersApi } from 'dp-api/src/endpoint/admin-log'
-import { 
+import {
     GetCustomSchemaListApi,
     GetCustomDocTypeListApi,
     TABLE, defaultTableSetting
@@ -104,6 +104,7 @@ onMounted(async() => {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: calc(var(--app-padding) * 2);
+  padding: calc(var(--app-padding) * 2);
 }
 :deep(.el-autocomplete) {
     width: 100%;
