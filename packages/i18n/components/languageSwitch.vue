@@ -1,13 +1,18 @@
 <template>
     <div class="languageSwitchContainer">
-      <div class="itemLabel">
-        {{ $t('language') }}
-      </div>
-      <div class="currentLang">
-        <div v-for="locale in filterLang" :key="locale" class="langItem" @click="handleCommand(locale)">
-          {{$t(locale)}}
-        </div>
-      </div>
+      
+      <ElDropdown  @command="handleCommand">
+          <div class="currentLang">
+              {{$t(locale)}}
+          </div>
+          <template #dropdown>
+              <ElDropdownMenu>
+                  <ElDropdownItem v-for="locale in availableLocales" :key="locale" :command="locale">
+                      {{$t(locale)}}
+                  </ElDropdownItem>
+              </ElDropdownMenu>
+          </template>
+        </ElDropdown>
     </div>
 </template>
 

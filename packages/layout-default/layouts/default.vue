@@ -22,6 +22,8 @@
         <div v-if="isLogin"  class="actions">
           <!-- <NotificationBadge v-if="feature.notification"/> -->
           <Notification v-if="feature.notification"/>
+          <ColorSwitch />
+          <LanguageSwitch v-if="feature.multiLanguage" />
           <UserMiniDropdown v-if="feature.userAuth" />
         </div>
       </div>
