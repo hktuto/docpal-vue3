@@ -1,5 +1,8 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
+      <div class="pageContainer">
+
+
       <template v-if="!state.loading && state.list.length === 0">
         <FolderCabinetEmpty @update="getList" />
       </template>
@@ -19,12 +22,13 @@
         </main>
         <FolderCabinetAddDialog ref="FolderCabinetAddDialogRef" @update="getList" />
       </template>
+      </div>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { 
-    GetCabinetListApi, 
+import {
+    GetCabinetListApi,
     DeleteCabinetTemplateApi,
     defaultTableSetting, TABLE
 } from 'dp-api'
@@ -72,6 +76,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  overflow: auto;
+  padding: calc( var(--app-padding) * 2);
+}
 main {
     width: 100%;
     height: 100%;

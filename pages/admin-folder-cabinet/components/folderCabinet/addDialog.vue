@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('folderCabinet.create')"
-    :close-on-click-modal="false"
+    :close-on-click-modal="false" append-to-body
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
     <template #footer>
@@ -48,7 +48,7 @@ async function handleSubmit() {
         state.visible = false
         emits('update')
     } catch (error) {
-        
+
     }
     state.loading = false
 }

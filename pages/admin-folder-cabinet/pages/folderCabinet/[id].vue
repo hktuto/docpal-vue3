@@ -1,8 +1,11 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/folderCabinet">
+      <div class="pageContainer">
         <FolderCabinetCard v-loading="state.loading" class="FolderCabinetCard" :setting="state.setting" :isRoot="true" ></FolderCabinetCard>
         <FolderCabinetAddChildDialog ref="FolderCabinetAddChildDialogRef" @update="getData" />
         <FolderCabinetAddDialog ref="FolderCabinetAddDialogRef" @update="getData" />
+      </div>
+
     </NuxtLayout>
 </template>
 
@@ -17,8 +20,9 @@ const state = reactive({
 const FolderCabinetAddChildDialogRef = ref()
 const route = useRoute()
 // await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
-// #region module: actions 
+// #region module: actions
     function handleAddChild(data) {
+  console.log(data)
         FolderCabinetAddChildDialogRef.value.handleOpen(data)
     }
     function handleDeleteChild(setting){
@@ -34,8 +38,8 @@ const route = useRoute()
                 duration: 0,
                 position: 'bottom-right'
             });
-            const response = await DeleteCabinetTemplateApi(setting.id)   
-            await getData() 
+            const response = await DeleteCabinetTemplateApi(setting.id)
+            await getData()
             noti.close()
             ElNotification({
                 title: 'Success',
@@ -46,7 +50,8 @@ const route = useRoute()
         })
     }
     const FolderCabinetAddDialogRef = ref()
-    function handleEdit (setting, isRoot: boolean = false) {
+    function handleEdit (setting:any, isRoot: boolean = false) {
+        console.log(setting);
         setting.isEdit = true
         if(!!isRoot) {
             FolderCabinetAddDialogRef.value.handleOpen(setting)
@@ -63,7 +68,7 @@ async function getData () {
     try {
         state.setting = await GetCabinetTemplateApi(route.params.id)
     } catch (error) {
-        
+
     }
     state.loading = false
 }
@@ -73,6 +78,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+    height: 100%;
+    overflow: auto;
+  padding: calc( var(--app-padding) * 2);
+}
 .FolderCabinetCard {
     height: 100%;
     background-color: #f1f1f1;
