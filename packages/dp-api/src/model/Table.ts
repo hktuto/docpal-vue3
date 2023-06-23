@@ -106,7 +106,8 @@ export enum TABLE {
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
-    ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
+    ADMIN_FOLDER_CABINET = 'adminFolderCabinet', 
+    ADMIN_VIRTUAL= 'adminVirtual',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1580,6 +1581,18 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
         ],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VIRTUAL]: {
+        columns: [
+            { id: '1', label: 'virtual_folder_admin_name', prop: 'name' },
+            { id: '2', label: 'virtual_folder_admin_users', prop:'userList', slot:'users' },
+            { id: '3' , label: 'virtual_folder_admin_groups', prop:'groupList', slot:'groups' },
+            { id: '3' , label: 'virtual_folder_admin_actions', slot:'actions' },
+        ],
+        events:[],
+        slots:[
+        ],
+        options:{}
     }
     
 }
