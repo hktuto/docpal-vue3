@@ -11,6 +11,8 @@ export * from './watermark'
 export * from './language'
 export * from './folder-cabinet'
 
+export * from './ocrAPi'
+
 export * from './admin-acl'
 export * from './admin-meta'
 export * from './admin-workflow'
