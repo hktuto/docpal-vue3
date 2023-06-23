@@ -37,7 +37,7 @@
 import InlineSvg from 'vue-inline-svg'
 const props = withDefaults(defineProps<{
     backPath?: string,
-    showSearch: boolean,
+    showSearch?: boolean,
 }>(), {
   showSearch: true
 })
