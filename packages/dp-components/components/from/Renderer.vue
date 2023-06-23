@@ -93,4 +93,15 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
         width: 100%;
     }
 }
+:deep .el-select-group__wrap {
+    display: unset!important;;
+}
+</style>
+<style lang="scss">
+.el-select-group__wrap {
+    display: unset!important;;
+}
+.el-select-group__wrap:not(:last-of-type)::after {
+    bottom: 0px;
+}
 </style>

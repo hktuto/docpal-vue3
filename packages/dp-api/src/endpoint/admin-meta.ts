@@ -47,7 +47,8 @@ let metaSettingData: metaData = null
 export const GetMetaSettingsApi = async(refresh: boolean = false):Promise<metaData> => {
     if(!!metaSettingData && !refresh) return deepCopy(metaSettingData) 
     const res = await api.get('/nuxeo/admin/setting').then(res => res.data.data)
-    metaSettingData = JSON.parse(res) 
+
+    metaSettingData = res
     return deepCopy(metaSettingData)
 }
 export const PutMetaSettingApi = async(params: metaData) => {
@@ -76,6 +77,7 @@ export const AddMetaSettingApi = async(params: metaSetting) => {
 export const GetMetaSettingList = async():Promise<metaSetting[]> => {
     await GetMetaSettingsApi()
     const res = await GetMetaValidationRuleApi()
+    console.log(res);
     const metaList:metaSetting[] = res.reduce((prev, item) => {
         let _item = item
         const _index = prev.findIndex((prevItem) => prevItem.documentType === item.documentType)

@@ -7,7 +7,7 @@
       <LazyForgetPassword  />
     </div>
     <div v-else-if="appStore.displayState != 'ready'" ref="loadingEl" class="loadingContainer">
-     
+
       <div class="contain">
         <LogoCacheWhite class="loginLogo" />
         <div class="status">{{ appStore.state }}</div>
@@ -27,7 +27,7 @@
 // check app ready, if no go to login
 const appStore  = useAppStore()
 import { api } from 'dp-api'
-const user = useUser();
+const {token, verify} = useUser();
 
 const props = withDefaults(defineProps<{
     showForgetPassword: boolean,
@@ -37,11 +37,12 @@ const props = withDefaults(defineProps<{
 
 onMounted(async () => {
   await appStore.appInit();
-  if(sessionStorage) {
-    api.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.getItem('token');
-    user.token.value = sessionStorage.getItem('token');
+  const t = localStorage.getItem('token') as string;
+  if(localStorage && t) {
+    api.defaults.headers.common['Authorization'] = 'Bearer ' + t;
+    token.value = t;
   }
-  user.verify();
+  verify();
 })
 
 </script>

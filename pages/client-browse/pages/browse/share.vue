@@ -27,10 +27,10 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
-import { 
+import {
     prepareShareDownloadApi,
-    getPrepareShareDownloadUrlApi, 
-    shareRequestApi, 
+    getPrepareShareDownloadUrlApi,
+    shareRequestApi,
     GetWatermarkDocPreview,
     GetDocumentPreview,
     getJsonApi } from 'dp-api';
@@ -81,22 +81,27 @@ async function handleDblclick (row) {
     previewFile.id = row.id
 }
 async function handleSubmit () {
+  console.log('handleSubmit');
     state.loading = true
-    const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
-    const param = {
+
+    try {
+      const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
+      const param = {
         emailList: formData.emailList,
         documentIdList: documentIdListGet(),
         watermarkList: watermarkListGet(),
         password: formData.password ? formData.password : '',
         tokenLiveInMinutes: diffMinute(formData.dueDate)
-    }
-    try {
+      }
+
+      console.log(formData);
         const response = await shareRequestApi(param)
         ElMessage.success($i18n.t('share_success'))
         updateShareList([])
         router.push(route.query.backPath)
     } catch (error) {
-        // ElMessage.error(error.message)
+      console.log(error);
+      ElMessage.error(error.message)
     }
     state.loading = false
     function watermarkListGet() {
@@ -122,7 +127,7 @@ onMounted(async() => {
     try {
         state.minTypeShareList = await getMineTypeShareList()
     } catch (error) {
-        
+
     }
     if(state.minTypeShareList.length === 0) router.push(route.query.backPath)
     const mimeTypeList = state.minTypeShareList.reduce((prev, item) => {

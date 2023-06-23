@@ -1,5 +1,8 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
+      <div class="pageContainer">
+
+
         <div class="flex-x-end">
             <el-button @click="uploadXlsx">{{$t('import')}}
                 <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
@@ -7,6 +10,7 @@
             <el-button type="primary" @click="handleSubmit">{{$t('save')}}</el-button>
         </div>
         <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
+      </div>
     </NuxtLayout>
 </template>
 
@@ -28,7 +32,7 @@ async function handleSubmit () {
 }
 // #region module: import
     const inputRef = ref()
-    function uploadXlsx() { inputRef.value.click() } 
+    function uploadXlsx() { inputRef.value.click() }
     function handleFile (event) {
         const reader = new FileReader();
         reader.readAsText(event.target.files[0], "UTF-8");
@@ -50,7 +54,7 @@ async function handleSubmit () {
             Message.error('file format error')
         }
         }
-    
+
     }
 // #endregion
 onMounted(() => {
@@ -62,6 +66,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  padding: calc( var(--app-padding) * 2);
+  height: 100%;
+  position: relative;
+}
 .button-add {
     margin: 0 0 var(--app-padding) 0;
 }

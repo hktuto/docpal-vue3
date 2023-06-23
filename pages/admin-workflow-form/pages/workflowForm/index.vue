@@ -28,7 +28,7 @@ import { GetProcessDefinitionListApi } from 'dp-api'
             state.list = res
             state._list = deepCopy(state.list)
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -43,6 +43,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .workflowCardContainer {
+    padding: calc( var(--app-padding) * 2);
     height: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

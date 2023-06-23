@@ -81,7 +81,7 @@ export const useUser = () => {
     async function verify() {
         try {
             user.value = await Verify();
-            Cookies.value = JSON.stringify(user.value) 
+            Cookies.value = JSON.stringify(user.value)
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
@@ -101,10 +101,10 @@ export const useUser = () => {
             username,  password
         })
         token.value = access_token,
-       
+
         // Cookies.value = access_token || ''
         refreshToken.value = refresh_token
-        sessionStorage.setItem('token', access_token);
+        localStorage.setItem('token', access_token);
         localStorage.setItem('refreshToken', refresh_token);
         api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
         if(!isRequired2FA) {

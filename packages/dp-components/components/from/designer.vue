@@ -89,4 +89,16 @@ defineExpose({ vFormDesignerRef, setFormJson, getFormJson })
 :deep(.el-header.main-header) {
     display: none;
 }
+:deep(.redPoint) {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 0px;
+}
+:deep(.el-form-item__label) {
+  position: relative;
+}
 </style>

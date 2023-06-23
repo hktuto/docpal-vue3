@@ -1,5 +1,8 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
+      <div class="pageContainer">
+
+
         <el-container>
                 <el-card>
                     <div class="collection-list" style="--color: #F56C6C">
@@ -13,8 +16,8 @@
                 </el-card>
             <el-container>
                 <el-header>
-                    <div class="flex-x-start">{{curCollection.name}} 
-                        <SvgIcon src="/icons/edit.svg" class="mg-l" 
+                    <div class="flex-x-start">{{curCollection.name}}
+                        <SvgIcon src="/icons/edit.svg" class="mg-l"
                             @click="openDialog(true)"/>
                     </div>
                     <el-button v-if="selectedDocs.length > 1"
@@ -31,6 +34,7 @@
         </el-container>
         <FileFormDialog ref="fileFormDialogAddRef" :title="$t('collections_new')" @submit="submitNewCollection"></FileFormDialog>
         <FileFormDialog ref="fileFormDialogEditRef" :title="$t('collections_edit')" @submit="saveCollection"></FileFormDialog>
+      </div>
     </NuxtLayout>
 </template>
 
@@ -51,8 +55,8 @@ const pageParams = {
 const state = reactive<State>({
     loading: false,
     tableData: [],
-    options: { 
-        // showPagination: true, 
+    options: {
+        // showPagination: true,
         paginationConfig: {
             total: 0,
             currentPage: 1,
@@ -77,8 +81,8 @@ const state = reactive<State>({
     function handleTabClick(row) {
         state.curCollection = row
         const time = new Date().valueOf().toString() + 1
-        router.push({ 
-            query: { tab: row.id, page: 0, pageSize: pageParams.pageSize, time } 
+        router.push({
+            query: { tab: row.id, page: 0, pageSize: pageParams.pageSize, time }
         })
     }
     function handleDelete(row) {
@@ -102,15 +106,15 @@ const state = reactive<State>({
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageIndex + 1
         } catch (error) {
-            
+
         }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { tab: state.curCollection.id, page, pageSize, time } 
+        router.push({
+            query: { tab: state.curCollection.id, page, pageSize, time }
         })
     }
     watch(
@@ -146,12 +150,12 @@ const state = reactive<State>({
                     const res = await removeCollectionApi(param)
                     setTimeout(() => {
                         const time = new Date().valueOf().toString() + 1
-                        router.push({ 
-                            query: { tab: state.curCollection.id, page: 0, pageSize: pageParams.pageSize, time } 
+                        router.push({
+                            query: { tab: state.curCollection.id, page: 0, pageSize: pageParams.pageSize, time }
                         })
                     }, 1000) // 500的数据还没有更新
                 } catch (error) {
-                    
+
                 }
                 state.loading = false
             })
@@ -214,6 +218,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer {
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
+  height: 100%;
+}
 .grid-layout {
     display: grid;
     grid-template-rows: min-content 1fr;

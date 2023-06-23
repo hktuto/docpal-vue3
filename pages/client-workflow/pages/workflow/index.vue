@@ -1,5 +1,8 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
+  <div class="pageContainer">
+
+
     <div class="buttons--absolute">
         <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
         <WorkflowPopoverPersonal />
@@ -23,6 +26,7 @@
         </el-tab-pane>
     </el-tabs>
     <WorkflowPopoverDownload ref="WorkflowPopoverDownloadRef"/>
+  </div>
 </NuxtLayout>
 </template>
 
@@ -59,6 +63,11 @@ watch(() => route.query, (q) => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer {
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
+  height: 100%;
+}
 .grid-layout {
     display: grid;
     grid-template-rows: min-content 1fr;

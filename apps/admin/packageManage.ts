@@ -19,6 +19,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-pre-search-config');
     packages.push('../../pages/admin-share-list');
     packages.push('../../pages/admin-watermark');
+    packages.push('../../pages/admin-folder-cabinet');
     packages.push('../../pages/admin-dam');
     packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');
@@ -26,9 +27,10 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-workflow-form');
     packages.push('../../pages/admin-workflow-manage');
     packages.push('../../pages/admin-mail-config');
-    // packages.push('../../pages/admin-directus');
+    packages.push('../../pages/admin-directus');
     
     packages.push('../../packages/dp-browse');
+    packages.push('../../packages/dp-search');
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")
     packages.push("../../packages/dp-language")

@@ -39,10 +39,10 @@ function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
 function goRoute(formModel) {
     const searchBackPath = route.query.searchBackPath || ''
     const time = new Date().valueOf().toString()
-    
+
     router.push({
-        query: { 
-            ...formModel, 
+        query: {
+            ...formModel,
             pageSize: 20,
             currentPageIndex: 1,
             searchBackPath,
@@ -107,7 +107,7 @@ defineExpose({ handleSubmit })
     display: grid;
     grid-template-rows: 1fr min-content;
     overflow: hidden;
-    min-width: 250px;
+    min-width: 320px;
     .formContainer {
         overflow-x: hidden;
         overflow-y: auto;
