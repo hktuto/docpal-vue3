@@ -5,14 +5,7 @@
 </template>
 
 <script setup>
-useHead({
-  script:[
-    {
-      src:"https://appsforoffice.microsoft.com/lib/1/hosted/office.js",
-      perfetch: true
-    }
-  ]
-})
+
 
 </script>
 

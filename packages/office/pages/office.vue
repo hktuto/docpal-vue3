@@ -40,7 +40,13 @@ function close(){
 
   }
 }
-
+useHead({
+  script:[
+    {
+      src:"https://appsforoffice.microsoft.com/lib/1/hosted/office.js",
+    }
+  ]
+})
 
 </script>
 

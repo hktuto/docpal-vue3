@@ -14,7 +14,7 @@
       const url = urlCreator.createObjectURL(newBlob)
       hocrUrl.value = url
     }catch(err) {
-      hocrUrl.value = null
+      hocrUrl.value = null;
     }
     
   }
@@ -33,7 +33,10 @@
 
 <template>
   <div class="ocrContainer">
-    {{doc}}
+    <iframe v-if="hocrFile" :src="hocrUrl" frameborder="0" width="100%" height="100%" ></iframe>
+    <div v-else class="loadingContainer">
+      no data
+    </div>
   </div>
 </template>
 

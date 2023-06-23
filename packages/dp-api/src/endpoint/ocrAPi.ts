@@ -3,6 +3,7 @@ import {api} from "../index";
 
 export const getOcrDocApi = async ( idOrPath:string ):Promise<Blob> => {
     const response = await api.post('/nuxeo/document/attachment/hocr/download', {idOrPath}, {responseType:'blob', timeout: 0}).then(res => res.data);
+    if(response.size === 0) throw new Error('No data');
     let text = await response.text();
     const defaultStyle = `
             <style id="frontendCustomStyle">
