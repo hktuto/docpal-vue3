@@ -1,5 +1,8 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
+      <div class="pageContainer">
+
+
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @command="handleAction"
                 @pagination-change="handlePaginationChange"
@@ -10,7 +13,7 @@
                         <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
                         <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
                     </div>
-                </template>    
+                </template>
             </Table>
             <ReaderDialog ref="ReaderRef" v-bind="previewFile">
                 <template #actions>
@@ -20,6 +23,7 @@
             </ReaderDialog>
             <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
             <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
+      </div>
     </NuxtLayout>
 </template>
 
@@ -38,9 +42,9 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            multiSelect: true, 
-            showPagination: true, 
+        options: {
+            multiSelect: true,
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -60,15 +64,15 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageIndex + 1
         } catch (error) {
-            
+
         }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { page, pageSize, time } 
+        router.push({
+            query: { page, pageSize, time }
         })
     }
     watch(
@@ -106,7 +110,7 @@ async function handleDblclick (row) {
     try {
         previewFile.blob = await GetDocumentPreview(row.id)
     } catch (error) {
-        
+
     }
     previewFile.id = row.id
     previewFile.name = row.name
@@ -163,7 +167,7 @@ async function handleDblclick (row) {
                 break
         }
         const res = await Promise.all(pList)
-        
+
         batchAction.value = null
         handleMsg(res)
         setTimeout(async() => {
@@ -172,7 +176,7 @@ async function handleDblclick (row) {
     }
     function handleMsg (ids) {
         console.log({ids});
-        
+
         let num = 0
         const fileNames = ids.reduce((p, id, index) => {
             if (id) {
@@ -199,7 +203,7 @@ async function handleDblclick (row) {
         try {
             await deleteOne(id)
         } catch (error) {
-            
+
         }
         setTimeout(async () => {
             ReaderRef.value.handleClose()
@@ -212,7 +216,7 @@ async function handleDblclick (row) {
         try {
             await restore(id)
         } catch (error) {
-            
+
         }
         // 系统会延时 还原
         setTimeout(async () => {
@@ -254,4 +258,9 @@ async function handleDownload (row: any) {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer {
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
+  height: 100%;
+}
 </style>

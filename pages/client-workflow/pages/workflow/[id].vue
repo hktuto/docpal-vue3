@@ -45,7 +45,7 @@ const userId:string = useUser().getUserId()
 const state = reactive({
     backState: route.query.state,
     processState: {
-        'completeTask': 'completeTask', 
+        'completeTask': 'completeTask',
     },
     activeTab: 'form',
     taskDetail: {},
@@ -69,16 +69,16 @@ async function getDetail() {
                 state.taskDetail = await getTaskApi(processInstanceId)
         }
         handleGetActivity(state.taskDetail.instanceId || state.taskDetail.processInstanceId)
-        
+
     } catch (error) {
-        
+
     }
     setTimeout(async() => {
         try {
             await handleFormDataGet()
             handleDisabledForm()
         } catch (error) {
-            
+
         }
         state.loading = false
     }, 100)
@@ -104,7 +104,7 @@ const isAssigneeUser = computed(() => {
                 formJson = await formJsonGet(state.taskDetail.taskDefinitionKey,
                                 state.taskDetail.taskInstance.processDefinitionKey)
                 vFormRef.value.setForm(formJson, formData)
-                
+
                 break
         }
     }
@@ -165,10 +165,10 @@ const isAssigneeUser = computed(() => {
         state.loading = false
     }
 // #endregion
-// #region module: activity 
+// #region module: activity
     async function handleGetActivity (processInstanceId) {
         state.activityList = await getActivityApi(processInstanceId)
-    } 
+    }
 // #endregion
 // #region module: graph
     const getCurrentStep = computed(() => state.activityList.map( activity => activity.originalPersistentState.activityId))
@@ -186,7 +186,7 @@ const handleTaskInfoChange = async (taskDetailRes, isClaim) => {
             vFormRef.value.disableForm()
         }
     } catch (error) {
-        
+
     }
     state.loading = false
 }
@@ -199,7 +199,13 @@ watch(() => route.query, (q) => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer {
+
+  height: 100%;
+}
 .grid-layout {
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
     display: grid;
     grid-template-columns: min-content 1fr min-content;
     height: 100%;

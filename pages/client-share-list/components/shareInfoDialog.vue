@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" :title="$t('menus_setting')">
+    <el-dialog v-model="dialogVisible" :title="$t('menus_setting')" append-to-body>
         <el-form ref="formRef"
                 :model="form"
                 label-width="120px"
@@ -9,13 +9,13 @@
             <el-form-item :label="$t('tableHeader_emailList')" prop="emailList"
                 :rules="[ { required: true, message: $t('form_common_requird'), trigger: 'change'}]">
                 <el-select v-model="form.emailList"
-                    filterable multiple clearable allow-create 
+                    filterable multiple clearable allow-create
                     style="width: 100%">
                     <el-option v-for="item in userList" :key="item.email" :label="`${item.username} <${item.email}>`" :value="item.email"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('share_shareLink')">
-                <el-input v-model="shareLink" readonly type="text" 
+                <el-input v-model="shareLink" readonly type="text"
                     class="cursorPointer"
                     @click="handleCopy(shareLink)">
                     <template #suffix>
@@ -33,10 +33,10 @@
                 <el-col :span="12">
                     <el-form-item :label="$t('tableHeader_dueDate')" prop="dueDate"
                         :rules="[{ required: true, message: $t('form_common_requird')}]">
-                        <el-date-picker v-model="form.dueDate" 
+                        <el-date-picker v-model="form.dueDate"
                                         type="datetime"
                                         :default-time="defaultTime"
-                                        :shortcuts="shortcuts" 
+                                        :shortcuts="shortcuts"
                                         style="width: 100%"/>
                     </el-form-item>
                 </el-col>
@@ -109,7 +109,7 @@ const emit = defineEmits(['submit'])
     async function handleSubmit() {
         const valid = await formRef.value.validate((valid, fields) => valid)
         if (!valid) return
-        const param = { 
+        const param = {
             // emailList: shareInfoForm.value.emailList,
             password: form.password,
             tokenLiveInMinutes: diffMinute(form.dueDate),
@@ -133,9 +133,9 @@ function handleCopy (copyContent: string) {
     copy(copyContent, t('common_copySuccess'))
 }
 onMounted(async() => {
-    state.userList = await getUserListApi()  
+    state.userList = await getUserListApi()
 })
-const { defaultTime, shortcuts, shareLink, userList } = toRefs(state) 
+const { defaultTime, shortcuts, shareLink, userList } = toRefs(state)
 defineExpose({ handleOpen })
 </script>
 
