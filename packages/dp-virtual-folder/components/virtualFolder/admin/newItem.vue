@@ -1,12 +1,32 @@
 
 
 <script lang="ts" setup>
-import {VirtualFolderDetail, VirtualFolderItemFile, VirtualFolderItemType} from "dp-api"
+import {DocItem, FolderItem, VirtualFolderItemType} from "dp-api"
 const props = defineProps<{
     isRoot: boolean
 }>()
 
 const newItemTypeOption = ref<VirtualFolderItemType[]>(['doc', 'folder'])
+const itemType = ref<VirtualFolderItemType>()
+
+const docForm = ref<DocItem>({
+    type: "doc",
+    name: "",
+    docType: "",
+    parentMeta:"",
+    includeChildren: false,
+    isFolder: false,
+})
+
+const folderForm = ref<FolderItem>({
+    type: "folder",
+    name: "",
+    labelTemplate: "",
+    isFolder: false,
+    children: []
+})
+
+
 </script>
 
 <template>
@@ -14,19 +34,14 @@ const newItemTypeOption = ref<VirtualFolderItemType[]>(['doc', 'folder'])
         <div class="title">
             New Item
         </div>
-        <el-form>
-            <el-form-item>
-                <el-input v-model="form.name" placeholder="Virtual folder label" size="large" />
-            </el-form-item>
-            <el-form-item>
-                <el-select v-model="form.doctype">
-                    <el-option ></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item v-if="form.isFolder ">
-                <el-switch v-model="form.isFolder" active-color="#13ce66" inactive-color="var(--primary-color)" />
-            </el-form-item>
-        </el-form>
+        <el-select v-model="itemType">
+          <el-option v-for="item in newItemTypeOption" :key="item" :label="item" :value="item" />
+        </el-select>
+        <template v-if="itemType === 'doc'">
+            <VirtualFolderAdminFormItemDoc v-model="docForm">
+              
+            </VirtualFolderAdminFormItemDoc>
+        </template>
     </div>
 </template>
 
