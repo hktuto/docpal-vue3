@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('folderCabinet.create')"
+<el-dialog v-model="state.visible" :title="state.setting?.isEdit ? $t('folderCabinet.edit') : $t('folderCabinet.create')"
     :close-on-click-modal="false" append-to-body
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
