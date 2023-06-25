@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/fileRequest">
+        <div class="pageContainer">
             <div class="left-top-left">
                 <el-select v-model="documentType" filterable default-first-option >
                     <el-option v-for="item in fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
@@ -75,6 +76,7 @@
                 </div>
                 <Reader ref="ReaderRef" v-bind="previewFile"></Reader>
             </el-card>
+        </div>
     </NuxtLayout>
 </template>
 
@@ -384,9 +386,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-
 .pageContainer {
-    padding: calc(var(--app-padding) * 2 );
     position: relative;
     height: 100%;
     display: grid;
