@@ -4,7 +4,7 @@
             <el-button @click="uploadXlsx">{{$t('import')}}
                 <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
             </el-button>
-            <el-button type="primary" @click="handleSubmit">{{$t('save')}}</el-button>
+            <el-button type="primary" @click="handleSubmit">{{$t('dpTool_save')}}</el-button>
         </div>
         <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
     </NuxtLayout>

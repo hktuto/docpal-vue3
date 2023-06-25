@@ -354,6 +354,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },
+            { id: '7', slot: 'docIcon', label: '', "width": 50, },
             { id: '1', label: 'tableHeader_name', prop: 'name' },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
@@ -401,6 +402,9 @@ export const defaultTableSetting: TableColumnSetting = {
             }
         ],
         events: ['delete', 'restored'],
+        slots: [
+            { slot: 'docIcon', label: '' },
+        ],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_COLLECTION] : {

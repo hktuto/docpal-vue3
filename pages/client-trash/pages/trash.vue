@@ -5,6 +5,10 @@
                 @pagination-change="handlePaginationChange"
                 @selection-change="handleSelectionChange"
                 @row-dblclick="handleDblclick">
+                
+                <template #docIcon="{ row, index }">
+                    <BrowseItemIcon :type="row.isFolder ? 'folder' : 'file'"/>
+                </template>
                 <template #actions>
                     <div>
                         <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
@@ -101,6 +105,7 @@ const previewFile = reactive({
     }
 })
 async function handleDblclick (row) {
+    if (row.isFolder) return
     ReaderRef.value.handleOpen()
     previewFile.loading = true
     try {
