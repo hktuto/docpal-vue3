@@ -1,0 +1,27 @@
+{
+  "name": "dp-virtual-folder",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "scripts": {
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
+    "build": "nuxi build .playground",
+    "generate": "nuxi generate .playground",
+    "postinstall": "nuxi prepare",
+    "preview": "nuxi preview .playground",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "mime-types": "^2.1.35"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@vueuse/components": "^9.13.0",
+    "@vueuse/core": "^9.12.0",
+    "dp-api": "workspace:*",
+    "eslint": "^8.28.0",
+    "nuxt": "^3.4.3",
+    "typescript": "^4.9.3"
+  }
+}

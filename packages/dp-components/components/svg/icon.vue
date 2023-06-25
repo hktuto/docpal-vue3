@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="flex-x-center">
     <template v-if="content">
         <el-tooltip :content="content">
             <template v-if="round">

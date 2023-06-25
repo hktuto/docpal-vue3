@@ -4,7 +4,7 @@
          <UserThumbnail class="thumbnail" />
          <template #dropdown>
              <div class="dropItemContainer">
-             <LogoutButton />
+              <LogoutButton />
              </div>
          </template>
         </ElDropdown>
@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts" setup>
+const { feature } = useAppConfig();
 </script>
 
 <style lang="scss" scoped>

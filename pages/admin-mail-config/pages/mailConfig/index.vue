@@ -28,7 +28,7 @@ async function handleSubmit () {
 }
 // #region module: import
     const inputRef = ref()
-    function uploadXlsx() { inputRef.value.click() } 
+    function uploadXlsx() { inputRef.value.click() }
     function handleFile (event) {
         const reader = new FileReader();
         reader.readAsText(event.target.files[0], "UTF-8");
@@ -50,7 +50,7 @@ async function handleSubmit () {
             Message.error('file format error')
         }
         }
-    
+
     }
 // #endregion
 onMounted(() => {
@@ -62,6 +62,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  padding: calc( var(--app-padding) * 2);
+  height: 100%;
+  position: relative;
+}
 .button-add {
     margin: 0 0 var(--app-padding) 0;
 }

@@ -1,6 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/fileRequest">
-        <div class="container">
             <div class="left-top-left">
                 <el-select v-model="documentType" filterable default-first-option >
                     <el-option v-for="item in fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
@@ -76,7 +75,6 @@
                 </div>
                 <Reader ref="ReaderRef" v-bind="previewFile"></Reader>
             </el-card>
-        </div>
     </NuxtLayout>
 </template>
 
@@ -85,10 +83,10 @@
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
-import { 
+import {
     WorkflowAttachmentDownloadApi,
-    getFormPropsApi, 
-    workflowAttachmentInfoGetApi, 
+    getFormPropsApi,
+    workflowAttachmentInfoGetApi,
     getDocTypeListApi,
     metaValidationRuleGetApi,
     workflowFormSubmitApi,
@@ -129,7 +127,7 @@ const state = reactive({
             if(tableData.value.length > 0) handleDblclick(tableData.value[0])
             getRQDetail(['email','documentId', 'submittedDate'], response)
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -220,10 +218,10 @@ const state = reactive({
             }
             const res = await workflowFormSubmitApi(param)
             console.log(res);
-            
+
             if (!!res) router.push('/fileRequest')
         } catch (error) {
-            
+
         }
         loading.value = false
     }
@@ -242,7 +240,7 @@ const state = reactive({
             }
         })
         return JSON.stringify(result)
-        
+
     }
     function getFileName(name) {
         const result = '[' + formatDate(state.detail.submittedDate, 'YYYYMMDD-HHmm')+ ' ' + state.detail.email + ']' + name
@@ -264,7 +262,7 @@ const state = reactive({
                 confirmButtonText: t('dpButtom_confirm'),
             })
         }
-        
+
         return msg.length === 0
       }
 // #endregion
@@ -304,7 +302,7 @@ const state = reactive({
                 })
             }
         } catch (error) {
-            
+
         }
         setTimeout(() => {state.loading = false}, 500)
     }
@@ -362,7 +360,7 @@ async function handleDblclick (row) {
     try {
         previewFile.blob = await WorkflowAttachmentPreviewApi(row.id)
     } catch (error) {
-        
+
     }
     previewFile.loading = false
     previewFile.id = row.id
@@ -371,7 +369,7 @@ async function handleDblclick (row) {
 async function handleDownload (file) {
     file.downloadLoading = true
     const blob = await WorkflowAttachmentDownloadApi(file.id)
-    setTimeout(() => { 
+    setTimeout(() => {
         file.downloadLoading = false
         downloadBlob(blob, file.name || file.title, blob.type)
     }, 500)
@@ -381,12 +379,15 @@ onMounted(async () => {
     getData()
     const res = await getDocTypeListApi()
     state.fileTypes = res.filter((item) => !item.isFolder)
-    
+
 })
 </script>
 
 <style lang="scss" scoped>
-.container {
+
+.pageContainer {
+    padding: calc(var(--app-padding) * 2 );
+    position: relative;
     height: 100%;
     display: grid;
     grid-template-columns: 1fr min-content 1fr;

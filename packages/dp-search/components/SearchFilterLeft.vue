@@ -35,16 +35,14 @@ function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
     if(!state.changeEvent) return
     const _data = dataHandle(formModel)
     goRoute(_data)
-    // emits('submit', formModel)
 }
 function goRoute(formModel) {
     const searchBackPath = route.query.searchBackPath || ''
-    const searchParams = getSearchParamsArray(formModel)
     const time = new Date().valueOf().toString()
-    
+
     router.push({
-        query: { 
-            ...searchParams, 
+        query: {
+            ...formModel,
             pageSize: 20,
             currentPageIndex: 1,
             searchBackPath,
@@ -56,7 +54,6 @@ function handleSubmit () {
     const data = FromRendererRef.value.vFormRenderRef.getFormData(false)
     const _data = dataHandle(data)
     goRoute(_data)
-    emits('submit', data)
 }
 
 function handleReset() {
@@ -80,8 +77,6 @@ function initForm () {
         if(searchParams.mimeType) {
             searchParams.mimeType = Array.isArray(searchParams.mimeType) ? searchParams.mimeType.join('') : searchParams.mimeType
         }
-        console.log({searchParams}, searchParams.includeFolder, 'ssssssssssssssssssssssssss');
-        
         // searchParams.includeFolder = searchParams.includeFolder === '1' || searchParams.includeFolder === 1;
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
         state.changeEvent = true
@@ -101,8 +96,6 @@ function handleDownload () {
     SearchDownloadDialogRef.value.handleOpen(_data)
 }
 onMounted(() => {
-    console.log('??????????');
-    
     initForm()
 })
 defineExpose({ handleSubmit })
@@ -114,7 +107,7 @@ defineExpose({ handleSubmit })
     display: grid;
     grid-template-rows: 1fr min-content;
     overflow: hidden;
-    min-width: 250px;
+    min-width: 320px;
     .formContainer {
         overflow-x: hidden;
         overflow-y: auto;

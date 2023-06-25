@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { 
+import {
     getUserListApi,
     DeleteUserApi,
     TABLE, defaultTableSetting
@@ -53,7 +53,7 @@ const state = reactive({
 })
 function handleTabClick (row) {
     dpLog(row, 'handleTabClick');
-    
+
     router.push({query: { id: row.userId }})
     state.curUser = row
 }
@@ -98,8 +98,8 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+
 .userDetailSection{
-  padding: 0 1rem 1rem 1rem;
   display : grid;
   grid-template-columns: minmax(min-content, 220px) minmax(min-content, 350px) 1fr;
   grid-template-rows: min-content min-content 1fr;

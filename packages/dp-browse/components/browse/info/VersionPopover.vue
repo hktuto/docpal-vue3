@@ -70,8 +70,7 @@ function toVersionComparison (row:any) {
     // close detail
     const ev = new CustomEvent('close-file-detail');
     window.dispatchEvent(ev);
-    const path = `versionComparison/${props.doc.id}`
-    PopoverRef.value.doClose()
+    const path = `/versionComparison/${props.doc.id}`
     router.push({
         path,
         query:{

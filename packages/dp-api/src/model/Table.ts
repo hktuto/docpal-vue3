@@ -81,6 +81,7 @@ export enum TABLE {
     CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
     CLIENT_BROWSE = 'clientBrowse',
     CLIENT_SHARE_SET = 'clientShareSet',
+    CLIENT_FOLDER_CABINET = 'clientFolderCabinet',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -107,6 +108,7 @@ export enum TABLE {
     ADMIN_AUDIT = 'adminAudit',
 
     PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
+    ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -518,6 +520,28 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
             { slot: 'watermark', label: 'watermark' }
         ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_FOLDER_CABINET]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_modifiedDate', prop: 'modifiedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'tableHeader_type', prop: 'type' }
+        ],
+        events: [],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_SHARE_LIST] : {
@@ -1535,6 +1559,38 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '5', label: 'dpTable_actions', slot: 'actions' }
         ],
         events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_FOLDER_CABINET]: {
+        columns: [
+            { id: '1', label: 'docType_label', prop: 'label' },
+            { id: '2', label: 'docType_documentType', prop: 'documentType' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "dpTable_actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [],
         options: { pageSize: 20 }
     }
     

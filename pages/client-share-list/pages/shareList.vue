@@ -25,8 +25,8 @@ const { t } = useI18n();
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            showPagination: true, 
+        options: {
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -46,15 +46,15 @@ const { t } = useI18n();
             state.options.paginationConfig.pageSize = param.size
             state.options.paginationConfig.currentPage = param.page + 1
         } catch (error) {
-            
+
         }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { page, pageSize, time } 
+        router.push({
+            query: { page, pageSize, time }
         })
     }
     function handleAction (command:sting, row: any, rowIndex: number) {
@@ -78,7 +78,7 @@ const { t } = useI18n();
         async (newval) => {
             const { page, pageSize } = newval
             dpLog({pageSize});
-            
+
             pageParams.pageIndex = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             getList({page: pageParams.pageIndex, size: pageParams.pageSize})
@@ -100,4 +100,9 @@ async function handleSubmit (shareInfo) {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer {
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
+  height: 100%;
+}
 </style>

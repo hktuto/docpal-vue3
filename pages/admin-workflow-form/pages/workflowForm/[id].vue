@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/workflowForm">
+
         <template #headerLeft>
             <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
@@ -69,7 +70,7 @@ const state = reactive<State>({
                 FromDesignerRef.value.setFormJson(res.json)
             })
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -77,7 +78,7 @@ const state = reactive<State>({
 // const shareInfoDialogRef = ref()
 async function getWorkflowDetail() {
     state.workflowDetail = await GetWorkflowApi(route.params.id)
-    
+
 }
 function handleCommand(command: string){
     router.push({
