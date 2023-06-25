@@ -3,7 +3,7 @@
     <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
         <template v-for="item in state.tabList" :key="item.id">
             <el-tab-pane  
-                :label="item.label" :name="item.id">
+                :label="item.label" :name="item.id" v-loading="state.loading">
                 <template v-if="item.id === activeTab">
                     <FolderCabinetTable @db-row-click="handleRowClick">
                         <template #suffixSortButton>
@@ -16,7 +16,7 @@
         </template>
         
     </el-tabs>
-    <FolderCabinetNewItemDialog ref="FolderCabinetNewItemDialogRef" />
+    <FolderCabinetNewItemDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
 </NuxtLayout>
 </template>
 
@@ -26,6 +26,7 @@ import { GetCabinetLoginUserListApi } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
 const state = reactive({
+    loading: false,
     activeTab: '',
     loading: false,
     tabList: []
@@ -43,11 +44,20 @@ function handleNewItem (activeSetting) {
 function handleRowClick (row) {
     router.push({query: { ...route.query, id: row.id }})
 }
+async function getData() {
+    state.loading = true
+    try {
+        state.tabList = await GetCabinetLoginUserListApi()
+    } catch (error) {
+        
+    }
+    state.loading = false
+}
 watch(() => route.query, (q) => {
     if (q.tab) state.activeTab = q.tab
 }, { immediate: true })
 onMounted(async() => {
-    state.tabList = await GetCabinetLoginUserListApi()
+    await getData()
     if (!state.activeTab && state.tabList.length > 0) state.activeTab = state.tabList[0].id
 })
 </script>

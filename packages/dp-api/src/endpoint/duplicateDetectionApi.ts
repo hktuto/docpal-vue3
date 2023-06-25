@@ -12,8 +12,12 @@ import { BreadResponse, DocDetail, GetChildResponse,
 export const GetChildThumbnail = async(params: pageParams):Promise<paginationData> => {
     return api.post<Response<paginationData>>('/nuxeo/document/children/thumbnail', params ).then(res => res.data.data);
 }
-export const GetDocDetail = async(idOrPath:string):Promise<DocDetail> => {
-    return api.post<Response<DocDetail>>('/nuxeo/document',{ idOrPath }, { headers: { browseErrorHandle: 'true' } }).then(res => res.data.data);
+const docDetailStores: any = {}
+export const GetDocDetail = async(idOrPath:string, forceRefresh: boolean = true):Promise<DocDetail> => {
+    if(!forceRefresh && docDetailStores[idOrPath]) return docDetailStores[idOrPath]
+    const res = api.post<Response<DocDetail>>('/nuxeo/document',{ idOrPath }, { headers: { browseErrorHandle: 'true' } }).then(res => res.data.data);
+    docDetailStores[idOrPath] = res
+    return res
 }
 export const getSpecificVersionApi = async(params):Promise<DocDetail> => {
     return api.post<Response<DocDetail>>('/nuxeo/getSpecificVersion',params).then(res => res.data.data);
@@ -225,10 +229,10 @@ export const downloadDocRecord = async(params) => {
     }
     const metaStore = {}
     export const metaValidationRuleGetApi = async (documentType: string, refresh: boolean = false):Promise<Meta[]> => {
-        if(documentType && metaStore[documentType] && !refresh) return metaStore[documentType]
+        if(documentType && metaStore[documentType] && !refresh) return structuredClone(metaStore[documentType])
         const response = await api.get('/docpal/workflow/queryMetaValidationRule', { params: { documentType } }).then(res => res.data.data);
         metaStore[documentType] = response
-        return response
+        return structuredClone(response) 
     }
 // #endregion
 

@@ -5,15 +5,15 @@
     <main>
         <div>
             <div>
-                <div class="row-expand-top">
+                <div class="row-item-top">
                     <span class="color__danger">*</span>
                     {{$t('name')}}
                 </div>
-                <el-input  class="row-expand-bottom-left" type="text" v-model="state.rootFolder.name"/>
+                <el-input  class="row-item-bottom-left" type="text" v-model="state.rootFolder.name"/>
             </div>
-            <div v-for="(item, index) in state.rootFolder.metaList" :key="item.metaData+index" class="row-expand">
+            <div v-for="(item, index) in state.rootFolder.metaList" :key="item.metaData+index" class="row-item">
                 <template v-if="item.display">
-                    <div class="row-expand-top">
+                    <div class="row-item-top">
                         <span class="color__danger" v-if="item.isRequire">*</span>
                         {{item.metaData}}
                     </div>
@@ -23,7 +23,7 @@
                                 :placeholder="$t('dpTip_datePicker')"
                                 :default-time="defaultTime"
                                 value-format="YYYY-MM-DDTHH:mm:ss.000Z"
-                                class="row-expand-bottom-left"
+                                class="row-item-bottom-left"
                                 style="width: 100%"></el-date-picker>
                     </template>
                     <template v-else-if="!!item.directoryEntries">
@@ -31,18 +31,19 @@
                                 :options="item.directoryEntries"
                                 :props="{ checkStrictly: item.hasChild, value: 'id', label: 'id' }"
                                 clearable filterable popper-class="pc-cascader"
-                                class="row-expand-bottom-left"
+                                class="row-item-bottom-left"
                                 style="width: 100%"></el-cascader>
                     </template>
                     <template v-else>
-                        <el-input  class="row-expand-bottom-left" type="text" v-model="item.value"
+                        <el-input  class="row-item-bottom-left" type="text" v-model="item.value"
                             :maxlength="item.length" show-word-limit/>
                     </template>
                 </template>
             </div>
         </div>
         <FolderCabinetUploadTree ref="FolderCabinetUploadTreeRef"
-             :treeData="state.cabinetTemplate.children"></FolderCabinetUploadTree>
+             :treeData="state.treeData"
+             v-loading="state.treeLoading"></FolderCabinetUploadTree>
     </main>
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
@@ -51,34 +52,69 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { metaValidationRuleGetApi, GetCabinetTemplateApi } from 'dp-api'
+import { 
+    metaValidationRuleGetApi, 
+    GetCabinetTemplateApi,
+    GetDocDetail,
+    CreateFoldersApi,
+    CreateDocumentApi } from 'dp-api'
 const emits = defineEmits([
     'refresh'
 ])
 const state = reactive({
     loading: false,
+    treeLoading: false,
     visible: false,
     rootFolder: {
+        name: '',
         metaList: []
     },
-    cabinetTemplate: {}
+    cabinetTemplate: {},
+    treeData: [],
+    rootDetail: {}
 })
 const FolderCabinetUploadTreeRef = ref()
 async function handleSubmit () {
-    // if (!validateForm(state.rootFolder)) return
-    FolderCabinetUploadTreeRef.value.checkData()
-    FolderCabinetUploadTreeRef.value.getData()
-    // const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    if (!validateForm(state.rootFolder)) return
     state.loading = true
     try {
-        // await CreateUserApi(data)
-        // state.visible = false
-        // FromRendererRef.value.vFormRenderRef.resetForm()
-        // emits('refresh')
+        const idOrPath = `${state.cabinetTemplate.rootPath}/${state.rootFolder.name}`
+        // 上传最上层数据
+        await CreateFoldersApi({
+            name: state.rootFolder.name,
+            type: state.cabinetTemplate.documentType,
+            idOrPath,
+            properties: getProperties(state.rootFolder.metaList)
+        })
+        const uploadList = FolderCabinetUploadTreeRef.value.getData()
+        
+        for (let index = 0; index < uploadList.length; index++) {
+            const params = uploadList[index];
+            if(params.document) {
+                params.document.idOrPath = `${idOrPath}${params.document.idOrPath}/${params.document.name}`
+                const formData = new FormData()
+                formData.append('files', params.files)
+                formData.append('document', JSON.stringify(params.document))
+                await CreateDocumentApi(formData)
+            } else {
+                params.idOrPath = `${idOrPath}${params.idOrPath}/${params.name}`
+                await CreateFoldersApi(params)
+            }
+        }
+        state.visible = false
+        setTimeout(()=> {
+            emits('refresh')
+        }, 500)
     } catch (error) {
         
     }
     state.loading = false
+}
+function getProperties(metaList) {
+    return metaList.reduce((prev, item) => {
+        prev[item.metaData] = item.value
+        return prev
+    }, {})
 }
 function validateForm (rootFolder) {
     let msg = ''
@@ -100,13 +136,28 @@ function validateForm (rootFolder) {
 }
 async function handleOpen(setting) {
     state.visible = true
-    console.log(setting);
+    getMetaList(setting)
+    state.treeLoading = true
+    try {
+        state.cabinetTemplate = await GetCabinetTemplateApi(setting.id)
+        initTreeDataRelativePath(state.cabinetTemplate.children)
+        state.treeData = state.cabinetTemplate.children
+
+        const rootDetail = await GetDocDetail(state.cabinetTemplate.rootId, false)
+        state.cabinetTemplate.rootPath = rootDetail.path
+    } catch (error) {
+        
+    }
+    state.treeLoading = false
+}
+async function getMetaList (setting) {
+    state.rootFolder.name = ''
+    state.rootFolder.metaList = []
     state.rootFolder.metaList = await metaValidationRuleGetApi(setting.documentType)
-    state.cabinetTemplate = await GetCabinetTemplateApi(setting.id)
-    initTreeDataRelativePath(state.cabinetTemplate.children)
 }
 function initTreeDataRelativePath (children, relativePath: string = '') {
     children.forEach(item => {
+        item.isLack = false
         item.relativePath = relativePath
         if (item.children) initTreeDataRelativePath(item.children, relativePath + '/' + item.label)
         else item.children = []
@@ -122,7 +173,7 @@ main {
     grid-template-columns: 1fr 1fr;
     gap: var(--app-padding);
 }
-.row-expand {
+.row-item {
     &-top {
         padding: var(--app-padding) 0;
     }
