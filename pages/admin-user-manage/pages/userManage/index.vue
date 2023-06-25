@@ -97,7 +97,6 @@ onMounted(async() => {
 .main {
     height: 100%;
     display: grid;
-  padding: calc( var(--app-padding) * 2);
     grid-template-columns: 1fr 1fr;
     gap: calc(var(--app-padding) * 2);
 }

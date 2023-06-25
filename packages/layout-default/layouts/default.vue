@@ -60,6 +60,7 @@ const { x, y } = useMouse()
 
 <style lang="scss" scoped>
 #pageContainer{
+  background-color: aquamarine;
     width: 100%;
     height: 100%;
     position: relative;
@@ -170,13 +171,13 @@ const { x, y } = useMouse()
 
 
 .fit-height {
-  #mainContent{
+  #mainContainer{
     width: 100%;
     height: 100%;
     position: relative;
     overflow: hidden;
   }
-  &.withPadding #mainContent {
+  &.withPadding #mainContainer {
     padding: calc(var(--app-padding) * 2);
   }
 }

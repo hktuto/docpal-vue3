@@ -1,7 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state._tableData"
                 @row-dblclick="handleDblclick">
             <template #preSortButton>
@@ -23,7 +21,6 @@
             </template>
         </Table>
         <MetaAddDocTypeDialog ref="MetaAddDocTypeDialogRef" @refresh="getList()"></MetaAddDocTypeDialog>
-      </div>
     </NuxtLayout>
 </template>
 

@@ -124,7 +124,6 @@ onMounted(async() => {
 
 <style lang="scss" scoped>
 .section {
-  padding: calc( var(--app-padding) * 2);
     overflow: hidden;
     height: 100%;
     display: grid;

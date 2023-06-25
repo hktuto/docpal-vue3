@@ -185,7 +185,6 @@ async function clearanceLevelChange (value) {
   position: relative;
 }
 .grid-layout{
-    padding: calc( var(--app-padding) * 2);
     height: 100%;
     overflow: hidden;
     display: grid;

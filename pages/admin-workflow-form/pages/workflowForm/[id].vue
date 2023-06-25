@@ -16,7 +16,6 @@
                 </template>
             </el-dropdown>
         </template>
-      <div class="pageContainer">
         <div style="height: 100%; overflow: hidden;">
             <FromDesigner ref="FromDesignerRef" :fieldListApi="state.fieldListApi">
                 <template #submit>
@@ -24,7 +23,6 @@
                 </template>
             </FromDesigner>
         </div>
-      </div>
     </NuxtLayout>
 </template>
 
@@ -97,11 +95,6 @@ watch(() => route.query.taskId, async(newValue) => {
 </script>
 
 <style lang="scss" scoped>
-.pageContainer{
-  padding: calc( var(--app-padding) * 2);
-  height: 100%;
-  position: relative;
-}
 .el-dropdown-link {
     display: grid;
     grid-template-columns: min-content min-content;

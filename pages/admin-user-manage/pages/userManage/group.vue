@@ -95,13 +95,8 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
-.pageContainer{
-  height: 100%;
-  padding: calc( var(--app-padding) * 2);
-  position: relative;
-}
+
 .userDetailSection{
-  padding: calc( var(--app-padding) * 2);
   display : grid;
   grid-template-columns: minmax(min-content, 220px) 1fr minmax(min-content, 350px);
   grid-template-rows: min-content 1fr;

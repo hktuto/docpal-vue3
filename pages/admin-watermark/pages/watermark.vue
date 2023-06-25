@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
       <template v-if="list.length === 0">
         <WatermarkEmpty @update="getList" />
       </template>
@@ -12,7 +9,6 @@
           <WatermarkDetail v-if="detail" :detail="detail" @update="getDetail(detail.id)"/>
         </div>
       </template>
-      </div>
     </NuxtLayout>
 </template>
 

@@ -1,14 +1,10 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @pagination-change="handlePaginationChange"
                 @command="handleAction"
                 @row-dblclick="handleDblclick"></Table>
         <ShareInfoDialog ref="shareInfoDialogRef" @submit="handleSubmit"></ShareInfoDialog>
-      </div>
     </NuxtLayout>
 </template>
 

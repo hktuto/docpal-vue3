@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
         <div class="flex-x-end">
             <el-button @click="uploadXlsx">{{$t('import')}}
                 <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
@@ -10,7 +7,6 @@
             <el-button type="primary" @click="handleSubmit">{{$t('save')}}</el-button>
         </div>
         <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
-      </div>
     </NuxtLayout>
 </template>
 

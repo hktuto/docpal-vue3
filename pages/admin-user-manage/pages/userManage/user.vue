@@ -100,7 +100,6 @@ onMounted(async() => {
 <style lang="scss" scoped>
 
 .userDetailSection{
-  padding: calc( var(--app-padding) * 2);
   display : grid;
   grid-template-columns: minmax(min-content, 220px) minmax(min-content, 350px) 1fr;
   grid-template-rows: min-content min-content 1fr;

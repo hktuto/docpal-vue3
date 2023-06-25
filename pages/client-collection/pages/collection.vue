@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
         <el-container>
                 <el-card>
                     <div class="collection-list" style="--color: #F56C6C">
@@ -34,7 +31,6 @@
         </el-container>
         <FileFormDialog ref="fileFormDialogAddRef" :title="$t('collections_new')" @submit="submitNewCollection"></FileFormDialog>
         <FileFormDialog ref="fileFormDialogEditRef" :title="$t('collections_edit')" @submit="saveCollection"></FileFormDialog>
-      </div>
     </NuxtLayout>
 </template>
 

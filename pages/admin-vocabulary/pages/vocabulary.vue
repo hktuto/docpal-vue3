@@ -157,7 +157,6 @@ onMounted(async() => {
     height: 100%;
     display: grid;
     grid-template-columns: minmax(min-content, 200px) 1fr;
-  padding: calc( var(--app-padding) * 2);
     gap: var(--app-padding);
     .vocabulary-item {
         padding: var(--app-padding);

@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state._tableData"
                 @command="handleAction"
                 @row-dblclick="handleDblclick">
@@ -23,7 +20,6 @@
             </template>
         </Table>
         <DamDialog ref="DamDialogRef" @refresh="getList()"></DamDialog>
-      </div>
     </NuxtLayout>
 </template>
 

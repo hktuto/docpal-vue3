@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @pagination-change="handlePaginationChange"
                 @selection-change="handleSelectionChange"
@@ -15,7 +12,6 @@
                 </template>
         </Table>
         <ReallocateDialog ref="ReallocateDialogRef" @submit="handleSubmit"></ReallocateDialog>
-      </div>
     </NuxtLayout>
 </template>
 

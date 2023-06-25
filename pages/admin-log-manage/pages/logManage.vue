@@ -1,7 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData"
                 @row-dblclick="handleDblclick">
             <template #configuredLevel="{ row }">
@@ -13,7 +11,6 @@
                 <el-button type="text" :loading="row.loading" ></el-button>
             </template>
         </Table>
-      </div>
     </NuxtLayout>
 </template>
 

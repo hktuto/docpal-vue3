@@ -1,8 +1,5 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
-  <div class="pageContainer">
-
-
     <div class="buttons--absolute">
         <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
         <WorkflowPopoverPersonal />
@@ -26,7 +23,6 @@
         </el-tab-pane>
     </el-tabs>
     <WorkflowPopoverDownload ref="WorkflowPopoverDownloadRef"/>
-  </div>
 </NuxtLayout>
 </template>
 

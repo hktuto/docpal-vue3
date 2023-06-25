@@ -1,7 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
         <Table :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 v-loading="loading"
                 @pagination-change="handlePaginationChange"
@@ -15,7 +13,6 @@
                     </el-button>
                 </template>
         </Table>
-      </div>
     </NuxtLayout>
 </template>
 

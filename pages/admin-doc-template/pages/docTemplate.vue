@@ -181,7 +181,6 @@ onMounted(() => {
     overflow: hidden;
     display: grid;
     grid-template-columns: 250px 1fr;
-  padding: calc( var(--app-padding) * 2);
     gap: var(--app-padding);
     .el-tree {
         overflow: auto;

@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
       <template v-if="!state.loading && state.list.length === 0">
         <FolderCabinetEmpty @update="getList" />
       </template>
@@ -22,7 +19,6 @@
         </main>
         <FolderCabinetAddDialog ref="FolderCabinetAddDialogRef" @update="getList" />
       </template>
-      </div>
     </NuxtLayout>
 </template>
 

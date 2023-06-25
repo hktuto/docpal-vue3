@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
         <Table :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 v-loading="loading"
                 @command="handleAction"
@@ -15,7 +12,6 @@
                     <span v-if="row.currentPath" class="pathButton"  @click="goClientPath(row.currentPath)">{{ row.logicalPath }}</span>
                 </template>
         </Table>
-      </div>
     </NuxtLayout>
 </template>
 

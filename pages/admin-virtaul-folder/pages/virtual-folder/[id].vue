@@ -1,8 +1,5 @@
 <template>
   <NuxtLayout class="fit-height withPadding" backPath="/virtual-folder">
-    <div class="pageContainer">
-
-    </div>
   </NuxtLayout>
 </template>
 

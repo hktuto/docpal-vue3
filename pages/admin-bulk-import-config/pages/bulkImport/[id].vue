@@ -27,6 +27,5 @@ onMounted(async() => {
     gap: var(--app-padding);
     height: 100%;
     overflow: hidden;
-  padding : calc( var(--app-padding) * 2);
 }
 </style>

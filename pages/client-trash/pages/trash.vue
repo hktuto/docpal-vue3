@@ -1,8 +1,5 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-      <div class="pageContainer">
-
-
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @command="handleAction"
                 @pagination-change="handlePaginationChange"
@@ -23,7 +20,6 @@
             </ReaderDialog>
             <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
             <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
-      </div>
     </NuxtLayout>
 </template>
 

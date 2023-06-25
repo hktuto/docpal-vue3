@@ -1,11 +1,8 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/folderCabinet">
-      <div class="pageContainer">
         <FolderCabinetCard v-loading="state.loading" class="FolderCabinetCard" :setting="state.setting" :isRoot="true" ></FolderCabinetCard>
         <FolderCabinetAddChildDialog ref="FolderCabinetAddChildDialogRef" @update="getData" />
         <FolderCabinetAddDialog ref="FolderCabinetAddDialogRef" @update="getData" />
-      </div>
-
     </NuxtLayout>
 </template>
 
