@@ -20,6 +20,7 @@
         </div>
 
         <div v-if="isLogin"  class="actions">
+          <Language v-if="mode === 'development'"></Language>
           <!-- <NotificationBadge v-if="feature.notification"/> -->
           <Notification v-if="feature.notification"/>
           <ColorSwitch />
@@ -45,7 +46,7 @@ const opened = ref(false);
 const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
 const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
-
+const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useDevice();
 function toggleOpen() {
      opened.value = !opened.value
