@@ -33,7 +33,7 @@
 
 <template>
   <div class="ocrContainer">
-    <iframe v-if="hocrFile" :src="hocrUrl" frameborder="0" width="100%" height="100%" ></iframe>
+    <iframe v-if="hocrUrl" :src="hocrUrl" frameborder="0" width="100%" height="100%" ></iframe>
     <div v-else class="loadingContainer">
       no data
     </div>
@@ -41,5 +41,7 @@
 </template>
 
 <style scoped lang="scss">
-
+.ocrContainer{
+  height: 100%;
+}
 </style>
