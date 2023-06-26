@@ -44,9 +44,9 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
-    GetChild, 
-    GetDocDetailApi, 
+import {
+    GetChild,
+    GetDocDetailApi,
     GetDocumentPreview,
     patchDocumentApi,
     GetBreadcrumb,
@@ -100,7 +100,7 @@ async function handleClick (doc) {
             await getPreviewFile(state.doc)
         }
     } catch (error) {
-        
+
     }
     setTimeout(() => {
         state.loading = false
@@ -171,7 +171,7 @@ function handleRightClick (event, data, isEmpty: boolean = false) {
     document.dispatchEvent(ev)
 }
 onMounted(() => {
-    useEventListener(document, 'docActionRefresh', (event) => handleRefresh(event.detail))  
+    useEventListener(document, 'docActionRefresh', (event) => handleRefresh(event.detail))
 })
 </script>
 

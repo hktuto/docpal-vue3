@@ -1,8 +1,8 @@
 <template>
     <div class="menu">
-        <div 
-            v-for="item in displayMenu" 
-            :key="item.name" 
+        <div
+            v-for="item in displayMenu"
+            :key="item.name"
             :class="{
                 menu__item: true,
                 selected: $route.fullPath.includes(item.url),
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<{
 })
 
 //#region Set Menu
-const { menu } = useAppConfig();
+const { menu, feature } = useAppConfig();
 const {user} = useUser();
 /**
  * filter Menu to difference role
@@ -38,6 +38,7 @@ const {user} = useUser();
 const displayMenu = computed(
     () => menu
         .filter(m => m.role ? m.role.includes(user.value.role) : true)
+        .filter(m => m.condition ? feature[m.condition] : true)
         .sort((a,b) => a.order - b.order)
 )
 //#endregion
@@ -53,6 +54,12 @@ const displayMenu = computed(
   --icon-color: var(--menu-color);
   --icon-hover-color: var(--menu-color);
   white-space: nowrap;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition : width .2s ease-in-out;
+  &.opened {
+    width: max-content;
+  }
   &__section {
     margin-bottom: calc(var(--app-padding) / 2);
     padding: 0;
@@ -62,6 +69,7 @@ const displayMenu = computed(
     align-items: stretch;
   }
   &__item{
+    margin-inline: var(--app-padding);
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
@@ -92,6 +100,7 @@ const displayMenu = computed(
       // background: var(--menu-selected-bg);
     }
     &.opened {
+
       .icon {
         margin-right: 12px;
       }

@@ -22,6 +22,7 @@
             <WorkflowAdhocTask v-if="activeTab === 'adhocTask'" ref="WorkflowRef"/>
         </el-tab-pane>
     </el-tabs>
+    <WorkflowPopoverDownload ref="WorkflowPopoverDownloadRef"/>
 </NuxtLayout>
 </template>
 
@@ -45,18 +46,11 @@ function tabChange (tab) {
         router.push({query: { tab }})
     }
 }
+const WorkflowPopoverDownloadRef = ref()
+
 async function handleDownload () {
-    state.loading = true
     const params = WorkflowRef.value.getDownloadParams()
-    try {
-        let blob
-        if(state.activeTab === 'completeTask') blob = await exportProcessHistoryApi(params)
-        else blob = await exportTasksUserApi(params)
-        await downloadBlob(blob, 'workflow.csv')
-    } catch (error) {
-        
-    }
-    state.loading = false
+    WorkflowPopoverDownloadRef.value.handleOpen(params)
 }
 watch(() => route.query, (q) => {
     if(!q.tab) q.tab = 'myTask'
@@ -65,6 +59,11 @@ watch(() => route.query, (q) => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer {
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
+  height: 100%;
+}
 .grid-layout {
     display: grid;
     grid-template-rows: min-content 1fr;

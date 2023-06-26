@@ -6,8 +6,8 @@ const props = defineProps<{
 const { item } = toRefs(props)
 const form = ref<any>({...props.item});
 const emit = defineEmits(['change'])
-function changeHandler(key: string, val: any) {
-  emit('change', {[key]: val})
+function changeHandler(key: string, value: any) {
+  emit('change', {key, value})
 }
 watch( item, () => {
   form.value = {...item.value}
@@ -27,6 +27,7 @@ watch( item, () => {
     <el-cascader  v-model="form.value"
                   :options="item.directoryEntries"
                   :props="{ checkStrictly: item.hasChild, value: 'id', label: 'id' }"
+                  @change="(val) => changeHandler(item.metaData, ...val)"
                   clearable filterable popper-class="pc-el-cascader"></el-cascader>
   </template>
   <template v-else>

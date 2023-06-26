@@ -4,7 +4,7 @@ export default defineAppConfig({
   menu:[
     {
       name:"admin_docType",
-      routeName:"docTypeManage",
+      routeName:"docType",
       url:"/docType",
       icon: "/icons/menu/docType.svg",
       order:6,

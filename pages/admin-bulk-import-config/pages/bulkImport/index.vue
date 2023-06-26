@@ -43,7 +43,7 @@ import { GetBulkImportConfigList, TABLE, defaultTableSetting, deepCopy } from 'd
             state.tableData = await GetBulkImportConfigList()
             state._tableData = deepCopy(state.tableData)
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -70,6 +70,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 .button-add {
     margin: 0 0 var(--app-padding) 0;
 }

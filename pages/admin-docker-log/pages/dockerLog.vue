@@ -16,6 +16,7 @@ const hostname = computed(() => location.host.includes('localhost') ? 'http://13
 .browsePage{
     position: relative;
     height: 100%;
+    padding: var(--app-padding);
     iframe{
         width: 100%;
         height: 100%;

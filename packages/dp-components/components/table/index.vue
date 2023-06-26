@@ -6,6 +6,9 @@
             </div>
             <TableSortButton ref="TableSortButtonRef" v-if="_options.sortKey" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
             <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
+            <div>
+                <slot name="suffixSortButton"></slot>
+            </div>
         </div>
         <div class="dp-table-container--main">
             <el-table
@@ -69,6 +72,9 @@
 <script lang="ts" setup>
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
+
+const { isMobileOrTablet } = useDevice()
+
 export type SortParams = {
     column: TableColumnCtx<T | any>,
     prop: string,
@@ -106,7 +112,7 @@ const _paginationConfig = computed(() => {
         layout: 'total, sizes, prev, pager, next, jumper',
         ..._options.value.paginationConfig
     }
-}) 
+})
 const emit = defineEmits([
     'selection-change', // 当选择项发生变化时会触发该事件
     'row-click', // 当某一行被点击时会触发该事件
@@ -116,14 +122,15 @@ const emit = defineEmits([
     'command', // 按钮组事件
     'size-change', // pageSize事件
     'current-change', // currentPage按钮组事件
-    'pagination-change', // currentPage或者pageSize改变触发 
-    'sort-change', // 列排序发生改变触发 
+    'pagination-change', // currentPage或者pageSize改变触发
+    'sort-change', // 列排序发生改变触发
     'expand-change'
 ])
 const columns__sub = ref(deepCopy(props.columns))
 
 // 自定义索引
 const tableRowClassName = ({ row, rowIndex }) => {
+    // if (!row || !row.rowIndex) return
     row.rowIndex = rowIndex
     let rowName = ""
     const index = shiftSelectList.value.findIndex(c => c.rowIndex === row.rowIndex)
@@ -133,7 +140,7 @@ const tableRowClassName = ({ row, rowIndex }) => {
     return rowName; //也可以再加上其他类名 如果有需求的话
 }
 const rowStyle = (row:any, rowIndex:any) => {
-    
+
 }
 const indexMethod = (index: number) => {
         const tabIndex = index + (_paginationConfig.value.currentPage - 1) * _paginationConfig.value.pageSize + 1
@@ -165,13 +172,17 @@ const indexMethod = (index: number) => {
     }
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
+        if(isMobileOrTablet) {
+          emit('row-dblclick', row, column, event)
+          return ;
+        }
         clearTimeout(clickTimeoutId.value);
         clickTimeoutId.value = setTimeout(() => {
             console.log("single click")// 双击事件返回
             if(_options.value.multiSelect) handleShift(row)
             emit('row-click', row, column, event)
         }, 200);
-        
+
     }
     const handleRowDblclick= (row: any, column: any, event: MouseEvent) => {
         // clean click adn selectChange timeout
@@ -190,7 +201,7 @@ const indexMethod = (index: number) => {
     /**
         *  当表格的排序条件发生变化的时候会触发该事件
         * 在列中设置 sortable 属性即可实现以该列为基准的排序， 接受一个 Boolean，默认为 false。
-        * 可以通过 Table 的 default-sort 属性设置默认的排序列和排序顺序。 
+        * 可以通过 Table 的 default-sort 属性设置默认的排序列和排序顺序。
         * 如果需要后端排序，需将 sortable 设置为 custom，同时在 Table 上监听 sort-change 事件，
         * 在事件回调中可以获取当前排序的字段名和排序顺序，从而向接口请求排序后的表格数据。
         */
@@ -219,7 +230,7 @@ function reorderColumn (displayList, initColumn: boolean = true) {
             refsElTable.toggleRowSelection(row); // ctrl多选 如果点击两次同样会取消选中
             return;
         }
-        if ( shiftOrAltDown && shiftSelectList.value.length > 0) { 
+        if ( shiftOrAltDown && shiftSelectList.value.length > 0) {
             let topAndBottom = getTopAndBottom(row, bottomSelectionRow.value, topSelectionRow.value );
             const dataObj = refsElTable.data.reduce((prev:any, item:any) => {
                 prev[`${item.rowIndex}`] = item
@@ -233,12 +244,12 @@ function reorderColumn (displayList, initColumn: boolean = true) {
             let findRow = shiftSelectList.value.find(c => c.rowIndex == row.rowIndex); //找出当前选中行
             console.log("findRow", shiftSelectList.value, findRow)
             //如果只有一行且点击的也是这一行则取消选择 否则清空再选中当前点击行
-            if (findRow&& shiftSelectList.value.length === 1 ) { 
+            if (findRow&& shiftSelectList.value.length === 1 ) {
                 refsElTable.toggleRowSelection(row, false);
                 return;
             }
             refsElTable.clearSelection();
-            refsElTable.toggleRowSelection(row); 
+            refsElTable.toggleRowSelection(row);
         }
     }
     const bottomSelectionRow = computed(() => {
@@ -331,7 +342,7 @@ defineExpose({ reorderColumn })
     width: 100%;
     display: grid;
     align-items: flex-end;
-    grid-template-columns: 1fr min-content;
+    grid-template-columns: 1fr min-content min-content;
     gap: var(--app-padding);
     .headerLeftExpand {
         overflow: hidden;

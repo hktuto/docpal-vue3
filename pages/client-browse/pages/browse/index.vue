@@ -29,6 +29,7 @@
                 </template>
             </BrowsePageHeader>
             <BrowseList
+                v-loading="loading"
                 :doc="listData.doc"
                 :permission="listData.permission"
                 @select-change="handleSelectionChange"
@@ -112,7 +113,6 @@ const selectList = ref<any[]>([])
 provide('selectList', selectList)
 const routePath = computed( () => (route.query.path as string) || '/')
 const infoOpened = ref(false);
-
 async function getDocDetail() {
     const response = await getDocumentDetail(routePath.value, userId)
     if(response.doc.isFolder) {

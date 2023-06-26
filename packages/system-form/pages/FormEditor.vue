@@ -64,6 +64,7 @@ function formatTree (obj) {
     })
     return result
 }
+
 onMounted(() => {
     getList()
 })
@@ -73,7 +74,7 @@ onMounted(() => {
 <style lang="scss" setup>
 .container {
     height: 100vh;
-    overflow: hidden; 
+    overflow: hidden;
     display: flex;
     aside {
         height: 100%;
@@ -81,7 +82,7 @@ onMounted(() => {
         grid-template-rows: min-content 1fr;
         gap: var(--app-padding);
         margin: var(--app-padding);
-    }   
+    }
     .el-scrollbar {
     }
     main {

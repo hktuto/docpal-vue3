@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div class="search-page">
-            <SearchFilterLeft :searchParams="state.searchParams" @submit=""></SearchFilterLeft>
+            <SearchFilterLeft :searchParams="state.searchParams"></SearchFilterLeft>
             <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                     @pagination-change="handlePaginationChange"
                     @row-dblclick="handleDblclick">
@@ -76,7 +76,6 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return
             pageParams = getSearchParamsArray({...newVal})
-            console.log({pageParams});
             
             state.searchParams = pageParams
             // pageParams = {...newVal}
