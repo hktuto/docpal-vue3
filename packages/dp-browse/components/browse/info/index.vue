@@ -145,10 +145,11 @@ watch(doc, async() => {
     user-select: none;
     -ms-touch-action: none;
     touch-action: none;
-    overflow: hidden;
+    overflow: auto;
     display: grid;
     grid-template-rows: min-content 1fr;
     border-radius: 12px;
+    position: relative;
     &.infoOpened{
         padding:0;
     }
