@@ -130,7 +130,7 @@ const columns__sub = ref(deepCopy(props.columns))
 
 // 自定义索引
 const tableRowClassName = ({ row, rowIndex }) => {
-    if (!row || !row.rowIndex) return
+    // if (!row || !row.rowIndex) return
     row.rowIndex = rowIndex
     let rowName = ""
     const index = shiftSelectList.value.findIndex(c => c.rowIndex === row.rowIndex)
