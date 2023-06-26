@@ -198,7 +198,7 @@ function handleCheckedNotisChange (value) {
     async function goRoute(item) {
         emit('close')
         if (item.content.documentId) {
-            router.push(localePath(`/file/browse?path=${item.content.documentId}`))
+            router.push(localePath(`/browse?path=${item.content.documentId}`))
         } else if (item.content.processInstanceId) {
             const { id } = await getTaskByProcessInstanceId(item.content.processInstanceId)
             if(id) { router.push(localePath(`/workflow/${id}`)) }
