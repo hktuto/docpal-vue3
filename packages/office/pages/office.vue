@@ -30,7 +30,7 @@ function wordInit() {
 }
 
 function openUrl(){
-  window.open(`https://${externalEndpoint.value.docpal}/browse?path=${result.value.path}`);
+  window.open(`https://${externalEndpoint.value.docpal}/browse?path=${result.value.path}`, '_blank');
 }
 
 function close(){
