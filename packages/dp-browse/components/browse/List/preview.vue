@@ -62,6 +62,15 @@ function imgError(event) {
             state.tableData = []
             res.entryList.forEach(async (item) => {
                 if (!item.isFolder) {
+                    try{
+                        const blob = await DocumentThumbnailGetApi(item.id)
+                        if (!!blob) {
+                            const urlCreator = window.URL || window.webkitURL
+                            item.blobUrl = urlCreator.createObjectURL(blob)
+                        } 
+                    }catch(err){
+                        item.blobUrl = ""
+                    }
                     const blob = await DocumentThumbnailGetApi(item.id)
                     if (!!blob) {
                         const urlCreator = window.URL || window.webkitURL
