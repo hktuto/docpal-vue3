@@ -26,7 +26,6 @@ const {isLogin} = useUser()
 
       <div v-if="isLogin"  class="actions">
         <!-- <NotificationBadge v-if="feature.notification"/> -->
-        <Notification v-if="feature.notification"/>
         <UserMiniDropdown v-if="feature.userAuth" />
       </div>
     </div>
