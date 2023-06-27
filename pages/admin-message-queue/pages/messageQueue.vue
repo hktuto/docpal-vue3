@@ -51,7 +51,7 @@ import {
             const res = await GetMessageQueuePageApi(param.pageNum, param.pageSize, {...state.extraParams})
 
             state.tableData = res.entryList
-            state.options.paginationConfig.total = res.totalElements
+            state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageNum + 1
         } catch (error) {
