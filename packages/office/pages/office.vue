@@ -39,6 +39,8 @@ onMounted(() => {
   })
 
 function openUrl(){
+  console.log("openUrl", externalEndpoint.value.docpal, result.value.path)
+  console.log(`https://${externalEndpoint.value.docpal}/browse?path=${result.value.path}`)
   window.open(`https://${externalEndpoint.value.docpal}/browse?path=${result.value.path}`, '_blank');
 }
 
