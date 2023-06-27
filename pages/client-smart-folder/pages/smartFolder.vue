@@ -118,7 +118,6 @@ onMounted(async() => {
 <style lang="scss" scoped>
 
 .grid-layout {
-  padding: calc(var(--app-padding) * 2 );
   position: relative;
     display: grid;
     grid-template-rows: min-content 1fr;

@@ -5,7 +5,10 @@ const { status, result, mineType, ext } = useUpload()
 const {externalEndpoint} = useSetting()
 const host = ref();
 const ready = ref(false);
-onMounted(() => {
+
+const checkReadyInterval = ref();
+
+function initOffice() {
   Office.onReady((info:any) => {
     host.value = info.host;
     if(info.host === Office.HostType.Word){
@@ -21,15 +24,23 @@ onMounted(() => {
       ext.value = '.pptx'
     }
     
-    wordInit()
+    ready.value = true;
   })
-})
-
-function wordInit() {
-  ready.value = true;
 }
+onMounted(() => {
+    checkReadyInterval.value = setInterval(() => {
+      console.log("interval run");
+      if(ready.value){
+        clearInterval(checkReadyInterval.value)
+      }else {
+        initOffice();
+      }
+    }, 500)
+  })
 
 function openUrl(){
+  console.log("openUrl", externalEndpoint.value.docpal, result.value.path)
+  console.log(`https://${externalEndpoint.value.docpal}/browse?path=${result.value.path}`)
   window.open(`https://${externalEndpoint.value.docpal}/browse?path=${result.value.path}`, '_blank');
 }
 
@@ -57,6 +68,9 @@ function close(){
         <el-button @click="openUrl">Open in Docpal</el-button>
         <el-button @click="close">Back</el-button>
       </div>
+    </div>
+    <div v-else>
+      Loading
     </div>
   </NuxtLayout>
 </template>

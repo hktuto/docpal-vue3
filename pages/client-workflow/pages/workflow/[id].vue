@@ -18,10 +18,10 @@
             </el-tab-pane>
             <el-tab-pane :label="$t('workflow_graph')" name="graph">
                 <!-- need to use v-if for bpmn, if not  svg graph will not show -->
-                <WorkflowDetailGraph v-if="activeTab === 'graph'" :processDefinitionId="taskDetail.taskInstance?.processDefinitionId" :steps="getCurrentStep"/>
+                <WorkflowDetailGraph v-if="activeTab === 'graph'" :processDefinitionId="taskDetail.processDefinitionId || taskDetail.taskInstance?.processDefinitionId" :steps="getCurrentStep"/>
             </el-tab-pane>
         </el-tabs>
-        <WorkflowDetailDiscussionChannel :id="taskDetail.instanceId"/>
+        <WorkflowDetailDiscussionChannel v-if="taskDetail && taskDetail.instanceId" :id="taskDetail.instanceId"/>
     </div>
 </NuxtLayout>
 </template>
@@ -84,7 +84,7 @@ async function getDetail() {
     }, 100)
 }
 const isAssigneeUser = computed(() => {
-    const id = state.taskDetail.assignee
+    const id = state.taskDetail?.assignee || ""
     return id === userId
 })
 // #region module: form

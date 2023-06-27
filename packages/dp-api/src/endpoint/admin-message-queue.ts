@@ -10,7 +10,7 @@ export const GetMessageQueuePageApi = async(pageNum: number, pageSize: number, e
         totalSize: res.totalElements
     }
 }
-export const ReSubmitMessageQueueApi = async(messageId: string) => {
-    const res = await api.post(`/message/queue/${messageId}/reSubmit`, {}).then(res => res.data.data)
+export const ReSubmitMessageQueueApi = async(messageId: string, businessId: string) => {
+    const res = await api.post(`/message/queue/${messageId}/reSubmit?businessId=${businessId}`, {}).then(res => res.data.data)
     return res
 }
