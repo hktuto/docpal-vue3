@@ -28,8 +28,8 @@ function initOffice() {
   })
 }
 onMounted(() => {
-  initOffice();
     checkReadyInterval.value = setInterval(() => {
+      console.log("interval run");
       if(ready.value){
         clearInterval(checkReadyInterval.value)
       }else {
@@ -66,6 +66,9 @@ function close(){
         <el-button @click="openUrl">Open in Docpal</el-button>
         <el-button @click="close">Back</el-button>
       </div>
+    </div>
+    <div v-else>
+      Loading
     </div>
   </NuxtLayout>
 </template>
