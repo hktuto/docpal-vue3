@@ -27,7 +27,7 @@
                 </div>
             </template>
     </Table>
-    <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2"></BrowseUpload2>
+    <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" :doc="doc"></BrowseUpload2>
 </div>
 
 </template>
@@ -180,9 +180,9 @@ function handleSelect (rows:any) {
     const FileUpload2Ref = ref()
     function handleDragLeave (e) {
         e.preventDefault()
-        state.dragActive = false
-        FileUpload2Ref.value.setActive(false)
-        console.log('handleDragLeave', FileUpload2Ref.value.state.active);
+            state.dragActive = false
+            FileUpload2Ref.value.setActive(false)
+            console.log('handleDragLeave', FileUpload2Ref.value.state.active);
     }
     function handleDragEnter (e) {
         e.preventDefault()
@@ -277,6 +277,7 @@ onMounted(() => {
     }
 }
 .FileUpload2 {
+    pointer-events: auto!important;
     display: none;
     height: 100%;
     width: 100%;

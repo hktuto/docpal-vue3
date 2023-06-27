@@ -33,6 +33,7 @@ export async function addDataTransfer(dataTransfer: any) {
     }
     return Promise.resolve([])
 }
+let id = 1
 function getFileSystemEntry (entry: Array<File | FileSystemEntry> | File | FileSystemEntry, path = '') {
     return new Promise((resolve) => {
         if (!entry) {
@@ -47,7 +48,7 @@ function getFileSystemEntry (entry: Array<File | FileSystemEntry> | File | FileS
                 if (!v) {
                     return resolve(uploadFiles)
                 }
-                getFileSystemEntry(v, path).then(function (results: any) {
+                getFileSystemEntry(v).then(function (results: any) {
                     uploadFiles.push(...results)
                     forEach(i + 1)
                 })
@@ -56,9 +57,10 @@ function getFileSystemEntry (entry: Array<File | FileSystemEntry> | File | FileS
             return
         }
         if (entry instanceof Blob) {
+            id++
             resolve([
                 {
-                    id: '',
+                    id: new Date().valueOf().toString() + id,
                     size: entry.size,
                     // @ts-ignore
                     name: entry.name,
@@ -72,14 +74,15 @@ function getFileSystemEntry (entry: Array<File | FileSystemEntry> | File | FileS
         if (entry.isFile) {
             let fileEntry = entry as FileSystemFileEntry
             fileEntry.file(function (file: File) {
+                id++
                 resolve([
                     {
-                    id: '',
-                    size: file.size,
-                    name: file.name,
-                    path: path,
-                    fileType: file.type,
-                    file,
+                        id: new Date().valueOf().toString() + id,
+                        size: file.size,
+                        name: file.name,
+                        path: path,
+                        fileType: file.type,
+                        file,
                     }
                 ])
             })
@@ -98,7 +101,7 @@ function getFileSystemEntry (entry: Array<File | FileSystemEntry> | File | FileS
                     if (!entries[i]) {
                         return readEntries()
                     }
-                    getFileSystemEntry(entries[i], path + directoryEntry.name + '/').then(function (results: any) {
+                    getFileSystemEntry(entries[i], path + '/' + directoryEntry.name).then(function (results: any) {
                         uploadFiles.push(...results)
                         forEach(i + 1)
                     })

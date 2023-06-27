@@ -98,7 +98,8 @@ const _options = computed<Table.Options>(() => {
         tooltipEffect: 'dark',
         showHeader: true,
         showPagination: false,
-        height: '100%'
+        height: '100%',
+        scrollbarAlwaysOn: true
     }
     return Object.assign(option, props?.options)
 })

@@ -7,6 +7,7 @@
 <script lang="ts" setup>
 import { addDataTransfer } from '../../../dp-components/utils/upload'
 import { useEventListener } from '@vueuse/core'
+const props = defineProps<{doc: any}>();
 const emits = defineEmits(['change'])
 const router = useRouter()
 const state = reactive({
@@ -18,7 +19,7 @@ const { setUploadFiles } = useUploadStore()
     // e.preventDefault()
     state.active = false
     const files = await addDataTransfer(e.dataTransfer)
-    setUploadFiles(files)
+    setUploadFiles(files, props.doc)
     router.push('/browse/upload')
     emits("change", files)
   }
