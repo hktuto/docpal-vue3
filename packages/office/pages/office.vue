@@ -5,7 +5,10 @@ const { status, result, mineType, ext } = useUpload()
 const {externalEndpoint} = useSetting()
 const host = ref();
 const ready = ref(false);
-onMounted(() => {
+
+const checkReadyInterval = ref();
+
+function initOffice() {
   Office.onReady((info:any) => {
     host.value = info.host;
     if(info.host === Office.HostType.Word){
@@ -21,13 +24,19 @@ onMounted(() => {
       ext.value = '.pptx'
     }
     
-    wordInit()
+    ready.value = true;
   })
-})
-
-function wordInit() {
-  ready.value = true;
 }
+onMounted(() => {
+  initOffice();
+    checkReadyInterval.value = setInterval(() => {
+      if(ready.value){
+        clearInterval(checkReadyInterval.value)
+      }else {
+        initOffice();
+      }
+    }, 1000)
+  })
 
 function openUrl(){
   window.open(`https://${externalEndpoint.value.docpal}/browse?path=${result.value.path}`, '_blank');
