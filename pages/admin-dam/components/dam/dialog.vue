@@ -1,6 +1,7 @@
 <template>
 <el-dialog v-model="state.visible" 
     :close-on-click-modal="false"
+    append-to-body
     >
     <template #title>
         {{$t(`DAM_${state.title}`)}}
@@ -25,6 +26,7 @@
         <el-form-item :label="$t('tableHeader_label')"
               prop="label"
               :rules="[{ required: true, message: $t('form_common_requird')}]"
+              required=""
         >
             <el-input type="text" v-model="state.data.label" />
         </el-form-item>
@@ -165,9 +167,10 @@ function handleOpen(data) {
 }
 const handleTargetTypeChange = (value) => {
     const targetItem = state.targetList.find(item => item.targetFileType === value)
+    console.log(targetItem, state.targetList)
     if(targetItem) {
         state.data.operation = { ...targetItem.operation }
-        state.data.name = targetItem.name
+        state.data.name = targetItem.type
     } else {
         state.data.operation = {}
         state.data.name = ''
