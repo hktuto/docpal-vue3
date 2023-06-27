@@ -95,8 +95,8 @@ async function handleReSubmit (row) {
     console.log(row);
     row.loading = true
     try {
-        const res = await ReSubmitMessageQueueApi(row.messageId)
-        if (res.resultCode === 200) {
+        const res = await ReSubmitMessageQueueApi(row.messageId, row.businessId)
+        if (!!res) {
             ElMessage.success('success')
             handlePaginationChange()
         }
