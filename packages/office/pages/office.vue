@@ -35,7 +35,7 @@ onMounted(() => {
       }else {
         initOffice();
       }
-    }, 1000)
+    }, 500)
   })
 
 function openUrl(){
