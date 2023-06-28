@@ -124,8 +124,10 @@ function handleDblclick (row) {
 }
 async function handleSubmit (form) {
     if (!form.assignee) return
-    const res = await taskUnClaimApi(form.id)
-    if (!res) return
+    if(form.oldAssignee){
+        const res = await taskUnClaimApi(form.id)
+        if (!res) return
+    }
     const res2 = await taskClaimApi(form.id, form.assignee)
     if (!res2) return
     handlePaginationChange(pageParams.pageIndex, pageParams.pageSize)
