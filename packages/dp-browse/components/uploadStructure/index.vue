@@ -2,9 +2,9 @@
     <div>
         <div>{{$t('upload')}}</div>
         <el-timeline>
-             <el-timeline-item v-for="item in uploadStore.uploadState.uploadRequestList" :key="item.id"
+             <el-timeline-item v-for="item in uploadState.uploadRequestList" :key="item.id"
                 :timestamp="formatDate(item.startDate)" placement="top">
-                {{item.count}}
+                <el-button v-show="item.count === item.docList.length" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
                 <el-tree ref="treeRef" :data="item.tree"
                     nodeKey="id" :expand-on-click-node="false">
                     <template #default="{ node, data }">
@@ -29,11 +29,13 @@
 </template>
 
 <script lang="ts" setup>
+import * as XLSX from 'xlsx'
 import { useEventListener } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
 const props = defineProps<{
     drawerOpen: boolean
 }>();
-const uploadStore = useUploadStore()
+const { uploadState } =storeToRefs(useUploadStore()) 
 function getType(status) {
     switch(status){
         case 'finish':
@@ -45,6 +47,42 @@ function getType(status) {
         default:
             return 'primary'
     }
+}
+function exportCsv(arr) {
+    const exportArr = arr.map((item) => ({
+        name: item.name,
+        status: item.status,
+        size: item.file?.size || '',
+        path: item.parentId,
+        isFolder: item.isFolder ? 'true' : 'false'
+    }))
+    jsonToXlsx(exportArr)
+}
+function jsonToXlsx (exportArr) {
+    // 自定义下载的header，注意是数组中的数组哦
+    const header = {
+        name: 'File Name',
+        status: 'File Upload Status',
+        size: 'File Size',
+        path: 'File Path',
+        isFolder: 'Is Folder'
+    };
+    exportArr.unshift(header)
+    console.log({exportArr});
+    
+    // 将JS数据数组转换为工作表。
+    const ws = XLSX.utils.json_to_sheet(exportArr, {
+        header: ['name', 'status', 'size', 'path', 'isFolder'],
+        skipHeader: true, 
+        origin: 'A1'
+    });
+    /* 新建空的工作表 */
+    const wb = XLSX.utils.book_new();
+    // 可以自定义下载之后的sheetname
+    XLSX.utils.book_append_sheet(wb, ws, 'sheetName');
+
+    /* 生成xlsx文件 */
+    XLSX.writeFile(wb, 'upload status.csv');
 }
 </script>
 
