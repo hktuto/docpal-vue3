@@ -455,7 +455,6 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             // { id: '4', type: 'selection' },
             { id: '1', slot: 'docName', label: 'table_name', prop: 'name' },
-            { id: '2', label: 'table_name', prop: 'name' },
             { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
