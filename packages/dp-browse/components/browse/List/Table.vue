@@ -1,33 +1,36 @@
 <template>
-<div :class="['tableContainer', { 'forbidden-childe-pointer-events': state.dragActive }]" 
+<div :class="['tableContainer']" 
     >
-    <Table
-        v-if="tableData"
-        v-loading="loading"
-        :columns="tableSetting.columns"
-        :table-data="tableData"
-        :options="options"
-        @drop.prevent="handleDrop"
-        @dragenter.prevent="handleDragEnter"
-        @dragleave.prevent="handleDragLeave"
-            @command="handleAction"
-            @row-dblclick="handleDblclick"
-            @row-contextmenu="handleRightClick"
-            @selection-change="handleSelect"
-            @contextmenu="handleEmptyRightClick">
-            <template #docName="{ row, index }">
-                <div class="nameContainer">
-                    <div :class="{selectContainer:true, checked: isSelected(row)}">
-                        <div v-if="options.selectable(row, index)" class="rowCheckbox">
-                            <SvgIcon class="checkIcon" src="/icons/white_check.svg" />
+    <DropzoneContainer class="backgroundDrop" @drop="(files) => handleDrop(doc , files)" >
+        </DropzoneContainer>
+        <Table
+            v-if="tableData"
+            v-loading="loading"
+            :class="{ dragActive: state.dragActive }"
+            :columns="tableSetting.columns"
+            :table-data="tableData"
+            :options="options"
+                @command="handleAction"
+                @row-dblclick="handleDblclick"
+                @row-contextmenu="handleRightClick"
+                @selection-change="handleSelect"
+                @contextmenu="handleEmptyRightClick">
+                <template #docName="{ row, index }">
+                    <div class="nameContainer">
+                        <div :class="{selectContainer:true, checked: isSelected(row)}">
+                            <div v-if="options.selectable(row, index)" class="rowCheckbox">
+                                <SvgIcon class="checkIcon" src="/icons/white_check.svg" />
+                            </div>
+                            <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" status="general"/>
                         </div>
-                        <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" status="general"/>
+                        <div class="label">{{row.name}}</div>
+                        <DropzoneContainer v-if="row.isFolder" class="folderDropzone backgroundDrop" @drop="(files) => handleDrop(row , files)"></DropzoneContainer>
+                        
                     </div>
-                    <div class="label">{{row.name}}</div>
-                </div>
-            </template>
-    </Table>
-    <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" :doc="doc"></BrowseUpload2>
+                </template>
+        </Table>
+        
+        <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
 </div>
 
 </template>
@@ -35,8 +38,7 @@
 
 <script lang="tsx" setup>
 import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
-import {TableV2FixedDir} from 'element-plus'
-import type { Column, RowClassNameGetter } from 'element-plus'
+
 const emit = defineEmits([
     'right-click',
     'select-change',
@@ -44,6 +46,8 @@ const emit = defineEmits([
 const selectedItems = ref<any>([])
 const props = defineProps<{doc: any}>();
 const { doc } = toRefs(props) 
+
+
 // #region module: page
 const { t } = useI18n()
 const route = useRoute()
@@ -177,24 +181,9 @@ function handleSelect (rows:any) {
 }
 
 // #region module: drag-upload
-    const FileUpload2Ref = ref()
-    function handleDragLeave (e) {
-        e.preventDefault()
-            state.dragActive = false
-            FileUpload2Ref.value.setActive(false)
-            console.log('handleDragLeave', FileUpload2Ref.value.state.active);
-    }
-    function handleDragEnter (e) {
-        e.preventDefault()
-        state.dragActive = true
-        FileUpload2Ref.value.setActive(true)
-        console.log('handleDragEnter',FileUpload2Ref.value.state.active);
-    }
-    function handleDrop (e) {
-        console.log(e, 'handleDropssss');
-        state.dragActive = false
-        FileUpload2Ref.value.setActive(false)
-        FileUpload2Ref.value.handleDrop(e)
+    
+    function handleDrop (doc: any, files: any) {
+        console.log(files, 'handleDropssss');
     }
 // #endregion
 onMounted(() => {
@@ -281,6 +270,23 @@ onMounted(() => {
     display: none;
     height: 100%;
     width: 100%;
+}
+.backgroundDrop{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.folderDropzone{
+    &.isOverDropZone{
+        border-left: 1px solid var(--primary-color);
+        &:after{
+            background: linear-gradient(90deg, var(--primary-color-03) 0%,  rgba(189, 189, 189, 0) 100%);
+            outline : none;
+        }
+    }
 }
 </style>
 <style lang="scss">
