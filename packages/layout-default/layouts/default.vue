@@ -20,6 +20,7 @@
         </div>
 
         <div v-if="isLogin"  class="actions">
+          <UploadStructureButton v-if="uploadState!.uploadRequestList && uploadState!.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Language v-if="mode === 'development'"></Language>
           <!-- <NotificationBadge v-if="feature.notification"/> -->
           <Notification v-if="feature.notification"/>
@@ -30,6 +31,9 @@
       </div>
         <main id="mainContainer">
           <slot />
+          <InteractDrawer ref="InteractDrawerRef">
+            <UploadStructure></UploadStructure>
+          </InteractDrawer>
         </main>
     </div>
 </template>
@@ -48,9 +52,21 @@ const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useDevice();
+const { uploadState } = toRefs(useUploadStore())
+const state = reactive({
+  drawerOpen: false
+})
 function toggleOpen() {
      opened.value = !opened.value
 }
+
+// #region module: 
+  const InteractDrawerRef = ref()
+  function handleOpenUpload() {
+    state.drawerOpen = !state.drawerOpen
+    InteractDrawerRef.value.handleOpen()
+  }
+// #endregion
 // #region get mouse position
 import { useMouse } from '@vueuse/core'
 import {useResponsive} from "~/composables/responsive";
@@ -167,6 +183,8 @@ const { x, y } = useMouse()
   overflow: hidden;
   grid-area: content;
   z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr min-content;
 }
 
 

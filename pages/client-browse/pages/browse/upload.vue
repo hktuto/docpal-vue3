@@ -21,9 +21,9 @@
                 </el-tree>
             </div>
             <div class="upload-main-center" >
-                <UploadMetaForm ref="UploadMetaFormRef" @apply-to-selected="handleApplyToSelected"></UploadMetaForm>
+                <UploadStructureMetaForm ref="UploadMetaFormRef" @apply-to-selected="handleApplyToSelected"></UploadStructureMetaForm>
             </div>
-            <div class="upload-main-right">supload-main-right</div>
+            <div class="upload-main-right">upload-main-right</div>
             <div class="upload-footer flex-x-end">
                 <div>
                     <el-button @click.native="handleDiscard">{{$t('discard')}}</el-button>
@@ -38,7 +38,7 @@
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
 import { deepCopy } from 'dp-api';
-const { getUploadFiles } = useUploadStore()
+const { getUploadFiles, updateUploadRequestList } = useUploadStore()
 const route = useRoute()
 const router = useRouter()
 const treeRef = ref()
@@ -107,6 +107,7 @@ function handleSubmit () {
         delete prev[key].children
         return prev
     }, {})
+    updateUploadRequestList(data)
     router.go(-1)
     function getPropertiesFromMetaList(metaList) {
         return metaList.reduce((prev, item) => {

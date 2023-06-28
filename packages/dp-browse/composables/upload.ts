@@ -1,26 +1,37 @@
 import { defineStore } from 'pinia'
+import { DocDetail, CreateDocumentApi, CreateFoldersApi } from 'dp-api'
 export type uploadDoc = {
     documentType: string,
     id: string,
     isFolder: boolean,
     parentId: string,
     name: string,
-    file: any
+    file: any,
+    status: 'finish' | 'skip' | 'fail' | 'loading' | 'pending', 
+    children: uploadDoc[]
+}
+
+export type uploadRequestItem = {
+    rootDoc: DocDetail;
+    startDate: Date,
+    docList: uploadDoc[];
+    tree: uploadDoc[];
+    count: number;
 }
 export const useUploadStore = defineStore('UploadStore', () => {
-    const state = reactive({
+    const uploadState = reactive({
         uploadFiles: <any>[], // input输入
-        uploadDocList: <any>[], // 右上角上传功能
-        rootDoc: <any>{}
+        rootDoc: <DocDetail>{},
+        uploadRequestList: <any>[]
     })
-    function setUploadFiles (files: any, doc: any) {
-        state.uploadFiles = files
-        state.rootDoc = doc
+    function setUploadFiles (files: any, doc: DocDetail) {
+        uploadState.uploadFiles = files
+        uploadState.rootDoc = doc
     }
     function getUploadFiles () {
         const treeData:any = []
         const treeMap: any = {}
-        state.uploadFiles.forEach((item: any) => {
+        uploadState.uploadFiles.forEach((item: any) => {
             if(!treeMap[item.path]) {
                 const names = item.path.split('/')
                 if (names.length === 0) return
@@ -53,22 +64,84 @@ export const useUploadStore = defineStore('UploadStore', () => {
         })
         return treeData
     }
-    function setUploadDocList (docs: uploadDoc[]) {
-        state.uploadDocList = docs
-    }
-    function getUploadDocList (docs: uploadDoc[]) {
-        return {
-            rootDoc: state.rootDoc,
-            list: state.uploadDocList
+    function updateUploadRequestList (docs: uploadDoc[]) {
+        const tree: any = []
+        const arr: any = []
+        Object.keys(docs).forEach((key: any) => {
+            const item = docs[key]
+            const parent: any = docs[item.parentId as any]
+            if (parent) {
+                if (!parent.children) parent.children = []
+                parent.children.push(item)
+            } else {
+                tree.push(item)
+            }
+            arr.push(item)
+        })
+        const requestItem = {
+            rootDoc: uploadState.rootDoc,
+            startDate: new Date(),
+            tree,
+            docList: arr,
+            count: 0
         }
+        uploadState.uploadRequestList.push(requestItem)
+        upload(tree, 'finish', uploadState.rootDoc.path, requestItem)
+    }
+    function upload(tree: uploadDoc[], status: any, parentPath: string, requestItem: uploadRequestItem) {
+        tree.forEach((item, index) => {
+            setTimeout(async() => {
+                if(!status || status === 'finish') {
+                    const { isDuplicate } = await duplicateNameFilter(parentPath, [item]);
+                    if (isDuplicate) item.status = 'skip'
+                    else {
+                        if (parentPath === '/') parentPath = ''
+                        item.status = 'loading'
+                        const res = await handleCreateDocument(item, parentPath)
+                        item.status = res ? 'finish' : 'fail'
+                    }
+                } else {
+                    item.status = 'skip'
+                }
+                requestItem.count++
+                if (item.children) upload(item.children, item.status , parentPath + '/' + item.name, requestItem)
+            }, 1000 + index * 100)
+        })
+    }
+    
+    async function handleCreateDocument (doc: any, parentPath: string) {
+        let result
+        const document = {
+          name: doc.name,
+          idOrPath: `${parentPath}/${doc.name}`,
+          type: doc.documentType,
+          properties: doc.properties
+        }
+        try {
+            if(doc.isFolder) {
+                result = await CreateFoldersApi(document)
+            }
+            else {
+                const formData = new FormData()
+                formData.append('files', doc.file)
+                formData.append('document', JSON.stringify(document))
+                result = await CreateDocumentApi(formData)
+            }
+        } catch (error) {
+            result = false
+        }
+        return result
+    }
+    function getUploadRequestList () {
+        return uploadState.uploadRequestList
     }
     onMounted(() => {
     })
     return {
         getUploadFiles,
         setUploadFiles,
-        setUploadDocList,
-        getUploadDocList,
-        state
+        updateUploadRequestList,
+        getUploadRequestList,
+        uploadState
     }
 })
