@@ -78,6 +78,7 @@ export const useUploadStore = defineStore('UploadStore', () => {
             }
             arr.push(item)
         })
+        
         const requestItem = {
             rootDoc: uploadState.rootDoc,
             startDate: new Date(),

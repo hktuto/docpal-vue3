@@ -32,7 +32,7 @@
         <main id="mainContainer">
           <slot />
           <InteractDrawer ref="InteractDrawerRef">
-            <UploadStructure></UploadStructure>
+            <UploadStructure v-if="state.drawerOpen"></UploadStructure>
           </InteractDrawer>
         </main>
     </div>
