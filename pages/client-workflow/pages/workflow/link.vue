@@ -5,7 +5,7 @@
     </template>
     <template v-else>
       <div class="noResultContainer">
-        <h1>The Task already completed or not exist</h1>
+        <h1> {{$t('workflow_error_link_empty')}}</h1>
         <Button Button type="primary" @click="() => $router.push({path:'/workflow'})">Back</Button>
       </div>
     </template>
