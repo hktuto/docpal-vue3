@@ -51,7 +51,7 @@ import {
             const res = await GetMessageQueuePageApi(param.pageNum, param.pageSize, {...state.extraParams})
 
             state.tableData = res.entryList
-            state.options.paginationConfig.total = res.totalElements
+            state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageNum + 1
         } catch (error) {
@@ -95,8 +95,8 @@ async function handleReSubmit (row) {
     console.log(row);
     row.loading = true
     try {
-        const res = await ReSubmitMessageQueueApi(row.messageId)
-        if (res.resultCode === 200) {
+        const res = await ReSubmitMessageQueueApi(row.messageId, row.businessId)
+        if (!!res) {
             ElMessage.success('success')
             handlePaginationChange()
         }
