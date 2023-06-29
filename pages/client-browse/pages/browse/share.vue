@@ -155,6 +155,8 @@ onMounted(async() => {
         overflow: hidden;
     }
     .reader-container {
+        height: 100%;
+        overflow: hidden;
         display: grid;
         grid-template-rows: min-content 1fr;
     }
