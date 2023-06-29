@@ -11,9 +11,9 @@ const emits = defineEmits([
     'drop',
 ])
 const dropZoneRef = ref<HTMLDivElement>()
-function onDrop(files: File[] | null) {
+function onDrop(files: File[] | null, event: DragEvent) {
   // called when files are dropped on zone
-  emits('drop', files)
+  emits('drop', files, event)
 }
 
 const { isOverDropZone } = useDropZone(dropZoneRef, onDrop)

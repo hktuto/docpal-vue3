@@ -1,7 +1,7 @@
 <template>
 <div :class="['tableContainer']" 
     >
-    <DropzoneContainer class="backgroundDrop" @drop="(files) => handleDrop(doc , files)" >
+    <DropzoneContainer class="backgroundDrop" @drop="(files, event) => handleDrop(doc , files, event)" >
         </DropzoneContainer>
         <Table
             v-if="tableData"
@@ -182,8 +182,8 @@ function handleSelect (rows:any) {
 
 // #region module: drag-upload
     
-    function handleDrop (doc: any, files: any) {
-        console.log(files, 'handleDropssss');
+    function handleDrop (doc: any, files: any, event:any) {
+        console.log(event, 'handleDropssss');
     }
 // #endregion
 onMounted(() => {
