@@ -48,11 +48,22 @@ function getType(status) {
             return 'primary'
     }
 }
+function fileSizeFilter (bytes) {
+    if (!bytes) return ''
+    bytes = Number(bytes)
+    const units = ["B", "KB", "MB", "GB", "TB"]
+    let unit = ''
+    for (let i = 1; bytes / 1024 >= 1; i++) {
+        unit = units[i]
+        bytes = bytes / 1024
+    }
+    return bytes.toFixed(2) + unit
+}
 function exportCsv(arr) {
     const exportArr = arr.map((item) => ({
         name: item.name,
         status: item.status,
-        size: item.file?.size || '',
+        size: fileSizeFilter(item.file?.size || ''),
         path: item.parentId,
         isFolder: item.isFolder ? 'true' : 'false'
     }))
