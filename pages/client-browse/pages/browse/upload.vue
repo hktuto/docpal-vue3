@@ -1,5 +1,7 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" backPath="upper">
+    <NuxtLayout class="fit-height withPadding" :backPath="state.backPath">
+        <!-- <template #headerLeft>{{state.rootDoc.logicPath}}</template> -->
+        <template #headerLeft>{{$t('browse.uploadText')}}</template>
         <main class="upload-main" v-loading="state.loading">
             <div class="upload-main-left-header">
                 <el-button @click="resetChecked">{{$t('reset')}}</el-button>
@@ -26,7 +28,8 @@
             <div class="upload-main-right">
                 <UploadStructurePreview ref="previewRef" />
             </div>
-            <div class="upload-footer flex-x-end">
+            <div class="upload-footer flex-x-between">
+                <div>{{$t('browse.uploadPosition')}}: {{state.rootDoc.name}}</div>
                 <div>
                     <el-button @click.native="handleDiscard">{{$t('discard')}}</el-button>
                     <el-button @click.native="handleSubmit">{{$t('confirm')}}</el-button>
@@ -39,8 +42,8 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
-import { deepCopy } from 'dp-api';
-const { getUploadFiles, updateUploadRequestList } = useUploadStore()
+import { deepCopy, GetBreadcrumb } from 'dp-api';
+const { getUploadFiles, updateUploadRequestList, getBackPath, getRootDoc } = useUploadStore()
 const route = useRoute()
 const router = useRouter()
 const treeRef = ref()
@@ -52,7 +55,9 @@ const state = reactive({
         children: 'children',
         label: 'name',
     },
-    checkList: []
+    checkList: [],
+    backPath: '',
+    rootDoc: {}
 })
 function handleSelect (row) {
     console.log(row.file);
@@ -98,7 +103,7 @@ function resetChecked(){
     treeRef.value!.setCheckedKeys([], false)
 }
 function handleDiscard () {
-    router.go(-1)
+    router.push(state.backPath)
 }
 function handleSubmit () {
     const nodeMap = treeRef.value!.store.nodesMap
@@ -112,7 +117,7 @@ function handleSubmit () {
         return prev
     }, {})
     updateUploadRequestList(data)
-    router.go(-1)
+    router.push(state.backPath)
     function getPropertiesFromMetaList(metaList) {
         return metaList.reduce((prev, item) => {
             if (item.value) prev[item.metaData] = deepCopy(item.value) 
@@ -120,9 +125,23 @@ function handleSubmit () {
         }, {})
     }
 }
+async function handleBreadcrumb() {
+    state.rootDoc = getRootDoc()
+    try {
+        const data = await GetBreadcrumb(state.rootDoc.path)
+        state.rootDoc.logicPath = data.reduce((prev,item) => {
+            prev += '/' + item.name
+            return prev
+        }, '')
+    } catch (error) {
+        
+    }
+}
 onMounted(async() => {
     state.checkList = []
     state.fileList = getUploadFiles()
+    state.backPath = getBackPath()
+    state.rootDoc = getRootDoc()
     if(state.fileList.length === 0) router.push('/browse')
 })
 </script>

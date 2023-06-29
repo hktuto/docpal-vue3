@@ -22,11 +22,19 @@ export const useUploadStore = defineStore('UploadStore', () => {
     const uploadState = reactive({
         uploadFiles: <any>[], // input输入
         rootDoc: <DocDetail>{},
-        uploadRequestList: <any>[]
+        uploadRequestList: <any>[],
+        backPath: ''
     })
     function setUploadFiles (files: any, doc: DocDetail) {
         uploadState.uploadFiles = files
         uploadState.rootDoc = doc
+        uploadState.backPath = `/browse?path=${uploadState.rootDoc.path}`
+    }
+    function getBackPath () {
+        return uploadState.backPath
+    }
+    function getRootDoc () {
+        return uploadState.rootDoc
     }
     function getUploadFiles () {
         const treeData:any = []
@@ -144,6 +152,8 @@ export const useUploadStore = defineStore('UploadStore', () => {
         setUploadFiles,
         updateUploadRequestList,
         getUploadRequestList,
-        uploadState
+        getBackPath,
+        getRootDoc,
+        uploadState,
     }
 })
