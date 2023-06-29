@@ -3,6 +3,7 @@
         <!-- <template #headerLeft>{{state.rootDoc.logicPath}}</template> -->
         <template #headerLeft>{{$t('browse.uploadText')}}</template>
         <main class="upload-main" v-loading="state.loading">
+            <!-- <div class="upload-header">upload-header</div> -->
             <div class="upload-main-left-header">
                 <el-button @click="resetChecked">{{$t('reset')}}</el-button>
             </div>
