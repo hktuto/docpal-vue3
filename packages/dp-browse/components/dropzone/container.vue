@@ -7,16 +7,20 @@
 
 <script lang="ts" setup >
 import { useDropZone } from '@vueuse/core'
-const emits = defineEmits([
-    'drop',
-])
-const dropZoneRef = ref<HTMLDivElement>()
-function onDrop(files: File[] | null, event: DragEvent) {
-  // called when files are dropped on zone
-  emits('drop', files, event)
-}
+import { addDataTransfer } from '../../../dp-components/utils/upload'
+const { setUploadFiles } = useUploadStore()
 
-const { isOverDropZone } = useDropZone(dropZoneRef, onDrop)
+const props = defineProps<{doc: any}>();
+const router = useRouter()
+const dropZoneRef = ref<HTMLDivElement>()
+
+
+const handleDrop = async (_, e) => {
+    const files = await addDataTransfer(e.dataTransfer)
+    setUploadFiles(files, props.doc)
+    router.push('/browse/upload')
+}
+const { isOverDropZone } = useDropZone(dropZoneRef, handleDrop)
 </script>
 
 <style lang="scss" >
