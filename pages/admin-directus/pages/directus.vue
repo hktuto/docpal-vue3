@@ -17,7 +17,7 @@ const directus_refresh_token = useCookie('directus_refresh_token');
 const directus_token = useCookie('directus_token');
 async function getDirecutsToken(){
     try {
-    const { result } = await api.post('/directus/auth/login',{}).then((res:any) => res.data);
+    const result = await api.post('/directus/auth/login',{}).then((res:any) => res.data.data);
     directus_refresh_token.value = result.refresh_token;
     directus_token.value = result.access_token;
 
