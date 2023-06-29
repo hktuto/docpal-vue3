@@ -14,7 +14,7 @@
     <video v-else-if="state.fileType === 'video/mp4'" controls style="width: 100%">
         <source :src="state.url" :type="state.fileType" />
     </video>
-    <el-image v-else-if="state.fileType.includes('image/') && state.fileType !== 'image/tiff'"
+    <el-image v-else-if="state.fileType.includes('image/')"
             :src="state.url" fit="contain"
             :preview-src-list="[state.url]">
         <template #error>
