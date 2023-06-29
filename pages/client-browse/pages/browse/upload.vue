@@ -12,7 +12,7 @@
                     <template #default="{ node, data }">
                         <div class="flex-x-between tree-item">
                             <span class="flex-x-start">
-                                <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
+                                 <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
                                 {{data.name}}
                             </span>
                             <div>{{data.documentType}}</div>
@@ -23,7 +23,9 @@
             <div class="upload-main-center" >
                 <UploadStructureMetaForm ref="UploadMetaFormRef" @apply-to-selected="handleApplyToSelected"></UploadStructureMetaForm>
             </div>
-            <div class="upload-main-right">upload-main-right</div>
+            <div class="upload-main-right">
+                <UploadStructurePreview ref="previewRef" />
+            </div>
             <div class="upload-footer flex-x-end">
                 <div>
                     <el-button @click.native="handleDiscard">{{$t('discard')}}</el-button>
@@ -42,6 +44,7 @@ const { getUploadFiles, updateUploadRequestList } = useUploadStore()
 const route = useRoute()
 const router = useRouter()
 const treeRef = ref()
+const previewRef = ref();
 const state = reactive({
     loading: false,
     fileList: [],
@@ -57,6 +60,7 @@ function handleSelect (row) {
 const UploadMetaFormRef = ref()
 function handleNodeClick(row) {
     UploadMetaFormRef.value.init(row)
+    previewRef.value.init(row)
 }
 function handleApplyToSelected({documentType, metaList, isFolder}) {
     if(state.checkList.length === 0) {
@@ -141,7 +145,7 @@ onMounted(async() => {
         border-right: 1px solid #ddd;
     }
     .upload-main-right {
-        background-color: aqua;
+        // background-color: aqua;
     }
 }
 .tree-item {
