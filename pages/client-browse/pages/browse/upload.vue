@@ -3,7 +3,9 @@
         <!-- <template #headerLeft>{{state.rootDoc.logicPath}}</template> -->
         <template #headerLeft>{{$t('browse.uploadText')}}</template>
         <main class="upload-main" v-loading="state.loading">
-            <!-- <div class="upload-header">upload-header</div> -->
+            <!-- <div class="upload-header">
+                <el-input v-model="state.filterText" clearable placeholder="Filter keyword" />
+            </div> -->
             <div class="upload-main-left-header">
                 <el-button @click="resetChecked">{{$t('reset')}}</el-button>
             </div>
@@ -11,6 +13,7 @@
                <el-tree ref="treeRef" :data="state.fileList" :props="state.defaultProps"
                     default-expand-all
                     nodeKey="id" show-checkbox check-strictly :expand-on-click-node="false"
+                    :filter-node-method="filterNode"
                     @node-click="handleNodeClick"
                     @check="handleCheck">
                     <template #default="{ node, data }">
@@ -59,12 +62,22 @@ const state = reactive({
     },
     checkList: [],
     backPath: '',
-    rootDoc: {}
+    rootDoc: {},
+    filterText: ''
 })
 function handleSelect (row) {
     console.log(row.file);
 }
 const UploadMetaFormRef = ref()
+// #region module: filter
+    watch(() => state.filterText, (val) => {
+        treeRef.value!.filter(val)
+    })
+    const filterNode = (value: string, data: Tree) => {
+        if (!value) return true
+        return data.name.includes(value)
+    }
+// #endregion
 function handleNodeClick(row) {
     UploadMetaFormRef.value.init(row)
     previewRef.value.init(row)
