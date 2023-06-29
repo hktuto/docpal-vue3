@@ -8,6 +8,7 @@
             </div>
             <div class="upload-main-left-main">
                <el-tree ref="treeRef" :data="state.fileList" :props="state.defaultProps"
+                    default-expand-all
                     nodeKey="id" show-checkbox check-strictly :expand-on-click-node="false"
                     @node-click="handleNodeClick"
                     @check="handleCheck">
