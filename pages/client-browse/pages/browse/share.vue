@@ -4,8 +4,10 @@
             <FromRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
             <div class="div2" v-loading="previewFile.loading">
                 <template v-if="previewFile.name">
-                    <h3>{{previewFile.name}}</h3>
-                    <Reader ref="ReaderRef" v-bind="previewFile" ></Reader>
+                    <div class="reader-container">
+                        <h3>{{previewFile.name}}</h3>
+                        <Reader ref="ReaderRef" v-bind="previewFile" ></Reader>
+                    </div>
                 </template>
                 <template v-else>
                     <div class="no-file-preview"> {{$t('please select a file')}}</div>
@@ -151,6 +153,10 @@ onMounted(async() => {
     .div4 { grid-area: 3 / 1 / 4 / 3; }
     .div1,.div2,.div3,.div4 {
         overflow: hidden;
+    }
+    .reader-container {
+        display: grid;
+        grid-template-rows: min-content 1fr;
     }
 }
 .no-file-preview{
