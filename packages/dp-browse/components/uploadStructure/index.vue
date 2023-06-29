@@ -79,7 +79,6 @@ function jsonToXlsx (exportArr) {
         isFolder: 'Is Folder'
     };
     exportArr.unshift(header)
-    console.log({exportArr});
     
     // 将JS数据数组转换为工作表。
     const ws = XLSX.utils.json_to_sheet(exportArr, {

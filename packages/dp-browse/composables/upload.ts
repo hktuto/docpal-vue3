@@ -31,8 +31,10 @@ export const useUploadStore = defineStore('UploadStore', () => {
     function getUploadFiles () {
         const treeData:any = []
         const treeMap: any = {}
+        console.log('getUploadFiles', uploadState.uploadFiles);
+        
         uploadState.uploadFiles.forEach((item: any) => {
-            if(!treeMap[item.path]) {
+            if(item.path && !treeMap[item.path]) {
                 const names = item.path.split('/')
                 if (names.length === 0) return
                 treeMap[item.path] = {
@@ -62,6 +64,8 @@ export const useUploadStore = defineStore('UploadStore', () => {
                 treeData.push(item)
             }
         })
+        console.log({treeData});
+        
         return treeData
     }
     function updateUploadRequestList (docs: uploadDoc[]) {

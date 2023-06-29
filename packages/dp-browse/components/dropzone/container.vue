@@ -14,7 +14,6 @@ const props = defineProps<{doc: any}>();
 const router = useRouter()
 const dropZoneRef = ref<HTMLDivElement>()
 
-
 const handleDrop = async (_, e) => {
     const files = await addDataTransfer(e.dataTransfer)
     setUploadFiles(files, props.doc)

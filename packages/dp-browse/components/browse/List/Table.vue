@@ -1,8 +1,7 @@
 <template>
 <div :class="['tableContainer']" 
     >
-    <DropzoneContainer class="backgroundDrop" @drop="(files, event) => handleDrop(doc , files, event)" >
-        </DropzoneContainer>
+    <DropzoneContainer class="backgroundDrop" :doc="doc" />
         <Table
             v-if="tableData"
             v-loading="loading"
@@ -24,7 +23,7 @@
                             <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" status="general"/>
                         </div>
                         <div class="label">{{row.name}}</div>
-                        <DropzoneContainer v-if="row.isFolder" class="folderDropzone backgroundDrop" @drop="(files) => handleDrop(row , files)"></DropzoneContainer>
+                        <DropzoneContainer v-if="row.isFolder" :doc="row" class="folderDropzone backgroundDrop"></DropzoneContainer>
                         
                     </div>
                 </template>
@@ -180,12 +179,6 @@ function handleSelect (rows:any) {
     emit('select-change', rows)
 }
 
-// #region module: drag-upload
-    
-    function handleDrop (doc: any, files: any, event:any) {
-        console.log(event, 'handleDropssss');
-    }
-// #endregion
 onMounted(() => {
 })
 
