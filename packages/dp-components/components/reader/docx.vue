@@ -1,5 +1,5 @@
 <template>
-<div class="docxContainer">
+<div class="docxContainer" :loading="props.loading">
      <div class="docxMain" ref="refWord" />
 </div>
 </template>
@@ -18,8 +18,6 @@ const state = reactive({
 })
 const refWord = ref()
 watch(() => props.blob, async(newBlob) => {
-    console.log(newBlob, 'ddddddddddddddddddddddddddddddddddd');
-    
    const options = {
         className: 'docx', // 默认和文档样式类的类名/前缀
         inWrapper: true, //  启用围绕文档内容渲染包装器
@@ -36,8 +34,6 @@ watch(() => props.blob, async(newBlob) => {
         showChanges: false // 启用文档更改（插入/删除）的实验性呈现
     }
     setTimeout(() => {
-
-        console.log(refWord.value);
         renderAsync(newBlob , refWord.value)
     })
     
