@@ -56,12 +56,17 @@ function handleOpen(setting) {
     state.visible = true
     if(setting && setting.isEdit) {
         state.setting = setting
+        
         setTimeout(async () => {
             const data = {
                 binds: revertUserGroup(setting.binds),
                 label: setting.label,
+                documentType: setting.documentType,
+                multiple: setting.multiple,
+                allow: setting.allow,
                 isEdit: true
             }
+            
             await FromRendererRef.value.vFormRenderRef.setFormData(data)
         })
     }
