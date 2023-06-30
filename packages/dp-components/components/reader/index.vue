@@ -1,9 +1,13 @@
 <template>
+
     <template v-if="!state.url" >
         <div v-if="id">{{$t('fileNoExist')}}</div>
     </template>
     <template v-else-if="state.fileType === 'application/pdf' && state.url" >
         <ReaderPdf v-bind="props" :no-annotation="!!annotations" ></ReaderPdf>
+    </template>
+    <template v-else-if="state.fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
+        <ReaderDocx v-bind="props"></ReaderDocx>
     </template>
     <template v-else-if="state.fileType === 'image/tiff' && state.url" >
         <ReaderTiff v-bind="props" ></ReaderTiff>
@@ -25,6 +29,7 @@
     </el-image>
     <template v-else-if="state.fileType">
         <h2 class="noSupportContainer">
+            4444
             {{ $t('msg_thisFormatFileIsNotSupported') }}
         </h2>
         
@@ -57,6 +62,10 @@ function handleDownload() {
     downloadBlob(props.blob, props.name, props.blob.type)
 }
 watch(() => props.blob, (newBlob:Blob) => {
+    console.log('ssssssssssssssssss');
+    
+    console.log({newBlob}, 'sssssssssssssssssssssssssssssssss');
+    
     if( !newBlob ) return
     state.fileType = newBlob.type
     

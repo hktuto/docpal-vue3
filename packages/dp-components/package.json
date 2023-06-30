@@ -17,6 +17,7 @@
     "animejs": "^3.2.1",
     "bpmn-js": "^9.4.1",
     "dayjs": "^1.11.7",
+    "docx-preview": "^0.1.16",
     "dp-api": "workspace:1.0.0",
     "interactjs": "^1.10.17",
     "mime-types": "^2.1.35",
