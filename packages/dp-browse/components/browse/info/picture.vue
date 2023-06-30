@@ -31,14 +31,17 @@ const pictureViews = computed(() => {
           if(!props.doc?.properties || !props.doc.properties['picture:views']) return [];
           return props.doc.properties['picture:views'].filter(item => item.tag === 'custom')
         case 'Video' :
+          console.log("Video", props.doc.properties['vid:transcodedVideos']);
           if(!props.doc.properties['vid:transcodedVideos'] || props.doc.properties['vid:transcodedVideos'].length === 0) return [];
-          return props.doc.properties['vid:transcodedVideos'].map(item => ({
+          const list = props.doc.properties['vid:transcodedVideos'].map(item => ({
               ...item.content,
               width: item.info.width,
               height: item.info.height,
               filename: item.name,
               format: item.info.format,
           }));
+          console.log("list", list)
+          return list;
         default:
           return []
         }
@@ -47,11 +50,11 @@ const pictureViews = computed(() => {
 function formatter (row, column) {
       switch(column.property) {
         case "fileSize": 
-          return fileSizeFilter(row.content.length)
+          return fileSizeFilter(row.length || row.content.length)
         case 'width*height':
-          return `${row.width} x ${row.height}`
+          return row.width && row.height ?`${row.width} x ${row.height}` : "NA"
         case 'fileFormat':
-          return row.info.format
+          return row.format || row.info.format
       }
     }
 
@@ -70,7 +73,7 @@ function fileSizeFilter (bytes) {
       const { externalEndpoint } = useSetting();
       let origin = externalEndpoint?.value?.docpal
       origin = origin.includes('http') ? origin : 'https://' + origin
-      const a = row.content.data
+      const a = row.data || row.content.data
       const url = a.replace(/(http(s)?:\/\/).*?(?=\/)/, origin)
       downloadUrl(url, row.filename)
     }
