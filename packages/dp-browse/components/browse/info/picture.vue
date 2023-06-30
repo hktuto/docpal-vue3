@@ -26,10 +26,22 @@ const props = defineProps<{doc: any}>();
 
 const { displayTime } = useTime()
 const pictureViews = computed(() => {
-    if (props.doc?.properties && props.doc.properties['picture:views']) {
-    return props.doc.properties['picture:views'].filter(item => item.tag === 'custom')
-    }
-    return []
+    switch(props.doc.type) {
+        case 'Picture' :
+          if(!props.doc?.properties || !props.doc.properties['picture:views']) return [];
+          return props.doc.properties['picture:views'].filter(item => item.tag === 'custom')
+        case 'Video' :
+          if(!props.doc.properties['vid:transcodedVideos'] || props.doc.properties['vid:transcodedVideos'].length === 0) return [];
+          return props.doc.properties['vid:transcodedVideos'].map(item => ({
+              ...item.content,
+              width: item.info.width,
+              height: item.info.height,
+              filename: item.name,
+              format: item.info.format,
+          }));
+        default:
+          return []
+        }
 })
 
 function formatter (row, column) {
