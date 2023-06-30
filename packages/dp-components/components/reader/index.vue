@@ -29,10 +29,8 @@
     </el-image>
     <template v-else-if="state.fileType">
         <h2 class="noSupportContainer">
-            4444
             {{ $t('msg_thisFormatFileIsNotSupported') }}
         </h2>
-        
     </template>
 </template>
 
@@ -62,10 +60,6 @@ function handleDownload() {
     downloadBlob(props.blob, props.name, props.blob.type)
 }
 watch(() => props.blob, (newBlob:Blob) => {
-    console.log('ssssssssssssssssss');
-    
-    console.log({newBlob}, 'sssssssssssssssssssssssssssssssss');
-    
     if( !newBlob ) return
     state.fileType = newBlob.type
     
