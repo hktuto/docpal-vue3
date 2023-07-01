@@ -5,7 +5,7 @@
             :key="item.name"
             :class="{
                 menu__item: true,
-                selected: $route.fullPath.includes(item.url),
+                selected: isCurrentPath(item),
                 icon:!opened,
                 opened
             }"
@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 // import InlineSvg from 'vue-inline-svg';
-
+const route = useRoute();
 const props = withDefaults(defineProps<{
     opened: boolean
 }>(),{
@@ -32,6 +32,10 @@ const props = withDefaults(defineProps<{
 //#region Set Menu
 const { menu, feature } = useAppConfig();
 const {user} = useUser();
+
+function isCurrentPath(menuItem: any) {
+    return route.name.includes(menuItem.routeName)
+}
 /**
  * filter Menu to difference role
  */
