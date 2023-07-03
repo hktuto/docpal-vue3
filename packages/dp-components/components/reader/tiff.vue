@@ -29,7 +29,7 @@ function blobToArrayBuffer(blob) {
         reader.readAsArrayBuffer(blob);
     });
 }
-function getUrl() {
+function getUrl(data) {
     state.interval = setInterval(() => {
         if(!!Tiff) {
             clearInterval(state.interval)
@@ -40,7 +40,7 @@ function getUrl() {
 }
 watch(() => props.blob, async(newBlob) => {
     const data = await blobToArrayBuffer(newBlob)
-    getUrl()
+    getUrl(data)
 }, {
     immediate: true
 })
