@@ -522,7 +522,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FOLDER_CABINET]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '1', label: 'tableHeader_name', prop: 'label' },
             { id: '2', label: 'tableHeader_modifiedDate', prop: 'modifiedDate',
                 formatList: [
                     {
