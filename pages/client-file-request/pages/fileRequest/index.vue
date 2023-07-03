@@ -24,8 +24,8 @@ const { t } = useI18n();
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            showPagination: true, 
+        options: {
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -52,15 +52,15 @@ const { t } = useI18n();
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageIndex + 1
         } catch (error) {
-            
+
         }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { page, pageSize, time } 
+        router.push({
+            query: { page, pageSize, time }
         })
     }
 
@@ -85,4 +85,9 @@ function handleDblclick (row) {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
+  height: 100%;
+}
 </style>

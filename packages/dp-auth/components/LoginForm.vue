@@ -1,18 +1,18 @@
 <template>
     <div class="fromContainer card glass">
         <Logo class="logo" mode="withName"/>
-        <ElForm 
+        <ElForm
             :model="form"
             :rules="rules"
             label-position="top">
             <ElFormItem label="username" :rules="rules.username">
                 <ElInput
-                    ref="usernameEl" 
-                    v-model="form.username" 
+                    ref="usernameEl"
+                    v-model="form.username"
                     type="text" />
             </ElFormItem>
             <ElFormItem label="password" :rules="rules.password">
-                <ElInput 
+                <ElInput
                     v-model="form.password"
                     type="password"
                     @keyup.enter.native="submit"
@@ -25,7 +25,7 @@
         <el-button v-if="showForgetPassword" @click="userStore.forgetPassword" link>
             {{ $t('login_forgetPassword') }}
         </el-button>
-       
+
     </div>
 </template>
 
@@ -59,7 +59,6 @@ async function submit() {
     } catch (error) {
         form.username = "";
         form.password = "";
-        dpLog(error);
     }
     loading.value = false;
 }

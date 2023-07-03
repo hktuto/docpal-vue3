@@ -1,5 +1,5 @@
 export * from './user';
-export * from './documents'
+export * from './duplicateDetectionApi'
 export * from './setting'
 export * from './search'
 export * from './workflow'
@@ -11,6 +11,8 @@ export * from './watermark'
 export * from './language'
 export * from './folder-cabinet'
 
+export * from './ocrAPi'
+
 export * from './admin-acl'
 export * from './admin-meta'
 export * from './admin-workflow'
@@ -20,4 +22,5 @@ export * from './admin-message-queue'
 export * from './admin-audit'
 export * from './admin-dam'
 export * from './admin-mail'
+export * from './admin-virtual-folder'
 

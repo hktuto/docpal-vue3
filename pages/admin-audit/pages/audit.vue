@@ -18,9 +18,11 @@
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { 
-    GetAuditEventApi, 
+import {
+    GetAuditEventApi,
     getJsonApi, TABLE, defaultTableSetting, deepCopy } from 'dp-api'
+
+const { externalEndpoint } = useSetting()
 // #region module: page
     const route = useRoute()
     const router = useRouter()
@@ -31,8 +33,8 @@ import {
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            showPagination: true, 
+        options: {
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -61,8 +63,8 @@ import {
         if(!pageSize) pageSize = pageParams.pageSize
         if(!page && page !== 0) page = pageParams.pageNum + 1
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { page, pageSize, time } 
+        router.push({
+            query: { page, pageSize, time }
         })
     }
 
@@ -111,15 +113,19 @@ function handleDblclick (row) {
 }
 
 function goClientPath (path) {
-    const p = (window.location.origin).replace('admin.', '');
-    window.open(p + '/file/browse?path=' + path, '_blank');
+    window.open('https://' + externalEndpoint.value.docpal + '/browse?path=' + path, '_blank');
 }
 onMounted(async() => {
-    
+
 })
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 :deep(.el-form-item--default) {
     margin-bottom: unset;
 }

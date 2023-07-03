@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts" setup>
-import { 
-    GetCabinetListApi, 
+import {
+    GetCabinetListApi,
     DeleteCabinetTemplateApi,
     defaultTableSetting, TABLE
 } from 'dp-api'
@@ -72,6 +72,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  overflow: auto;
+  padding: calc( var(--app-padding) * 2);
+}
 main {
     width: 100%;
     height: 100%;

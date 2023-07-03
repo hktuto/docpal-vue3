@@ -22,15 +22,13 @@
                 <BrowseInfoPreview :doc="detail"  />
             </div>
             <BrowseInfoDocInfo :doc="detail" :permission="permission" @update="docUpdated"/>
-<!--     move info picture to it own tag or download tag       -->
-
-            
-           
-<!--            -->
         </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
         <BrowseInfoActivities v-if="currentTab === 'activities'" :doc="detail" />
+    </el-tab-pane>
+    <el-tab-pane :label="$t('rightDetail_ocr')" name="ocr">
+        <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_comments')" name="comments">
         <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" />
@@ -147,10 +145,11 @@ watch(doc, async() => {
     user-select: none;
     -ms-touch-action: none;
     touch-action: none;
-    overflow: hidden;
+    overflow: auto;
     display: grid;
     grid-template-rows: min-content 1fr;
     border-radius: 12px;
+    position: relative;
     &.infoOpened{
         padding:0;
     }

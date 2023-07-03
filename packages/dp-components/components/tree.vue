@@ -41,15 +41,19 @@ const state = ref({
 
 })
 const _options = computed(() => {
-  const qPath = route.query.logicPath
+  const qPath = route.query.path
   let defaultExpandedKeys = []
   if(props.options && props.options.defaultExpandedKeys) {
     defaultExpandedKeys.push([...props.options.defaultExpandedKeys])
   }
   if(!!qPath) {
     const qPaths = qPath.split('/').reduce((prev, key, index) => {
-      if(index === 0) prev.push(key)
-      else prev.push(prev[index - 1] + '/' + key)
+      if(index === 0) prev.push('/')
+      else {
+        let _key = prev[index - 1] + key
+        if(index !== qPath.length - 1) _key += '/'
+        prev.push(_key)
+      }
       return prev
     }, [])
     dpLog({qPaths});
@@ -59,7 +63,7 @@ const _options = computed(() => {
   
   return {
     highlightCurrent: true,
-    nodeKey: 'logicPath',
+    nodeKey: 'path',
     icon: ArrowRight,
     ...props.options,
     defaultExpandedKeys
@@ -87,7 +91,6 @@ const router = useRouter()
       if (node.level === 0) {
         if (props.rootDataGetApi) {
           const res = await props.rootDataGetApi();//获取顶级节点数据
-          res.forEach(item => item.logicPath = item.name)
           resolve(res)
           emits('rootLoadFinish', res[0])
         } else {
@@ -99,9 +102,8 @@ const router = useRouter()
         getMore(node)
       } else {
         const res = await getLoadMoreData(node.data)
-        res.forEach(item => item.logicPath = node.data.logicPath + '/' + item.name)
         node.data.children = res
-        if(node.data.logicPath === route.query.logicPath) {
+        if(node.data.path === route.query.path) {
           emits('loadFinish', node.data);
         }
         resolve(res)
@@ -114,23 +116,24 @@ const router = useRouter()
       pageNumber: props.options?.pageNumber || 0,
       pageSize: props.options?.pageSize || 10
     }
-    pageParams.idOrPath = data.path
+    pageParams.idOrPath = data.path === 'Root' ? '/' : data.path.replace('Root', '') 
     const docsPage = await props.leafDataGetApi(pageParams)
-    if (docsPage.entryList) docsPage.entryList.push(...handleGetMoreNode(docsPage.entryList, { ...pageParams }, data.logicPath))
+    if (docsPage.entryList) docsPage.entryList.push(...handleGetMoreNode(docsPage.entryList, { ...pageParams }, data.path))
     else docsPage.entryList = [...docsPage]
     return docsPage.entryList
   }
   // #region module: getMore button node
-    function handleGetMoreNode (list, pageParams, logicPath?: string ) {
-      const parentLogicPath = getParentLogicPath(logicPath)
-      treeRef.value.remove({logicPath: `${parentLogicPath}/getMoreNode`}) 
+    function handleGetMoreNode (list, pageParams, path?: string ) {
+      const parentpath = path
+      console.log({parentpath});
+      
+      treeRef.value.remove({path: `${parentpath}/getMoreNode`}) 
       const result = []
       if (list.length === pageParams.pageSize) {
         pageParams.pageNumber++
         result.push({
           name: 'getMoreNode',
-          path: `${parentLogicPath}/getMoreNode`,
-          logicPath: `${parentLogicPath}/getMoreNode`,
+          path: `${parentpath}/getMoreNode`,
           isGetMore: true,
           params: pageParams,
           loading: false,
@@ -139,7 +142,7 @@ const router = useRouter()
       }
       return result
     }
-    function getParentLogicPath (path: string) {
+    function getParentpath (path: string) {
       const pList = path.split('/')
       pList.pop()
       return pList.join('/')
@@ -149,13 +152,12 @@ const router = useRouter()
       node.data.loading = true
       try {
         const docsPage = await props.leafDataGetApi(node.data.params)
-        docsPage.entryList.push(...handleGetMoreNode(docsPage.entryList, node.data.params, node.data.logicPath))
-        const parentLogicPath = getParentLogicPath(node.data.logicPath)
-        
+        const pPath = getParentpath(node.data.path)
+        docsPage.entryList.push(...handleGetMoreNode(docsPage.entryList, node.data.params, pPath))
+        const parentpath = getParentpath(node.data.path)
         docsPage.entryList.forEach(docItem => {
-          docItem.logicPath = parentLogicPath + '/' + docItem.name
-          if (parentLogicPath !== 'Root') {
-            treeRef.value.append(docItem, parentLogicPath)
+          if (parentpath !== 'Root') {
+            treeRef.value.append(docItem, parentpath)
           }
           // @ts-ignore
           else treeRef.value.append(docItem, treeRef.value.root)
@@ -168,13 +170,15 @@ const router = useRouter()
   // #endregion
 // #endregion
 function handleNodeClick (data, node?, nodeComponent?) {
+  console.log({data});
+  
   if (node.data.isGetMore) {
     getMore(node)
     return
   }
   router.push({
     query: {
-      logicPath: data.logicPath
+      path: data.path
     }
   })
   treeRef.value.setCurrentKey(data[_options.value.nodeKey])

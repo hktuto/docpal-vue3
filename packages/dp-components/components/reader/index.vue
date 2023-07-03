@@ -1,9 +1,16 @@
 <template>
+
     <template v-if="!state.url" >
         <div v-if="id">{{$t('fileNoExist')}}</div>
     </template>
     <template v-else-if="state.fileType === 'application/pdf' && state.url" >
         <ReaderPdf v-bind="props" :no-annotation="!!annotations" ></ReaderPdf>
+    </template>
+    <template v-else-if="state.fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
+        <ReaderDocx v-bind="props"></ReaderDocx>
+    </template>
+    <template v-else-if="state.fileType === 'image/tiff' && state.url" >
+        <ReaderTiff v-bind="props" ></ReaderTiff>
     </template>
     <audio v-else-if="state.fileType === 'audio/mpeg'" controls>
         <source :src="state.url" :type="state.fileType" />
@@ -55,7 +62,6 @@ function handleDownload() {
 watch(() => props.blob, (newBlob:Blob) => {
     if( !newBlob ) return
     state.fileType = newBlob.type
-    console.log(state.fileType);
     
     const urlCreator = window.URL || window.webkitURL
     state.url = urlCreator.createObjectURL(newBlob)

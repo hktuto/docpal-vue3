@@ -41,7 +41,7 @@ const readerType = computed(() => {
     if(!mineType) return "pdf"; // set to pdf for testing
     console.log({mineType}, 'mineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineTypemineType');
     
-    if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text')  ) {
+    if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text') || mineType.includes('photoshop') || mineType.includes('psd') || mineType.includes('illustrator')  ) {
         return 'pdf';
     }
     else if(mineType.includes('video')) {

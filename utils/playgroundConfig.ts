@@ -28,9 +28,7 @@ type RuntimeOption = {
 
 
 const makeConfig = (options:RuntimeOption) => {
-    defaultConfig.plugins.push({
-      src:'../../../utils/formDesignerPlugin', mode: 'client'
-    })
+   
   return defaultConfig
 }
 export default makeConfig

@@ -4,7 +4,7 @@ export default defineAppConfig({
   menu:[
     {
       name:"admin_watermark",
-      routeName:"vocabularyManage",
+      routeName:"watermark",
       url:"/watermark",
       icon: "/icons/menu/watermark.svg",
       order:1,

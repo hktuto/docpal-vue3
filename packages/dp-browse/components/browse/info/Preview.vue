@@ -18,6 +18,10 @@ async function getPreview(){
   }
 }
 
+function imgError(event) {
+  event.target.src = '/icons/file-general.svg'
+}
+
 watch(() => props.doc, () => {
   getPreview()
 }, {immediate: true})
@@ -25,7 +29,7 @@ watch(() => props.doc, () => {
 
 <template>
   <div class="previewContainer">
-    <img v-if="previewUrl"  :src="previewUrl" />
+    <img v-if="previewUrl"  :src="previewUrl" @error="imgError" />
   </div>
 </template>
 

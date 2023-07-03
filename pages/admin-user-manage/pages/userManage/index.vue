@@ -18,7 +18,7 @@
                 <template #header>
                     <div class="card-header">
                         <span>{{$t('user_groups')}}</span>
-                        <el-button class="button" type="primary" 
+                        <el-button class="button" type="primary"
                             @click="handleGroupDialogShow()">{{$t('user_newGroup')}}</el-button>
                     </div>
                     <KeywordFilter :list="state.groupList" attr="name"
@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 // import { getLoggersApi, setLoggersApi } from 'dp-api/src/endpoint/admin-log'
-import { 
+import {
     getUserListApi,
     GetGroupListApi,
     TABLE, defaultTableSetting
@@ -89,7 +89,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
-
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 .main {
     height: 100%;
     display: grid;

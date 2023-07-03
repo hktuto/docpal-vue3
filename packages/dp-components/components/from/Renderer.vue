@@ -70,7 +70,7 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
         ReaderRef.value.handleOpen()
         previewFile.loading = true
         try {
-            const fileId = fileInfo.response && fileInfo.response.length > 0 ? fileInfo.response[0].contentId : fileInfo.id
+            const fileId = fileInfo.response?.data && fileInfo.response.data.length > 0 ? fileInfo.response.data[0].contentId : fileInfo.id
             try {
                 previewFile.blob = await WorkflowAttachmentDownloadApi(fileId)
             } catch (error) {

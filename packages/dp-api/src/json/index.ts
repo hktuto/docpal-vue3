@@ -5,6 +5,7 @@ export function getFormJsonListApi () {
         prev[name] = jsonModules[key].default
         return prev
     }, {})
+    console.log(data);
     return data
 }
 export const formJsonList: any = getFormJsonListApi()

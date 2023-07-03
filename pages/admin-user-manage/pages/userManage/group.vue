@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { 
+import {
     GetGroupListApi,
     DeleteGroupApi,
     TABLE, defaultTableSetting
@@ -95,8 +95,8 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+
 .userDetailSection{
-  padding: 0 1rem 1rem 1rem;
   display : grid;
   grid-template-columns: minmax(min-content, 220px) 1fr minmax(min-content, 350px);
   grid-template-rows: min-content 1fr;

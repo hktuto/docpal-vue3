@@ -37,7 +37,7 @@
 
 <script lang="ts" setup>
 import { ElNotification, ElMessage } from 'element-plus'
-import { 
+import {
     GetVocabularyIdsApi,
     GetVocabularyApi,
     DeleteVocabularyApi,
@@ -100,7 +100,7 @@ async function handleSubmit () {
         res.forEach((item, index) => {
             if (item.state) successList.push(item.id)
             else failList.push(item.id)
-        
+
         })
         await getVocabularyDetail({id: state.curVocabulary.id})
         if (successList.length === pList.length) ElMessage.success($i18n.t('dpMsg_success') as string)
@@ -136,7 +136,7 @@ function handleUserFilter(data) {
             if (row.exist) await DeleteVocabularyApi(state.curVocabulary.id, row)
             await getVocabularyDetail({id: state.curVocabulary.id})
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -147,6 +147,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 .section {
     overflow: hidden;
     height: 100%;
@@ -178,5 +183,5 @@ onMounted(async() => {
         grid-template-rows: min-content 1fr;
         overflow: hidden;
     }
-}   
+}
 </style>

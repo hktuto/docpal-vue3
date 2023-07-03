@@ -4,7 +4,7 @@ export default defineAppConfig({
   menu:[
     {
       name:"admin_audit",
-      routeName:"adminAudit",
+      routeName:"audit",
       url:"/audit",
       icon: "/icons/menu/audit.svg",
       order:2,
