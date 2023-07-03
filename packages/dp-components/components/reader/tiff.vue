@@ -15,7 +15,8 @@ const props = defineProps<{
     loading: Boolean
 }>();
 const state = reactive({
-    imgUrl: ''
+    imgUrl: '',
+    interval: null
 })
 const tiffRef = ref()
 function blobToArrayBuffer(blob) {
@@ -28,14 +29,18 @@ function blobToArrayBuffer(blob) {
         reader.readAsArrayBuffer(blob);
     });
 }
+function getUrl() {
+    state.interval = setInterval(() => {
+        if(!!Tiff) {
+            clearInterval(state.interval)
+            let url = new Tiff({buffer: data});
+            state.imgUrl = url.toDataURL();
+        }
+    }, 200)
+}
 watch(() => props.blob, async(newBlob) => {
     const data = await blobToArrayBuffer(newBlob)
-    setTimeout(() => {
-        console.log(Tiff);
-        console.log('Tiff');
-        let url = new Tiff({buffer: data});
-        state.imgUrl = url.toDataURL();
-    })
+    getUrl()
 }, {
     immediate: true
 })
