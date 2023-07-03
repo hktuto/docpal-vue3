@@ -33,13 +33,8 @@ function blobToArrayBuffer(blob) {
 
 watch(() => props.blob, async(newBlob) => {
     const data = await blobToArrayBuffer(newBlob)
-    setTimeout(() => {
-        
-        let url = new Tiff({buffer: data});
-        console.log({url});
-        
-        state.imgUrl = url.toDataURL();
-    })
+    let url = new Tiff({buffer: data});
+    state.imgUrl = url.toDataURL();
 }, {
     immediate: true
 })
