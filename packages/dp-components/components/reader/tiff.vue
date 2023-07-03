@@ -29,18 +29,17 @@ function blobToArrayBuffer(blob) {
         reader.readAsArrayBuffer(blob);
     });
 }
-function getUrl(data) {
-    state.interval = setInterval(() => {
-        if(!!Tiff) {
-            clearInterval(state.interval)
-            let url = new Tiff({buffer: data});
-            state.imgUrl = url.toDataURL();
-        }
-    }, 200)
-}
+
 watch(() => props.blob, async(newBlob) => {
     const data = await blobToArrayBuffer(newBlob)
-    getUrl(data)
+    setTimeout(() => {
+        console.log(window);
+        
+        let url = new Tiff({buffer: data});
+        console.log({url});
+        
+        state.imgUrl = url.toDataURL();
+    }, 1000)
 }, {
     immediate: true
 })
