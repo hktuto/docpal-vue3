@@ -35,7 +35,7 @@ import { storeToRefs } from 'pinia'
 const props = defineProps<{
     drawerOpen: boolean
 }>();
-const { uploadState } =storeToRefs(useUploadStore()) 
+const { uploadState }  = useUploadStore()
 function getType(status) {
     switch(status){
         case 'finish':
