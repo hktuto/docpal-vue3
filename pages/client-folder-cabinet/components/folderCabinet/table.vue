@@ -14,7 +14,7 @@
 
 
 <script lang="ts" setup>
-import { GetCabinetSubDocumentsApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { GetCabinetPageApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const emit = defineEmits(['db-row-click']);
 const userId:string = useUser().getUserId()
 // #region module: page
@@ -44,7 +44,7 @@ const userId:string = useUser().getUserId()
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetCabinetSubDocumentsApi({...param, ...state.extraParams})
+            const res = await GetCabinetPageApi({...param, ...state.extraParams})
             
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
@@ -69,7 +69,7 @@ const userId:string = useUser().getUserId()
             const { page, pageSize } = newval
             pageParams.pageNum = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-            pageParams.id = route.query.tab
+            pageParams.templateId = route.query.tab
             getList(pageParams)
         },
         { immediate: true }

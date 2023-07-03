@@ -24,7 +24,10 @@ export const GetCabinetListApi = async() => {
     const res = await api.get('/docpal/cabinet/list').then(res => res.data.data)
     return res
 }
-
+export const MatchingTemplateApi = async(id: string) => {
+    const res = await api.post('/docpal/cabinet/verification/complete', {id}).then(res => res.data.data)
+    return res
+}
 export const GetCabinetTemplateApi = async(id: string) => {
     const res = await api.get(`/docpal/cabinet/template/${id}`).then(res => res.data.data)
     return res

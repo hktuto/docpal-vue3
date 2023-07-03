@@ -7,7 +7,7 @@
 
 
 <script lang="ts" setup>
-import { GetCabinetResultApi, GetCabinetTemplateApi } from 'dp-api'
+import { GetCabinetResultApi, MatchingTemplateApi } from 'dp-api'
 const route = useRoute()
 const state = reactive({
     id: '',
@@ -23,9 +23,12 @@ const state = reactive({
 async function init (docId, templateId) {
     console.log({docId}, 'ini');
     // await GetCabinetResultApi(id)
-    state.treeData = await GetCabinetTemplateApi(templateId)
-    await GetChild(docId)
-    // await GetCabinetTemplateApi(templateId)
+    const data = await MatchingTemplateApi(docId)
+    state.treeData = data.children
+    console.log(state.treeData);
+    
+    // await GetChild(docId)
+    // await MatchingTemplateApi(templateId)
 }
 watch(() => route.query, (q) => {
     if (q.id) {
@@ -33,7 +36,7 @@ watch(() => route.query, (q) => {
         init(state.id, q.tab)
     }
 }, { immediate: true })
-defineExpose({ init })
+// defineExpose({ init })
 </script>
 
 <style lang="scss" scoped>

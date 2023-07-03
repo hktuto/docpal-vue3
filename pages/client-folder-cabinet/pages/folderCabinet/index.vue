@@ -1,5 +1,8 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
+    <div class="buttons--absolute">
+        <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
+    </div>
     <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
         <template v-for="item in state.tabList" :key="item.id">
             <el-tab-pane  
@@ -10,13 +13,12 @@
                             <el-button style="margin-bottom: 10px;" @click="handleNewItem(item)">{{$t('folderCabinet.newItem')}}</el-button>
                         </template>
                     </FolderCabinetTable>
-                    <FolderCabinetTemplateMatchingResult />
+                    <FolderCabinetMatchingResult ref="MatchingResultRef"/>
                 </template>
             </el-tab-pane>
         </template>
-        
     </el-tabs>
-    <FolderCabinetNewItemDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
+    <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
 </NuxtLayout>
 </template>
 
@@ -29,7 +31,8 @@ const state = reactive({
     loading: false,
     activeTab: '',
     loading: false,
-    tabList: []
+    tabList: [],
+    uploadList: []
 })
 const { activeTab } = toRefs(state)
 function tabChange (tab) {
@@ -38,24 +41,33 @@ function tabChange (tab) {
 }
 const FolderCabinetNewItemDialogRef = ref()
 function handleNewItem (activeSetting) {
-    // const activeSetting = state.tabList.find(item => item.id === state.activeTab)
     FolderCabinetNewItemDialogRef.value.handleOpen(activeSetting)
 }
+const MatchingResultRef = ref()
 function handleRowClick (row) {
     router.push({query: { ...route.query, id: row.id }})
 }
-async function getData() {
-    state.loading = true
-    try {
-        state.tabList = await GetCabinetLoginUserListApi()
-    } catch (error) {
-        
+
+// #region module: init
+    async function getData() {
+        state.loading = true
+        try {
+            state.tabList = await GetCabinetLoginUserListApi()
+        } catch (error) {
+        }
+        state.loading = false
     }
-    state.loading = false
-}
-watch(() => route.query, (q) => {
-    if (q.tab) state.activeTab = q.tab
-}, { immediate: true })
+    watch(() => route.query, (q) => {
+        if (q.tab) state.activeTab = q.tab
+    }, { immediate: true })
+// #endregion
+
+// #region module: uploadList
+    function uploadListAdd(detail) {
+        console.log({detail});
+    }
+    provide('uploadListAdd', uploadListAdd)
+// #endregion
 onMounted(async() => {
     await getData()
     if (!state.activeTab && state.tabList.length > 0) state.activeTab = state.tabList[0].id

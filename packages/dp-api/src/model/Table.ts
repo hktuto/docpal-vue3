@@ -527,7 +527,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FOLDER_CABINET]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '1', label: 'tableHeader_name', prop: 'label' },
             { id: '2', label: 'tableHeader_modifiedDate', prop: 'modifiedDate',
                 formatList: [
                     {
@@ -542,7 +542,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             { id: '3', label: 'role.creator', prop: 'createdBy' },
-            { id: '4', label: 'tableHeader_type', prop: 'type' }
+            { id: '4', label: 'tableHeader_type', prop: 'documentType' }
         ],
         events: [],
         options: { pageSize: 20 }
