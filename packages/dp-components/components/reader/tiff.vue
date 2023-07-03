@@ -6,7 +6,8 @@
 </template>
 
 <script lang="ts" setup>
-import Tiff from 'tiff.js'
+import { TiffV } from '../../stores/tiff.min.js'
+TiffV()
 const props = defineProps<{
     annotations: Map<string,any>,
     blob: Blob,
@@ -29,18 +30,16 @@ function blobToArrayBuffer(blob) {
         reader.readAsArrayBuffer(blob);
     });
 }
-function getUrl(data) {
-    state.interval = setInterval(() => {
-        if(!!Tiff) {
-            clearInterval(state.interval)
-            let url = new Tiff({buffer: data});
-            state.imgUrl = url.toDataURL();
-        }
-    }, 200)
-}
+
 watch(() => props.blob, async(newBlob) => {
     const data = await blobToArrayBuffer(newBlob)
-    getUrl(data)
+    setTimeout(() => {
+        
+        let url = new Tiff({buffer: data});
+        console.log({url});
+        
+        state.imgUrl = url.toDataURL();
+    })
 }, {
     immediate: true
 })
