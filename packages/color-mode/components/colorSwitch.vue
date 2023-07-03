@@ -1,5 +1,6 @@
 <template>
     <div class="colorSwitchContainer">
+
         <ElIcon @click="toggleColor">
             <Sunny v-if="colorMode.value === 'light'" />
             <Moon v-else />

@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state._tableData"
+        <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state._tableData"
                 @row-dblclick="handleDblclick">
             <template #preSortButton>
                 <div class="filter-container">
@@ -42,7 +42,7 @@ import { GetMetaSettingList, TABLE, defaultTableSetting, deepCopy } from 'dp-api
             state.tableData = await GetMetaSettingList()
             state._tableData = deepCopy(state.tableData)
         } catch (error) {
-            
+            console.error(error)
         }
         state.loading = false
     }
@@ -67,6 +67,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 .button-add {
     margin: 0 0 var(--app-padding) 0;
 }

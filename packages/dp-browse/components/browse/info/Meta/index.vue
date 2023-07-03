@@ -43,11 +43,11 @@
 
 
 
-    async function itemUpdate(metaData:object) {
+    async function itemUpdate({key, value}:any) {
       await patchDocumentApi({
         idOrPath: doc.value.id,
         name: doc.value.name,
-        properties: {...metaData},
+        properties: {[key] : value},
       })
       emit('update')
       updateDisplayMeta()

@@ -173,7 +173,11 @@ async function revertData (profile) {
     state.profileID = profile.profileID
     formData.profileName = profile.profileName
     try {
-        formData.rootPath = await GetBreadcrumb(profile.rootPath)
+        const data = await GetBreadcrumb(profile.rootPath)
+        formData.rootPath = data.reduce((prev, item) => {
+            prev.push(item.path)
+            return prev
+        }, [])
     } catch (error) {
         formData.rootPath = [profile.rootPath]
     }

@@ -9,7 +9,7 @@
                     <div>
                         <el-button :disabled="!state.selectedRows || state.selectedRows.length === 0" type="danger" @click="handleDeleteSelected"> {{$t('deleteSelected')}} </el-button>
                     </div>
-                </template> 
+                </template>
         </Table>
         <ReallocateDialog ref="ReallocateDialogRef" @submit="handleSubmit"></ReallocateDialog>
     </NuxtLayout>
@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
-import { 
+import {
     getAllTask, DeleteWorkflowProcessApi, taskClaimApi, taskUnClaimApi,
     TABLE, defaultTableSetting } from 'dp-api'
 // #region module: page
@@ -33,9 +33,9 @@ import {
         loading: false,
         tableData: [],
         selectedRows: [],
-        options: { 
-            multiSelect: true, 
-            showPagination: true, 
+        options: {
+            multiSelect: true,
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -55,15 +55,15 @@ import {
             state.options.paginationConfig.pageSize = param.size
             state.options.paginationConfig.currentPage = param.page + 1
         } catch (error) {
-            
+
         }
         state.loading = false
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { page, pageSize, time } 
+        router.push({
+            query: { page, pageSize, time }
         })
     }
     function handleAction (command:sting, row: any, rowIndex: number) {
@@ -90,11 +90,11 @@ import {
                 try {
                     const pList = []
                     state.selectedRows.forEach((s) => pList.push(DeleteWorkflowProcessApi({processInstanceId: s.instanceId})))
-                    
+
                     await Promise.all(pList)
                     handlePaginationChange(pageParams.pageIndex - 1, pageParams.pageSize)
                 } catch (error) {
-                    
+
                 }
                 state.loading = false
             })
@@ -124,8 +124,10 @@ function handleDblclick (row) {
 }
 async function handleSubmit (form) {
     if (!form.assignee) return
-    const res = await taskUnClaimApi(form.id)
-    if (!res) return
+    if(form.oldAssignee){
+        const res = await taskUnClaimApi(form.id)
+        if (!res) return
+    }
     const res2 = await taskClaimApi(form.id, form.assignee)
     if (!res2) return
     handlePaginationChange(pageParams.pageIndex, pageParams.pageSize)
@@ -134,4 +136,9 @@ async function handleSubmit (form) {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 </style>

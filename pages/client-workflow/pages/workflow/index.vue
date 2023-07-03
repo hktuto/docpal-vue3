@@ -59,6 +59,11 @@ watch(() => route.query, (q) => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer {
+  padding: calc(var(--app-padding) * 2 );
+  position: relative;
+  height: 100%;
+}
 .grid-layout {
     display: grid;
     grid-template-rows: min-content 1fr;

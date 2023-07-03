@@ -41,7 +41,7 @@ const { t } = useI18n();
         try {
             state.tableData = await getLoggersApi()
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -58,7 +58,7 @@ async function handleLevelChange (level, row) {
         })
         await getList()
     } catch (error) {
-        
+
     }
     row.loading = false
 }
@@ -73,4 +73,9 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  padding: calc( var(--app-padding) * 2);
+  height: 100%;
+  position: relative;
+}
 </style>

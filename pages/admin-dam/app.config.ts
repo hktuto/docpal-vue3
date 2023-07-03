@@ -4,7 +4,7 @@ export default defineAppConfig({
   menu:[
     {
       name:"admin_DAM",
-      routeName:"DAM",
+      routeName:"dam",
       url:"/dam",
       icon: "/icons/menu/dam.svg",
       order:7,

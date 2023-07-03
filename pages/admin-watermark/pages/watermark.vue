@@ -52,6 +52,11 @@ watch(() => route.query.id, (newId) => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+  height: 100%;
+  padding: calc( var(--app-padding) * 2);
+  position: relative;
+}
 .listContainer{
   height: 100%;
   width: 100%;

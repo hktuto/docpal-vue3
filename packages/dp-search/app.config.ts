@@ -6,6 +6,7 @@ export default defineAppConfig({
           url:"/search",
           icon: "/icons/menu/search.svg",
           order:1,
+          condition: 'search'
         }
       ],
 })

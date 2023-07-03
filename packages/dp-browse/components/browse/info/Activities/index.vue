@@ -9,13 +9,16 @@
         <el-timeline-item
           v-for="(activity, index) in activities"
           :key="index"
-          :timestamp="displayTime(activity.logDate)"
+          :timestamp="displayTime(activity.envetDateStr)"
         >
           <div class="timeline">
-            <div class="userOrAction user">{{ activity.username }}</div>
-            <div class="userOrAction action">{{ activity.action }}</div>
+            <div class="userOrAction user">{{ activity.principalName }}</div>
+            <div class="userOrAction action">{{ $t(activity.eventId) }}</div>
           </div>
         </el-timeline-item>
+        <template v-if="activities.length < totalSize">
+          <el-button type="link" @click="loadMore">{{$t('loadMore')}}</el-button>
+        </template>
       </el-timeline>
     </div>
   </div>
@@ -23,23 +26,40 @@
 
 
 <script lang="ts" setup>
-import {getActivitiesApi } from 'dp-api'
+import {getAuditClientApi, AuditClientParams } from 'dp-api'
 import dayjs from 'dayjs'
 const props = defineProps<{doc: any}>();
 const { doc } = toRefs(props);
-const activities = ref([])
+const activities = ref<any[]>([])
 const { displayTime } = useTime()
-const getActivities = async (idOrPath: String) => {
+const params = reactive<AuditClientParams>({
+    pageNum: 0,
+    pageSize: 20,
+    documentId: doc.value.id,
+})
+const totalSize = ref(0);
+const pageNum = ref(0);
+const pageSize = ref(50);
+const canLoadMore = ref(false);
+const loadMore = async() => {
+    pageNum.value += 1;
+    params.pageNum = pageNum.value;
+    await getActivities()
+}
+const getActivities = async () => {
     try {
-    const data = await getActivitiesApi(idOrPath)
-    return data.sort( (a:any,b:any) => {
-            const dateA = dayjs(a.logDate).unix();
-            const dateB = dayjs(b.logDate).unix();
-            return dateB - dateA;
-        })
+    const data = await getAuditClientApi(params)
+    console.log('data', data)
+    totalSize.value = data.totalSize;
+    activities.value.push(...data.entryList);
+    // return data.sort( (a:any,b:any) => {
+    //         const dateA = dayjs(a.logDate).unix();
+    //         const dateB = dayjs(b.logDate).unix();
+    //         return dateB - dateA;
+    //     })
     } catch(error) {
-        dpLog(error)
-    return null
+        console.log(error)
+        return null
     }
 }
 
@@ -47,7 +67,10 @@ watch(
     doc,
     async (val:any) => {
         if (val && val.id) {
-            activities.value = await getActivities(val.id)
+          activities.value = [];
+          pageNum.value = 0;
+          canLoadMore.value = false;
+          await getActivities()
         }
     },
     {

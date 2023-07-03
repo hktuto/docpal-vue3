@@ -30,6 +30,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-directus');
     
     packages.push('../../packages/dp-browse');
+    packages.push('../../packages/dp-search');
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")
     packages.push("../../packages/dp-language")

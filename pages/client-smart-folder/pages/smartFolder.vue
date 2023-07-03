@@ -25,8 +25,8 @@ const pageParams = {
 const state = reactive<State>({
     loading: false,
     tableData: [],
-    options: { 
-        showPagination: true, 
+    options: {
+        showPagination: true,
         paginationConfig: {
             total: 0,
             currentPage: 1,
@@ -41,8 +41,8 @@ const state = reactive<State>({
     function handleTabClick(tab) {
         state.tabName = tab
         const time = new Date().valueOf().toString() + 1
-        router.push({ 
-            query: { tab, page: 1, pageSize: pageParams.pageSize, time } 
+        router.push({
+            query: { tab, page: 1, pageSize: pageParams.pageSize, time }
         })
     }
 // #endregion
@@ -60,26 +60,26 @@ const state = reactive<State>({
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageIndex + 1
         } catch (error) {
-            
+
         }
         state.loading = false
     }
     function getPresetParams (tab) {
         const index = state.sFolderList.findIndex(item => item.id === tab)
         if(index === -1) return
-        const data = JSON.parse(state.sFolderList[index].json_value) 
+        const data = JSON.parse(state.sFolderList[index].json_value)
         const paramsInTextSearch =  data.paramsInTextSearch
-                        ? 
+                        ?
                         data.paramsInTextSearch.split(/ /).filter(s => { return s && s.trim() })
-                        : 
+                        :
                         []
         return { ...data, paramsInTextSearch }
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { tab: state.tabName, page, pageSize, time } 
+        router.push({
+            query: { tab: state.tabName, page, pageSize, time }
         })
     }
     watch(
@@ -116,7 +116,9 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+
 .grid-layout {
+  position: relative;
     display: grid;
     grid-template-rows: min-content 1fr;
     height: 100%;

@@ -1,3 +1,4 @@
+import { pageParams } from './../model/index';
 import {api} from '../';
 import { BreadResponse, DocDetail, GetChildResponse, 
     pageParams, collectionRemoveDocParams, collectionCreateParams,
@@ -268,6 +269,15 @@ export const SearchTagByName = async (keyword) => {
 
 export const getActivitiesApi = async (idOrPath: string) => {
     return await api.post('/nuxeo/document/audit', { idOrPath }).then(res => res.data.data);
+}
+
+export type AuditClientParams = {
+    pageNum: number,
+    pageSize: number,
+    documentId: string,
+}
+export const getAuditClientApi = async (params: AuditClientParams) => {
+    return await api.post('/nuxeo/document/queryAuditEvent', params).then(res => res.data.data);
 }
 
 // #endregion

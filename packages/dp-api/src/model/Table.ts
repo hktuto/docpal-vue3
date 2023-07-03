@@ -106,6 +106,8 @@ export enum TABLE {
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
+
+    PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
     ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
 }
 
@@ -352,6 +354,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },
+            { id: '7', slot: 'docIcon', label: '', "width": 50, },
             { id: '1', label: 'tableHeader_name', prop: 'name' },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
@@ -399,6 +402,9 @@ export const defaultTableSetting: TableColumnSetting = {
             }
         ],
         events: ['delete', 'restored'],
+        slots: [
+            { slot: 'docIcon', label: '' },
+        ],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_COLLECTION] : {
@@ -449,7 +455,6 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             // { id: '4', type: 'selection' },
             { id: '1', slot: 'docName', label: 'table_name', prop: 'name' },
-            { id: '2', label: 'table_name', prop: 'name' },
             { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
@@ -1548,6 +1553,17 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.PUBLIC_LANGUAGE_SET]: {
+        columns: [
+            { id: '1', label: 'key', prop: 'key' },
+            { id: '2', label: 'en-US', prop: 'en-US', slot: 'enUS' },
+            { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zhCN' },
+            { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zhHK' },
+            { id: '5', label: 'dpTable_actions', slot: 'actions' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
     [TABLE.ADMIN_FOLDER_CABINET]: {
         columns: [
             { id: '1', label: 'docType_label', prop: 'label' },
@@ -1577,8 +1593,7 @@ export const defaultTableSetting: TableColumnSetting = {
             }
         ],
         events: ['delete'],
-        slots: [
-        ],
+        slots: [],
         options: { pageSize: 20 }
     }
     

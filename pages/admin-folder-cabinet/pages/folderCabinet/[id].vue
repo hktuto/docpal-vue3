@@ -17,7 +17,7 @@ const state = reactive({
 const FolderCabinetAddChildDialogRef = ref()
 const route = useRoute()
 // await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
-// #region module: actions 
+// #region module: actions
     function handleAddChild(data) {
         FolderCabinetAddChildDialogRef.value.handleOpen(data)
     }
@@ -34,8 +34,8 @@ const route = useRoute()
                 duration: 0,
                 position: 'bottom-right'
             });
-            const response = await DeleteCabinetTemplateApi(setting.id)   
-            await getData() 
+            const response = await DeleteCabinetTemplateApi(setting.id)
+            await getData()
             noti.close()
             ElNotification({
                 title: 'Success',
@@ -46,12 +46,13 @@ const route = useRoute()
         })
     }
     const FolderCabinetAddDialogRef = ref()
-    function handleEdit (setting, isRoot: boolean = false) {
-        setting.isEdit = true
+    function handleEdit (setting:any, isRoot: boolean = false) {
+        const _setting = deepCopy(setting)
+        _setting.isEdit = true
         if(!!isRoot) {
-            FolderCabinetAddDialogRef.value.handleOpen(setting)
+            FolderCabinetAddDialogRef.value.handleOpen(_setting)
         } else {
-            FolderCabinetAddChildDialogRef.value.handleOpen(setting)
+            FolderCabinetAddChildDialogRef.value.handleOpen(deepCopy(_setting))
         }
     }
     provide('handleEdit', handleEdit)
@@ -63,7 +64,7 @@ async function getData () {
     try {
         state.setting = await GetCabinetTemplateApi(route.params.id)
     } catch (error) {
-        
+
     }
     state.loading = false
 }
@@ -73,6 +74,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.pageContainer{
+    height: 100%;
+    overflow: auto;
+  padding: calc( var(--app-padding) * 2);
+}
 .FolderCabinetCard {
     height: 100%;
     background-color: #f1f1f1;

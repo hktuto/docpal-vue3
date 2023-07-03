@@ -28,7 +28,7 @@ import { GetProcessDefinitionListApi } from 'dp-api'
             state.list = res
             state._list = deepCopy(state.list)
         } catch (error) {
-            
+
         }
         state.loading = false
     }

@@ -16,10 +16,11 @@ const props = defineProps<{
     doc: any
 }>()
 
+const { externalEndpoint } = useSetting()
 function copyPath(){
     // copy path to clipboard
     const el = document.createElement('textarea');
-    el.value = props.doc.path;
+    el.value = 'https://' + externalEndpoint.value.docpal + '/browse?path=' +  props.doc.path;
     document.body.appendChild(el);
     el.select();
     document.execCommand('copy');

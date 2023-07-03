@@ -13,7 +13,7 @@
                     <img :src="item.blobUrl" class="thumbnail" @error="imgError"/>
                 </template>
                 <template v-else>
-                    <BrowseItemIcon :type="item.isFolder ? 'folder' : 'file'"/>
+                    <BrowseItemIcon class="folderIcon" :type="item.isFolder ? 'folder' : 'file'" status="general"/>
                 </template>
                 <div class="name">{{item.name}}</div>
             </div>
@@ -44,7 +44,7 @@ const state = reactive<State>({
 
 function imgError(event) {
 
-    event.target.src = '/icons/file-normal.svg'
+    event.target.src = '/icons/file-general.svg'
 }
 // #region module: page 
     const pageParams = ref({
@@ -62,6 +62,15 @@ function imgError(event) {
             state.tableData = []
             res.entryList.forEach(async (item) => {
                 if (!item.isFolder) {
+                    try{
+                        const blob = await DocumentThumbnailGetApi(item.id)
+                        if (!!blob) {
+                            const urlCreator = window.URL || window.webkitURL
+                            item.blobUrl = urlCreator.createObjectURL(blob)
+                        } 
+                    }catch(err){
+                        item.blobUrl = ""
+                    }
                     const blob = await DocumentThumbnailGetApi(item.id)
                     if (!!blob) {
                         const urlCreator = window.URL || window.webkitURL
@@ -174,5 +183,8 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
         width: 100%;
         position: relative;
     }
+}
+.folderIcon{
+    --icon-size: 100%;
 }
 </style>

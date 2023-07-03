@@ -116,7 +116,7 @@ const userId:string = useUser().getUserId()
     const { tableData, options, loading, activeTab } = toRefs(state)
 // #endregion
 function handleDblclick (row) {
-    router.push(`/file/browse?path=${row.documentPath}`)
+    router.push(`/browse?path=${row.documentPath}`)
 }
 function getDownloadParams () {
     return {
