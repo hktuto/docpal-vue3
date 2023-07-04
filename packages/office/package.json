@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build  --dotenv ../../.env.deploy.dev",
-    "dev": "NODE_TLS_REJECT_UNAUTHORIZED=0  nuxt dev .playground --dotenv ../../../.env.dev --port 3000 --https --ssl-cert ../../localhost.pem --ssl-key ../../localhost-key.pem\n",
+    "dev": "nuxt dev .playground --dotenv ../../../.env.dev --port 3000 --https --ssl-cert ../../localhost.pem --ssl-key ../../localhost-key.pem\n",
     "generate": "nuxt generate  --dotenv ../../.env.deploy.dev",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
