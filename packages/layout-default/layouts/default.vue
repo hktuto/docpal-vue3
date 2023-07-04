@@ -64,7 +64,7 @@ function toggleOpen() {
   const InteractDrawerRef = ref()
   function handleOpenUpload() {
     state.drawerOpen = !state.drawerOpen
-    InteractDrawerRef.value.handleOpen()
+    InteractDrawerRef.value.handleSwitch()
   }
 // #endregion
 // #region get mouse position
