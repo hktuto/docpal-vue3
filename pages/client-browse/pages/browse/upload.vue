@@ -169,6 +169,8 @@ onMounted(async() => {
     grid-template-rows: repeat(2, min-content) 1fr min-content;
     grid-column-gap: var(--app-padding);
     grid-row-gap: var(--app-padding);
+    position: relative;
+    overflow: hidden;
     .upload-header { grid-area: 1 / 1 / 2 / 4; }
     .upload-main-left-header { grid-area: 2 / 1 / 3 / 2; }
     .upload-main-left-main { grid-area: 3 / 1 / 4 / 2; }
@@ -177,6 +179,7 @@ onMounted(async() => {
     .upload-footer { grid-area: 4 / 1 / 5 / 4; }
     .upload-main-left-main {
         border-right: 1px solid #ddd;
+        overflow: auto;
     }
     .upload-main-right {
         // background-color: aqua;

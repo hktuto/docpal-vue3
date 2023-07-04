@@ -5,23 +5,22 @@
              <el-timeline-item v-for="item in uploadState.uploadRequestList" :key="item.id"
                 :timestamp="formatDate(item.startDate)" placement="top">
                 <el-button v-show="item.count === item.docList.length" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
-                <el-tree ref="treeRef" :data="item.tree"
-                    nodeKey="id" :expand-on-click-node="false">
-                    <template #default="{ node, data }">
-                        <div class="flex-x-between tree-item">
-                            <span class="flex-x-start">
-                                <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
-                                {{data.name}}
-                            </span>
-                            <div>
-                                <el-button :type="getType(data.status)" text
-                                    :loading="data.status === 'loading'">
-                                    {{ data.status === 'loading' ? '' : data.status || 'pending' }}
-                                </el-button>
-                            </div>
+                <div class="listContainer">
+                    <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
+                        <div class="nameContainer">
+
+                        <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
+                        {{ uploadItem.name }} 
                         </div>
-                    </template>
-                </el-tree>
+                        <div>
+                            <el-button :type="getType(uploadItem.status)" text
+                                :loading="uploadItem.status === 'loading'">
+                                {{ uploadItem.status === 'loading' ? '' : uploadItem.status || 'pending' }}
+                            </el-button>
+                        </div>
+                    </div>
+                </div>
+                
              </el-timeline-item>
         </el-timeline>
         
@@ -94,11 +93,33 @@ function jsonToXlsx (exportArr) {
     /* 生成xlsx文件 */
     XLSX.writeFile(wb, 'upload status.csv');
 }
+
+watch(uploadState, () => {
+    console.log("uploadState", uploadState.value)
+}, {
+    deep: true
+})
 </script>
 
 <style lang="scss" scoped>
 .tree-item {
     width: 100%;
     padding-right: var(--app-padding);
+}
+.uploadItem{
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    margin-block: calc(var(--app-padding) / 2 );
+    padding-block: calc(var(--app-padding) / 2 );
+}
+.uploadItem + .uploadItem {
+    border-top: 1px solid var(--color-grey-050);
+}
+.nameContainer{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.7rem;
 }
 </style>

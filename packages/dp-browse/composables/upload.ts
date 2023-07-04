@@ -18,6 +18,14 @@ export type uploadRequestItem = {
     tree: uploadDoc[];
     count: number;
 }
+
+export type UploadParams = {
+    uploadFiles: uploadDoc[];
+    status: any;
+    parentPath: string;
+    requestIndex: number;
+    isChildren:boolean
+}
 // export const useUploadStore = defineStore('UploadStore', () => {
 //     const uploadState = reactive({
 //         uploadFiles: <any>[], // input输入
@@ -236,29 +244,52 @@ export const useUploadStore = () => {
             docList: arr,
             count: 0
         }
-        upload(tree, 'finish', uploadState.value.rootDoc.path, requestItem)
         uploadState.value.uploadRequestList.push(requestItem)
+        upload({
+            uploadFiles: tree, 
+            status:'finish', 
+            parentPath :uploadState.value.rootDoc.path, 
+            requestIndex: uploadState.value.uploadRequestList.length - 1, 
+            isChildren:false
+        })
     }
 
-    function upload(tree: uploadDoc[], status: any, parentPath: string, requestItem: uploadRequestItem) {
-        tree.forEach((item, index) => {
+    function upload({uploadFiles, status, parentPath, requestIndex, isChildren}:UploadParams):void {
+        uploadFiles.forEach((item, index) => {
             setTimeout(async() => {
+                uploadState.value.uploadRequestList[requestIndex].count++
                 if(!status || status === 'finish') {
-                    const { isDuplicate } = await duplicateNameFilter(parentPath, [item]);
-                    if (isDuplicate) item.status = 'skip'
-                    else {
-                        if (parentPath === '/') parentPath = ''
-                        item.status = 'loading'
-                        const res = await handleCreateDocument(item, parentPath)
-                        console.log(res);
-                        console.log(uploadState.value.uploadRequestList)
-                        item.status = res ? 'finish' : 'fail'
+                    
+                    let skip = false;
+                    if(!isChildren) {
+                        const { isDuplicate } = await duplicateNameFilter(parentPath, [item]);
+                        skip =!! isDuplicate
+                        if (isDuplicate) item.status = 'skip';
                     }
+                    if(skip) return;
+                    // get index of the item
+                    const index = uploadState.value.uploadRequestList[requestIndex].docList.findIndex((doc: any) => doc.id === item.id)
+
+                    if (parentPath === '/') parentPath = ''
+                    item.status = 'loading'
+                    uploadState.value.uploadRequestList[requestIndex].docList[index].status = 'loading'
+                    const res = await handleCreateDocument(item, parentPath)
+                    item.status = res ? 'finish' : 'fail'
+                    uploadState.value.uploadRequestList[requestIndex].docList[index].status = res ? 'finish' : 'fail'
+                    console.log("item update", uploadState.value.uploadRequestList[requestIndex].docList[index].status)
                 } else {
                     item.status = 'skip'
                 }
-                requestItem.count++
-                if (item.children) upload(item.children, item.status , parentPath + '/' + item.name, requestItem)
+                
+                if (item.children){
+                    upload({
+                        uploadFiles: item.children, 
+                        status: item.status, 
+                        parentPath : parentPath + '/' + item.name, 
+                        requestIndex, 
+                        isChildren:true
+                    })
+                }
             }, 1000 + index * 100)
         })
     }

@@ -20,7 +20,7 @@
         </div>
 
         <div v-if="isLogin"  class="actions">
-          <UploadStructureButton v-if="uploadRequestList && uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
+          <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Language v-if="mode === 'development'"></Language>
           <!-- <NotificationBadge v-if="feature.notification"/> -->
           <Notification v-if="feature.notification"/>
