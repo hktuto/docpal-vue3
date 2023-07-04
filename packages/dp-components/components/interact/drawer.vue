@@ -9,34 +9,26 @@
 >
   <slot></slot>
   <SvgIcon v-if="interact.closeShow" class="drawer-close" src="/icons/close.svg"
-    @click="handleSwitch"></SvgIcon>
+    @click="handleOpen"></SvgIcon>
 </Interact>
 </template>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<{
-    defaultW: number,
-    minWidth: number,
-    maxWidth: number,
-}>(),{
-    defaultW: 400,
-    minWidth: 120,
-    maxWidth: 600
-})
+
 const interact = reactive({
-    // maxWidth: 600,
-    // minWidth: 120,
+    maxWidth: 600,
+    minWidth: 120,
     w: 0,
-    // defaultW: 400,
+    defaultW: 400,
     closeShow: false
 })
 const style = computed(() => {
     let s = `--drawer-width: ${interact.w}px;` 
     s += `--drawer-padding: ${interact.w === 0 ? 0 + 'px': 'var(--app-padding)'};`
-    s += `--drawer-min-width: ${interact.w === 0 ? 0 : props.minWidth }px;`
+    s += `--drawer-min-width: ${interact.w === 0 ? 0 : interact.minWidth }px;`
     return s
 })
-function handleSwitch(width: number = props.defaultW) {
+function handleOpen(width: number = interact.defaultW) {
     if (interact.w === 0) {
         interact.w = width 
         interact.closeShow = true
@@ -45,16 +37,12 @@ function handleSwitch(width: number = props.defaultW) {
         interact.closeShow = false
     }
 }
-function handleOpen(width: number = props.defaultW) {
-    interact.w = width 
-    interact.closeShow = true
-}
 function resizeMove(event:any) {
-    const min = Math.max(event.rect.width, props.minWidth)
-    interact.w = props.maxWidth ? Math.min(min, props.maxWidth) : min;
+    const min = Math.max(event.rect.width, interact.minWidth)
+    interact.w = interact.maxWidth ? Math.min(min, interact.maxWidth) : min;
 }
 defineExpose({
-    handleOpen, handleSwitch
+    handleOpen
 })
 </script>
 
@@ -69,7 +57,7 @@ defineExpose({
 }
 .drawer-close {
     position: absolute;
-    top: var(--drawer-padding);
-    right: var(--drawer-padding);
+    top: var(--app-padding);
+    right: var(--app-padding);
 }
 </style>

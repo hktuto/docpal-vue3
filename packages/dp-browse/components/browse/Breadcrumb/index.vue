@@ -10,11 +10,13 @@
                 <ElIcon><ArrowRight/></ElIcon>
             </div>
             <template v-for="(item,index) in displayBread" :key="displayBread.id">
+                <DropzoneContainer class="drop" :doc="item" >
                 <div  :class="{breadItem:true, pointer: index < displayBread.length - 1 }" 
                         @click="() => {if(index === displayBread.length - 1 )return; navigate(item.path)}"
                         @contextmenu="(event) => {if(index < displayBread.length - 1 )return ; handleRightClick(item, event)}">
                     {{item.name}}
                 </div>
+                </DropzoneContainer>
                 <div v-if="index < displayBread.length - 1" class="divider">
                     <ElIcon><ArrowRight/></ElIcon>
                 </div>
@@ -125,5 +127,9 @@ defineExpose({
             color: var(--el-color-white);
         }
     }
+}
+
+.drop{
+    position: relative;
 }
 </style>
