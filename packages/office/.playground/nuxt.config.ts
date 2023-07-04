@@ -4,6 +4,7 @@ import {customLayer} from '../packageManage'
 const config = defineNuxtConfig({
   ssr:false,
   extends: [
+      "../",
     ...customLayer()
   ],
   ...playgroundConfig({}),

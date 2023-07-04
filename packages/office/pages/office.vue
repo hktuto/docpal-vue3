@@ -1,42 +1,12 @@
 <script setup lang="ts">
-import {useUpload} from "~/compositbles/upload";
 
-const { status, result, mineType, ext } = useUpload()
+const { status, result, mineType, ext, host, ready, checkOffice } = useOffice()
 const {externalEndpoint} = useSetting()
-const host = ref();
-const ready = ref(false);
 
-const checkReadyInterval = ref();
 
-function initOffice() {
-  Office.onReady((info:any) => {
-    host.value = info.host;
-    if(info.host === Office.HostType.Word){
-     mineType.value = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-      ext.value = '.docx'
-    }
-    if(info.host === Office.HostType.Excel){
-      mineType.value = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      ext.value = '.xlsx'
-    }
-    if(info.host === Office.HostType.PowerPoint){
-      mineType.value = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-      ext.value = '.pptx'
-    }
-    
-    ready.value = true;
-  })
-}
 onMounted(() => {
-    checkReadyInterval.value = setInterval(() => {
-      console.log("interval run");
-      if(ready.value){
-        clearInterval(checkReadyInterval.value)
-      }else {
-        initOffice();
-      }
-    }, 500)
-  })
+  checkOffice()
+})
 
 function openUrl(){
   console.log("openUrl", externalEndpoint.value.docpal, result.value.path)
