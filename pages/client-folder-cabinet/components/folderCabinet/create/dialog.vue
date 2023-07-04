@@ -45,7 +45,7 @@ const state = reactive({
     treeData: [],
     rootDetail: {}
 })
-
+const route = useRoute()
 // #region module: handleSubmit
     const MetaFormRef = ref()
     const FolderCabinetUploadTreeRef = ref()
@@ -61,7 +61,8 @@ const state = reactive({
                 name: state.rootFolder.name,
                 type: state.cabinetTemplate.documentType,
                 idOrPath,
-                properties: metaFormData
+                properties: metaFormData,
+                templateId: route.query.tab
             })
             const uploadList = FolderCabinetUploadTreeRef.value.getData()
             uploadListAdd({
