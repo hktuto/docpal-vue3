@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { GetCabinetPageApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
-const emit = defineEmits(['db-row-click']);
+const emit = defineEmits(['row-click']);
 const userId:string = useUser().getUserId()
 // #region module: page
     const route = useRoute()

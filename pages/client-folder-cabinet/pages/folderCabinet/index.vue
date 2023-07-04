@@ -1,10 +1,7 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
-    <div>
-        <div class="buttons--absolute">
-            <el-button v-if="state.uploadList.length > 0" class="el-icon--left" type="info" @click="handleOpenUploadStatus">{{$t('uploadStatus')}}</el-button>
-        </div>
-        <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
+    <div class="grid-layout">
+        <el-tabs v-model="activeTab" class="tag-container" @tab-change="tabChange">
             <template v-for="item in state.tabList" :key="item.id">
                 <el-tab-pane  
                     :label="item.label" :name="item.id" v-loading="state.loading">
@@ -17,8 +14,13 @@
                     <el-button style="margin-bottom: 10px;" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
                 </template>
             </FolderCabinetTable>
-            <FolderCabinetMatchingResult ref="MatchingResultRef"/>
+            <InteractDrawer ref="InteractDrawerRef" :minWidth="240">
+                <FolderCabinetMatchingResult ref="MatchingResultRef"/>
+            </InteractDrawer>
         </main>
+    </div>
+    <div class="buttons--absolute">
+        <el-button v-if="state.uploadList.length > 0" class="el-icon--left" type="info" @click="handleOpenUploadStatus">{{$t('uploadStatus')}}</el-button>
     </div>
     <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
     <FolderCabinetCreateUploadStatusDialog ref="CreateUploadStatusDialogRef" />
@@ -47,10 +49,15 @@ function handleNewItem () {
     const activeSetting = state.tabList.find(item => item.id === state.activeTab)
     FolderCabinetNewItemDialogRef.value.handleOpen(activeSetting)
 }
+
 const MatchingResultRef = ref()
+const InteractDrawerRef = ref()
 function handleRowClick (row) {
+    console.log('click');
+    
     const _ref = MatchingResultRef.value
     _ref.init(row, route.query.tab)
+    InteractDrawerRef.value.handleOpen()
 }
 
 // #region module: init
@@ -84,6 +91,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.grid-layout {
+    height: 100%;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+}
 .buttons--absolute {
     position: absolute;
     right: calc(var(--app-padding) * 2);
@@ -93,7 +105,9 @@ onMounted(async() => {
 .tag-container {
 }
 main {
+    overflow: hidden;
     display: grid;
     grid-template-columns: 1fr min-content;
+    gap: var(--app-padding);
 }
 </style>

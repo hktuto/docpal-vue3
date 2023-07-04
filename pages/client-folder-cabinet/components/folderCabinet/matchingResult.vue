@@ -1,5 +1,6 @@
 <template>
 <div v-loading="state.loading">
+    <h3>{{state.activeDoc.label}}</h3>
     <el-tree :data="state.treeData" :props="state.defaultProps"
         @node-click="handleNodeClick" >
         <template #default="{ node, data }">
@@ -7,7 +8,7 @@
                 <div >
                     <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
                     <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
-                    <span>
+                    <span :class="getCss(data)">
                         {{data.label || data.title || data.name}}
                     </span>
                 </div>
@@ -40,13 +41,16 @@ const state = reactive({
         children: 'children',
         label: 'label'
     },
-    loading: false
+    loading: false,
+    activeDoc: {},
+    docMap: {}
 })
 // #region module: tree
     function handleNodeClick () {}
 // #endregion
     async function init (docItem: any, templateId: string) {
         state.loading = true
+        state.activeDoc = docItem
         try {
             const data = await MatchingTemplateApi(docItem.id)
             if(data.children) {
@@ -58,17 +62,32 @@ const state = reactive({
         }
         state.loading = false
     }
-    function addDocToChildren(children) {
+    function addDocToChildren(children, rootId) {
         if (children) 
-        children.forEach(item => {
-            addDocToChildren(item.children)
-            if(item.documents) {
-                if(!item.children) item.children = []
-                item.children.push(...item.documents)
-            }
-        })
+            children.forEach(item => {
+                addDocToChildren(item.children, item.rootId)
+                if(item.documents) {
+                    if(!item.children) item.children = []
+                    const documents = item.documents.reduce((prev, docItem) => {
+                        if (!docItem.isFolder) {
+                            docItem.isDoc = true
+                            prev.push(docItem)
+                        }
+                        else {
+                            state.docMap[docItem.id] = docItem
+                        }
+                        return prev 
+                    }, [])
+                    item.children.push(...documents)
+                }
+                if(!item.rootId && rootId) item.rootId = rootId
+            })
     }
 // #region module: style
+    function getCss(data) {
+        if(data.folder === true || data.isDoc) return ''
+        return data.complete ? '' : 'color__danger'
+    }
     function showAddButton(data) {
         return data.folder === false &&
                 !(!data.multiple && data.children && data.children.length > 0)
@@ -108,5 +127,8 @@ defineExpose({ init })
         align-items: center;
         gap: calc(var(--app-padding) / 3);
     }
+}
+.danger {
+
 }
 </style>
