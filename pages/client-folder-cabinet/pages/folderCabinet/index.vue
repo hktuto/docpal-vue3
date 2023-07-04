@@ -22,7 +22,7 @@
     <div class="buttons--absolute">
         <el-button v-if="state.uploadList.length > 0" class="el-icon--left" type="info" @click="handleOpenUploadStatus">{{$t('uploadStatus')}}</el-button>
     </div>
-    <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
+    <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="refreshTable"/>
     <FolderCabinetCreateUploadStatusDialog ref="CreateUploadStatusDialogRef" />
 </NuxtLayout>
 </template>
@@ -53,11 +53,13 @@ function handleNewItem () {
 const MatchingResultRef = ref()
 const InteractDrawerRef = ref()
 function handleRowClick (row) {
-    console.log('click');
-    
     const _ref = MatchingResultRef.value
     _ref.init(row, route.query.tab)
     InteractDrawerRef.value.handleOpen()
+}
+function refreshTable () {
+    const time = new Date().valueOf().toString()
+    router.push({ ...route.query, time })
 }
 
 // #region module: init
@@ -93,6 +95,7 @@ onMounted(async() => {
 <style lang="scss" scoped>
 .grid-layout {
     height: 100%;
+    overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr;
 }
