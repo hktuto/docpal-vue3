@@ -11,12 +11,14 @@
                 </el-tab-pane>
             </template>
         </el-tabs>
-        <FolderCabinetTable @row-click="handleRowClick">
-            <template #suffixSortButton>
-                <el-button style="margin-bottom: 10px;" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
-            </template>
-        </FolderCabinetTable>
-        <FolderCabinetMatchingResult ref="MatchingResultRef"/>
+        <main>
+            <FolderCabinetTable @row-click="handleRowClick">
+                <template #suffixSortButton>
+                    <el-button style="margin-bottom: 10px;" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
+                </template>
+            </FolderCabinetTable>
+            <FolderCabinetMatchingResult ref="MatchingResultRef"/>
+        </main>
     </div>
     <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
     <FolderCabinetCreateUploadStatusDialog ref="CreateUploadStatusDialogRef" />
@@ -89,5 +91,9 @@ onMounted(async() => {
     z-index: 2;
 }
 .tag-container {
+}
+main {
+    display: grid;
+    grid-template-columns: 1fr min-content;
 }
 </style>

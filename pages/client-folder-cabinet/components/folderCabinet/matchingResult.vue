@@ -8,7 +8,7 @@
                     <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
                     <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
                     <span>
-                        {{data.label || data.title}}
+                        {{data.label || data.title || data.name}}
                     </span>
                 </div>
                 <div style="--icon-size: 18px">
