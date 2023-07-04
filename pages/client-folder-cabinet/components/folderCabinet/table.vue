@@ -88,7 +88,8 @@ const userId:string = useUser().getUserId()
     const formJson = getJsonApi('folderCabinetSearch.json')
     function handleFormChange (data) {
         const extraParams = Object.keys(data.formModel).reduce((prev,key) => {
-            if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
+            if(typeof data.formModel[key] === 'boolean') prev[key] = data.formModel[key]
+            else if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
             return prev
         }, {})
         state.extraParams = extraParams
@@ -97,9 +98,7 @@ const userId:string = useUser().getUserId()
 // #endregion
 const tableRef = ref()
 function handleClick (row) {
-    // tableRef.value.tableRef.setCurrentRow(row)
     emit('row-click', row)
-    // router.push(`/workflow/${row.id}?state=${state.tabName}`)
 }
 onMounted(() => {
     setTimeout(() => {
