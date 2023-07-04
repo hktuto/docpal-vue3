@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import {useOffice} from '~/compositbles/office'
 const { status, result, mineType, ext, host, ready, checkOffice } = useOffice()
 const {externalEndpoint} = useSetting()
 
