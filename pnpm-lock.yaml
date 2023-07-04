@@ -11,7 +11,7 @@ importers:
       pnpm: 8.6.2
     devDependencies:
       consola: 3.1.0
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
 
   apps/admin:
     specifiers:
@@ -22,7 +22,7 @@ importers:
       sass: ^1.58.0
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
     devDependencies:
       '@element-plus/nuxt': 1.0.5
       '@types/node': 18.16.18
@@ -39,7 +39,7 @@ importers:
       sass: ^1.58.0
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
     devDependencies:
       '@element-plus/nuxt': 1.0.5
       '@types/node': 18.16.18
@@ -56,7 +56,7 @@ importers:
       sass: ^1.58.0
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
     devDependencies:
       '@element-plus/nuxt': 1.0.5
       '@types/node': 18.16.18
@@ -114,7 +114,7 @@ importers:
       '@james090500/vue-tagsinput': ^3.1.4
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       mime-types: ^2.1.35
@@ -126,7 +126,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -161,7 +161,7 @@ importers:
       interactjs: 1.10.17
       mime-types: 2.1.35
       v-code-diff: 1.5.0
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
       vue-inline-svg: 3.1.2
       vuedraggable: 4.1.0
     devDependencies:
@@ -192,7 +192,7 @@ importers:
       '@james090500/vue-tagsinput': ^3.1.4
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       mime-types: ^2.1.35
@@ -206,7 +206,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -259,7 +259,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@pinia/nuxt': ^0.4.7
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       i18n: workspace:*
@@ -268,7 +268,7 @@ importers:
       typescript: ^4.9.3
     dependencies:
       '@pinia/nuxt': 0.4.11_typescript@4.9.5
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       mime-types: 2.1.35
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
@@ -282,7 +282,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       mime-types: ^2.1.35
@@ -293,7 +293,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -379,7 +379,7 @@ importers:
       nuxt: 3.5.3_6bslz4e6n5adwvys7lutvfehrm
       sass: 1.63.4
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
 
   packages/office:
     specifiers:
@@ -392,7 +392,7 @@ importers:
     dependencies:
       '@microsoft/office-js': 1.1.86
     devDependencies:
-      '@nuxt/devtools': 0.6.3_nuxt@3.5.3
+      '@nuxt/devtools': 0.6.4_nuxt@3.5.3
       '@types/node': 18.16.18
       '@types/office-js': 1.0.330
       dp-api: link:../dp-api
@@ -402,7 +402,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -410,7 +410,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -420,7 +420,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -428,7 +428,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -453,7 +453,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -461,7 +461,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -471,7 +471,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -480,18 +480,18 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
 
   pages/admin-bulk-import-config:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -499,7 +499,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -509,7 +509,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -517,7 +517,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -527,7 +527,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -535,7 +535,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -545,7 +545,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -553,7 +553,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -563,7 +563,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.0.0
@@ -571,7 +571,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -581,7 +581,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -589,7 +589,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -599,7 +599,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -608,18 +608,18 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
 
   pages/admin-log-manage:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -627,7 +627,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -637,7 +637,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -645,7 +645,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -655,7 +655,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -663,7 +663,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -673,7 +673,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -681,7 +681,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -692,7 +692,7 @@ importers:
       '@nuxt/devtools': ^0.1.4
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.0.0
@@ -701,7 +701,7 @@ importers:
       '@nuxt/devtools': 0.1.6_nuxt@3.5.3
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -711,7 +711,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -719,7 +719,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -729,7 +729,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -738,7 +738,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -749,7 +749,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -757,7 +757,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -767,7 +767,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -775,7 +775,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -785,7 +785,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.0.0
@@ -793,7 +793,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -803,7 +803,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.0.0
@@ -811,7 +811,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -821,18 +821,18 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
       typescript: ^4.9.3
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7
+      v-form: github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -842,7 +842,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -850,7 +850,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -861,7 +861,7 @@ importers:
       '@james090500/vue-tagsinput': ^3.1.4
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -871,7 +871,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -881,7 +881,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -889,7 +889,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -899,7 +899,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -907,7 +907,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -917,7 +917,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       bpmn-js: ^9.0.2
       dp-api: workspace:*
       eslint: ^8.28.0
@@ -930,7 +930,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -940,7 +940,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -948,7 +948,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -958,7 +958,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -966,7 +966,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -976,7 +976,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -984,7 +984,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -994,7 +994,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       dp-api: workspace:*
       eslint: ^8.28.0
       nuxt: ^3.4.3
@@ -1002,7 +1002,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -1012,7 +1012,7 @@ importers:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@vueuse/components': ^9.13.0
-      '@vueuse/core': ^9.12.0
+      '@vueuse/core': ^10.2.1
       bpmn-js: ^9.0.2
       dp-api: workspace:*
       eslint: ^8.28.0
@@ -1025,7 +1025,7 @@ importers:
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
-      '@vueuse/core': 9.13.0
+      '@vueuse/core': 10.2.1
       dp-api: link:../../packages/dp-api
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
@@ -1946,7 +1946,7 @@ packages:
     resolution: {integrity: sha512-7kZUAaLscfgbwBQRbvdMYaZOWyMEcPTH/tJjnyAWJ/dvvs9Ef+CERx/qJb9GExJpl1qipaDGn7KqHnFGGixd0w==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
-      semver: 7.5.2
+      semver: 7.5.3
     dev: true
 
   /@npmcli/git/4.1.0:
@@ -1959,7 +1959,7 @@ packages:
       proc-log: 3.0.0
       promise-inflight: 1.0.1
       promise-retry: 2.0.1
-      semver: 7.5.2
+      semver: 7.5.3
       which: 3.0.1
     transitivePeerDependencies:
       - bluebird
@@ -2003,8 +2003,8 @@ packages:
     resolution: {integrity: sha512-GBzP8zOc7CGWyFQS6dv1lQz8VVpz5C2yRszbXufwG/9zhStTIH50EtD87NmWbTMwXDvZLNg8GIpb1UFdH93JCA==}
     dev: true
 
-  /@nuxt/devtools-kit/0.6.3_nuxt@3.5.3:
-    resolution: {integrity: sha512-YRGyM7Kz3LH4SyaCFU1KtwN8d3vxUovJ/pWWXxJp9BCAHg/6kWtAllsLgyPAkt03lU249FJTJ23RBDOkqzmegA==}
+  /@nuxt/devtools-kit/0.6.4_nuxt@3.5.3:
+    resolution: {integrity: sha512-+NSTULmKIECVBzAmk2/LnzJnUv1hIzkRmtBSPwNTyaHe6KEU45eq32/4OdjlM/Nw4ucc2w7CSbATptcR7lnWVw==}
     peerDependencies:
       nuxt: ^3.5.1
       vite: '*'
@@ -2018,8 +2018,8 @@ packages:
       - supports-color
     dev: true
 
-  /@nuxt/devtools-wizard/0.6.3:
-    resolution: {integrity: sha512-oZbv0HZizfKlD0f+AX6WgWgSqDnQfTXVReF+9oSaZ2Gi2jUe8dGLv3EyMfJRTa3vvu0cvuRKoDvl5FjbAnpMhQ==}
+  /@nuxt/devtools-wizard/0.6.4:
+    resolution: {integrity: sha512-bWRs64ThCAPvBpKUi5adIiW1caBMQRL+A142P0cPYf1B4x9ie44VuydGlfdELrshdMiOT8xse+G6Uwoy8Yt03Q==}
     hasBin: true
     dependencies:
       consola: 3.1.0
@@ -2065,15 +2065,15 @@ packages:
       - vite
     dev: true
 
-  /@nuxt/devtools/0.6.3_nuxt@3.5.3:
-    resolution: {integrity: sha512-ToQLbVtNtbr7Px/HDyKDDmZl373LkYQsRnKMzpgk/dTfEwZIpgneUHqIL/1Whxo7ST8ayVJ9Z35PmiOsm1mjgQ==}
+  /@nuxt/devtools/0.6.4_nuxt@3.5.3:
+    resolution: {integrity: sha512-Sn+yUMylI0ccpk0v2qfNCVmYMdduHrzLy6GyDZRDN/e0gxzAZqeHZfFD433KuND6cyvcvJ7GFVjlBz+6gYERWA==}
     hasBin: true
     peerDependencies:
       nuxt: ^3.5.1
       vite: '*'
     dependencies:
-      '@nuxt/devtools-kit': 0.6.3_nuxt@3.5.3
-      '@nuxt/devtools-wizard': 0.6.3
+      '@nuxt/devtools-kit': 0.6.4_nuxt@3.5.3
+      '@nuxt/devtools-wizard': 0.6.4
       '@nuxt/kit': 3.6.0
       birpc: 0.2.12
       boxen: 7.1.0
@@ -2101,7 +2101,7 @@ packages:
       semver: 7.5.3
       sirv: 2.0.3
       unimport: 3.0.8
-      vite-plugin-inspect: 0.7.28
+      vite-plugin-inspect: 0.7.30
       vite-plugin-vue-inspector: 3.4.2
       wait-on: 7.0.1
       which: 3.0.1
@@ -2886,6 +2886,9 @@ packages:
   /@types/web-bluetooth/0.0.16:
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==}
 
+  /@types/web-bluetooth/0.0.17:
+    resolution: {integrity: sha512-4p9vcSmxAayx72yn70joFoL44c9MO/0+iVEBIQXe3v2h2SiAsEIo/G5v6ObFWvNKRFjbrVadNf9LqEEZeQPzdA==}
+
   /@typescript-eslint/eslint-plugin/5.59.11_jxhnufqfdxsaktvg4boo4kir6q:
     resolution: {integrity: sha512-XxuOfTkCUiOSyBWIvHlUraLw/JT/6Io1365RO6ZuI88STKMavJZPNMU0lFcUTeQXEhHiv64CbxYxBNoDVSmghg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -3231,6 +3234,17 @@ packages:
       - vue
     dev: true
 
+  /@vueuse/core/10.2.1:
+    resolution: {integrity: sha512-c441bfMbkAwTNwVRHQ0zdYZNETK//P84rC01aP2Uy/aRFCiie9NE/k9KdIXbno0eDYP5NPUuWv0aA/I4Unr/7w==}
+    dependencies:
+      '@types/web-bluetooth': 0.0.17
+      '@vueuse/metadata': 10.2.1
+      '@vueuse/shared': 10.2.1
+      vue-demi: 0.14.5
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
   /@vueuse/core/9.13.0:
     resolution: {integrity: sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==}
     dependencies:
@@ -3241,6 +3255,7 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+    dev: true
 
   /@vueuse/core/9.13.0_vue@3.3.4:
     resolution: {integrity: sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==}
@@ -3253,8 +3268,19 @@ packages:
       - '@vue/composition-api'
       - vue
 
+  /@vueuse/metadata/10.2.1:
+    resolution: {integrity: sha512-3Gt68mY/i6bQvFqx7cuGBzrCCQu17OBaGWS5JdwISpMsHnMKKjC2FeB5OAfMcCQ0oINfADP3i9A4PPRo0peHdQ==}
+
   /@vueuse/metadata/9.13.0:
     resolution: {integrity: sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ==}
+
+  /@vueuse/shared/10.2.1:
+    resolution: {integrity: sha512-QWHq2bSuGptkcxx4f4M/fBYC3Y8d3M2UYyLsyzoPgEoVzJURQ0oJeWXu79OiLlBb8gTKkqe4mO85T/sf39mmiw==}
+    dependencies:
+      vue-demi: 0.14.5
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
 
   /@vueuse/shared/9.13.0:
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
@@ -3263,6 +3289,7 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+    dev: true
 
   /@vueuse/shared/9.13.0_vue@3.3.4:
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
@@ -7096,7 +7123,6 @@ packages:
       pathe: 1.1.1
       pkg-types: 1.0.3
       ufo: 1.1.2
-    dev: true
 
   /moddle-xml/9.0.6:
     resolution: {integrity: sha512-tl0reHpsY/aKlLGhXeFlQWlYAQHFxTkFqC8tq8jXRYpQSnLVw13T6swMaourLd7EXqHdWsc+5ggsB+fEep6xZQ==}
@@ -7298,7 +7324,7 @@ packages:
       nopt: 6.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.5.2
+      semver: 7.5.3
       tar: 6.1.15
       which: 2.0.2
     transitivePeerDependencies:
@@ -7338,7 +7364,7 @@ packages:
     dependencies:
       hosted-git-info: 6.1.1
       is-core-module: 2.12.1
-      semver: 7.5.2
+      semver: 7.5.3
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -7365,7 +7391,7 @@ packages:
     resolution: {integrity: sha512-dH3GmQL4vsPtld59cOn8uY0iOqRmqKvV+DLGwNXV/Q7MDgD2QfOADWd/mFXcIE5LVhYYGjA3baz6W9JneqnuCw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
-      semver: 7.5.2
+      semver: 7.5.3
     dev: true
 
   /npm-normalize-package-bin/3.0.1:
@@ -7379,7 +7405,7 @@ packages:
     dependencies:
       hosted-git-info: 6.1.1
       proc-log: 3.0.0
-      semver: 7.5.2
+      semver: 7.5.3
       validate-npm-package-name: 5.0.0
     dev: true
 
@@ -7397,7 +7423,7 @@ packages:
       npm-install-checks: 6.1.1
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 10.1.0
-      semver: 7.5.2
+      semver: 7.5.3
     dev: true
 
   /npm-registry-fetch/14.0.5:
@@ -8216,7 +8242,7 @@ packages:
     resolution: {integrity: sha512-nN7pYi0AQqJnoLPC9eHFQ8AcyaixBUOwvqc5TDnIKCMEE6I0y8P7OKA7fPexsXGCGxQDl/cmrLAp26LhcwxZ4A==}
     dependencies:
       jsonc-parser: 3.2.0
-      mlly: 1.3.0
+      mlly: 1.4.0
       pathe: 1.1.1
 
   /pluralize/8.0.0:
@@ -10149,6 +10175,24 @@ packages:
       - supports-color
     dev: true
 
+  /vite-plugin-inspect/0.7.30:
+    resolution: {integrity: sha512-4z3bxULL9KGsSu2Gt+Z/lYQB2APpODG+2eHDGWK9NE4IGnwKfbz0lzJqVJGFtLGhvdwzGjt01aPgpMLYb/bibw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      vite: ^3.1.0 || ^4.0.0
+    dependencies:
+      '@antfu/utils': 0.7.4
+      '@rollup/pluginutils': 5.0.2
+      debug: 4.3.4
+      fs-extra: 11.1.1
+      open: 9.1.0
+      picocolors: 1.0.0
+      sirv: 2.0.3
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: true
+
   /vite-plugin-vue-inspector/3.4.2:
     resolution: {integrity: sha512-q5OTkcZJqL78bwGJl1Zk8CNqtxZ9wP2udJYqyFIZzL1lTax0/oq7DhNkLrnPTxkJuf0QPZKdunb1vDyCByn4dQ==}
     peerDependencies:
@@ -10795,10 +10839,10 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  github.com/hktuto/v-form-designer/2886761cd75e216e76729657b37101f5ec1ae9f7:
-    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/2886761cd75e216e76729657b37101f5ec1ae9f7}
+  github.com/hktuto/v-form-designer/125b2bd5474ae0e7d025f5882418a46cf741fe80:
+    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/125b2bd5474ae0e7d025f5882418a46cf741fe80}
     name: v-form
-    version: 3.0.6
+    version: 3.0.7
     dependencies:
       '@element-plus/icons-vue': 0.2.7_vue@3.3.4
       axios: 0.24.0
