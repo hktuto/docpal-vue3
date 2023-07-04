@@ -59,7 +59,7 @@ function handleRowClick (row) {
 }
 function refreshTable () {
     const time = new Date().valueOf().toString()
-    router.push({ ...route.query, time })
+    router.push({ query: { ...route.query, time } })
 }
 
 // #region module: init

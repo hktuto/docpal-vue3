@@ -47,6 +47,7 @@ const userId:string = useUser().getUserId()
     async function getList (param) {
         state.loading = true
         try {
+            state.tableData = []
             const res = await GetCabinetPageApi({...param, ...state.extraParams})
             
             state.tableData = res.entryList
