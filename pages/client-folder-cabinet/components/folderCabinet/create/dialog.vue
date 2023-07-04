@@ -50,10 +50,8 @@ const state = reactive({
     const MetaFormRef = ref()
     const FolderCabinetUploadTreeRef = ref()
     async function handleSubmit () {
-        // if (!validateForm(state.rootFolder)) return
+        if (!validateForm(state.rootFolder)) return
         const metaFormData = MetaFormRef.value.getData()
-        const uploadList = FolderCabinetUploadTreeRef.value.getData()
-        return
         if(!metaFormData) return
         state.loading = true
         try {
@@ -66,6 +64,12 @@ const state = reactive({
                 properties: metaFormData
             })
             const uploadList = FolderCabinetUploadTreeRef.value.getData()
+            uploadListAdd({
+                name: state.cabinetTemplate.rootName,
+                startDate: new Date(), 
+                treeData:uploadList
+            })
+            uploadHandler(uploadList, idOrPath)
             
             state.visible = false
             setTimeout(()=> {
@@ -76,9 +80,38 @@ const state = reactive({
         }
         state.loading = false
     }
-    function uploadHandler (children: any, parentPath: string = '') {
-        children.forEach(item => {
-            if(item.children) uploadHandler(item.children, )
+    function uploadHandler (children: any, parentPath: string = '', parentStatus) {
+        children.forEach(async(item) => {
+            item.path = parentPath + '/' + item.label
+            try {
+                if (parentStatus === 'skip' || parentStatus === 'fail') throw new Error("skip");
+                if (item.folder) {
+                    item.status = 'loading'
+                    await CreateFoldersApi({
+                        name: item.label,
+                        type: item.documentType,
+                        idOrPath: item.path,
+                    })
+                } else {
+                    const document = {
+                        name: item.label,
+                        idOrPath: item.path,
+                        type: item.documentType,
+                        // languages: file.languages,
+                        // properties: {}
+                    }
+                    const formData = new FormData()
+                    formData.append('files', item.raw)
+                    formData.append('document', JSON.stringify(document))
+                    await CreateDocumentApi(formData)
+                }
+                item.status = 'finish'
+            } catch (error) {
+                item.status = 'skip'
+            }
+            setTimeout(() => {
+                if(item.children) uploadHandler(item.children, item.path, item.status)
+            }, 300)
         })
     }
     function validateForm (rootFolder) {
@@ -106,6 +139,7 @@ const state = reactive({
 
             const rootDetail = await GetDocDetail(state.cabinetTemplate.rootId, false)
             state.cabinetTemplate.rootPath = rootDetail.path
+            state.cabinetTemplate.rootName = rootDetail.name
         } catch (error) {
             
         }

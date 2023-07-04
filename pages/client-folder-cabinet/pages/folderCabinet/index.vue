@@ -1,24 +1,25 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
-    <div class="buttons--absolute">
-        <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
+    <div>
+        <div class="buttons--absolute">
+            <el-button v-if="state.uploadList.length > 0" class="el-icon--left" type="info" @click="handleOpenUploadStatus">{{$t('uploadStatus')}}</el-button>
+        </div>
+        <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
+            <template v-for="item in state.tabList" :key="item.id">
+                <el-tab-pane  
+                    :label="item.label" :name="item.id" v-loading="state.loading">
+                </el-tab-pane>
+            </template>
+        </el-tabs>
+        <FolderCabinetTable @row-click="handleRowClick">
+            <template #suffixSortButton>
+                <el-button style="margin-bottom: 10px;" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
+            </template>
+        </FolderCabinetTable>
+        <FolderCabinetMatchingResult ref="MatchingResultRef"/>
     </div>
-    <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
-        <template v-for="item in state.tabList" :key="item.id">
-            <el-tab-pane  
-                :label="item.label" :name="item.id" v-loading="state.loading">
-                <template v-if="item.id === activeTab">
-                    <FolderCabinetTable @db-row-click="handleRowClick">
-                        <template #suffixSortButton>
-                            <el-button style="margin-bottom: 10px;" @click="handleNewItem(item)">{{$t('folderCabinet.newItem')}}</el-button>
-                        </template>
-                    </FolderCabinetTable>
-                    <FolderCabinetMatchingResult ref="MatchingResultRef"/>
-                </template>
-            </el-tab-pane>
-        </template>
-    </el-tabs>
     <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
+    <FolderCabinetCreateUploadStatusDialog ref="CreateUploadStatusDialogRef" />
 </NuxtLayout>
 </template>
 
@@ -40,12 +41,14 @@ function tabChange (tab) {
     router.push({query: { tab, time }})
 }
 const FolderCabinetNewItemDialogRef = ref()
-function handleNewItem (activeSetting) {
+function handleNewItem () {
+    const activeSetting = state.tabList.find(item => item.id === state.activeTab)
     FolderCabinetNewItemDialogRef.value.handleOpen(activeSetting)
 }
 const MatchingResultRef = ref()
 function handleRowClick (row) {
-    router.push({query: { ...route.query, id: row.id }})
+    const _ref = MatchingResultRef.value
+    _ref.init(row, route.query.tab)
 }
 
 // #region module: init
@@ -63,8 +66,12 @@ function handleRowClick (row) {
 // #endregion
 
 // #region module: uploadList
-    function uploadListAdd(detail) {
-        console.log({detail});
+    const CreateUploadStatusDialogRef = ref()
+    function handleOpenUploadStatus () {
+        CreateUploadStatusDialogRef.value.handleOpen(state.uploadList)
+    }
+    function uploadListAdd(uploadItem) {
+        state.uploadList.push(uploadItem)
     }
     provide('uploadListAdd', uploadListAdd)
 // #endregion
@@ -75,15 +82,6 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
-.grid-layout {
-    display: grid;
-    grid-template-rows: min-content 1fr;
-    height: 100%;
-    overflow: hidden;
-    :deep(.el-tab-pane) {
-        height: 100%;
-    }
-}
 .buttons--absolute {
     position: absolute;
     right: calc(var(--app-padding) * 2);
@@ -91,28 +89,5 @@ onMounted(async() => {
     z-index: 2;
 }
 .tag-container {
-    :deep .el-tab-pane {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: var(--app-padding);
-    }
-    :deep .el-tabs__nav-wrap:first {
-        width: calc(100% - 338px);
-        &::after {
-            display: none;
-        }
-    }
-    :deep .el-tabs__header:first {
-        &::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--el-border-color-light);
-            z-index: var(--el-index-normal);
-        }
-    }
 }
 </style>

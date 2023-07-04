@@ -1,8 +1,9 @@
 <template>
-    <Table  :columns="tableSetting.columns" :table-data="tableData" :options="options"
+    <Table  ref="tableRef"
+            :columns="tableSetting.columns" :table-data="tableData" :options="options"
             v-loading="loading"
             @pagination-change="handlePaginationChange"
-            @row-dblclick="handleDblclick">
+            @row-click="handleClick">
             <template #preSortButton>
                 <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
             </template>
@@ -34,9 +35,11 @@ const userId:string = useUser().getUserId()
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
-                pageSize: pageParams.pageSize
+                pageSize: pageParams.pageSize,
             },
-            sortKey: tableKey
+            sortKey: tableKey,
+            highlightCurrentRow: true,
+            rowKey: 'id'
         },
         extraParams: {},
     })
@@ -92,8 +95,10 @@ const userId:string = useUser().getUserId()
         handlePaginationChange(1)
     }
 // #endregion
-function handleDblclick (row) {
-    emit('db-row-click', row)
+const tableRef = ref()
+function handleClick (row) {
+    // tableRef.value.tableRef.setCurrentRow(row)
+    emit('row-click', row)
     // router.push(`/workflow/${row.id}?state=${state.tabName}`)
 }
 onMounted(() => {

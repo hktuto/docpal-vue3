@@ -308,7 +308,7 @@ onMounted(() => {
     })
 })
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
-defineExpose({ reorderColumn })
+defineExpose({ reorderColumn, tableRef })
 </script>
 <style lang="scss" scoped>
 :deep(.el-image__inner) {
