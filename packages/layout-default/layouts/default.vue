@@ -10,30 +10,32 @@
             </div>
         </div>
         <div id="topBarContainer">
-        <div class="headerLeft">
-          <PageTitle  :backPath="backPath"/>
-          <slot name="headerLeft" />
-        </div>
-        <div class="expand">
-          <SmartSearch v-if="feature.search && showSearch"/>
-          <slot name="postHeader" />
-        </div>
+            <div class="headerLeft">
+                <PageTitle  :backPath="backPath"/>
+                <slot name="headerLeft" />
+            </div>
+            <div class="expand">
+                <SmartSearch v-if="feature.search && showSearch"/>
+                <slot name="postHeader" />
+            </div>
 
-        <div v-if="isLogin"  class="actions">
-          <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
-          <Language v-if="mode === 'development'"></Language>
-          <!-- <NotificationBadge v-if="feature.notification"/> -->
-          <Notification v-if="feature.notification"/>
-          <ColorSwitch />
-          <LanguageSwitch v-if="feature.multiLanguage" />
-          <UserMiniDropdown v-if="feature.userAuth" />
+            <div v-if="isLogin"  class="actions">
+                <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
+                <Language v-if="mode === 'development'"></Language>
+                <!-- <NotificationBadge v-if="feature.notification"/> -->
+                <Notification v-if="feature.notification"/>
+                <ColorSwitch />
+                <LanguageSwitch v-if="feature.multiLanguage" />
+                <UserMiniDropdown v-if="feature.userAuth" />
+            </div>
         </div>
-      </div>
         <main id="mainContainer">
-          <slot />
-          <InteractDrawer ref="InteractDrawerRef">
-            <UploadStructure></UploadStructure>
-          </InteractDrawer>
+            <div id="mainContent">
+                <slot />
+            </div>
+            <InteractDrawer ref="InteractDrawerRef">
+                <UploadStructure></UploadStructure>
+            </InteractDrawer>
         </main>
     </div>
 </template>
@@ -56,14 +58,14 @@ const { uploadState, uploadRequestList } = useUploadStore()
 const state = reactive({
 })
 function toggleOpen() {
-     opened.value = !opened.value
+    opened.value = !opened.value
 }
 
 // #region module: 
-  const InteractDrawerRef = ref()
-  function handleOpenUpload() {
-    InteractDrawerRef.value.handleSwitch()
-  }
+    const InteractDrawerRef = ref()
+    function handleOpenUpload() {
+        InteractDrawerRef.value.handleSwitch()
+    }
 // #endregion
 // #region get mouse position
 import { useMouse } from '@vueuse/core'
@@ -75,7 +77,7 @@ const { x, y } = useMouse()
 
 <style lang="scss" scoped>
 #pageContainer{
-  background-color: aquamarine;
+    background-color: aquamarine;
     width: 100%;
     height: 100%;
     position: relative;
@@ -101,100 +103,100 @@ const { x, y } = useMouse()
 }
 
 #sidebarContainer{
-  grid-area: menu;
-  display: grid;
-  grid-template-rows: 60px 1fr 30px;
-  grid-template-areas: "logo"
-                        "menu"
-                        "toggle";
-  background: var(--sidebar-bg);
-  transition: all 0.3s ease-in-out;
-  color: var(--sidebar-color);
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  transform: scale(1);
-  box-shadow: 2px 0px 10px rgb(0 0 0 / 30%);
-  z-index: 5;
-
-  .logo{
-    height: 30px;
-    grid-area: logo;
-    transition: all 0.2s ease-in-out;
-    margin: var(--app-padding);
-  }
-  .expand {
-    margin-inline: var(--app-padding);
-  }
-  .menu{
     grid-area: menu;
-  }
-  .expand{
-    grid-area: toggle;
-    color: #fff;
-  }
-  &.opened {
+    display: grid;
+    grid-template-rows: 60px 1fr 30px;
+    grid-template-areas: "logo"
+                            "menu"
+                            "toggle";
+    background: var(--sidebar-bg);
+    transition: all 0.3s ease-in-out;
+    color: var(--sidebar-color);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    transform: scale(1);
+    box-shadow: 2px 0px 10px rgb(0 0 0 / 30%);
+    z-index: 5;
 
     .logo{
-      margin-left : 0px;
-      width: 100%;
+        height: 30px;
+        grid-area: logo;
+        transition: all 0.2s ease-in-out;
+        margin: var(--app-padding);
     }
-  }
+    .expand {
+        margin-inline: var(--app-padding);
+    }
+    .menu{
+        grid-area: menu;
+    }
+    .expand{
+        grid-area: toggle;
+        color: #fff;
+    }
+    &.opened {
+
+        .logo{
+        margin-left : 0px;
+        width: 100%;
+        }
+    }
 }
 
 #topBarContainer{
-  background: var(--header-bg);
-  min-height: 40px;
-  grid-area: header;
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
-  gap: var(--app-padding);
-  align-items: center;
-  position: relative ; // some browser default position is static, will ignore z-index;
-  z-index: 4;
-  .headerLeft{
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: center;
+    background: var(--header-bg);
+    min-height: 40px;
+    grid-area: header;
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    padding: calc(var(--app-padding) * 1) calc(var(--app-padding) * 2 );
     gap: var(--app-padding);
-  }
-  .expand{
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
     align-items: center;
-    gap: var(--app-padding);
-  }
-  .actions{
-    display: flex;
-    flex-flow: row nowrap;
-    gap : var(--app-padding);
-    justify-content: flex-start;
-    align-items: center;
-  }
+    position: relative ; // some browser default position is static, will ignore z-index;
+    z-index: 4;
+    .headerLeft{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        gap: var(--app-padding);
+    }
+    .expand{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: var(--app-padding);
+    }
+    .actions{
+        display: flex;
+        flex-flow: row nowrap;
+        gap : var(--app-padding);
+        justify-content: flex-start;
+        align-items: center;
+    }
 }
 
 #mainContainer{
-  background: var(--el-bg-color);
-  overflow: hidden;
-  grid-area: content;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr min-content;
+    background: var(--el-bg-color);
+    overflow: hidden;
+    grid-area: content;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr min-content;
 }
 
 
 
 .fit-height {
-  #mainContainer{
+  #mainContent{
     width: 100%;
     height: 100%;
     position: relative;
     overflow: hidden;
   }
-  &.withPadding #mainContainer {
+  &.withPadding #mainContent {
     padding: calc(var(--app-padding) * 2);
   }
 }
