@@ -70,7 +70,10 @@ const route = useRoute()
                 startDate: new Date(), 
                 treeData:uploadList
             })
-            uploadHandler(uploadList, idOrPath)
+            // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
+            setTimeout(() => {
+                uploadHandler(uploadList, idOrPath)
+            }, 2000)
             
             state.visible = false
             setTimeout(()=> {
