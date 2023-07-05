@@ -12,10 +12,11 @@
     "@nuxt/devtools": "latest",
     "@types/node": "^18",
     "@types/office-js": "^1.0.330",
-    "nuxt": "^3.5.2",
-    "dp-api":"workspace:*"
+    "dp-api": "workspace:*",
+    "nuxt": "^3.5.2"
   },
   "dependencies": {
-    "@microsoft/office-js": "^1.1.86"
+    "@microsoft/office-js": "^1.1.86",
+    "blob-util": "^2.0.2"
   }
 }

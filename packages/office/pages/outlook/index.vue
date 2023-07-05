@@ -3,7 +3,7 @@ import {useOffice} from '~/compositbles/office'
 const {  host, ready, checkOffice } = useOffice()
 const {externalEndpoint} = useSetting()
 type Methods = 'message' | 'messageAndAttachments' | 'attachments';
-type outlookState = 'waiting' | 'noSelected' | 'multipleSelect' | 'selected' | 'chooseMethod'
+type outlookState = 'waiting' | 'noSelected' | 'multipleSelect' | 'selected' | 'chooseMethod' | 'uploading' | 'finish'
 const state = ref<outlookState>('waiting')
 const methodState = ref<Methods>();
 const selectedItem = ref<any>({
@@ -11,21 +11,31 @@ const selectedItem = ref<any>({
   hasAttachment: false,
 });
 const isSelectedMultiple = ref(false)
-
+const uploadQueue = ref([]);
 function getAttachmentCallback(result:any, item:any) {
-    console.log(result.value, item, selectedItem.value)
-  selectedItem.value.attachmentFile.push({
-    ...result.value,
-    ...item,
-  })
+  // check item.id already in selectedItem attachmentFile
+  // if not push
+  // if yes, replace
+  const i = selectedItem.value.attachmentFile.findIndex((i:any) => i.id === item.id);
+  if (i === -1) {
+    selectedItem.value.attachmentFile.push({
+      ...item,
+      ...result.value,
+      
+    })
+    return;
+  }
 }
 function selectedChange() {
   Office.context.mailbox.getSelectedItemsAsync((asyncResult:any) => {
     state.value = 'noSelected'
+    selectedItem.value.attachmentFile = []
+    uploadQueue.value = [];
     if (asyncResult.status === Office.AsyncResultStatus.Failed) {
       console.log(asyncResult.error.message);
       return;
     }
+    console.log('selectedChange', asyncResult.value) 
     // reset all 
     selectedItem.value = null
     if(asyncResult.value.length === 0) {
@@ -41,7 +51,7 @@ function selectedChange() {
     const item = Office.context.mailbox.item
     selectedItem.value = item
     selectedItem.value.attachmentFile = [];
-    if(item.attachments.length > 0) {
+    if(asyncResult.value[0].hasAttachment && item.attachments.length > 0) {
       for( let i=0; i < item.attachments.length; i ++) {
         item.getAttachmentContentAsync(item.attachments[i].id, (res:any) => getAttachmentCallback(res, item.attachments[i]));
       }
@@ -72,6 +82,16 @@ function chooseMethodAgain() {
   state.value = 'selected';
 }
 
+function toUpload(form:any) {
+  uploadQueue.value.push(...form);
+  state.value = 'uploading'
+}
+
+function uploadFinish(){
+  console.log('upload finish')
+  state.value = 'finish'
+}
+
 onMounted(() => {
   checkOffice()
 })
@@ -96,17 +116,35 @@ watch( ready, (isReady) => {
         please only select one email
       </div>
       <div v-else-if="state === 'selected'" class="selectedContainer">
-        <div class="subject">
-          {{ selectedItem.subject }}
-        </div>
-        <el-button type="primary" @click="chooseMethod('message')">Upload Message</el-button>
-        <el-button v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('messageAndAttachments')">Upload Message and Attachments</el-button>
-        <el-button v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('attachments')">Upload Attachments</el-button>
+        <el-button size="large" type="primary" @click="chooseMethod('message')">Upload Message</el-button>
+        <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('messageAndAttachments')">Upload Message and Attachments</el-button>
+        <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('attachments')">Upload Attachments</el-button>
       </div>
-      <div v-if="state === 'chooseMethod'" class="chooseMethod">
-        
-        {{ methodState }}
-        <el-button @click="chooseMethodAgain">back</el-button>
+      <div v-else-if="state === 'chooseMethod'" class="chooseMethod">
+        <div v-if="methodState === 'message' " class="messageOnly">
+          <div class="title">
+            Upload Email Message Only
+          </div>
+          <OfficeAddinOutlookUploadMessage :item="selectedItem" @back="chooseMethodAgain" @submit="toUpload"/>
+        </div>
+        <div v-else-if="methodState === 'messageAndAttachments' " class="messageAndAttachments">
+          <div class="title">
+            Upload Email Message and Attachments
+          </div>
+          <OfficeAddinOutlookUploadMessageAndAttachments :item="selectedItem" :attachments="selectedItem.attachmentFile" @back="chooseMethodAgain" @submit="toUpload"/>
+        </div>
+        <div v-else-if="methodState === 'attachments' " class="attachments">
+          <div class="title">
+            Upload Email Attachments
+          </div>
+          <OfficeAddinOutlookUploadAttachments :attachments="selectedItem.attachmentFile" @back="chooseMethodAgain" @submit="toUpload" />
+        </div>
+      </div>
+      <div v-else-if="state === 'uploading'" class="uploading">
+        <OfficeAddinOutlookUpload :items="uploadQueue" @finish="uploadFinish" />
+      </div>
+      <div v-else-if="state === 'finish'" class="finish">
+        Upload Success
       </div>
     </div>
     <div v-else>
@@ -116,7 +154,15 @@ watch( ready, (isReady) => {
 </template>
 
 <style scoped>
+.contentContainer{
+  height: 100%;
+  overflow: auto;
+  > * {
+    height: 100%;
+  }
+}
 .selectedContainer{
+  height: 100%;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -126,5 +172,11 @@ watch( ready, (isReady) => {
     font-size: 1.2rem;
     margin-block: var(--app-padding);
   }
+}
+.finish {
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  color: var(--primary-color);
 }
 </style>
