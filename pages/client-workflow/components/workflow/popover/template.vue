@@ -90,7 +90,7 @@ async function templateParamGet (templateItem: Object) {
         const res = await GetTemplateParamsApi(state.params)
         if(!res.paramsList || res.paramsList.length === 0) {
             form.paramList = []
-            ElMessage.error(`${$i18n.t('requestDataIsEmpty')}`)
+            ElMessage.error(`${$i18n.t('msg_requestDataIsEmpty')}`)
             return
         }
         state.canDownload = true
