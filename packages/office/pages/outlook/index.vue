@@ -1,23 +1,54 @@
 <script setup lang="ts">
 import {useOffice} from '~/compositbles/office'
-const { result, ext, host, ready, checkOffice } = useOffice()
+const {  host, ready, checkOffice } = useOffice()
 const {externalEndpoint} = useSetting()
-
-const selectedItem = ref<any>();
+type Methods = 'message' | 'messageAndAttachments' | 'attachments';
+type outlookState = 'waiting' | 'noSelected' | 'multipleSelect' | 'selected' | 'chooseMethod'
+const state = ref<outlookState>('waiting')
+const methodState = ref<Methods>();
+const selectedItem = ref<any>({
+  subject:"",
+  hasAttachment: false,
+});
 const isSelectedMultiple = ref(false)
+
+function getAttachmentCallback(result:any, item:any) {
+    console.log(result.value, item, selectedItem.value)
+  selectedItem.value.attachmentFile.push({
+    ...result.value,
+    ...item,
+  })
+}
 function selectedChange() {
   Office.context.mailbox.getSelectedItemsAsync((asyncResult:any) => {
+    state.value = 'noSelected'
     if (asyncResult.status === Office.AsyncResultStatus.Failed) {
       console.log(asyncResult.error.message);
       return;
     }
-    console.log("items", asyncResult.value)
-    isSelectedMultiple.value = asyncResult.value.length > 1;
-    // asyncResult.value.forEach(item => {
-    //   const listItem = document.createElement("li");
-    //   listItem.textContent = item.subject;
-    //   list.appendChild(listItem);
-    // });
+    // reset all 
+    selectedItem.value = null
+    if(asyncResult.value.length === 0) {
+      state.value = 'noSelected'
+      return ;
+    }
+    isSelectedMultiple.value = !(asyncResult.value.length === 1)
+    if(isSelectedMultiple.value) {
+      state.value = 'multipleSelect'
+      return
+    }
+    state.value = 'selected'
+    const item = Office.context.mailbox.item
+    selectedItem.value = item
+    selectedItem.value.attachmentFile = [];
+    if(item.attachments.length > 0) {
+      for( let i=0; i < item.attachments.length; i ++) {
+        item.getAttachmentContentAsync(item.attachments[i].id, (res:any) => getAttachmentCallback(res, item.attachments[i]));
+      }
+    }
+    // if hasAttachment is true, 
+    // loop all attachment and push 
+
   })
 }
 function initOutlook() {
@@ -32,23 +63,50 @@ function initOutlook() {
   });
 }
 
+function chooseMethod(method:Methods) {
+  state.value = 'chooseMethod';
+  methodState.value = method;
+}
+
+function chooseMethodAgain() {
+  state.value = 'selected';
+}
+
 onMounted(() => {
   checkOffice()
 })
 
 watch( ready, (isReady) => {
-  if(isReady) initOutlook()
+  if(isReady) {
+    state.value = 'noSelected'
+    initOutlook()
+  }else{
+    state.value = 'waiting'
+  }
 })
 </script>
 
 <template>
   <NuxtLayout  name="addin" :pageTitle="host">
-    <div v-if="ready" class="contentContainer">
-      <div v-if="isSelectedMultiple">
+    <div v-if="ready " class="contentContainer">
+      <div v-if="state === 'noSelected'" class="noSelect">
+        Please select an email
+      </div>
+      <div v-else-if="state === 'multipleSelect'">
         please only select one email
       </div>
-      <div v-else>
-        add button
+      <div v-else-if="state === 'selected'" class="selectedContainer">
+        <div class="subject">
+          {{ selectedItem.subject }}
+        </div>
+        <el-button type="primary" @click="chooseMethod('message')">Upload Message</el-button>
+        <el-button v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('messageAndAttachments')">Upload Message and Attachments</el-button>
+        <el-button v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('attachments')">Upload Attachments</el-button>
+      </div>
+      <div v-if="state === 'chooseMethod'" class="chooseMethod">
+        
+        {{ methodState }}
+        <el-button @click="chooseMethodAgain">back</el-button>
       </div>
     </div>
     <div v-else>
@@ -58,5 +116,15 @@ watch( ready, (isReady) => {
 </template>
 
 <style scoped>
-
+.selectedContainer{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--app-padding);
+  .subject{
+    font-size: 1.2rem;
+    margin-block: var(--app-padding);
+  }
+}
 </style>
