@@ -82,7 +82,7 @@
                     <bt:Image id="Icon.80x80" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/word-hello-world/assets/icon-80.png"/>
                 </bt:Images>
                 <bt:Urls>
-                    <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/outlook"/>
+                    <bt:Url id="Taskpane.Url" DefaultValue="https://app4.wclsolution.com/outlook"/>
                 </bt:Urls>
                 <bt:ShortStrings>
                     <bt:String id="GroupLabel" DefaultValue="Item Multi-select"/>
