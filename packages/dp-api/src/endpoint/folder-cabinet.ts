@@ -67,6 +67,9 @@ export const GetCabinetHeaderApi = async() => {
     return res
 }
 export const ExportCabinetApi = async(params) => {
-    const res = await api.post('/docpal/cabinet/export', params).then(res => res.data.data)
+    const res = await api.post('/docpal/cabinet/export', params, {
+        responseType: 'blob',
+        timeout: 0
+    }).then(res => res.data)
     return res
 }
