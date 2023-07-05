@@ -9,9 +9,10 @@
             </template>
         </el-tabs>
         <main>
-            <FolderCabinetTable @row-click="handleRowClick">
+            <FolderCabinetTable ref="tableRef" @row-click="handleRowClick">
                 <template #suffixSortButton>
-                    <el-button style="margin-bottom: 10px;" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
+                    <el-button class="suffixSortButton" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
+                    <el-button class="suffixSortButton" type="info" @click="handleDownload()">{{$t('export')}}</el-button>
                 </template>
             </FolderCabinetTable>
             <InteractDrawer ref="InteractDrawerRef" :minWidth="240">
@@ -22,6 +23,7 @@
     <div class="buttons--absolute">
         <el-button v-if="state.uploadList.length > 0" class="el-icon--left" type="info" @click="handleOpenUploadStatus">{{$t('uploadStatus')}}</el-button>
     </div>
+    <FolderCabinetDownloadDialog ref="DownloadDialogRef"/>
     <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="refreshTable"/>
     <FolderCabinetCreateUploadStatusDialog ref="CreateUploadStatusDialogRef" />
 </NuxtLayout>
@@ -86,6 +88,17 @@ function refreshTable () {
     }
     provide('uploadListAdd', uploadListAdd)
 // #endregion
+// #region module: Download csv
+    const tableRef = ref()
+    const DownloadDialogRef = ref()
+    function handleDownload () {
+        const searchParams = tableRef.value.getSearchParams()
+        console.log({searchParams});
+        
+        DownloadDialogRef.value.handleOpen(searchParams)
+    }
+// #endregion
+
 onMounted(async() => {
     await getData()
     if (!state.activeTab && state.tabList.length > 0) state.activeTab = state.tabList[0].id
@@ -112,5 +125,10 @@ main {
     display: grid;
     grid-template-columns: 1fr min-content;
     gap: var(--app-padding);
+}
+.suffixSortButton {
+    width: 88px;
+    margin-left: unset;
+    margin-bottom: 10px;
 }
 </style>

@@ -101,11 +101,18 @@ const tableRef = ref()
 function handleClick (row) {
     emit('row-click', row)
 }
+function getSearchParams () {
+    return {
+        ...state.extraParams,
+        ...pageParams,
+        templateId: route.query.tab
+    }
+}
 onMounted(() => {
     setTimeout(() => {
     })  
 })
-// defineExpose({ })
+defineExpose({ getSearchParams })
 </script>
 
 <style lang="scss" scoped>
