@@ -32,7 +32,7 @@
         <main id="mainContainer">
           <slot />
           <InteractDrawer ref="InteractDrawerRef">
-            <UploadStructure v-if="state.drawerOpen"></UploadStructure>
+            <UploadStructure></UploadStructure>
           </InteractDrawer>
         </main>
     </div>
@@ -54,7 +54,6 @@ const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useDevice();
 const { uploadState, uploadRequestList } = useUploadStore()
 const state = reactive({
-  drawerOpen: false
 })
 function toggleOpen() {
      opened.value = !opened.value
@@ -63,7 +62,6 @@ function toggleOpen() {
 // #region module: 
   const InteractDrawerRef = ref()
   function handleOpenUpload() {
-    state.drawerOpen = !state.drawerOpen
     InteractDrawerRef.value.handleSwitch()
   }
 // #endregion
