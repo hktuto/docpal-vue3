@@ -120,11 +120,11 @@ const loading = ref(false)
       const canApproval = ref(false)
 
       async function handelAudit (approved:boolean) {
-        if (!!approved && props.doc.isCheckedOut) {
+        // if (!!approved && props.doc.isCheckedOut) {
 
-          ElMessage.error(`${t('dpTip_versoionError')}`)
-          return
-        }
+        //   ElMessage.error(`${t('dpTip_versoionError')}`)
+        //   return
+        // }
         const param = {
           properties: {
             documentId: props.doc.id,
@@ -133,9 +133,9 @@ const loading = ref(false)
           }
         }
         loading.value = true
-        const res = await auditAdhocApi(param)
+        const result = await auditAdhocApi(param)
         loading.value = false
-        if(res) {
+        if(result) {
           canApproval.value = false
           // 有延迟
           // TODO : add api
