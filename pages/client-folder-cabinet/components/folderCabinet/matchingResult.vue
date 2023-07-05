@@ -165,7 +165,8 @@ const emits = defineEmits([
             formData.append('files', file)
             formData.append('document', JSON.stringify(document))
             const res = await CreateDocumentApi(formData)
-            return res.result
+            if (res.result) return ''
+            return file.name + ':' + res.result
         }
     // #endregion
     

@@ -19,7 +19,9 @@
         <el-form :model="form" ref="FormRef" @submit.native.prevent>
           <el-form-item :label="$t('role.auditor')">
             <el-select v-model="form.user_approver_id" multiple filterable clearable>
-              <el-option v-for="item in userListFilter" :key="item.userId" :label="item.userId" :value="item.userId" ></el-option>
+              <template v-for="item in userListFilter">
+                <el-option v-if="item.userId" :key="item.userId" :label="item.userId" :value="item.userId" ></el-option>
+              </template>
             </el-select>
           </el-form-item>
         </el-form>
