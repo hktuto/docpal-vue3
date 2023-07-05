@@ -1,22 +1,31 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
-    <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
-        <template v-for="item in state.tabList" :key="item.id">
-            <el-tab-pane  
-                :label="item.label" :name="item.id" v-loading="state.loading">
-                <template v-if="item.id === activeTab">
-                    <FolderCabinetTable @db-row-click="handleRowClick">
-                        <template #suffixSortButton>
-                            <el-button style="margin-bottom: 10px;" @click="handleNewItem(item)">{{$t('folderCabinet.newItem')}}</el-button>
-                        </template>
-                    </FolderCabinetTable>
-                    <FolderCabinetTemplateMatchingResult />
+    <div class="grid-layout">
+        <el-tabs v-model="activeTab" class="tag-container" @tab-change="tabChange">
+            <template v-for="item in state.tabList" :key="item.id">
+                <el-tab-pane  
+                    :label="item.label" :name="item.id" v-loading="state.loading">
+                </el-tab-pane>
+            </template>
+        </el-tabs>
+        <main>
+            <FolderCabinetTable ref="tableRef" @row-click="handleRowClick">
+                <template #suffixSortButton>
+                    <el-button class="suffixSortButton" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
+                    <el-button class="suffixSortButton" type="info" @click="handleDownload()">{{$t('export')}}</el-button>
                 </template>
-            </el-tab-pane>
-        </template>
-        
-    </el-tabs>
-    <FolderCabinetNewItemDialog ref="FolderCabinetNewItemDialogRef" @refresh="getData"/>
+            </FolderCabinetTable>
+            <InteractDrawer ref="InteractDrawerRef" :minWidth="240">
+                <FolderCabinetMatchingResult ref="MatchingResultRef"/>
+            </InteractDrawer>
+        </main>
+    </div>
+    <div class="buttons--absolute">
+        <el-button v-if="state.uploadList.length > 0" class="el-icon--left" type="info" @click="handleOpenUploadStatus">{{$t('uploadStatus')}}</el-button>
+    </div>
+    <FolderCabinetDownloadDialog ref="DownloadDialogRef"/>
+    <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="refreshTable"/>
+    <FolderCabinetCreateUploadStatusDialog ref="CreateUploadStatusDialogRef" />
 </NuxtLayout>
 </template>
 
@@ -29,7 +38,8 @@ const state = reactive({
     loading: false,
     activeTab: '',
     loading: false,
-    tabList: []
+    tabList: [],
+    uploadList: []
 })
 const { activeTab } = toRefs(state)
 function tabChange (tab) {
@@ -37,25 +47,58 @@ function tabChange (tab) {
     router.push({query: { tab, time }})
 }
 const FolderCabinetNewItemDialogRef = ref()
-function handleNewItem (activeSetting) {
-    // const activeSetting = state.tabList.find(item => item.id === state.activeTab)
+function handleNewItem () {
+    const activeSetting = state.tabList.find(item => item.id === state.activeTab)
     FolderCabinetNewItemDialogRef.value.handleOpen(activeSetting)
 }
+
+const MatchingResultRef = ref()
+const InteractDrawerRef = ref()
 function handleRowClick (row) {
-    router.push({query: { ...route.query, id: row.id }})
+    const _ref = MatchingResultRef.value
+    _ref.init(row, route.query.tab)
+    InteractDrawerRef.value.handleOpen()
 }
-async function getData() {
-    state.loading = true
-    try {
-        state.tabList = await GetCabinetLoginUserListApi()
-    } catch (error) {
-        
+function refreshTable () {
+    const time = new Date().valueOf().toString()
+    router.push({ query: { ...route.query, time } })
+}
+
+// #region module: init
+    async function getData() {
+        state.loading = true
+        try {
+            state.tabList = await GetCabinetLoginUserListApi()
+        } catch (error) {
+        }
+        state.loading = false
     }
-    state.loading = false
-}
-watch(() => route.query, (q) => {
-    if (q.tab) state.activeTab = q.tab
-}, { immediate: true })
+    watch(() => route.query, (q) => {
+        if (q.tab) state.activeTab = q.tab
+    }, { immediate: true })
+// #endregion
+
+// #region module: uploadList
+    const CreateUploadStatusDialogRef = ref()
+    function handleOpenUploadStatus () {
+        CreateUploadStatusDialogRef.value.handleOpen(state.uploadList)
+    }
+    function uploadListAdd(uploadItem) {
+        state.uploadList.push(uploadItem)
+    }
+    provide('uploadListAdd', uploadListAdd)
+// #endregion
+// #region module: Download csv
+    const tableRef = ref()
+    const DownloadDialogRef = ref()
+    function handleDownload () {
+        const searchParams = tableRef.value.getSearchParams()
+        console.log({searchParams});
+        
+        DownloadDialogRef.value.handleOpen(searchParams)
+    }
+// #endregion
+
 onMounted(async() => {
     await getData()
     if (!state.activeTab && state.tabList.length > 0) state.activeTab = state.tabList[0].id
@@ -64,13 +107,10 @@ onMounted(async() => {
 
 <style lang="scss" scoped>
 .grid-layout {
-    display: grid;
-    grid-template-rows: min-content 1fr;
     height: 100%;
     overflow: hidden;
-    :deep(.el-tab-pane) {
-        height: 100%;
-    }
+    display: grid;
+    grid-template-rows: min-content 1fr;
 }
 .buttons--absolute {
     position: absolute;
@@ -79,28 +119,16 @@ onMounted(async() => {
     z-index: 2;
 }
 .tag-container {
-    :deep .el-tab-pane {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: var(--app-padding);
-    }
-    :deep .el-tabs__nav-wrap:first {
-        width: calc(100% - 338px);
-        &::after {
-            display: none;
-        }
-    }
-    :deep .el-tabs__header:first {
-        &::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--el-border-color-light);
-            z-index: var(--el-index-normal);
-        }
-    }
+}
+main {
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: var(--app-padding);
+}
+.suffixSortButton {
+    width: 88px;
+    margin-left: unset;
+    margin-bottom: 10px;
 }
 </style>

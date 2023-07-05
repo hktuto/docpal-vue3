@@ -22,7 +22,8 @@ function getMenuItemFromPathName(name: string) {
     currentRouteMenuName.value = item?.name || "";
 }
 function handleBack () {
-    if(props.backPath) router.push(props.backPath)
+    if(props.backPath === 'upper') router.go(-1)
+    else if(props.backPath) router.push(props.backPath)
 }
 
 watch( route , (newRoute) => {

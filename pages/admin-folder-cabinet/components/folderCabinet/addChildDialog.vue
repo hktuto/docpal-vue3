@@ -41,14 +41,12 @@ async function handleSubmit() {
         state.visible = false
         emits('update')
     } catch (error) {
-
     }
     state.loading = false
 }
 function handleOpen(setting) {
     state.visible = true
     state.setting = setting
-
     setTimeout(async () => {
         if(setting.isEdit) {
             await FromRendererRef.value.vFormRenderRef.setFormData(setting)

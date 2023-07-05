@@ -64,7 +64,6 @@ async function getData () {
     try {
         state.setting = await GetCabinetTemplateApi(route.params.id)
     } catch (error) {
-
     }
     state.loading = false
 }

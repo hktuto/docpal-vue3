@@ -1,8 +1,9 @@
 <template>
-    <Table  :columns="tableSetting.columns" :table-data="tableData" :options="options"
+    <Table  ref="tableRef"
+            :columns="tableSetting.columns" :table-data="tableData" :options="options"
             v-loading="loading"
             @pagination-change="handlePaginationChange"
-            @row-dblclick="handleDblclick">
+            @row-click="handleClick">
             <template #preSortButton>
                 <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
             </template>
@@ -14,8 +15,8 @@
 
 
 <script lang="ts" setup>
-import { GetCabinetSubDocumentsApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
-const emit = defineEmits(['db-row-click']);
+import { GetCabinetPageApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+const emit = defineEmits(['row-click']);
 const userId:string = useUser().getUserId()
 // #region module: page
     const route = useRoute()
@@ -34,9 +35,11 @@ const userId:string = useUser().getUserId()
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
-                pageSize: pageParams.pageSize
+                pageSize: pageParams.pageSize,
             },
-            sortKey: tableKey
+            sortKey: tableKey,
+            highlightCurrentRow: true,
+            rowKey: 'id'
         },
         extraParams: {},
     })
@@ -44,7 +47,8 @@ const userId:string = useUser().getUserId()
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetCabinetSubDocumentsApi({...param, ...state.extraParams})
+            state.tableData = []
+            const res = await GetCabinetPageApi({...param, ...state.extraParams})
             
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
@@ -69,7 +73,7 @@ const userId:string = useUser().getUserId()
             const { page, pageSize } = newval
             pageParams.pageNum = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-            pageParams.id = route.query.tab
+            pageParams.templateId = route.query.tab
             getList(pageParams)
         },
         { immediate: true }
@@ -85,22 +89,30 @@ const userId:string = useUser().getUserId()
     const formJson = getJsonApi('folderCabinetSearch.json')
     function handleFormChange (data) {
         const extraParams = Object.keys(data.formModel).reduce((prev,key) => {
-            if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
+            if(typeof data.formModel[key] === 'boolean') prev[key] = data.formModel[key]
+            else if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
             return prev
         }, {})
         state.extraParams = extraParams
         handlePaginationChange(1)
     }
 // #endregion
-function handleDblclick (row) {
-    emit('db-row-click', row)
-    // router.push(`/workflow/${row.id}?state=${state.tabName}`)
+const tableRef = ref()
+function handleClick (row) {
+    emit('row-click', row)
+}
+function getSearchParams () {
+    return {
+        ...state.extraParams,
+        ...pageParams,
+        templateId: route.query.tab
+    }
 }
 onMounted(() => {
     setTimeout(() => {
     })  
 })
-// defineExpose({ })
+defineExpose({ getSearchParams })
 </script>
 
 <style lang="scss" scoped>

@@ -48,7 +48,6 @@ async function handleSubmit() {
         state.visible = false
         emits('update')
     } catch (error) {
-
     }
     state.loading = false
 }

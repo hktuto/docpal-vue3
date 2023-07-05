@@ -1,36 +1,43 @@
 <template>
-<div class="tableContainer"  >
-    <Table
-        v-if="tableData"
-        v-loading="loading"
-        :columns="tableSetting.columns"
-        :table-data="tableData"
-        :options="options"
-            @command="handleAction"
-            @row-dblclick="handleDblclick"
-            @row-contextmenu="handleRightClick"
-            @selection-change="handleSelect"
-            @contextmenu="handleEmptyRightClick">
-            <template #docName="{ row, index }">
-                <div class="nameContainer">
-                    <div :class="{selectContainer:true, checked: isSelected(row)}">
-                        <div v-if="options.selectable(row, index)" class="rowCheckbox">
-                            <SvgIcon class="checkIcon" src="/icons/white_check.svg" />
+<div :class="['tableContainer']" 
+    >
+    <DropzoneContainer class="backgroundDrop" :doc="doc" />
+        <Table
+            v-if="tableData"
+            v-loading="loading"
+            :class="{ dragActive: state.dragActive }"
+            :columns="tableSetting.columns"
+            :table-data="tableData"
+            :options="options"
+                @command="handleAction"
+                @row-dblclick="handleDblclick"
+                @row-contextmenu="handleRightClick"
+                @selection-change="handleSelect"
+                @contextmenu="handleEmptyRightClick">
+                <template #docName="{ row, index }">
+                    <div class="nameContainer">
+                        <div :class="{selectContainer:true, checked: isSelected(row)}">
+                            <div v-if="options.selectable(row, index)" class="rowCheckbox">
+                                <SvgIcon class="checkIcon" src="/icons/white_check.svg" />
+                            </div>
+                            <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" status="general"/>
                         </div>
-                        <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" status="general"/>
+                        <div class="label">{{row.name}}</div>
+                        <DropzoneContainer v-if="row.isFolder" :doc="row" class="folderDropzone backgroundDrop"></DropzoneContainer>
+                        
                     </div>
-                    <div class="label">{{row.name}}</div>
-                </div>
-            </template>
-    </Table>
+                </template>
+        </Table>
+        
+        <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
 </div>
+
 </template>
 
 
 <script lang="tsx" setup>
 import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
-import {TableV2FixedDir} from 'element-plus'
-import type { Column, RowClassNameGetter } from 'element-plus'
+
 const emit = defineEmits([
     'right-click',
     'select-change',
@@ -38,6 +45,8 @@ const emit = defineEmits([
 const selectedItems = ref<any>([])
 const props = defineProps<{doc: any}>();
 const { doc } = toRefs(props) 
+
+
 // #region module: page
 const { t } = useI18n()
 const route = useRoute()
@@ -57,7 +66,9 @@ const state = reactive<State>({
             return !row.isFolder
         }
     },
-    curDoc: {}
+    curDoc: {},
+
+    dragActive: false
 })
 const tableKey = TABLE.CLIENT_BROWSE
 const tableSetting = defaultTableSetting[tableKey]
@@ -168,6 +179,8 @@ function handleSelect (rows:any) {
     emit('select-change', rows)
 }
 
+onMounted(() => {
+})
 
 </script>
 
@@ -244,5 +257,33 @@ function handleSelect (rows:any) {
             height: var(--icon-size);
         }
     }
+}
+.FileUpload2 {
+    pointer-events: auto!important;
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+.backgroundDrop{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.folderDropzone{
+    &.isOverDropZone{
+        border-left: 1px solid var(--primary-color);
+        &:after{
+            background: linear-gradient(90deg, var(--primary-color-03) 0%,  rgba(189, 189, 189, 0) 100%);
+            outline : none;
+        }
+    }
+}
+</style>
+<style lang="scss">
+.forbidden-childe-pointer-events * {
+    pointer-events: none;
 }
 </style>
