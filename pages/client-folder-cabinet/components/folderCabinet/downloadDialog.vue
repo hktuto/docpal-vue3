@@ -61,6 +61,8 @@ async function handleSubmit() {
           return prev
       }, [])
       const blob = await ExportCabinetApi({ ...state.searchParams, orderList })
+      console.log({blob});
+      
       await downloadBlob(blob, 'folder-cabinet.csv')
       state.visible = false
     } catch (error) {

@@ -1,12 +1,14 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <div class="flex-x-end">
-            <el-button @click="uploadXlsx">{{$t('import')}}
-                <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
-            </el-button>
-            <el-button type="primary" @click="handleSubmit">{{$t('dpTool_save')}}</el-button>
+        <div>
+            <div class="flex-x-end">
+                <el-button @click="uploadXlsx">{{$t('import')}}
+                    <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
+                </el-button>
+                <el-button type="primary" @click="handleSubmit">{{$t('dpTool_save')}}</el-button>
+            </div>
+            <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
         </div>
-        <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
     </NuxtLayout>
 </template>
 
