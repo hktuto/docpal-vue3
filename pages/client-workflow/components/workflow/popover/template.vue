@@ -19,7 +19,7 @@
         </el-form>
         <template #footer>
             <el-button @click="state.dialogVisible = false">{{$t('cancel')}}</el-button>
-            <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_download')}}</el-button>
+            <el-button v-if="state.canDownload" :loading="state.loading" @click="handleSubmit">{{$t('common_download')}}</el-button>
         </template>
     </el-dialog>
 </template>
@@ -45,7 +45,8 @@ const state = reactive({
         fileType: '',
         templatePath: '',
         name: ''
-    }
+    },
+    canDownload: false
 })
 const FormRef = ref()
 const form = reactive({
@@ -67,6 +68,7 @@ async function handleSubmit() {
         const res = await DownloadTemplateApi(params)
         if(!res || res.errorCode) throw new Error(`${$i18n.t('responseMsg_errorCode_2')}`);
         downloadBlob(res, 'template')
+        state.dialogVisible = false
     } catch (error) {
         // ElMessage.error(error?.response?.data?.message || error.message)
     }
@@ -74,6 +76,7 @@ async function handleSubmit() {
 }
 async function templateParamGet (templateItem: Object) {
     dpLog({form}, 'form');
+    state.canDownload = false
     form.templatePath = templateItem.path
     try {
         const suffix = templateItem.name.split('.').pop()
@@ -85,7 +88,12 @@ async function templateParamGet (templateItem: Object) {
         state.params.name = templateItem.name
         state.params.templatePath = templateItem.path
         const res = await GetTemplateParamsApi(state.params)
-        if(!res.paramsList || res.paramsList.length === 0) throw new Error(`${$i18n.t('requestDataIsEmpty')}`);
+        if(!res.paramsList || res.paramsList.length === 0) {
+            form.paramList = []
+            ElMessage.error(`${$i18n.t('requestDataIsEmpty')}`)
+            return
+        }
+        state.canDownload = true
         form.paramList = [...new Set(res.paramsList)].map(item => ({ key: item, value: '' }))
     } catch (error) {
         // ElMessage.error(error?.response?.data?.message || error.message)

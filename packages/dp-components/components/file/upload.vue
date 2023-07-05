@@ -1,15 +1,19 @@
 <template>
 <div ref="dragRef" :class="['drag', { 'drag-active': state.active }]" >
-    <p class="drag-title">{{$t('common_dragFileHere')}}</p>
+    <p class="drag-title">{{$t('common_dragFileHere')}}
+      <SvgIcon v-if="accept" class="el-icon--right" src="/icons/tip.svg" :content="`${$t('onlyAccept')}:${accept}`"></SvgIcon>
+    </p>
     <el-button @click="clickUpload('file')"> {{$t('button.uploadFile')}} </el-button>
     <el-button @click="clickUpload('folder')"> {{$t('button.uploadFolder')}} </el-button>
     <input  v-show="false" ref="fileUploaderRef"
                 multiple
                 type="file"
+                :accept="accept"
                 @change="uploadHandler($event, 'fileUploader')"/>
     <input  v-show="false" ref="folderUploaderRef"
             multiple="false"
             type="file"
+            :accept="accept"
             webkitdirectory
             @change="uploadHandler($event, 'folderUploader')"
         />
@@ -18,6 +22,11 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
+const props = withDefaults(defineProps<{
+    accept: string,
+}>(), {
+  accept: ''
+})
 const emits = defineEmits(['change'])
 const state = reactive({
     active: false
@@ -94,6 +103,9 @@ onMounted(() => {
 
     &-title {
         font-size: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     &-subtile {

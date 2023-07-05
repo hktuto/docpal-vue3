@@ -12,7 +12,8 @@
           <strong class="primaryTitle">{{ $t('filePopover_newFiles') }}</strong>
           {{ 'in ' + state._doc.path }}
       </template>
-      <FileUpload class="sidebar" @change="tableDataAdd"></FileUpload>
+      <FileUpload class="sidebar"
+        :accept="accept" @change="tableDataAdd"></FileUpload>
       <div class="header">
         <span>{{$t('filePopover_batchTip')}}</span>
         <el-select v-model="state.documentType" class="el-icon--right" filterable default-first-option >
@@ -97,7 +98,8 @@ const emits = defineEmits(['success'])
 const dialogOpened = ref(false)
 
 const props = defineProps<{
-    doc: any
+    doc: any,
+    accept: string
 }>()
 const state = reactive({
   loading: false,
