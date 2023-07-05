@@ -32,8 +32,8 @@
 </div>
 </template>
 
-
 <script lang="ts" setup>
+import {ElMessage} from 'element-plus'
 import { 
     GetCabinetResultApi, 
     MatchingTemplateApi, 
@@ -69,7 +69,7 @@ const emits = defineEmits([
         try {
             const data = await MatchingTemplateApi(docItem.id)
             if(data.children) {
-                addDocToChildren(data.children)
+                addDocToChildren(data.children, data.documentPath)
                 state.treeData = data.children
             }
         } catch (error) {
@@ -77,10 +77,10 @@ const emits = defineEmits([
         }
         state.loading = false
     }
-    function addDocToChildren(children, rootId) {
+    function addDocToChildren(children, documentPath) {
         if (children) 
             children.forEach(item => {
-                addDocToChildren(item.children, item.rootId)
+                addDocToChildren(item.children, item.documentPath)
                 if(item.documents) {
                     if(!item.children) item.children = []
                     const documents = item.documents.reduce((prev, docItem) => {
@@ -88,14 +88,11 @@ const emits = defineEmits([
                             docItem.isDoc = true
                             prev.push(docItem)
                         }
-                        else {
-                            state.docMap[docItem.id] = docItem
-                        }
                         return prev 
                     }, [])
                     item.children.push(...documents)
                 }
-                if(!item.rootId && rootId) item.rootId = rootId
+                if(!item.documentPath && documentPath) item.documentPath = documentPath
             })
     }
 // #endregion
@@ -145,11 +142,17 @@ const emits = defineEmits([
             e.target.value = '' // 解决不能上传相同文件问题
         }
         async function handleUpload(file) {
-            const parentId = state.activeTreeItem.rootId
-            let parent
-            if (parentId) {
-                parent = state.docMap[parentId]
-                return await uploadDoc(file, parent.path)
+            const parentPath = state.activeTreeItem!.documentPath
+            const { isDuplicate } = await duplicateNameFilter(parentPath, [{ name: file.name }]);
+            if (isDuplicate) {
+                ElMessage({
+                    message: $t('dpTip_duplicateFileName') as string,
+                    type: 'error'
+                })
+                return file.name + ':Duplicate'
+            }
+            if (parentPath) {
+                return await uploadDoc(file, parentPath)
             }
         }
         async function uploadDoc (file, parentPath) {
