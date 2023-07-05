@@ -165,7 +165,7 @@ onMounted(async() => {
 .upload-main {
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr repeat(2, 2fr);
+    grid-template-columns: min-content 1fr min-content;
     grid-template-rows: repeat(2, min-content) 1fr min-content;
     grid-column-gap: var(--app-padding);
     grid-row-gap: var(--app-padding);
