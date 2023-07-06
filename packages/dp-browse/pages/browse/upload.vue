@@ -157,7 +157,10 @@ onMounted(async() => {
     state.fileList = getUploadFiles()
     state.backPath = getBackPath()
     state.rootDoc = getRootDoc()
-    if(state.fileList.length === 0) router.push('/browse')
+    if(state.fileList.length === 0) {
+        const path = route.query.backPath || '/browse'
+        router.push(path)
+    }
 })
 </script>
 
