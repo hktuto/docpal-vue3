@@ -35,10 +35,10 @@ export const useUploadStore = () => {
         backPath: ''
     }) )
     const uploadQueue = useState('uploadQueue', () => ({}) )
-    function setUploadFiles (files: any, doc: DocDetail) {
+    function setUploadFiles (files: any, doc: DocDetail, backPath: string = '/browse') {
         uploadState.value.uploadFiles = files
         uploadState.value.rootDoc = doc
-        uploadState.value.backPath = `/browse?path=${uploadState.value.rootDoc.path}`
+        uploadState.value.backPath = `${backPath}?path=${uploadState.value.rootDoc.path}`
     }
     function getBackPath () {
         return uploadState.value.backPath

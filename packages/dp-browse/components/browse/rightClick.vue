@@ -1,14 +1,36 @@
 <template>
-    <div v-show="state.visible" ref="FileRightClickPopoverRef" class="fileRightClick-container">
+    <div v-show="state.visible" ref="FileRightClickPopoverRef" 
+        style="--icon-size: 20px"
+        class="fileRightClick-container">
         <el-menu :default-active="state.defaultActive" @select="handleSelect" v-loading="state.loading">
-            <el-menu-item index="docActionAddFolder" v-show="state.canWrite && state.doc.isFolder && state.actions.addFolder" >{{$t('filePopover_newFolder')}}</el-menu-item>
-            <el-menu-item index="docActionAddFile" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >{{$t('filePopover_uploadFolder')}}</el-menu-item>
-            <el-menu-item index="docActionRename" v-show="state.canWrite && state.actions.rename">{{$t('filePopover_rename')}}</el-menu-item>
-            <el-menu-item index="docActionCopy" v-show="state.actions.copy">{{$t('filePopover_copy')}}</el-menu-item>
-            <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">{{$t('filePopover_cut')}}</el-menu-item>
-            <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">{{$t('filePopover_paste')}}</el-menu-item>
-            <el-menu-item index="docActionDelete" v-show="state.canWrite && state.actions.delete"> {{$t('filePopover_delete')}}</el-menu-item>
-            <el-menu-item index="docActionRefresh" v-show="state.actions.refresh">{{$t('common_refresh')}}</el-menu-item>
+            <el-menu-item index="docActionAddFolder" v-show="state.canWrite && state.doc.isFolder && state.actions.addFolder" >
+                <SvgIcon class="el-icon--left" src="/icons/file/folder-add.svg"></SvgIcon>
+                {{$t('filePopover_newFolder')}}</el-menu-item>
+            <!-- <el-menu-item index="docActionAddFile" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >{{$t('filePopover_uploadFolder')}}</el-menu-item> -->
+            <el-menu-item index="docActionUploadFile" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >
+                <SvgIcon class="el-icon--left" src="/icons/file/file-upload.svg"></SvgIcon>
+                {{$t('filePopover_uploadFile')}}</el-menu-item>
+            <el-menu-item index="docActionUploadFolder" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >
+                <SvgIcon class="el-icon--left" src="/icons/file/folder-upload.svg"></SvgIcon>
+                {{$t('filePopover_uploadFolder')}}</el-menu-item>
+            <el-menu-item index="docActionRename" v-show="state.canWrite && state.actions.rename">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-rename.svg"></SvgIcon>
+                {{$t('filePopover_rename')}}</el-menu-item>
+            <el-menu-item index="docActionCopy" v-show="state.actions.copy">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-copy.svg"></SvgIcon>
+                {{$t('filePopover_copy')}}</el-menu-item>
+            <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-cut.svg"></SvgIcon>
+                {{$t('filePopover_cut')}}</el-menu-item>
+            <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-paste.svg"></SvgIcon>
+                {{$t('filePopover_paste')}}</el-menu-item>
+            <el-menu-item index="docActionDelete" v-show="state.canWrite && state.actions.delete"> 
+                <SvgIcon class="el-icon--left" src="/icons/menu/trash.svg"></SvgIcon>
+                {{$t('filePopover_delete')}}</el-menu-item>
+            <el-menu-item index="docActionRefresh" v-show="state.actions.refresh">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg"></SvgIcon>
+                {{$t('common_refresh')}}</el-menu-item>
         </el-menu>
     </div>
 </template>
