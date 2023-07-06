@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('replaceFile')"
+<el-dialog v-model="state.visible" class="replace-dialog" :title="$t('replaceFile')"
     :close-on-click-modal="false" append-to-body
     >
     <el-form ref="formRef" :model="form"  label-position="top" @submit.native.prevent>
@@ -73,6 +73,8 @@ onMounted(async() => {
 })
 defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
+<style lang="scss">
+.replace-dialog {
+    width: 400px;
+}
 </style>
