@@ -1,7 +1,7 @@
 <template>
 <div :class="['tableContainer']" 
     >
-    <DropzoneContainer class="backgroundDrop" :doc="doc" />
+    
         <Table
             v-if="tableData"
             v-loading="loading"
@@ -272,6 +272,7 @@ onMounted(() => {
     height: 100%;
     z-index: 1;
 }
+
 .folderDropzone{
     &.isOverDropZone{
         border-left: 1px solid var(--primary-color);
