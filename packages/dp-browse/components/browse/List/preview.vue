@@ -14,6 +14,7 @@
                 </template>
                 <template v-else>
                     <BrowseItemIcon class="folderIcon" :type="item.isFolder ? 'folder' : 'file'" status="general"/>
+                    <DropzoneContainer v-if="item.isFolder" :doc="item" class="folderDropzone backgroundDrop"></DropzoneContainer>
                 </template>
                 <div class="name">{{item.name}}</div>
             </div>
@@ -147,6 +148,7 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
         color: var(--color-grey-700);
         > *{
             width: calc(var(--img-size) + var(--app-padding) * 2);
+          position: relative;
         }
     }
 }
@@ -186,5 +188,13 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
 }
 .folderIcon{
     --icon-size: 100%;
+}
+.backgroundDrop{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 </style>

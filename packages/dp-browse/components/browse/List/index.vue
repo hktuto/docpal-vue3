@@ -1,6 +1,7 @@
 <template>
     <div class="listContainer">
         <div class="left">
+          <DropzoneContainer class="backgroundDrop rootDrop" :doc="doc" />
             <el-tabs v-model="modelProps" @tab-click="tabChange">
             <el-tab-pane label="Table" name="table" class="h100">
                 <browse-list-table v-if="modelProps === 'table'" :doc="doc" :loading="pending" 
@@ -54,6 +55,7 @@ function handleSelectionChange (rows) {
 .left, .right{
     height: 100%;
     overflow: hidden;
+    position: relative;
 }
 :deep {
         .el-tabs {
@@ -73,4 +75,13 @@ function handleSelectionChange (rows) {
             overflow-x: hidden;
         }
     }
+
+.backgroundDrop{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
 </style>

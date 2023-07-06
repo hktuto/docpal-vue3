@@ -9,8 +9,8 @@
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
-                        <BrowseActionsNewFolder v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
-                        <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                        <!-- <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/> -->
+                        <BrowseActionsNew v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
@@ -78,6 +78,8 @@
         </Teleport>
         <!-- global action -->
         <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
+        <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
+        <BrowseActionsUploadDoc v-show="false" @success="handleRefresh"/>
     </page-container>
 
     </NuxtLayout>

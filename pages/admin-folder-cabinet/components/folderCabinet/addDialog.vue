@@ -9,7 +9,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, CreateCabinetTemplateApi, PatchCabinetTemplateApi } from 'dp-api'
+import { getJsonApi, GetBreadcrumb, CreateCabinetTemplateApi, PatchCabinetTemplateApi } from 'dp-api'
 const emits = defineEmits([
     'update'
 ])
@@ -55,20 +55,25 @@ function handleOpen(setting) {
     state.visible = true
     if(setting && setting.isEdit) {
         state.setting = setting
-        
         setTimeout(async () => {
+            state.loading = true
             const data = {
                 binds: revertUserGroup(setting.binds),
                 label: setting.label,
                 documentType: setting.documentType,
                 multiple: setting.multiple,
                 allow: setting.allow,
-                isEdit: true
+                isEdit: true,
+                rootId: await getRootIds(setting.rootId)
             }
-            
             await FromRendererRef.value.vFormRenderRef.setFormData(data)
+            state.loading = false
         })
     }
+}
+async function getRootIds(idOrPath: string) {
+    const data = await GetBreadcrumb(idOrPath)
+    return data.map(item => (item.id))
 }
 function revertUserGroup (binds) {
     return binds.reduce((prev, item) => {

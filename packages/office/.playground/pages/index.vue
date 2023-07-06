@@ -7,7 +7,7 @@
 const router = useRouter();
 
 router.push({
-    path:'/workflow'
+    path:'/office'
 })
 
 </script>

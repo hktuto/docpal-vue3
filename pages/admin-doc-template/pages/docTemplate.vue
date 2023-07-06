@@ -34,7 +34,8 @@
         </div>
         <LazyBrowseRightClick :permission="state.permission"></LazyBrowseRightClick>
         <BrowseActionsPaste v-show="false" @success="handleRefreshPaste"/>
-        <BrowseActionsUpload v-show="false" :accept="accept" @success="handleRefresh"/>
+        <BrowseActionsUploadDoc v-show="false" :accept="accept" backPath="/docTemplate" @success="handleRefresh"/>
+        <!-- <BrowseActionsUpload v-show="false" :accept="accept" @success="handleRefresh"/> -->
         <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
         <BrowseActionsDelete v-show="false" @success="handleRefreshDelete"/>
         <BrowseActionsEdit v-show="false" @success="handleRefreshParent"/>

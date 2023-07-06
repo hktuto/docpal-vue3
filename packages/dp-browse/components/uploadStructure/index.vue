@@ -1,29 +1,23 @@
 <template>
     <div>
         <div>{{$t('upload')}}</div>
-        <el-timeline>
-             <el-timeline-item v-for="item in uploadState.uploadRequestList" :key="item.id"
-                :timestamp="formatDate(item.startDate)" placement="top">
-                <el-button v-show="item.count === item.docList.length" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
-                <div class="listContainer">
-                    <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
-                        <div class="nameContainer">
+      <el-collapse v-model="activeNames" >
+        <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :title="formatDate(item.startDate)" :name="index.toString()">
+          <el-button v-show="isFinish(index)" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
+          <div class="listContainer">
+            <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
+              <div class="nameContainer" @click="itemClickHandler(uploadItem)">
 
-                        <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
-                        {{ uploadItem.name }} 
-                        </div>
-                        <div>
-                            <el-button :type="getType(uploadItem.status)" text
-                                :loading="uploadItem.status === 'loading'">
-                                {{ uploadItem.status === 'loading' ? '' : uploadItem.status || 'pending' }}
-                            </el-button>
-                        </div>
-                    </div>
-                </div>
-                
-             </el-timeline-item>
-        </el-timeline>
-        
+                <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
+                {{ uploadItem.name }}
+              </div>
+              <div >
+                {{ item.status || uploadItem.status }}
+              </div>
+            </div>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
     </div>
 </template>
 
@@ -34,6 +28,8 @@ import { storeToRefs } from 'pinia'
 const props = defineProps<{
     drawerOpen: boolean
 }>();
+const router = useRouter()
+const activeNames = ref(['0'])
 const { uploadState }  = useUploadStore()
 function getType(status) {
     switch(status){
@@ -63,7 +59,7 @@ function exportCsv(arr) {
         name: item.name,
         status: item.status,
         size: fileSizeFilter(item.file?.size || ''),
-        path: item.parentId,
+        path: item.path,
         isFolder: item.isFolder ? 'true' : 'false'
     }))
     jsonToXlsx(exportArr)
@@ -93,6 +89,19 @@ function jsonToXlsx (exportArr) {
     /* 生成xlsx文件 */
     XLSX.writeFile(wb, 'upload status.csv');
 }
+function itemClickHandler(item:any) {
+  if(item.status === 'finish' && item.path) {
+    router.push({ path:'/browse', query: {path : item.path} })
+  }
+}
+function isFinish(index: number){
+  const item = uploadState.value.uploadRequestList[index]
+  if(item.count === item.docList.length) {
+    uploadState.value.uploadRequestList[index].status = 'finish'
+    return true
+  }
+  return false
+}
 
 watch(uploadState, () => {
     console.log("uploadState", uploadState.value)
@@ -121,5 +130,6 @@ watch(uploadState, () => {
     align-items: center;
     gap: 10px;
     font-size: 0.7rem;
+  cursor: pointer;
 }
 </style>
