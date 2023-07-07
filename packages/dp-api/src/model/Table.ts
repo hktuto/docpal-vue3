@@ -542,7 +542,30 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             { id: '3', label: 'role.creator', prop: 'createdBy' },
-            { id: '4', label: 'tableHeader_type', prop: 'documentType' }
+            { id: '4', label: 'tableHeader_type', prop: 'documentType' },
+            {
+                "id": '5',
+                "type": "",
+                "label": "actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "goRoute",
+                        "suffixIcon": "/icons/file/position.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
         ],
         events: [],
         options: { pageSize: 20 }
