@@ -53,15 +53,17 @@ const state = reactive({
         if (!initData) initData = {}
         const res = await metaValidationRuleGetApi(documentType)
         if(!res) return []
-        res.forEach(item => {
-            if (ignoreList.includes(item.metaData)) return
+        const result = res.reduce((prev,item) => {
+            if (ignoreList.includes(item.metaData)) return prev
             else if (item.directoryEntries) {
                 item.directoryEntries = handleChildOptions(item.directoryEntries)
                 item.value = initData[item.metaData] ? initData[item.metaData] : []
             }
             else item.value = initData[item.metaData] ? initData[item.metaData] : ''
-        })
-        return res
+            prev.push(item)
+            return prev
+        }, [])
+        return result
     }
     function handleChildOptions (list = []) {
         const result = []
