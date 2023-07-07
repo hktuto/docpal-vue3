@@ -152,7 +152,7 @@ export const useUploadStore = () => {
                 if (parentPath === '/') parentPath = ''
                 uploadState.value.uploadRequestList[requestIndex].docList[index].status = 'loading'
                 const res = await handleCreateDocument(item, parentPath)
-                uploadState.value.uploadRequestList[requestIndex].docList[index].status = res ? 'finish' : 'fail'
+                uploadState.value.uploadRequestList[requestIndex].docList[index].status = res ? 'finish' : 'error'
                 uploadState.value.uploadRequestList[requestIndex].docList[index].path  = res ? res.path : '';
                 
             } else {
