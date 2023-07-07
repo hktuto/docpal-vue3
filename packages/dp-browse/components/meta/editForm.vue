@@ -49,7 +49,7 @@ const state = reactive({
         state.metaList = await metaListGet(documentType, initData)
     }
     async function metaListGet(documentType: string, initData: any) {
-        const ignoreList = ['dc:title']
+        const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor']
         if (!initData) initData = {}
         const res = await metaValidationRuleGetApi(documentType)
         if(!res) return []
