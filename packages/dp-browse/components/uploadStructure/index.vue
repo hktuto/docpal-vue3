@@ -12,7 +12,7 @@
                 {{ uploadItem.name }}
               </div>
               <div >
-                {{ uploadItem.status }}
+                {{ $t('upload_Status_' + uploadItem.status) }}
               </div>
             </div>
           </div>
