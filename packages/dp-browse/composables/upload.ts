@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { ElMessage } from 'element-plus'
 import { DocDetail, CreateDocumentApi, CreateFoldersApi } from 'dp-api'
 export type uploadDoc = {
     documentType: string,
@@ -34,10 +35,11 @@ export const useUploadStore = () => {
         uploadRequestList: <any>[],
         backPath: ''
     }) )
+    const router = useRouter()
     const uploadQueue = useState('uploadQueue', () => ({}) )
-    function setUploadFiles (files: any, doc: DocDetail, backPath: string = '/browse') {
+    function setUploadFiles (files: any, doc?: DocDetail, backPath: string = '/browse') {
         uploadState.value.uploadFiles = files
-        uploadState.value.rootDoc = doc
+        if (doc) uploadState.value.rootDoc = doc
         uploadState.value.backPath = `${backPath}?path=${uploadState.value.rootDoc.path}`
     }
     function getBackPath () {
@@ -50,7 +52,9 @@ export const useUploadStore = () => {
         const treeData:any = []
         const treeMap: any = {}
         uploadState.value.uploadFiles.forEach((item: any) => {
-            if(item.name.charAt(0) === '.')  return
+            console.log({item});
+            
+            if(item.name.charAt(0) === '.' || item.path.includes('/.'))  return
             if(item.path && !treeMap[item.path]) {
                 const names = item.path.split('/')
                 if (names.length === 0) return
@@ -81,6 +85,12 @@ export const useUploadStore = () => {
                 treeData.push(item)
             }
         })
+        if (treeData.length === 0) {
+            // @ts-ignore
+            ElMessage.error($i18n.t('msg.NoLegitimateDataDetected') as string)
+            setUploadFiles([])
+            router.push(uploadState.value.backPath)
+        }
         return treeData
     }
     function updateUploadRequestList (docs: uploadDoc[]) {

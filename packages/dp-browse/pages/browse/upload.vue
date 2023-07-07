@@ -48,7 +48,7 @@
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
 import { deepCopy, GetBreadcrumb } from 'dp-api';
-const { getUploadFiles, updateUploadRequestList, getBackPath, getRootDoc } = useUploadStore()
+const { setUploadFiles, getUploadFiles, updateUploadRequestList, getBackPath, getRootDoc } = useUploadStore()
 const route = useRoute()
 const router = useRouter()
 const treeRef = ref()
@@ -118,6 +118,7 @@ function resetChecked(){
     treeRef.value!.setCheckedKeys([], false)
 }
 function handleDiscard () {
+    setUploadFiles([])
     router.push(state.backPath)
 }
 function handleSubmit () {
