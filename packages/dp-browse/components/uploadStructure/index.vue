@@ -12,7 +12,7 @@
                 {{ uploadItem.name }}
               </div>
               <div >
-                {{ item.status || uploadItem.status }}
+                {{ uploadItem.status }}
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@ function exportCsv(arr) {
         status: item.status,
         size: fileSizeFilter(item.file?.size || ''),
         path: item.path,
-        isFolder: item.isFolder ? 'true' : 'false'
+        isFolder: item.isFolder ? 'yes' : 'no'
     }))
     jsonToXlsx(exportArr)
 }

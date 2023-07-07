@@ -129,7 +129,7 @@ export const useUploadStore = () => {
         for (let i = 0; i < uploadFiles.length; i++) {
             const item = uploadFiles[i]
 
-            uploadState.value.uploadRequestList[requestIndex].count++
+            
             if (!status || status === 'finish') {
 
                 let skip = false;
@@ -138,16 +138,22 @@ export const useUploadStore = () => {
                     skip = isDuplicate
                     if (isDuplicate) item.status = 'skip';
                 }
-                if (skip) continue;
+                if (skip){
+                    uploadState.value.uploadRequestList[requestIndex].count++
+                    continue
+                };
                 // get index of the item
                 const index = uploadState.value.uploadRequestList[requestIndex].docList.findIndex((doc: any) => doc.id === item.id)
 
                 if (parentPath === '/') parentPath = ''
+                uploadState.value.uploadRequestList[requestIndex].docList[index].status = 'loading'
                 const res = await handleCreateDocument(item, parentPath)
                 uploadState.value.uploadRequestList[requestIndex].docList[index].status = res ? 'finish' : 'fail'
                 uploadState.value.uploadRequestList[requestIndex].docList[index].path  = res ? res.path : '';
                 
             } else {
+                const index = uploadState.value.uploadRequestList[requestIndex].docList.findIndex((doc: any) => doc.id === item.id)
+                uploadState.value.uploadRequestList[requestIndex].docList[index].path.status = 'skip'
                 item.status = 'skip'
             }
 
@@ -160,6 +166,7 @@ export const useUploadStore = () => {
                     isChildren: true
                 })
             }
+            uploadState.value.uploadRequestList[requestIndex].count++
         }
     }
     
