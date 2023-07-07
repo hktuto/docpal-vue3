@@ -2,7 +2,7 @@
     <div>
         <div>{{$t('upload')}}</div>
       <el-collapse v-model="activeNames" >
-        <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :title="formatDate(item.startDate)" :name="index.toString()">
+        <el-collapsee-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :title="formatDate(item.startDate)" :name="index.toString()">
           <el-button v-show="isFinish(index)" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
           <div class="listContainer">
             <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
@@ -16,7 +16,7 @@
               </div>
             </div>
           </div>
-        </el-collapse-item>
+        </el-collapsee-item>
       </el-collapse>
     </div>
 </template>
