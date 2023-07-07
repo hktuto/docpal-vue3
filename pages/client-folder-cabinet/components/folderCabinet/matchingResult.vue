@@ -15,7 +15,7 @@
                 </div>
                 <div style="--icon-size: 18px">
                     <div v-if="showError(data)" class="color__danger size12">{{$t('onlyOneFileAllow')}}</div>
-                    <SvgIcon v-if="showAddButton(data)" src="/icons/add.svg"
+                    <SvgIcon v-if="showAddButton(data)" src="/icons/file/newFolder.svg"
                         @click="handleAddFile(data)"></SvgIcon>
                     <SvgIcon v-if="data.isDoc" src="/icons/menu/trash.svg"
                         @click="handleDeleteFile(data)"></SvgIcon>
