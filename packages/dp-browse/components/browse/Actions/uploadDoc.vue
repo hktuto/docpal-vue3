@@ -51,6 +51,7 @@ function uploadHandler (e) {
 }
 function getPath(path: string) {
     if(!path) return ''
+    path='/'+path
     const pathNames = path.split('/')
     pathNames.pop()
     return pathNames.join('/')
