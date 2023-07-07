@@ -11,6 +11,7 @@
                 {{ 'in /' + state.doc.name }}
             </template>
             <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" />
+            <MetaEditForm ref="MetaFormRef"></MetaEditForm>
             <template #footer>
                 <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{$t('submit')}}</el-button>
             </template>
