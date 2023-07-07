@@ -10,6 +10,7 @@ async function getPreview(){
     return
   }
   const blob = await DocumentThumbnailGetApi(props.doc.id)
+  console.log("blob", blob)
   if (blob) {
     const urlCreator = window.URL || window.webkitURL;
     previewUrl.value = urlCreator.createObjectURL(blob)
@@ -18,7 +19,7 @@ async function getPreview(){
   }
 }
 
-function imgError(event) {
+function imgError(event:any) {
   event.target.src = '/icons/file-general.svg'
 }
 

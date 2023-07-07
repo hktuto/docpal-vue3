@@ -131,7 +131,10 @@ export const downloadDocRecord = async(params) => {
     export const DocumentThumbnailGetApi = async(idOrPath:string) => {
         return api.post('/nuxeo/document/thumbnail', {idOrPath},{
             responseType: 'blob',
-            timeout: 0
+            timeout: 0,
+            headers:{
+                'noThrowError' : "true"
+            }
         }).then(res =>res.data)
     }
     export const DocumentThumbnailListGetApi = async(idOrPaths:string []) => {
