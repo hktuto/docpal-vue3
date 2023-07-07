@@ -66,6 +66,7 @@ function selectedChange() {
 function initOutlook() {
   // register outlook event listener
   Office.context.mailbox.addHandlerAsync(Office.EventType.SelectedItemsChanged, selectedChange, (asyncResult:any) => {
+    console.log("Office init", asyncResult.value);
     if (asyncResult.status === Office.AsyncResultStatus.Failed) {
       console.log(asyncResult.error.message);
       return;
