@@ -28,6 +28,8 @@ function getAttachmentCallback(result:any, item:any) {
 }
 function selectedChange() {
   Office.context.mailbox.getSelectedItemsAsync((asyncResult:any) => {
+    console.log("Selected Change", asyncResult.value)
+    console.log("Office item", Office.context.mailbox.item)
     state.value = 'noSelected'
     selectedItem.value.attachmentFile = []
     uploadQueue.value = [];
