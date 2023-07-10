@@ -143,7 +143,6 @@ const { x, y } = useMouse()
 }
 
 #topBarContainer{
-  overflow: hidden;
   background: var(--header-bg);
   min-height: 40px;
   grid-area: header;
