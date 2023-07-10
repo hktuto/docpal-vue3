@@ -11,7 +11,7 @@
                 <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
                 {{ uploadItem.name }}
               </div>
-              <div >
+              <div class="uploadStatus">
                 {{ $t('upload_Status_' + uploadItem.status) }}
               </div>
             </div>
@@ -131,5 +131,8 @@ watch(uploadState, () => {
     gap: 10px;
     font-size: 0.7rem;
   cursor: pointer;
+}
+.uploadStatus {
+  word-break: keep-all;
 }
 </style>
