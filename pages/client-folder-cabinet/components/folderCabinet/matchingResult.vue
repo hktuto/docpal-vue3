@@ -14,6 +14,7 @@
                     </span>
                 </div>
                 <div style="--icon-size: 18px">
+                    <div v-if="showFolderError(data)" class="color__danger size12">{{$t('msg.NoOtherFilesAllowed')}}</div>
                     <div v-if="showError(data)" class="color__danger size12">{{$t('onlyOneFileAllow')}}</div>
                     <SvgIcon v-if="showAddButton(data)" src="/icons/file/newFolder.svg"
                         @click="handleAddFile(data)"></SvgIcon>
@@ -102,8 +103,12 @@ const emits = defineEmits([
         if(data.folder === true || data.isDoc) return false
         return !data.multiple && data.children && data.children.length > 1
     }
+    function showFolderError (data) {
+        return false
+        return data.folder === true && !data.complete
+    }
     function getCss(data) {
-        if(data.folder === true || data.isDoc) return 'ellipsis'
+        if(data.isDoc) return 'ellipsis'
         return data.complete ? 'ellipsis' : 'ellipsis color__danger'
     }
     function showAddButton(data) {

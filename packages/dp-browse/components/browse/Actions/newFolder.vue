@@ -4,13 +4,14 @@
             content="new folder"
             round
             @click="iconClickHandler(doc)"></SvgIcon>
-        <el-dialog v-model="dialogOpened" append-to-body 
+        <el-dialog class="scroll-dialog" v-model="dialogOpened" append-to-body 
                     :close-on-click-modal="false">
             <template #title>
                 <strong class="primaryTitle">{{ $t('filePopover_newFolder') }}</strong>
                 {{ 'in /' + state.doc.name }}
             </template>
-            <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" />
+            <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" 
+                @formChange="formChange"/>
             <MetaEditForm ref="MetaFormRef"></MetaEditForm>
             <template #footer>
                 <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{$t('submit')}}</el-button>
@@ -37,6 +38,7 @@ const state = reactive({
     doc: {}
 })
 const FromRendererRef = ref()
+const MetaFormRef = ref()
 function iconClickHandler(doc:any){
     dialogOpened.value = true
     state.docPath = doc.path 
@@ -48,16 +50,20 @@ function iconClickHandler(doc:any){
     
 }
 const formJson = getJsonApi('fileNewFolder.json')
-
+function formChange ({fieldName,newValue,oldValue,formModel}) {
+    if(fieldName[0] === 'type') MetaFormRef.value.initMeta(fieldName[1])
+}
 async function handleSubmit () {
-    console.log("handleSubmit")
-    state.loading = true
     try {
         const timestamp = new Date().valueOf()
+        const metaFormData = MetaFormRef.value.getData()
+        if(!metaFormData) return
         const data = await FromRendererRef.value.vFormRenderRef.getFormData()
         const parentPath = state.docPath === '/' ? '' : state.docPath
+        state.loading = true
         const params = {
             ...data,
+            properties: metaFormData,
             idOrPath: `${parentPath}/new Folder${timestamp}`,
         }
         
@@ -70,7 +76,6 @@ async function handleSubmit () {
         emits('success', state.doc)
         state.loading = false
     } catch (error) {
-        console.log(error)
         if(error.message === 'dpTip_duplicateFileName') {
             ElMessage({
                 message: t(error.message) as string,

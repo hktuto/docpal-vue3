@@ -42,6 +42,10 @@ const state = reactive({
 })
 // #region module: set
     async function initMeta (documentType: string, initData: any) {
+        if(!documentType) {
+            state.metaList = []
+            return
+        }
         state.metaList = await metaListGet(documentType, initData)
     }
     async function metaListGet(documentType: string, initData: any) {
@@ -99,7 +103,15 @@ const state = reactive({
         if (!metaList) return
         metaList.forEach(metaItem => {
             if (!metaItem.display) return
-            if (metaItem.isRequire && !metaItem.value) msg += `[${metaItem.metaData}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+            if (metaItem.isRequire){
+                if(metaItem.value instanceof Array) {
+                    if(metaItem.value.length === 0) {
+                        msg += `[${metaItem.metaData}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+                    }
+                }else if(!metaItem.value) {
+                    msg += `[${metaItem.metaData}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+                }
+            } 
         })
     
         if (msg.length > 0) {
@@ -108,8 +120,7 @@ const state = reactive({
                 confirmButtonText: $i18n.t('dpButtom_confirm'),
             })
         }
-    
-        return msg.length === 0
+        return msg === ''
     }
 // #endregion
 defineExpose({ initMeta, getData })

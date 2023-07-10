@@ -1,34 +1,35 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <el-container>
-                <el-card>
-                    <div class="collection-list" style="--color: #F56C6C">
-                        <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': curCollection.id === item.id}]" @click="handleTabClick(item)">
-                            <span class="ellipsis" :title="item.name">{{item.name}}</span>
-                            <el-icon class="color__danger__hover cursorPointer"
-                                @click.stop="handleDelete(item)"><Delete /></el-icon>
-                        </div>
-                    </div>
+        <div class="collection-container">
+            <div :class="['collection-container--left', { collapse: style.collapse }]">
+                <div class="flex-x-end">
                     <el-button :loading="fileFormAddLoading" @click="openDialog()">{{$t('collections_new')}}</el-button>
-                </el-card>
-            <el-container>
-                <el-header>
+                    <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']" @click="handleCollapse"><ArrowDownBold /></el-icon>
+                </div>
+                <div class="collection-list" style="--color: #F56C6C">
+                    <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': curCollection.id === item.id}]" @click="handleTabClick(item)">
+                        <span class="ellipsis" :title="item.name">{{item.name}}</span>
+                        <el-icon class="color__danger__hover cursorPointer"
+                            @click.stop="handleDelete(item)"><Delete /></el-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="collection-main">
+                <div class="flex-x-between">
                     <div class="flex-x-start">{{curCollection.name}}
-                        <SvgIcon src="/icons/edit.svg" class="mg-l"
+                        <SvgIcon src="/icons/edit.svg" class="el-icon--right"
                             @click="openDialog(true)"/>
                     </div>
                     <el-button v-if="selectedDocs.length > 1"
                         @click="handleMulDelete">{{$t('delete')}}</el-button>
-                </el-header>
-                <el-main class="">
-                        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-                            @selection-change="handleSelectionChange"
-                            @pagination-change="handlePaginationChange"
-                            @command="handleAction"
-                            @row-dblclick="handleDblclick"></Table>
-                </el-main>
-            </el-container>
-        </el-container>
+                </div>
+                <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                    @selection-change="handleSelectionChange"
+                    @pagination-change="handlePaginationChange"
+                    @command="handleAction"
+                    @row-dblclick="handleDblclick"></Table>
+            </div>
+        </div>
         <FileFormDialog ref="fileFormDialogAddRef" :title="$t('collections_new')" @submit="submitNewCollection"></FileFormDialog>
         <FileFormDialog ref="fileFormDialogEditRef" :title="$t('collections_edit')" @submit="saveCollection"></FileFormDialog>
     </NuxtLayout>
@@ -38,7 +39,7 @@
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Delete } from '@element-plus/icons-vue'
+import { Delete, ArrowDownBold } from '@element-plus/icons-vue'
 import { getCollectionApi, DeleteByIdApi, removeCollectionApi, getCollectionDoc, createCollectionApi, patchDocApi,
         TABLE, defaultTableSetting, idOrPathParams } from 'dp-api'
 const { t } = useI18n();
@@ -186,6 +187,15 @@ const state = reactive<State>({
         }, 500)
     }
 // #endregion
+
+// #region module: 
+    const style = reactive({
+        collapse: true
+    })
+    function handleCollapse () {
+        style.collapse = !style.collapse
+    }
+// #endregion
 function handleDblclick (row) {
     router.push({
         path: '/browse',
@@ -214,17 +224,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.pageContainer {
-  padding: calc(var(--app-padding) * 2 );
-  position: relative;
-  height: 100%;
-}
-.grid-layout {
-    display: grid;
-    grid-template-rows: min-content 1fr;
-    height: 100%;
-    overflow: hidden;
-}
 .current {
     background-color: var(--menu-selected-bg);
     color: var(--menu-selected-color);
@@ -233,32 +232,85 @@ onMounted(() => {
     height: 100%;
     overflow: hidden;
 }
-.el-card :deep(.el-card__body) {
-    width: 200px;
+
+.collection-container {
     display: grid;
-    grid-template-rows: 1fr min-content;
+    grid-template-columns: min-content 1fr;
+    gap: var(--app-padding);
     height: 100%;
     overflow: hidden;
-    gap: var(--app-padding);
-    .collection-list {
-        overflow: auto;
-    }
-    .collection-item {
-        padding: var(--app-padding);
+    &--left {
+        width: 200px;
         display: grid;
-        grid-template-columns: 1fr min-content;
+        grid-template-rows: min-content 1fr;
+        height: 100%;
+        overflow: hidden;
         gap: var(--app-padding);
+        .collection-list {
+            overflow: auto;
+        }
+        .collection-item {
+            padding: var(--app-padding);
+            display: grid;
+            grid-template-columns: 1fr min-content;
+            gap: var(--app-padding);
+        }
+        .collapse-icon {
+            display: none;
+        }
     }
 }
-.el-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.collection-main {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    gap: var(--app-padding);
+    overflow: hidden;
 }
-.el-main {
-    padding: 0 var(--app-padding);
+.rotate {
+    transition: all 1s;
 }
-.mg-l {
-    margin-left: var(--app-padding);
+.revert{
+    transition: all 1s;
+    transform:rotate(180deg);
+}
+@media (max-width : 1024px) {
+    .collection-container {
+        grid-template-columns: unset;
+        grid-template-rows: min-content 1fr;
+        width: calc(100vw - 40px);
+        &--left.collapse {
+            height: 35px;
+            width: 100%;
+            box-shadow: unset;
+        }
+        &--left {
+            height: 50vh;
+            width: 100%;
+            box-shadow:  -1px 0px 3px rgba(0, 0, 0, .12);
+        }
+        .collection-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            .collection-item {
+                background-color: #ecf5ff;
+                color: #409eff;
+                display: grid;
+                grid-template-columns: 1fr min-content;
+                gap: var(--app-padding);
+                align-items: center;
+                vertical-align: middle;
+                padding: 3px 9px;
+                margin: 4px 4px;
+                border-radius: 4px;
+            }
+            .current {
+                background-color: aquamarine;
+            }
+        }
+        .collapse-icon {
+            display: unset;
+        }
+        
+    }
 }
 </style>
