@@ -139,5 +139,6 @@ function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
     display: grid;
     grid-template-columns: min-content 1fr;
     gap: var(--app-padding);
+    overflow: hidden;
 }
 </style>

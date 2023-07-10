@@ -28,6 +28,10 @@ function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()
 }
 onMounted(async() => {
+    nextTick(() => {
+        const keywordRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('keyword')
+        keywordRef.setHidden(true)
+    })
 })
 defineExpose({ handleSubmit })
 </script>
