@@ -4,7 +4,7 @@
             <div :class="['collection-container--left', { collapse: style.collapse }]">
                 <div class="flex-x-end">
                     <el-button :loading="fileFormAddLoading" @click="openDialog()">{{$t('collections_new')}}</el-button>
-                    <el-icon :class="['collapse-icon', 'el-icon--right', state.isCollapse ? 'rotate' : 'revert']" @click="handleCollapse"><ArrowDownBold /></el-icon>
+                    <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']" @click="handleCollapse"><ArrowDownBold /></el-icon>
                 </div>
                 <div class="collection-list" style="--color: #F56C6C">
                     <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': curCollection.id === item.id}]" @click="handleTabClick(item)">
@@ -266,7 +266,14 @@ onMounted(() => {
     gap: var(--app-padding);
     overflow: hidden;
 }
-@media (width <= 800px) {
+.rotate {
+    transition: all 1s;
+}
+.revert{
+    transition: all 1s;
+    transform:rotate(180deg);
+}
+@media (max-width : 1024px) {
     .collection-container {
         grid-template-columns: unset;
         grid-template-rows: min-content 1fr;
@@ -303,13 +310,7 @@ onMounted(() => {
         .collapse-icon {
             display: unset;
         }
-        .rotate {
-            transition: all 1s;
-            transform:rotate(180deg);
-        }
-        .revert{
-            transition: all 1s;
-        }
+        
     }
 }
 </style>
