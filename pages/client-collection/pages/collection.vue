@@ -23,14 +23,11 @@
                     <el-button v-if="selectedDocs.length > 1"
                         @click="handleMulDelete">{{$t('delete')}}</el-button>
                 </div>
-                <div style="overflow: auto">
-                    <div v-for="item in 50">{{item}}</div>
-                </div>
-                <!-- <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                     @selection-change="handleSelectionChange"
                     @pagination-change="handlePaginationChange"
                     @command="handleAction"
-                    @row-dblclick="handleDblclick"></Table> -->
+                    @row-dblclick="handleDblclick"></Table>
             </div>
         </div>
         <FileFormDialog ref="fileFormDialogAddRef" :title="$t('collections_new')" @submit="submitNewCollection"></FileFormDialog>
