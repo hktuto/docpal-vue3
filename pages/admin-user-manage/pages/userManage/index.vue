@@ -99,6 +99,7 @@ onMounted(async() => {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: calc(var(--app-padding) * 2);
+    overflow: hidden;
 }
 :deep(.el-autocomplete) {
     width: 100%;

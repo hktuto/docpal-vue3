@@ -3,11 +3,11 @@
         <div class="left">
           <DropzoneContainer class="backgroundDrop rootDrop" :doc="doc" />
             <el-tabs v-model="modelProps" @tab-click="tabChange">
-            <el-tab-pane label="Table" name="table" class="h100">
+            <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100">
                 <browse-list-table v-if="modelProps === 'table'" :doc="doc" :loading="pending" 
                     @select-change="handleSelectionChange" />
             </el-tab-pane>
-            <el-tab-pane label="Preview" name="preview" class="h100">
+            <el-tab-pane :label="$t('browse_list_preview')" name="preview" class="h100">
                 <browse-list-preview v-if="modelProps === 'preview'" :doc="doc" :permission="permission" />
             </el-tab-pane>
             </el-tabs>

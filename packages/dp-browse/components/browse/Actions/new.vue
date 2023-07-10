@@ -1,6 +1,6 @@
 <template>
 <el-dropdown @command="handleCommand">
-    <SvgIcon src="/icons/add.svg" round></SvgIcon>
+    <SvgIcon src="/icons/file/newFolder.svg" round></SvgIcon>
     <template #dropdown>
         <el-dropdown-menu>
             <el-dropdown-item command="docActionAddFolder" >

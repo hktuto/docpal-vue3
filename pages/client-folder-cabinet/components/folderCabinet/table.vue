@@ -2,6 +2,7 @@
     <Table  ref="tableRef"
             :columns="tableSetting.columns" :table-data="tableData" :options="options"
             v-loading="loading"
+            @command="handleAction"
             @pagination-change="handlePaginationChange"
             @row-click="handleClick">
             <template #preSortButton>
@@ -43,7 +44,21 @@ const userId:string = useUser().getUserId()
         },
         extraParams: {},
     })
-    
+    function handleAction (command, row: any, index: number) {
+        switch (command) {
+        case 'goRoute':
+            goRoute(row)
+            break
+        default:
+            break
+        }
+    }
+    function goRoute (row) {
+        router.push({ 
+            path: '/browse',
+            query: { path: row.documentPath } 
+        })
+    }
     async function getList (param) {
         state.loading = true
         try {

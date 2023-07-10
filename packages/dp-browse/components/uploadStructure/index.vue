@@ -2,7 +2,7 @@
     <div>
         <div>{{$t('upload')}}</div>
       <el-collapse v-model="activeNames" >
-        <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :title="formatDate(item.startDate)" :name="index.toString()">
+        <el-collapsee-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :title="formatDate(item.startDate)" :name="index.toString()">
           <el-button v-show="isFinish(index)" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
           <div class="listContainer">
             <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
@@ -12,11 +12,11 @@
                 {{ uploadItem.name }}
               </div>
               <div >
-                {{ item.status || uploadItem.status }}
+                {{ $t('upload_Status_' + uploadItem.status) }}
               </div>
             </div>
           </div>
-        </el-collapse-item>
+        </el-collapsee-item>
       </el-collapse>
     </div>
 </template>
@@ -60,7 +60,7 @@ function exportCsv(arr) {
         status: item.status,
         size: fileSizeFilter(item.file?.size || ''),
         path: item.path,
-        isFolder: item.isFolder ? 'true' : 'false'
+        isFolder: item.isFolder ? 'yes' : 'no'
     }))
     jsonToXlsx(exportArr)
 }

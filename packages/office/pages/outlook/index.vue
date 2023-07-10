@@ -28,6 +28,8 @@ function getAttachmentCallback(result:any, item:any) {
 }
 function selectedChange() {
   Office.context.mailbox.getSelectedItemsAsync((asyncResult:any) => {
+    console.log("Selected Change", asyncResult.value)
+    console.log("Office item", Office.context.mailbox.item)
     state.value = 'noSelected'
     selectedItem.value.attachmentFile = []
     uploadQueue.value = [];
@@ -64,6 +66,7 @@ function selectedChange() {
 function initOutlook() {
   // register outlook event listener
   Office.context.mailbox.addHandlerAsync(Office.EventType.SelectedItemsChanged, selectedChange, (asyncResult:any) => {
+    console.log("Office init", asyncResult);
     if (asyncResult.status === Office.AsyncResultStatus.Failed) {
       console.log(asyncResult.error.message);
       return;

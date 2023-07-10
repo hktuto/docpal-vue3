@@ -42,22 +42,28 @@ const state = reactive({
 })
 // #region module: set
     async function initMeta (documentType: string, initData: any) {
+        if(!documentType) {
+            state.metaList = []
+            return
+        }
         state.metaList = await metaListGet(documentType, initData)
     }
     async function metaListGet(documentType: string, initData: any) {
-        const ignoreList = ['dc:title']
+        const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor']
         if (!initData) initData = {}
         const res = await metaValidationRuleGetApi(documentType)
         if(!res) return []
-        res.forEach(item => {
-            if (ignoreList.includes(item.metaData)) return
+        const result = res.reduce((prev,item) => {
+            if (ignoreList.includes(item.metaData)) return prev
             else if (item.directoryEntries) {
                 item.directoryEntries = handleChildOptions(item.directoryEntries)
                 item.value = initData[item.metaData] ? initData[item.metaData] : []
             }
             else item.value = initData[item.metaData] ? initData[item.metaData] : ''
-        })
-        return res
+            prev.push(item)
+            return prev
+        }, [])
+        return result
     }
     function handleChildOptions (list = []) {
         const result = []
@@ -97,7 +103,15 @@ const state = reactive({
         if (!metaList) return
         metaList.forEach(metaItem => {
             if (!metaItem.display) return
-            if (metaItem.isRequire && !metaItem.value) msg += `[${metaItem.metaData}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+            if (metaItem.isRequire){
+                if(metaItem.value instanceof Array) {
+                    if(metaItem.value.length === 0) {
+                        msg += `[${metaItem.metaData}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+                    }
+                }else if(!metaItem.value) {
+                    msg += `[${metaItem.metaData}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+                }
+            } 
         })
     
         if (msg.length > 0) {
@@ -106,8 +120,7 @@ const state = reactive({
                 confirmButtonText: $i18n.t('dpButtom_confirm'),
             })
         }
-    
-        return msg.length === 0
+        return msg === ''
     }
 // #endregion
 defineExpose({ initMeta, getData })

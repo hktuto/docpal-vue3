@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { ElMessage } from 'element-plus'
 import { DocDetail, CreateDocumentApi, CreateFoldersApi } from 'dp-api'
 export type uploadDoc = {
     documentType: string,
@@ -34,10 +35,11 @@ export const useUploadStore = () => {
         uploadRequestList: <any>[],
         backPath: ''
     }) )
+    const router = useRouter()
     const uploadQueue = useState('uploadQueue', () => ({}) )
-    function setUploadFiles (files: any, doc: DocDetail, backPath: string = '/browse') {
+    function setUploadFiles (files: any, doc?: DocDetail, backPath: string = '/browse') {
         uploadState.value.uploadFiles = files
-        uploadState.value.rootDoc = doc
+        if (doc) uploadState.value.rootDoc = doc
         uploadState.value.backPath = `${backPath}?path=${uploadState.value.rootDoc.path}`
     }
     function getBackPath () {
@@ -50,18 +52,27 @@ export const useUploadStore = () => {
         const treeData:any = []
         const treeMap: any = {}
         uploadState.value.uploadFiles.forEach((item: any) => {
-            if(item.name.charAt(0) === '.')  return
+            if(item.name.charAt(0) === '.' || item.path.includes('/.'))  return
             if(item.path && !treeMap[item.path]) {
                 const names = item.path.split('/')
                 if (names.length === 0) return
-                treeMap[item.path] = {
-                    id: item.path,
-                    isFolder: true,
-                    name: names.pop(),
-                    parentId: names.join('/'),
-                    documentType: 'Folder',
-                    children: []
-                }
+                let _namePaths: string[] = []
+                names.forEach((_name: string) => {
+                    _namePaths.push(_name)
+                    if (_namePaths.length < 2) return
+                    const _path = _namePaths.join('/')
+                    if(!treeMap[_path]) {
+                        const __namePaths = structuredClone(_namePaths)
+                        treeMap[_path] = {
+                            id: _path,
+                            isFolder: true,
+                            name: __namePaths.pop(),
+                            parentId: __namePaths.join('/'),
+                            documentType: 'Folder',
+                            children: []
+                        }
+                    }
+                })
             }
             treeMap[item.id] = {
                 id: item.id,
@@ -81,6 +92,12 @@ export const useUploadStore = () => {
                 treeData.push(item)
             }
         })
+        if (treeData.length === 0) {
+            // @ts-ignore
+            ElMessage.error($i18n.t('msg.NoLegitimateDataDetected') as string)
+            setUploadFiles([])
+            router.push(uploadState.value.backPath)
+        }
         return treeData
     }
     function updateUploadRequestList (docs: uploadDoc[]) {
@@ -118,26 +135,29 @@ export const useUploadStore = () => {
     async function upload({uploadFiles, status, parentPath, requestIndex, isChildren}:UploadParams):Promise<void> {
         for (let i = 0; i < uploadFiles.length; i++) {
             const item = uploadFiles[i]
-
-            uploadState.value.uploadRequestList[requestIndex].count++
             if (!status || status === 'finish') {
-
                 let skip = false;
                 if (!isChildren) {
                     const {isDuplicate} = await duplicateNameFilter(parentPath, [item]);
                     skip = isDuplicate
                     if (isDuplicate) item.status = 'skip';
                 }
-                if (skip) continue;
+                if (skip){
+                    uploadState.value.uploadRequestList[requestIndex].count++
+                    continue
+                };
                 // get index of the item
                 const index = uploadState.value.uploadRequestList[requestIndex].docList.findIndex((doc: any) => doc.id === item.id)
 
                 if (parentPath === '/') parentPath = ''
+                uploadState.value.uploadRequestList[requestIndex].docList[index].status = 'loading'
                 const res = await handleCreateDocument(item, parentPath)
-                uploadState.value.uploadRequestList[requestIndex].docList[index].status = res ? 'finish' : 'fail'
+                uploadState.value.uploadRequestList[requestIndex].docList[index].status = res ? 'finish' : 'error'
                 uploadState.value.uploadRequestList[requestIndex].docList[index].path  = res ? res.path : '';
                 
             } else {
+                const index = uploadState.value.uploadRequestList[requestIndex].docList.findIndex((doc: any) => doc.id === item.id)
+                uploadState.value.uploadRequestList[requestIndex].docList[index].path.status = 'skip'
                 item.status = 'skip'
             }
 
@@ -150,6 +170,7 @@ export const useUploadStore = () => {
                     isChildren: true
                 })
             }
+            uploadState.value.uploadRequestList[requestIndex].count++
         }
     }
     
