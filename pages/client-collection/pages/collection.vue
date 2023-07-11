@@ -246,6 +246,8 @@ onMounted(() => {
         height: 100%;
         overflow: hidden;
         gap: var(--app-padding);
+        box-shadow: 0 0 12px rgba(0,0,0,.12);
+        padding-right: var(--app-padding);
         .collection-list {
             overflow: auto;
         }
@@ -286,6 +288,7 @@ onMounted(() => {
         &--left {
             height: 50vh;
             width: 100%;
+            padding-right: unset;
             box-shadow:  -1px 0px 3px rgba(0, 0, 0, .12);
         }
         .collection-list {
