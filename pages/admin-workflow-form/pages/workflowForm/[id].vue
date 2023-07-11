@@ -50,7 +50,11 @@ const state = reactive<State>({
             jsonValue: JSON.stringify(json)
         }
         state.submitLoading = true
-        const res = await SaveTaskFormJsonApi(param)
+        try {
+            const res = await SaveTaskFormJsonApi(param)
+        } catch (error) {
+            
+        }
         state.submitLoading = false
         if(!!res)  ElMessage.success($t('msg_successfullyModified'))
     }
