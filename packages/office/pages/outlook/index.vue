@@ -133,7 +133,7 @@ watch( ready, (isReady) => {
 
 <template>
   <NuxtLayout  name="addin" :pageTitle="host">
-    <div v-if="ready " class="contentContainer">
+    <div v-if="state !== 'waiting' " class="contentContainer">
       <div v-if="state === 'noSelected'" class="noSelect">
         Please select an email
       </div>
