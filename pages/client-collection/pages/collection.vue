@@ -277,7 +277,7 @@ onMounted(() => {
     .collection-container {
         grid-template-columns: unset;
         grid-template-rows: min-content 1fr;
-        width: calc(100vw - 40px);
+        width: 100%;
         &--left.collapse {
             height: 35px;
             width: 100%;

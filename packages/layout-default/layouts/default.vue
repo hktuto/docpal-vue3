@@ -11,7 +11,7 @@
         </div>
         <div id="topBarContainer">
         <div class="headerLeft">
-          <PageTitle  :backPath="backPath"/>
+          <PageTitle :title="pageTitle"  :backPath="backPath"/>
           <slot name="headerLeft" />
         </div>
         <div class="expand">
@@ -43,6 +43,7 @@ import InlineSvg from 'vue-inline-svg'
 const props = withDefaults(defineProps<{
     backPath?: string,
     showSearch?: boolean,
+    pageTitle?:  string
 }>(), {
   showSearch: true
 })
