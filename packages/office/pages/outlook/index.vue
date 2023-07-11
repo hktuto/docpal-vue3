@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useOffice} from '~/compositbles/office'
-const {  host, ready, checkOffice } = useOffice()
+const {  host, ready, checkOffice, platform } = useOffice()
 const {externalEndpoint} = useSetting()
 type Methods = 'message' | 'messageAndAttachments' | 'attachments';
 type outlookState = 'waiting' | 'noSelected' | 'multipleSelect' | 'selected' | 'chooseMethod' | 'uploading' | 'finish'
@@ -13,6 +13,7 @@ const selectedItem = ref<any>({
 const isSelectedMultiple = ref(false)
 const uploadQueue = ref([]);
 function getAttachmentCallback(result:any, item:any) {
+  console.log(result)
   // check item.id already in selectedItem attachmentFile
   // if not push
   // if yes, replace
@@ -26,10 +27,28 @@ function getAttachmentCallback(result:any, item:any) {
     return;
   }
 }
+
+function getSelected() {
+  console.log('getSelected');
+  const item = Office.context.mailbox.item
+  console.log(item, ready.value)
+  if(!item) {
+    state.value = 'noSelected'
+    return ;
+  }
+  selectedItem.value = item
+  selectedItem.value.attachmentFile = [];
+  state.value = 'selected'
+  if( item.attachments.length > 0) {
+    
+      for( let i=0; i < item.attachments.length; i ++) {
+        item.getAttachmentContentAsync(item.attachments[i].id, (res:any) => getAttachmentCallback(res, item.attachments[i]));
+      }
+    }
+}
 function selectedChange() {
+  
   Office.context.mailbox.getSelectedItemsAsync((asyncResult:any) => {
-    console.log("Selected Change", asyncResult.value)
-    console.log("Office item", Office.context.mailbox.item)
     state.value = 'noSelected'
     selectedItem.value.attachmentFile = []
     uploadQueue.value = [];
@@ -65,15 +84,20 @@ function selectedChange() {
 }
 function initOutlook() {
   // register outlook event listener
-  Office.context.mailbox.addHandlerAsync(Office.EventType.SelectedItemsChanged, selectedChange, (asyncResult:any) => {
-    console.log("Office init", asyncResult);
-    if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-      console.log(asyncResult.error.message);
-      return;
-    }
-    console.log("Event handler added.");
-    selectedChange();
-  });
+  getSelected();
+  if(platform.value === 'OfficeOnline' || platform.value === 'Mac') {
+    
+    return ;
+  }
+  // Office.context.mailbox.addHandlerAsync(Office.EventType.SelectedItemsChanged, selectedChange, (asyncResult:any) => {
+  //   console.log(asyncResult)
+  //   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+  //     console.log(asyncResult.error.message);
+  //     return;
+  //   }
+  //   console.log("Event handler added.");
+  //   selectedChange();
+  // });
 }
 
 function chooseMethod(method:Methods) {
@@ -120,6 +144,9 @@ watch( ready, (isReady) => {
       </div>
       <div v-else-if="state === 'selected'" class="selectedContainer">
         <el-button size="large" type="primary" @click="chooseMethod('message')">Upload Message</el-button>
+        <template v-if="platform === 'OfficeOnline'">
+          Attachment is not supported in Office Online
+        </template>
         <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('messageAndAttachments')">Upload Message and Attachments</el-button>
         <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('attachments')">Upload Attachments</el-button>
       </div>
@@ -151,7 +178,7 @@ watch( ready, (isReady) => {
       </div>
     </div>
     <div v-else>
-      Loading
+      Loading...
     </div>
   </NuxtLayout>
 </template>
