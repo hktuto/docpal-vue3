@@ -13,6 +13,7 @@ const selectedItem = ref<any>({
 const isSelectedMultiple = ref(false)
 const uploadQueue = ref([]);
 function getAttachmentCallback(result:any, item:any) {
+  console.log(result)
   // check item.id already in selectedItem attachmentFile
   // if not push
   // if yes, replace
@@ -36,7 +37,7 @@ function getSelected() {
     return ;
   }
   selectedItem.value = item
-  console.log(selectedItem.value, ready.value)
+  selectedItem.value.attachmentFile = [];
   state.value = 'selected'
   if( item.attachments.length > 0) {
     
@@ -83,19 +84,20 @@ function selectedChange() {
 }
 function initOutlook() {
   // register outlook event listener
-  if(platform.value === 'OfficeOnline') {
-    getSelected();
+  getSelected();
+  if(platform.value === 'OfficeOnline' || platform.value === 'Mac') {
+    
     return ;
   }
-  Office.context.mailbox.addHandlerAsync(Office.EventType.SelectedItemsChanged, selectedChange, (asyncResult:any) => {
-    console.log(asyncResult)
-    if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-      console.log(asyncResult.error.message);
-      return;
-    }
-    console.log("Event handler added.");
-    selectedChange();
-  });
+  // Office.context.mailbox.addHandlerAsync(Office.EventType.SelectedItemsChanged, selectedChange, (asyncResult:any) => {
+  //   console.log(asyncResult)
+  //   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+  //     console.log(asyncResult.error.message);
+  //     return;
+  //   }
+  //   console.log("Event handler added.");
+  //   selectedChange();
+  // });
 }
 
 function chooseMethod(method:Methods) {
@@ -142,6 +144,9 @@ watch( ready, (isReady) => {
       </div>
       <div v-else-if="state === 'selected'" class="selectedContainer">
         <el-button size="large" type="primary" @click="chooseMethod('message')">Upload Message</el-button>
+        <template v-if="platform === 'OfficeOnline'">
+          Attachment is not supported in Office Online
+        </template>
         <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('messageAndAttachments')">Upload Message and Attachments</el-button>
         <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('attachments')">Upload Attachments</el-button>
       </div>
@@ -173,7 +178,7 @@ watch( ready, (isReady) => {
       </div>
     </div>
     <div v-else>
-      Loading... {{selectedItem}}
+      Loading...
     </div>
   </NuxtLayout>
 </template>
