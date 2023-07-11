@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {useOffice} from '~/compositbles/office'
+import { useOffice } from '~/compositbles/office'
 const {  host, ready, checkOffice, platform } = useOffice()
-const {externalEndpoint} = useSetting()
+const { externalEndpoint } = useSetting()
 type Methods = 'message' | 'messageAndAttachments' | 'attachments';
 type outlookState = 'waiting' | 'noSelected' | 'multipleSelect' | 'selected' | 'chooseMethod' | 'uploading' | 'finish'
 const state = ref<outlookState>('waiting')
@@ -9,11 +9,10 @@ const methodState = ref<Methods>();
 const selectedItem = ref<any>({
   subject:"",
   hasAttachment: false,
-});
+}); 
 const isSelectedMultiple = ref(false)
 const uploadQueue = ref([]);
 function getAttachmentCallback(result:any, item:any) {
-  console.log(result)
   // check item.id already in selectedItem attachmentFile
   // if not push
   // if yes, replace
@@ -145,10 +144,14 @@ watch( ready, (isReady) => {
       <div v-else-if="state === 'selected'" class="selectedContainer">
         <el-button size="large" type="primary" @click="chooseMethod('message')">Upload Message</el-button>
         <template v-if="platform === 'OfficeOnline'">
-          Attachment is not supported in Office Online
+          <div class="warning">
+           Attachment is not supported in Office Online
+          </div>
         </template>
-        <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('messageAndAttachments')">Upload Message and Attachments</el-button>
-        <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('attachments')">Upload Attachments</el-button>
+        <template v-else>
+          <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('messageAndAttachments')">Upload Message and Attachments</el-button>
+          <el-button size="large" v-if="selectedItem.attachmentFile.length > 0" type="primary" @click="chooseMethod('attachments')">Upload Attachments</el-button>
+        </template>
       </div>
       <div v-else-if="state === 'chooseMethod'" class="chooseMethod">
         <div v-if="methodState === 'message' " class="messageOnly">
@@ -198,10 +201,15 @@ watch( ready, (isReady) => {
   justify-content: center;
   align-items: center;
   gap: var(--app-padding);
+  padding: var(--app-padding);
   .subject{
     font-size: 1.2rem;
     margin-block: var(--app-padding);
   }
+}
+.warning{
+  font-size: .8rem;
+  text-align: center;
 }
 .finish {
   display: grid;

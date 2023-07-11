@@ -4,7 +4,7 @@
   "scripts": {
     "build": "nuxt build  --dotenv ../../.env.deploy.dev",
     "dev": "nuxt dev .playground --dotenv ../../../.env.dev --port 3000 --https --ssl-cert ../../localhost.pem --ssl-key ../../localhost-key.pem\n",
-    "generate": "nuxt generate  --dotenv ../../.env.deploy.dev",
+    "generate": "nuxt generate  --dotenv ../../.env.office.deploy",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
