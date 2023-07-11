@@ -18,7 +18,7 @@
     <WorkflowDetailGraph :process-key="state.selectedWorkflow.key" step="start"/>
     <WorkflowDetailFormRender ref="vFormRef" />
     <template #footer>
-        <el-button @click="checkAndSubmit">{{$t('workflow_startWorkflow')}}</el-button>
+        <el-button :loading="state.loading" @click="checkAndSubmit">{{$t('workflow_startWorkflow')}}</el-button>
     </template>
 </el-dialog>
 
@@ -36,7 +36,8 @@ const emits = defineEmits(['created']);
 const state = reactive({
     availableWorkflow: [],
     formDialogVisible: false,
-    selectedWorkflow: {}
+    selectedWorkflow: {},
+    loading: false
 })
 async function getAvailableWorkflow () {
     state.availableWorkflow = await getAvailableWorkflowApi()
@@ -67,11 +68,17 @@ async function workflowClickHandler (item: Workflow) {
                     return newObj;
                 },{}),
             }
-            await workflowProcessStartApi(form)
-            state.formDialogVisible = false
-            ElMessage.success('Workflow created')
-            emits('created')
+            state.loading = true
+            try {
+                await workflowProcessStartApi(form)
+                state.formDialogVisible = false
+                ElMessage.success('Workflow created')
+                emits('created')
+            } catch (error) {
+                
+            }
         }
+        state.loading = false
     }
     async function initForm (processKey) {
         const props = await getFormPropsApi({ processKey })

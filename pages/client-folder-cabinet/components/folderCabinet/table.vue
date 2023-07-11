@@ -6,6 +6,7 @@
             @pagination-change="handlePaginationChange"
             @row-click="handleClick">
             <template #preSortButton>
+                <!-- <ResponsiveFilter ref="ResponsiveSelect" @change="formChange"/> -->
                 <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
             </template>
             <template #suffixSortButton>
@@ -94,6 +95,11 @@ const userId:string = useUser().getUserId()
         { immediate: true }
     )
     const { tableData, options, loading } = toRefs(state)
+
+    function formChange(filedData, formModel) {
+        console.log(filedData, formModel);
+        
+    }
 // #endregion
 
 // #region module: 
