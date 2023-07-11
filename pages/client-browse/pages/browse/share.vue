@@ -142,7 +142,8 @@ onMounted(async() => {
 
 <style lang="scss" scoped>
 .share-main {
-    height: 99%;
+    height: 100%;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 1.3fr 1fr;
     grid-template-rows: min-content 1fr min-content;
