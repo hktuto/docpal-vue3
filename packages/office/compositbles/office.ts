@@ -5,13 +5,15 @@ export const useOffice = () => {
     const { status, result, mineType, ext } = useUpload()
     const host = useState('officeHost',() => "");
     const ready = useState('officeReady',() => false);
-
+    const platform = useState('platform',() => "");
     const checkReadyInterval = useState("checkReadyInterval");
     
     function initOffice() {
         // @ts-ignore
         Office.onReady((info:any) => {
+            console.log(info)
             host.value = info.host;
+            platform.value = info.platform;
             // @ts-ignore
             if(info.host === Office.HostType.Word){
                 mineType.value = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -55,5 +57,6 @@ export const useOffice = () => {
         host,
         ready,
         checkOffice,
+        platform,
     }
 }

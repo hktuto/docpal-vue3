@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useOffice} from '~/compositbles/office'
-const {  host, ready, checkOffice } = useOffice()
+const {  host, ready, checkOffice, platform } = useOffice()
 const {externalEndpoint} = useSetting()
 type Methods = 'message' | 'messageAndAttachments' | 'attachments';
 type outlookState = 'waiting' | 'noSelected' | 'multipleSelect' | 'selected' | 'chooseMethod' | 'uploading' | 'finish'
@@ -26,7 +26,27 @@ function getAttachmentCallback(result:any, item:any) {
     return;
   }
 }
+
+function getSelected() {
+  console.log('getSelected');
+  const item = Office.context.mailbox.item
+  console.log(item, ready.value)
+  if(!item) {
+    state.value = 'noSelected'
+    return ;
+  }
+  selectedItem.value = item
+  console.log(selectedItem.value, ready.value)
+  state.value = 'selected'
+  if( item.attachments.length > 0) {
+    
+      for( let i=0; i < item.attachments.length; i ++) {
+        item.getAttachmentContentAsync(item.attachments[i].id, (res:any) => getAttachmentCallback(res, item.attachments[i]));
+      }
+    }
+}
 function selectedChange() {
+  
   Office.context.mailbox.getSelectedItemsAsync((asyncResult:any) => {
     state.value = 'noSelected'
     selectedItem.value.attachmentFile = []
@@ -63,7 +83,12 @@ function selectedChange() {
 }
 function initOutlook() {
   // register outlook event listener
+  if(platform.value === 'OfficeOnline') {
+    getSelected();
+    return ;
+  }
   Office.context.mailbox.addHandlerAsync(Office.EventType.SelectedItemsChanged, selectedChange, (asyncResult:any) => {
+    console.log(asyncResult)
     if (asyncResult.status === Office.AsyncResultStatus.Failed) {
       console.log(asyncResult.error.message);
       return;
@@ -148,7 +173,7 @@ watch( ready, (isReady) => {
       </div>
     </div>
     <div v-else>
-      Loading
+      Loading... {{selectedItem}}
     </div>
   </NuxtLayout>
 </template>
