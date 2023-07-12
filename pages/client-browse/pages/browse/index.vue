@@ -6,18 +6,24 @@
                 <template #default="{doc, permission}" >
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
                     <div v-show="selectList.length === 0 && doc.path !== '/'" id="browseHeaderRight" class="folderAction">
+                      <CollapseMenu>
+                        <template #default="{collapse}">
+
+
                         <BrowseActionsSubscribe  :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <!-- <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/> -->
                         <BrowseActionsNew v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsUploadRequest v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
 
-                        <div class="actionDivider"></div>
+                        <div :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
+                        </template>
+                      </CollapseMenu>
                     </div>
                     <div v-show="selectList.length !== 0" id="browseHeaderRight" class="selectedAction">
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
@@ -183,6 +189,10 @@ onMounted(() => {
     height: calc( var(--icon-size) + 16px);
     width: 1px;
     background: var(--color-grey-100);
+    &.collapse{
+      width:100%;
+      height: 1px;
+    }
 }
 .fileNameContainer{
     display: flex;
