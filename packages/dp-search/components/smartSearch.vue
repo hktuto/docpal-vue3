@@ -165,12 +165,16 @@ onMounted(() => {
     margin:0 auto;
     transition: all .3s ease-in-out;
     &.dropdownOpened{
-      position: fixed;
-      left: var(--app-padding);
-      top: var(--app-padding);
-      width: calc(100vw - var(--app-padding) * 2);
-      --max-width: 800px;
-      z-index: 9;
+        --max-width: 800px;
+        @media (max-width: 1024px) {
+            --max-width: 100%;
+            position: fixed;
+            left: var(--app-padding);
+            top: var(--app-padding);
+            width: calc(100vw - var(--app-padding) * 2);
+            z-index: 999;
+        }
+     
     }
 }
 .inputContainer{
