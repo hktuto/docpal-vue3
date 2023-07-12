@@ -1,7 +1,7 @@
 <template>
     <div id="pageContainer" :class="{isMobile}" >
         <div id="fullPage"></div>
-        <div id="sidebarContainer">
+        <div id="sidebarContainer" :class="{opened}">
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
             <div v-if="menu.length > 0" :class="{expand:true, opened}" @click="toggleOpen">
@@ -11,6 +11,7 @@
         </div>
         <div id="topBarContainer">
         <div class="headerLeft">
+          <SvgIcon v-if="isMobile" src="/icons/menu.svg" @click="toggleOpen" />
           <PageTitle :title="pageTitle"  :backPath="backPath"/>
           <slot name="headerLeft" />
         </div>
@@ -94,8 +95,11 @@ function toggleOpen() {
       #sidebarContainer{
         position: absolute;
         transform: translateX(-100vw);
-        width: 100vw;
         height: 100vh;
+        transition: transform .2s ease-in-out;
+        &.opened{
+          transform: translateX(0);
+        }
       }
     }
 }
