@@ -27,11 +27,6 @@
                         
                     </div>
                 </template>
-                <template #actions="{row, index}">
-                  <div class="actionContainer" @click="handleEmptyRightClick">
-                    <SvgIcon src="/icons/menu.svg" round />
-                  </div>
-                </template>
         </Table>
         
         <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
