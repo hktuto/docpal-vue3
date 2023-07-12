@@ -195,6 +195,7 @@ watch(show, (isShow) => {
     font-size: var(--el-font-size-large);
     text-align: center;
     color: var(--color-grey-0000);
+  word-break: break-all;
 }
 
 :deep {

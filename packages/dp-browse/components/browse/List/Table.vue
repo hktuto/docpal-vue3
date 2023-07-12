@@ -27,6 +27,11 @@
                         
                     </div>
                 </template>
+                <template #actions="{row, index}">
+                  <div class="actionContainer" @click="handleEmptyRightClick">
+                    <SvgIcon src="/icons/menu.svg" round />
+                  </div>
+                </template>
         </Table>
         
         <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
@@ -75,11 +80,13 @@ const tableSetting = defaultTableSetting[tableKey]
 
 
 
-function handleAction (command:string, row: any, rowIndex: number) {
+function handleAction (command:string, row: any, rowIndex: number, evt:MouseEvent) {
     switch (command) {
         case 'disabled':
             handleDisabled(row)
             break
+      case 'rightClick':
+        handleRightClick(row, null, evt)
     }
 }
 

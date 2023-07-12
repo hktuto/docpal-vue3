@@ -4,8 +4,8 @@ const tableHelper = useTableHelper()
 const props = defineProps<{ col: Table.Column }>()
 const emit = defineEmits(['command'])
 // 按钮组事件
-const handleAction = (command: Table.Command, { row, $index }: { row: any; $index: number }) => {
-    emit('command', command, row, $index)
+const handleAction = (command: Table.Command, { row, $index }: { row: any; $index: number }, evt:Event) => {
+    emit('command', command, row, $index, evt)
 }
 function getProp(row, prop?) {
     if(!prop) prop = props.col.prop
@@ -16,7 +16,7 @@ function formatProp (row) {
 }
 function getIcon (row, position='prefixIcon') {
     // dpLog(col[position]);
-    
+
 }
 </script>
 <template>
@@ -31,9 +31,9 @@ function getIcon (row, position='prefixIcon') {
         <!---图片 (START)-->
         <!-- 如需更改图片size，可自行配置参数 -->
         <template v-if="col.type === 'image'" #default="{ row, $index }">
-            
+
             <el-image
-                
+
                 preview-teleported
                 :hide-on-click-modal="true"
                 :preview-src-list="[row[col.prop!]]"
@@ -49,7 +49,7 @@ function getIcon (row, position='prefixIcon') {
         <template v-else-if="col.render"  #default="{ row, $index }">
             <component  :is="col.render" :row="row" :index="$index" />
         </template>
-            
+
         <template v-else-if="col.buttons?.length"  #default="{ row, $index }">
             <!-- 如果传递按钮数组，就展示按钮组 START-->
             <el-button-group >
@@ -58,7 +58,7 @@ function getIcon (row, position='prefixIcon') {
                     :key="index"
                     :size="btn.size"
                     :type="btn.type"
-                    @click.stop="handleAction(btn.command, { row, $index })"
+                    @click.stop="(evt) => handleAction(btn.command, { row, $index }, evt)"
                     >
                         <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
                         {{ btn.name }}
