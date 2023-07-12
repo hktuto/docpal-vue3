@@ -52,11 +52,10 @@ const state = reactive<State>({
         state.submitLoading = true
         try {
             const res = await SaveTaskFormJsonApi(param)
+            if(!!res)  ElMessage.success($t('msg_successfullyModified'))
         } catch (error) {
-            
         }
         state.submitLoading = false
-        if(!!res)  ElMessage.success($t('msg_successfullyModified'))
     }
     function handleFiledList () {
         // formProperties
