@@ -1,7 +1,7 @@
 <template>
     <div id="pageContainer" :class="{isMobile}" >
         <div id="fullPage"></div>
-        <div id="sidebarContainer" :class="{opened}">
+        <div ref="sidebarEl" id="sidebarContainer" :class="{opened}">
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
             <div v-if="menu.length > 0" :class="{expand:true, opened}" @click="toggleOpen">
@@ -42,6 +42,7 @@
 <script lang="ts" setup>
 import InlineSvg from 'vue-inline-svg'
 import {useLayout} from "~/composables/layout";
+import { onClickOutside } from '@vueuse/core'
 const props = withDefaults(defineProps<{
     backPath?: string,
     showSearch?: boolean,
@@ -56,8 +57,15 @@ const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useDevice();
 const { uploadState, uploadRequestList } = useUploadStore()
-
+const sidebarEl = ref();
 const { sideSlot } = useLayout()
+
+onClickOutside(sidebarEl, () => {
+  console.log("outside click")
+  if(isMobile && opened.value) {
+    opened.value = false
+  }
+})
 const state = reactive({
 })
 function toggleOpen() {
