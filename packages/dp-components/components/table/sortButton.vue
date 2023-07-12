@@ -1,6 +1,8 @@
 <template>
     <client-only class="reorderButtom__container">
-      <el-button type="primary" v-popover="popoverRef">{{ $t('tableHeader_orderColumn') }}</el-button>
+      <div class="sort-button" v-popover="popoverRef">
+        <SvgIcon src="/icons/orderColumn.svg" ></SvgIcon>
+      </div>
       <el-popover ref="popoverRef" width="280">
         <div class="listContainer">
           <draggable class="list-group" 
@@ -175,6 +177,19 @@ defineExpose({ initColumn })
 
 
 <style lang="scss" scoped>
+.sort-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-grey-200);
+  display: flex;
+  justify-content: center;
+  border-radius: 50% 0 0 50%;
+  --icon-size: 18px;
+  --icon-color: var(--color-grey-700);
+}
 .list-group {
   max-height: 50vh;
   overflow: auto;

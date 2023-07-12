@@ -4,7 +4,6 @@
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-            <TableSortButton ref="TableSortButtonRef" v-if="_options.sortKey" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
             <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
             <div>
                 <slot name="suffixSortButton"></slot>
@@ -57,6 +56,11 @@
                         </TableColumn>
                     </template>
                 </template>
+                <el-table-column v-if="_options.sortKey" :width="40">
+                    <template #header="{ column, $index }">
+                        <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <!-- 分页器 -->
@@ -367,6 +371,9 @@ defineExpose({ reorderColumn, tableRef })
         line-height: 1.5rem;
     }
 }
-
 </style>
-
+<style lang="scss">
+.dp-table-container .el-table__cell {
+    position: relative;
+}
+</style>
