@@ -467,12 +467,34 @@ export const defaultTableSetting: TableColumnSetting = {
                         "index": 0
                     }
                 ] 
+            },
+            {
+                id: '2',
+                "type": "",
+                "label": "dpTable_actions",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "rightClick",
+                        "suffixIcon": "/icons/dots.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
             }
         ],
         events: [],
         slots: [
             { slot: 'docName', label: 'table_name', prop: 'name' },
-            { id: '3', label: 'tableHeader_type', prop: 'type' },
         ],
         options: { pageSize: 20 }
     },

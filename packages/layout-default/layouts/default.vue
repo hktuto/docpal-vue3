@@ -1,7 +1,7 @@
 <template>
-    <div id="pageContainer" :class="{isMobile}" :style="`--mouse-x:${x}px; --mouse-y:${y}px;`">
+    <div id="pageContainer" :class="{isMobile}" >
         <div id="fullPage"></div>
-        <div id="sidebarContainer">
+        <div ref="sidebarEl" id="sidebarContainer" :class="{opened}">
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
             <div v-if="menu.length > 0" :class="{expand:true, opened}" @click="toggleOpen">
@@ -11,6 +11,7 @@
         </div>
         <div id="topBarContainer">
         <div class="headerLeft">
+          <SvgIcon v-if="isMobile" src="/icons/menu.svg" @click="toggleOpen" />
           <PageTitle :title="pageTitle"  :backPath="backPath"/>
           <slot name="headerLeft" />
         </div>
@@ -23,7 +24,7 @@
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Language v-if="mode === 'development'"></Language>
           <!-- <NotificationBadge v-if="feature.notification"/> -->
-          <Notification v-if="feature.notification"/>
+          <Notification v-if="feature.notification" />
           <ColorSwitch />
           <LanguageSwitch v-if="feature.multiLanguage" />
           <UserMiniDropdown v-if="feature.userAuth" />
@@ -40,6 +41,8 @@
 
 <script lang="ts" setup>
 import InlineSvg from 'vue-inline-svg'
+import {useLayout} from "~/composables/layout";
+import { onClickOutside } from '@vueuse/core'
 const props = withDefaults(defineProps<{
     backPath?: string,
     showSearch?: boolean,
@@ -54,23 +57,28 @@ const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useDevice();
 const { uploadState, uploadRequestList } = useUploadStore()
+const sidebarEl = ref();
+const { sideSlot } = useLayout()
+
+onClickOutside(sidebarEl, () => {
+  console.log("outside click")
+  if(isMobile && opened.value) {
+    opened.value = false
+  }
+})
 const state = reactive({
 })
 function toggleOpen() {
      opened.value = !opened.value
 }
 
-// #region module: 
+// #region module:
   const InteractDrawerRef = ref()
   function handleOpenUpload() {
     InteractDrawerRef.value.handleSwitch()
   }
 // #endregion
-// #region get mouse position
-import { useMouse } from '@vueuse/core'
-import {useResponsive} from "~/composables/responsive";
-const { x, y } = useMouse()
-// #endregion
+
 
 </script>
 
@@ -95,8 +103,11 @@ const { x, y } = useMouse()
       #sidebarContainer{
         position: absolute;
         transform: translateX(-100vw);
-        width: 100vw;
         height: 100vh;
+        transition: transform .2s ease-in-out;
+        &.opened{
+          transform: translateX(0);
+        }
       }
     }
 }

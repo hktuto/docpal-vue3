@@ -135,6 +135,7 @@ watch(doc, async() => {
   .name {
     font-weight: 800;
     font-size: 1.2rem;
+    word-break: break-all;
   }
 }
 .infoContainer {

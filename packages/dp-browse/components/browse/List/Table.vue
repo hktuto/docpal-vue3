@@ -3,11 +3,11 @@
     >
     
         <Table
-            v-if="tableData"
+            v-if="list"
             v-loading="loading"
             :class="{ dragActive: state.dragActive }"
             :columns="tableSetting.columns"
-            :table-data="tableData"
+            :table-data="list"
             :options="options"
                 @command="handleAction"
                 @row-dblclick="handleDblclick"
@@ -37,14 +37,15 @@
 
 <script lang="tsx" setup>
 import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
+import {openFileDetail} from "~/utils/browseHelper";
 
 const emit = defineEmits([
     'right-click',
     'select-change',
 ])
 const selectedItems = ref<any>([])
-const props = defineProps<{doc: any}>();
-const { doc } = toRefs(props) 
+const props = defineProps<{list: any}>();
+const { list } = toRefs(props) 
 
 
 // #region module: page
@@ -58,7 +59,6 @@ const pageParams = ref({
 })
 const state = reactive<State>({
     loading: false,
-    tableData: [],
     options: {
         multiSelect: true,
         showPagination: false,
@@ -73,63 +73,44 @@ const state = reactive<State>({
 const tableKey = TABLE.CLIENT_BROWSE
 const tableSetting = defaultTableSetting[tableKey]
 
-async function getList (param:any) {
-    const res = await GetChildThumbnail(param)
-    if(res.totalSize === 0 || res.entryList.length === 0){
-        return;
-    }
-    state.tableData.push(...res.entryList)
-    if(state.tableData.length < res.totalSize ) {
-        param.pageNumber++;
-        return getList(param)
-    }else {
-        return
-    }
-}
 
 
-async function cleanList () {
-    state.tableData = []
-}
-
-function handleAction (command:string, row: any, rowIndex: number) {
+function handleAction (command:string, row: any, rowIndex: number, evt:MouseEvent) {
     switch (command) {
         case 'disabled':
             handleDisabled(row)
             break
+      case 'rightClick':
+        handleRightClick(row, null, evt)
     }
 }
 
 function handleDisabled (_row:any) {
 
 }
-watch(
-    doc,
-    async (newVal:any) => {
-        console.log('doc change', newVal)
-        // 重置數據
-        cleanList()
-        pageParams.value = {
-            idOrPath: newVal.path || '/',
-            pageNumber: 0,
-            pageSize: 100
-        }
-        getList(pageParams.value)
-    },
-    { immediate: true, deep:true }
-)
+
 const { tableData, options, loading } = toRefs(state)
 // #endregion
 
 
 function handleDblclick (row:any) {
     state.curDoc = row;
-    router.push({
-        query: {
-            path: row.path,
-            isFolder: row.isFolder
-        }
-    });
+    if(row.isFolder) {
+      router.push({
+          query: {
+              path: row.path,
+              isFolder: row.isFolder
+          }
+      });
+      return 
+      
+    }
+    
+    openFileDetail(row.path, {
+      showInfo:true,
+      showHeaderAction:true
+    })
+    
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()

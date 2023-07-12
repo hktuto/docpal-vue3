@@ -163,8 +163,8 @@ const indexMethod = (index: number) => {
         emit('pagination-change', currentPage, _paginationConfig.value.pageSize)
     }
     // 按钮组事件
-    const handleAction = (command: Table.Command, row: any, index: number) => {
-        emit('command', command, row, index)
+    const handleAction = (command: Table.Command, row: any, index: number, evt: Event) => {
+        emit('command', command, row, index, evt)
     }
 
     // 多选事件

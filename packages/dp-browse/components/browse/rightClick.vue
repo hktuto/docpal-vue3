@@ -74,6 +74,7 @@ async function handleRightClick (detail: any) {
     state.defaultActive = []
     FileRightClickPopoverRef.value.style.left = detail.pageX + 'px'
     FileRightClickPopoverRef.value.style.top = detail.pageY + 'px'
+    
     const popoverHeight = FileRightClickPopoverRef.value.offsetHeight
     const popoverWidth = FileRightClickPopoverRef.value.offsetWidth
     const windowHeight = window.innerHeight
@@ -83,7 +84,9 @@ async function handleRightClick (detail: any) {
         const top = detail.pageY - popoverHeight
         FileRightClickPopoverRef.value.style.top = top + 'px'
     }
-    if (detail.pageX + popoverWidth > windowHeight) {
+  console.log(detail.pageX + popoverWidth, windowWidth)
+    if (detail.pageX + popoverWidth > windowWidth) {
+        
         const left = detail.pageX - popoverWidth
         FileRightClickPopoverRef.value.style.left = left + 'px'
     }
@@ -139,10 +142,8 @@ function handleSelect (command: string) {
     document.dispatchEvent(ev)
     emits('rightActionClick', command)
 }
-onMounted(() => {
-    useEventListener(document, 'fileRightClick', (evt) => handleRightClick(evt.detail))  
-    useEventListener(document, 'mouseup', hidePopover)  
-})
+useEventListener(document, 'fileRightClick', (evt:any) => handleRightClick(evt.detail))
+useEventListener(document, 'mouseup', hidePopover)
 </script>
 <style lang="scss" scoped>
 .fileRightClick-container {
