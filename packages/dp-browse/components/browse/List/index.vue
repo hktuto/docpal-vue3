@@ -4,11 +4,11 @@
           <DropzoneContainer class="backgroundDrop rootDrop" :doc="doc" />
             <el-tabs v-model="modelProps" @tab-click="tabChange">
             <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100">
-                <browse-list-table v-if="modelProps === 'table'" :doc="doc" :loading="pending" 
+                <browse-list-table v-if="modelProps === 'table'" :list="children" :loading="pending" 
                     @select-change="handleSelectionChange" />
             </el-tab-pane>
             <el-tab-pane :label="$t('browse_list_preview')" name="preview" class="h100">
-                <browse-list-preview v-if="modelProps === 'preview'" :doc="doc" :permission="permission" />
+                <browse-list-preview v-if="modelProps === 'preview'" :list="children"  :permission="permission" />
             </el-tab-pane>
             </el-tabs>
         </div>
@@ -19,8 +19,16 @@
 </template>
 
 <script lang="ts" setup>
-import { GetChild } from 'dp-api'
+import {GetChild, GetChildThumbnail} from 'dp-api'
 import { ViewType } from "../../browseType";
+
+const pageParams = ref({
+  idOrPath: '/',
+  pageNumber: 0,
+  pageSize: 100
+})
+const children = ref<any[]>([]);
+
 const emits = defineEmits([
     'select-change',
     'update:viewType',
@@ -42,6 +50,37 @@ function tabChange(tab: TabsPaneContext, event: Event) {
 function handleSelectionChange (rows) {
     emits('select-change', rows)
 }
+
+async function getList (param:any):Promise<any> {
+  const res = await GetChildThumbnail(param)
+  if(res.totalSize === 0 || res.entryList.length === 0){
+    return;
+  }
+  children.value.push(...res.entryList)
+  if(children.value.length < res.totalSize ) {
+    param.pageNumber++;
+    return getList(param)
+  }else {
+    return
+  }
+}
+
+
+async function cleanList () {
+  children.value = []
+}
+
+watch( doc, () => {
+  cleanList()
+  pageParams.value = {
+    idOrPath: doc.value.path || '/',
+    pageNumber: 0,
+    pageSize: 100
+  }
+  getList(pageParams.value)
+},{
+  immediate:true
+})
 </script>
 <style lang="scss" scoped>
 .h100 {

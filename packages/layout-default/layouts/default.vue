@@ -1,5 +1,5 @@
 <template>
-    <div id="pageContainer" :class="{isMobile}" :style="`--mouse-x:${x}px; --mouse-y:${y}px;`">
+    <div id="pageContainer" :class="{isMobile}" >
         <div id="fullPage"></div>
         <div id="sidebarContainer">
             <Logo class="logo" :mode="logo"/>
@@ -23,7 +23,7 @@
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Language v-if="mode === 'development'"></Language>
           <!-- <NotificationBadge v-if="feature.notification"/> -->
-          <Notification v-if="feature.notification"/>
+          <Notification v-if="feature.notification" />
           <ColorSwitch />
           <LanguageSwitch v-if="feature.multiLanguage" />
           <UserMiniDropdown v-if="feature.userAuth" />
@@ -40,6 +40,7 @@
 
 <script lang="ts" setup>
 import InlineSvg from 'vue-inline-svg'
+import {useLayout} from "~/composables/layout";
 const props = withDefaults(defineProps<{
     backPath?: string,
     showSearch?: boolean,
@@ -54,23 +55,21 @@ const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useDevice();
 const { uploadState, uploadRequestList } = useUploadStore()
+
+const { sideSlot } = useLayout()
 const state = reactive({
 })
 function toggleOpen() {
      opened.value = !opened.value
 }
 
-// #region module: 
+// #region module:
   const InteractDrawerRef = ref()
   function handleOpenUpload() {
     InteractDrawerRef.value.handleSwitch()
   }
 // #endregion
-// #region get mouse position
-import { useMouse } from '@vueuse/core'
-import {useResponsive} from "~/composables/responsive";
-const { x, y } = useMouse()
-// #endregion
+
 
 </script>
 
