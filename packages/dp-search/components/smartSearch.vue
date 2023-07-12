@@ -3,13 +3,13 @@
         <div ref="wrapper" id="smartSearchContainer" :class="{wrapper:true, dropdownOpened: !!dropdownState}">
             <div :class="{inputContainer:true, dropdownOpened: !!dropdownState}" @mouseenter="focusInput">
                 <ElIcon><Search /></ElIcon>
-                <input ref="inputEl" :value="state.keyword" :placeholder="$t('search_keyword')" 
+                <input ref="inputEl" :value="state.keyword" :placeholder="$t('search_keyword')"
                     @input="keywordInputHandler"
                     @keyup.enter="keywordEnter()" />
                 <ElIcon class="filterIcon" @click="openFilter"><Operation /></ElIcon>
             </div>
             <div  :class="{popUpDialog:true, dropdownOpened: !!dropdownState}">
-                <SearchFilter ref="SearchFilterRef" v-show="dropdownState === 'filter'" 
+                <SearchFilter ref="SearchFilterRef" v-show="dropdownState === 'filter'"
                     :searchParams="state.searchParams"
                     @closed="dropdownState = ''" @submit="handleSubmit"/>
                 <!-- <SearchShortResult v-else-if="dropdownState === 'list'" /> -->
@@ -29,7 +29,7 @@ const inputEl = ref();
 const state = reactive({
     dropdownState: '', // '' || 'filter' || 'list'
     formOpen: false, // 控制formChange带来的路由跳转
-    
+
     keyword: '',
     searchParams: {
         // paramsInTextSearch: [],
@@ -46,7 +46,7 @@ const state = reactive({
     }
 })
 const { dropdownState } = toRefs(state)
-// #region  dialog 
+// #region  dialog
     const wrapper = ref();
     const SearchFilterRef = ref()
     function keywordEnter () {
@@ -69,12 +69,12 @@ const { dropdownState } = toRefs(state)
         if(shouldClose) {
             state.dropdownState = ''
         }
-        
+
     })
     function isElPopover(pathList: any) {
         for(var index in pathList) {
             const element = pathList[index]
-            if(element && 
+            if(element &&
                 element.className &&
                 typeof element.className === 'string' &&
                 element.className.includes('el-popper')) return true
@@ -95,16 +95,16 @@ function goRoute() {
     const searchBackPath = route.query.searchBackPath ? route.query.searchBackPath : route.fullPath
     router.push({
         path: '/search',
-        query: { 
-            ...state.searchParams, 
+        query: {
+            ...state.searchParams,
             pageSize: 20,
             currentPageIndex: 1,
-            searchBackPath 
+            searchBackPath
         }
     })
 }
 function elHoverHandler() {
-    
+
 }
 function focusInput() {
     inputEl.value.focus();
@@ -118,12 +118,12 @@ function keywordInputHandler(event) {
     state.keyword = value
     state.searchParams.paramsInTextSearch = [value]
 }
-// #region module: 
+// #region module:
     const { ctrl_k, meta_k } = useMagicKeys({
         passive: false,
         onEventFired(e) {
             if ((e.ctrlKey && e.key === 'k' && e.type === 'keydown') ||
-                (e.metaKey && e.key === 'k' && e.type === 'keydown')) 
+                (e.metaKey && e.key === 'k' && e.type === 'keydown'))
                 e.preventDefault()
         }
     })
@@ -151,7 +151,7 @@ onMounted(() => {
     width: 100%;
     overflow: visible;
     position: relative;
-    
+
 }
 .wrapper{
     --input-padding: calc(var(--app-padding) * 0.8);
@@ -165,11 +165,16 @@ onMounted(() => {
     margin:0 auto;
     transition: all .3s ease-in-out;
     &.dropdownOpened{
-        --max-width: 800px;
+      position: fixed;
+      left: var(--app-padding);
+      top: var(--app-padding);
+      width: calc(100vw - var(--app-padding) * 2);
+      --max-width: 800px;
+      z-index: 9;
     }
 }
 .inputContainer{
-    
+
     width: 100%;
     padding: calc(var(--app-padding) * 0.8) var(--app-padding);
     display: grid;
@@ -195,7 +200,7 @@ onMounted(() => {
         border-color: var(--color-grey-000);
         background-color: var(--color-grey-0000);
         // box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        
+
     }
 }
 .filterIcon{
@@ -219,16 +224,16 @@ onMounted(() => {
     background-color: transparent;
     border-radius: var(--radius) ;
     border-color: var(--color-grey-000);
-    padding: var(--app-padding); 
+    padding: var(--app-padding);
     overflow: auto;
-    
+
     z-index: -1;
     transition: all .2s ease-in-out;
     &.dropdownOpened {
         box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         background-color: var(--color-grey-0000);
         height: auto;
-        padding: calc(var(--input-height) + 20px ) var(--app-padding) var(--app-padding) var(--app-padding); 
+        padding: calc(var(--input-height) + 20px ) var(--app-padding) var(--app-padding) var(--app-padding);
     }
 }
 </style>
