@@ -65,7 +65,7 @@
         <Resources>
             <bt:Images>
                 <bt:Image id="Icon.16x16" DefaultValue="https://app4.wclsolution.com/icon-16.png"/>
-                <bt:Image id="Icon.32x32" DefaultValue="hhttps://app4.wclsolution.com/icon-32.png"/>
+                <bt:Image id="Icon.32x32" DefaultValue="https://app4.wclsolution.com/icon-32.png"/>
                 <bt:Image id="Icon.80x80" DefaultValue="https://app4.wclsolution.com/icon-80.png"/>
             </bt:Images>
             <bt:Urls>
