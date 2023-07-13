@@ -22,6 +22,8 @@ const pageParams = {
     pageIndex: 0,
     pageSize: 20
 }
+const tableKey = TABLE.CLIENT_SMART_FOLDER
+const tableSetting = defaultTableSetting[tableKey]
 const state = reactive<State>({
     loading: false,
     tableData: [],
@@ -31,7 +33,8 @@ const state = reactive<State>({
             total: 0,
             currentPage: 1,
             pageSize: pageParams.pageSize
-        }
+        },
+        sortKey: tableKey
     },
     sFolderList: [],
     tabName: ''
@@ -48,8 +51,7 @@ const state = reactive<State>({
 // #endregion
 
 // #region module: page
-    const tableKey = TABLE.CLIENT_SMART_FOLDER
-    const tableSetting = defaultTableSetting[tableKey]
+
     async function getList (param, tab) {
         state.loading = true
         try {
@@ -96,12 +98,20 @@ const state = reactive<State>({
     )
 // #endregion
 function handleDblclick (row) {
+  if(row.isFolder) {
+
     router.push({
         path: '/browse',
         query: {
             path: row.path,
         },
     })
+    return ;
+  }
+  openFileDetail(row.path, {
+    showInfo:true,
+    showHeaderAction:true
+  })
 }
 
 const { tableData, options, loading, sFolderList, tabName } = toRefs(state)

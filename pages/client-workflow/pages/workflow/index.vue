@@ -66,12 +66,16 @@ watch(() => route.query, (q) => {
   height: 100%;
 }
 .grid-layout {
-    display: grid;
-    grid-template-rows: min-content 1fr;
+    display: flex;
+    flex-flow: column nowrap;
+    width:100%;
     height: 100%;
     overflow: hidden;
-    :deep(.el-tab-pane) {
+    :deep {
+
+      .el-tab-pane{
         height: 100%;
+      }
     }
 }
 .buttons--absolute {

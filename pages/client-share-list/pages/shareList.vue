@@ -22,6 +22,8 @@ const { t } = useI18n();
         pageIndex: 0,
         pageSize: 20
     }
+    const tableKey = TABLE.CLIENT_SHARE_LIST
+    const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -31,11 +33,11 @@ const { t } = useI18n();
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
-        }
+            },
+            sortKey: tableKey,
+        },
     })
-    const tableKey = TABLE.CLIENT_SHARE_LIST
-    const tableSetting = defaultTableSetting[tableKey]
+
 
     async function getList (param) {
         state.loading = true

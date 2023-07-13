@@ -5,9 +5,9 @@
       </div>
       <el-popover ref="popoverRef" width="280">
         <div class="listContainer">
-          <draggable class="list-group" 
-                    :list="displayList" 
-                    itemKey="name" 
+          <draggable class="list-group"
+                    :list="displayList"
+                    itemKey="name"
                     group="people"
                     handle=".handle"
                     @change="handleSubmit">
@@ -32,9 +32,9 @@
       <!-- <el-dialog v-model="dialogShow" :title="$t('tableHeader_reorderColumn')" custom-class="reorder__dialog">
         <el-card class="box-card">
           <template #header> <span>{{$t('tableHeader_displayColumn')}}</span> </template>
-          <draggable class="list-group" 
-                    :list="displayList" 
-                    itemKey="name" 
+          <draggable class="list-group"
+                    :list="displayList"
+                    itemKey="name"
                     group="people"
                     @change="handelDragChange">
             <template #item="{ element, index }">
@@ -81,10 +81,10 @@ interface TableProps {
 }
 const props = defineProps<TableProps>()
 const emit = defineEmits([
-    'reorderColumn', 
+    'reorderColumn',
 ])
 
-const popoverRef = ref(); 
+const popoverRef = ref();
 
 const dialogShow = ref(false)
 const displayList = ref([
@@ -105,7 +105,7 @@ function handleRevert () {
       item.show = userColumns.includes(index)
       return item
     })
-  
+
   handleSubmit()
 }
 // 保存偏好设置
@@ -126,7 +126,7 @@ async function handleSubmit () {
     await getUserSetting()
     emit('reorderColumn', showList.value, false)
   } catch (error) {
-    
+
   }
   loading.value = false
 }
@@ -136,7 +136,7 @@ function initColumn () {
   if(props.sortKey && tableColumnSetting.value) {
     originalColumns.value = tableColumnSetting.value[props.sortKey].columns || props.columns;
     // normalize user preference
-    
+
     // set displayList and hideList
     let userColumns = getDefaultColumns()
     if (userPreference.value.tableSettings[props.sortKey]) {
@@ -179,16 +179,24 @@ defineExpose({ initColumn })
 <style lang="scss" scoped>
 .sort-button {
   position: absolute;
-  top: 0;
+  top: 0%;
   right: 0;
-  width: 100%;
-  height: 100%;
+  width: 30px;
+  height: 30px;
   background-color: var(--color-grey-200);
   display: flex;
-  justify-content: center;
-  border-radius: 50% 0 0 50%;
-  --icon-size: 18px;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: calc( var(--app-padding) / 3);
+  border-radius: 0 0 0 100%;
+  --icon-size: 16px;
   --icon-color: var(--color-grey-700);
+  transform: scale(1);
+  transition: transform .2s ease-in-out;
+  transform-origin: top right;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 .list-group {
   max-height: 50vh;

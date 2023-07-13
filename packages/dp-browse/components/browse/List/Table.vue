@@ -57,6 +57,10 @@ const pageParams = ref({
     pageNumber: 0,
     pageSize: 100
 })
+
+const tableKey = TABLE.CLIENT_BROWSE
+const tableSetting = defaultTableSetting[tableKey]
+
 const state = reactive<State>({
     loading: false,
     options: {
@@ -64,14 +68,14 @@ const state = reactive<State>({
         showPagination: false,
         selectable: (row, index) => {
             return !row.isFolder
-        }
+        },
+      sortKey: tableKey
     },
     curDoc: {},
 
     dragActive: false
 })
-const tableKey = TABLE.CLIENT_BROWSE
-const tableSetting = defaultTableSetting[tableKey]
+
 
 
 
@@ -94,6 +98,7 @@ const { tableData, options, loading } = toRefs(state)
 
 
 function handleDblclick (row:any) {
+  
     state.curDoc = row;
     if(row.isFolder) {
       router.push({
@@ -173,6 +178,10 @@ onMounted(() => {
         flex-flow: row nowrap;
         column-gap: var(--app-padding);
         align-items: center;
+        position: relative;
+      .label{
+        word-break: break-all;
+      }
     }
 }
 :deep(.el-checkbox.is-disabled) {

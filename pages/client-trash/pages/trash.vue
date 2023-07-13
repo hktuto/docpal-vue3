@@ -5,7 +5,7 @@
                 @pagination-change="handlePaginationChange"
                 @selection-change="handleSelectionChange"
                 @row-dblclick="handleDblclick">
-                
+
                 <template #docIcon="{ row, index }">
                     <BrowseItemIcon :type="row.isFolder ? 'folder' : 'file'"/>
                 </template>
@@ -39,6 +39,8 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
         pageIndex: 0,
         pageSize: 20
     }
+const tableKey = TABLE.CLIENT_TRASH
+const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -49,11 +51,11 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
+            },
+          sortKey: tableKey
         }
     })
-    const tableKey = TABLE.CLIENT_TRASH
-    const tableSetting = defaultTableSetting[tableKey]
+
 
     async function getList (param) {
         state.loading = true

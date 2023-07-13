@@ -158,3 +158,21 @@ html.dark {
     max-width: 60vw;
     overflow-x: auto;
 }
+
+.el-tabs{
+  max-width: calc( 100vw - (var(--app-padding) * 4) + 60px);
+  @media(max-width: 1024px){
+    max-width: calc( 100vw - var(--app-padding) * 4);
+  }
+}
+
+.el-tabs__item{
+  @media(max-width: 1024px) {
+    display:block !important;
+    text-align: left;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}

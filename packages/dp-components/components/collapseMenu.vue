@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import {useBreakpoints} from '@vueuse/core'
+
 import { onClickOutside } from '@vueuse/core'
 const opened = ref(false);
-const breakpoints = useBreakpoints({
-  laptop: 1024,
-  desktop: 1280,
-})
+const { isMobile } = useLayout()
 const emits = defineEmits(['openedChange'])
 const outsideTarget = ref()
-const collapse = breakpoints.smallerOrEqual('laptop');
 
 onClickOutside(outsideTarget, (event) => {
-  if(collapse.value && opened.value){
+  if(isMobile.value && opened.value){
     opened.value = false
   }
 })
@@ -23,8 +19,8 @@ watch(opened,(bool) => {
 
 <template>
   <div class="collapseContainer">
-    <template v-if="!collapse">
-      <slot />
+    <template v-if="!isMobile">
+      <slot :collapse="false" />
     </template>
     <template v-else>
       <div class="mobileCollapse" @click.stop="() => {}">
