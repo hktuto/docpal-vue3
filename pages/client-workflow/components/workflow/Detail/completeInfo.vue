@@ -1,6 +1,5 @@
 <template>
 <div class="info" v-if="taskDetail">
-    <h4>{{ $t('workflow_info') }}</h4>
     <div class="infoContainer">
         <div class="label">{{ $t('workflow_jobName') }}</div>
         <div class="value">
@@ -10,7 +9,7 @@
             }}
         </div>
     </div>
-    <h4 class="mg-t">{{ $t('workflow_taskInfo') }}</h4>
+
     <div class="infoContainer">
         <div class="label">{{ $t('workflow_taskName') }}</div>
         <div class="value">
@@ -44,15 +43,20 @@ const props = defineProps<{
 </script>
 <style lang="scss" scoped>
 .info {
-    min-width: 180px;
-    h4 {
-        padding: unset;
-        margin: unset;
-        margin-bottom: calc(var(--app-padding) / 3);
+  display: flex;
+  flex-flow: column nowrap;
+  min-width: 180px;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  @media (max-width : 640px) {
+    flex-flow: row wrap;
+    gap: calc(var(--app-padding) * 2 );
+    .f-g {
+      flex: 1 0 100%;
     }
-    .mg-t {
-        margin-top: calc(var(--app-padding) * 3);
-    }
+  }
 }
 .infoContainer{
     margin-bottom: var(--app-padding);
