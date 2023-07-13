@@ -113,7 +113,7 @@ import { onKeyUp, onKeyDown } from '@vueuse/core'
 
 
 
-const { isSmallMobile } = useLayout()
+const { isSmallMobile, isMobile } = useLayout()
 
 export type SortParams = {
     column: TableColumnCtx<T | any>,
@@ -214,7 +214,7 @@ const indexMethod = (index: number) => {
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
         console.log("handleRowClick")
-        if(isSmallMobile.value) {
+        if(isMobile.value) {
           emit('row-dblclick', row, column, event)
           return ;
         }

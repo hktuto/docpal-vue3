@@ -1,7 +1,7 @@
 <template>
 <NuxtLayout class="fit-height withPadding " :backPath="`/workflow?tab=${backState}`">
     <div class="grid-layout">
-        <div>
+        <div class="info_panel">
             <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>
             <WorkflowDetailInfo v-else :taskDetail="taskDetail" @change="handleTaskInfoChange"></WorkflowDetailInfo>
         </div>
@@ -20,8 +20,11 @@
                 <!-- need to use v-if for bpmn, if not  svg graph will not show -->
                 <WorkflowDetailGraph v-if="activeTab === 'graph'" :processDefinitionId="taskDetail.processDefinitionId || taskDetail.taskInstance?.processDefinitionId" :steps="getCurrentStep"/>
             </el-tab-pane>
+          <el-tab-pane v-if="taskDetail && taskDetail.instanceId && isMobile" :label="$t('common_discussionChannel')" name="command">
+            <WorkflowDetailDiscussionChannel v-if="taskDetail && taskDetail.instanceId" :id="taskDetail.instanceId" :noToggle="true"/>
+          </el-tab-pane>
         </el-tabs>
-        <WorkflowDetailDiscussionChannel v-if="taskDetail && taskDetail.instanceId" :id="taskDetail.instanceId"/>
+        <WorkflowDetailDiscussionChannel v-if="taskDetail && taskDetail.instanceId && !isMobile" :id="taskDetail.instanceId"/>
     </div>
 </NuxtLayout>
 </template>
@@ -40,7 +43,7 @@ import {
 } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
-
+const { isMobile } = useLayout()
 const userId:string = useUser().getUserId()
 const state = reactive({
     backState: route.query.state,
@@ -205,6 +208,10 @@ watch(() => route.query, (q) => {
     height: 100%;
     gap: var(--app-padding);
     overflow: hidden;
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: min-content 1fr;
+    }
 }
 .grid-layout-tab {
     display: grid;
