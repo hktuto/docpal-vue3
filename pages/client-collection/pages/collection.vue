@@ -49,6 +49,8 @@ const pageParams = {
     pageIndex: 0,
     pageSize: 20
 }
+const tableKey = TABLE.CLIENT_COLLECTION
+const tableSetting = defaultTableSetting[tableKey]
 const state = reactive<State>({
     loading: false,
     tableData: [],
@@ -58,7 +60,8 @@ const state = reactive<State>({
             total: 0,
             currentPage: 1,
             pageSize: pageParams.pageSize
-        }
+        },
+      sortKey: tableKey
     },
     collectionList: [],
     curCollection: '',
@@ -92,8 +95,7 @@ const state = reactive<State>({
 // #endregion
 
 // #region module: page
-    const tableKey = TABLE.CLIENT_COLLECTION
-    const tableSetting = defaultTableSetting[tableKey]
+
     async function getList (param, tab) {
         state.loading = true
         try {

@@ -4,11 +4,8 @@
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-            <TableSortButton ref="TableSortButtonRef" v-if="_options.sortKey" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
             <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
-            <div>
-                <slot name="suffixSortButton"></slot>
-            </div>
+            <slot name="suffixSortButton"></slot>
         </div>
         <div class="dp-table-container--main">
           <template v-if="!isSmallMobile">
@@ -58,10 +55,18 @@
                         </TableColumn>
                     </template>
                 </template>
+                <el-table-column v-if="_options.sortKey" :width="40">
+                  <template #header="{ column, $index }">
+                    <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+                  </template>
+                </el-table-column>
             </el-table>
           </template>
           <template v-else>
             <div class="cardList">
+              <div v-if="tableData.length === 0" class="noData">
+                {{ $t('noData')}}
+              </div>
              <TableCard
                 v-for="(item, rowIndex) in tableData"
                 :key="'card_'+ rowIndex"
@@ -119,7 +124,7 @@ export type SortParams = {
 const props = defineProps<{
     tableData: Array<object>, // table的数据
     columns: Table.Column[], // 每列的配置项
-    options?: Table.Options
+    options?: Table.Options,
 }>()
 const tableRef = ref();
 
@@ -377,9 +382,10 @@ defineExpose({ reorderColumn, tableRef })
 
 .tableHeader{
     width: 100%;
-    display: grid;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
     align-items: flex-end;
-    grid-template-columns: 1fr min-content min-content;
     gap: var(--app-padding);
     .headerLeftExpand {
         overflow: hidden;

@@ -71,11 +71,8 @@ watch(() => route.query, (q) => {
     width:100%;
     height: 100%;
     overflow: hidden;
-
     :deep {
-      .el-tabs__content{
-        flex: 1 0 auto;
-      }
+
       .el-tab-pane{
         height: 100%;
       }

@@ -21,6 +21,8 @@ const { t } = useI18n();
         pageIndex: 0,
         pageSize: 20
     }
+  const tableKey = TABLE.CLIENT_FILE_REQUEST
+  const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -31,6 +33,7 @@ const { t } = useI18n();
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
+            sortKey: tableKey,
             rowStyle ({row, index}) {
                 if(row.status !== 'pending_approval') {
                     return 'background-color: #CDD0D6!important'
@@ -40,8 +43,7 @@ const { t } = useI18n();
             }
         }
     })
-    const tableKey = TABLE.CLIENT_FILE_REQUEST
-    const tableSetting = defaultTableSetting[tableKey]
+
 
     async function getList (param) {
         state.loading = true
