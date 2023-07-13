@@ -28,7 +28,7 @@
             <MetaEditForm ref="MetaFormRef" showNoData @meta-change="handleMetaChange"></MetaEditForm>
         </template>
         <template v-else>
-            {{$t('click folder and file to set meta')}}
+            {{$t('tip.clickFolderOrFileToSetMeta')}}
         </template>
     </div>
     <MetaEditForm v-show="false" ref="MetaFormRef2"></MetaEditForm>
