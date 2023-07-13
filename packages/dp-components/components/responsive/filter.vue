@@ -59,9 +59,7 @@ const state = reactive<state>({
 })
 // #region module: onResize
     function onResize({ width, height }: { width: number; height: number }) {
-        console.log(width);
-        
-        let defaultWidth = state.moreList.length > 0 ? 110 : 0
+        let defaultWidth = state.moreList.length > 0 ? 83 : 0
         const clearFilterStr = $t('clearFilter')
         defaultWidth += clearFilterStr.getWidth() + state.padding * 2
         state.moreList = []
@@ -72,8 +70,6 @@ const state = reactive<state>({
             const item = state.list[index]
             const boxWidth = getWidth(item)
             prev += boxWidth
-            console.log(prev > width, prev ,width);
-            
             if(prev > width) {
                 _boxRef.style.display = 'none'
                 state.moreList.push(item)
