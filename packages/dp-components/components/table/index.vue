@@ -11,6 +11,7 @@
             </div>
         </div>
         <div class="dp-table-container--main">
+          <template v-if="!isSmallMobile">
             <el-table
                 ref="tableRef"
                 :data="tableData"
@@ -58,6 +59,38 @@
                     </template>
                 </template>
             </el-table>
+          </template>
+          <template v-else>
+            <div class="cardList">
+             <TableCard
+                v-for="(item, rowIndex) in tableData"
+                :key="'card_'+ rowIndex"
+                :row="item"
+                :column="columns__sub"
+                @row-contextmenu="handleRightClick"
+                @selection-change="handleSelectionChange"
+                @row-click="handleRowClick"
+                @row-dblclick="handleRowDblclick"
+                @cell-click="handleCellClick"
+                @sort-change="handleSortChange"
+              >
+                <template v-for="(col, index) in columns__sub" :key="index">
+                  <template v-if="!col.hide">
+                    <TableCardItem :col="col" :rowData="item" :rowIndex="index" :class="col.class" @command="handleAction">
+                      <template #customHeader="{ slotName, column, index }">
+                        <slot :name="slotName" :column="column" :index="index" />
+                      </template>
+                      <!-- 自定义表头插槽 -->
+                      <!-- 自定义列插槽 -->
+                      <template #default="{ slotName, row, index }">
+                        <slot :name="slotName" :row="row" :index="index" />
+                      </template>
+                    </TableCardItem>
+                  </template>
+                </template>
+              </TableCard>
+            </div>
+          </template>
         </div>
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
@@ -73,7 +106,9 @@
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
 
-const { isMobileOrTablet } = useDevice()
+
+
+const { isSmallMobile } = useLayout()
 
 export type SortParams = {
     column: TableColumnCtx<T | any>,
@@ -173,7 +208,8 @@ const indexMethod = (index: number) => {
     }
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-        if(isMobileOrTablet) {
+        console.log("handleRowClick")
+        if(isSmallMobile.value) {
           emit('row-dblclick', row, column, event)
           return ;
         }
@@ -367,6 +403,15 @@ defineExpose({ reorderColumn, tableRef })
         line-height: 1.5rem;
     }
 }
-
+.cardList{
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--app-padding);
+  padding-inline: 4px;
+}
 </style>
 

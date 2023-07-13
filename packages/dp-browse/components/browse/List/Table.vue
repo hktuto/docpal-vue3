@@ -94,6 +94,7 @@ const { tableData, options, loading } = toRefs(state)
 
 
 function handleDblclick (row:any) {
+  
     state.curDoc = row;
     if(row.isFolder) {
       router.push({

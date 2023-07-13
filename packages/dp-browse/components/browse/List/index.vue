@@ -1,7 +1,7 @@
 <template>
     <div class="listContainer">
         <div class="left">
-          <DropzoneContainer class="backgroundDrop rootDrop" :doc="doc" />
+          <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" />
             <el-tabs v-model="modelProps" @tab-click="tabChange">
             <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100">
                 <browse-list-table v-if="modelProps === 'table'" :list="children" :loading="pending" 
@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import {GetChild, GetChildThumbnail} from 'dp-api'
 import { ViewType } from "../../browseType";
-
+const { isMobile } = useLayout()
 const pageParams = ref({
   idOrPath: '/',
   pageNumber: 0,
