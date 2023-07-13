@@ -96,12 +96,20 @@ const state = reactive<State>({
     )
 // #endregion
 function handleDblclick (row) {
+  if(row.isFolder) {
+
     router.push({
         path: '/browse',
         query: {
             path: row.path,
         },
     })
+    return ;
+  }
+  openFileDetail(row.path, {
+    showInfo:true,
+    showHeaderAction:true
+  })
 }
 
 const { tableData, options, loading, sFolderList, tabName } = toRefs(state)

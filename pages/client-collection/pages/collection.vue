@@ -188,7 +188,7 @@ const state = reactive<State>({
     }
 // #endregion
 
-// #region module: 
+// #region module:
     const style = reactive({
         collapse: true
     })
@@ -197,12 +197,21 @@ const state = reactive<State>({
     }
 // #endregion
 function handleDblclick (row) {
+  if(row.isFolder) {
+
     router.push({
-        path: '/browse',
-        query: {
-            path: row.path,
-        },
+      path: '/browse',
+      query: {
+        path: row.path,
+      },
     })
+    return ;
+  }
+  openFileDetail(row.path, {
+    showInfo:true,
+    showHeaderAction:true
+  })
+
 }
 function handleAction (command, row: any, index: number) {
     switch (command) {
@@ -313,7 +322,7 @@ onMounted(() => {
         .collapse-icon {
             display: unset;
         }
-        
+
     }
 }
 </style>
