@@ -62,10 +62,11 @@ const NextDialogRef = ref()
             })
             
             NextDialogRef.value.handleOpen(state.cabinetTemplate, idOrPath)
-            setTimeout(()=> {
+            await new Promise(resolve => setTimeout(() => {
                 state.visible = false
                 emits('refresh')
-            }, 1000)
+                resolve
+            }, 1000));
         } catch (error) {
             
         }

@@ -118,6 +118,7 @@ $--scroll-dialog-height: fit-content;
     transform: translate(-50%,-50%);
     max-height: 80%;
     width: 60%;
+    height: var(--scroll-dialog-height);
     min-width: 280px;
     .el-dialog__body {
         flex: 1;
