@@ -23,7 +23,7 @@
                 </el-button>
             </template>
         </el-popover>
-        <el-button text @click="handleFilter">{{$t('button.clearFilter')}}</el-button>
+        <el-button style="margin: unset" text @click="handleFilter">{{$t('button.clearFilter')}}</el-button>
      </div>
   </div>
 </template>
@@ -63,13 +63,16 @@ const state = reactive<state>({
         const clearFilterStr = $t('clearFilter')
         defaultWidth += clearFilterStr.getWidth() + state.padding * 2
         state.moreList = []
+        
         Object.keys(boxRefs.value).reduce((prev, key) => {
+            if (!prev) prev = defaultWidth
             const _boxRef = boxRefs.value[key]
             const index = state.list.findIndex(m => m.label === key)
             if(index === -1) return
             const item = state.list[index]
             const boxWidth = getWidth(item)
             prev += boxWidth
+            
             if(prev > width) {
                 _boxRef.style.display = 'none'
                 state.moreList.push(item)
@@ -100,7 +103,7 @@ const state = reactive<state>({
     function getWidth (selectData: ResSelectData) {
         const labelStr = $t(selectData.label)
         let width = labelStr.getWidth()
-        if (selectData.value) {
+        if (selectData.value && selectData.value.length > 0 ) {
             const lStr = selectData.value.length > 0 ?
                         selectData.value.length > 9 ?
                         '9+':
@@ -130,7 +133,9 @@ function handleChange (filedData: {fieldName: string, value: any}) {
     state.moreSelected = 0
     const formModel = state.list.reduce((prev,item) => {
         prev[item.key] = item.value
-        state.moreSelected += item.value.length
+        if(state.moreList.find(m => m.key === item.key)) {
+            state.moreSelected += item.value.length
+        }
         return prev
     }, {})
     setTimeout(() => {
