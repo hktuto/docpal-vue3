@@ -6,18 +6,24 @@
             @pagination-change="handlePaginationChange"
             @row-click="handleClick">
             <template #preSortButton>
-                <!-- <ResponsiveFilter ref="ResponsiveSelect" @change="formChange"/> -->
                 <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
+                <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
+                    @clear-filter="handleClearFilter"/>
             </template>
             <template #suffixSortButton>
-                <slot name="suffixSortButton"></slot>
+                <div class="suffixSortButton">
+                    <slot name="suffixSortButton"></slot>
+                </div>
             </template>
     </Table>
 </template>
 
 
 <script lang="ts" setup>
-import { GetCabinetPageApi, getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import { 
+    GetCabinetConditionsApi, 
+    GetCabinetPageApi, 
+    getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
 const emit = defineEmits(['row-click']);
 const userId:string = useUser().getUserId()
 // #region module: page
@@ -44,6 +50,7 @@ const userId:string = useUser().getUserId()
             rowKey: 'id'
         },
         extraParams: {},
+        curTab: ''
     })
     function handleAction (command, row: any, index: number) {
         switch (command) {
@@ -91,15 +98,13 @@ const userId:string = useUser().getUserId()
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             pageParams.templateId = route.query.tab
             if(pageParams.templateId) getList(pageParams)
+            getFilter(pageParams.templateId)
         },
         { immediate: true }
     )
     const { tableData, options, loading } = toRefs(state)
 
-    function formChange(filedData, formModel) {
-        console.log(filedData, formModel);
-        
-    }
+    
 // #endregion
 
 // #region module: 
@@ -114,8 +119,23 @@ const userId:string = useUser().getUserId()
             else if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
             return prev
         }, {})
-        state.extraParams = extraParams
+        state.extraParams = { ...state.extraParams, ...extraParams }
         handlePaginationChange(1)
+    }
+// #endregion
+// #region module: filter
+    function handleFilterFormChange(formModel, filedData) {
+        Object.keys(formModel).forEach((key) => {
+            if(typeof formModel[key] === 'boolean') state.extraParams[key] = formModel[key]
+            else if(formModel[key] && formModel[key].length > 0) state.extraParams[key]  = formModel[key]
+            else {
+                delete state.extraParams[key]
+            }
+        })
+        handlePaginationChange(1)
+    }
+    function handleClearFilter () {
+        FromRendererRef.value.vFormRenderRef.resetForm()
     }
 // #endregion
 const tableRef = ref()
@@ -129,15 +149,40 @@ function getSearchParams () {
         templateId: route.query.tab
     }
 }
-onMounted(() => {
-    setTimeout(() => {
-    })  
-})
+const ResponsiveFilterRef = ref()
+async function getFilter(tab) {
+    if (state.curTab === tab) return
+    state.curTab = tab
+    const data = await GetCabinetConditionsApi(tab) 
+    ResponsiveFilterRef.value.init(data)
+}
 defineExpose({ getSearchParams })
 </script>
 
 <style lang="scss" scoped>
 :deep(.el-form-item--default) {
     margin-bottom: unset;
+}
+:deep(.tableHeader) {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    margin-bottom: var(--app-padding);
+    .headerLeftExpand {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+    }
+    .suffixSortButton {
+        display: flex;
+    }
+}
+@media (max-width : 1024px) {
+    :deep(.tableHeader) {
+        width: 100%;
+        grid-template-columns: 1fr;
+        .headerLeftExpand { 
+            gap: var(--app-padding);
+            grid-template-columns: unset;
+        }
+    }
 }
 </style>

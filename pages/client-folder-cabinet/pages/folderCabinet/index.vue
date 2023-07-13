@@ -11,9 +11,9 @@
         <main>
             <FolderCabinetTable ref="tableRef" @row-click="handleRowClick">
                 <template #suffixSortButton>
-                    <el-button class="suffixSortButton" @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
+                    <el-button @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
                     <!-- <el-button class="suffixSortButton" @click="handleNextItem()">{{$t('handleNextItem.newItem')}}</el-button> -->
-                    <el-button class="suffixSortButton" type="info" @click="handleDownload()">{{$t('export')}}</el-button>
+                    <el-button type="info" @click="handleDownload()">{{$t('export')}}</el-button>
                 </template>
             </FolderCabinetTable>
             <InteractDrawer ref="InteractDrawerRef" :minWidth="240">
