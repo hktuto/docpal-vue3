@@ -90,7 +90,7 @@ const userId:string = useUser().getUserId()
             pageParams.pageNum = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             pageParams.templateId = route.query.tab
-            getList(pageParams)
+            if(pageParams.templateId) getList(pageParams)
         },
         { immediate: true }
     )
