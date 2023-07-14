@@ -110,7 +110,7 @@ const state = reactive({
             return prev
         }, {})
     }
-    function validateForm (metaList) {
+    function validateForm (metaList, messageError: boolean = true) {
         const msg = getValidateMsg(metaList)
     
         if (msg.length > 0 && messageError) {
