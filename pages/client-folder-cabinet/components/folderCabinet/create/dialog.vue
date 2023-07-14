@@ -3,18 +3,11 @@
     :close-on-click-modal="false"
     class="scroll-dialog"
     >
-    <main>
-        <div>
-            <div>
-                <div class="row-item-top">
-                    <span class="color__danger">*</span>
-                    {{$t('name')}}
-                </div>
-                <el-input  class="row-item-bottom-left" type="text" v-model="state.rootFolder.name"/>
-            </div>
+    <FromRenderer ref="FromRendererRef" :form-json="formJson">
+        <template v-slot:metaForm>
             <MetaEditForm ref="MetaFormRef"></MetaEditForm>
-        </div>
-    </main>
+        </template>
+    </FromRenderer>
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('button.next')}}</el-button>
     </template>
@@ -27,7 +20,8 @@ import {
     GetCabinetTemplateApi,
     GetDocDetail,
     CreateFoldersApi,
-    CreateDocumentApi } from 'dp-api'
+    CreateDocumentApi,
+    getJsonApi } from 'dp-api'
 const uploadListAdd = inject('uploadListAdd')
 const emits = defineEmits([
     'refresh'
@@ -36,25 +30,25 @@ const state = reactive({
     loading: false,
     treeLoading: false,
     visible: false,
-    rootFolder: {
-        name: '',
-    },
     cabinetTemplate: {},
 })
+const userId:string = useUser().getUserId()
 const route = useRoute()
 const NextDialogRef = ref()
+const FromRendererRef = ref()
+const formJson = getJsonApi('client/folderCabinetNew.json')
 // #region module: handleSubmit
     const MetaFormRef = ref()
     async function handleSubmit () {
-        if (!validateForm(state.rootFolder)) return
+        const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
         const metaFormData = MetaFormRef.value.getData()
-        if(!metaFormData) return
+        if(!formData || !metaFormData) return
         state.loading = true
         try {
-            const idOrPath = `${state.cabinetTemplate.rootPath}/${state.rootFolder.name}`
+            const idOrPath = `${state.cabinetTemplate.rootPath}/${formData.name}`
             // 上传最上层数据
             await CreateFoldersApi({
-                name: state.rootFolder.name,
+                ...formData,
                 type: state.cabinetTemplate.documentType,
                 idOrPath,
                 properties: metaFormData,
@@ -71,18 +65,6 @@ const NextDialogRef = ref()
             
         }
         state.loading = false
-    }
-    function validateForm (rootFolder) {
-        let msg = ''
-        if (!rootFolder.name)  msg += `[${$i18n.t('name')}]: ${$i18n.t('common_canNotEmpty')}<br/>`
-    
-        if (msg.length > 0) {
-            ElMessageBox.confirm(msg, $i18n.t('dpTip_warning'), {
-                dangerouslyUseHTMLString: true,
-                confirmButtonText: $i18n.t('dpButtom_confirm'),
-            })
-        }
-        return msg.length === 0
     }
 // #endregion
 
@@ -101,6 +83,16 @@ const NextDialogRef = ref()
         }
         setTimeout(()=> {
             MetaFormRef.value.initMeta(setting.documentType)
+            // userId
+            if (!state.cabinetTemplate.tos) state.cabinetTemplate.tos = []
+            if (!state.cabinetTemplate.ccs) state.cabinetTemplate.ccs = []
+            const createByIndex = state.cabinetTemplate.tos.findIndex(item => item === 'createBy')
+            if (createByIndex !== -1) state.cabinetTemplate.tos[createByIndex] = userId
+            const params = {
+                tos: [...new Set(state.cabinetTemplate.tos)],
+                ccs: [...new Set(state.cabinetTemplate.ccs)]
+            }
+            FromRendererRef.value.vFormRenderRef.setFormData(params)
         })
         state.treeLoading = false
     }
