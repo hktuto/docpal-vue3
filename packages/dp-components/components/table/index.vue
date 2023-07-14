@@ -63,7 +63,7 @@
             </el-table>
           </template>
           <template v-else>
-            <div class="cardList">
+            <div ref="tableCardRef" class="cardList">
               <div v-if="tableData.length === 0" class="noData">
                 {{ $t('noData')}}
               </div>
@@ -127,6 +127,7 @@ const props = defineProps<{
     options?: Table.Options,
 }>()
 const tableRef = ref();
+const tableCardRef = ref();
 
 const clickTimeoutId = ref<NodeJS.Timeout>();
 const selectChangeTimeoutId = ref<NodeJS.Timeout>();
@@ -418,6 +419,11 @@ defineExpose({ reorderColumn, tableRef })
   align-items: flex-start;
   gap: var(--app-padding);
   padding-inline: 4px;
+}
+@media (max-width : 640px) {
+  .el-pagination__total, .el-pagination__sizes, .el-pagination__jump {
+    display: none;
+  }
 }
 </style>
 
