@@ -6,7 +6,6 @@
 
 <script setup>
 const route= useRoute()
-console.log(route.fullPath)
 if(route.fullPath.includes('office') || route.fullPath.includes('outlook')) {
   useHead({
     script:[

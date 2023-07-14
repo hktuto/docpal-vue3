@@ -92,6 +92,18 @@ const deepCopy  = (data:any) => {
     return JSON.parse(JSON.stringify(data));
 }
 
+export type FileDetailOptions = {
+    showInfo: boolean,
+    showHeaderAction: boolean
+}
+export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
+    const ev = new CustomEvent('openFilePreview', {detail: {
+            pathOrId,
+            options
+        }})
+    document.dispatchEvent(ev);
+}
+
 export function downloadUrl(url:string, name:string){
   const a = document.createElement('a')
   a.id = 'file_' + Date.now();

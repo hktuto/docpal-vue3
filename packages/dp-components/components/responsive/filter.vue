@@ -1,5 +1,5 @@
 <template>
-  <div :style="`--responsive-padding:${state.padding}px`"
+  <div ref="responsiveRef" :style="`--responsive-padding:${state.padding}px`"
    class="responsive-container" v-element-size="onResize">
      <div class="flex-x-start">
         <div v-for="item in state.list" :key="item.label" :ref="el => { boxRefs[item.label] = el }">
@@ -23,7 +23,7 @@
                 </el-button>
             </template>
         </el-popover>
-        <el-button text @click="handleFilter">{{$t('clearFilter')}}</el-button>
+        <el-button style="margin: unset" text @click="handleFilter">{{$t('button.clearFilter')}}</el-button>
      </div>
   </div>
 </template>
@@ -59,24 +59,23 @@ const state = reactive<state>({
 })
 // #region module: onResize
     function onResize({ width, height }: { width: number; height: number }) {
-        let defaultWidth = state.moreList.length > 0 ? 110 : 0
+        let defaultWidth = state.moreList.length > 0 ? 83 : 0
         const clearFilterStr = $t('clearFilter')
         defaultWidth += clearFilterStr.getWidth() + state.padding * 2
         state.moreList = []
-        state.moreSelected = 0
+        
         Object.keys(boxRefs.value).reduce((prev, key) => {
+            if (!prev) prev = defaultWidth
             const _boxRef = boxRefs.value[key]
             const index = state.list.findIndex(m => m.label === key)
             if(index === -1) return
             const item = state.list[index]
             const boxWidth = getWidth(item)
             prev += boxWidth
+            
             if(prev > width) {
                 _boxRef.style.display = 'none'
                 state.moreList.push(item)
-                if (item.value && item.value.length > 0) {
-                    state.moreSelected += item.value.length
-                }
             } else {
                 _boxRef.style.display = 'unset'
                 const mIndex = state.moreList.findIndex(m => m.label === key)
@@ -104,7 +103,7 @@ const state = reactive<state>({
     function getWidth (selectData: ResSelectData) {
         const labelStr = $t(selectData.label)
         let width = labelStr.getWidth()
-        if (selectData.value) {
+        if (selectData.value && selectData.value.length > 0 ) {
             const lStr = selectData.value.length > 0 ?
                         selectData.value.length > 9 ?
                         '9+':
@@ -119,56 +118,50 @@ const state = reactive<state>({
         return width
     }
 // #endregion
-const alist = [
-    { 
-        key: '1ssssssss', 
-        label: '1ssssssss', 
-        options: [ 
-            { label: 'test1', value: '111'},
-            { label: 'test12', value: '1112'},
-            { label: 'test13', value: '1113'},
-            { label: 'test14', value: '1114'},
-            { label: 'test15', value: '11144'},
-            { label: 'test16', value: '111444'},
-            { label: 'test147', value: '554'},
-            { label: 'test148', value: '111554'},
-        ], 
-        value: []
-    },
-    {  key: '2ssssssss',   label: '2ssssssss' },
-    {  key: '3ssssssss',   label: '3ssssssss' },
-    {  key: '4ssssssss',   label: '4ssssssss' },
-    {  key: '5ssssssss',   label: '5ssssssss' },
-    {  key: '6ssssssss',   label: '6ssssssss' },
-    {  key: '7ssssssss',   label: '7ssssssss' },
-    {  key: '8ssssssss',   label: '8ssssssss' },
-    {  key: '9ssssssss',   label: '9ssssssss' },
-]
+const responsiveRef = ref()
 function init(list: ResSelectData[]) {
-    state.list = alist
+    state.list = list.reduce((prev, item) => {
+        item.value = []
+        prev.push(item)
+        return prev
+    }, [])
+    nextTick(() => {
+        onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
+    })
 }
 function handleChange (filedData: {fieldName: string, value: any}) {
+    state.moreSelected = 0
     const formModel = state.list.reduce((prev,item) => {
         prev[item.key] = item.value
+        if(state.moreList.find(m => m.key === item.key)) {
+            state.moreSelected += item.value.length
+        }
         return prev
     }, {})
-    emits('form-change', filedData, deepCopy(formModel) )
+    setTimeout(() => {
+        emits('form-change', deepCopy(formModel), filedData)
+        onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
+    },200)
 }
 function handleFilter () {
     state.list.forEach(item => {
         item.value = []
     })
+    const formModel = state.list.reduce((prev,item) => {
+        prev[item.key] = []
+        return prev
+    }, {})
     emits('clear-filter')
-    emits('form-change', null, {} )
+    emits('form-change', formModel, null )
 }
-onMounted(() => {
-    init()
-})
+defineExpose({ init })
 </script>
 <style lang="scss" scoped>
 .responsive-container {
     overflow: hidden;
     width: 100%;
+    display: flex;
+    align-items: flex-end;
     &>div {
         width: 100%;
     }

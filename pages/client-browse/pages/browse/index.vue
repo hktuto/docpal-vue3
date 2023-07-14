@@ -6,18 +6,24 @@
                 <template #default="{doc, permission}" >
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
                     <div v-show="selectList.length === 0 && doc.path !== '/'" id="browseHeaderRight" class="folderAction">
+                      <CollapseMenu>
+                        <template #default="{collapse}">
+
+
                         <BrowseActionsSubscribe  :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <!-- <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/> -->
                         <BrowseActionsNew v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                         <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
+                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsUploadRequest v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
 
-                        <div class="actionDivider"></div>
+                        <div :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
+                        </template>
+                      </CollapseMenu>
                     </div>
                     <div v-show="selectList.length !== 0" id="browseHeaderRight" class="selectedAction">
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
@@ -42,41 +48,7 @@
                 </template>
             </BrowseList>
         </div>
-        <Teleport v-if="detailData && detailData.doc" to="body">
-            <BrowseDetail v-if="!forceRefresh" :show="detailData.doc" :doc="detailData.doc" :permission="detailData.permission" @close="detailClosed" >
-                <template #default="{doc , permission}" >
-                    <div class="fileNameContainer">
-                        <div class="fileName">{{ doc.name }}</div>
-                        <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
-                    </div>
-                    <div class="actions">
-                        <BrowseActionsSubscribe  :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
-                        <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" @success="handleRefresh"/>
-                        <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
-                        <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc" />
-                        <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
-                        <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                        <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
-                        <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
 
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
-                        <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
-                        <div  class="actionDivider"></div>
-                        <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
-                        <div class="actionIconContainer" @click="detailClosed">
-                            <el-icon >
-                                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
-                            </el-icon>
-                        </div>
-                    </div>
-                </template>
-                <template #info="{doc, permission}">
-                    <BrowseInfo :doc="doc" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false" />
-                </template>
-            </BrowseDetail>
-        </Teleport>
         <!-- global action -->
         <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
         <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
@@ -89,9 +61,10 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import { DocDetail } from 'dp-api';
+import {DocDetail, GetChildThumbnail} from 'dp-api';
 import {watch, ref, computed} from 'vue'
 import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
+import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper';
 // #region refs
 const breadCrumb = ref();
 const shareStore = useShareStore()
@@ -101,10 +74,7 @@ const listData = ref<{
     doc: DocDetail;
     permission: Permission
 }>();
-const detailData = ref<{
-    doc: DocDetail;
-    permission: Permission
-} | null>(null);
+
 
 const forceRefresh = ref(false)
 
@@ -116,11 +86,15 @@ const selectList = ref<any[]>([])
 provide('selectList', selectList)
 const routePath = computed( () => (route.query.path as string) || '/')
 const infoOpened = ref(false);
+
+
+
+
+
 async function getDocDetail() {
     const response = await getDocumentDetail(routePath.value, userId)
     if(response.doc.isFolder) {
 
-        detailData.value = null
         // check if the path is the same
         if(listData.value && listData.value.doc.id === response.doc.id && !forceRefresh.value) {
             console.log('same path do not refresh')
@@ -128,14 +102,19 @@ async function getDocDetail() {
         }
         listData.value = response
         forceRefresh.value = false
+
     } else {
         if(!listData.value) {
             // split router path to get parent path
             const parentPath = routePath.value.split('/').slice(0, -1).join('/')
             listData.value =  await getDocumentDetail(parentPath, userId)
+
         }
-        detailData.value = response
-      forceRefresh.value = false
+        // open detail
+        openFileDetail(routePath.value, {
+          showInfo:true,
+          showHeaderAction:true
+        })
     }
 }
 
@@ -157,7 +136,7 @@ watch(route, async(newRoute, oldRoute) => {
     try {
         await getDocDetail()
     } catch (error) {
-        
+
     }
     loading.value = false;
 },{immediate:true, deep: true});
@@ -210,6 +189,10 @@ onMounted(() => {
     height: calc( var(--icon-size) + 16px);
     width: 1px;
     background: var(--color-grey-100);
+    &.collapse{
+      width:100%;
+      height: 1px;
+    }
 }
 .fileNameContainer{
     display: flex;

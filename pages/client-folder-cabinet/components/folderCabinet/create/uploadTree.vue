@@ -1,11 +1,12 @@
 <template>
-<div>
+<div class="new-item-child">
     <el-tree ref="treeRef" :data="treeData" :props="state.defaultProps"
         nodeKey="id" default-expand-all :expand-on-click-node="false"
         @node-click="handleNodeClick" >
         <template #default="{ node, data }">
             <div class="tree-item">
                 <div >
+                    <el-button v-if="data.loading" size="small" text circle :loading="data.loading"></el-button>
                     <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
                     <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
                     <span :class="getCss(data)">
@@ -21,6 +22,16 @@
             </div>
         </template>
     </el-tree>
+    <div>
+        <template v-if="state.selectedRow && state.selectedRow.folder !== false ">
+            {{state.selectedRow.label}}
+            <MetaEditForm ref="MetaFormRef" showNoData @meta-change="handleMetaChange"></MetaEditForm>
+        </template>
+        <template v-else>
+            {{$t('tip.clickFolderOrFileToSetMeta')}}
+        </template>
+    </div>
+    <MetaEditForm v-show="false" ref="MetaFormRef2"></MetaEditForm>
     <input  v-show="false" ref="fileUploaderRef"
                 multiple
                 type="file"
@@ -30,6 +41,7 @@
 
 
 <script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
 import { deepCopy, GetCabinetResultApi, GetCabinetTemplateApi } from 'dp-api'
 const props = defineProps<{
     treeData: Object
@@ -41,17 +53,32 @@ const state = reactive({
     },
     treeItem: {},
     isCheck: true,
+    selectedRow: {}
 })
 const treeRef = ref()
-function getData () {
+const MetaFormRef = ref()
+const MetaFormRef2 = ref()
+function getData (isValidate: boolean = false) {
     state.isCheck = true
+    let msg = ''
     const nodeMap = Object.values(treeRef.value.store.nodesMap).reduce((prev, item) => {
         prev[item.data.id] = {
             ...item.data,
         }
+        if (prev[item.data.id] && prev[item.data.id].metaList) {
+            const _msg = MetaFormRef2.value.getValidateMsg(deepCopy(prev[item.data.id].metaList) , deepCopy(prev[item.data.id].properties) )
+            if (_msg) msg += `<h4 class="msg-h4">${prev[item.data.id].label}:</h4>${_msg}`
+        }
         delete prev[item.data.id].children
         return prev
     }, {})
+    if (msg.length > 0 && isValidate) {
+        ElMessageBox.confirm(msg, $i18n.t('dpTip_warning'), {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: $i18n.t('dpButtom_confirm'),
+        })
+        return false
+    }
     const result = []
     Object.values(nodeMap).forEach((item) => {
         if(item.folder !== false) {
@@ -64,11 +91,21 @@ function getData () {
             }
         }
     })
-    console.log({result});
-    
     return result
 }
-// #region module: style
+function handleNodeClick (row) {
+    state.selectedRow = row
+    if (state.selectedRow.folder === false) return
+    if (!state.selectedRow.properties) state.selectedRow.properties = {}
+    // 用了 v-if，如果不用 nextTick 会报错
+    nextTick(async() => {
+        MetaFormRef.value.initMeta(state.selectedRow.documentType, state.selectedRow.properties)
+    })
+}
+function handleMetaChange (properties: any) {
+    state.selectedRow.properties = properties
+}
+// #region module: style 
     function getCss(data) {
         if(!state.isCheck) return ''
         if(data.folder === false && data.children && data.children.length === 0) {
@@ -89,19 +126,29 @@ function getData () {
     }
 
     let num = 1
-    function uploadHandler (e) {
+    async function uploadHandler (e) {
         const files = Array.from(e.target.files) 
-        files.forEach((file) => {
+        state.treeItem.loading = true
+        const pList = []
+        files.forEach(async(file) => {
+            pList.push(append(file))
+        })
+        e.target.value = '' // 解决不能上传相同文件问题
+        const res = await Promise.all(pList)
+        state.treeItem.loading = false
+
+        async function append(file) {
             const param = {
                 id: new Date().valueOf() + num++,
                 raw: file,
                 label: file.name,
                 parentId: state.treeItem.parentId,
-                documentType: state.treeItem.documentType
+                documentType: state.treeItem.documentType,
+                properties: {},
+                metaList: await MetaFormRef2.value.metaListGet(state.treeItem.documentType, {})
             }
             treeRef.value.append(param, state.treeItem)
-        })
-        e.target.value = '' // 解决不能上传相同文件问题
+        }
     }
     function handleDeleteFile (treeItem) {
         treeRef.value.remove(treeItem)
@@ -113,6 +160,12 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+.new-item-child {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--app-padding);
+}
 .tree-item {
     width: 100%;
     display: flex;
@@ -125,5 +178,15 @@ defineExpose({
 }
 .lack-item {
     color: red;
+}
+.scroll-dialog {
+    height: 50vh;
+}
+
+</style>
+<style lang="scss">
+.msg-h4 {
+    margin: unset;
+    padding: unset;
 }
 </style>

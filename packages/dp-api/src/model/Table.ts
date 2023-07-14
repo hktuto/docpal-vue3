@@ -128,7 +128,7 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { label: 'dpTable_id', property: 'profileID', sortable: true },
             { label: 'dpTable_name', property: 'profileName' },
-            { slot: 'action', property: 'action', label: 'dpTable_actions' }
+            { slot: 'action', property: 'action', label: 'dpTable_actions', class: "slotTopRight", }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -176,7 +176,7 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { label: 'dpTable_documentType', property: 'type', sortable: true },
             { label: 'rightDetail_meta', property: 'meta' },
-            { slot: 'action', property: 'action', label: 'table_actions' }
+            { slot: 'action', property: 'action', label: 'table_actions', class: "slotTopRight", }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -223,7 +223,7 @@ export const defaultTableSetting: TableColumnSetting = {
             // { slot: 'assignee', property: 'assignee', label: i18n.t('workflow_assignee')  },
             { label: 'workflow_createDate', property: 'createDate', sortable: true },
             { label: 'workflow_dueDate', property: 'dueDate', sortable: true },
-            { label: 'dpTable_actions', slot: 'action', property: 'action' }
+            { label: 'dpTable_actions', slot: 'action', property: 'action', class: "slotTopRight", }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -374,6 +374,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '7',
                 "type": "",
                 "label": "actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -428,6 +429,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '4',
                 "type": "",
                 "label": "actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -467,12 +469,35 @@ export const defaultTableSetting: TableColumnSetting = {
                         "index": 0
                     }
                 ] 
+            },
+            {
+                id: '2',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "rightClick",
+                        "suffixIcon": "/icons/dots.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
             }
         ],
         events: [],
         slots: [
             { slot: 'docName', label: 'table_name', prop: 'name' },
-            { id: '3', label: 'tableHeader_type', prop: 'type' },
         ],
         options: { pageSize: 20 }
     },
@@ -500,6 +525,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "type": "",
                 "label": "actions",
                 "prop": "",
+                class: "slotTopRight",
                 "align": "center",
                 "width": 100,
                 "hide": false,
@@ -547,6 +573,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "id": '5',
                 "type": "",
                 "label": "actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -616,6 +643,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '5',
                 "type": "",
                 "label": "actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -683,6 +711,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '5',
                 "type": "",
                 "label": "dpTable_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -986,7 +1015,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
-            { id: '4', slot: 'actions', label: 'tableHeader_actions' }
+            { id: '4', slot: 'actions', label: 'tableHeader_actions', class: "slotTopRight", }
             // {   
             //     id: '4',
             //     "type": "buttons",
@@ -1010,7 +1039,7 @@ export const defaultTableSetting: TableColumnSetting = {
             // }
         ],
         slots: [
-            { slot: 'actions', label: 'tableHeader_actions' }
+            { slot: 'actions', label: 'tableHeader_actions', class: "slotTopRight", }
         ],
         events: ['download'],
         options: { pageSize: 20 }
@@ -1044,6 +1073,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '3',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1083,6 +1113,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '3',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1132,6 +1163,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '6',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1167,6 +1199,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '3',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1213,6 +1246,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '3',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1244,6 +1278,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '3',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1283,6 +1318,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '4',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1316,6 +1352,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '2',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1346,6 +1383,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '2',
                 "type": "",
                 "label": "tableHeader_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1479,6 +1517,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '8',
                 "type": "",
                 "label": "dpTable_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,
@@ -1530,11 +1569,11 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]  
             },
-            { id: '7', slot: 'refreshAction', label: 'dpTable_actions' },
+            { id: '7', slot: 'refreshAction', label: 'dpTable_actions', class: "slotTopRight", },
         ],
         events: [],
         slots: [
-            { slot: 'refreshAction', label: 'dpTable_actions' },
+            { slot: 'refreshAction', label: 'dpTable_actions', class: "slotTopRight", },
         ],
         options: { pageSize: 20 }
     },
@@ -1582,7 +1621,7 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '2', label: 'en-US', prop: 'en-US', slot: 'enUS' },
             { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zhCN' },
             { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zhHK' },
-            { id: '5', label: 'dpTable_actions', slot: 'actions' }
+            { id: '5', label: 'dpTable_actions', slot: 'actions', class: "slotTopRight", }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -1595,6 +1634,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 id: '3',
                 "type": "",
                 "label": "dpTable_actions",
+                class: "slotTopRight",
                 "prop": "",
                 "align": "center",
                 "width": 100,

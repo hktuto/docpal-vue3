@@ -16,6 +16,7 @@
     </div>
     <div v-else ref="readyElement" class="clientPageContainer">
       <NuxtPage />
+      <component v-for="s in globalSlots" :key="s.name" :is="s.component" v-bind="$props" />
     </div>
      <LoadingBg v-if="appStore.displayState != 'ready'" />
 
@@ -28,6 +29,8 @@
 const appStore  = useAppStore()
 import { api } from 'dp-api'
 const {token, verify} = useUser();
+
+const { globalSlots } = useLayout()
 
 const props = withDefaults(defineProps<{
     showForgetPassword: boolean,

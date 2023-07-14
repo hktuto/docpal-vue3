@@ -3,25 +3,16 @@
     :close-on-click-modal="false"
     class="scroll-dialog"
     >
-    <main>
-        <div>
-            <div>
-                <div class="row-item-top">
-                    <span class="color__danger">*</span>
-                    {{$t('name')}}
-                </div>
-                <el-input  class="row-item-bottom-left" type="text" v-model="state.rootFolder.name"/>
-            </div>
+    <FromRenderer ref="FromRendererRef" :form-json="formJson">
+        <template v-slot:metaForm>
             <MetaEditForm ref="MetaFormRef"></MetaEditForm>
-        </div>
-        <FolderCabinetCreateUploadTree ref="FolderCabinetUploadTreeRef"
-             :treeData="state.treeData"
-             v-loading="state.treeLoading"></FolderCabinetCreateUploadTree>
-    </main>
+        </template>
+    </FromRenderer>
     <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+        <el-button :loading="state.loading" @click="handleSubmit">{{$t('button.next')}}</el-button>
     </template>
 </el-dialog>
+<FolderCabinetCreateNextDialog ref="NextDialogRef" />
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -29,7 +20,8 @@ import {
     GetCabinetTemplateApi,
     GetDocDetail,
     CreateFoldersApi,
-    CreateDocumentApi } from 'dp-api'
+    CreateDocumentApi,
+    getJsonApi } from 'dp-api'
 const uploadListAdd = inject('uploadListAdd')
 const emits = defineEmits([
     'refresh'
@@ -38,97 +30,41 @@ const state = reactive({
     loading: false,
     treeLoading: false,
     visible: false,
-    rootFolder: {
-        name: '',
-    },
     cabinetTemplate: {},
-    treeData: [],
-    rootDetail: {}
 })
+const userId:string = useUser().getUserId()
 const route = useRoute()
+const NextDialogRef = ref()
+const FromRendererRef = ref()
+const formJson = getJsonApi('client/folderCabinetNew.json')
 // #region module: handleSubmit
     const MetaFormRef = ref()
-    const FolderCabinetUploadTreeRef = ref()
     async function handleSubmit () {
-        if (!validateForm(state.rootFolder)) return
+        const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
         const metaFormData = MetaFormRef.value.getData()
-        if(!metaFormData) return
+        if(!formData || !metaFormData) return
         state.loading = true
         try {
-            const idOrPath = `${state.cabinetTemplate.rootPath}/${state.rootFolder.name}`
+            const idOrPath = `${state.cabinetTemplate.rootPath}/${formData.name}`
             // 上传最上层数据
             await CreateFoldersApi({
-                name: state.rootFolder.name,
+                ...formData,
                 type: state.cabinetTemplate.documentType,
                 idOrPath,
                 properties: metaFormData,
                 templateId: route.query.tab
             })
-            const uploadList = FolderCabinetUploadTreeRef.value.getData()
-            uploadListAdd({
-                name: state.cabinetTemplate.rootName,
-                startDate: new Date(), 
-                treeData:uploadList
-            })
-            // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
-            setTimeout(() => {
-                uploadHandler(uploadList, idOrPath)
-            }, 2000)
             
-            state.visible = false
-            setTimeout(()=> {
+            NextDialogRef.value.handleOpen(state.cabinetTemplate, idOrPath)
+            await new Promise(resolve => setTimeout(() => {
+                state.visible = false
                 emits('refresh')
-            }, 500)
+                resolve
+            }, 1000));
         } catch (error) {
             
         }
         state.loading = false
-    }
-    function uploadHandler (children: any, parentPath: string = '', parentStatus) {
-        children.forEach(async(item) => {
-            item.path = parentPath + '/' + item.label
-            try {
-                if (parentStatus === 'skip' || parentStatus === 'fail') throw new Error("skip");
-                if (item.folder) {
-                    item.status = 'loading'
-                    await CreateFoldersApi({
-                        name: item.label,
-                        type: item.documentType,
-                        idOrPath: item.path,
-                    })
-                } else {
-                    const document = {
-                        name: item.label,
-                        idOrPath: item.path,
-                        type: item.documentType,
-                        // languages: file.languages,
-                        // properties: {}
-                    }
-                    const formData = new FormData()
-                    formData.append('files', item.raw)
-                    formData.append('document', JSON.stringify(document))
-                    await CreateDocumentApi(formData)
-                }
-                item.status = 'finish'
-            } catch (error) {
-                item.status = 'skip'
-            }
-            setTimeout(() => {
-                if(item.children) uploadHandler(item.children, item.path, item.status)
-            }, 300)
-        })
-    }
-    function validateForm (rootFolder) {
-        let msg = ''
-        if (!rootFolder.name)  msg += `[${$i18n.t('name')}]: ${$i18n.t('common_canNotEmpty')}<br/>`
-    
-        if (msg.length > 0) {
-            ElMessageBox.confirm(msg, $i18n.t('dpTip_warning'), {
-                dangerouslyUseHTMLString: true,
-                confirmButtonText: $i18n.t('dpButtom_confirm'),
-            })
-        }
-        return msg.length === 0
     }
 // #endregion
 
@@ -138,8 +74,6 @@ const route = useRoute()
         state.treeLoading = true
         try {
             state.cabinetTemplate = await GetCabinetTemplateApi(setting.id)
-            initTreeData(state.cabinetTemplate.children)
-            state.treeData = state.cabinetTemplate.children
 
             const rootDetail = await GetDocDetail(state.cabinetTemplate.rootId, false)
             state.cabinetTemplate.rootPath = rootDetail.path
@@ -149,16 +83,18 @@ const route = useRoute()
         }
         setTimeout(()=> {
             MetaFormRef.value.initMeta(setting.documentType)
+            // userId
+            if (!state.cabinetTemplate.tos) state.cabinetTemplate.tos = []
+            if (!state.cabinetTemplate.ccs) state.cabinetTemplate.ccs = []
+            const createByIndex = state.cabinetTemplate.tos.findIndex(item => item === 'createBy')
+            if (createByIndex !== -1) state.cabinetTemplate.tos[createByIndex] = userId
+            const params = {
+                tos: [...new Set(state.cabinetTemplate.tos)],
+                ccs: [...new Set(state.cabinetTemplate.ccs)]
+            }
+            FromRendererRef.value.vFormRenderRef.setFormData(params)
         })
         state.treeLoading = false
-    }
-    function initTreeData (children, parentId: string = '') {
-        children.forEach(item => {
-            item.isLack = false
-            if(parentId) item.parentId = parentId
-            if (item.children) initTreeData(item.children, item.id)
-            else item.children = []
-        })
     }
 // #endregion
 
@@ -167,7 +103,6 @@ defineExpose({ handleOpen })
 <style lang="scss" scoped>
 main {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: var(--app-padding);
 }
 .row-item {

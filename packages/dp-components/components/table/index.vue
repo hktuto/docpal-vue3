@@ -4,13 +4,11 @@
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-            <TableSortButton ref="TableSortButtonRef" v-if="_options.sortKey" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
             <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
-            <div>
-                <slot name="suffixSortButton"></slot>
-            </div>
+            <slot name="suffixSortButton"></slot>
         </div>
         <div class="dp-table-container--main">
+          <template v-if="!isSmallMobile">
             <el-table
                 ref="tableRef"
                 :data="tableData"
@@ -57,7 +55,47 @@
                         </TableColumn>
                     </template>
                 </template>
+                <el-table-column v-if="_options.sortKey" :width="40">
+                  <template #header="{ column, $index }">
+                    <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+                  </template>
+                </el-table-column>
             </el-table>
+          </template>
+          <template v-else>
+            <div class="cardList">
+              <div v-if="tableData.length === 0" class="noData">
+                {{ $t('noData')}}
+              </div>
+             <TableCard
+                v-for="(item, rowIndex) in tableData"
+                :key="'card_'+ rowIndex"
+                :row="item"
+                :column="columns__sub"
+                @row-contextmenu="handleRightClick"
+                @selection-change="handleSelectionChange"
+                @row-click="handleRowClick"
+                @row-dblclick="handleRowDblclick"
+                @cell-click="handleCellClick"
+                @sort-change="handleSortChange"
+              >
+                <template v-for="(col, index) in columns__sub" :key="index">
+                  <template v-if="!col.hide">
+                    <TableCardItem :col="col" :rowData="item" :rowIndex="index" :class="col.class" @command="handleAction">
+                      <template #customHeader="{ slotName, column, index }">
+                        <slot :name="slotName" :column="column" :index="index" />
+                      </template>
+                      <!-- 自定义表头插槽 -->
+                      <!-- 自定义列插槽 -->
+                      <template #default="{ slotName, row, index }">
+                        <slot :name="slotName" :row="row" :index="index" />
+                      </template>
+                    </TableCardItem>
+                  </template>
+                </template>
+              </TableCard>
+            </div>
+          </template>
         </div>
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
@@ -73,7 +111,9 @@
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
 
-const { isMobileOrTablet } = useDevice()
+
+
+const { isSmallMobile, isMobile } = useLayout()
 
 export type SortParams = {
     column: TableColumnCtx<T | any>,
@@ -84,7 +124,7 @@ export type SortParams = {
 const props = defineProps<{
     tableData: Array<object>, // table的数据
     columns: Table.Column[], // 每列的配置项
-    options?: Table.Options
+    options?: Table.Options,
 }>()
 const tableRef = ref();
 
@@ -159,8 +199,8 @@ const indexMethod = (index: number) => {
         emit('pagination-change', currentPage, _paginationConfig.value.pageSize)
     }
     // 按钮组事件
-    const handleAction = (command: Table.Command, row: any, index: number) => {
-        emit('command', command, row, index)
+    const handleAction = (command: Table.Command, row: any, index: number, evt: Event) => {
+        emit('command', command, row, index, evt)
     }
 
     // 多选事件
@@ -173,7 +213,8 @@ const indexMethod = (index: number) => {
     }
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-        if(isMobileOrTablet) {
+        console.log("handleRowClick")
+        if(isMobile.value) {
           emit('row-dblclick', row, column, event)
           return ;
         }
@@ -341,9 +382,10 @@ defineExpose({ reorderColumn, tableRef })
 
 .tableHeader{
     width: 100%;
-    display: grid;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
     align-items: flex-end;
-    grid-template-columns: 1fr min-content min-content;
     gap: var(--app-padding);
     .headerLeftExpand {
         overflow: hidden;
@@ -367,6 +409,15 @@ defineExpose({ reorderColumn, tableRef })
         line-height: 1.5rem;
     }
 }
-
+.cardList{
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--app-padding);
+  padding-inline: 4px;
+}
 </style>
 
