@@ -29,7 +29,7 @@ const loading = ref(false);
 // const colorMode = useColorMode();
 const {locale} = useI18n()
 const { options } = toRefs(props)
-
+const blob = ref();
 async function getAnnotation():Promise<Object> {
     if(!props.options.loadAnnotations) return new Map();
     const annotation = await GetAnnotation(props.doc.id);
@@ -46,15 +46,19 @@ async function getAnnotation():Promise<Object> {
     return annotationMap;
 }
 
+async function downloadPdf() {
+  console.log(blob.value)
+  await downloadBlob(blob.value, props.doc.name)
+}
 async function sendPdfAndAnnotation() {
     if(props.doc.isFolder) return; // 如果是文件夹，不要拿预览
     loading.value = true;
     try {
-        const blob = await GetDocumentPreview(props.doc.id);
-        console.log(blob)
+        blob.value = await GetDocumentPreview(props.doc.id);
+        
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
-        frame?.postMessage({blob, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
+        frame?.postMessage({blob:blob.value, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
         console.log(error);
     }
@@ -108,13 +112,13 @@ async function saveAnnotation(annotation:Map<string, object>) {
         comments
     }
     await SaveAnnotation([param])
-    //  TODO : show notification
-    dpLog("Annotation saved successfully");
 
 }
 
 useEventListener(window, 'message', gotMessageFromIframe)
 useEventListener(window, 'downloadPdfAndAnnotation', downloadPdfAndAnnotation)
+useEventListener(document, 'downloadPdf', downloadPdf)
+
 </script>
 
 <style lang="scss" scoped>

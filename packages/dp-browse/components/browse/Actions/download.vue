@@ -17,9 +17,9 @@
                 <!-- download button -->
                 <el-button type="text" @click="downloadHandler">Download original</el-button>
                 <!-- download as pdf button -->
-                <el-button type="text" @click="downloadAsPdfHandler">Download as PDF</el-button>
+                <el-button v-if="isPdf" type="text" @click="downloadAsPdfHandler">Download as PDF</el-button>
                 <!-- download pdf and annotation -->
-                <el-button type="text" @click="downloadPdfAndAnnotationHandler">Download PDF with annotation</el-button>
+                <el-button v-if="isPdf" type="text" @click="downloadPdfAndAnnotationHandler">Download PDF with annotation</el-button>
                 <ElDivider />
                 <ElForm
                     ref="formRef"
@@ -45,13 +45,17 @@
 <script lang="ts" setup>
 import { DownloadDocApi, downloadDocRecord, getSupportedFormatApi, submitExportRequestApi } from "dp-api"
 import { ElNotification, ElMessage} from 'element-plus'
+import {useEventListener} from "@vueuse/core";
 const props = defineProps<{
     doc: any,
+    blob: any,
     selected: any[]
 }>()
 const { doc } = toRefs(props)
 const { t } = useI18n()
 const popupOpened = ref(false)
+
+const isPdf = ref()
 // #region new convert 
 const form = ref<any>({
       targetFile: ''
@@ -97,6 +101,8 @@ const filterArrObj = (arr,filterField) =>{
 }
 
 onMounted(async () => {
+  const ev = new CustomEvent('checkIsPdf')
+  document.dispatchEvent(ev)
     await handleGetSupportedFormat()
 })
 
@@ -114,8 +120,9 @@ async function downloadHandler(){
           position: 'bottom-right'
         });
     try{
-        const blob = await DownloadDocApi(props.doc.id)
-        await downloadBlob(blob, props.doc.name)
+      const blob = await DownloadDocApi(props.doc.id)
+      await downloadBlob(blob, props.doc.name)
+      await DownloadDocApi(props.doc.id)
     } catch(error:any) {
         ElMessage.error(t('download_noFile') as string)
     }
@@ -134,8 +141,10 @@ async function downloadAsPdfHandler(){
           position: 'bottom-right'
         });
     try{
-        const blob = await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDF'})
-        await downloadBlob(blob, props.doc.name)
+      console.log("downloadHandler")
+      const ev = new CustomEvent('downloadPdf')
+      document.dispatchEvent(ev);
+        await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDF'})
     } catch(error:any) {
         ElMessage.error(t('download_noFile') as string)
     }
@@ -147,6 +156,15 @@ async function downloadPdfAndAnnotationHandler(){
     const ev = new CustomEvent('downloadPdfAndAnnotation', { detail: props.doc })
     window.dispatchEvent(ev);
 }
+
+useEventListener(document, 'isDocPdf', () => {
+  console.log('isDocPdf')
+  isPdf.value = true;
+})
+useEventListener(document, 'notDocPdf', () => {
+  console.log('notDocPdf')
+  isPdf.value = false;
+})
 </script>
 
 <style lang="scss" scoped>
