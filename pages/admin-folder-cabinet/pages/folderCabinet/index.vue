@@ -3,7 +3,7 @@
       <template v-if="!state.loading && state.list.length === 0">
         <FolderCabinetEmpty @update="getList" />
       </template>
-      <template v-else>
+    <template v-else>
         <main>
             <div class=" flex-x-end">
                 <el-button @click="handleAdd">{{$t('add')}}</el-button>

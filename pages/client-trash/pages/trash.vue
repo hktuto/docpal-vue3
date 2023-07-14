@@ -7,7 +7,7 @@
                 @row-dblclick="handleDblclick">
 
                 <template #docIcon="{ row, index }">
-                    <BrowseItemIcon :type="row.isFolder ? 'folder' : 'file'"/>
+                    <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
                 </template>
                 <template #actions>
                     <div>

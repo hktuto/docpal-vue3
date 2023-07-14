@@ -1,13 +1,16 @@
 <template>
-    <div class="container">
-        <aside width="200px">
+    <div class="container" >
+        <aside v-if="state.asideShow" width="200px">
             <KeywordFilter :list="state.list" attr="name"
                 @filter="handleKeywordFilter"></KeywordFilter>
             <el-scrollbar>
                 <TreeMenu :menu="state._list" :options="{defaultActive: state.selectName}" @select="handleSelect"></TreeMenu>
             </el-scrollbar>
         </aside>
-        <main ><NuxtPage /></main>
+        <el-button :class="{'absolute-button': state.asideShow}" @click="state.asideShow = !state.asideShow"> 收 </el-button>
+        <main >
+            <NuxtPage />
+        </main>
     </div>
 </template>
 
@@ -19,7 +22,8 @@ const route = useRoute()
 const state = reactive({
     selectName: '',
     list: [],
-    _list: []
+    _list: [],
+    asideShow: true
 })
 function handleSelect (name) {
     state.selectName= name
@@ -89,7 +93,13 @@ onMounted(() => {
         flex: 1;
         height: 100%;
         overflow: hidden;
+        position: relative;
     }
 }
-
+.absolute-button {
+    position: absolute;
+    top: 45px;
+    left: 12px;
+    z-index: 1;
+}
 </style>

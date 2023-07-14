@@ -58,12 +58,9 @@ function handleOpen(setting) {
         setTimeout(async () => {
             state.loading = true
             const data = {
-                binds: revertUserGroup(setting.binds),
-                label: setting.label,
-                documentType: setting.documentType,
-                multiple: setting.multiple,
-                allow: setting.allow,
+                ...setting,
                 isEdit: true,
+                binds: revertUserGroup(setting.binds),
                 rootId: await getRootIds(setting.rootId)
             }
             await FromRendererRef.value.vFormRenderRef.setFormData(data)

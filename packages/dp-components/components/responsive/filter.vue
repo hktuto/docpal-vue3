@@ -140,6 +140,7 @@ function handleChange (filedData: {fieldName: string, value: any}) {
     }, {})
     setTimeout(() => {
         emits('form-change', deepCopy(formModel), filedData)
+        onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
     },200)
 }
 function handleFilter () {
