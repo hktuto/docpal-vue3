@@ -63,6 +63,9 @@
             </el-table>
           </template>
           <template v-else>
+            <div v-if="_options.sortKey" class="cardSortContainer">
+              <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+            </div>
             <div ref="tableCardRef" class="cardList">
               <div v-if="tableData.length === 0" class="noData">
                 {{ $t('noData')}}
@@ -395,7 +398,11 @@ defineExpose({ reorderColumn, tableRef })
         margin-bottom: 10px;
     }
 }
-
+.cardSortContainer{
+  margin-bottom: 32px;
+  z-index: 2
+;
+}
 </style>
 <style lang="scss">
 .shiftSelect {
