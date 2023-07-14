@@ -14,7 +14,7 @@
                     <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
                     <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" @success="handleRefresh"/>
                     <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
-                    <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc" />
+                    <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc"  />
                     <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                     <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                     <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
@@ -79,14 +79,17 @@ const readerType = computed(() => {
     if(!mineType) return "pdf"; // set to pdf for testing
     
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text') || mineType.includes('photoshop') || mineType.includes('psd') || mineType.includes('illustrator')  ) {
-        return 'pdf';
+      
+      return 'pdf';
     }
-    else if(mineType.includes('video')) {
+    if(mineType.includes('video')) {
         return 'video';
     }
-    else if (mineType.includes('audio')) {
+    if (mineType.includes('audio')) {
         return 'other';
     }
+    
+    
     return '';
 });
 
@@ -117,7 +120,15 @@ onKeyStroke("Escape", (e) => {
 
 useEventListener(document, 'openFilePreview', openPreview )
 useEventListener(document, 'closeFilePreview', closePreview)
-
+useEventListener(document, 'checkIsPdf', () => {
+  if(readerType.value === 'pdf') {
+    const ev = new CustomEvent('isDocPdf')
+    document.dispatchEvent(ev)
+  }else{
+    const ev = new CustomEvent('notDocPdf')
+    document.dispatchEvent(ev)
+  }
+})
 watch(show, (isShow) => {
   if(isShow) {
     document.body.classList.add('noScroll')
