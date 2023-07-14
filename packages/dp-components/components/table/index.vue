@@ -4,8 +4,11 @@
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-            <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
-            <slot name="suffixSortButton"></slot>
+
+            <slot name="suffixSortButton">
+
+            </slot>
+
         </div>
         <div class="dp-table-container--main">
           <template v-if="!isSmallMobile">
@@ -84,7 +87,14 @@
               >
                 <template v-for="(col, index) in columns__sub" :key="index">
                   <template v-if="!col.hide">
-                    <TableCardItem :col="col" :rowData="item" :rowIndex="index" :class="col.class" @command="handleAction">
+                    <template v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'" >
+                      <input
+                        type="checkbox"
+
+                        @change="(val) => cardSelectedChange(rowIndex, val)"
+                      />
+                    </template>
+                    <TableCardItem v-else :col="col" :rowData="item" :rowIndex="index" :class="col.class" @command="handleAction">
                       <template #customHeader="{ slotName, column, index }">
                         <slot :name="slotName" :column="column" :index="index" />
                       </template>
@@ -215,6 +225,25 @@ const indexMethod = (index: number) => {
             emit('selection-change', val)
         }, 200);
     }
+
+    const cardSelection = ref<number[]>([]);
+      const cardSelectedChange = (index:any, ev:any) => {
+        const val = ev.target.checked as boolean;
+        if(val) {
+          cardSelection.value.push(index)
+        }else{
+          // find index from cardSelection
+          const e = cardSelection.value.findIndex( it => it === index);
+          cardSelection.value.splice(e, 1);
+        }
+        const selectedItem = cardSelection.value.map( i => props.tableData[i]);
+        emit('selection-change', selectedItem)
+    }
+
+    watch(props.tableData, () => {
+      // clean card data
+      cardSelection.value = []
+    })
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
         console.log("handleRowClick")
@@ -399,10 +428,16 @@ defineExpose({ reorderColumn, tableRef })
     }
 }
 .cardSortContainer{
+  width: 100%;
   margin-bottom: 32px;
   z-index: 2;
   position: relative;
-;
+}
+.noData{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
 }
 </style>
 <style lang="scss">

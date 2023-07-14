@@ -12,7 +12,7 @@
             <div class="label">{{row.name}}</div>
           </div>
         </template>
-        <template #actions>
+        <template #preSortButton>
           <div>
             <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
             <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
