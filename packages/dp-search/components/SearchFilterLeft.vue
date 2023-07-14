@@ -2,9 +2,14 @@
     <div ref="filterContainerRef" class="filterContainer">
       <div class="formShrink" @click="opened = true">
         Filter
-        <arrow-down />
+        <div class="iconContainer">
+          <arrow-down />
+        </div>
       </div>
-      <div :class="{formContainer:true, opened}">
+      <div :class="{formContainerDialog:true, opened}">
+        <div v-if="isMobile" class="dialogCloseBtn" @click="opened = false">
+          <SvgIcon src="/icons/close.svg" />
+        </div>
         <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
         <div class="filterContainer-footer">
             <el-row :gutter="10">
@@ -29,6 +34,7 @@ import {ArrowDown} from "@element-plus/icons-vue";
 const props = defineProps<{
     searchParams: any
 }>()
+const { isMobile } = useLayout()
 const route = useRoute()
 const router = useRouter()
 const emits = defineEmits(['submit'])
@@ -63,6 +69,9 @@ function handleSubmit () {
     const data = FromRendererRef.value.vFormRenderRef.getFormData(false)
     const _data = dataHandle(data)
     goRoute(_data)
+  if(opened ) {
+    opened.value = false
+  }
 }
 
 function handleReset() {
@@ -137,14 +146,25 @@ defineExpose({ handleSubmit })
 }
 .formShrink{
   display: none;
+  width: 100%;
+  position: relative;
+  font-size: .8rem;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  .iconContainer{
+    width: 1rem;
+  }
   @media (max-width: 1024px) {
-    display: block;
+    display: flex;
   }
 }
-.formContainer{
+.formContainerDialog{
   display: none;
+  background: var(--color-grey-0000);
   @media (min-width: 1024px) {
     display: block !important;
+
   }
   &.opened {
     display: block;
@@ -152,7 +172,7 @@ defineExpose({ handleSubmit })
     z-index: 9;
     left: var(--app-padding);
     right: var(--app-padding);
-    top: var(--app-padding);
+    top: calc( var(--app-padding) + 60px );
     bottom: var(--app-padding);
 
   }
