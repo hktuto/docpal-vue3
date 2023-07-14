@@ -24,7 +24,8 @@ import {
     GetCabinetConditionsApi, 
     GetCabinetPageApi, 
     getJsonApi, TABLE, defaultTableSetting,
-    TableAddColumns } from 'dp-api'
+    TableAddColumns, 
+    deepCopy} from 'dp-api'
 const emit = defineEmits(['row-click']);
 const userId:string = useUser().getUserId()
 // #region module: page
@@ -35,7 +36,8 @@ const userId:string = useUser().getUserId()
         pageSize: 20,
     }
     const tableKey = TABLE.CLIENT_FOLDER_CABINET
-    const tableSetting = defaultTableSetting[tableKey]
+    const tableSetting = ref(deepCopy(defaultTableSetting[tableKey]))
+    
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -157,17 +159,17 @@ async function getFilter(tab) {
     const data = await GetCabinetConditionsApi(tab) 
     ResponsiveFilterRef.value.init(data)
     const ignoreList = ['createdBy', 'complete']
+    tableSetting.value = deepCopy(defaultTableSetting[tableKey])
     data.forEach(item => {
         if(!ignoreList.includes(item.key)) {
             TableAddColumns({
                 id: item.key,
                 label: item.key,
                 prop: item.key
-            }, tableSetting.columns)
+            }, tableSetting.value.columns)
         }
     })
-    console.log(tableSetting.columns);
-    
+    tableRef.value.reorderColumn(tableSetting.value.columns)
 }
 defineExpose({ getSearchParams })
 </script>

@@ -1662,8 +1662,38 @@ export const defaultTableSetting: TableColumnSetting = {
     
 }
 
-export function TableAddColumns (columnItem: { label: string, prop: string }, columns: any) {
-    columns.push({
-        ...columnItem
+export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
+    const _columnItem: TableColumnItem = {
+        label: columnItem.label,
+        prop: columnItem.prop,
+        id: columnItem.id
+    }
+    if (columnItem.type === 'date') {
+        _columnItem.formatList = [
+            {
+                joiner: "",
+                prop: columnItem.prop,
+                formatFun: "dateFormat",
+                params: {
+                    "format": ""
+                },
+                index: 0
+            }
+        ]
+    } else if (columnItem.type === 'complex') {
+        _columnItem.formatList = [
+            {
+                joiner: "",
+                prop: columnItem.prop,
+                formatFun: "concat",
+                params: {
+                    "format": ""
+                },
+                index: 0
+            }
+        ]
+    }
+    columnList.push({
+        ..._columnItem
     })
 } 
