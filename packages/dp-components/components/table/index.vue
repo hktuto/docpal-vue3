@@ -400,7 +400,8 @@ defineExpose({ reorderColumn, tableRef })
 }
 .cardSortContainer{
   margin-bottom: 32px;
-  z-index: 2
+  z-index: 2;
+  position: relative;
 ;
 }
 </style>
