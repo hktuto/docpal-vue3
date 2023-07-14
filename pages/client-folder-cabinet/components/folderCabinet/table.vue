@@ -23,7 +23,8 @@
 import { 
     GetCabinetConditionsApi, 
     GetCabinetPageApi, 
-    getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+    getJsonApi, TABLE, defaultTableSetting,
+    TableAddColumns } from 'dp-api'
 const emit = defineEmits(['row-click']);
 const userId:string = useUser().getUserId()
 // #region module: page
@@ -155,6 +156,18 @@ async function getFilter(tab) {
     state.curTab = tab
     const data = await GetCabinetConditionsApi(tab) 
     ResponsiveFilterRef.value.init(data)
+    const ignoreList = ['createdBy', 'complete']
+    data.forEach(item => {
+        if(!ignoreList.includes(item.key)) {
+            TableAddColumns({
+                id: item.key,
+                label: item.key,
+                prop: item.key
+            }, tableSetting.columns)
+        }
+    })
+    console.log(tableSetting.columns);
+    
 }
 defineExpose({ getSearchParams })
 </script>

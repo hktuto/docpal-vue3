@@ -1661,3 +1661,9 @@ export const defaultTableSetting: TableColumnSetting = {
     }
     
 }
+
+export function TableAddColumns (columnItem: { label: string, prop: string }, columns: any) {
+    columns.push({
+        ...columnItem
+    })
+} 
