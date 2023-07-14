@@ -568,6 +568,19 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '6', label: 'deadline', prop: 'deadline',
+                formatList: [
+                    {
+                        joiner: "",
+                        prop: 'deadline',
+                        formatFun: "dateFormat",
+                        params: {
+                            "format": ""
+                        },
+                        index: 0
+                    }
+                ]
+            },
             { id: '4', label: 'tableHeader_type', prop: 'documentType' },
             {
                 "id": '5',
