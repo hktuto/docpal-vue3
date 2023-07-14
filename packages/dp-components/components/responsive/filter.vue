@@ -17,7 +17,7 @@
                 </div>
             </template>
             <template #reference>
-                <el-button text>{{$t('more')}}
+                <el-button text>{{$t('button.more')}}
                     <el-tag v-if="state.moreSelected > 0" class="el-icon--right" effect="dark" round size="small">{{state.moreSelected > 9 ? '9+' : state.moreSelected}}</el-tag>
                     <el-icon class="el-icon--right"><ArrowDownBold /></el-icon>
                 </el-button>
