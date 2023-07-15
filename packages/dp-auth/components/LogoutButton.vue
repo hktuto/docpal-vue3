@@ -1,5 +1,5 @@
 <template>
-    <ElButton  @click="logout">{{ $t('login_loginOut') }}</ElButton>
+  <SvgIcon src="/icons/logout.svg" round/>
 </template>
 
 <script lang="ts" setup>

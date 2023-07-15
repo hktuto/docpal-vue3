@@ -1,10 +1,8 @@
 <template>
     <div class="languageSwitchContainer">
-      
+
       <ElDropdown  @command="handleCommand">
-          <div class="currentLang">
-              {{$t(locale)}}
-          </div>
+        <SvgIcon src="/icons/language.svg" round />
           <template #dropdown>
               <ElDropdownMenu>
                   <ElDropdownItem v-for="locale in availableLocales" :key="locale" :command="locale">

@@ -1,29 +1,26 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-                @command="handleAction"
-                @pagination-change="handlePaginationChange"
-                @selection-change="handleSelectionChange"
-                @row-dblclick="handleDblclick">
+      <Table  :columns="tableSetting.columns" :table-data="tableData" :options="options"
+              @command="handleAction"
+              @pagination-change="handlePaginationChange"
+              @selection-change="handleSelectionChange"
+              @row-dblclick="handleDblclick">
 
-                <template #docIcon="{ row, index }">
-                    <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
-                </template>
-                <template #actions>
-                    <div>
-                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
-                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
-                    </div>
-                </template>
-            </Table>
-            <ReaderDialog ref="ReaderRef" v-bind="previewFile">
-                <template #actions>
-                    <el-button @click="handleRestoreOne(previewFile.id)">{{$t('trash_actions_restore')}}</el-button>
-                    <el-button @click="handleDeleteOne(previewFile.id)"> {{$t('trash_actions_delete')}}</el-button>
-                </template>
-            </ReaderDialog>
-            <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
-            <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
+        <template #docIcon="{ row, index }">
+          <div class="nameItem">
+            <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
+            <div class="label">{{row.name}}</div>
+          </div>
+        </template>
+        <template #preSortButton>
+          <div>
+            <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
+            <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
+          </div>
+        </template>
+      </Table>
+      <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
+      <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
     </NuxtLayout>
 </template>
 
@@ -73,6 +70,7 @@ const tableSetting = defaultTableSetting[tableKey]
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
+        // scroll top
         router.push({
             query: { page, pageSize, time }
         })
@@ -81,9 +79,12 @@ const tableSetting = defaultTableSetting[tableKey]
         () => route.query,
         async (newval) => {
             const { page, pageSize } = newval
-            pageParams.pageIndex = (Number(page) - 1) || 0
-            pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-            getList(pageParams)
+            nextTick(() => {
+
+              pageParams.pageIndex = (Number(page) - 1) || 0
+              pageParams.pageSize = Number(pageSize) || pageParams.pageSize
+              getList(pageParams)
+            })
         },
         { immediate: true }
     )
@@ -108,16 +109,10 @@ const previewFile = reactive({
 })
 async function handleDblclick (row) {
     if (row.isFolder) return
-    ReaderRef.value.handleOpen()
-    previewFile.loading = true
-    try {
-        previewFile.blob = await GetDocumentPreview(row.id)
-    } catch (error) {
-
-    }
-    previewFile.id = row.id
-    previewFile.name = row.name
-    previewFile.loading = false
+    openFileDetail(row.path, {
+      showInfo:true,
+      showHeaderAction:true
+    })
 }
 // #region module: delete
     const batchAction = ref('')
@@ -265,5 +260,12 @@ async function handleDownload (row: any) {
   padding: calc(var(--app-padding) * 2 );
   position: relative;
   height: 100%;
+}
+.nameItem{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--app-padding);
 }
 </style>

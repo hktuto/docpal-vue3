@@ -21,7 +21,7 @@ function getIcon (row, position='prefixIcon') {
 
 <template>
   <div class="cardContent">
-    <div class="header">
+    <div v-if="col.label" class="header">
       <component v-if="col.headerRender" :is="col.headerRender" :column="col" :index="rowIndex" />
       <slot
         v-else-if="col.headerSlot"
@@ -101,6 +101,9 @@ function getIcon (row, position='prefixIcon') {
     font-size: .8rem;
     color: var(--primary-color);
     line-height: 1;
+  }
+  .content {
+    word-break: break-all;
   }
 }
 </style>

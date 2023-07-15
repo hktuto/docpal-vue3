@@ -204,9 +204,9 @@ watch(show, (isShow) => {
 }
 .fileName{
     font-size: var(--el-font-size-large);
-    text-align: center;
+    text-align: left;
     color: var(--color-grey-0000);
-  word-break: break-all;
+    word-break: break-all;
 }
 
 :deep {

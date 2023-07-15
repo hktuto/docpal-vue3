@@ -1,11 +1,5 @@
 <template>
-    <div class="colorSwitchContainer">
-
-        <ElIcon @click="toggleColor">
-            <Sunny v-if="colorMode.value === 'light'" />
-            <Moon v-else />
-        </ElIcon>
-    </div>
+  <SvgIcon src="/icons/light.svg" round @click="toggleColor" />
 </template>
 
 <script lang="ts" setup>
@@ -27,13 +21,13 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .colorSwitchContainer{
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     border-radius: var(--el-border-radius-round);
 
-    background-color: var(--color-grey-050);
+    //background-color: var(--color-grey-050);
     transform: all .5s ease-in-out;
-    font-size: 12px;
+    font-size: 16px;
     display: grid;
     place-items: center;
     &:hover{
