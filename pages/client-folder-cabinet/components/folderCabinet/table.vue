@@ -4,7 +4,9 @@
             v-loading="loading"
             @command="handleAction"
             @pagination-change="handlePaginationChange"
-            @row-click="handleClick">
+            @row-click="handleClick"
+            @row-dblclick="handleClick"
+      >
             <template #preSortButton>
                 <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
@@ -20,11 +22,11 @@
 
 
 <script lang="ts" setup>
-import { 
-    GetCabinetConditionsApi, 
-    GetCabinetPageApi, 
+import {
+    GetCabinetConditionsApi,
+    GetCabinetPageApi,
     getJsonApi, TABLE, defaultTableSetting,
-    TableAddColumns, 
+    TableAddColumns,
     deepCopy} from 'dp-api'
 const emit = defineEmits(['row-click']);
 const userId:string = useUser().getUserId()
@@ -37,12 +39,12 @@ const userId:string = useUser().getUserId()
     }
     const tableKey = TABLE.CLIENT_FOLDER_CABINET
     const tableSetting = ref(deepCopy(defaultTableSetting[tableKey]))
-    
+
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            showPagination: true, 
+        options: {
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -65,9 +67,9 @@ const userId:string = useUser().getUserId()
         }
     }
     function goRoute (row) {
-        router.push({ 
+        router.push({
             path: '/browse',
-            query: { path: row.documentPath } 
+            query: { path: row.documentPath }
         })
     }
     async function getList (param) {
@@ -75,7 +77,7 @@ const userId:string = useUser().getUserId()
         try {
             state.tableData = []
             const res = await GetCabinetPageApi({...param, ...state.extraParams})
-            
+
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -88,8 +90,8 @@ const userId:string = useUser().getUserId()
     function handlePaginationChange (page: number, pageSize: number = pageParams.pageSize) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { ...route.query, page, pageSize, time } 
+        router.push({
+            query: { ...route.query, page, pageSize, time }
         })
     }
 
@@ -107,10 +109,10 @@ const userId:string = useUser().getUserId()
     )
     const { tableData, options, loading } = toRefs(state)
 
-    
+
 // #endregion
 
-// #region module: 
+// #region module:
     const FromRendererRef = ref()
 
 // #endregion
@@ -156,7 +158,7 @@ const ResponsiveFilterRef = ref()
 async function getFilter(tab) {
     if (state.curTab === tab) return
     state.curTab = tab
-    const data = await GetCabinetConditionsApi(tab) 
+    const data = await GetCabinetConditionsApi(tab)
     ResponsiveFilterRef.value.init(data)
     const ignoreList = ['createdBy', 'complete']
     tableSetting.value = deepCopy(defaultTableSetting[tableKey])
@@ -194,7 +196,7 @@ defineExpose({ getSearchParams })
     :deep(.tableHeader) {
         width: 100%;
         grid-template-columns: 1fr;
-        .headerLeftExpand { 
+        .headerLeftExpand {
             gap: var(--app-padding);
             grid-template-columns: unset;
         }

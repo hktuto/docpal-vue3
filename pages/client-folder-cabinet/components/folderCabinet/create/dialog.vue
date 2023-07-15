@@ -2,6 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')"
     :close-on-click-modal="false"
     class="scroll-dialog"
+           append-to-body
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson">
         <template v-slot:metaForm>
@@ -16,7 +17,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
+import {
     GetCabinetTemplateApi,
     GetDocDetail,
     CreateFoldersApi,
@@ -54,7 +55,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
                 properties: metaFormData,
                 templateId: route.query.tab
             })
-            
+
             NextDialogRef.value.handleOpen(state.cabinetTemplate, idOrPath)
             await new Promise(resolve => setTimeout(() => {
                 state.visible = false
@@ -62,7 +63,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
                 resolve
             }, 1000));
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -79,7 +80,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             state.cabinetTemplate.rootPath = rootDetail.path
             state.cabinetTemplate.rootName = rootDetail.name
         } catch (error) {
-            
+
         }
         setTimeout(()=> {
             MetaFormRef.value.initMeta(setting.documentType)

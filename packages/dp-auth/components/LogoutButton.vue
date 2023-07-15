@@ -1,5 +1,5 @@
 <template>
-  <SvgIcon src="/icons/logout.svg" round/>
+  <SvgIcon src="/icons/logout.svg" round @click="logout"/>
 </template>
 
 <script lang="ts" setup>

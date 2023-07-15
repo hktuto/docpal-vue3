@@ -129,6 +129,9 @@ $--scroll-dialog-height: fit-content;
     .el-form-item__error{
         display: none
     }
+  @media(max-width: 640px){
+    --el-dialog-width : 80% !important;
+  }
 }
 @-webkit-keyframes fadeOut {
     0% { opacity: 1;}
