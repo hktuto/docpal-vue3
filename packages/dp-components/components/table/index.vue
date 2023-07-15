@@ -452,6 +452,11 @@ defineExpose({ reorderColumn, tableRef })
         max-width: 80%;
         line-height: 1.5rem;
     }
+  @media( max-width: 640px) {
+    display: flex;
+    flex-flow: column nowrap;
+
+  }
 }
 .cardList{
   height: 100%;
