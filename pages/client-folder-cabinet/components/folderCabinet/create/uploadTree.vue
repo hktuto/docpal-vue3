@@ -105,7 +105,7 @@ function handleNodeClick (row) {
 function handleMetaChange (properties: any) {
     state.selectedRow.properties = properties
 }
-// #region module: style 
+// #region module: style
     function getCss(data) {
         if(!state.isCheck) return ''
         if(data.folder === false && data.children && data.children.length === 0) {
@@ -127,7 +127,7 @@ function handleMetaChange (properties: any) {
 
     let num = 1
     async function uploadHandler (e) {
-        const files = Array.from(e.target.files) 
+        const files = Array.from(e.target.files)
         state.treeItem.loading = true
         const pList = []
         files.forEach(async(file) => {
@@ -165,6 +165,10 @@ defineExpose({
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--app-padding);
+  @media( max-width: 640px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 }
 .tree-item {
     width: 100%;
