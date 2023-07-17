@@ -77,3 +77,7 @@ export const ExportCabinetApi = async(params) => {
     }).then(res => res.data)
     return res
 }
+export const CreateCabinetApi = async(params) => {
+    const res = await api.post('/docpal/cabinet/create', params).then(res => res.data)
+    return res
+}

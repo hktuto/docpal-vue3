@@ -20,7 +20,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import {
     GetCabinetTemplateApi,
     GetDocDetail,
-    CreateFoldersApi,
+    CreateCabinetApi,
     CreateDocumentApi,
     getJsonApi } from 'dp-api'
 const uploadListAdd = inject('uploadListAdd')
@@ -48,7 +48,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
         try {
             const idOrPath = `${state.cabinetTemplate.rootPath}/${formData.name}`
             // 上传最上层数据
-            await CreateFoldersApi({
+            await CreateCabinetApi({
                 ...formData,
                 type: state.cabinetTemplate.documentType,
                 idOrPath,
