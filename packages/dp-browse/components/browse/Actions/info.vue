@@ -6,6 +6,7 @@
             </el-icon>
         </el-tooltip>
     </div>   -->
+    
     <SvgIcon src="/icons/file/info.svg"  
                 content="info"
                 round

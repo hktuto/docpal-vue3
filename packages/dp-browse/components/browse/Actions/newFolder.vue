@@ -1,7 +1,7 @@
 <template>
     <div>
         <SvgIcon src="/icons/file/newFolder.svg"  
-            content="new folder"
+            content="tip.new_folder"
             round
             @click="iconClickHandler(doc)"></SvgIcon>
         <el-dialog class="scroll-dialog" v-model="dialogOpened" append-to-body 

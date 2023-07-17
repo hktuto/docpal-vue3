@@ -8,8 +8,6 @@
                     <div v-show="selectList.length === 0 && doc.path !== '/'" id="browseHeaderRight" class="folderAction">
                       <CollapseMenu>
                         <template #default="{collapse}">
-
-
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
@@ -20,10 +18,11 @@
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsUploadRequest v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :path="doc.path" />
 
-                        <div :class="{actionDivider:true, collapse}"></div>
-                        <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
+
                         </template>
                       </CollapseMenu>
+                      <div :class="{actionDivider:true, collapse}"></div>
+                      <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
                     </div>
                     <div v-show="selectList.length !== 0" id="browseHeaderRight" class="selectedAction">
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
