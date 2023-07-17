@@ -62,8 +62,8 @@ export const GetCabinetResultApi = async(id: string) => {
     const res = await api.get(`/docpal/cabinet/${id}/loginUser/sublist`).then(res => res.data.data)
     return res
 }
-export const GetCabinetHeaderApi = async() => {
-    const res = await api.get('/docpal/cabinet/header/list').then(res => res.data.data)
+export const GetCabinetHeaderApi = async(templateId) => {
+    const res = await api.get('/docpal/cabinet/header/list', { params: {templateId} }).then(res => res.data.data)
     return res
 }
 export const GetCabinetConditionsApi = async(templateId) => {
