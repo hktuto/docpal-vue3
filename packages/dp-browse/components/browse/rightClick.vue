@@ -22,6 +22,9 @@
             <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">
                 <SvgIcon class="el-icon--left" src="/icons/file/file-cut.svg"></SvgIcon>
                 {{$t('filePopover_cut')}}</el-menu-item>
+            <el-menu-item index="docActionInternalShare" v-show="state.canWrite && state.actions.internalShare">
+                <SvgIcon class="el-icon--left" src="/icons/menu/shareMe.svg"></SvgIcon>
+                {{$t('filePopover_internalShare')}}</el-menu-item>
             <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">
                 <SvgIcon class="el-icon--left" src="/icons/file/file-paste.svg"></SvgIcon>
                 {{$t('filePopover_paste')}}</el-menu-item>
@@ -60,6 +63,7 @@ const state = reactive({
         paste: true,
         delete: true,
         refresh: true,
+        internalShare: true
     },
     canWrite: false,
     loading: false
@@ -150,7 +154,7 @@ useEventListener(document, 'mouseup', hidePopover)
     box-shadow: var(--el-box-shadow-light);
     position: fixed;
     z-index: 9999;
-    width: 180px;
+    min-width: 180px;
     .el-menu-item {
         height: unset;
         line-height: unset;
