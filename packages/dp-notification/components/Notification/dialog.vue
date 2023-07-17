@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" class="scroll-dialog" :title="unreadCount > 0 ? `${$t('notifications')}(${unreadCount})` : $t('notifications')"
-    :close-on-click-modal="false"
+    :close-on-click-modal="false" append-to-body
     >
     <div class="infinite-container">
         <div
@@ -9,56 +9,117 @@
             :infinite-scroll-disabled="state.scrollDisabled"
             :infinite-scroll-immediate="false">
             <el-checkbox-group v-model="state.checkedNotis" @change="handleCheckedNotisChange">
-                <el-card v-for="(item, index) in state.notiList" :key="item.id" class="infinite-list-item cursorPointer" 
-                    @click.native="handleRead(item)">
+                <div v-for="(item, index) in state.notiList" :key="item.id" class="infinite-list-item cursorPointer" @click.native="handleRead(item)">
+
+                  <el-badge  is-dot class="ellipsis" :hidden="item.status === 'READED'">
+                  
+                    <el-checkbox :label="item.id" :key="item.id">
+                      <div class="small">{{displayTime(item.createdDate)}}</div>
+                      <div class="itemType">
+                        
+                        {{$t(`notification.${item.functionPoint}`)}}
+                      </div>
+                      <div class="body">
+                        <div v-if="item.content.templateId">
+                          {{$t(item.content.templateId)}}
+                        </div>
+                        
+                        <table>
+                          <div v-if="item.content.processDefinitionName">
+                            <div class="small">{{$t('workflow_taskName')}}</div>
+                            <div>{{item.content.processDefinitionName}} - {{item.content.businessKey}}</div>
+                          </div>
+                          <div v-if="item.content.documentName">
+                            <div class="small">{{$t('dpDocument_fileName')}}</div>
+                            <div>{{item.content.documentName}}</div>
+                          </div>
+                          <div v-if="item.content.documentPath">
+                            <div class="small">{{$t('tableHeader_path')}}</div>
+                            <div>{{item.content.documentPath}}</div>
+                          </div>
+                          <div v-if="item.createdBy" >
+                            <div class="small">{{$t('operator')}}</div>
+                            <div>{{item.createdBy }}</div>
+                          </div>
+                          <div v-else-if="item.content.creator || item.content.user_creator_id" >
+                            <div class="small">{{$t('user_creator_id')}}</div>
+                            <div>{{item.content.creator || item.content.user_creator_id }}</div>
+                          </div>
+                          <div v-if="item.content.emailList" >
+                            <div class="small">{{$t('emailList')}}</div>
+                            <div>{{JSON.parse(item.content.emailList).join(',') }}</div>
+                          </div>
+                          <div v-if="item.content.user_approver_id" >
+                            <div class="small">{{$t('user_approver_id')}}</div>
+                            <div>{{item.content.user_approver_id}}</div>
+                          </div>
+                          <div v-if="item.content.startTime">
+                            <div class="small">{{$t('workflow_startTime')}}</div>
+                            <div>{{formatDate(item.content.startTime)}}</div>
+                          </div>
+                          <div v-if="item.content.approvedDate">
+                            <div class="small">{{$t('dpTable_approvedDate')}}</div>
+                            <div>{{formatDate(item.content.approvedDate)}}</div>
+                          </div>
+                        </table>
+                        <el-button v-if="isRoute(item)" type="primary" @click="goRoute(item)" >{{$t('jump_to_view')}}</el-button>
+                      </div>
+                    </el-checkbox>
+                  </el-badge>
+                    <SvgIcon src="/icons/trash_pure.svg"  @click.native.stop="handleDelete(item, index)"></SvgIcon>
+                  
                     
-                    <el-badge slot="header" is-dot class="ellipsis" :hidden="item.status === 'READED'">
-                        <el-checkbox :label="item.id" :key="item.id">{{item.createDate}} - {{$t(`notification.${item.functionPoint}`)}}</el-checkbox>
-                        <SvgIcon src="/icons/trash_pure.svg"  @click.native.stop="handleDelete(item, index)"></SvgIcon>
-                    </el-badge>
-                    <div v-if="item.content.templateId">
-                        {{$t(item.content.templateId)}}
-                    </div>
-                    <table>
-                        <tr v-if="item.content.processDefinitionName">
-                            <td>{{$t('workflow_taskName')}}</td>
-                            <td>{{item.content.processDefinitionName}} - {{item.content.businessKey}}</td>
-                        </tr>
-                        <tr v-if="item.content.documentName">
-                            <td>{{$t('dpDocument_fileName')}}</td>
-                            <td>{{item.content.documentName}}</td>
-                        </tr>
-                        <tr v-if="item.content.documentPath">
-                            <td>{{$t('tableHeader_path')}}</td>
-                            <td>{{item.content.documentPath}}</td>
-                        </tr>
-                        <tr v-if="item.createdBy" >
-                            <td>{{$t('operator')}}</td>
-                            <td>{{item.createdBy }}</td>
-                        </tr>
-                        <tr v-else-if="item.content.creator || item.content.user_creator_id" >
-                            <td>{{$t('user_creator_id')}}</td>
-                            <td>{{item.content.creator || item.content.user_creator_id }}</td>
-                        </tr>
-                        <tr v-if="item.content.emailList" >
-                            <td>{{$t('emailList')}}</td>
-                            <td>{{JSON.parse(item.content.emailList).join(',') }}</td>
-                        </tr>
-                        <tr v-if="item.content.user_approver_id" >
-                            <td>{{$t('user_approver_id')}}</td>
-                            <td>{{item.content.user_approver_id}}</td>
-                        </tr>
-                        <tr v-if="item.content.startTime">
-                            <td>{{$t('workflow_startTime')}}</td>
-                            <td>{{formatDate(item.content.startTime)}}</td>
-                        </tr>
-                        <tr v-if="item.content.approvedDate">
-                            <td>{{$t('dpTable_approvedDate')}}</td>
-                            <td>{{formatDate(item.content.approvedDate)}}</td>
-                        </tr>
-                    </table>
-                    <el-button v-if="isRoute(item)" type="primary" @click="goRoute(item)" >{{$t('jump_to_view')}}</el-button>
-                </el-card>
+                </div>
+<!--                <el-card v-for="(item, index) in state.notiList" :key="item.id" class="infinite-list-item cursorPointer" -->
+<!--                    @click.native="handleRead(item)">-->
+<!--                    -->
+<!--                    <el-badge slot="header" is-dot class="ellipsis" :hidden="item.status === 'READED'">-->
+<!--                        <el-checkbox :label="item.id" :key="item.id">{{item.createDate}} - {{$t(`notification.${item.functionPoint}`)}}</el-checkbox>-->
+<!--                        <SvgIcon src="/icons/trash_pure.svg"  @click.native.stop="handleDelete(item, index)"></SvgIcon>-->
+<!--                    </el-badge>-->
+<!--                    <div v-if="item.content.templateId">-->
+<!--                        {{$t(item.content.templateId)}}-->
+<!--                    </div>-->
+<!--                    <table>-->
+<!--                        <div v-if="item.content.processDefinitionName">-->
+<!--                            <div>{{$t('workflow_taskName')}}</div>-->
+<!--                            <div>{{item.content.processDefinitionName}} - {{item.content.businessKey}}</div>-->
+<!--                        </div>-->
+<!--                        <div v-if="item.content.documentName">-->
+<!--                            <div>{{$t('dpDocument_fileName')}}</div>-->
+<!--                            <div>{{item.content.documentName}}</div>-->
+<!--                        </div>-->
+<!--                        <div v-if="item.content.documentPath">-->
+<!--                            <div>{{$t('tableHeader_path')}}</div>-->
+<!--                            <div>{{item.content.documentPath}}</div>-->
+<!--                        </div>-->
+<!--                        <div v-if="item.createdBy" >-->
+<!--                            <div>{{$t('operator')}}</div>-->
+<!--                            <div>{{item.createdBy }}</div>-->
+<!--                        </div>-->
+<!--                        <div v-else-if="item.content.creator || item.content.user_creator_id" >-->
+<!--                            <div>{{$t('user_creator_id')}}</div>-->
+<!--                            <div>{{item.content.creator || item.content.user_creator_id }}</div>-->
+<!--                        </div>-->
+<!--                        <div v-if="item.content.emailList" >-->
+<!--                            <div>{{$t('emailList')}}</div>-->
+<!--                            <div>{{JSON.parse(item.content.emailList).join(',') }}</div>-->
+<!--                        </div>-->
+<!--                        <div v-if="item.content.user_approver_id" >-->
+<!--                            <div>{{$t('user_approver_id')}}</div>-->
+<!--                            <div>{{item.content.user_approver_id}}</div>-->
+<!--                        </div>-->
+<!--                        <div v-if="item.content.startTime">-->
+<!--                            <div>{{$t('workflow_startTime')}}</div>-->
+<!--                            <div>{{formatDate(item.content.startTime)}}</div>-->
+<!--                        </div>-->
+<!--                        <div v-if="item.content.approvedDate">-->
+<!--                            <div>{{$t('dpTable_approvedDate')}}</div>-->
+<!--                            <div>{{formatDate(item.content.approvedDate)}}</div>-->
+<!--                        </div>-->
+<!--                    </table>-->
+<!--                    <el-button v-if="isRoute(item)" type="primary" @click="goRoute(item)" >{{$t('jump_to_view')}}</el-button>-->
+<!--                </el-card>-->
             </el-checkbox-group>
         </div>
         <p v-show="state.loading" class="loading" style="text-align: center;">
@@ -118,6 +179,8 @@ const scrollNoMore = computed(() => {
 const scrollDisabled = computed(() => {
     return scrollNoMore.value || state.loading
 })
+
+const {displayTime} = useTime()
 async function getNotiPage () {
     state.loading = true
     const res = await getNotificationListApi(userId, state.notiPageParam)
@@ -219,28 +282,33 @@ onMounted(() => {
 defineExpose({ handleOpen, initData })
 </script>
 <style lang="scss" scoped>
+.scroll-dialog{
+  :deep {
+    
+  }
+}
 .infinite-container {
     min-height: 50vh;
   .infinite-list-item {
-    margin: var(--app-padding);
-      :deep .el-badge__content {
-        left: 0;
-        top: 5px;
-      }
-    :deep .el-card__header {
-      padding: unset;
-      .el-badge {
-        padding: var(--app-padding);
-        line-height: 2rem;
-        display: grid;
-        grid-template-columns: 1fr min-content;
-        align-items: center;
-        .el-badge__content {
-          left: -1rem;
-          top: 0.5rem;
-          width: 1rem;
-          height: 1rem;
-        }
+    :deep .el-badge__content {
+      left: 0;
+      top: 5px;
+    }
+    
+  }
+  .infinite-list-item + .infinite-list-item {
+    border-top: 1px solid var(--color-grey-050);
+  }
+  .el-checkbox{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: auto;
+    padding-block: var(--app-padding);
+    :deep {
+      .el-checkbox__label{
+        display: block;
       }
     }
   }
@@ -259,5 +327,18 @@ defineExpose({ handleOpen, initData })
       }
     }
   }
+}
+.el-checkbox-group{
+  margin-inline: calc( var(--app-padding) * -1);
+}
+.body{
+  margin-top: var(--app-padding);
+}
+.small{
+  font-size: 0.7rem;
+  margin-bottom: calc( var(--app-padding) / 2);
+}
+.itemType{
+  font-size: 1rem;
 }
 </style>
