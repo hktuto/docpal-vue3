@@ -162,7 +162,7 @@ watch(show, (isShow) => {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      gap: calc(var(--app-padding) /2 );
+      gap: calc(var(--app-padding) / 2 );
     }
 }
 .header{
@@ -175,11 +175,23 @@ watch(show, (isShow) => {
     grid-template-columns: 1fr min-content;
     padding: var(--el-component-size-small);
     overflow: hidden;
+    position: relative;
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      .info {
+        position: absolute;
+        z-index: 2;
+        top: var(--app-padding);
+        left: var(--app-padding);
+        width: calc( 100% - var(--app-padding) * 2);
+        height: calc( 100% - var(--app-padding) * 2);
+      }
+    }
     .info {
         transition: width .2s ease-in-out;
-    overflow: hidden;
-
+        overflow: hidden;
     }
+  
 }
 .noSupportContainer {
     color: var(--color-grey-0000);
