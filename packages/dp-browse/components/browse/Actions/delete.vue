@@ -1,7 +1,7 @@
 <template>
     <!-- <SvgIcon src="/icons/file/delete.svg" round content="delete"
                 @click="deleteItem(doc)"></SvgIcon> -->
-    <div>
+    <BrowseActionsButton :label="$t('delete')" >
         <el-tooltip content="delete">
             <div class="actionIconContainer" @click="deleteItem(doc, true)">
 
@@ -10,7 +10,7 @@
             </el-icon>
             </div>
         </el-tooltip>
-    </div>
+    </BrowseActionsButton>
 </template>
 
 <script lang="ts" setup>

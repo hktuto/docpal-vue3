@@ -73,7 +73,7 @@ const style = computed(() => {
     }
     let result:any = {};
     if(w.value) {
-    result.width = `${w.value}px`
+      result.width = `${w.value > (window.innerWidth - 24) ? (window.innerWidth - 24) : w.value}px`
     }
     return result
 })
@@ -154,6 +154,9 @@ watch(doc, async() => {
     &.infoOpened{
         padding:0;
     }
+  @media (max-width: 640px) {
+    margin-left: 0;
+  }
 }
 .infoTagContainer{
     height: 100%;

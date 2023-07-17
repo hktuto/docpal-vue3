@@ -1,5 +1,6 @@
 <template>
    <div>
+     <BrowseActionsButton :label="$t('tip.edit')" >
         <el-tooltip content="edit">
             <!-- <div class="actionIconContainer" @click="openDialog(doc)"> -->
                 <!-- <el-icon >
@@ -9,6 +10,7 @@
             <SvgIcon src="/icons/file/edit.svg" round content="edit"
                 @click="openDialog(doc)"></SvgIcon> 
         </el-tooltip>
+     </BrowseActionsButton>
         <el-dialog v-model="dialogOpened" append-to-body :title="$t('filePopover_rename')" class="scroll-dialog">
             <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
                 <el-form-item :label="$t('name')" prop="name"

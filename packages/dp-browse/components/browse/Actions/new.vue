@@ -1,6 +1,8 @@
 <template>
 <el-dropdown @command="handleCommand">
+  <BrowseActionsButton :label="$t('tip.new')" >
     <SvgIcon src="/icons/file/newFolder.svg" round></SvgIcon>
+  </BrowseActionsButton>
     <template #dropdown>
         <el-dropdown-menu>
             <el-dropdown-item command="docActionAddFolder" >
