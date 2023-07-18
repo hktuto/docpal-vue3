@@ -16,7 +16,7 @@ export const GetShareMeApi = async(params: pageParams) => {
     }
 }
 export const DeleteShareMeApi = async(ids: string []) => {
-    const res = await api.delete('/docpal/internalShare/me', {data: {ids} }).then(res => res.data.data)
+    const res = await api.delete('/docpal/internalShare/me', {data: {detailIds: ids} }).then(res => res.data.data)
     return res
 }
 
