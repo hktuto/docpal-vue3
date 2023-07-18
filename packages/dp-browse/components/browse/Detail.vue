@@ -168,7 +168,7 @@ watch(show, (isShow) => {
     }
     @media(max-width: 640px) {
       .actions {
-        flex-flow: row wrap;
+        flex-flow: row nowrap;
       }
     }
 }
