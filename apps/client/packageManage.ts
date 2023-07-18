@@ -14,6 +14,8 @@ export function customLayer():string[] {
     packages.push('../../pages/client-collection');
     packages.push('../../pages/client-workflow');
     packages.push('../../pages/client-folder-cabinet');
+    packages.push('../../pages/client-share-me');
+    packages.push('../../pages/client-share-other');
     
     
     packages.push("../../packages/dp-stores")

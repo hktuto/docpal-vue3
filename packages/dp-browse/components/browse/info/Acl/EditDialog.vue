@@ -58,6 +58,8 @@ async function handleSubmit () {
 }
 const handleCloseDialog = (closeDialog: boolean = true) => {
     state.dialogVisible = !closeDialog
+    console.log(state.dialogVisible, 'state.dialogVisible');
+    
     state.loading = false
     if (closeDialog) FromRendererRef.value.vFormRenderRef.resetForm()
 }
@@ -93,8 +95,8 @@ function handleOpen (docDetail, isEdit: boolean = false, internalShare: boolean 
             await CreateInternalShareApi(formData)
             cb()
         } catch (error) {
+            cb(false)
         }
-        cb(false)
     }
 // #endregion
 

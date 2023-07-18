@@ -1,12 +1,17 @@
 <template>
-    <NuxtLayout >
+<NuxtLayout>
+    <template #headerLeft>
+        <slot name="headerLeft"></slot>
+    </template>
     <page-container>
         <div v-if="listData" class="browsePageContainer">
             <BrowsePageHeader :doc="listData.doc" :permission="listData.permission" >
                 <template #default="{doc, permission}" >
-                    <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
+                    <slot name="breadcrumb">
+                        <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
+                    </slot>
                     <div v-show="selectList.length === 0 && doc.path !== '/'" id="browseHeaderRight" class="folderAction">
-                      <CollapseMenu>
+                    <CollapseMenu>
                         <template #default="{collapse}">
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
@@ -20,9 +25,9 @@
 
 
                         </template>
-                      </CollapseMenu>
-                      <div :class="{actionDivider:true, collapse}"></div>
-                      <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
+                    </CollapseMenu>
+                    <div :class="{actionDivider:true, collapse}"></div>
+                    <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
                     </div>
                     <div v-show="selectList.length !== 0" id="browseHeaderRight" class="selectedAction">
                         <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
@@ -54,7 +59,7 @@
         <BrowseActionsUploadDoc v-show="false" @success="handleRefresh"/>
     </page-container>
 
-    </NuxtLayout>
+</NuxtLayout>
 </template>
 
 

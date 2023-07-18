@@ -82,6 +82,8 @@ export enum TABLE {
     CLIENT_BROWSE = 'clientBrowse',
     CLIENT_SHARE_SET = 'clientShareSet',
     CLIENT_FOLDER_CABINET = 'clientFolderCabinet',
+    CLIENT_INTERNAL_SHEAR_ME = 'clientInternalShareMe',
+    CLIENT_INTERNAL_SHEAR_OTHER = 'clientInternalShareOther',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -373,7 +375,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {
                 id: '7',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -428,7 +430,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {   
                 id: '4',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -523,7 +525,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {
                 id: '5',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 "prop": "",
                 class: "slotTopRight",
                 "align": "center",
@@ -585,7 +587,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {
                 "id": '5',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -655,7 +657,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {
                 id: '5',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -678,6 +680,118 @@ export const defaultTableSetting: TableColumnSetting = {
             }
         ],
         events: ['disabled'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_INTERNAL_SHEAR_ME] : {
+        columns: [
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            // { id: '2', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '3', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_INTERNAL_SHEAR_OTHER] : {
+        columns: [
+            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
+            { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
+            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds' },
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    // {
+                    //     "name": "",
+                    //     "type": "text",
+                    //     "command": "preview",
+                    //     "suffixIcon": "/icons/eye.svg",
+                    //     "index": 0
+                    // },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_FILE_REQUEST] : {
