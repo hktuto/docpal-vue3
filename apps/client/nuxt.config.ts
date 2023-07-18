@@ -3,7 +3,6 @@ import playgroundConfig from '../../utils/playgroundConfig'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     ssr:false,
-    components: true,
     app: {
         head: {
             charset: 'utf-8',
