@@ -143,6 +143,9 @@ function toggleOpen() {
   }
   .expand {
     margin-inline: var(--app-padding);
+    --icon-size: 0.8rem;
+    --icon-bg-size: 1.4rem;
+    --icon-bg-color: var(--color-grey-0000);
   }
   .menu{
     grid-area: menu;
@@ -162,7 +165,7 @@ function toggleOpen() {
 .menuActions{
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
   align-content: flex-start;
   gap: var(--app-padding);
