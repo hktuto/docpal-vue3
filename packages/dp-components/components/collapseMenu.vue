@@ -60,6 +60,8 @@ watch(opened,(bool) => {
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
   transform: translateX(100vw);
   transition: transform .2s ease-in-out;
+
+  width: 220px;
   &.opened{
     display: flex;
     flex-flow: column nowrap;

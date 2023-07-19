@@ -82,6 +82,8 @@ export enum TABLE {
     CLIENT_BROWSE = 'clientBrowse',
     CLIENT_SHARE_SET = 'clientShareSet',
     CLIENT_FOLDER_CABINET = 'clientFolderCabinet',
+    CLIENT_INTERNAL_SHEAR_ME = 'clientInternalShareMe',
+    CLIENT_INTERNAL_SHEAR_OTHER = 'clientInternalShareOther',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -106,6 +108,7 @@ export enum TABLE {
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
+    ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
 
     PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
     ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
@@ -354,8 +357,8 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },
-            { id: '7', slot: 'docIcon', label: '', "width": 50, },
-            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '7', slot: 'docIcon', label: 'tableHeader_name' },
+            // { id: '1', label: 'tableHeader_name', prop: 'name' },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
             { id: '4', label: 'trash_deleteBy', prop: 'properties.principalName' },
@@ -373,7 +376,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {
                 id: '7',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -428,7 +431,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {   
                 id: '4',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -523,7 +526,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {
                 id: '5',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 "prop": "",
                 class: "slotTopRight",
                 "align": "center",
@@ -568,11 +571,24 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '6', label: 'deadline', prop: 'deadline',
+                formatList: [
+                    {
+                        joiner: "",
+                        prop: 'deadline',
+                        formatFun: "dateFormat",
+                        params: {
+                            "format": ""
+                        },
+                        index: 0
+                    }
+                ]
+            },
             { id: '4', label: 'tableHeader_type', prop: 'documentType' },
             {
                 "id": '5',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -642,7 +658,7 @@ export const defaultTableSetting: TableColumnSetting = {
             {
                 id: '5',
                 "type": "",
-                "label": "actions",
+                "label": "dpTable_actions",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
@@ -667,6 +683,119 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['disabled'],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_INTERNAL_SHEAR_ME] : {
+        columns: [
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            // { id: '2', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '3', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_INTERNAL_SHEAR_OTHER] : {
+        columns: [
+            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
+            { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
+            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds' },
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    // {
+                    //     "name": "",
+                    //     "type": "text",
+                    //     "command": "preview",
+                    //     "suffixIcon": "/icons/eye.svg",
+                    //     "index": 0
+                    // },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
             { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true },
@@ -1577,6 +1706,63 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.ADMIN_INTERNAL_SHEAR] : {
+        columns: [
+            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
+            { id: '1', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '2', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
+            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserId',},
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    // {
+                    //     "name": "",
+                    //     "type": "text",
+                    //     "command": "preview",
+                    //     "suffixIcon": "/icons/eye.svg",
+                    //     "index": 0
+                    // },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
+        options: { pageSize: 20 }
+    },
     [TABLE.ADMIN_AUDIT]: {
         columns: [
             { id: '1', label: 'User', prop: 'principalName' },
@@ -1661,3 +1847,39 @@ export const defaultTableSetting: TableColumnSetting = {
     }
     
 }
+
+export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
+    const _columnItem: TableColumnItem = {
+        label: columnItem.label,
+        prop: columnItem.prop,
+        id: columnItem.id
+    }
+    if (columnItem.type === 'date') {
+        _columnItem.formatList = [
+            {
+                joiner: "",
+                prop: columnItem.prop,
+                formatFun: "dateFormat",
+                params: {
+                    "format": ""
+                },
+                index: 0
+            }
+        ]
+    } else if (columnItem.type === 'complex') {
+        _columnItem.formatList = [
+            {
+                joiner: "",
+                prop: columnItem.prop,
+                formatFun: "concat",
+                params: {
+                    "format": ""
+                },
+                index: 0
+            }
+        ]
+    }
+    columnList.push({
+        ..._columnItem
+    })
+} 

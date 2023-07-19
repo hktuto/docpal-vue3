@@ -1,7 +1,10 @@
 <template>
+  <BrowseActionsButton :label="$t('tip.replace')" >
+    
     <SvgIcon :src="'/icons/replace.svg'" :content="$t('tip.replace')" round :svg-class="`dp-svg-icon`"
                 class="cursorPointer headerIcons" 
         @click="handleOpenReplaceDialog(doc)"/>
+  </BrowseActionsButton>
     <BrowseActionsReplaceDialog ref="BrowseActionsReplaceDialogRef" 
         @update="emits('success')"/>
 </template>

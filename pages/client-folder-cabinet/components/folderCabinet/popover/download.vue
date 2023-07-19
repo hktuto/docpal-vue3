@@ -96,13 +96,17 @@ defineExpose({ handleOpen })
 
 .search-download-container {
     height: 40vh;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--app-padding);
     &-box {
+      height: 100%;
+      overflow: hidden;
         display: grid;
         grid-template-rows: 52px 1fr;
         .list-group {
+          overflow: auto;
             padding: var(--app-padding);
             border: 1px solid var(--color-grey-050);
             background: var(--color-grey-050);

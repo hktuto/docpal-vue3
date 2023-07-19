@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./nuxt.config.ts",
   "scripts": {
-    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev --port 3002",
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
     "postinstall": "nuxi prepare",

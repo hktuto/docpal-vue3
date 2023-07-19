@@ -57,6 +57,7 @@ const props = defineProps<{
     hidePreview:boolean,
 }>()
 const userId:string = useUser().getUserId()
+const { isMobile } = useLayout()
 const { doc } = toRefs(props)
 const currentTab = ref('info')
 const maxWidth = 600;
@@ -73,7 +74,7 @@ const style = computed(() => {
     }
     let result:any = {};
     if(w.value) {
-    result.width = `${w.value}px`
+      result.width = `${isMobile ? (window.innerWidth - 24) : w.value > (window.innerWidth - 24) ? (window.innerWidth - 24) : w.value}px`
     }
     return result
 })
@@ -154,6 +155,9 @@ watch(doc, async() => {
     &.infoOpened{
         padding:0;
     }
+  @media (max-width: 640px) {
+    margin-left: 0;
+  }
 }
 .infoTagContainer{
     height: 100%;

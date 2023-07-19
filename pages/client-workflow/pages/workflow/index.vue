@@ -94,6 +94,11 @@ watch(() => route.query, (q) => {
   }
 }
 .tag-container {
+  :deep {
+    .el-tabs__content {
+      height: 100%;
+    }
+  }
     :deep .el-tabs__nav-wrap:first {
         width: calc(100% - 338px);
         &::after {

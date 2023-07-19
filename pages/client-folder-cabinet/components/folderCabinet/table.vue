@@ -4,7 +4,9 @@
             v-loading="loading"
             @command="handleAction"
             @pagination-change="handlePaginationChange"
-            @row-click="handleClick">
+            @row-click="handleClick"
+            @row-dblclick="handleClick"
+      >
             <template #preSortButton>
                 <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
@@ -20,10 +22,12 @@
 
 
 <script lang="ts" setup>
-import { 
-    GetCabinetConditionsApi, 
-    GetCabinetPageApi, 
-    getJsonApi, TABLE, defaultTableSetting } from 'dp-api'
+import {
+    GetCabinetConditionsApi,
+    GetCabinetPageApi,
+    getJsonApi, TABLE, defaultTableSetting,
+    TableAddColumns,
+    deepCopy} from 'dp-api'
 const emit = defineEmits(['row-click']);
 const userId:string = useUser().getUserId()
 // #region module: page
@@ -34,12 +38,13 @@ const userId:string = useUser().getUserId()
         pageSize: 20,
     }
     const tableKey = TABLE.CLIENT_FOLDER_CABINET
-    const tableSetting = defaultTableSetting[tableKey]
+    const tableSetting = ref(deepCopy(defaultTableSetting[tableKey]))
+
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        options: { 
-            showPagination: true, 
+        options: {
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -50,6 +55,7 @@ const userId:string = useUser().getUserId()
             rowKey: 'id'
         },
         extraParams: {},
+        extraParamsFilter: {},
         curTab: ''
     })
     function handleAction (command, row: any, index: number) {
@@ -62,17 +68,17 @@ const userId:string = useUser().getUserId()
         }
     }
     function goRoute (row) {
-        router.push({ 
+        router.push({
             path: '/browse',
-            query: { path: row.documentPath } 
+            query: { path: row.documentPath }
         })
     }
     async function getList (param) {
         state.loading = true
         try {
             state.tableData = []
-            const res = await GetCabinetPageApi({...param, ...state.extraParams})
-            
+            const res = await GetCabinetPageApi({...param, ...state.extraParams, ...state.extraParamsFilter})
+
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -85,8 +91,8 @@ const userId:string = useUser().getUserId()
     function handlePaginationChange (page: number, pageSize: number = pageParams.pageSize) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { ...route.query, page, pageSize, time } 
+        router.push({
+            query: { ...route.query, page, pageSize, time }
         })
     }
 
@@ -97,17 +103,19 @@ const userId:string = useUser().getUserId()
             pageParams.pageNum = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             pageParams.templateId = route.query.tab
-            if(pageParams.templateId) getList(pageParams)
-            getFilter(pageParams.templateId)
+            if (pageParams.templateId) {
+                getList(pageParams)
+                getFilter(pageParams.templateId)
+            }
         },
         { immediate: true }
     )
     const { tableData, options, loading } = toRefs(state)
 
-    
+
 // #endregion
 
-// #region module: 
+// #region module:
     const FromRendererRef = ref()
 
 // #endregion
@@ -119,19 +127,13 @@ const userId:string = useUser().getUserId()
             else if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
             return prev
         }, {})
-        state.extraParams = { ...state.extraParams, ...extraParams }
+        state.extraParams = extraParams
         handlePaginationChange(1)
     }
 // #endregion
 // #region module: filter
     function handleFilterFormChange(formModel, filedData) {
-        Object.keys(formModel).forEach((key) => {
-            if(typeof formModel[key] === 'boolean') state.extraParams[key] = formModel[key]
-            else if(formModel[key] && formModel[key].length > 0) state.extraParams[key]  = formModel[key]
-            else {
-                delete state.extraParams[key]
-            }
-        })
+        state.extraParamsFilter = formModel
         handlePaginationChange(1)
     }
     function handleClearFilter () {
@@ -152,9 +154,23 @@ function getSearchParams () {
 const ResponsiveFilterRef = ref()
 async function getFilter(tab) {
     if (state.curTab === tab) return
+    state.extraParams = {}
+    state.extraParamsFilter = {}
     state.curTab = tab
-    const data = await GetCabinetConditionsApi(tab) 
+    const data = await GetCabinetConditionsApi(tab)
     ResponsiveFilterRef.value.init(data)
+    const ignoreList = ['createdBy', 'complete']
+    tableSetting.value = deepCopy(defaultTableSetting[tableKey])
+    data.forEach(item => {
+        if(!ignoreList.includes(item.key)) {
+            TableAddColumns({
+                id: item.key,
+                label: item.key,
+                prop: item.key
+            }, tableSetting.value.columns)
+        }
+    })
+    tableRef.value.reorderColumn(tableSetting.value.columns)
 }
 defineExpose({ getSearchParams })
 </script>
@@ -179,7 +195,7 @@ defineExpose({ getSearchParams })
     :deep(.tableHeader) {
         width: 100%;
         grid-template-columns: 1fr;
-        .headerLeftExpand { 
+        .headerLeftExpand {
             gap: var(--app-padding);
             grid-template-columns: unset;
         }

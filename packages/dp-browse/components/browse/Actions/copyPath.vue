@@ -6,8 +6,10 @@
             </el-icon>
         </el-tooltip>
     </div> -->
-    <SvgIcon src="/icons/file/copy.svg" round content="copy"
-                @click="copyPath"></SvgIcon>
+    <BrowseActionsButton label="copy" >
+      <SvgIcon src="/icons/file/copy.svg" round content="copy"
+                  @click="copyPath"></SvgIcon>
+    </BrowseActionsButton>
 </template>
 
 <script lang="ts" setup>

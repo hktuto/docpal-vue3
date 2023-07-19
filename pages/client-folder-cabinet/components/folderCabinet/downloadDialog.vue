@@ -49,7 +49,9 @@ const state = reactive({
     searchParams: {},
     hideList: [ ]
 })
-function handleOpen(searchParams) {
+async function handleOpen(searchParams) {
+    await getExportList(searchParams.templateId)
+
     state.visible = true
     state.searchParams = searchParams
 }
@@ -71,15 +73,14 @@ async function handleSubmit() {
     state.loading = false
 }
 
-async function getExportList () {
-  const res = await GetCabinetHeaderApi()
+async function getExportList (templateId) {
+  const res = await GetCabinetHeaderApi(templateId)
   state.exportList = []
   Object.keys(res).forEach(key => {
     state.exportList.push({ id: key, name: res[key]})
   })
 }
 onMounted(async() => {
-   getExportList()
 })
 defineExpose({ handleOpen })
 </script>
@@ -87,13 +88,17 @@ defineExpose({ handleOpen })
 
 .search-download-container {
     height: 40vh;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--app-padding);
     &-box {
+      height: 100%;
+      overflow: hidden;
         display: grid;
         grid-template-rows: 52px 1fr;
         .list-group {
+          overflow: auto;
             padding: var(--app-padding);
             border: 1px solid var(--color-grey-050);
             background: var(--color-grey-050);

@@ -1,9 +1,10 @@
 <template>
-<el-dialog 
+<el-dialog
     style="--scroll-dialog-height: 80vh"
     v-model="state.visible" :title="$t('folderCabinet.newItem')"
     :close-on-click-modal="false"
     class="scroll-dialog"
+    append-to-body
     >
     <main>
         <FolderCabinetCreateUploadTree ref="FolderCabinetUploadTreeRef"
@@ -18,7 +19,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
+import {
     GetCabinetTemplateApi,
     GetDocDetail,
     CreateFoldersApi,
@@ -44,23 +45,23 @@ const route = useRoute()
             const uploadList = FolderCabinetUploadTreeRef.value.getData(true)
             if(!uploadList) {
                 throw new Error("");
-            } 
+            }
             uploadListAdd({
                 name: state.cabinetTemplate.rootName,
-                startDate: new Date(), 
+                startDate: new Date(),
                 treeData:uploadList
             })
             // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
             setTimeout(() => {
                 uploadHandler(uploadList, state.rootDetail.idOrPath)
             }, 2000)
-            
+
             state.visible = false
             setTimeout(()=> {
                 emits('refresh')
             }, 500)
         } catch (error) {
-            
+
         }
         state.loading = false
     }
@@ -112,7 +113,7 @@ const route = useRoute()
             initTreeData(state.cabinetTemplate.children)
             state.treeData = state.cabinetTemplate.children
         } catch (error) {
-            
+
         }
         state.treeLoading = false
     }

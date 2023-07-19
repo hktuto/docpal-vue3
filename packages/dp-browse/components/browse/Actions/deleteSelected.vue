@@ -1,6 +1,8 @@
 <template>
+  <BrowseActionsButton :label="$t('delete')" >
     <SvgIcon src="/icons/file/delete.svg" round content="delete"
         @click="deleteSelected()"></SvgIcon>
+  </BrowseActionsButton>
 </template>
 
 <script lang="ts" setup>

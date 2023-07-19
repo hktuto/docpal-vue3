@@ -90,6 +90,16 @@ watch( doc, () => {
     display: grid;
     grid-template-columns: 1fr min-content;
     overflow: hidden;
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      .right {
+        z-index: 2;
+        position: absolute;
+        left: 0;
+        top: var(--app-padding);
+        
+      }
+    }
 }
 .left, .right{
     height: 100%;

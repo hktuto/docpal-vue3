@@ -140,9 +140,18 @@ function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
 }
 .search-page {
     height: 100%;
-    display: grid;
-    grid-template-columns: min-content 1fr;
+    display: flex;
+    flex-flow: row nowrap;
     gap: var(--app-padding);
     overflow: hidden;
+    position: relative;
+    @media(max-width : 1024px) {
+      flex-flow: column nowrap;
+      //grid-template-columns: 1fr;
+      //grid-template-rows: min-content 1fr ;
+    }
+  .dp-table-container{
+    flex: 1 0 80%;
+  }
 }
 </style>

@@ -143,7 +143,7 @@ function initColumn () {
       userColumns = userPreference.value.tableSettings[props.sortKey]
     }
 
-    displayList.value = originalColumns.value.map( (item,index) => {
+    displayList.value = props.columns.map( (item,index) => {
       item.rowIndex = index;
       item.show = userColumns.includes(index)
       return item

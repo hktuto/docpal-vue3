@@ -99,7 +99,7 @@ defineExpose({
 }
 .breadContainer{
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: flex-start;
     align-items: center;
     gap: calc(var(--el-component-size-small) / 3 );

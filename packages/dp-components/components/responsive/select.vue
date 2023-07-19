@@ -17,7 +17,12 @@
             <el-checkbox-group v-if="selectData.options && selectData.options.length > 0"
                 v-model="selectData.value"
                 @change="handleChange(selectData)">
-                <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" >{{item.label}}</el-checkbox>
+                <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" >
+                    <template v-if="selectData.type === 'date'">
+                        {{formatDate(item.label)}}
+                    </template>
+                    <template v-else> {{item.label}} </template>
+                </el-checkbox>
             </el-checkbox-group>
             <div v-else>
                 {{$t('noData')}}

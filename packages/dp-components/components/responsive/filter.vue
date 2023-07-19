@@ -1,5 +1,5 @@
 <template>
-  <div ref="responsiveRef" :style="`--responsive-padding:${state.padding}px`"
+  <div ref="responsiveRef"
    class="responsive-container" v-element-size="onResize">
      <div class="flex-x-start">
         <div v-for="item in state.list" :key="item.label" :ref="el => { boxRefs[item.label] = el }">
@@ -17,7 +17,7 @@
                 </div>
             </template>
             <template #reference>
-                <el-button text>{{$t('more')}}
+                <el-button text>{{$t('button.more')}}
                     <el-tag v-if="state.moreSelected > 0" class="el-icon--right" effect="dark" round size="small">{{state.moreSelected > 9 ? '9+' : state.moreSelected}}</el-tag>
                     <el-icon class="el-icon--right"><ArrowDownBold /></el-icon>
                 </el-button>
@@ -89,6 +89,8 @@ const state = reactive<state>({
         if (span == null) {
             span = document.createElement("span");
             span.id = "_getwidthID";
+            span.style.position = "absolute";
+            span.style.top = "0";
             span.style.visibility = "hidden";
             span.style.whiteSpace = "nowrap"
         } else {
@@ -132,7 +134,13 @@ function init(list: ResSelectData[]) {
 function handleChange (filedData: {fieldName: string, value: any}) {
     state.moreSelected = 0
     const formModel = state.list.reduce((prev,item) => {
-        prev[item.key] = item.value
+        if(item.belong) {
+            if(!prev[item.belong]) prev[item.belong] = {}
+            prev[item.belong][item.key] = item.value
+        }
+        else {
+            prev[item.key] = item.value
+        }
         if(state.moreList.find(m => m.key === item.key)) {
             state.moreSelected += item.value.length
         }
@@ -147,12 +155,8 @@ function handleFilter () {
     state.list.forEach(item => {
         item.value = []
     })
-    const formModel = state.list.reduce((prev,item) => {
-        prev[item.key] = []
-        return prev
-    }, {})
     emits('clear-filter')
-    emits('form-change', formModel, null )
+    emits('form-change', {}, null )
 }
 defineExpose({ init })
 </script>
@@ -165,9 +169,5 @@ defineExpose({ init })
     &>div {
         width: 100%;
     }
-}
-.nowrap {
-    padding: var(--responsive-padding);
-    white-space: nowrap;
 }
 </style>

@@ -9,7 +9,6 @@
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",
-    "postinstall": "nuxi prepare",
     "lint": "eslint ."
   },
   "dependencies": {

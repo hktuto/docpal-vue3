@@ -10,8 +10,10 @@
                     </el-tooltip>
                 </div>
             </div> -->
+  <BrowseActionsButton :label="$t('download')" >
             <SvgIcon src="/icons/file/download.svg" round content="download"
                         @click="popupOpened = true"></SvgIcon>
+  </BrowseActionsButton>
             <ElDialog v-model="popupOpened" width="280" append-to-body>
             <div class="popoverContent">
                 <!-- download button -->

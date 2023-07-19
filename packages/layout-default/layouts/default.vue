@@ -4,8 +4,18 @@
         <div ref="sidebarEl" id="sidebarContainer" :class="{opened}">
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
-            <div v-if="menu.length > 0" :class="{expand:true, opened}" @click="toggleOpen">
-                <InlineSvg :src="opened ? '/icons/menu/closed.svg' : '/icons/menu/expanded.svg'" />
+            <div v-if="menu.length > 0" :class="{expand:true, opened}" >
+              <div class="menuActions">
+
+
+              <Language v-if="mode === 'development'"></Language>
+              <!-- <NotificationBadge v-if="feature.notification"/> -->
+<!--              <UserMiniDropdown v-if="feature.userAuth" />-->
+              <LogoutButton />
+              <ColorSwitch />
+              <LanguageSwitch v-if="feature.multiLanguage" />
+              </div>
+                <InlineSvg :src="opened ? '/icons/menu/closed.svg' : '/icons/menu/expanded.svg'" @click="toggleOpen"/>
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
         </div>
@@ -22,12 +32,8 @@
 
         <div v-if="isLogin"  class="actions">
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
-          <Language v-if="mode === 'development'"></Language>
-          <!-- <NotificationBadge v-if="feature.notification"/> -->
           <Notification v-if="feature.notification" />
-          <ColorSwitch />
-          <LanguageSwitch v-if="feature.multiLanguage" />
-          <UserMiniDropdown v-if="feature.userAuth" />
+
         </div>
       </div>
         <main id="mainContainer">
@@ -55,7 +61,7 @@ const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
 const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
-const { isMobile } = useDevice();
+const { isMobile } = useLayout();
 const { uploadState, uploadRequestList } = useUploadStore()
 const sidebarEl = ref();
 const { sideSlot } = useLayout()
@@ -115,7 +121,7 @@ function toggleOpen() {
 #sidebarContainer{
   grid-area: menu;
   display: grid;
-  grid-template-rows: 60px 1fr 30px;
+  grid-template-rows: 60px 1fr min-content;
   grid-template-areas: "logo"
                         "menu"
                         "toggle";
@@ -137,6 +143,9 @@ function toggleOpen() {
   }
   .expand {
     margin-inline: var(--app-padding);
+    --icon-size: 0.8rem;
+    --icon-bg-size: 1.4rem;
+    --icon-bg-color: var(--color-grey-0000);
   }
   .menu{
     grid-area: menu;
@@ -153,7 +162,16 @@ function toggleOpen() {
     }
   }
 }
-
+.menuActions{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: var(--app-padding);
+  margin:0 auto;
+  margin-bottom: var(--app-padding);
+}
 #topBarContainer{
   background: var(--header-bg);
   min-height: 40px;

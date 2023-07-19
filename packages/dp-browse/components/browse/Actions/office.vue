@@ -1,6 +1,9 @@
 <template>
+  <BrowseActionsButton :label="$t('tip.office')" >
+    
     <SvgIcon src="/icons/file/office.svg" round content="Go to office"
                 @click="goOffice"></SvgIcon>
+  </BrowseActionsButton>
 </template>
 
 <script lang="ts" setup>
