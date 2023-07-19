@@ -12,6 +12,9 @@
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
                     @clear-filter="handleClearFilter"/>
             </template>
+            <template #status="{ row, index }">
+                <SvgIcon :src="`/icons/file/status-${row.state}.svg`"></SvgIcon>
+            </template>
             <template #suffixSortButton>
                 <div class="suffixSortButton">
                     <slot name="suffixSortButton"></slot>

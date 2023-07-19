@@ -556,6 +556,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FOLDER_CABINET]: {
         columns: [
+            { id: '7', label: 'tableHeader_status', slot: 'status',width: 60 },
             { id: '1', label: 'tableHeader_name', prop: 'label' },
             { id: '2', label: 'tableHeader_modifiedDate', prop: 'modifiedDate',
                 formatList: [
@@ -609,6 +610,9 @@ export const defaultTableSetting: TableColumnSetting = {
                 "prefixIcon": "",
                 "suffixIcon": "",
             }
+        ],
+        slots: [
+            { label: 'tableHeader_status', slot: 'status' },
         ],
         events: [],
         options: { pageSize: 20 }
