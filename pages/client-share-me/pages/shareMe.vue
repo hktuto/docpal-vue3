@@ -90,7 +90,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
 
 function handleDblclick (row) {
     if(row.isFolder) {
-        sessionStorage.setItem('shareMeFolderId', row.documentId)
+        sessionStorage.setItem('shareFolderId', row.documentId)
         router.push('/shareMeFolder')
     }
     else {
