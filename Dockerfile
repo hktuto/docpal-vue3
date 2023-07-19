@@ -1,6 +1,6 @@
 FROM nikolaik/python-nodejs AS base
-
-RUN apt-get install libnss3 \
+RUN apt-get update
+RUN apt-get install -y libnss3 \
         libnspr4  \
         libatk1.0-0\
         libatk-bridge2.0-0\
