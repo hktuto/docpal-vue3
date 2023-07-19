@@ -61,7 +61,7 @@ const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
 const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
-const { isMobile } = useDevice();
+const { isMobile } = useLayout();
 const { uploadState, uploadRequestList } = useUploadStore()
 const sidebarEl = ref();
 const { sideSlot } = useLayout()
