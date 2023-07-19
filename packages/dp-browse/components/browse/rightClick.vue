@@ -22,7 +22,7 @@
             <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">
                 <SvgIcon class="el-icon--left" src="/icons/file/file-cut.svg"></SvgIcon>
                 {{$t('filePopover_cut')}}</el-menu-item>
-            <el-menu-item index="docActionInternalShare" v-show="state.canWrite && state.actions.internalShare">
+            <el-menu-item index="docActionInternalShare" v-show="state.canManage && state.actions.internalShare">
                 <SvgIcon class="el-icon--left" src="/icons/menu/shareMe.svg"></SvgIcon>
                 {{$t('filePopover_internalShare')}}</el-menu-item>
             <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">
@@ -66,6 +66,7 @@ const state = reactive({
         internalShare: true
     },
     canWrite: false,
+    canManage: false,
     loading: false
 })
 const userId:string = useUser().getUserId()
@@ -88,7 +89,6 @@ async function handleRightClick (detail: any) {
         const top = detail.pageY - popoverHeight
         FileRightClickPopoverRef.value.style.top = top + 'px'
     }
-  console.log(detail.pageX + popoverWidth, windowWidth)
     if (detail.pageX + popoverWidth > windowWidth) {
         
         const left = detail.pageX - popoverWidth
@@ -99,7 +99,7 @@ async function handleAction (detail:any) {
     if (detail.actions) state.actions = { ...state._actions,  ...detail.actions}
     else state.actions = { ...state._actions }
     if (props.permission) {
-        state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission.permission })
+        setPermission(props.permission.permission)
         return
     }
     state.loading = true
@@ -107,13 +107,20 @@ async function handleAction (detail:any) {
         const idOrPath = detail.doc.path === '/' ? '/' : detail.doc.id
         const permission = await GetDocPermission(idOrPath, userId);
         if(!permission) throw new Error("null");
-        state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission.permission })
+        setPermission(permission.permission)
     } catch (error) {
-        if (props.permission)
-            state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission.permission })
-        else state.canWrite = false
+        if (props.permission) {
+            setPermission(props.permission.permission)
+        }
+        else {
+            setPermission('Read')
+        }
     }
     state.loading = false
+}
+function setPermission(permission) {
+    state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission })
+    state.canManage = AllowTo({feature:'ManageRecord', userPermission: permission })
 }
 function hidePopover () {
     if (!state.visible) return
