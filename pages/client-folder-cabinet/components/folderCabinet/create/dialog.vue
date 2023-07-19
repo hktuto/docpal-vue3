@@ -71,6 +71,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
 
 // #region module: init
     async function handleOpen(setting) {
+        state.loading = false
         state.visible = true
         state.treeLoading = true
         try {
