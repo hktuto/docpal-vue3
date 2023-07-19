@@ -132,7 +132,13 @@ function init(list: ResSelectData[]) {
 function handleChange (filedData: {fieldName: string, value: any}) {
     state.moreSelected = 0
     const formModel = state.list.reduce((prev,item) => {
-        prev[item.key] = item.value
+        if(item.belong) {
+            if(!prev[item.belong]) prev[item.belong] = {}
+            prev[item.belong][item.key] = item.value
+        }
+        else {
+            prev[item.key] = item.value
+        }
         if(state.moreList.find(m => m.key === item.key)) {
             state.moreSelected += item.value.length
         }
@@ -147,12 +153,8 @@ function handleFilter () {
     state.list.forEach(item => {
         item.value = []
     })
-    const formModel = state.list.reduce((prev,item) => {
-        prev[item.key] = []
-        return prev
-    }, {})
     emits('clear-filter')
-    emits('form-change', formModel, null )
+    emits('form-change', {}, null )
 }
 defineExpose({ init })
 </script>
