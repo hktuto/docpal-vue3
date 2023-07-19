@@ -1,5 +1,5 @@
 <template>
-  <div ref="responsiveRef" :style="`--responsive-padding:${state.padding}px`"
+  <div ref="responsiveRef"
    class="responsive-container" v-element-size="onResize">
      <div class="flex-x-start">
         <div v-for="item in state.list" :key="item.label" :ref="el => { boxRefs[item.label] = el }">
@@ -89,6 +89,8 @@ const state = reactive<state>({
         if (span == null) {
             span = document.createElement("span");
             span.id = "_getwidthID";
+            span.style.position = "absolute";
+            span.style.top = "0";
             span.style.visibility = "hidden";
             span.style.whiteSpace = "nowrap"
         } else {
@@ -167,9 +169,5 @@ defineExpose({ init })
     &>div {
         width: 100%;
     }
-}
-.nowrap {
-    padding: var(--responsive-padding);
-    white-space: nowrap;
 }
 </style>
