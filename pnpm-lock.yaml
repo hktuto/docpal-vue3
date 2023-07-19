@@ -462,8 +462,10 @@ importers:
   packages/unit-test:
     specifiers:
       '@playwright/test': ^1.36.1
+      playwright-teamcity-reporter: ^0.2.0
     devDependencies:
       '@playwright/test': 1.36.1
+      playwright-teamcity-reporter: 0.2.0
 
   pages/admin-acl:
     specifiers:
@@ -8444,6 +8446,10 @@ packages:
     resolution: {integrity: sha512-7+tmPuMcEW4xeCL9cp9KxmYpQYHKkyjwoXRnoeTowaeNat8PoBMk/HwCYhqkH2fRkshfKEOiVus/IhID2Pg8kg==}
     engines: {node: '>=16'}
     hasBin: true
+    dev: true
+
+  /playwright-teamcity-reporter/0.2.0:
+    resolution: {integrity: sha512-S7kwDmaPtwHPbZVtfNXv25KFKN2Tg7fjXogJso2QF9fpSkVKaCcTGXuaFYRxegh9Xl13XwPolnJSlxi2TIGTZA==}
     dev: true
 
   /pluralize/8.0.0:
