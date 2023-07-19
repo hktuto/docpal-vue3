@@ -108,6 +108,7 @@ export enum TABLE {
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
+    ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
 
     PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
     ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
@@ -794,6 +795,7 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['preview'],
         options: { pageSize: 20 }
     },
+    
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
             { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true },
@@ -1702,6 +1704,63 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
             { slot: 'refreshAction', label: 'dpTable_actions', class: "slotTopRight", },
         ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_INTERNAL_SHEAR] : {
+        columns: [
+            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
+            { id: '1', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '2', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
+            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserId',},
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    // {
+                    //     "name": "",
+                    //     "type": "text",
+                    //     "command": "preview",
+                    //     "suffixIcon": "/icons/eye.svg",
+                    //     "index": 0
+                    // },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
         options: { pageSize: 20 }
     },
     [TABLE.ADMIN_AUDIT]: {

@@ -623,6 +623,24 @@ importers:
       typescript: 4.9.5
       v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
 
+  pages/admin-internal-share:
+    specifiers:
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^10.2.1
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.4.3
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 10.2.1
+      dp-api: link:../../packages/dp-api
+      eslint: 8.43.0
+      nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
+      typescript: 4.9.5
+
   pages/admin-log-manage:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0

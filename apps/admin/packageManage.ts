@@ -28,6 +28,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-workflow-manage');
     packages.push('../../pages/admin-mail-config');
     packages.push('../../pages/admin-directus');
+    packages.push('../../pages/admin-internal-share');
     
     packages.push('../../packages/dp-browse');
     packages.push('../../packages/dp-search');
