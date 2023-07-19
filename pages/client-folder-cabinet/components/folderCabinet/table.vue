@@ -55,6 +55,7 @@ const userId:string = useUser().getUserId()
             rowKey: 'id'
         },
         extraParams: {},
+        extraParamsFilter: {},
         curTab: ''
     })
     function handleAction (command, row: any, index: number) {
@@ -76,7 +77,7 @@ const userId:string = useUser().getUserId()
         state.loading = true
         try {
             state.tableData = []
-            const res = await GetCabinetPageApi({...param, ...state.extraParams})
+            const res = await GetCabinetPageApi({...param, ...state.extraParams, ...state.extraParamsFilter})
 
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
@@ -126,19 +127,13 @@ const userId:string = useUser().getUserId()
             else if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
             return prev
         }, {})
-        state.extraParams = { ...state.extraParams, ...extraParams }
+        state.extraParams = extraParams
         handlePaginationChange(1)
     }
 // #endregion
 // #region module: filter
     function handleFilterFormChange(formModel, filedData) {
-        Object.keys(formModel).forEach((key) => {
-            if(typeof formModel[key] === 'boolean') state.extraParams[key] = formModel[key]
-            else if(formModel[key] && formModel[key].length > 0) state.extraParams[key]  = formModel[key]
-            else {
-                delete state.extraParams[key]
-            }
-        })
+        state.extraParamsFilter = formModel
         handlePaginationChange(1)
     }
     function handleClearFilter () {
@@ -159,6 +154,8 @@ function getSearchParams () {
 const ResponsiveFilterRef = ref()
 async function getFilter(tab) {
     if (state.curTab === tab) return
+    state.extraParams = {}
+    state.extraParamsFilter = {}
     state.curTab = tab
     const data = await GetCabinetConditionsApi(tab)
     ResponsiveFilterRef.value.init(data)

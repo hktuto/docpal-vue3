@@ -29,10 +29,18 @@ async function handleSubmit() {
     }
     if(data.rootId && data.rootId.length > 0) params.rootId = data.rootId.pop()
     params.binds = data.binds.reduce((prev, item) => {
-        const _bindItems = item.split(':')
+        const _bindItems = item.split('&&&&')
         prev.push({
             type: _bindItems[0],
             bindId: _bindItems[1]
+        })
+        return prev
+    }, [])
+    params.metadata = data.metadata.reduce((prev, item) => {
+        const _metadataItems = item.split('&&&&')
+        prev.push({
+            type: _metadataItems[0],
+            name: _metadataItems[1]
         })
         return prev
     }, [])
