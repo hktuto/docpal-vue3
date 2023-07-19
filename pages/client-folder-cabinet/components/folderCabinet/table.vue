@@ -107,8 +107,8 @@ const userId:string = useUser().getUserId()
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             pageParams.templateId = route.query.tab
             if (pageParams.templateId) {
-                getList(pageParams)
                 getFilter(pageParams.templateId)
+                getList(pageParams)
             }
         },
         { immediate: true }
