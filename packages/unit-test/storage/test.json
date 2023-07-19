@@ -1,0 +1,47 @@
+{
+  "cookies": [
+    {
+      "name": "docpal-user",
+      "value": "%7B%22isConnected%22%3Anull%2C%22timeout%22%3Anull%2C%22sessionId%22%3A%22Basic%20c2VhbnRzYW5nOmFhQUExMjM0%22%2C%22username%22%3A%22seantsang%22%2C%22userId%22%3A%22seantsang%22%2C%22id%22%3Anull%2C%22firstName%22%3Anull%2C%22lastName%22%3Anull%2C%22email%22%3Anull%2C%22password%22%3Anull%2C%22jwtExpiredAt%22%3A%222023-07-19%2015%3A48%3A01%20GMT%22%2C%22properties%22%3Anull%7D",
+      "domain": "app4.wclsolution.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "messageToken",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI5ZmQ1MDk2YS04MWFjLTRkOTEtYjNkNS1iZTNlY2IxYTc5NjAiLCJzdWIiOiJzZWFudHNhbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cHM6Ly9hcHA0LndjbHNvbHV0aW9uLmNvbS9hcGkvYXV0aC9udXhlby9sb2dpbiIsImV4cCI6MTY4OTc4MTY4MX0.443_tDGvt12ORwgAVIuzT9heGvMuWlMUMFE6teP1YT4",
+      "domain": "app4.wclsolution.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://app4.wclsolution.com",
+      "localStorage": [
+        {
+          "name": "v_form_locale",
+          "value": "zh-CN"
+        },
+        {
+          "name": "nuxt-color-mode",
+          "value": "light"
+        },
+        {
+          "name": "refreshToken",
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI5ZmQ1MDk2YS04MWFjLTRkOTEtYjNkNS1iZTNlY2IxYTc5NjAiLCJzdWIiOiJzZWFudHNhbmciLCJpc3MiOiJodHRwczovL2FwcDQud2Nsc29sdXRpb24uY29tL2FwaS9hdXRoL251eGVvL2xvZ2luIiwiZXhwIjoxNjg5Nzg1MjgxfQ.49u9m6msTD4lFYL-CSYVAurUPmVX0rZgn6kr9DwzygI"
+        },
+        {
+          "name": "token",
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI5ZmQ1MDk2YS04MWFjLTRkOTEtYjNkNS1iZTNlY2IxYTc5NjAiLCJzdWIiOiJzZWFudHNhbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cHM6Ly9hcHA0LndjbHNvbHV0aW9uLmNvbS9hcGkvYXV0aC9udXhlby9sb2dpbiIsImV4cCI6MTY4OTc4MTY4MX0.443_tDGvt12ORwgAVIuzT9heGvMuWlMUMFE6teP1YT4"
+        }
+      ]
+    }
+  ]
+}
