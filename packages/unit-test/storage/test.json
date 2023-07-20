@@ -2,8 +2,8 @@
   "cookies": [
     {
       "name": "docpal-user",
-      "value": "%7B%22isConnected%22%3Anull%2C%22timeout%22%3Anull%2C%22sessionId%22%3A%22Basic%20c2VhbnRzYW5nOmFhQUExMjM0%22%2C%22username%22%3A%22seantsang%22%2C%22userId%22%3A%22seantsang%22%2C%22id%22%3Anull%2C%22firstName%22%3Anull%2C%22lastName%22%3Anull%2C%22email%22%3Anull%2C%22password%22%3Anull%2C%22jwtExpiredAt%22%3A%222023-07-19%2018%3A50%3A56%20GMT%22%2C%22properties%22%3Anull%7D",
-      "domain": "app4.wclsolution.com",
+      "value": "%7B%22isConnected%22%3Anull%2C%22timeout%22%3Anull%2C%22sessionId%22%3A%22Basic%20c2VhbnRzYW5nOmFhQUExMjM0%22%2C%22username%22%3A%22seantsang%22%2C%22userId%22%3A%22seantsang%22%2C%22id%22%3Anull%2C%22firstName%22%3Anull%2C%22lastName%22%3Anull%2C%22email%22%3Anull%2C%22password%22%3Anull%2C%22jwtExpiredAt%22%3A%222023-07-20%2019%3A52%3A44%20GMT%22%2C%22properties%22%3Anull%7D",
+      "domain": "localhost",
       "path": "/",
       "expires": -1,
       "httpOnly": false,
@@ -12,8 +12,8 @@
     },
     {
       "name": "messageToken",
-      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI4NzQzMWQzOS01YmMyLTQxN2UtODA5Zi1jZGM0MDk4ZmY3NGMiLCJzdWIiOiJzZWFudHNhbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cHM6Ly9hcHA0LndjbHNvbHV0aW9uLmNvbS9hcGkvYXV0aC9udXhlby9sb2dpbiIsImV4cCI6MTY4OTc5MjY1Nn0.LB0UFAmD-fw7Im-56aUZhV8dUk3NmdLwSp_Aos3fa74",
-      "domain": "app4.wclsolution.com",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI3MWFkN2Y2MC03YWYxLTQ0M2YtOTA3Ni1hODY1M2ExYWI5NDYiLCJzdWIiOiJzZWFudHNhbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cHM6Ly9hcHA0LndjbHNvbHV0aW9uLmNvbS9hcGkvYXV0aC9udXhlby9sb2dpbiIsImV4cCI6MTY4OTg4Mjc2NH0.gJx63GcTsLt6knkCG9pUk3tIFMu5Mykbo2nujCHnmbM",
+      "domain": "localhost",
       "path": "/",
       "expires": -1,
       "httpOnly": false,
@@ -23,7 +23,7 @@
   ],
   "origins": [
     {
-      "origin": "https://app4.wclsolution.com",
+      "origin": "http://localhost:3000",
       "localStorage": [
         {
           "name": "v_form_locale",
@@ -35,11 +35,11 @@
         },
         {
           "name": "refreshToken",
-          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI4NzQzMWQzOS01YmMyLTQxN2UtODA5Zi1jZGM0MDk4ZmY3NGMiLCJzdWIiOiJzZWFudHNhbmciLCJpc3MiOiJodHRwczovL2FwcDQud2Nsc29sdXRpb24uY29tL2FwaS9hdXRoL251eGVvL2xvZ2luIiwiZXhwIjoxNjg5Nzk2MjU2fQ.HgGyMB4sVkGSVqwsk1mT1W-z5efS03pgeVavt6R6XZk"
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI3MWFkN2Y2MC03YWYxLTQ0M2YtOTA3Ni1hODY1M2ExYWI5NDYiLCJzdWIiOiJzZWFudHNhbmciLCJpc3MiOiJodHRwczovL2FwcDQud2Nsc29sdXRpb24uY29tL2FwaS9hdXRoL251eGVvL2xvZ2luIiwiZXhwIjoxNjg5ODg2MzY0fQ.FCqjqUdZq5LHYToK-oQ7paIRK0YxBQ69WQ8CzEVoPp8"
         },
         {
           "name": "token",
-          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI4NzQzMWQzOS01YmMyLTQxN2UtODA5Zi1jZGM0MDk4ZmY3NGMiLCJzdWIiOiJzZWFudHNhbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cHM6Ly9hcHA0LndjbHNvbHV0aW9uLmNvbS9hcGkvYXV0aC9udXhlby9sb2dpbiIsImV4cCI6MTY4OTc5MjY1Nn0.LB0UFAmD-fw7Im-56aUZhV8dUk3NmdLwSp_Aos3fa74"
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb2NQYWxTZXNzaW9uSWQiOiI3MWFkN2Y2MC03YWYxLTQ0M2YtOTA3Ni1hODY1M2ExYWI5NDYiLCJzdWIiOiJzZWFudHNhbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cHM6Ly9hcHA0LndjbHNvbHV0aW9uLmNvbS9hcGkvYXV0aC9udXhlby9sb2dpbiIsImV4cCI6MTY4OTg4Mjc2NH0.gJx63GcTsLt6knkCG9pUk3tIFMu5Mykbo2nujCHnmbM"
         }
       ]
     }

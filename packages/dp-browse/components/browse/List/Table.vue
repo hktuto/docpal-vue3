@@ -15,7 +15,7 @@
                 @selection-change="handleSelect"
                 @contextmenu="handleEmptyRightClick">
                 <template #docName="{ row, index }">
-                    <div class="nameContainer">
+                    <div class="nameContainer" :data-row-name="row.name">
                         <div :class="{selectContainer:true, checked: isSelected(row)}">
                             <div v-if="options.selectable(row, index)" class="rowCheckbox">
                                 <SvgIcon class="checkIcon" src="/icons/white_check.svg" />

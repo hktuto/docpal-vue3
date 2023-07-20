@@ -1,7 +1,7 @@
 <template>
     <!-- <div class="actionIconContainer" @click="uploadDialog"> -->
       <div>
-        <BrowseActionsButton :label="$t('publicUpload_requestFileUpload')" @click="uploadDialog">
+        <BrowseActionsButton id="uploadRequestActionButton" :label="$t('publicUpload_requestFileUpload')" @click="uploadDialog">
         
         <SvgIcon src="/icons/file/uploadRequest.svg" round content="upload request"
             ></SvgIcon>

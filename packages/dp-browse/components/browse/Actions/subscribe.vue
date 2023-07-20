@@ -7,7 +7,7 @@
             </el-icon>
         </el-tooltip>
      </div> -->
-     <BrowseActionsButton :label="isSubscribe(doc.id) ?  $t('tip.unsubscribe') : $t('tip.subscribe')" @click="toggleSubscribe(doc.id)">
+     <BrowseActionsButton id="subscribeActionButton" :label="isSubscribe(doc.id) ?  $t('tip.unsubscribe') : $t('tip.subscribe')" @click="toggleSubscribe(doc.id)">
         <SvgIcon :src="isSubscribe(doc.id)? '/icons/file/unsubscribe.svg': '/icons/file/subscribe.svg'"  
                 :content="isSubscribe(doc.id) ?  $t('tip.unsubscribe') : $t('tip.subscribe')"
                 round

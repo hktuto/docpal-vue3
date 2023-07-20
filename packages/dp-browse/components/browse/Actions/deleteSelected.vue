@@ -1,5 +1,5 @@
 <template>
-  <BrowseActionsButton :label="$t('delete')" @click="deleteSelected()">
+  <BrowseActionsButton id="deleteSelectActionButton" :label="$t('delete')" @click="deleteSelected()">
     <SvgIcon src="/icons/file/delete.svg" round content="delete"
         ></SvgIcon>
   </BrowseActionsButton>
