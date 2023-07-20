@@ -31,6 +31,7 @@ const { state:shareState, updateShareList } = useShareStore()
 // const shareList = inject('selectList')
 const props = defineProps<{
     doc: any,
+    hideAfterClick: boolean
 }>()
 const state = reactive({
     dialogOpened: false
@@ -50,6 +51,10 @@ function iconClickHandler(){
             backPath: route.fullPath
         }
     })
+  if(props.hideAfterClick) {
+    const ev = new CustomEvent('closeFilePreview')
+    document.dispatchEvent(ev);
+  }
     // state.dialogOpened = true
     // open upload dialog
 
