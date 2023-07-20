@@ -38,4 +38,9 @@ function handleCommand(command) {
 .mg-r {
     margin-right: var(--app-padding);
 }
+.el-dropdown{
+  .buttonContainer{
+    width: 100%;
+  }
+}
 </style>

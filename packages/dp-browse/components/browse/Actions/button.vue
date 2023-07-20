@@ -18,6 +18,12 @@ const props = defineProps<{
   gap: var(--app-padding);
   justify-content: flex-start;
   align-items: center;
+  cursor: pointer;
+  @media (max-width: 1024px) {
+    &:hover {
+      background: var(--primary-color-02);
+    }
+  }
   .label {
     display: none;
     color: #000;

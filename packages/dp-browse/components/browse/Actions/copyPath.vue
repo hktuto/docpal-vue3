@@ -6,9 +6,9 @@
             </el-icon>
         </el-tooltip>
     </div> -->
-    <BrowseActionsButton label="copy" >
+    <BrowseActionsButton label="copy" @click="copyPath">
       <SvgIcon src="/icons/file/copy.svg" round content="copy"
-                  @click="copyPath"></SvgIcon>
+                  ></SvgIcon>
     </BrowseActionsButton>
 </template>
 

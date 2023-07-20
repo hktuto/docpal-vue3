@@ -1,10 +1,10 @@
 <template>
     <!-- <div class="actionIconContainer" @click="uploadDialog"> -->
       <div>
-        <BrowseActionsButton :label="$t('publicUpload_requestFileUpload')" >
+        <BrowseActionsButton :label="$t('publicUpload_requestFileUpload')" @click="uploadDialog">
         
         <SvgIcon src="/icons/file/uploadRequest.svg" round content="upload request"
-            @click="uploadDialog"></SvgIcon>
+            ></SvgIcon>
         </BrowseActionsButton>
         <!-- <el-tooltip content="upload request">
             <el-icon >

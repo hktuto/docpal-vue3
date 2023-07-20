@@ -66,7 +66,7 @@ watch(opened,(bool) => {
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: stretch;
     gap: calc(var(--app-padding) / 2);
     transform: translateX(0);
     z-index: 999;

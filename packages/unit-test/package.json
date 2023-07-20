@@ -1,0 +1,19 @@
+{
+  "name": "unit-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test --reporter=html,playwright-teamcity-reporter",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "record": "playwright codegen app4.wclsolution.com"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.36.1",
+    "playwright-teamcity-reporter": "^0.2.0"
+  }
+}
