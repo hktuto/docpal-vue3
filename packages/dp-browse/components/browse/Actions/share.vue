@@ -1,10 +1,10 @@
 <template>
     <!-- <div class="actionIconContainer" @click="iconClickHandler"> -->
     <div>
-      <BrowseActionsButton :label="$t('tip.share')" >
+      <BrowseActionsButton :label="$t('tip.share')" @click="iconClickHandler" >
         
         <SvgIcon src="/icons/file/share.svg" round content="share"
-            @click="iconClickHandler"></SvgIcon>
+            ></SvgIcon>
       </BrowseActionsButton>
         <!-- <el-tooltip content="share">
             <el-icon >
