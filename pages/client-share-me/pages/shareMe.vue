@@ -26,7 +26,7 @@
 
 
 <script lang="ts" setup>
-import { useI18n } from "vue-i18n";
+import { useEventListener } from '@vueuse/core'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTableSetting } from 'dp-api'
@@ -126,12 +126,15 @@ function handleRightClick (row: any, column: any, event: MouseEvent) {
             cut: false,
             paste: false,
             rename: false,
+            addFolder: false,
+            addFile: false
         }
     }
     const ev = new CustomEvent('fileRightClick',{ detail: data })
     document.dispatchEvent(ev)
 }
 async function handleRefresh () {
+    handlePaginationChange(...route.query)
     // forceRefresh.value = true
 }
 function handleDelete (row) {
@@ -143,6 +146,9 @@ function handleDelete (row) {
                 handlePaginationChange(pageParams.currentPageIndex - 1, pageParams.pageSize)
             })
 }
+onMounted(() => {
+    useEventListener(document, 'docActionRefresh', (event) => handleRefresh())
+})
 </script>
 
 <style lang="scss" scoped>
