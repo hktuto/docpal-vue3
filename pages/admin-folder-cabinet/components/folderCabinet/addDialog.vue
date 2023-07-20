@@ -44,6 +44,16 @@ async function handleSubmit() {
         })
         return prev
     }, [])
+    params.tos = data.tos.reduce((prev, item) => {
+        const _to = item.split('&&&&')
+        prev.push(_to[0])
+        return prev
+    }, [])
+    params.ccs = data.ccs.reduce((prev, item) => {
+        const _to = item.split('&&&&')
+        prev.push(_to[0])
+        return prev
+    }, [])
     try {
         state.loading = true
         if (params.isEdit) {
@@ -64,6 +74,7 @@ function handleOpen(setting) {
     if(setting && setting.isEdit) {
         state.setting = setting
         setTimeout(async () => {
+            await FromRendererRef.value.vFormRenderRef.resetForm()
             state.loading = true
             const data = {
                 ...setting,
@@ -74,6 +85,8 @@ function handleOpen(setting) {
             await FromRendererRef.value.vFormRenderRef.setFormData(data)
             state.loading = false
         })
+    } else {
+        setTimeout(() => { FromRendererRef.value.vFormRenderRef.resetForm() })
     }
 }
 async function getRootIds(idOrPath: string) {
@@ -82,7 +95,7 @@ async function getRootIds(idOrPath: string) {
 }
 function revertUserGroup (binds) {
     return binds.reduce((prev, item) => {
-        prev.push(`${item.type}:${item.bindId}`)
+        prev.push(`${item.type}&&&&${item.bindId}`)
         return prev
     }, [])
 }

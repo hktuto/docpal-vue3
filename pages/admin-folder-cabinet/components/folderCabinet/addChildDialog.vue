@@ -49,6 +49,7 @@ function handleOpen(setting) {
     state.setting = setting
     setTimeout(async () => {
         if(setting.isEdit) {
+            await FromRendererRef.value.vFormRenderRef.resetForm()
             await FromRendererRef.value.vFormRenderRef.setFormData(setting)
         } else {
             await FromRendererRef.value.vFormRenderRef.resetForm()
