@@ -5,35 +5,44 @@
             <!-- <div class="upload-header">
                 <el-input v-model="state.filterText" clearable placeholder="Filter keyword" />
             </div> -->
-            <div class="upload-main-left-header">
+          <div class="main">
+            <div class="main-left">
+              
+            
+              <div class="upload-main-left-header">
                 <el-button @click="resetChecked">{{$t('reset')}}</el-button>
-            </div>
-            <div class="upload-main-left-main">
-               <el-tree ref="treeRef" :data="state.fileList" :props="state.defaultProps"
-                    default-expand-all
-                    nodeKey="id" show-checkbox check-strictly :expand-on-click-node="false"
-                    :filter-node-method="filterNode"
-                    @node-click="handleNodeClick"
-                    @check="handleCheck">
-                    <template #default="{ node, data }">
-                        <div class="flex-x-between tree-item">
+              </div>
+              <div class="upload-main-left-main">
+              <el-tree ref="treeRef" :data="state.fileList" :props="state.defaultProps"
+                       default-expand-all
+                       nodeKey="id" show-checkbox check-strictly :expand-on-click-node="false"
+                       :filter-node-method="filterNode"
+                       @node-click="handleNodeClick"
+                       @check="handleCheck">
+                <template #default="{ node, data }">
+                  <div class="flex-x-between tree-item">
                             <span class="flex-x-start">
                                  <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
                                 {{data.name}}
                             </span>
-                            <div>{{data.documentType}}</div>
-                        </div>
-                    </template>
-                </el-tree>
+                    <div>{{data.documentType}}</div>
+                  </div>
+                </template>
+              </el-tree>
             </div>
-            <div class="upload-main-center" >
+            </div>
+            <div class="main-right">
+              <div class="upload-main-center" >
                 <UploadStructureMetaForm ref="UploadMetaFormRef" @apply-to-selected="handleApplyToSelected"></UploadStructureMetaForm>
-            </div>
-            <div class="upload-main-right">
+              </div>
+              <div class="upload-main-right">
                 <UploadStructurePreview ref="previewRef" />
+              </div>
             </div>
-            <div class="upload-footer flex-x-between">
+          </div>
+           <div class="upload-footer flex-x-between">
                 <div>{{$t('browse.uploadPosition')}}: {{state.rootDoc.name}}</div>
+              <div class="space"></div>
                 <div>
                     <el-button @click.native="handleDiscard">{{$t('discard')}}</el-button>
                     <el-button @click.native="handleSubmit">{{$t('confirm')}}</el-button>
@@ -168,31 +177,62 @@ onMounted(async() => {
 .upload-main {
     height: 100%;
     display: grid;
-    grid-template-columns: min-content 1fr min-content;
-    grid-template-rows: repeat(2, min-content) 1fr min-content;
+    grid-template-rows: 1fr min-content;
     grid-column-gap: var(--app-padding);
     grid-row-gap: var(--app-padding);
     position: relative;
     overflow: hidden;
-    .upload-header { grid-area: 1 / 1 / 2 / 4; }
-    .upload-main-left-header { grid-area: 2 / 1 / 3 / 2; }
-    .upload-main-left-main { grid-area: 3 / 1 / 4 / 2; }
-    .upload-main-center {  grid-area: 2 / 2 / 4 / 3; }
-    .upload-main-right { grid-area: 2 / 3 / 4 / 4; }
-    .upload-footer { grid-area: 4 / 1 / 5 / 4; }
-    .upload-main-left-main {
-        border-right: 1px solid #ddd;
-        overflow: auto;
-    }
-    .upload-main-right {
-        // background-color: aqua;
+    .main{
+      display: grid;
+        grid-template-columns: min-content 1fr;
+        grid-column-gap: var(--app-padding);
+        grid-row-gap: var(--app-padding);
+        height: 100%;
+      @media (max-width : 1024px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+        .main-left {
+            height: 100%;
+            overflow: auto;
+            .el-tree {
+                height: 100%;
+                overflow: auto;
+            }
+        }
+        .main-right {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr min-content ;
+            grid-column-gap: var(--app-padding);
+            grid-row-gap: var(--app-padding);
+            .upload-main-center {
+                height: 100%;
+                overflow: auto;
+            }
+            
+            .upload-main-right {
+                height: 100%;
+                overflow: auto;
+              @media(max-width: 1024px) {
+                display: none;
+              }
+            }
+        }
     }
 }
 .tree-item {
     width: 100%;
     padding-right: var(--app-padding);
+    display: flex;
+  gap: var(--app-padding);
 }
 :deep(.el-tree-node.is-current > .el-tree-node__content) {
     background-color: var(--el-tree-node-hover-bg-color);
 } 
+.upload-footer{
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--app-padding);
+}
 </style>
