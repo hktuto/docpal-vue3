@@ -7,7 +7,6 @@
     "test": "playwright test --reporter=html,playwright-teamcity-reporter",
     "test:ui": "playwright test --ui",
     "report": "playwright show-report",
-    "postinstall": "npx playwright install",
     "record": "playwright codegen app4.wclsolution.com"
   },
   "keywords": [],
