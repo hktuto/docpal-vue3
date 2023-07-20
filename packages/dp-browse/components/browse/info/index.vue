@@ -74,7 +74,7 @@ const style = computed(() => {
     }
     let result:any = {};
     if(w.value) {
-      result.width = `${isMobile ? (window.innerWidth - 24) : w.value > (window.innerWidth - 24) ? (window.innerWidth - 24) : w.value}px`
+      result.width = `${isMobile.value ? (window.innerWidth - 24) : w.value > (window.innerWidth - 24) ? (window.innerWidth - 24) : w.value}px`
     }
     return result
 })
