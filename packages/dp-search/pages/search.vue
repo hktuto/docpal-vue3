@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div class="search-page">
-            <SearchFilterLeft :searchParams="state.searchParams"></SearchFilterLeft>
+            <SearchFilterLeft ref="SearchFilterLeftRef" :ready="state.firstReady"></SearchFilterLeft>
             <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                     @pagination-change="handlePaginationChange"
                     @row-dblclick="handleDblclick">
@@ -28,11 +28,13 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
 // #region module: page
     const route = useRoute()
     const router = useRouter()
+    const SearchFilterLeftRef = ref()
     let pageParams = {
         currentPageIndex: 0,
         pageSize: 20
     }
     const state = reactive<State>({
+        firstReady: false,
         loading: false,
         tableData: [],
         options: {
@@ -78,11 +80,14 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
             pageParams = getSearchParamsArray({...newVal})
 
             state.searchParams = pageParams
+            if(!state.firstReady) SearchFilterLeftRef.value.initForm(state.searchParams)
+
             // pageParams = {...newVal}
             pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
 
-            getList(pageParams)
+            await getList(pageParams)
+            state.firstReady = true
         },
         { debounce: 200, maxWait: 500, immediate: true }
     )
