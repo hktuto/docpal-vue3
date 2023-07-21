@@ -9,7 +9,7 @@ export const publicFileRequestGetApi = async(params) => {
 }
 export const publicFileRequestSaveApi = async(params) => {
     try {
-        const res = api.post('/nuxeo/public/filerequest', params).then(res => res.data.result)
+        const res = api.post('/nuxeo/public/filerequest', params, { timeout: 0 }).then(res => res.data.result)
         return res || true
     } catch (error) {
         return false
