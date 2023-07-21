@@ -32,7 +32,8 @@
 import { deepCopy, getJsonApi, getSearchParamsArray } from 'dp-api'
 import {ArrowDown} from "@element-plus/icons-vue";
 const props = defineProps<{
-    searchParams: any
+    searchParams: any,
+    ready: boolean
 }>()
 const { isMobile } = useLayout()
 const route = useRoute()
@@ -41,13 +42,11 @@ const emits = defineEmits(['submit'])
 const filterJson = getJsonApi('search.json')
 const FromRendererRef = ref()
 const filterContainerRef = ref()
-const state = reactive({
-    changeEvent: false
-})
+
 const opened = ref(false);
 const formModelData = ref<any>({});
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
-    if(!state.changeEvent) return
+    if(!props.ready) return
     const _data = dataHandle(formModel)
     goRoute(_data)
 }
@@ -77,10 +76,9 @@ function handleSubmit () {
 function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()
 }
-function initForm () {
+function initForm (searchParams) {
   nextTick(async() => {
-        const searchParams = deepCopy(props.searchParams)
-        let key = props.searchParams.paramsInTextSearch
+        let key = searchParams.paramsInTextSearch
         if(!!key) searchParams.keyword = key
         searchParams.includeFolder = searchParams.includeFolder ? '1' : '0'
         if(searchParams.hight) {
@@ -97,7 +95,6 @@ function initForm () {
         }
         // searchParams.includeFolder = searchParams.includeFolder === '1' || searchParams.includeFolder === 1;
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
-        state.changeEvent = true
         formModelData.value = FromRendererRef.value.vFormRenderRef.getFormData(false)
     })
 }
@@ -115,9 +112,8 @@ function handleDownload () {
     SearchDownloadDialogRef.value.handleOpen(_data)
 }
 onMounted(() => {
-    initForm()
 })
-defineExpose({ handleSubmit })
+defineExpose({ handleSubmit, initForm })
 </script>
 
 <style lang="scss" scoped>
