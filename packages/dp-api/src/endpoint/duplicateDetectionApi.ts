@@ -114,7 +114,7 @@ export const downloadDocRecord = async(params) => {
         return api.post('/nuxeo/document/createFolders', param).then(res => res.data.data)
     }
     export const CreateDocumentApi = async(param) => {
-        return api.post('/nuxeo/document/createDocument', param).then(res => res.data.data)
+        return api.post('/nuxeo/document/createDocument', param, {timeout:0}).then(res => res.data.data)
     }
     export const patchDocumentApi = async(param) => {
         return api.patch('/nuxeo/document', param).then(res => res.data.data)
