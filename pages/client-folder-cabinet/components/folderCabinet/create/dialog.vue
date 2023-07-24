@@ -23,6 +23,7 @@ import {
     CreateCabinetApi,
     CreateDocumentApi,
     getJsonApi } from 'dp-api'
+
 const uploadListAdd = inject('uploadListAdd')
 const emits = defineEmits([
     'refresh'
@@ -56,17 +57,18 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
         if(!formData || !metaFormData) return
         state.loading = true
         try {
-            const idOrPath = `${state.cabinetTemplate.rootPath}/${formData.name}`
+            const idOrPath = `${state.cabinetTemplate.rootPath}/${getMetaName(metaFormData)}`
             // 上传最上层数据
-            await CreateCabinetApi({
+            const res = await CreateCabinetApi({
                 ...formData,
                 type: state.cabinetTemplate.documentType,
                 idOrPath,
                 properties: metaFormData,
                 templateId: route.query.tab
             })
-
-            NextDialogRef.value.handleOpen(state.cabinetTemplate, idOrPath)
+            if(res.path) {
+                NextDialogRef.value.handleOpen(state.cabinetTemplate, res.path)
+            }
             await new Promise(resolve => setTimeout(() => {
                 state.visible = false
                 emits('refresh')
@@ -76,6 +78,30 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
 
         }
         state.loading = false
+    }
+    function getMetaName(metaFormData) {
+        const date = new Date()
+        
+        const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : ''
+        if (!labelRule) return state.cabinetTemplate.label + formatDate(date,'YYYY-MM-DD')
+        else {
+            return labelRule.reduce((prev, rule, index) => {
+                const joiner = index === 0 ? '' : '-'
+                if(rule.metaData === 'fc:createDate') {
+                    prev += joiner + formatDate(date,'YYYY-MM-DD')
+                }
+                else if(rule.metaData === 'fc:label'){
+                    prev += joiner + state.cabinetTemplate.label
+                }
+                else if(rule.dataType === 'date') {
+                    prev += joiner + formatDate(metaFormData[rule.metaData])
+                } 
+                else {
+                    prev += joiner + metaFormData[rule.metaData]
+                }
+                return prev
+            }, '')
+        }
     }
 // #endregion
 

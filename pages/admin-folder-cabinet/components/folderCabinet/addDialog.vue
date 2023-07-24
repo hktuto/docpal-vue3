@@ -2,7 +2,20 @@
 <el-dialog v-model="state.visible" :title="state.setting?.isEdit ? $t('folderCabinet.edit') : $t('folderCabinet.create')"
     :close-on-click-modal="false" append-to-body
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FromRenderer ref="FromRendererRef" :form-json="formJson" @docTypeChange="handleDocTypeChange">
+        <template v-slot:dragSelect>
+            <el-form label-position="top" ref="FormRef" :model="form">
+                <el-form-item prop="labelRule" class="intro"
+                    :rules="[{ required: true, message: $t('form_common_requird')}]">
+                    <template #label>
+                        {{$t('tableHeader_labelRule')}}
+                        <span class="color__primary__hover" @click="goMetaEdit">({{$t('tip.clickToEditDisplayMeta')}})</span>
+                    </template>
+                    <DragSelect :dragList="state.dragList" :dropList="form.labelRule"/>
+                </el-form-item>
+            </el-form>
+        </template>
+    </FromRenderer>
     <template #footer>
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
@@ -16,17 +29,44 @@ const emits = defineEmits([
 const state = reactive({
     loading: false,
     visible: false,
-    setting: null
+    setting: null,
+    dragList: [],
+    curDocType: '',
+    editReady: false
 })
+const router = useRouter()
+const form = reactive({
+    labelRule: []
+})
+const FormRef = ref()
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/folderCabinet.json')
-
+function handleDocTypeChange (data) {
+    if(state.editReady) form.labelRule = []
+    state.curDocType = data.value
+    state.dragList = data.metaList.reduce((prev, item) => {
+        if(item.dataType === 'string' || item.dataType === 'date') {
+            prev.push({
+                metaData: item.metaData,
+                dataType: item.dataType
+            })
+        }
+        return prev
+    }, [])
+    state.dragList.push(
+        {metaData: 'fc:label', dataType: 'string'},
+        {metaData: 'fc:createDate', dataType: 'date'}
+    )
+}
 async function handleSubmit() {
+    const valid = FormRef.value.validate()
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    if(!valid || !data) return
     const params = {
         ...data,
         folder: true
     }
+    params.labelRule = JSON.stringify(form.labelRule) 
     if(data.rootId && data.rootId.length > 0) params.rootId = data.rootId.pop()
     params.binds = data.binds.reduce((prev, item) => {
         const _bindItems = item.split('&&&&')
@@ -71,8 +111,10 @@ async function handleSubmit() {
 }
 function handleOpen(setting) {
     state.visible = true
+    state.editReady = false
     if(setting && setting.isEdit) {
         state.setting = setting
+        form.labelRule = setting.labelRule ? JSON.parse(setting.labelRule) : []
         setTimeout(async () => {
             await FromRendererRef.value.vFormRenderRef.resetForm()
             state.loading = true
@@ -84,10 +126,17 @@ function handleOpen(setting) {
             }
             await FromRendererRef.value.vFormRenderRef.setFormData(data)
             state.loading = false
+            setTimeout(() => { state.editReady = true },1000)
         })
     } else {
+        state.editReady = true
         setTimeout(() => { FromRendererRef.value.vFormRenderRef.resetForm() })
     }
+}
+function goMetaEdit () {
+    let r = '/meta'
+    if (state.curDocType) r += `/${state.curDocType}`
+    router.push(r)
 }
 async function getRootIds(idOrPath: string) {
     const data = await GetBreadcrumb(idOrPath)
