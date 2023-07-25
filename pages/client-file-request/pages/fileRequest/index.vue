@@ -36,7 +36,7 @@ const { t } = useI18n();
             sortKey: tableKey,
             rowStyle ({row, index}) {
                 if(row.status !== 'pending_approval') {
-                    return 'background-color: #CDD0D6!important'
+                    return 'background-color: var(--color-b2)!important'
                 } else {
                     return ''
                 }

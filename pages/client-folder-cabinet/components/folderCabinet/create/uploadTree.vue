@@ -116,6 +116,7 @@ function handleMetaChange (properties: any) {
         return data.folder === false &&
                 !(!data.multiple && data.children && data.children.length > 0)
     }
+
 // #endregion
 
 // #region module: tree actions
@@ -155,7 +156,7 @@ function handleMetaChange (properties: any) {
     }
 // #endregion
 defineExpose({
-    getData
+    getData, treeRef
 })
 </script>
 

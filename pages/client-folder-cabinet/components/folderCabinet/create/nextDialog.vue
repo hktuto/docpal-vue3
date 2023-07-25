@@ -24,7 +24,7 @@ import {
     GetDocDetail,
     CreateFoldersApi,
     CreateDocumentApi } from 'dp-api'
-const uploadListAdd = inject('uploadListAdd')
+const setUploading = inject('setUploading')
 const emits = defineEmits([
     'refresh'
 ])
@@ -34,7 +34,10 @@ const state = reactive({
     visible: false,
     cabinetTemplate: {},
     treeData: [],
-    rootDetail: {}
+    rootDetail: {},
+
+    uploadLength: 0,
+    uploadedLength: 0
 })
 const route = useRoute()
 // #region module: handleSubmit
@@ -43,28 +46,34 @@ const route = useRoute()
         state.loading = true
         try {
             const uploadList = FolderCabinetUploadTreeRef.value.getData(true)
+            state.uploadLength = getUploadLength()
+            state.uploadedLength = 0
             if(!uploadList) {
                 throw new Error("");
             }
-            uploadListAdd({
-                name: state.cabinetTemplate.rootName,
-                startDate: new Date(),
-                treeData:uploadList
-            })
+            setUploading(true)
+            state.visible = false
             // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
             setTimeout(() => {
                 uploadHandler(uploadList, state.rootDetail.idOrPath)
             }, 2000)
 
-            state.visible = false
-            setTimeout(()=> {
-                emits('refresh')
-            }, 500)
         } catch (error) {
 
         }
         state.loading = false
     }
+    function getUploadLength () {
+        const nodesMap = FolderCabinetUploadTreeRef.value.treeRef.store.nodesMap
+        return Object.keys(nodesMap).reduce((prev, key) => {
+            const item = nodesMap[key].data
+            if(item.folder !== false) prev++
+            return prev
+        }, 0)
+    }
+    watch(()=> state.uploadedLength, newValue => {
+        if(newValue === state.uploadLength) setUploading(false)
+    } )
     function uploadHandler (children: any, parentPath: string = '', parentStatus) {
         children.forEach(async(item) => {
             item.path = parentPath + '/' + item.label
@@ -78,6 +87,7 @@ const route = useRoute()
                         idOrPath: item.path,
                         properties: item.properties
                     })
+                    state.uploadedLength ++
                 } else {
                     const document = {
                         name: item.label,
@@ -91,6 +101,7 @@ const route = useRoute()
                     formData.append('files', item.raw)
                     formData.append('document', JSON.stringify(document))
                     await CreateDocumentApi(formData)
+                    state.uploadedLength ++
                 }
                 item.status = 'finish'
             } catch (error) {

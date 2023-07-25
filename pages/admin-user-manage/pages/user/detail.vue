@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" backPath="/userManage">
+    <NuxtLayout class="fit-height withPadding" backPath="/user">
        <div class="userDetailSection">
             <div class="list">
                 <KeywordFilter :list="state.userList" attr="username"

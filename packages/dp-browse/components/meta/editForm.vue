@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading="state.loading">
         <template v-if="state.metaList.length > 0">
             <div v-for="(item, index) in state.metaList" :key="item.metaData+index" class="row-item">
                 <template v-if="item.display">
@@ -49,7 +49,8 @@ const emits = defineEmits([
     'refresh', 'meta-change'
 ])
 const state = reactive({
-    metaList: []
+    metaList: [],
+    loading: false
 })
 // #region module: set
     async function initMeta (documentType: string, initData: any) {
@@ -57,7 +58,9 @@ const state = reactive({
             state.metaList = []
             return
         }
+        state.loading = true
         state.metaList = await metaListGet(documentType, initData)
+        state.loading = false
         return state.metaList
     }
     async function metaListGet(documentType: string, initData: any) {

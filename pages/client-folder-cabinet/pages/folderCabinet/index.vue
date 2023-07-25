@@ -14,6 +14,7 @@
                     <el-button @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
                     <!-- <el-button class="suffixSortButton" @click="handleNextItem()">{{$t('handleNextItem.newItem')}}</el-button> -->
                     <el-button type="info" @click="handleDownload()">{{$t('export')}}</el-button>
+                    <el-button :loading="state.uploading" text></el-button>
                 </template>
             </FolderCabinetTable>
             <InteractDrawer ref="InteractDrawerRef" :minWidth="240">
@@ -41,7 +42,8 @@ const state = reactive({
     activeTab: '',
     loading: false,
     tabList: [],
-    uploadList: []
+    uploadList: [],
+    uploading: false
 })
 const { activeTab } = toRefs(state)
 function tabChange (tab) {
@@ -145,15 +147,21 @@ function refreshTable () {
     function uploadListAdd(uploadItem) {
         state.uploadList.push(uploadItem)
     }
+    function setUploading (uploading: boolean = false) {
+        state.uploading = uploading
+        if (!state.uploading) {
+            const time = new Date().valueOf().toString()
+            refreshTable()
+        }
+    }
     provide('uploadListAdd', uploadListAdd)
+    provide('setUploading', setUploading)
 // #endregion
 // #region module: Download csv
     const tableRef = ref()
     const DownloadDialogRef = ref()
     function handleDownload () {
         const searchParams = tableRef.value.getSearchParams()
-        console.log({searchParams});
-        
         DownloadDialogRef.value.handleOpen(searchParams)
     }
 // #endregion

@@ -159,6 +159,9 @@ export const downloadDocRecord = async(params) => {
     export const RestoreByIdApi = async (idOrPath: string) => {
         return await api.post('/nuxeo/document/restore', { idOrPath }).then(() => true)
     }
+    export const DeleteAllApi = async () => {
+        return await api.delete('/nuxeo/document/purge').then(() => true)
+    }
 // #endregion
 
 // #region module: collection
