@@ -69,7 +69,6 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .list-drag {
-    min-height: 30px;
     &-item {
         margin-right: 3px;
     }

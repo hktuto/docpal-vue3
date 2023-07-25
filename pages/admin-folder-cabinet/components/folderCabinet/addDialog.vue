@@ -1,5 +1,7 @@
 <template>
-<el-dialog v-model="state.visible" :title="state.setting?.isEdit ? $t('folderCabinet.edit') : $t('folderCabinet.create')"
+<el-dialog 
+    class="scroll-dialog"
+    v-model="state.visible" :title="state.setting?.isEdit ? $t('folderCabinet.edit') : $t('folderCabinet.create')"
     :close-on-click-modal="false" append-to-body
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" @docTypeChange="handleDocTypeChange">
@@ -9,7 +11,7 @@
                     :rules="[{ required: true, message: $t('form_common_requird')}]">
                     <template #label>
                         {{$t('tableHeader_labelRule')}}
-                        <span class="color__primary__hover" @click="goMetaEdit">({{$t('tip.clickToEditDisplayMeta')}})</span>
+                        <span class="color__primary__hover cursorPointer" @click="goMetaEdit">({{$t('tip.clickToEditDisplayMeta')}})</span>
                     </template>
                     <DragSelect :dragList="state.dragList" :dropList="form.labelRule"/>
                 </el-form-item>
@@ -42,7 +44,7 @@ const FormRef = ref()
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/folderCabinet.json')
 function handleDocTypeChange (data) {
-    if(state.editReady) form.labelRule = []
+    if (state.editReady) form.labelRule = []
     state.curDocType = data.value
     state.dragList = data.metaList.reduce((prev, item) => {
         if(item.dataType === 'string' || item.dataType === 'date' && item.isRequire) {
@@ -57,6 +59,10 @@ function handleDocTypeChange (data) {
         {metaData: 'fc:label', dataType: 'string'},
         {metaData: 'fc:createDate', dataType: 'date'}
     )
+    if (form.labelRule.length > 0) {
+        state.dragList = state.dragList.filter((allItem:any) => 
+              !form.labelRule.some((exitItem:any) => exitItem.metaData === allItem.metaData))
+    }
 }
 async function handleSubmit() {
     const valid = FormRef.value.validate()
@@ -136,7 +142,8 @@ function handleOpen(setting) {
 function goMetaEdit () {
     let r = '/meta'
     if (state.curDocType) r += `/${state.curDocType}`
-    router.push(r)
+    const url = router.resolve(r)
+    window.open(url.href, '_blank');
 }
 async function getRootIds(idOrPath: string) {
     const data = await GetBreadcrumb(idOrPath)
