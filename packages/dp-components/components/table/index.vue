@@ -1,6 +1,6 @@
 <template>
     <div class="dp-table-container">
-        <div class="tableHeader">
+        <div :class="['tableHeader', headerClass]">
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
@@ -138,6 +138,7 @@ const props = defineProps<{
     tableData: Array<object>, // table的数据
     columns: Table.Column[], // 每列的配置项
     options?: Table.Options,
+    headerClass?: string
 }>()
 const tableRef = ref();
 const tableCardRef = ref();
@@ -474,6 +475,30 @@ defineExpose({ reorderColumn, tableRef })
   .el-pagination__total, .el-pagination__sizes, .el-pagination__jump {
     display: none;
   }
+}
+
+.table-responsive-header {
+    display: grid!important;
+    grid-template-columns: 1fr min-content;
+    margin-bottom: var(--app-padding);
+    .headerLeftExpand {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        align-items: flex-end!important;
+    }
+    .suffixSortButton {
+        display: flex;
+    }
+}
+@media (max-width : 1024px) {
+    .table-responsive-header {
+        width: 100%;
+        grid-template-columns: 1fr;
+        .headerLeftExpand {
+            gap: var(--app-padding);
+            grid-template-columns: unset;
+        }
+    }
 }
 </style>
 
