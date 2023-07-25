@@ -501,4 +501,11 @@ defineExpose({ reorderColumn, tableRef })
     }
 }
 </style>
-
+<style lang="scss">
+.el-table__row {
+    color: var(--color-grey-900);
+}
+.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+    background-color: var(--color-b3);
+}
+</style>
