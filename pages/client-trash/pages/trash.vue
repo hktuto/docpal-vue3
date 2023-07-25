@@ -51,7 +51,8 @@ const tableSetting = defaultTableSetting[tableKey]
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
-          sortKey: tableKey
+            rowKey: 'id',
+            sortKey: tableKey
         }
     })
 

@@ -65,6 +65,8 @@ function handleDialogShow(data) {
 
 async function getTable() {
     const docType = await GetMetaSettingApi(route.params.id)
+    console.log({docType});
+    
     state.list = docType.related
     state._list = state.list
 }
