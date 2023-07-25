@@ -45,7 +45,7 @@ function handleDocTypeChange (data) {
     if(state.editReady) form.labelRule = []
     state.curDocType = data.value
     state.dragList = data.metaList.reduce((prev, item) => {
-        if(item.dataType === 'string' || item.dataType === 'date') {
+        if(item.dataType === 'string' || item.dataType === 'date' && item.isRequire) {
             prev.push({
                 metaData: item.metaData,
                 dataType: item.dataType

@@ -30,7 +30,6 @@ const emits = defineEmits([
 ])
 const state = reactive({
     loading: false,
-    treeLoading: false,
     visible: false,
     cabinetTemplate: {},
 })
@@ -57,7 +56,21 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
         if(!formData || !metaFormData) return
         state.loading = true
         try {
-            const idOrPath = `${state.cabinetTemplate.rootPath}/${getMetaName(metaFormData)}`
+            let fileName = getMetaName(metaFormData)
+            const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.rootPath, fileName } )
+            if (fileName !== _fileName) {
+                const check = await ElMessageBox.confirm(`${$i18n.t('dpTip_duplicateFileNameNext')}`, {
+                    confirmButtonText: `${$i18n.t('dpButtom_confirm')}`,
+                    cancelButtonText: `${$i18n.t('dpButtom_cancel')}`
+                }).catch((action) => { return action })
+                if(check !== 'confirm') {
+                    state.loading = false
+                    return
+                } else {
+                    fileName = _fileName
+                }
+            }
+            const idOrPath = `${state.cabinetTemplate.rootPath}/${fileName}`
             // 上传最上层数据
             const res = await CreateCabinetApi({
                 ...formData,
@@ -81,26 +94,33 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
     }
     function getMetaName(metaFormData) {
         const date = new Date()
-        
-        const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : ''
-        if (!labelRule) return state.cabinetTemplate.label + formatDate(date,'YYYY-MM-DD')
-        else {
-            return labelRule.reduce((prev, rule, index) => {
-                const joiner = index === 0 ? '' : '-'
-                if(rule.metaData === 'fc:createDate') {
-                    prev += joiner + formatDate(date,'YYYY-MM-DD')
-                }
-                else if(rule.metaData === 'fc:label'){
-                    prev += joiner + state.cabinetTemplate.label
-                }
-                else if(rule.dataType === 'date') {
-                    prev += joiner + formatDate(metaFormData[rule.metaData])
-                } 
-                else {
-                    prev += joiner + metaFormData[rule.metaData]
-                }
-                return prev
-            }, '')
+        try {
+           const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : ''
+            if (!labelRule) throw new Error("no labelRule");
+            else {
+                return labelRule.reduce((prev, rule, index) => {
+                    console.log(index);
+                    
+                    const joiner = index === 0 ? '' : '-'
+                    if(rule.metaData === 'fc:createDate') {
+                        prev += joiner + formatDate(date,'YYYY-MM-DD')
+                    }
+                    else if(rule.metaData === 'fc:label'){
+                        prev += joiner + state.cabinetTemplate.label
+                    }
+                    else if(rule.dataType === 'date') {
+                        if(!metaFormData[rule.metaData]) throw new Error("no metaData");
+                        prev += joiner + formatDate(metaFormData[rule.metaData])
+                    } 
+                    else {
+                        if(!metaFormData[rule.metaData]) throw new Error("no metaData");
+                        prev += joiner + metaFormData[rule.metaData]
+                    }
+                    return prev
+                }, '')
+            } 
+        } catch (error) {
+            return state.cabinetTemplate.label + formatDate(date,'YYYY-MM-DD')
         }
     }
 // #endregion
@@ -109,7 +129,6 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
     async function handleOpen(setting) {
         state.loading = false
         state.visible = true
-        state.treeLoading = true
         try {
             state.cabinetTemplate = await GetCabinetTemplateApi(setting.id)
 
@@ -117,7 +136,8 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             state.cabinetTemplate.rootPath = rootDetail.path
             state.cabinetTemplate.rootName = rootDetail.name
         } catch (error) {
-
+            ElMessage.error(`${$i18n.t('dpMsg_error')}`)
+            state.visible = false
         }
         setTimeout(()=> {
             MetaFormRef.value.initMeta(setting.documentType)
@@ -132,7 +152,6 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             }
             FromRendererRef.value.vFormRenderRef.setFormData(params)
         })
-        state.treeLoading = false
     }
 // #endregion
 
