@@ -95,7 +95,6 @@ const selectedRow = ref([])
 function handleSelectionChange (rows) {
     selectedRow.value = rows
 }
-const ReaderRef = ref()
 const previewFile = reactive({
     blob: null,
     name: '',
@@ -193,10 +192,8 @@ async function handleDblclick (row) {
             ElNotification.success(`${$i18n.t('commons_success')}` )
         }
     }
-    const deleteOnePopoverShow = ref(false)
     async function handleDeleteOne (id, row?) {
         if(!!row) row.deleteOnePopoverShow = false
-        deleteOnePopoverShow.value = false
         loading.value = true
         try {
             await deleteOne(id)
@@ -204,7 +201,6 @@ async function handleDblclick (row) {
 
         }
         setTimeout(async () => {
-            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
         }, 500)
@@ -218,7 +214,6 @@ async function handleDblclick (row) {
         }
         // 系统会延时 还原
         setTimeout(async () => {
-            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
         }, 500)
