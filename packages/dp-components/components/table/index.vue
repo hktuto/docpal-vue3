@@ -422,6 +422,8 @@ defineExpose({ reorderColumn, tableRef })
     gap: var(--app-padding);
     .headerLeftExpand {
         overflow: hidden;
+        display: flex;
+        align-items: center;
     }
     &>:deep(.el-button)  {
         margin-bottom: 10px;
