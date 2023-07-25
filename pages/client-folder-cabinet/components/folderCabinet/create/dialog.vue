@@ -99,8 +99,6 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             if (!labelRule) throw new Error("no labelRule");
             else {
                 return labelRule.reduce((prev, rule, index) => {
-                    console.log(index);
-                    
                     const joiner = index === 0 ? '' : '-'
                     if(rule.metaData === 'fc:createDate') {
                         prev += joiner + formatDate(date,'YYYY-MM-DD')
