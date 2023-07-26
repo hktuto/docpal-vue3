@@ -224,7 +224,7 @@ watch(show, (isShow) => {
 .fileName{
     font-size: var(--el-font-size-large);
     text-align: left;
-    color: var(--color-grey-0000);
+    color: #fff !important;
     word-break: break-all;
 }
 
