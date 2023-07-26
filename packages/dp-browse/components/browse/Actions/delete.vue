@@ -1,7 +1,7 @@
 <template>
     <!-- <SvgIcon src="/icons/file/delete.svg" round content="delete"
                 @click="deleteItem(doc)"></SvgIcon> -->
-    <BrowseActionsButton :label="$t('delete')" @click="deleteItem(doc, true)">
+    <BrowseActionsButton id="deleteActionButton" :label="$t('delete')" @click="deleteItem(doc, true)">
         <el-tooltip content="delete">
             <div class="actionIconContainer" >
 

@@ -2,7 +2,7 @@
   <div class="actionIconContainer" >
   <!-- <SvgIcon src="/icons/file/upload.svg" round content="upload"
           @click="uploadDialog"></SvgIcon> -->
-    <BrowseActionsButton :label="$t('tip.upload')" @click="uploadDialog(doc)">
+    <BrowseActionsButton id="uploadActionButton" :label="$t('tip.upload')" @click="uploadDialog(doc)">
     
       <el-tooltip content="upload">
         <el-icon >

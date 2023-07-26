@@ -188,6 +188,7 @@ onMounted(async() => {
         grid-column-gap: var(--app-padding);
         grid-row-gap: var(--app-padding);
         height: 100%;
+        overflow: hidden;
       @media (max-width : 1024px) {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;

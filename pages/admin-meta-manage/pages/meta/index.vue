@@ -1,6 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state._tableData"
+                :options="state.options"
                 @row-dblclick="handleDblclick">
             <template #preSortButton>
                 <div class="filter-container">
@@ -31,7 +32,10 @@ import { GetMetaSettingList, TABLE, defaultTableSetting, deepCopy } from 'dp-api
     const state = reactive<State>({
         loading: false,
         tableData: [],
-        _tableData: []
+        _tableData: [],
+        options: {
+            rowKey: 'documentType',
+        }
     })
     const tableKey = TABLE.ADMIN_META_MANAGE
     const tableSetting = defaultTableSetting[tableKey]
@@ -40,6 +44,8 @@ import { GetMetaSettingList, TABLE, defaultTableSetting, deepCopy } from 'dp-api
         state.loading = true
         try {
             state.tableData = await GetMetaSettingList()
+            console.log(state.tableData);
+            
             state._tableData = deepCopy(state.tableData)
         } catch (error) {
             console.error(error)

@@ -2,6 +2,7 @@
     <Table  ref="tableRef"
             :columns="tableSetting.columns" :table-data="tableData" :options="options"
             v-loading="loading"
+            headerClass="table-responsive-header"
             @command="handleAction"
             @pagination-change="handlePaginationChange"
             @row-click="handleClick"
@@ -181,27 +182,5 @@ defineExpose({ getSearchParams })
 <style lang="scss" scoped>
 :deep(.el-form-item--default) {
     margin-bottom: unset;
-}
-:deep(.tableHeader) {
-    display: grid;
-    grid-template-columns: 1fr min-content;
-    margin-bottom: var(--app-padding);
-    .headerLeftExpand {
-        display: grid;
-        grid-template-columns: 200px 1fr;
-    }
-    .suffixSortButton {
-        display: flex;
-    }
-}
-@media (max-width : 1024px) {
-    :deep(.tableHeader) {
-        width: 100%;
-        grid-template-columns: 1fr;
-        .headerLeftExpand {
-            gap: var(--app-padding);
-            grid-template-columns: unset;
-        }
-    }
 }
 </style>

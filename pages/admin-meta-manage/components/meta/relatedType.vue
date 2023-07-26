@@ -36,7 +36,7 @@ const tableKey = TABLE.ADMIN_META_RELATED
 const tableSetting = defaultTableSetting[tableKey]
 function handleDblclick (row) {
     handleDialogShow(row)
-    // router.push(`/userManage/user?id=${row.userId}`)
+    // router.push(`/user/detail?id=${row.userId}`)
 }
 function handleAction (command:sting, row: any, rowIndex: number) {
     switch (command) {

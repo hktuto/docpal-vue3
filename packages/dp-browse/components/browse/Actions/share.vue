@@ -1,7 +1,7 @@
 <template>
     <!-- <div class="actionIconContainer" @click="iconClickHandler"> -->
     <div>
-      <BrowseActionsButton :label="$t('tip.share')" @click="iconClickHandler" >
+      <BrowseActionsButton id="shareActionButton" :label="$t('tip.share')" @click="iconClickHandler" >
         
         <SvgIcon src="/icons/file/share.svg" round content="share"
             ></SvgIcon>

@@ -4,7 +4,8 @@
               @command="handleAction"
               @pagination-change="handlePaginationChange"
               @selection-change="handleSelectionChange"
-              @row-dblclick="handleDblclick">
+              @row-dblclick="handleDblclick"
+              v-loading="state.loading">
 
         <template #docIcon="{ row, index }">
           <div class="nameItem">
@@ -13,9 +14,10 @@
           </div>
         </template>
         <template #preSortButton>
-          <div>
+          <div style="margin-bottom: 3px">
             <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
             <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
+            <el-button type="danger" @click="handleDeleteAll"> {{$t('trash_actions_deleteAll')}} </el-button>
           </div>
         </template>
       </Table>
@@ -26,7 +28,7 @@
 
 
 <script lang="ts" setup>
-import { GetTrashApi, DeleteByIdApi, RestoreByIdApi, GetDocumentPreview, TABLE, defaultTableSetting, Login } from 'dp-api'
+import { GetTrashApi, DeleteByIdApi, RestoreByIdApi, DeleteAllApi, GetDocumentPreview, TABLE, defaultTableSetting, Login } from 'dp-api'
 import { ElNotification } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 // #region module: page
@@ -49,7 +51,8 @@ const tableSetting = defaultTableSetting[tableKey]
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
-          sortKey: tableKey
+            rowKey: 'id',
+            sortKey: tableKey
         }
     })
 
@@ -95,7 +98,6 @@ const selectedRow = ref([])
 function handleSelectionChange (rows) {
     selectedRow.value = rows
 }
-const ReaderRef = ref()
 const previewFile = reactive({
     blob: null,
     name: '',
@@ -193,10 +195,8 @@ async function handleDblclick (row) {
             ElNotification.success(`${$i18n.t('commons_success')}` )
         }
     }
-    const deleteOnePopoverShow = ref(false)
     async function handleDeleteOne (id, row?) {
         if(!!row) row.deleteOnePopoverShow = false
-        deleteOnePopoverShow.value = false
         loading.value = true
         try {
             await deleteOne(id)
@@ -204,7 +204,6 @@ async function handleDblclick (row) {
 
         }
         setTimeout(async () => {
-            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
         }, 500)
@@ -218,7 +217,6 @@ async function handleDblclick (row) {
         }
         // 系统会延时 还原
         setTimeout(async () => {
-            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
         }, 500)
@@ -242,6 +240,14 @@ async function handleDblclick (row) {
             processDetail.completedNum++
             return idOrPath
         }
+    }
+    async function handleDeleteAll () {
+        state.loading = true
+        await DeleteAllApi()
+        setTimeout(async() => {
+            await handlePaginationChange(0)
+            state.loading = false
+        }, 2000)
     }
 // #endregion
 async function handleDownload (row: any) {

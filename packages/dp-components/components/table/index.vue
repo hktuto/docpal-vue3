@@ -1,6 +1,6 @@
 <template>
     <div class="dp-table-container">
-        <div class="tableHeader">
+        <div :class="['tableHeader', headerClass]">
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
@@ -138,6 +138,7 @@ const props = defineProps<{
     tableData: Array<object>, // table的数据
     columns: Table.Column[], // 每列的配置项
     options?: Table.Options,
+    headerClass?: string
 }>()
 const tableRef = ref();
 const tableCardRef = ref();
@@ -422,6 +423,8 @@ defineExpose({ reorderColumn, tableRef })
     gap: var(--app-padding);
     .headerLeftExpand {
         overflow: hidden;
+        display: flex;
+        align-items: center;
     }
     &>:deep(.el-button)  {
         margin-bottom: 10px;
@@ -473,5 +476,36 @@ defineExpose({ reorderColumn, tableRef })
     display: none;
   }
 }
-</style>
 
+.table-responsive-header {
+    display: grid!important;
+    grid-template-columns: 1fr min-content;
+    margin-bottom: var(--app-padding);
+    .headerLeftExpand {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        align-items: flex-end!important;
+    }
+    .suffixSortButton {
+        display: flex;
+    }
+}
+@media (max-width : 1024px) {
+    .table-responsive-header {
+        width: 100%;
+        grid-template-columns: 1fr;
+        .headerLeftExpand {
+            gap: var(--app-padding);
+            grid-template-columns: unset;
+        }
+    }
+}
+</style>
+<style lang="scss">
+.el-table__row {
+    color: var(--color-grey-900);
+}
+.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+    background-color: var(--color-b3);
+}
+</style>

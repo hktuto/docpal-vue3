@@ -7,7 +7,7 @@
 const router = useRouter();
 
 router.push({
-    path:'/userManage'
+    path:'/user'
 })
 
 </script>

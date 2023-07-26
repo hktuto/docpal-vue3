@@ -5,15 +5,13 @@
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
             <div v-if="menu.length > 0" :class="{expand:true, opened}" >
-              <div class="menuActions">
-
-
-              <Language v-if="mode === 'development'"></Language>
-              <!-- <NotificationBadge v-if="feature.notification"/> -->
-<!--              <UserMiniDropdown v-if="feature.userAuth" />-->
-              <LogoutButton />
-              <ColorSwitch />
-              <LanguageSwitch v-if="feature.multiLanguage" />
+              <div class="menuActions" style="--icon-color: var(--color-grey-500)">
+                <Language v-if="mode === 'development'"></Language>
+                <!-- <NotificationBadge v-if="feature.notification"/> -->
+  <!--              <UserMiniDropdown v-if="feature.userAuth" />-->
+                <LogoutButton />
+                <ColorSwitch />
+                <LanguageSwitch v-if="feature.multiLanguage" />
               </div>
                 <InlineSvg :src="opened ? '/icons/menu/closed.svg' : '/icons/menu/expanded.svg'" @click="toggleOpen"/>
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->

@@ -23,13 +23,13 @@ import {
     CreateCabinetApi,
     CreateDocumentApi,
     getJsonApi } from 'dp-api'
+
 const uploadListAdd = inject('uploadListAdd')
 const emits = defineEmits([
     'refresh'
 ])
 const state = reactive({
     loading: false,
-    treeLoading: false,
     visible: false,
     cabinetTemplate: {},
 })
@@ -56,17 +56,32 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
         if(!formData || !metaFormData) return
         state.loading = true
         try {
-            const idOrPath = `${state.cabinetTemplate.rootPath}/${formData.name}`
+            let fileName = getMetaName(metaFormData)
+            const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.rootPath, fileName } )
+            if (fileName !== _fileName) {
+                const check = await ElMessageBox.confirm(`${$i18n.t('dpTip_duplicateFileNameNext')}`, {
+                    confirmButtonText: `${$i18n.t('dpButtom_confirm')}`,
+                    cancelButtonText: `${$i18n.t('dpButtom_cancel')}`
+                }).catch((action) => { return action })
+                if(check !== 'confirm') {
+                    state.loading = false
+                    return
+                } else {
+                    fileName = _fileName
+                }
+            }
+            const idOrPath = `${state.cabinetTemplate.rootPath}/${fileName}`
             // 上传最上层数据
-            await CreateCabinetApi({
+            const res = await CreateCabinetApi({
                 ...formData,
                 type: state.cabinetTemplate.documentType,
                 idOrPath,
                 properties: metaFormData,
                 templateId: route.query.tab
             })
-
-            NextDialogRef.value.handleOpen(state.cabinetTemplate, idOrPath)
+            if(res.path) {
+                NextDialogRef.value.handleOpen(state.cabinetTemplate, res.path)
+            }
             await new Promise(resolve => setTimeout(() => {
                 state.visible = false
                 emits('refresh')
@@ -77,13 +92,41 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
         }
         state.loading = false
     }
+    function getMetaName(metaFormData) {
+        const date = new Date()
+        try {
+           const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : ''
+            if (!labelRule) throw new Error("no labelRule");
+            else {
+                return labelRule.reduce((prev, rule, index) => {
+                    const joiner = index === 0 ? '' : '-'
+                    if(rule.metaData === 'fc:createDate') {
+                        prev += joiner + formatDate(date,'YYYY-MM-DD')
+                    }
+                    else if(rule.metaData === 'fc:label'){
+                        prev += joiner + state.cabinetTemplate.label
+                    }
+                    else if(rule.dataType === 'date') {
+                        if(!metaFormData[rule.metaData]) throw new Error("no metaData");
+                        prev += joiner + formatDate(metaFormData[rule.metaData])
+                    } 
+                    else {
+                        if(!metaFormData[rule.metaData]) throw new Error("no metaData");
+                        prev += joiner + metaFormData[rule.metaData]
+                    }
+                    return prev
+                }, '')
+            } 
+        } catch (error) {
+            return state.cabinetTemplate.label + formatDate(date,'YYYY-MM-DD')
+        }
+    }
 // #endregion
 
 // #region module: init
     async function handleOpen(setting) {
         state.loading = false
         state.visible = true
-        state.treeLoading = true
         try {
             state.cabinetTemplate = await GetCabinetTemplateApi(setting.id)
 
@@ -91,7 +134,8 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             state.cabinetTemplate.rootPath = rootDetail.path
             state.cabinetTemplate.rootName = rootDetail.name
         } catch (error) {
-
+            ElMessage.error(`${$i18n.t('dpMsg_error')}`)
+            state.visible = false
         }
         setTimeout(()=> {
             MetaFormRef.value.initMeta(setting.documentType)
@@ -106,7 +150,6 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             }
             FromRendererRef.value.vFormRenderRef.setFormData(params)
         })
-        state.treeLoading = false
     }
 // #endregion
 

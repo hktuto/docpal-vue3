@@ -28,6 +28,8 @@ export const getUniqueName = async(file:any) => {
  * @returns {isDuplicate: boolean, list: any[]}
  */
 export const duplicateNameFilter = async (idOrPath: string, list:any) => {
+  console.log({list});
+  
   try {
       let result = false
       const titles = list.reduce((prev:any, item:any) => {

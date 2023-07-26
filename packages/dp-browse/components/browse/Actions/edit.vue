@@ -1,6 +1,6 @@
 <template>
    <div>
-     <BrowseActionsButton :label="$t('tip.edit')" @click="openDialog(doc)">
+     <BrowseActionsButton id="editActionButton" :label="$t('tip.edit')" @click="openDialog(doc)">
         <el-tooltip content="edit">
             <!-- <div class="actionIconContainer" @click="openDialog(doc)"> -->
                 <!-- <el-icon >

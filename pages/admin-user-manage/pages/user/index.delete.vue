@@ -53,10 +53,10 @@ const userTableSetting = defaultTableSetting[userTableKey]
 const groupTableKey = TABLE.ADMIN_GROUP_MANAGE
 const groupTableSetting = defaultTableSetting[groupTableKey]
 function handleUserDblclick (row) {
-    router.push(`/userManage/user?id=${row.userId}`)
+    router.push(`/user/detail?id=${row.userId}`)
 }
 function handleGroupDblclick (row) {
-    router.push(`/userManage/group?id=${row.id}`)
+    router.push(`/group/detail?id=${row.id}`)
 }
 const UserDialogRef = ref()
 const GroupDialogRef = ref()
