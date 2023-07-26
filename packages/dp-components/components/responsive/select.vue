@@ -12,6 +12,7 @@
         :width="200"
         trigger="click"
         virtual-triggering
+        :popper-append-to-body="false"
     >
         <template #default>
             <el-checkbox-group v-if="selectData.options && selectData.options.length > 0"
@@ -44,7 +45,9 @@ const emits = defineEmits(['change'])
 const buttonRef = ref()
 const popoverRef = ref()
 const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.()
+    console.log(popoverRef);
+    
+//   unref(popoverRef).popperRef?.delayHide?.()
 }
 function handleChange (data: ResSelectData) {
     emits('change', {
