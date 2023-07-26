@@ -26,7 +26,7 @@ const props = defineProps<{
   }
   .label {
     display: none;
-    color: #000;
+    color: var(--color-grey-900);
     @media (max-width: 1024px) {
       display: block;
     }

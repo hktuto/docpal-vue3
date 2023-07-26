@@ -42,6 +42,7 @@ watch(opened,(bool) => {
   align-items: center;
   font-size: 16px;
   --icon-size: 16px;
+  color: var(--color-grey-900);
 
 }
 .mobileCollapse{
