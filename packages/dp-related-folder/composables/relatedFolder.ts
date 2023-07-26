@@ -1,53 +1,111 @@
+import { api, searchByMeta } from 'dp-api';
 
 
 type DocumentMeta = {
     [key:string] : string | any[];
   }
   
-  type DocumentSetting = {
+  type MayBeDocumentSetting = {
     fileType?: string[]
-    meta?: DocumentMeta & {
-      parentKey?: string
-    }
+    meta?: string,
     related?:string[],
     label?: string,
     isRoot?: boolean,
     isFolder?: boolean
   }
 
-function useRelatedFolder() {
+  type DocumentSetting = {
+    fileType: string[]
+    meta: string,
+    related:string[],
+    label: string,
+    isRoot: boolean,
+    isFolder: boolean
+  } 
+
+export const useRelatedFolder =() => {
+
+    const docTypes = useState<{[key:string] :DocumentSetting}>('docTypes', () => ({}) );
 
     const doc = useState('relatedDoc', () => null);
 
-    const normalizeSetting = (setting:DocumentSetting):DocumentSetting => ({ fileType:[],meta:{},related:[],...setting})
+    const normalizeSetting = (setting:MayBeDocumentSetting):MayBeDocumentSetting => ({ fileType:[],meta:{},related:[],...setting})
 
     const relatedChildren = useState('relatedChildren', () => ({}));
 
+    async function getTypeSetting() {
+        console.log("getTypeSetting")
+        docTypes.value = await api.get('/nuxeo/admin/setting').then(res => res.data.data);
+    }
+
+
+    async function getItem(meta:any) {
+        // await getSetting()
+        const parentKey = meta.parentKey
+        if(parentKey){
+            delete meta.parentKey
+        }
+        return await searchByMeta(meta)
+    }
+
+    async function getItemsByMeta(doc:any, setting:MayBeDocumentSetting):Promise<Document[]> {
+        if (!setting.meta) return []
+        const parentKey = setting.meta.parentKey
+        
+        const params = {
+            properties :{
+                ['ecm:primaryType']: setting.type,
+                [setting.meta as string]: doc.properties[setting.meta]
+            }
+        }
+        const response = await getItem(params)
+        return response.map((item:any) => ({ ...item }))
+    }
 
     async function getRelatedChild(doc:any) {
-        const returnObject:Document[] = []
-        const setting:DocumentSetting = normalizeSetting(docTypeStore.docTypes[doc.type]);
+        const returnObject:any[] = []
+        if(Object.keys(docTypes.value).length === 0) await getTypeSetting();
+        try{
+            const setting:DocumentSetting = normalizeSetting(docTypes.value[doc.type]) ;
+            for( let i =0; i < setting.fileType.length; i++){
+                const childFileType = setting.fileType[i]
+                const childSetting = normalizeSetting(docTypes.value[childFileType])
+                const childrenChildren = await getItemsByMeta(doc, childSetting)
+                returnObject.push(...childrenChildren)
+            }
+            
+            if(setting.related.length > 0){
+               
+                for( let i = 0; i <setting.related.length; i++ ){
+                    const related = {
+                        name: setting.related[i].type,
+                        id: new Date().valueOf().toString(),
+                        children: [] as Document[],
+                      }
+                    const relatedItems = await getItemsByMeta(doc, setting.related[i])
+                    
+                    related.children.push(...relatedItems)
+                    returnObject.push(related)
+                }
+               
+            }
+
+        } catch(e) {
+            console.log(e)
+        }
+        console.log()
+        return returnObject 
     }
 
     async function getRelated() {
-        const allChildren = await getRelatedChild(doc)
+        const allChildren = await getRelatedChild(doc.value)
 
-        const related = allChildren.find((d:any) => d.name === 'related') || {
-            children: [],
-        }
-        const empty: any = {}
-        relatedChildren.value = related.children.reduce(
-            (result: any, current:any) => {
-                if (result[current.type]) {
-                    result[current.type].push(current)
-                } else {
-                    result[current.type] = [current]
-                }
-                return result
-            },
-            empty
-        )
+        relatedChildren.value = allChildren
     }
+
+    onMounted(async () => {
+        await getTypeSetting()
+    })
 
     watch(doc, (newDoc) => {
         if(newDoc) {
@@ -64,5 +122,6 @@ function useRelatedFolder() {
     return {
         doc,
         relatedChildren,
+        docTypes,
     }
 }

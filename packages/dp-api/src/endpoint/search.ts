@@ -44,7 +44,7 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
 export const searchByMeta = (properties:any) => {
     return api.post('/nuxeo/document/searchByProperties', {properties})
         .then(res => res.data.data)
-        .then( data => data.items.map(i => {
+        .then( data => data.map(i => {
             if(i.type === 'vendor'){
                 i.isFolder = true;
             }

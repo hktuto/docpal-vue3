@@ -1,20 +1,19 @@
 <script setup lang="ts">
+import { useRelatedFolder } from '~/composables/relatedFolder';
+
 const props = defineProps<{
-  detail: any,
-  doc: any
+  detail: any
 }>()
 
 const emit = defineEmits(['show-relate', 'hide-relate'])
 const viewType = ref<'TABLE' | 'MAP'>('TABLE')
 
-
+const {doc, relatedChildren,} = useRelatedFolder();
 
 
 
 watch(() => props.detail, (val) => {
-  if(val) {
-    getRelated()
-  }
+  doc.value = val
 },{
   immediate: true
 })
@@ -24,11 +23,25 @@ watch(() => props.detail, (val) => {
 
 <template>
   <div id="relatedInfoContainer">
-    {{detail}}
+    
+    <div class="header">
+
+    </div>
+    <div class="content">
+      {{relatedChildren}}
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-
+#relatedInfoContainer{
+  height: 100%;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  gap: var(--app-padding);
+  .content{
+    overflow: auto;
+  }
+}
 
 </style>
