@@ -204,7 +204,7 @@ onMounted(() => {
         justify-content: space-between;
     }
 }
-:deep(.el-form-item--default) {
+:deep(.headerLeftExpand .el-form-item--default) {
     margin-bottom: 0;
 }
 .table-tag {
