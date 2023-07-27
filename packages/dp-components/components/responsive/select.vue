@@ -9,7 +9,7 @@
         ref="popoverRef"
         :virtual-ref="buttonRef"
         placement="bottom"
-        :width="200"
+        :width="300"
         trigger="click"
         virtual-triggering
         :popper-append-to-body="false"

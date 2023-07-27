@@ -28,7 +28,7 @@ async function handleSubmit () {
     state.loading = true
     try {
         data.userId = props.user.userId
-        await PatchUserApi(data)
+        await PatchUserApi({ ...props.user, ...data })
         state.visible = false
         FromRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')

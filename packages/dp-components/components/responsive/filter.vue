@@ -138,7 +138,7 @@ function handleChange (filedData: {fieldName: string, value: any}) {
             if(!prev[item.belong]) prev[item.belong] = {}
             prev[item.belong][item.key] = item.value
         }
-        else {
+        else if(item.value && item.value.length > 0){
             prev[item.key] = item.value
         }
         if(state.moreList.find(m => m.key === item.key)) {
