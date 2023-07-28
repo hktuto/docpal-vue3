@@ -26,7 +26,7 @@
                 <!-- <span v-if="element.prefixSymbol" class="list-drop-item--divider" >{{element.prefixSymbol}}</span> -->
                 <!-- <DragSelectTag :element="element" @close="handleClose"/> -->
                 <!-- <span v-if="element.suffixSymbol" class="list-drop-item--divider">{{element.suffixSymbol}}</span> -->
-                <el-tag ref="tagRef" closable @close="handleClose()">{{ element[itemKey] }}</el-tag>
+                <el-tag ref="tagRef" closable @close="handleClose(element)">{{ element[itemKey] }}</el-tag>
                 <span class="list-drop-item--divider">{{joiner}}</span>
             </span>
         </template>
@@ -51,6 +51,8 @@ const FromRendererRef = ref()
 const formJson = getJsonApi('admin/dragSelect.json')
 
 function handleClose(element) {
+    console.log(props.dropList, element);
+    
     let addItem
     const index = props.dropList.findIndex(item => {
         if(item[props.itemKey] === element[props.itemKey]) {

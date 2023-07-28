@@ -1192,9 +1192,27 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_USER_MANAGE]: {
         columns: [
-            { id: '1', label: 'username', prop: 'username' },
-            { id: '2', label: 'Identifer', prop: 'userId' },
+            { id: '1', label: 'username', prop: 'username', "width": 200, showOverflowTooltip: true  },
+            // { id: '2', label: 'Identifer', prop: 'userId' },
+            { id: '3', label: 'user_email', prop: 'email', "width": 250, showOverflowTooltip: true  },
+            { id: '4', label: 'user_groupName', slot: 'group' },
+            { id: '5', label: 'user_active', slot: 'active', "width": 100 },
+            {   
+                id: '6',
+                "label": "tableHeader_actions",
+                "width": 100,
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    }
+                ],
+            }
         ],
+
         events: [],
         options: { pageSize: 20 }
     },

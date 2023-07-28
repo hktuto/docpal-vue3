@@ -1,34 +1,12 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/user">
-       <div class="userDetailSection">
-            <div class="list">
-                <KeywordFilter :list="state.userList" attr="username"
-                        @filter="handleUserFilter"></KeywordFilter>
-                <div class="list-user">
-                    <template v-for="item in state._userList" >
-                        <!-- TODO 自动滚动 -->
-                        <div v-if="item.userId && item.username" :class="['user-item','cursorPointer', {'current': state.curUser?.userId === item.userId}]" @click="handleTabClick(item)">
-                            <span class="ellipsis" :title="item.name">{{item.username}}</span>
-                        </div>
-                    </template>
-                </div>
-                <el-button @click="handleUserDialogShow">{{$t('user_newUser')}}</el-button>
-            </div>
-            <div class="topArea" v-if="state.curUser">
-                <div class="flex-x-center">
-                    {{state.curUser.username}}
-                    <SvgIcon class="el-icon--right" src="/icons/file/edit.svg" round
-                        @click="handleEdit"></SvgIcon>
-                </div>
-                <SvgIcon src="/icons/file/delete.svg" round
-                    @click="handleDelete"></SvgIcon>
-            </div>
-            <UserInfo class="info" :user="state.curUser" :isLdapMode="isLdapMode"></UserInfo>
+       <template v-if="state.curUser" #headerLeft>{{state.curUser.username}}</template>
+       <div class="userDetailSection" v-if="state.curUser">
+            <UserInfo class="info" :user="state.curUser" :isLdapMode="isLdapMode"
+                @refresh="getUser"></UserInfo>
             <UserGroupTable class="group" :user="state.curUser">group</UserGroupTable>
-            <UserVirtualFolder v-if="state.curUser" class="virtualFolder" :userOrGroup="state.curUser" mode="userAllowList">virtualFolder</UserVirtualFolder>
+            <!-- <UserVirtualFolder v-if="state.curUser" class="virtualFolder" :userOrGroup="state.curUser" mode="userAllowList">virtualFolder</UserVirtualFolder> -->
         </div>
-        <UserDialog ref="UserDialogRef" @refresh="getUser(true)"></UserDialog>
-        <UserEditDialog ref="UserEditDialogRef" :user="state.curUser" @refresh="handleEditRefresh"></UserEditDialog>
     </NuxtLayout>
 </template>
 
@@ -36,64 +14,23 @@
 <script lang="ts" setup>
 import { ElNotification, ElMessageBox } from 'element-plus'
 import {
-    getUserListApi,
-    DeleteUserApi,
+    GetUserDetailApi,
     TABLE, defaultTableSetting
 } from 'dp-api'
 import { toRefs } from '@vueuse/core'
 const { isLdapMode } = toRefs(useSetting())
-// import { getLoggersApi, setLoggersApi } from 'dp-api/src/endpoint/admin-log'
-
 const router = useRouter()
 const route = useRoute()
 const state = reactive({
-    userList: [],
-    _userList: [],
     curUser: null
 })
-function handleTabClick (row) {
-    dpLog(row, 'handleTabClick');
 
-    router.push({query: { id: row.userId }})
-    state.curUser = row
-}
-async function handleSubmit (shareInfo) {
-}
-const UserDialogRef = ref()
-function handleUserDialogShow() {
-    UserDialogRef.value.handleOpen()
-}
-async function getUser(refresh: boolean = false) {
-    state.userList = await getUserListApi(refresh)
-    state._userList = state.userList
-}
-function handleUserFilter(data) {
-    state._userList = data
-}
-const UserEditDialogRef = ref()
-function handleEdit () {
-    UserEditDialogRef.value.handleOpen()
-}
-async function handleEditRefresh() {
-    await getUser(true)
-    const queryId = route.query.id
-    const user = state.userList.find(item => item.userId === queryId)
-    handleTabClick(user)
-}
-
-function handleDelete() {
-    ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
-        .then(async() => {
-            const res = await DeleteUserApi({ userId: state.curUser.userId })
-            await getUser(true)
-            if(state.userList.length > 0) handleTabClick(state.userList[0])
-        })
+async function getUser() {
+    const userId = route.query.id
+    state.curUser = await GetUserDetailApi(userId)
 }
 onMounted(async() => {
-    await getUser()
-    const queryId = route.query.id
-    const user = state.userList.find(item => item.userId === queryId)
-    handleTabClick(user)
+    getUser()
 })
 </script>
 
@@ -101,13 +38,14 @@ onMounted(async() => {
 
 .userDetailSection{
   display : grid;
-  grid-template-columns: minmax(min-content, 220px) minmax(min-content, 350px) 1fr;
+  grid-template-columns: minmax(min-content, 450px) 1fr;
   grid-template-rows: min-content min-content 1fr;
   gap: var(--app-padding);
   grid-template-areas:
-    'list topArea topArea'
-    'list info group'
-    'list virtualFolder group';
+    'topArea topArea'
+    'info group'
+    'info group';
+    // 'virtualFolder group';
   height: 100%;
   overflow: hidden;
 }
@@ -132,7 +70,7 @@ onMounted(async() => {
   grid-area: topArea;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 .info{
   grid-area: info;
