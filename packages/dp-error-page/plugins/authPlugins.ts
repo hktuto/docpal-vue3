@@ -8,7 +8,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         (response) => response, 
         async(error) => {
             const config = error?.config;
-            const messageErrorCode = [401,503]
+            const messageErrorCode = [401, 500]
             if (error?.response?.status === 401 && !config?.sent) {
                 config.sent = true;
                 return api(config);
