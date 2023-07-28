@@ -8,6 +8,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         (response) => response, 
         async(error) => {
             const config = error?.config;
+            const messageErrorCode = [401,503]
             if (error?.response?.status === 401 && !config?.sent) {
                 config.sent = true;
                 return api(config);
@@ -15,7 +16,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                     !routeMatcher(route.path, noRouteErrorPages)) {
                 router.push(`/error/${error.response.status}`)
                 return
-            } else if (error?.response?.status === 500) {
+            } else if (messageErrorCode.includes(error?.response?.status)) {
                 messageError(error, { router, route })
             }
             return Promise.reject(error);

@@ -80,12 +80,13 @@ export const useUser = () => {
 
     async function verify() {
         try {
+            const token = localStorage.getItem('token')
+            if(!token) throw new Error("no token");
             user.value = await Verify();
             Cookies.value = JSON.stringify(user.value)
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
-            dpLog("verify", error);
             appStore.state = 'needAuth';
             isLogin.value = false,
             token.value = "";
