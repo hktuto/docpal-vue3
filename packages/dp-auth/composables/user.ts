@@ -119,9 +119,7 @@ export const useUser = () => {
         token.value = "";
         refreshToken.value = "";
         appStore.state = 'needAuth';
-        if(sessionStorage){
-            sessionStorage.removeItem('token');
-        };
+        localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
     }
 
