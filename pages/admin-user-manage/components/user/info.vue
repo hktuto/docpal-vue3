@@ -3,7 +3,7 @@
     <template #header>
         <div class="flex-x-between">
             {{ $t('common_info') }}
-            <div class="flex-x-end">
+            <div class="flex-x-end" v-if="!isLdapMode">
                 <SvgIcon class="el-icon--right" src="/icons/file/edit.svg" round
                     @click="handleEdit"></SvgIcon>
                 <SvgIcon v-if="!isLdapMode" class="el-icon--right" src="/icons/password-change.svg" round

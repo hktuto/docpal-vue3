@@ -14,7 +14,7 @@
         </template>  
         <template #suffixSortButton>
             <el-button class="el-icon--right" type="primary" 
-                :disabled="state.activeUsers >= state.licenseUsers"
+                :disabled="state.activeUsers >= state.licenseUsers || isLdapMode"
                 @click="handleUserDialogShow()">{{$t('user_newUser')}} ({{ state.activeUsers }} / {{state.licenseUsers}})</el-button>
         </template>
         <template #group="{row, index}">
@@ -44,6 +44,7 @@ import {
     getJsonApi
 } from 'dp-api'
 // #region module: page
+    const isLdapMode:boolean = useUser().getIsLdapMode()
     const route = useRoute()
     const router = useRouter()
     const pageParams = {

@@ -1,6 +1,6 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
-import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi} from 'dp-api'
+import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
     const Cookies = useCookie('docpal-user')
@@ -13,6 +13,7 @@ export const useUser = () => {
 
     const userPreference = useState<UserSetting>('userPreference');
     const settingStore = useSetting()
+    const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
 
@@ -51,6 +52,7 @@ export const useUser = () => {
 
     async function getUserSetting() {
         const userSetting = await GetSetting()
+        isLdapMode.value = await isLdapModeApi()
         const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
         if(!userSizeValid) {
           delete userSetting.size;
@@ -135,12 +137,16 @@ export const useUser = () => {
     function getUserId () {
         return user.value.userId || user.value.username
     }
+    function getIsLdapMode () {
+        return isLdapMode.value
+    }
     return {
         // data
         token,
         user,
         userPreference,
         isLogin,
+        isLdapMode,
         // function
         login,
         verify,
@@ -149,6 +155,7 @@ export const useUser = () => {
         savePreference,
         getUserList,
         getUserId,
+        getIsLdapMode,
         userList,
         forgetPassword
     }

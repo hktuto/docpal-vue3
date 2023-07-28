@@ -18,7 +18,7 @@ import {
     TABLE, defaultTableSetting
 } from 'dp-api'
 import { toRefs } from '@vueuse/core'
-const { isLdapMode } = toRefs(useSetting())
+const isLdapMode:boolean = useUser().getIsLdapMode()
 const router = useRouter()
 const route = useRoute()
 const state = reactive({
