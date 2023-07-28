@@ -31,7 +31,7 @@ export const useRelatedFolder =() => {
 
     const normalizeSetting = (setting:MayBeDocumentSetting):MayBeDocumentSetting => ({ fileType:[],meta:{},related:[],...setting})
 
-    const relatedChildren = useState('relatedChildren', () => ({}));
+    const relatedChildren = useState<any>('relatedChildren', () => ({}));
 
     async function getTypeSetting() {
         console.log("getTypeSetting")

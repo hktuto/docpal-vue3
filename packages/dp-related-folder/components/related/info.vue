@@ -28,7 +28,7 @@ watch(() => props.detail, (val) => {
 
     </div>
     <div class="content">
-      {{relatedChildren}}
+      <RelatedTable v-for="item in relatedChildren" :key="item.id" :data="item"></RelatedTable>
     </div>
   </div>
 </template>
