@@ -96,6 +96,7 @@ const readerType = computed(() => {
 });
 
 async function openPreview({detail}:any) {
+  show.value = false
   options.value = detail.options
   const response = await getDocumentDetail(detail.pathOrId, userId)
   doc.value = response.doc

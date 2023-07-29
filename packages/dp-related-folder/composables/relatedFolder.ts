@@ -53,10 +53,8 @@ export const useRelatedFolder =() => {
         const parentKey = setting.meta.parentKey
         
         const params = {
-            properties :{
-                ['ecm:primaryType']: setting.type,
-                [setting.meta as string]: doc.properties[setting.meta]
-            }
+            ['ecm:primaryType']: setting.type,
+            [setting.meta as string]: doc.properties[setting.meta]
         }
         const response = await getItem(params)
         return response.map((item:any) => ({ ...item }))
