@@ -22,19 +22,30 @@
       <el-button class="intro" @click="appStore.state = 'needAuth'" link>
         {{ $t('login') }}
       </el-button>
+      <div v-if="state.time > 0">
+        <h3>
+          {{$t('dpTip_autoLogin')}}: {{state.time}}s 
+        </h3>
+      </div>
     </div>
 </template>
 
 
 <script lang="ts" setup>
+import { ElMessage} from 'element-plus'
 import { ForgetPasswordApi } from 'dp-api'
 const appStore = useAppStore();    
 const status = ref('beforeSubmit')
 const loading = ref(false)
+const state = reactive({
+  time: 0,
+  timer: null
+})
 const form = ref({
     userId: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+
 })
 
 const FormRef = ref()
@@ -47,14 +58,26 @@ async function handleSubmit () {
     try {
       const res = await ForgetPasswordApi(form.value.userId)
       if (res) status.value = 'submitted'
+      ElMessage.success($t('dpMsg_success'))
+      returnLogin()
     } catch (error) {
       
     }
     loading.value = false
 }
 
-
-</script>
+function returnLogin () {
+    if(!!state.timer) clearInterval(state.timer)
+    state.time = 5
+    state.timer = setInterval(() => {
+        state.time --
+        if(state.time === 0) {
+            clearInterval(state.timer)
+            appStore.state = 'needAuth'
+        }
+    }, 1000)
+}
+</script> 
 
 
 <style scoped lang="scss">

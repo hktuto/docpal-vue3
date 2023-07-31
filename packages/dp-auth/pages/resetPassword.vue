@@ -20,6 +20,7 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus'
 import { checkValidTokenApi, resetPasswordApi, getJsonApi, PatchUserPasswordApi } from 'dp-api'
 const props = defineProps<{
     user: object,
@@ -48,6 +49,8 @@ async function handleSubmit () {
             token: route.query.token,
         }
         await resetPasswordApi(param)
+        ElMessage.success($t('dpMsg_success'))
+        returnLogin()
         FromRendererRef.value.vFormRenderRef.resetForm()
     } catch (error) {
         
@@ -59,7 +62,10 @@ function returnLogin () {
     state.time = 5
     state.timer = setInterval(() => {
         state.time --
-        if(state.time === 0) clearInterval(state.timer)
+        if(state.time === 0) {
+            clearInterval(state.timer)
+            appStore.state = 'needAuth'
+        }
     }, 1000)
 }
 onMounted(async () => {
