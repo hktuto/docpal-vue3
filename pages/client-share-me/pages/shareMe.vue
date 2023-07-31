@@ -34,7 +34,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
     const route = useRoute()
     const router = useRouter()
     const pageParams = {
-        currentPageIndex: 0,
+        pageNum: 0,
         pageSize: 20
     }
     const tableKey = TABLE.CLIENT_INTERNAL_SHEAR_ME
@@ -61,7 +61,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
-            state.options.paginationConfig.currentPage = param.currentPageIndex + 1
+            state.options.paginationConfig.currentPage = param.pageNum + 1
         } catch (error) {
 
         }
@@ -89,7 +89,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
             const { page, pageSize } = newval
             dpLog({pageSize});
 
-            pageParams.currentPageIndex = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
+            pageParams.pageNum = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             getList(pageParams)
         },
@@ -143,7 +143,7 @@ function handleDelete (row) {
                 const param = []
                 param.push(row.detailId)
                 await DeleteShareMeApi(param)
-                handlePaginationChange(pageParams.currentPageIndex - 1, pageParams.pageSize)
+                handlePaginationChange(pageParams.pageNum - 1, pageParams.pageSize)
             })
 }
 onMounted(() => {

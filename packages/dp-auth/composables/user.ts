@@ -5,7 +5,7 @@ import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
     const route = useRoute()
     const router = useRouter()
-    const publicRouteList = ['/resetPassword']
+    const publicRouteList = ['/resetPassword', '/resetPassword/']
     const Cookies = useCookie('docpal-user')
     // @ts-ignore
     const appStore = useAppStore();
