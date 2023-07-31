@@ -1,5 +1,7 @@
 import DocDetail from '~/components/browse/Detail.vue'
 
+
+
 export default defineNuxtPlugin(nuxtApp => {
     const { globalSlots } = useLayout()
     
@@ -8,5 +10,6 @@ export default defineNuxtPlugin(nuxtApp => {
         order: 0,
         component: DocDetail
     })
+    
     
 })
