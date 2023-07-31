@@ -27,8 +27,8 @@ export const GetShareOthersApi = async(params: pageParams) => {
         totalSize: res.totalSize
     }
 }
-export const DeleteShareApi = async(ids: string []) => {
-    const res = await api.delete('/docpal/internalShare', {data: {ids} }).then(res => res.data.data)
+export const DeleteShareApi = async(detailIds: string []) => {
+    const res = await api.delete('/docpal/internalShare', {data: {detailIds} }).then(res => res.data.data)
     return res
 }
 

@@ -100,6 +100,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
 
 function handleDblclick (row) {
     if(row.isFolder) {
+        // shareFolderId 目录下一层rootId，用于breadcrumbs划分
         sessionStorage.setItem('shareFolderId', row.documentId)
         router.push(`/shareMeFolder?path=${row.documentId}`)
     }

@@ -745,8 +745,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_INTERNAL_SHEAR_OTHER] : {
         columns: [
-            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
-            { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            // { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
             { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds' },
             { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
                 formatList: [

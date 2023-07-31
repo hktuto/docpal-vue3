@@ -7,7 +7,7 @@
                 <template #docIcon="{ row, index }">
                     <div class="nameItem">
                         <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
-                        <div class="label">{{row.documentNames}}</div>
+                        <div class="label">{{row.documentName}}</div>
                     </div>
                 </template>   
         </Table>
@@ -89,22 +89,23 @@ import { GetShareOthersApi, DeleteShareApi, TABLE, defaultTableSetting } from 'd
 // #endregion
 // TODO:预览，由于后端数据暂时没法支持预览，所以先不做预览
 function handleDblclick (row) {
-    // if(row.isFolder) {
-    //     sessionStorage.setItem('shareFolderId', row.documentId)
-    //     router.push('/shareOtherFolder')
-    // }
-    // else {
-    //     openFileDetail(row.documentId, {
-    //         showInfo:true,
-    //         showHeaderAction:true
-    //     })
-    // }
+    if(row.isFolder) {
+        // shareFolderId 目录下一层rootId，用于breadcrumbs划分
+        sessionStorage.setItem('shareFolderId', row.documentId)
+        router.push(`/shareOtherFolder?path=${row.documentId}`)
+    }
+    else {
+        openFileDetail(row.documentId, {
+            showInfo:true,
+            showHeaderAction:true
+        })
+    }
 }
 function handleDelete (row) {
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
                 const param = []
-                param.push(row.id)
+                param.push(...row.detailIds.split(','))
                 await DeleteShareApi(param)
                 handlePaginationChange(pageParams.pageNum - 1, pageParams.pageSize)
             })
