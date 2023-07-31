@@ -3,6 +3,9 @@ import { useSetting } from './../../dp-stores/composables/setting';
 import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
+    const route = useRoute()
+    const router = useRouter()
+    const publicRouteList = ['/resetPassword']
     const Cookies = useCookie('docpal-user')
     // @ts-ignore
     const appStore = useAppStore();
@@ -80,7 +83,7 @@ export const useUser = () => {
 
     }
 
-    async function verify() {
+    async function verify(path: string) {
         try {
             const token = localStorage.getItem('token')
             if(!token) throw new Error("no token");
@@ -89,7 +92,11 @@ export const useUser = () => {
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
-            appStore.state = 'needAuth';
+            if(path && publicRouteList.includes(path)) {
+                appStore.state = 'ready';
+            } else {
+                appStore.state = 'needAuth';
+            }
             isLogin.value = false,
             token.value = "";
             refreshToken.value = "";
@@ -103,6 +110,9 @@ export const useUser = () => {
         const {access_token, refresh_token, isRequired2FA} = await Login({
             username,  password
         })
+        if(route.path && publicRouteList.includes(route.path)) {
+            router.push('/browse')
+        }
         token.value = access_token,
 
         // Cookies.value = access_token || ''
@@ -116,7 +126,7 @@ export const useUser = () => {
         return {isRequired2FA}
     }
     // docpal-user
-    function logout(){
+    function logout(router: any){
         // await api.delete('/session');
         isLogin.value = false;
         token.value = "";
@@ -135,7 +145,11 @@ export const useUser = () => {
         appStore.state = 'forgetPassword';
     }
     function getUserId () {
-        return user.value.userId || user.value.username
+        try {
+            return user.value.userId || user.value.username
+        } catch (error) {
+            return ''
+        }
     }
     function getIsLdapMode () {
         return isLdapMode.value

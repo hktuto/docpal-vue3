@@ -57,8 +57,8 @@ async function submit() {
         form.username = "";
         form.password = "";
     } catch (error) {
-        form.username = "";
-        form.password = "";
+        // form.username = "";
+        // form.password = "";
     }
     loading.value = false;
 }

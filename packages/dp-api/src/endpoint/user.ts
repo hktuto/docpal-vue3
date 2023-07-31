@@ -16,12 +16,19 @@ export const UserSettingSaveApi = async(data:UserSetting) => {
 export const Login = async(data: LoginRequest):Promise<LoginResponse> => {
     return await api.post<Response<LoginResponse>>('/auth/nuxeo/login',data).then(res => res.data.data)
 }
-export const isLdapModeApi = async()=> {
-    return await api.get('/docpal/relation/isLdapMode').then(res => res.data.data);
-}
 export const Verify = async():Promise<User> => {
     return api.get<Response<User>>('/nuxeo/user/getApplication').then(res => res.data.data);
 }
+export const isLdapModeApi = async()=> {
+    return await api.get('/docpal/relation/isLdapMode').then(res => res.data.data);
+}
+export const checkValidTokenApi = async(token) => {
+    return api.get(`/nuxeo/user/confirmReset?token=${token}`).then(res => res.data.data);
+}
+export const resetPasswordApi = async(params) => {
+    return api.post('/nuxeo/user/resetPassword', params).then(res => res.data.data);
+}
+
 export const GetUserDetailApi = async (userId: string) => {
     return await api.get(`/nuxeo/user/${userId}`).then(res => res.data.data);
 }

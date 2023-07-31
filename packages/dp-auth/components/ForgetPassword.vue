@@ -29,8 +29,6 @@
 <script lang="ts" setup>
 import { ForgetPasswordApi } from 'dp-api'
 const appStore = useAppStore();    
-
-
 const status = ref('beforeSubmit')
 const loading = ref(false)
 const form = ref({
