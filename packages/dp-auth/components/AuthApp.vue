@@ -31,13 +31,21 @@ const route = useRoute()
 const {token, verify} = useUser();
 
 const { globalSlots } = useLayout()
-
+const { uploadState } = useUploadStore()
 const props = withDefaults(defineProps<{
     showForgetPassword: boolean,
 }>(), {
   showForgetPassword: true
 })
 onMounted(async () => {
+  window.addEventListener('beforeunload', function (e) {
+    if(uploadState.value.uploadRequestList.length > 0) {
+      // Cancel the event
+      // Chrome requires returnValue to be set
+      e.preventDefault();
+      e.returnValue = $i18n.t('tip.beforeunload');
+    }
+  });
   await appStore.appInit();
   const t = localStorage.getItem('token') as string;
   if(localStorage && t) {
