@@ -27,6 +27,12 @@
                         
                     </div>
                 </template>
+                <template #tags="{ row, index }">
+                    <el-tag v-for="tag in row.tags">{{ tag }}</el-tag>
+                </template>
+                <template #contributors="{ row, index }">
+                    <el-tag v-for="tag in row.contributors">{{ tag }}</el-tag>
+                </template>
         </Table>
         
         <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
