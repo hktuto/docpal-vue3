@@ -774,13 +774,13 @@ export const defaultTableSetting: TableColumnSetting = {
                 "showOverflowTooltip": false,
                 "formatList": [],
                 "buttons": [
-                    // {
-                    //     "name": "",
-                    //     "type": "text",
-                    //     "command": "preview",
-                    //     "suffixIcon": "/icons/eye.svg",
-                    //     "index": 0
-                    // },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    },
                     {
                         "name": "",
                         "type": "text",
@@ -1730,8 +1730,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_INTERNAL_SHEAR] : {
         columns: [
-            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
-            { id: '1', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            // { id: '1', label: 'tableHeader_name', prop: 'documentName'},
             { id: '2', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
             { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserId',},
             { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 

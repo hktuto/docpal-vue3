@@ -17,7 +17,6 @@
         <BrowseActionsEdit v-show="false" @success="handleRefresh" />
         <BrowseActionsNew v-show="false" @success="handleRefresh" />
         <BrowseActionsDelete v-show="false" @success="handleRefresh"/>
-        <BrowseActionsCopyPath  v-show="false" @success="handleRefresh"/>
         <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
         <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
         <BrowseActionsUploadDoc v-show="false" @success="handleRefresh"/>
@@ -116,19 +115,19 @@ function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.stopPropagation();
     // handleSelect([])
     const data = {
-        doc: { id: row.documentId, isFolder: row.isFolder, name: row.documentName },
+        doc: { id: row.documentId, isFolder: row.isFolder, name: row.documentName, path: row.path },
         isFolder: row.isFolder,
         idOrPath: row.path,
         pageX: event.pageX,
         pageY: event.pageY,
         actions: {
             delete: false,
-            copy: false, // 后端没返回docPath,没法重命名检测
+            // copy: false, // 后端没返回docPath,没法重命名检测
             cut: false,
-            paste: false,
+            // paste: false,
             rename: false,
-            addFolder: false,
-            addFile: false
+            // addFolder: false,
+            // addFile: false
         }
     }
     const ev = new CustomEvent('fileRightClick',{ detail: data })

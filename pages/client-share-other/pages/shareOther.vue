@@ -3,14 +3,23 @@
         <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                 @pagination-change="handlePaginationChange"
                 @command="handleAction"
-                @row-dblclick="handleDblclick">
+                @row-dblclick="handleDblclick"
+                @row-contextmenu="handleRightClick">
                 <template #docIcon="{ row, index }">
                     <div class="nameItem">
-                        <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
+                        <BrowseItemIcon v-if="!!row" :type="row.isFolder !== 'false' ? 'folder' : 'file'"/>
                         <div class="label">{{row.documentName}}</div>
                     </div>
                 </template>   
         </Table>
+        <BrowseRightClick></BrowseRightClick>
+        <BrowseInfoAclEditDialog />
+        <BrowseActionsEdit v-show="false" @success="handleRefresh" />
+        <BrowseActionsNew v-show="false" @success="handleRefresh" />
+        <BrowseActionsDelete v-show="false" @success="handleRefresh"/>
+        <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
+        <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
+        <BrowseActionsUploadDoc v-show="false" @success="handleRefresh"/>
     </NuxtLayout>
 </template>
 
@@ -73,6 +82,10 @@ import { GetShareOthersApi, DeleteShareApi, TABLE, defaultTableSetting } from 'd
                 handleDelete(row)
         }
     }
+    async function handleRefresh () {
+        handlePaginationChange(...route.query)
+        // forceRefresh.value = true
+    }
     watch(
         () => route.query,
         async (newval) => {
@@ -100,6 +113,29 @@ function handleDblclick (row) {
             showHeaderAction:true
         })
     }
+}
+function handleRightClick (row: any, column: any, event: MouseEvent) {
+    event.preventDefault()
+    event.stopPropagation();
+    // handleSelect([])
+    const data = {
+        doc: { id: row.documentId, isFolder: row.isFolder, name: row.documentName, path: row.path },
+        isFolder: row.isFolder,
+        idOrPath: row.path,
+        pageX: event.pageX,
+        pageY: event.pageY,
+        actions: {
+            delete: false,
+            copy: false, // 后端没返回docPath,没法重命名检测
+            cut: false,
+            paste: false,
+            // rename: false,
+            // addFolder: false,
+            // addFile: false
+        }
+    }
+    const ev = new CustomEvent('fileRightClick',{ detail: data })
+    document.dispatchEvent(ev)
 }
 function handleDelete (row) {
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
