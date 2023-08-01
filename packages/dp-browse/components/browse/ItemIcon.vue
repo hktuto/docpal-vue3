@@ -18,7 +18,6 @@ type IconStatus = 'normal' | 'selected' | 'general'
 
     const iconSrc = computed(() => {
         const { type, status, mimeType } = props
-        console.log('mimeType', mimeType)
         if(mimeType) {
              return mimeTypeToSrc()
         }else {

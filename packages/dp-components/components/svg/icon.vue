@@ -1,5 +1,5 @@
 <template>
-<div class="flex-x-center">
+<div v-if="src" class="flex-x-center">
     <template v-if="content">
         <el-tooltip :content="content">
             <template v-if="round">
@@ -21,6 +21,7 @@
         <component :is="InlineSvg" :class="svgClass" :src="src"></component>
     </template>
 </div>
+<div v-else></div>
 </template>
 
 <script lang="ts" setup>
