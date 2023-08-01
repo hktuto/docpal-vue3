@@ -96,6 +96,7 @@ export const useRelatedFolder =() => {
     }
 
     async function getRelated() {
+        relatedChildren.value = []
         const allChildren = await getRelatedChild(doc.value)
 
         relatedChildren.value = allChildren
@@ -109,7 +110,7 @@ export const useRelatedFolder =() => {
         if(newDoc) {
             getRelated()
         }else {
-            relatedChildren.value = {}
+            relatedChildren.value = []
 
         }
     },{
