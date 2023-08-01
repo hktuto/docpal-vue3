@@ -460,7 +460,8 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             // { id: '4', type: 'selection' },
             { id: '1', slot: 'docName', label: 'table_name', prop: 'name', sortable: true },
-            { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
+           
+            { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
                 formatList: [
                     {
                         "joiner": "",
@@ -473,8 +474,11 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
+            { id: '3', label: 'table_docType', prop: 'documentType', sortable: true },
+            { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
+            { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
             {
-                id: '2',
+                id: '6',
                 "type": "",
                 "label": "dpTable_actions",
                 class: "slotTopRight",
@@ -501,6 +505,8 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         slots: [
             { slot: 'docName', label: 'table_name', prop: 'name' },
+            { slot: 'tags', label: 'rightDetail_tags', prop: 'tags' },
+            { slot: 'contributors', label: 'info_contributors', prop: 'contributors' }
         ],
         options: { pageSize: 20 }
     },

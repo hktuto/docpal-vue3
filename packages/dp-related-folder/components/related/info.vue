@@ -6,11 +6,13 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['show-relate', 'hide-relate'])
-const viewType = ref<'TABLE' | 'MAP'>('TABLE')
 
 const {doc, relatedChildren,} = useRelatedFolder();
 
-
+function openMap() {
+  const ev = new CustomEvent('show-relate-map')
+  document.dispatchEvent(ev)
+}
 
 watch(() => props.detail, (val) => {
   doc.value = val
@@ -25,7 +27,10 @@ watch(() => props.detail, (val) => {
   <div id="relatedInfoContainer">
     
     <div class="header">
-
+      <div class="action" @click="openMap">
+        {{ $t('related_view_map') }}
+        <SvgIcon src="/icons/map.svg" />
+      </div>
     </div>
     <div class="content">
       <RelatedTable v-for="item in relatedChildren" :key="item.id" :data="item"></RelatedTable>
@@ -43,5 +48,20 @@ watch(() => props.detail, (val) => {
     overflow: auto;
   }
 }
-
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  .action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: var(--color-grey-600);
+    font-size: 0.8rem;
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
 </style>
