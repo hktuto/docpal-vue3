@@ -41,7 +41,7 @@
         <BrowseInfoRelate v-if="currentTab === 'relate'"  :doc="detail" />
     </el-tab-pane> -->
     <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
-      <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail}" />
+      <component :is="slot.component" v-bind="{...$props, detail}" />
     </el-tab-pane>
 </el-tabs>
   <div v-else v-loading="loading" class="loadingContainer">

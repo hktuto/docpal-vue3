@@ -107,11 +107,9 @@ export const useRelatedFolder =() => {
     })
 
     watch(doc, (newDoc) => {
+        console.log("related watch doc",doc)
         if(newDoc) {
             getRelated()
-        }else {
-            relatedChildren.value = []
-
         }
     },{
         immediate:true
