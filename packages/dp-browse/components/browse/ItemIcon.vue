@@ -1,6 +1,6 @@
 <template>
     <div class="iconContainer">
-         <SvgIcon :src="`/icons/${type}-${status}.svg`" />
+         <SvgIcon :src="iconSrc" />
     </div>
 </template>
 
@@ -10,8 +10,66 @@ type IconStatus = 'normal' | 'selected' | 'general'
  const props = withDefaults( defineProps<{
         type: IconType;
         status?: IconStatus;
+        mimeType?: string;
     }>() , {
         type: 'folder',
         status: 'general'
     })
+
+    const iconSrc = computed(() => {
+        const { type, status, mimeType } = props
+        console.log('mimeType', mimeType)
+        if(mimeType) {
+             return mimeTypeToSrc()
+        }else {
+            return `/icons/${type}-${status}.svg`
+        }
+    })
+
+    function mimeTypeToSrc() {
+        // if mimetype is image, return image src
+        if(props.mimeType?.startsWith('image')) {
+            return `/icons/doc/image.svg`
+        }
+
+        // if mimetype is video, return video src
+        if(props.mimeType?.startsWith('video')) {
+            return `/icons/doc/video.svg`
+        }
+        // if mimetype is audio, return audio src
+        if(props.mimeType?.startsWith('audio')) {
+            return `/icons/doc/audio.svg`
+        }
+
+        // if mimetype is pdf, return pdf src
+        if(props.mimeType?.startsWith('application/pdf')) {
+            return `/icons/doc/pdf.svg`
+        }
+        // if mimetype is text, return text src
+        if(props.mimeType?.startsWith('text')) {
+            return `/icons/doc/text.svg`
+        }
+        // if mimetype is zip, return zip src
+        if(props.mimeType?.startsWith('application/zip')) {
+            return `/icons/doc/zip.svg`
+        }
+        // if mimetype is excel, return excel src
+        if(props.mimeType?.startsWith('application/vnd.ms-excel')) {
+            return `/icons/doc/excel.svg`
+        }
+
+        // if mimetype is word, return word src
+        if(props.mimeType?.startsWith('application/msword')) {
+            return `/icons/doc/word.svg`
+        }
+        // if mimetype is ppt, return ppt src
+        if(props.mimeType?.startsWith('application/vnd.ms-powerpoint')) {
+            return `/icons/doc/ppt.svg`
+        }
+        
+        // if mimetype is unknown, return unknown src
+        return `/icons/doc/file.svg`
+
+    }
+    
 </script>
