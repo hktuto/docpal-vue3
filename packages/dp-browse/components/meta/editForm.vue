@@ -64,7 +64,7 @@ const state = reactive({
         return state.metaList
     }
     async function metaListGet(documentType: string, initData: any) {
-        const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor']
+        const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
         if (!initData) initData = {}
         const res = await metaValidationRuleGetApi(documentType)
         if(!res) return []
