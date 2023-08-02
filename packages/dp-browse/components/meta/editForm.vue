@@ -41,7 +41,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {  metaValidationRuleGetApi } from 'dp-api'
+import { metaValidationRuleGetApi } from 'dp-api'
 const props = defineProps<{
     showNoData: boolean
 }>();
