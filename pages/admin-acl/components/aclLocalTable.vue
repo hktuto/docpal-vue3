@@ -35,8 +35,9 @@
 </div>
 </template>
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { addACLApi, removeACLApi, replaceACLApi } from 'dp-api/src/endpoint/admin-acl'
+import { CheckShareInternalApi } from 'dp-api'
 const props = defineProps<{
     tableData: Array,
     doc: object
@@ -112,6 +113,15 @@ function permissionRevert (open: boolean, permission) {
 async function removeLocalAcl (row: any) {
     row.loading = true
     try {
+        let msg = ''
+        const isShareInternal = await CheckShareInternalApi({ documentId: props.doc.id, userId: row.userId })
+        if(isShareInternal) msg += `<span class="color__danger">${$t('msg_isShareInternal')}</span>,`
+        
+        msg += `${$t('msg_confirmWhetherToDelete')}`
+        const action = await ElMessageBox.confirm(msg , {
+            dangerouslyUseHTMLString: true,
+        })
+        if(action !== 'confirm') throw new Error("cancel");
         await removeACLApi({ idOrPath: props.doc.id, userId: row.userId})
         emits('refresh')
     } catch (error) {
