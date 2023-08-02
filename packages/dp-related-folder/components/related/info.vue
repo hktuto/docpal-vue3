@@ -15,6 +15,7 @@ function openMap() {
 }
 
 watch(() => props.detail, (val) => {
+  console.log("detail Change", val)
   doc.value = val
 },{
   immediate: true
@@ -27,7 +28,7 @@ watch(() => props.detail, (val) => {
   <div id="relatedInfoContainer">
     
     <div class="header">
-      <div class="action" @click="openMap">
+      <div v-if="relatedChildren.length > 0" class="action" @click="openMap">
         {{ $t('related_view_map') }}
         <SvgIcon src="/icons/map.svg" />
       </div>

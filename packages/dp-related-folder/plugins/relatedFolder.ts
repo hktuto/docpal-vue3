@@ -1,5 +1,5 @@
 import RelatedInfo from '~/components/related/info.vue'
-
+import RelatedMap from '~/components/related/map.vue'
 
 
 export default defineNuxtPlugin(nuxtApp => {
@@ -15,8 +15,8 @@ export default defineNuxtPlugin(nuxtApp => {
 
     globalSlots.value.push({
         name: "rightDetail_related",
-        order: 0,
-        component: RelatedInfo
+        order: 1,
+        component: RelatedMap
     })
 
 
