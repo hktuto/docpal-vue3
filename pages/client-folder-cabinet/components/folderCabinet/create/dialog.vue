@@ -4,7 +4,7 @@
     class="scroll-dialog"
            append-to-body
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson">
+    <FromRenderer ref="FromRendererRef" :form-json="formJson" v-loading="state.initLoading">
         <template v-slot:metaForm>
             <MetaEditForm ref="MetaFormRef"></MetaEditForm>
         </template>
@@ -29,6 +29,7 @@ const emits = defineEmits([
     'refresh'
 ])
 const state = reactive({
+    initLoading: false,
     loading: false,
     visible: false,
     cabinetTemplate: {},
@@ -128,6 +129,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
 
 // #region module: init
     async function handleOpen(setting) {
+        state.initLoading = true
         state.loading = false
         state.visible = true
         try {
@@ -153,6 +155,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             }
             FromRendererRef.value.vFormRenderRef.setFormData(params)
         })
+        state.initLoading = false
     }
 // #endregion
 

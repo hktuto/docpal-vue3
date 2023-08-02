@@ -1,5 +1,5 @@
 <template>
-    <div v-loading="state.loading">
+    <div class="meta-edit-form-container" v-loading="state.loading">
         <template v-if="state.metaList.length > 0">
             <div v-for="(item, index) in state.metaList" :key="item.metaData+index" class="row-item">
                 <template v-if="item.display">
@@ -160,6 +160,9 @@ const state = reactive({
 defineExpose({ initMeta, getData, validateForm, getValidateMsg, metaListGet })
 </script>
 <style lang="scss" scoped>
+.meta-edit-form-container {
+    min-height: 40px;
+}
 .row-item {
     &-top {
         padding: var(--app-padding) 0;
