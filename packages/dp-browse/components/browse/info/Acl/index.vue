@@ -6,7 +6,7 @@
         <div class="listTitle">{{ $t('permission.read') }}</div>
         <div class="listContent">
           <BrowseInfoAclItem v-for="(ace, i) in ReadList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
-          <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('Read')"/>
+          <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('Read')"/> -->
         </div>
       </div>
 
@@ -14,7 +14,7 @@
         <div class="listTitle">{{ $t('permission.write') }}</div>
         <div class="listContent">
           <BrowseInfoAclItem v-for="(ace, i) in ReadWriteList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
-          <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('ReadWrite')"/>
+          <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('ReadWrite')"/> -->
         </div>
       </div>
 
@@ -22,7 +22,7 @@
         <div class="listTitle">{{ $t('permission.manage') }}</div>
         <div class="listContent">
           <BrowseInfoAclItem v-for="(ace, i) in ManageRecordList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
-          <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('ManageRecord')"/>
+          <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('ManageRecord')"/> -->
         </div>
       </div>
 
@@ -30,7 +30,7 @@
         <div class="listTitle">{{ $t('permission.everything') }}</div>
         <div class="listContent">
           <BrowseInfoAclItem v-for="(ace, i) in EverythingList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
-          <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('Everything')"/>
+          <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('Everything')"/> -->
         </div>
       </div>
       
