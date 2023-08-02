@@ -181,3 +181,7 @@ $--scroll-dialog-height: fit-content;
     white-space: nowrap;
   }
 }
+.el-popper {
+    max-height: 70vh;
+    overflow: auto;
+}

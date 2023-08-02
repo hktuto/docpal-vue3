@@ -51,12 +51,12 @@ watch(route, async(newRoute, oldRoute) => {
         else if (state.rootId) goRoute(state.rootId)
         return
     }
-    const res = await GetBreadcrumb(newRoute.query.path)
+    const breadcrumbList = await GetBreadcrumb(newRoute.query.path)
     if(!state.rootPath && state.rootId) {
-        const rootItem = res.find(item => item.id === state.rootId)
+        const rootItem = breadcrumbList.find(item => item.id === state.rootId)
         state.rootPath = rootItem.path
     }
-    state.breadcrumbs = res.reduce((prev, item) => {
+    state.breadcrumbs = breadcrumbList.reduce((prev, item) => {
         if(item.path.includes(state.rootPath)) prev.push({
             path: item.path,
             name: item.name

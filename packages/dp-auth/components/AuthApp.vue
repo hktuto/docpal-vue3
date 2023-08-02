@@ -7,7 +7,6 @@
       <LazyForgetPassword  />
     </div>
     <div v-else-if="appStore.displayState != 'ready'" ref="loadingEl" class="loadingContainer">
-
       <div class="contain">
         <LogoCacheWhite class="loginLogo" />
         <div class="status">{{ appStore.state }}</div>
@@ -28,24 +27,32 @@
 // check app ready, if no go to login
 const appStore  = useAppStore()
 import { api } from 'dp-api'
+const route = useRoute()
 const {token, verify} = useUser();
 
 const { globalSlots } = useLayout()
-
+const { uploadState } = useUploadStore()
 const props = withDefaults(defineProps<{
     showForgetPassword: boolean,
 }>(), {
   showForgetPassword: true
 })
-
 onMounted(async () => {
+  window.addEventListener('beforeunload', function (e) {
+    if(uploadState.value.uploadRequestList.length > 0) {
+      // Cancel the event
+      // Chrome requires returnValue to be set
+      e.preventDefault();
+      e.returnValue = $i18n.t('tip.beforeunload');
+    }
+  });
   await appStore.appInit();
   const t = localStorage.getItem('token') as string;
   if(localStorage && t) {
     api.defaults.headers.common['Authorization'] = 'Bearer ' + t;
     token.value = t;
   }
-  verify();
+  verify(route.path);
 })
 
 </script>

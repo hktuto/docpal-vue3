@@ -9,7 +9,6 @@
         class="list-drag"
         :list="dragList"
         group="people"
-        @change="log"
         :itemKey="itemKey"
     >
         <template #item="{ element, index }">
@@ -20,12 +19,14 @@
         class="list-drop"
         :list="dropList"
         group="people"
-        @change="handleChange"
         :itemKey="itemKey"
     >
         <template #item="{ element, index }">
             <span class="list-drop-item">
-                <el-tag closable @close="handleClose(element)">{{ element[itemKey] }}</el-tag>
+                <!-- <span v-if="element.prefixSymbol" class="list-drop-item--divider" >{{element.prefixSymbol}}</span> -->
+                <!-- <DragSelectTag :element="element" @close="handleClose"/> -->
+                <!-- <span v-if="element.suffixSymbol" class="list-drop-item--divider">{{element.suffixSymbol}}</span> -->
+                <el-tag ref="tagRef" closable @close="handleClose(element)">{{ element[itemKey] }}</el-tag>
                 <span class="list-drop-item--divider">{{joiner}}</span>
             </span>
         </template>
@@ -34,6 +35,7 @@
 </template>
 
 <script lang="ts" setup>
+import { getJsonApi } from 'dp-api'
 const props = withDefaults(defineProps<{
     dropList: any,
     dragList: any,
@@ -45,10 +47,12 @@ const props = withDefaults(defineProps<{
     itemKey: 'metaData',
     nullTip: 'tip.pleaseGoToConfigDisplayMetaOrSelectDocumentType'
 })
-function log (evt) {
-    
-}
+const FromRendererRef = ref()
+const formJson = getJsonApi('admin/dragSelect.json')
+
 function handleClose(element) {
+    console.log(props.dropList, element);
+    
     let addItem
     const index = props.dropList.findIndex(item => {
         if(item[props.itemKey] === element[props.itemKey]) {
@@ -61,6 +65,23 @@ function handleClose(element) {
     props.dragList.push(addItem)
 }
 function handleChange (evt) {
+    const dropLen = props.dropList.length
+    if (evt.added) {
+        if(evt.added.newIndex < dropLen - 1) {
+            const newEl = props.dropList[evt.added.newIndex]
+            newEl.suffixSymbol = '-'
+        }
+        else if(evt.added.newIndex === dropLen - 1 && dropLen > 1) {
+            const previousEl = props.dropList[evt.added.newIndex - 1]
+            previousEl.suffixSymbol = '-'
+        }
+        
+    } else if(evt.removed) {
+        if(evt.removed.oldIndex === dropLen) {
+            const lastEl = props.dropList[dropLen - 1]
+            if(lastEl.suffixSymbol === '-') lastEl.suffixSymbol = ''
+        }
+    }
     // emit('update:modelValue', JSON.stringify(props.dropList))
 }
 onMounted(() => {

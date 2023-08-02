@@ -460,7 +460,8 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             // { id: '4', type: 'selection' },
             { id: '1', slot: 'docName', label: 'table_name', prop: 'name', sortable: true },
-            { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
+           
+            { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
                 formatList: [
                     {
                         "joiner": "",
@@ -473,8 +474,11 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
+            { id: '3', label: 'info_type', prop: 'documentType', sortable: true },
+            { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
+            { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
             {
-                id: '2',
+                id: '6',
                 "type": "",
                 "label": "dpTable_actions",
                 class: "slotTopRight",
@@ -501,6 +505,8 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         slots: [
             { slot: 'docName', label: 'table_name', prop: 'name' },
+            { slot: 'tags', label: 'rightDetail_tags', prop: 'tags' },
+            { slot: 'contributors', label: 'info_contributors', prop: 'contributors' }
         ],
         options: { pageSize: 20 }
     },
@@ -745,8 +751,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_INTERNAL_SHEAR_OTHER] : {
         columns: [
-            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
-            { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            // { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
             { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds' },
             { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
                 formatList: [
@@ -774,13 +780,13 @@ export const defaultTableSetting: TableColumnSetting = {
                 "showOverflowTooltip": false,
                 "formatList": [],
                 "buttons": [
-                    // {
-                    //     "name": "",
-                    //     "type": "text",
-                    //     "command": "preview",
-                    //     "suffixIcon": "/icons/eye.svg",
-                    //     "index": 0
-                    // },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    },
                     {
                         "name": "",
                         "type": "text",
@@ -1192,9 +1198,27 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_USER_MANAGE]: {
         columns: [
-            { id: '1', label: 'username', prop: 'username' },
-            { id: '2', label: 'Identifer', prop: 'userId' },
+            { id: '1', label: 'username', prop: 'username', "width": 200, showOverflowTooltip: true  },
+            // { id: '2', label: 'Identifer', prop: 'userId' },
+            { id: '3', label: 'user_email', prop: 'email', "width": 250, showOverflowTooltip: true  },
+            { id: '4', label: 'user_groupName', slot: 'group' },
+            { id: '5', label: 'user_active', slot: 'active', "width": 100 },
+            {   
+                id: '6',
+                "label": "tableHeader_actions",
+                "width": 100,
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    }
+                ],
+            }
         ],
+
         events: [],
         options: { pageSize: 20 }
     },
@@ -1712,8 +1736,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_INTERNAL_SHEAR] : {
         columns: [
-            // { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentNames' },
-            { id: '1', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            // { id: '1', label: 'tableHeader_name', prop: 'documentName'},
             { id: '2', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
             { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserId',},
             { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 

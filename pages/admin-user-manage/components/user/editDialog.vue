@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('user_newUser')"
+<el-dialog v-model="state.visible" :title="$t('user_editUser')"
     :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
@@ -27,8 +27,7 @@ async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        data.userId = props.user.userId
-        await PatchUserApi(data)
+        await PatchUserApi({ ...props.user, properties: null, ...data })
         state.visible = false
         FromRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')

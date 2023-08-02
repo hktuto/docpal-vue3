@@ -17,7 +17,6 @@
         <BrowseActionsEdit v-show="false" @success="handleRefresh" />
         <BrowseActionsNew v-show="false" @success="handleRefresh" />
         <BrowseActionsDelete v-show="false" @success="handleRefresh"/>
-        <BrowseActionsCopyPath  v-show="false" @success="handleRefresh"/>
         <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
         <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
         <BrowseActionsUploadDoc v-show="false" @success="handleRefresh"/>
@@ -34,7 +33,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
     const route = useRoute()
     const router = useRouter()
     const pageParams = {
-        currentPageIndex: 0,
+        pageNum: 0,
         pageSize: 20
     }
     const tableKey = TABLE.CLIENT_INTERNAL_SHEAR_ME
@@ -61,7 +60,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
-            state.options.paginationConfig.currentPage = param.currentPageIndex + 1
+            state.options.paginationConfig.currentPage = param.pageNum + 1
         } catch (error) {
 
         }
@@ -89,7 +88,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
             const { page, pageSize } = newval
             dpLog({pageSize});
 
-            pageParams.currentPageIndex = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
+            pageParams.pageNum = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             getList(pageParams)
         },
@@ -100,6 +99,7 @@ import { GetShareMeApi, DeleteShareMeApi, patchShareInfoApi, TABLE, defaultTable
 
 function handleDblclick (row) {
     if(row.isFolder) {
+        // shareFolderId 目录下一层rootId，用于breadcrumbs划分
         sessionStorage.setItem('shareFolderId', row.documentId)
         router.push(`/shareMeFolder?path=${row.documentId}`)
     }
@@ -115,19 +115,19 @@ function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.stopPropagation();
     // handleSelect([])
     const data = {
-        doc: { id: row.documentId, isFolder: row.isFolder, name: row.documentName },
+        doc: { id: row.documentId, isFolder: row.isFolder, name: row.documentName, path: row.path },
         isFolder: row.isFolder,
         idOrPath: row.path,
         pageX: event.pageX,
         pageY: event.pageY,
         actions: {
             delete: false,
-            copy: false, // 后端没返回docPath,没法重命名检测
+            // copy: false, // 后端没返回docPath,没法重命名检测
             cut: false,
-            paste: false,
+            // paste: false,
             rename: false,
-            addFolder: false,
-            addFile: false
+            // addFolder: false,
+            // addFile: false
         }
     }
     const ev = new CustomEvent('fileRightClick',{ detail: data })
@@ -143,7 +143,7 @@ function handleDelete (row) {
                 const param = []
                 param.push(row.detailId)
                 await DeleteShareMeApi(param)
-                handlePaginationChange(pageParams.currentPageIndex - 1, pageParams.pageSize)
+                handlePaginationChange(pageParams.pageNum - 1, pageParams.pageSize)
             })
 }
 onMounted(() => {

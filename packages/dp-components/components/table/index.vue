@@ -247,14 +247,12 @@ const indexMethod = (index: number) => {
     })
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-        console.log("handleRowClick")
         if(isMobile.value) {
           emit('row-dblclick', row, column, event)
           return ;
         }
         clearTimeout(clickTimeoutId.value);
         clickTimeoutId.value = setTimeout(() => {
-            console.log("single click")// 双击事件返回
             if(_options.value.multiSelect) handleShift(row)
             emit('row-click', row, column, event)
         }, 200);

@@ -6,8 +6,8 @@
                 @row-dblclick="handleDblclick">
                 <template #docIcon="{ row, index }">
                     <div class="nameItem">
-                        <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
-                        <div class="label">{{row.documentNames}}</div>
+                        <BrowseItemIcon v-if="!!row" :type="row.isFolder !== 'false' ? 'folder' : 'file'"/>
+                        <div class="label">{{row.documentName}}</div>
                     </div>
                 </template>   
         </Table>
@@ -104,7 +104,7 @@ function handleDelete (row) {
     ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
                 const param = []
-                param.push(row.id)
+                param.push(...row.detailIds.split(','))
                 await DeleteShareApi(param)
                 handlePaginationChange(pageParams.pageNum - 1, pageParams.pageSize)
             })

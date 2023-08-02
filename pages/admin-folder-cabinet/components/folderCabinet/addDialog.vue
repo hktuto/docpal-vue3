@@ -47,7 +47,7 @@ function handleDocTypeChange (data) {
     if (state.editReady) form.labelRule = []
     state.curDocType = data.value
     state.dragList = data.metaList.reduce((prev, item) => {
-        if(item.dataType === 'string' || item.dataType === 'date' && item.isRequire) {
+        if((item.dataType === 'string' || item.dataType === 'date') && item.isRequire) {
             prev.push({
                 metaData: item.metaData,
                 dataType: item.dataType
@@ -56,8 +56,9 @@ function handleDocTypeChange (data) {
         return prev
     }, [])
     state.dragList.push(
-        {metaData: 'fc:label', dataType: 'string'},
-        {metaData: 'fc:createDate', dataType: 'date'}
+        { metaData: 'fc:label', dataType: 'string' },
+        { metaData: 'fc:createDate', dataType: 'date' },
+        { metaData: 'fc:creator', dataType: 'string ' }
     )
     if (form.labelRule.length > 0) {
         state.dragList = state.dragList.filter((allItem:any) => 

@@ -106,6 +106,9 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
                     else if(rule.metaData === 'fc:label'){
                         prev += joiner + state.cabinetTemplate.label
                     }
+                    else if(rule.metaData === 'fc:creator'){
+                        prev += joiner + userId
+                    }
                     else if(rule.dataType === 'date') {
                         if(!metaFormData[rule.metaData]) throw new Error("no metaData");
                         prev += joiner + formatDate(metaFormData[rule.metaData])
@@ -118,7 +121,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
                 }, '')
             } 
         } catch (error) {
-            return state.cabinetTemplate.label + formatDate(date,'YYYY-MM-DD')
+            return state.cabinetTemplate.label + '-' + formatDate(date,'YYYY-MM-DD')
         }
     }
 // #endregion

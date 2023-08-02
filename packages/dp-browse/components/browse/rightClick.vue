@@ -22,12 +22,12 @@
             <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">
                 <SvgIcon class="el-icon--left" src="/icons/file/file-cut.svg"></SvgIcon>
                 {{$t('filePopover_cut')}}</el-menu-item>
-            <el-menu-item index="docActionInternalShare" v-show="state.canManage && state.actions.internalShare">
-                <SvgIcon class="el-icon--left" src="/icons/menu/shareMe.svg"></SvgIcon>
-                {{$t('filePopover_internalShare')}}</el-menu-item>
             <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">
                 <SvgIcon class="el-icon--left" src="/icons/file/file-paste.svg"></SvgIcon>
                 {{$t('filePopover_paste')}}</el-menu-item>
+            <el-menu-item index="docActionInternalShare" v-show="state.canManage && state.actions.internalShare">
+                <SvgIcon class="el-icon--left" src="/icons/menu/shareMe.svg"></SvgIcon>
+                {{$t('filePopover_internalShare')}}</el-menu-item>
             <el-menu-item index="docActionDelete" v-show="state.canWrite && state.actions.delete"> 
                 <SvgIcon class="el-icon--left" src="/icons/menu/trash.svg"></SvgIcon>
                 {{$t('filePopover_delete')}}</el-menu-item>
@@ -75,6 +75,8 @@ async function handleRightClick (detail: any) {
 
     state.visible = true
     state.doc = detail.doc
+    console.log(state.doc);
+    
     await handleAction(detail)
     state.defaultActive = []
     FileRightClickPopoverRef.value.style.left = detail.pageX + 'px'

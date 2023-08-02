@@ -65,7 +65,6 @@ const sidebarEl = ref();
 const { sideSlot } = useLayout()
 
 onClickOutside(sidebarEl, () => {
-  console.log("outside click")
   if(isMobile && opened.value) {
     opened.value = false
   }

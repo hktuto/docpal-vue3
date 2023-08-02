@@ -3,7 +3,14 @@
     <template #header>
         <div class="flex-x-between">
             {{ $t('common_info') }}
-            <el-button v-if="!isLdapMode" @click="openDialog">{{$t('user_updatePassword')}}</el-button>
+            <div class="flex-x-end" v-if="!isLdapMode">
+                <SvgIcon class="el-icon--right" src="/icons/file/edit.svg" round
+                    @click="handleEdit"></SvgIcon>
+                <SvgIcon v-if="!isLdapMode" class="el-icon--right" src="/icons/password-change.svg" round
+                    @click="openDialog"></SvgIcon>
+                <SvgIcon class="el-icon--right" src="/icons/file/delete.svg" round
+                    @click="handleDelete"></SvgIcon>
+            </div>
         </div>
     </template>
     <div class="row">
@@ -31,43 +38,81 @@
             </el-select>
         </div>
     </div>
+    <div class="row">
+        <div class="rowTitle">{{ $t('user_active') }}</div>
+        <div class="rowValue">
+            <el-switch v-model="user.status" 
+                active-value="A" inactive-value="D"
+                :loading="user.loading" :disabled="user.loading"
+                @change="(value) => handleSetStatus(value, user)" />
+        </div>
+    </div>
+    <UserEditDialog ref="UserEditDialogRef" :user="user" @refresh="emits('refresh')"></UserEditDialog>
     <UserPasswordDialog ref="UserPasswordDialogRef" :user="user"></UserPasswordDialog>
 </el-card>
 </template>
 
 
 <script lang="ts" setup>
-import { ElNotification, ElMessage } from 'element-plus'
-import { GetUserDetailApi, PatchUserApi } from 'dp-api'
+import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
+import { GetUserDetailApi, PatchUserApi, SetUserStatusApi, DeleteUserApi } from 'dp-api'
 const props = defineProps<{
     user: object,
     isLdapMode: boolean,
 }>()
+const emits = defineEmits([
+    'refresh'
+])
 const state = reactive({
+    ready: false,
     clearanceLevel: '',
     options: ['classified', 'confidential','normal']
 })
+const router = useRouter()
 async function updateMeta (value) {
     try {
         const res = await PatchUserApi({
+            // ...props.user,
+            // userId: props.user.userId,
+            // properties: {  ...props.user.properties, clearanceLevel: value || null }
             userId: props.user.userId,
             properties: {  clearanceLevel: value || null }
         })
         if (!!res) ElMessage.success('success')
     } catch (error) {
+        emits('refresh')
         // ElMessage.error('error')
     }
 }
+async function handleDelete() {
+    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
+    const res = await DeleteUserApi({ userId: props.user.userId })
+    if (!!res) router.push('/user')
+}
+
+const UserEditDialogRef = ref()
+function handleEdit () {
+    UserEditDialogRef.value.handleOpen()
+}
+
 const UserPasswordDialogRef = ref()
 function openDialog() {
     UserPasswordDialogRef.value.handleOpen()
 }
-watch(() => props.user, async(user) => {
-    if(!user || !user.userId) return
-    const res = await GetUserDetailApi(user.userId)
-    state.clearanceLevel = res.properties.clearanceLevel
-},{
-    immediate:true
+async function handleSetStatus (status, row) {
+    row.loading = true
+    row.properties = null
+    const res = await SetUserStatusApi(row)
+    if (!res) {
+        row.status = row.status = 'A' ? 'D' : 'A'
+    } else {
+        // await getAllUserAndActiveCount()
+    }
+    row.loading = false
+}
+watch(() =>props.user, () => {
+    if(props.user && props.user.properties) state.clearanceLevel = props.user.properties.clearanceLevel
 })
 </script>
 

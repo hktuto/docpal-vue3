@@ -20,12 +20,18 @@
                             <div v-if="options.selectable(row, index)" class="rowCheckbox">
                                 <SvgIcon class="checkIcon" src="/icons/white_check.svg" />
                             </div>
-                            <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" status="general"/>
+                            <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" :mimeType="row.mimeType" status="general"/>
                         </div>
                         <div class="label">{{row.name}}</div>
                         <DropzoneContainer v-if="row.isFolder" :doc="row" class="folderDropzone backgroundDrop"></DropzoneContainer>
                         
                     </div>
+                </template>
+                <template #tags="{ row, index }">
+                    <el-tag v-for="tag in row.tags">{{ tag }}</el-tag>
+                </template>
+                <template #contributors="{ row, index }">
+                    <el-tag v-for="tag in row.contributors">{{ tag }}</el-tag>
                 </template>
         </Table>
         
@@ -205,6 +211,7 @@ onMounted(() => {
 .selectContainer{
     --container-size: 40px;
     --check-size: 40px;
+    --icon-size: 2rem;
     width: var(--container-size);
     height: var(--container-size);
     position: relative;
@@ -230,7 +237,7 @@ onMounted(() => {
         transition: all .2s ease-in-out;
     }
     .rowCheckbox{
-        --check-size: 26px;
+        --check-size: 32px;
         --icon-color: transparent;
         --icon-size: calc(var(--check-size) - 8px);
         position: absolute;

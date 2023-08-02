@@ -96,6 +96,7 @@ const readerType = computed(() => {
 });
 
 async function openPreview({detail}:any) {
+  show.value = false
   options.value = detail.options
   const response = await getDocumentDetail(detail.pathOrId, userId)
   doc.value = response.doc
@@ -224,7 +225,7 @@ watch(show, (isShow) => {
 .fileName{
     font-size: var(--el-font-size-large);
     text-align: left;
-    color: var(--color-grey-0000);
+    color: #fff !important;
     word-break: break-all;
 }
 

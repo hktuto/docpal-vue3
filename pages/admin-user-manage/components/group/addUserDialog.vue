@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('user_addGroups')"
+<el-dialog v-model="state.visible" :title="$t('user_addUser')"
     :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
