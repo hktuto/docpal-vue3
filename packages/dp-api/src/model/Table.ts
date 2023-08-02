@@ -474,7 +474,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { id: '3', label: 'table_docType', prop: 'documentType', sortable: true },
+            { id: '3', label: 'info_type', prop: 'documentType', sortable: true },
             { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
             { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
             {

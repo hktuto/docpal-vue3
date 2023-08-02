@@ -2,21 +2,35 @@
 import { useEventListener } from "@vueuse/core";
 const show = ref(false);
 const infoOpened = ref(false);
-const {doc, relatedChildren,} = useRelatedFolder();
+const permission = ref();
+const doc = ref({
+    name:""
+});
+const { relatedChildren } = useRelatedFolder();
 
 function closePreview(){
     show.value = false;
-    doc.value = null
 }
 
-useEventListener(document, 'show-relate-map', () => {
+useEventListener(document, 'show-relate-map', ({ detail }) => {
+    console.log(detail);
+    permission.value = detail.permission;
+    doc.value = detail.doc;
     show.value = true;
+
 })
 useEventListener(document, 'close-relate-map', () => {
     show.value = false;
 })
 
 
+function itemDeleted(){
+    closePreview()
+}
+
+function handleRefresh(){
+    // todo: refresh
+}
 
 </script>
 
@@ -27,7 +41,7 @@ useEventListener(document, 'close-relate-map', () => {
             <div v-if="show && relatedChildren" class="dialog">
                 <div id="modalHeader">
                     <div class="fileNameContainer">
-                        <!-- <div class="fileName">{{ doc.name }}</div> -->
+                        <div class="fileName">{{ doc.name }}</div>
                     </div>
                     <div  class="actions">
                         <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
@@ -38,7 +52,38 @@ useEventListener(document, 'close-relate-map', () => {
                         </div>
                     </div>
                 </div>
-
+                <div id="relatedContent">
+                    <canvas id="relatedCanvas"></canvas>
+                    <BrowseInfo 
+                        id="relatedInfo" 
+                        :doc="doc" 
+                        :permission="permission" 
+                        :infoOpened="infoOpened" 
+                        :hidePreview="true" 
+                        @close="infoOpened = false" 
+                        draggable
+                        :resizeOption="{
+                            edges: { left: true, right: true, bottom: false, top: false }
+                        }"
+                    >
+                        <template #header>
+                            <div class="infoHeaderActions">
+                                <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                                <BrowseActionsSubscribe  :doc="doc" />
+                                
+                                <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" @success="handleRefresh"/>
+                                <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
+                                <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc"  />
+                                <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                                <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                                <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                                
+                                <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
+                            </div>
+                        </template>
+                    </BrowseInfo>
+                </div>
+                
             </div>
         </teleport>
     </div>
@@ -53,7 +98,9 @@ useEventListener(document, 'close-relate-map', () => {
     width: 100vw;
     height: 100%;
     z-index: 5;
-    background-color: rgba(0,0,0,0.8);
+    background:
+            conic-gradient(from 90deg at 1px 1px,#C9DDF4 90deg,#DEE7EE 0)
+            0 0/10px 10px;
     display: grid;
     grid-template-rows: min-content 1fr;
 }
@@ -77,5 +124,47 @@ useEventListener(document, 'close-relate-map', () => {
         flex-flow: row nowrap;
       }
     }
+}
+.actionIconContainer{
+    color: #000;
+}
+.fileName{
+    color: #000;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+#relatedContent{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+#relatedInfo {
+    max-height: 80vh;
+    right: var(--app-padding);
+    top: var(--app-padding);
+}
+
+.infoHeaderActions{
+    width:100%;
+    overflow: auto;
+    display: flex;
+    gap: var(--app-padding);
+    flex-flow: row nowrap;
+}
+
+:deep {
+  .actionIconContainer{
+    font-size: var(--icon-size);
+    background: var(--color-grey-150);
+    padding: 8px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--color-grey-950);
+    cursor: pointer;
+    &:hover{
+      background: var(--color-grey-200);
+    }
+  }
 }
 </style>

@@ -211,6 +211,7 @@ onMounted(() => {
 .selectContainer{
     --container-size: 40px;
     --check-size: 40px;
+    --icon-size: 2rem;
     width: var(--container-size);
     height: var(--container-size);
     position: relative;

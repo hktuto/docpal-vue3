@@ -2,7 +2,8 @@
 import { useRelatedFolder } from '~/composables/relatedFolder';
 
 const props = defineProps<{
-  detail: any
+  detail: any,
+  permission: any,
 }>()
 
 const emit = defineEmits(['show-relate', 'hide-relate'])
@@ -10,12 +11,14 @@ const emit = defineEmits(['show-relate', 'hide-relate'])
 const {doc, relatedChildren,} = useRelatedFolder();
 
 function openMap() {
-  const ev = new CustomEvent('show-relate-map')
+  const ev = new CustomEvent('show-relate-map',{detail:{
+    doc: props.detail,
+    permission: props.permission
+  }})
   document.dispatchEvent(ev)
 }
 
 watch(() => props.detail, (val) => {
-  console.log("detail Change", val)
   doc.value = val
 },{
   immediate: true
@@ -28,10 +31,10 @@ watch(() => props.detail, (val) => {
   <div id="relatedInfoContainer">
     
     <div class="header">
-      <div v-if="relatedChildren.length > 0" class="action" @click="openMap">
+      <!-- <div v-if="relatedChildren.length > 0" class="action" @click="openMap">
         {{ $t('related_view_map') }}
         <SvgIcon src="/icons/map.svg" />
-      </div>
+      </div> -->
     </div>
     <div class="content">
       <RelatedTable v-for="item in relatedChildren" :key="item.id" :data="item"></RelatedTable>
