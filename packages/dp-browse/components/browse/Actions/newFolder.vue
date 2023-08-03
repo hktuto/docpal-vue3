@@ -64,7 +64,8 @@ async function handleSubmit () {
         const params = {
             ...data,
             properties: metaFormData,
-            idOrPath: `${parentPath}/new Folder${timestamp}`,
+            // idOrPath: `${parentPath}/new Folder${timestamp}`,
+            idOrPath: `${parentPath}/${data.name}`,
         }
         
         const { isDuplicate } = await duplicateNameFilter(state.doc.path, [data]);

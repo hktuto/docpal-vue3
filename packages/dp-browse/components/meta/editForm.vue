@@ -72,7 +72,7 @@ const state = reactive({
             if (ignoreList.includes(item.metaData)) return prev
             else if (item.directoryEntries) {
                 item.directoryEntries = handleChildOptions(item.directoryEntries)
-                item.value = initData[item.metaData] ? initData[item.metaData] : []
+                item.value = initData[item.metaData] ? initData[item.metaData] : ''
             }
             else item.value = initData[item.metaData] ? initData[item.metaData] : ''
             prev.push(item)
@@ -107,7 +107,8 @@ const state = reactive({
         if (!validateForm(state.metaList)) return false
         return state.metaList.reduce((prev, item) => {
             if (item.value instanceof Array) {
-                if(item.value.length > 0) prev[item.metaData] = item.value
+                if(item.length > 1) prev[item.metaData] = item.value
+                else if(item.value.length > 0) prev[item.metaData] = item.value.join(',')
             }
             else if(item.value) prev[item.metaData] = item.value
             return prev
@@ -146,10 +147,13 @@ const state = reactive({
     }
 // #endregion
 // #region module: change
-    function handleChange () {
+    function handleChange (value) {
+        console.log(state.metaList);
+        
         const properties = state.metaList.reduce((prev, item) => {
             if (item.value instanceof Array) {
-                if(item.value.length > 0) prev[item.metaData] = item.value
+                if(item.length > 1) prev[item.metaData] = item.value
+                else if(item.value.length > 0) prev[item.metaData] = item.value.join(',')
             }
             else if(item.value) prev[item.metaData] = item.value
             return prev
