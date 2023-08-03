@@ -4,6 +4,7 @@ import {memoizedRefreshToken} from "~/utils/refreshToken";
 let refreshing = false;
 import LogoutButton from '~/components/LogoutButton.vue'
 export default defineNuxtPlugin((nuxtApp) => {
+    const { logout } = useUser()
     const router:any = nuxtApp.$router;
     // Doing something with nuxtApp
     // setup api for token refresh
@@ -33,6 +34,12 @@ export default defineNuxtPlugin((nuxtApp) => {
             }
             return api(config);
         }
+        if(error?.response?.status === 403 && config?.sent) {
+            config.sent = false;
+            logout();
+            return Promise.resolve();
+        }
+            
         return Promise.reject(error);
     });
 })
