@@ -126,8 +126,7 @@ export const useUser = () => {
         return {isRequired2FA}
     }
     // docpal-user
-    function logout(router: any){
-        // await api.delete('/session');
+    function logout(){
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
