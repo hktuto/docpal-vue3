@@ -70,13 +70,17 @@ async function handlePermissionChange (open:boolean, permission: string, row: an
         else {
             const _permission = permissionRevert(open,permission)
             if (!_permission) {
-                res = await removeACLApi({ idOrPath: props.doc.id, userId: row.userId, permission: row.acePermission})
+                const action = await removeLocalAcl(row)
+                if(action === 'cancel') row.read = true
+                row.loading = false
+                return
+                // res = await removeACLApi({ idOrPath: props.doc.id, userId: row.userId, permission: row.acePermission})
             } else {
                 const _data:any = {
-                idOrPath: props.doc.id,
-                aceId: row.aceId,
-                permission: _permission,
-                userId: row.userId,
+                    idOrPath: props.doc.id,
+                    aceId: row.aceId,
+                    permission: _permission,
+                    userId: row.userId,
                 }
                 if (row.startDate) _data.startDate = row.startDate
                 if (row.endDate) _data.endDate = row.endDate
@@ -125,7 +129,7 @@ async function removeLocalAcl (row: any) {
         await removeACLApi({ idOrPath: props.doc.id, userId: row.userId})
         emits('refresh')
     } catch (error) {
-        
+        return 'cancel'
     }
     row.loading = false
 }
