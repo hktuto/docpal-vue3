@@ -92,16 +92,16 @@ async function handleSubmit() {
         return prev
     }, [])
     
-    // params.tos = data.tos.reduce((prev, item) => {
-    //     const _to = item.split('&&&&')
-    //     prev.push(_to[0])
-    //     return prev
-    // }, [])
-    // params.ccs = data.ccs.reduce((prev, item) => {
-    //     const _to = item.split('&&&&')
-    //     prev.push(_to[0])
-    //     return prev
-    // }, [])
+    params.tos = data.tos.reduce((prev, item) => {
+        const _to = item.split('&&&&')
+        prev.push(_to[0])
+        return prev
+    }, [])
+    params.ccs = data.ccs.reduce((prev, item) => {
+        const _to = item.split('&&&&')
+        prev.push(_to[0])
+        return prev
+    }, [])
     try {
         state.loading = true
         if (params.isEdit) {
