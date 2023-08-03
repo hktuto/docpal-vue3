@@ -91,16 +91,17 @@ async function handleSubmit() {
         })
         return prev
     }, [])
-    params.tos = data.tos.reduce((prev, item) => {
-        const _to = item.split('&&&&')
-        prev.push(_to[0])
-        return prev
-    }, [])
-    params.ccs = data.ccs.reduce((prev, item) => {
-        const _to = item.split('&&&&')
-        prev.push(_to[0])
-        return prev
-    }, [])
+    
+    // params.tos = data.tos.reduce((prev, item) => {
+    //     const _to = item.split('&&&&')
+    //     prev.push(_to[0])
+    //     return prev
+    // }, [])
+    // params.ccs = data.ccs.reduce((prev, item) => {
+    //     const _to = item.split('&&&&')
+    //     prev.push(_to[0])
+    //     return prev
+    // }, [])
     try {
         state.loading = true
         if (params.isEdit) {
@@ -127,6 +128,7 @@ function handleOpen(setting) {
             state.loading = true
             const data = {
                 ...setting,
+                metadata: revertMetadata(setting.metadata),
                 isEdit: true,
                 binds: revertUserGroup(setting.binds),
                 rootId: await getRootIds(setting.rootId)
@@ -153,6 +155,12 @@ async function getRootIds(idOrPath: string) {
 function revertUserGroup (binds) {
     return binds.reduce((prev, item) => {
         prev.push(`${item.type}&&&&${item.bindId}`)
+        return prev
+    }, [])
+}
+function revertMetadata (binds) {
+    return binds.reduce((prev, item) => {
+        prev.push(`${item.type}&&&&${item.name}`)
         return prev
     }, [])
 }

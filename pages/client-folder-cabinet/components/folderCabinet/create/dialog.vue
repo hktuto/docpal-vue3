@@ -43,16 +43,16 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
     const MetaFormRef = ref()
     async function handleSubmit () {
         const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
-        formData.tos = formData.tos.reduce((prev, item) => {
-            const _to = item.split('&&&&')
-            prev.push(_to[0])
-            return prev
-        }, [])
-        formData.ccs = formData.ccs.reduce((prev, item) => {
-            const _to = item.split('&&&&')
-            prev.push(_to[0])
-            return prev
-        }, [])
+        // formData.tos = formData.tos.reduce((prev, item) => {
+        //     const _to = item.split('&&&&')
+        //     prev.push(_to[0])
+        //     return prev
+        // }, [])
+        // formData.ccs = formData.ccs.reduce((prev, item) => {
+        //     const _to = item.split('&&&&')
+        //     prev.push(_to[0])
+        //     return prev
+        // }, [])
         const metaFormData = MetaFormRef.value.getData()
         if(!formData || !metaFormData) return
         state.loading = true
