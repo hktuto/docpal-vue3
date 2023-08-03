@@ -8,7 +8,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['show-relate', 'hide-relate'])
 
-const {doc, relatedChildren,} = useRelatedFolder();
+const {doc, relatedChildren, getRelated} = useRelatedFolder();
 
 function openMap() {
   const ev = new CustomEvent('show-relate-map',{detail:{
@@ -20,6 +20,7 @@ function openMap() {
 
 watch(() => props.detail, (val) => {
   doc.value = val
+  getRelated();
 },{
   immediate: true
 })

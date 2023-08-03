@@ -59,5 +59,6 @@ function handleChange (data: ResSelectData) {
 <style lang="scss" scoped>
 .el-checkbox {
     width: 100%;
+    white-space: pre-wrap;
 }
 </style>

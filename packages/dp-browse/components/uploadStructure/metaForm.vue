@@ -90,7 +90,7 @@ async function handleDocTypeChange (doc) {
         getDocType(state.doc.isFolder)
     }
     async function metaListGet(documentType: string) {
-        const ignoreList = ['dc:title', 'dc:creator']
+        const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
         const res = await metaValidationRuleGetApi(documentType)
         if(!res) return []
         return res.reduce((prev, item) => {

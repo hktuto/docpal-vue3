@@ -1,8 +1,6 @@
 <template>
-    <el-tag  :class="['userRightItem',{ cursorPointer: ace.type === 'local' && AllowTo({feature:'ManageRecord', userPermission: permission.permission}), [ace.type]:true }]" effect="dark"
-              :closable="ace.type === 'local' && AllowTo({feature:'ManageRecord', userPermission: permission.permission})" 
-              @close="handleRemove(ace)"
-              @click="handleEdit(ace)">
+    <el-tag  :class="['userRightItem',{ [ace.type]:true }]" effect="dark"
+              :closable="false" >
               {{ ace.userId }}
     </el-tag>
 </template>

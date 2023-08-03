@@ -13,7 +13,7 @@ importers:
     devDependencies:
       consola: 3.1.0
       cross-env: 7.0.3
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
 
   apps/admin:
     specifiers:
@@ -24,7 +24,7 @@ importers:
       sass: ^1.58.0
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
     devDependencies:
       '@element-plus/nuxt': 1.0.5
       '@types/node': 18.16.18
@@ -41,7 +41,7 @@ importers:
       sass: ^1.58.0
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
     devDependencies:
       '@element-plus/nuxt': 1.0.5
       '@types/node': 18.16.18
@@ -58,7 +58,7 @@ importers:
       sass: ^1.58.0
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
     devDependencies:
       '@element-plus/nuxt': 1.0.5
       '@types/node': 18.16.18
@@ -167,7 +167,7 @@ importers:
       mime-types: 2.1.35
       tiff.js: 1.0.0
       v-code-diff: 1.5.0
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
       vue-inline-svg: 3.1.2
       vuedraggable: 4.1.0
     devDependencies:
@@ -408,7 +408,7 @@ importers:
       nuxt: 3.5.3_6bslz4e6n5adwvys7lutvfehrm
       sass: 1.63.4
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
 
   packages/office:
     specifiers:
@@ -423,7 +423,7 @@ importers:
       '@microsoft/office-js': 1.1.86
       blob-util: 2.0.2
     devDependencies:
-      '@nuxt/devtools': 0.7.1_nuxt@3.5.3
+      '@nuxt/devtools': 0.7.2_nuxt@3.5.3
       '@types/node': 18.16.18
       '@types/office-js': 1.0.330
       dp-api: link:../dp-api
@@ -480,7 +480,7 @@ importers:
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
 
   packages/unit-test:
     specifiers:
@@ -526,7 +526,7 @@ importers:
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
 
   pages/admin-bulk-import-config:
     specifiers:
@@ -654,7 +654,7 @@ importers:
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
 
   pages/admin-internal-share:
     specifiers:
@@ -887,7 +887,7 @@ importers:
       typescript: ^4.9.3
       v-form: github:hktuto/v-form-designer
     dependencies:
-      v-form: github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
       '@vueuse/components': 9.13.0
@@ -1762,6 +1762,12 @@ packages:
 
   /@floating-ui/core/1.3.1:
     resolution: {integrity: sha512-Bu+AMaXNjrpjh41znzHqaz3r2Nr8hHuHZT6V2LBKMhyMl0FgKA62PNYbqnfgmzOhoWZj70Zecisbo4H1rotP5g==}
+    dev: true
+
+  /@floating-ui/core/1.4.1:
+    resolution: {integrity: sha512-jk3WqquEJRlcyu7997NtR5PibI+y5bi+LS3hPmguVClypenMsCY3CBa3LAQnozRCtCrYWSEtAdiskpamuJRFOQ==}
+    dependencies:
+      '@floating-ui/utils': 0.1.1
 
   /@floating-ui/dom/1.4.0:
     resolution: {integrity: sha512-b4F0iWffLiqb/TpP2PWVOixrZqE6ni+6VT64AmFH7sJIF3SFPLbe6/h3jQ5Cwffs+HaC9A8V0TQzCPBwVvziIA==}
@@ -1769,10 +1775,14 @@ packages:
       '@floating-ui/core': 1.3.1
     dev: true
 
-  /@floating-ui/dom/1.4.5:
-    resolution: {integrity: sha512-96KnRWkRnuBSSFbj0sFGwwOUd8EkiecINVl0O9wiZlZ64EkpyAOG3Xc2vKKNJmru0Z7RqWNymA+6b8OZqjgyyw==}
+  /@floating-ui/dom/1.5.1:
+    resolution: {integrity: sha512-KwvVcPSXg6mQygvA1TjbN/gh///36kKtllIF8SUm0qpFj8+rvYrpvlYdL1JoA71SHpDqgSSdGOSoQ0Mp3uY5aw==}
     dependencies:
-      '@floating-ui/core': 1.3.1
+      '@floating-ui/core': 1.4.1
+      '@floating-ui/utils': 0.1.1
+
+  /@floating-ui/utils/0.1.1:
+    resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
 
   /@hapi/hoek/9.3.0:
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
@@ -2115,30 +2125,30 @@ packages:
     resolution: {integrity: sha512-GBzP8zOc7CGWyFQS6dv1lQz8VVpz5C2yRszbXufwG/9zhStTIH50EtD87NmWbTMwXDvZLNg8GIpb1UFdH93JCA==}
     dev: true
 
-  /@nuxt/devtools-kit/0.7.1_nuxt@3.5.3:
-    resolution: {integrity: sha512-g7OgrU0VlW9fibLdHmhad4tEQzkS4g8yxaqDD/Kri/i3mEOeS7w9E8x7kkA/56FmmnXe6F6lCcLqG6u3FYW6WA==}
+  /@nuxt/devtools-kit/0.7.2_nuxt@3.5.3:
+    resolution: {integrity: sha512-hY4GWWkEdY68V9YdUn5Cmdxc3IbBP1YPjPs5vkHw+MOv9exlg/KnElDcbNWeWsTKIvlptdimssdh7rXY8ytfgQ==}
     peerDependencies:
-      nuxt: ^3.6.1
+      nuxt: ^3.6.5
       vite: '*'
     dependencies:
       '@nuxt/kit': 3.6.5
       '@nuxt/schema': 3.6.5
-      execa: 7.1.1
+      execa: 7.2.0
       nuxt: 3.5.3_@types+node@18.16.18
     transitivePeerDependencies:
       - rollup
       - supports-color
     dev: true
 
-  /@nuxt/devtools-wizard/0.7.1:
-    resolution: {integrity: sha512-WZ8kdb9yfqgXn77ors9ojykb0wh0/+OdvgLEQt1xmwZxbWP5PPMqS/mcCUtKEuoYF2SM5aMBSPoXz90TJ/DfHQ==}
+  /@nuxt/devtools-wizard/0.7.2:
+    resolution: {integrity: sha512-vq9QRq8NbvOiWtkOpVh6UjScYJhWJ44dedENCcVoXck1DUjd00EbNtdHOyMqF9xK4+lQpKz6JltPFdpP0CIMjg==}
     hasBin: true
     dependencies:
       consola: 3.2.3
       diff: 5.1.0
-      execa: 7.1.1
+      execa: 7.2.0
       global-dirs: 3.0.1
-      magicast: 0.2.9
+      magicast: 0.2.10
       pathe: 1.1.1
       picocolors: 1.0.0
       pkg-types: 1.0.3
@@ -2177,21 +2187,21 @@ packages:
       - vite
     dev: true
 
-  /@nuxt/devtools/0.7.1_nuxt@3.5.3:
-    resolution: {integrity: sha512-fwtsfv6vezD8AAKZO2rCwMc+jBsylP1AWF7WncCjr6KeOLoTjS38aOelO03XvrR61B1t4Vt44S/3afUPkmIEFQ==}
+  /@nuxt/devtools/0.7.2_nuxt@3.5.3:
+    resolution: {integrity: sha512-oBq88qa1L0eaUwaUqetwQpWyU5PRtcwO8BvjWSGMbh+6F0lF85C1EtsSRFoxaizY6nYM2/WV4c4VBDsKXUkqgQ==}
     hasBin: true
     peerDependencies:
-      nuxt: ^3.6.1
+      nuxt: ^3.6.5
       vite: '*'
     dependencies:
-      '@nuxt/devtools-kit': 0.7.1_nuxt@3.5.3
-      '@nuxt/devtools-wizard': 0.7.1
+      '@nuxt/devtools-kit': 0.7.2_nuxt@3.5.3
+      '@nuxt/devtools-wizard': 0.7.2
       '@nuxt/kit': 3.6.5
       birpc: 0.2.12
       boxen: 7.1.1
       consola: 3.2.3
       error-stack-parser-es: 0.1.0
-      execa: 7.1.1
+      execa: 7.2.0
       fast-folder-size: 2.1.0
       fast-glob: 3.3.1
       get-port-please: 3.0.1
@@ -2202,7 +2212,7 @@ packages:
       is-installed-globally: 0.4.0
       launch-editor: 2.6.0
       local-pkg: 0.4.3
-      magicast: 0.2.9
+      magicast: 0.2.10
       nuxt: 3.5.3_@types+node@18.16.18
       nypm: 0.2.2
       pacote: 15.2.0
@@ -2215,7 +2225,7 @@ packages:
       sirv: 2.0.3
       unimport: 3.1.0
       vite-plugin-inspect: 0.7.33
-      vite-plugin-vue-inspector: 3.4.2
+      vite-plugin-vue-inspector: 3.5.0
       wait-on: 7.0.1
       which: 3.0.1
       ws: 8.13.0
@@ -3024,10 +3034,14 @@ packages:
   /@types/lodash-es/4.17.8:
     resolution: {integrity: sha512-euY3XQcZmIzSy7YH5+Unb3b2X12Wtk54YWINBvvGQ5SmMvwb11JQskGsfkH/5HXK77Kr8GF0wkVDIxzAisWtog==}
     dependencies:
-      '@types/lodash': 4.14.195
+      '@types/lodash': 4.14.196
 
   /@types/lodash/4.14.195:
     resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
+    dev: true
+
+  /@types/lodash/4.14.196:
+    resolution: {integrity: sha512-22y3o88f4a94mKljsZcanlNWPzO0uBsBdzLAngf2tp533LzZcQzb6+eZPJ+vCTt+bqF2XnvT9gejTLsAcJAJyQ==}
 
   /@types/mime-types/2.1.1:
     resolution: {integrity: sha512-vXOTGVSLR2jMw440moWTC7H19iUyLtP3Z1YTj7cSsubOICinjMxFeb/V57v9QdyyPGbbWolUFSSmSiRSn94tFw==}
@@ -3345,8 +3359,8 @@ packages:
       '@vue/reactivity-transform': 3.3.4
       '@vue/shared': 3.3.4
       estree-walker: 2.0.2
-      magic-string: 0.30.1
-      postcss: 8.4.26
+      magic-string: 0.30.2
+      postcss: 8.4.27
       source-map-js: 1.0.2
 
   /@vue/compiler-ssr/3.3.4:
@@ -3365,7 +3379,7 @@ packages:
       '@vue/compiler-core': 3.3.4
       '@vue/shared': 3.3.4
       estree-walker: 2.0.2
-      magic-string: 0.30.1
+      magic-string: 0.30.2
 
   /@vue/reactivity/3.3.4:
     resolution: {integrity: sha512-kLTDLwd0B1jG08NBF3R5rqULtv/f8x3rOFByTDz4J53ttIQEDmALqKqXY0J+XQeN0aV2FBxY8nJDf88yvOPAqQ==}
@@ -4341,8 +4355,8 @@ packages:
     resolution: {integrity: sha512-mWYvfOLrfEc996hlKcdABeIiPHUPC6DM2QYZdGGOvhOTbA3tjm2eBwqlJpoFdjC89NI4Qt6h0Pu06Mp+1Pj5OQ==}
     dev: true
 
-  /core-js/3.31.1:
-    resolution: {integrity: sha512-2sKLtfq1eFST7l7v62zaqXacPc7uG8ZAya8ogijLhTtaKNcpzpB4TMoTw2Si+8GYKRwFPMMtUT0263QFWFfqyQ==}
+  /core-js/3.32.0:
+    resolution: {integrity: sha512-rd4rYZNlF3WuoYuRIDEmbR/ga9CeuWX9U05umAvgrrZoHY4Z++cp/xwPQMvUpBB4Ag6J8KfD80G0zwCyaSxDww==}
     requiresBuild: true
 
   /core-util-is/1.0.3:
@@ -4902,9 +4916,9 @@ packages:
     dependencies:
       '@ctrl/tinycolor': 3.6.0
       '@element-plus/icons-vue': 2.1.0_vue@3.3.4
-      '@floating-ui/dom': 1.4.5
+      '@floating-ui/dom': 1.5.1
       '@popperjs/core': /@sxzz/popperjs-es/2.11.7
-      '@types/lodash': 4.14.195
+      '@types/lodash': 4.14.196
       '@types/lodash-es': 4.17.8
       '@vueuse/core': 9.13.0_vue@3.3.4
       async-validator: 4.2.5
@@ -5558,6 +5572,21 @@ packages:
 
   /execa/7.1.1:
     resolution: {integrity: sha512-wH0eMf/UXckdUYnO21+HDztteVv05rq2GXksxT4fCGeHkBhw1DROXh40wcjMcRqDOWE7iPJ4n3M7e2+YFP+76Q==}
+    engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
+    dependencies:
+      cross-spawn: 7.0.3
+      get-stream: 6.0.1
+      human-signals: 4.3.1
+      is-stream: 3.0.0
+      merge-stream: 2.0.0
+      npm-run-path: 5.1.0
+      onetime: 6.0.0
+      signal-exit: 3.0.7
+      strip-final-newline: 3.0.0
+    dev: true
+
+  /execa/7.2.0:
+    resolution: {integrity: sha512-UduyVP7TLB5IcAQl+OzLyLcS/l32W/GLg+AhHJ+ow40FOk2U3SAllPwR44v4vmdFwIWqpdwxxpQbF1n5ta9seA==}
     engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
     dependencies:
       cross-spawn: 7.0.3
@@ -7135,12 +7164,18 @@ packages:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /magicast/0.2.9:
-    resolution: {integrity: sha512-S1WBXLSVKa34X+Bv7pfA8Umqc1BoglsqzWaQcyuexDc0cjgnERaFTSHbne2OfT27lXYxt/B/sV/2Kh0HaSQkfg==}
+  /magic-string/0.30.2:
+    resolution: {integrity: sha512-lNZdu7pewtq/ZvWUp9Wpf/x7WzMTsR26TWV03BRZrXFsv+BI6dy8RAiKgm1uM/kyR0rCfUcqvOlXKG66KhIGug==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.15
+
+  /magicast/0.2.10:
+    resolution: {integrity: sha512-Ah2qatigknxwmoYCd9hx/mmVyrRNhDKiaWZIuW4gL6dWrAGMoOpCVkQ3VpGWARtkaJVFhe8uIphcsxDzLPQUyg==}
     dependencies:
       '@babel/parser': 7.22.7
       '@babel/types': 7.22.5
-      recast: 0.23.2
+      recast: 0.23.3
     dev: true
 
   /make-dir/1.3.0:
@@ -8151,7 +8186,7 @@ packages:
     resolution: {integrity: sha512-O7bumfWgUXlJefT1Y41SF4vsCvzeUYmnKABuOKStheCObzrkWPDmqJc+RJVU+57oFu9bITcrUq8sKFIHgjCnTg==}
     engines: {node: ^14.16.0 || >=16.10.0}
     dependencies:
-      execa: 7.1.1
+      execa: 7.2.0
     dev: true
 
   /object-assign/4.1.1:
@@ -8911,6 +8946,15 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
+
+  /postcss/8.4.27:
+    resolution: {integrity: sha512-gY/ACJtJPSmUFPDCHtX78+01fHa64FaU4zaaWfuh1MhGJISufJAH4cun6k/8fwsHYeK4UQmENQK+tRLCFJE8JQ==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.6
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
 
   /prelude-ls/1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
@@ -9107,8 +9151,8 @@ packages:
     dependencies:
       picomatch: 2.3.1
 
-  /recast/0.23.2:
-    resolution: {integrity: sha512-Qv6cPfVZyMOtPszK6PgW70pUgm7gPlFitAPf0Q69rlOA0zLw2XdDcNmPbVGYicFGT9O8I7TZ/0ryJD+6COvIPw==}
+  /recast/0.23.3:
+    resolution: {integrity: sha512-HbCVFh2ANP6a09nzD4lx7XthsxMOJWKX5pIcUwtLrmeEIl3I0DwjCoVXDE0Aobk+7k/mS3H50FK4iuYArpcT6Q==}
     engines: {node: '>= 4'}
     dependencies:
       assert: 2.0.0
@@ -10140,7 +10184,7 @@ packages:
       escape-string-regexp: 5.0.0
       fast-glob: 3.3.1
       local-pkg: 0.4.3
-      magic-string: 0.30.1
+      magic-string: 0.30.2
       mlly: 1.4.0
       pathe: 1.1.1
       pkg-types: 1.0.3
@@ -10595,6 +10639,24 @@ packages:
       - supports-color
     dev: true
 
+  /vite-plugin-vue-inspector/3.5.0:
+    resolution: {integrity: sha512-dDoxEi5VWkfsKflVUYxElC3XD/MOn8s/6mjCqWRDlFIQ+OsY0cW5PNTbqxGllbBBCr5SDnDmPWFS1vMJxrLVEw==}
+    peerDependencies:
+      vite: ^3.0.0-0 || ^4.0.0-0
+    dependencies:
+      '@babel/core': 7.22.5
+      '@babel/plugin-syntax-import-meta': 7.10.4_@babel+core@7.22.5
+      '@babel/plugin-transform-typescript': 7.22.5_@babel+core@7.22.5
+      '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.22.5
+      '@vue/compiler-dom': 3.3.4
+      esno: 0.16.3
+      kolorist: 1.8.0
+      magic-string: 0.30.2
+      shell-quote: 1.8.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /vite/4.3.9:
     resolution: {integrity: sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -10905,7 +10967,7 @@ packages:
   /vue3-quill/0.2.9:
     resolution: {integrity: sha512-VJZc3ZHqIIxxUbbuRwPXmzoFnAnLkXPRkGLp9LDbtVH04O4etjT0CETCmoWWBo9o35pHtea3MTtbhjayn+7l7g==}
     dependencies:
-      core-js: 3.31.1
+      core-js: 3.32.0
       quill: 1.3.7
       vue: 3.3.4
 
@@ -11223,15 +11285,15 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  github.com/hktuto/v-form-designer/eccd598ccfb1c75e9931ce723fe572778ff18bb6:
-    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/eccd598ccfb1c75e9931ce723fe572778ff18bb6}
+  github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849:
+    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849}
     name: v-form
-    version: 3.0.10
+    version: 3.0.12
     dependencies:
       '@element-plus/icons-vue': 0.2.7_vue@3.3.4
       axios: 0.24.0
       clipboard: 2.0.11
-      core-js: 3.31.1
+      core-js: 3.32.0
       element-plus: 2.3.8_vue@3.3.4
       file-saver: 2.0.5
       mitt: 3.0.1
