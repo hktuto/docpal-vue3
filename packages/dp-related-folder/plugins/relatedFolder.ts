@@ -1,5 +1,5 @@
 import RelatedInfo from '~/components/related/info.vue'
-import RelatedMap from '~/components/related/map.vue'
+// import RelatedMap from '~/components/related/map.vue'
 
 
 export default defineNuxtPlugin(nuxtApp => {
@@ -11,13 +11,6 @@ export default defineNuxtPlugin(nuxtApp => {
         component: RelatedInfo
     })
 
-    const { globalSlots } = useLayout()
-
-    globalSlots.value.push({
-        name: "rightDetail_related",
-        order: 1,
-        component: RelatedMap
-    })
 
 
 })

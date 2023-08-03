@@ -98,7 +98,7 @@ export const useRelatedFolder =() => {
     async function getRelated() {
         relatedChildren.value = []
         const allChildren = await getRelatedChild(doc.value)
-
+        console.log(allChildren)
         relatedChildren.value = allChildren
     }
 
@@ -106,19 +106,12 @@ export const useRelatedFolder =() => {
         await getTypeSetting()
     })
 
-    watch(doc, (newDoc) => {
-        console.log("related watch doc",doc)
-        if(newDoc) {
-            getRelated()
-        }
-    },{
-        immediate:true
-    })
 
 
     return {
         doc,
         relatedChildren,
         docTypes,
+        getRelated,
     }
 }
