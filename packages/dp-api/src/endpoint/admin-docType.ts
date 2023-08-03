@@ -1,7 +1,10 @@
 import {api} from '../';
 // schema
 export const CreateSchemasApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/createSchemas', params).then(res => res.data.data)
+    const res = await api.post('/nuxeo/studio/createSchemas', params, { 
+        responseType: 'blob', 
+        timeout: 0 
+    }).then(res => res.data)
     return res
 }
 // 修改使用，只能修改自定义Schema，系统Schema不允许修改
@@ -19,13 +22,19 @@ export const GetSchemaApi = async(id: string) => {
     return res
 }
 export const UpdateSchemasApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/updateSchemas', params).then(res => res.data.data)
+    const res = await api.post('/nuxeo/studio/updateSchemas', params, { 
+        responseType: 'blob', 
+        timeout: 0 
+    }).then(res => res.data)
     return res
 }
 
 // docType
 export const CreateDocTypesApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/createDocTypes', params).then(res => res.data.data)
+    const res = await api.post('/nuxeo/studio/createDocTypes', params, { 
+        responseType: 'blob', 
+        timeout: 0 
+    }).then(res => res.data)
     return res
 }
 // 修改使用，只能修改自定义DocType，系统DocType不允许修改
@@ -43,7 +52,10 @@ export const GetDocTypeApi = async(id: string) => {
     return res
 }
 export const UpdateDocTypesApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/updateDocTypes', params).then(res => res.data.data)
+    const res = await api.post('/nuxeo/studio/updateDocTypes', params, { 
+        responseType: 'blob', 
+        timeout: 0 
+    }).then(res => res.data)
     return res
 }
 
@@ -82,7 +94,10 @@ export const fieldTypeRelatedList = { // 依后台需求根据fieldTypeId转换f
     'default': 'General Field Type',
 }
 // 下载
-export const DownloadPackageTarApi = async(params) => {
-    const res = await api.post('/nuxeo/studio/updateDocTypes', params, { responseType: 'blob', timeout: 0 }).then(res => res.data)
+export const DownloadPackageTarApi = async() => {
+    const res = await api.get('/nuxeo/studio/download/last/nuxeo/package', { 
+        responseType: 'blob', 
+        timeout: 0 
+    }).then(res => res.data)
     return res
 }

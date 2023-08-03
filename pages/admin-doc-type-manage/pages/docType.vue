@@ -1,7 +1,10 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <div class="main">
-            <el-card>
+            <div class="main-header">
+                <el-button @click="handleDownload" @keyup.enter="handleDownload">{{$t('common_download')}}</el-button>
+            </div>
+            <el-card class="main-left" v-loading="state.schemaLoading">
                 <template #header>
                     <div class="card-header">
                         <span>{{$t('docType_schema')}}({{ state.schemaList.length }})</span>
@@ -15,7 +18,7 @@
                     @command="handleSchemaAction"
                     @row-dblclick="handleSchemaDialogShow"></Table>
             </el-card>
-            <el-card>
+            <el-card class="main-right" v-loading="state.docTypeLoading">
                 <template #header>
                     <div class="card-header">
                         <span>{{$t('docType_documentType')}}({{ state.docTypeList.length }})</span>
@@ -41,6 +44,7 @@
 import {
     GetCustomSchemaListApi,
     GetCustomDocTypeListApi,
+    DownloadPackageTarApi,
     TABLE, defaultTableSetting
 } from 'dp-api'
 const state = reactive({
@@ -48,6 +52,8 @@ const state = reactive({
     _schemaList: [],
     docTypeList: [],
     _docTypeList: [],
+    schemaLoading: false,
+    docTypeLoading: false,
 })
 const schemaTableKey = TABLE.ADMIN_SCHEMA_LIST
 const schemaTableSetting = defaultTableSetting[schemaTableKey]
@@ -83,13 +89,27 @@ function handleUserFilter(data) {
 function handleGroupFilter(data) {
     state._docTypeList = data
 }
+async function handleDownload () {
+    const blob = await DownloadPackageTarApi()
+    downloadBlob(blob, 'wcl-custom-schema-doctype-vocabulary.jar')
+}
 async function getSchema() {
-    state.schemaList = await GetCustomSchemaListApi(true)
-    state._schemaList = state.schemaList
+    state.schemaLoading = true
+    try {
+        state.schemaList = await GetCustomSchemaListApi(true)
+        state._schemaList = state.schemaList
+    } catch (error) {
+    }
+    state.schemaLoading = false
 }
 async function getDocType() {
-    state.docTypeList = await GetCustomDocTypeListApi(true)
-    state._docTypeList = state.docTypeList
+    state.docTypeLoading = true
+    try {
+        state.docTypeList = await GetCustomDocTypeListApi(true)
+        state._docTypeList = state.docTypeList
+    } catch (error) {
+    }
+    state.docTypeLoading = false
 }
 onMounted(async() => {
     getSchema()
@@ -98,14 +118,18 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
-
 .main {
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: min-content 1fr;
     gap: calc(var(--app-padding) * 2);
     overflow: hidden;
+    &-header { grid-area: 1 / 1 / 2 / 3; }
+    &-left { grid-area: 2 / 1 / 3 / 2; }
+    &-right { grid-area: 2 / 2 / 3 / 3; }
 }
+
 :deep(.el-autocomplete) {
     width: 100%;
     margin: var(--app-padding) 0;

@@ -29,7 +29,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { CreateSchemasApi, UpdateSchemasApi, GetSchemaApi, getDocTypeListApi, fieldTypeRelatedList,
     TABLE, defaultTableSetting, deepCopy } from 'dp-api'
 const props = defineProps<{
@@ -66,8 +66,13 @@ async function handleSubmit () {
     }
     
     try {
-        if (state.isEdit) await UpdateSchemasApi([params])
-        else await CreateSchemasApi([params])
+        let blob
+        if (state.isEdit) blob = await UpdateSchemasApi([params])
+        else blob = await CreateSchemasApi([params])
+        ElMessageBox.confirm(`${$t('msg_confirmWhetherToDownloadJar')}`)
+        .then(async() => {
+            downloadBlob(blob, 'wcl-custom-schema-doctype-vocabulary.jar')
+        })
         state.visible = false
         emits('refresh')
     } catch (error) {
