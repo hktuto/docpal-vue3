@@ -43,6 +43,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
     const MetaFormRef = ref()
     async function handleSubmit () {
         const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
+        // 后端多个用户用同一个email
         formData.tos = formData.tos.reduce((prev, item) => {
             const _to = item.split('&&&&')
             prev.push(_to[0])

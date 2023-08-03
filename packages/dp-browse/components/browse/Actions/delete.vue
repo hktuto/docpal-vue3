@@ -17,19 +17,25 @@
 import { useEventListener } from '@vueuse/core'
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { trashApi } from 'dp-api'
+import { trashApi, CheckShareInternalApi } from 'dp-api'
 const props = defineProps<{
     doc: any
 }>()
 const emits = defineEmits(['delete'])
-const { t } = useI18n()
-function deleteItem(doc:any, isDetail: boolean = false){
+async function deleteItem(doc:any, isDetail: boolean = false){
     const idOrPath = doc.path
-    
-    ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    let msg = ''
+    const isShareInternal = await CheckShareInternalApi({
+        documentId: doc.id
+    })
+    if (isShareInternal) msg += `<span class="color__danger">${doc.name} ${$t('msg_isShareInternalFile')}</span>,`
+    msg += $t('msg_confirmWhetherToDelete')
+    ElMessageBox.confirm(msg, {
+        dangerouslyUseHTMLString: true,
+    })
     .then(async() => {
         const noti = ElNotification({
-            title: t('delete'),
+            title: $t('delete'),
             icon: Loading,
             dangerouslyUseHTMLString: true,
             message: `<div title="${doc.name}">${doc.name}</div>`,
