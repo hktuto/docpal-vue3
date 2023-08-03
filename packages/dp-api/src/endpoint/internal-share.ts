@@ -40,11 +40,11 @@ export const DeleteShareApi = async(detailIds: string []) => {
             totalSize: res.totalSize
         }
     }
-    export const CheckShareInternalApi = async(params: {
-        documentId: string,
-        shareToUserId?: string
-    }) => {
-        const res = await api.post('/docpal/internalShare/checkDocumentIsInShare', params).then(res => res.data.data)
-        return res
-    }
 // #endregion
+export const CheckShareInternalApi = async(params: {
+    documentId: string,
+    shareToUserId?: string
+}) => {
+    const res = await api.post('/docpal/internalShare/checkDocumentIsInShare', params).then(res => res.data.data)
+    return res
+}
