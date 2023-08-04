@@ -1,5 +1,10 @@
 <template>
-    <FromRenderer :class="{vformReadonly: state.readonly}" ref="FromRendererRef" :formJson="formJson" :data="formData"></FromRenderer>
+    <FromRenderer :class="{vformReadonly: state.readonly, workflowForm: true}" ref="FromRendererRef" :formJson="formJson" :data="formData"
+        @previewFileInit="handlePreviewFileInit">
+        <template v-slot:previewFile="{data}">
+            <WorkflowDetailReader class="WorkflowDetailReader" ref="WorkflowReaderRef"></WorkflowDetailReader>
+        </template>
+    </FromRenderer>
 </template>
 
 <script lang="ts" setup>
@@ -129,6 +134,12 @@ const FromRendererRef = ref()
         FromRendererRef.value.vFormRenderRef.disableForm()
     }
 // #endregion
+// #region module: WorkflowReader
+    const WorkflowReaderRef = ref()
+    function handlePreviewFileInit (fileId: string) {
+        if (WorkflowReaderRef.value && fileId) WorkflowReaderRef.value.init(fileId)
+    }
+// #endregion
 onMounted(() => {
     
 })
@@ -136,10 +147,14 @@ const { formData, formJson } = toRefs(state)
 defineExpose({ setForm, getFormData, disableForm, enableForm })
 </script>
 
-<style scoped>
-.formContainer {
+<style lang="scss" scoped>
+.workflowForm {
     height: 100%;
     overflow: hidden;
-    overflow-y: auto;
+    :deep(.el-form) {
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 }
 </style>
