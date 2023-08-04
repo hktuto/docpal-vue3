@@ -15,16 +15,19 @@
         :popper-append-to-body="false"
     >
         <template #default>
-            <el-checkbox-group v-if="selectData.options && selectData.options.length > 0"
-                v-model="selectData.value"
-                @change="handleChange(selectData)">
-                <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" >
-                    <template v-if="selectData.type === 'date'">
-                        {{formatDate(item.label)}}
-                    </template>
-                    <template v-else> {{item.label}} </template>
-                </el-checkbox>
-            </el-checkbox-group>
+            <template v-if="selectData.options && selectData.options.length > 0">
+                <el-checkbox-group 
+                    :max="selectData.isMultiple ? 100 : 1 "
+                    v-model="selectData.value"
+                    @change="handleChange(selectData)">
+                    <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" >
+                        <template v-if="selectData.type === 'date'">
+                            {{formatDate(item.label)}}
+                        </template>
+                        <template v-else> {{item.label}} </template>
+                    </el-checkbox>
+                </el-checkbox-group>
+            </template>
             <div v-else>
                 {{$t('noData')}}
             </div>

@@ -42,6 +42,7 @@ export type ResSelectData = {
     key: string,
     options: option[],
     value?: string[],
+    isMultiple?: boolean
 }
 type state = {
     list: ResSelectData[],
@@ -123,6 +124,7 @@ const state = reactive<state>({
 const responsiveRef = ref()
 function init(list: ResSelectData[]) {
     state.list = list.reduce((prev, item) => {
+        if(!item.isMultiple) item.isMultiple = true
         item.value = []
         prev.push(item)
         return prev
@@ -136,10 +138,10 @@ function handleChange (filedData: {fieldName: string, value: any}) {
     const formModel = state.list.reduce((prev,item) => {
         if(item.belong) {
             if(!prev[item.belong]) prev[item.belong] = {}
-            prev[item.belong][item.key] = item.value
+            prev[item.belong][item.key] = item.isMultiple ? item.value : item.value.join(',')
         }
         else if(item.value && item.value.length > 0){
-            prev[item.key] = item.value
+            prev[item.key] = item.isMultiple ? item.value : item.value.join(',')
         }
         if(state.moreList.find(m => m.key === item.key)) {
             state.moreSelected += item.value.length

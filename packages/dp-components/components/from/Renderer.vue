@@ -4,8 +4,8 @@
             <v-form-render ref="vFormRenderRef" :form-json="fromJsonNormalizer" :form-data="data" :option-data="options" @formChange="formChange" 
                 @file-preview="handleFilePreview"
                 @emit="handleEmit">
-                <template v-for="(idx, slotName) in $slots" #[slotName]>
-                    <slot :name="slotName"></slot>
+                <template v-for="(idx, slotName) in $slots" #[slotName]="data">
+                    <slot :name="slotName" :data="data"></slot>
                 </template> 
             </v-form-render>
         </client-only>
