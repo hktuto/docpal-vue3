@@ -6,7 +6,7 @@
             <template #preSortButton>
                 <FromRenderer :form-json="formJson" @formChange="handleFormChange"/>
             </template>
-            </Table>
+    </Table>
 </template>
 
 

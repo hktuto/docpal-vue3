@@ -1,5 +1,7 @@
 <template>
-    <Reader class="workflowReader" ref="ReaderRef" v-bind="previewFile" ></Reader>
+<div class="workflowReader" v-loading="previewFile.loading">
+    <Reader ref="ReaderRef" v-bind="previewFile" ></Reader>
+</div>
 </template>
 <script lang="ts" setup>
 import { WorkflowAttachmentPreviewApi } from "dp-api";
