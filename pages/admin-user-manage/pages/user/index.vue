@@ -23,8 +23,11 @@
         <template #active="{row, index}">
             <el-switch v-model="row.status" 
                 active-value="A" inactive-value="D"
-                :loading="row.loading" :disabled="row.loading"
-                @change="(value) => handleSetStatus(value, row)" />
+                :loading="row.loading"
+                :disabled="row.status === 'D' && (state.activeUsers >= state.licenseUsers)"
+                @change="(value) => handleSetStatus(value, row)"
+                
+                 />
         </template>
     </Table>
 
@@ -43,6 +46,7 @@ import {
     TABLE, defaultTableSetting,
     getJsonApi
 } from 'dp-api'
+import {ElMessage} from 'element-plus'
 // #region module: page
     const isLdapMode:boolean = useUser().getIsLdapMode()
     const route = useRoute()
@@ -164,6 +168,12 @@ async function handleSetStatus (status, row) {
         row.status = row.status = 'A' ? 'D' : 'A'
     } else {
         await getAllUserAndActiveCount()
+    }
+    if(state.activeUsers >= state.licenseUsers) {
+        ElMessage({
+            message: $t('user_activeUserOverLimit'),
+            type: 'warning'
+        })
     }
     row.loading = false
 }

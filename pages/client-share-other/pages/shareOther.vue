@@ -118,9 +118,10 @@ function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.preventDefault()
     event.stopPropagation();
     // handleSelect([])
+    console.log('row', row.isFolder)
     const data = {
         doc: { id: row.documentId, isFolder: row.isFolder, name: row.documentName, path: row.path },
-        isFolder: row.isFolder,
+        isFolder: row.isFolder === "false" ? false : true,
         idOrPath: row.path,
         pageX: event.pageX,
         pageY: event.pageY,
@@ -130,8 +131,8 @@ function handleRightClick (row: any, column: any, event: MouseEvent) {
             cut: false,
             paste: false,
             // rename: false,
-            // addFolder: false,
-            // addFile: false
+            addFolder: false,
+            addFile: false
         }
     }
     const ev = new CustomEvent('fileRightClick',{ detail: data })
