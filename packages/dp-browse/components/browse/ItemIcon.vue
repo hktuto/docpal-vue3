@@ -52,17 +52,17 @@ type IconStatus = 'normal' | 'selected' | 'general'
         if(props.mimeType?.startsWith('application/zip')) {
             return `/icons/doc/zip.svg`
         }
-        // if mimetype is excel, return excel src
-        if(props.mimeType?.startsWith('application/vnd.ms-excel')) {
+        // if mimetype is .xls or xlsx return  excel src
+        if(props.mimeType?.startsWith('application/vnd.ms-excel') || props.mimeType?.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
             return `/icons/doc/excel.svg`
         }
 
         // if mimetype is word, return word src
-        if(props.mimeType?.startsWith('application/msword')) {
+        if(props.mimeType?.startsWith('application/msword') || props.mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
             return `/icons/doc/word.svg`
         }
         // if mimetype is ppt, return ppt src
-        if(props.mimeType?.startsWith('application/vnd.ms-powerpoint')) {
+        if(props.mimeType?.startsWith('application/vnd.ms-powerpoint') || props.mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
             return `/icons/doc/ppt.svg`
         }
         
