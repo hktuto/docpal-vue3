@@ -37,6 +37,7 @@ watch(doc, () => {
     height: 100%;
 }
 iframe {
+    background: #fff;
     width: 100%;
     height: 100%;
     border: none;
