@@ -9,11 +9,11 @@
     <DefaultLocale>en-US</DefaultLocale>
     <DisplayName DefaultValue="DocPal"/>
     <Description DefaultValue="Upload Message and attachment to DocPal"/>
-    <IconUrl DefaultValue="https://app4.wclsolution.com/icon-32.png"/>
-    <HighResolutionIconUrl DefaultValue="https://app4.wclsolution.com/icon-64.png"/>
+    <IconUrl DefaultValue="https://localhost:3000/icon-32.png"/>
+    <HighResolutionIconUrl DefaultValue="https://localhost:3000/icon-64.png"/>
     <SupportUrl DefaultValue="https://learn.microsoft.com/office/dev/add-ins/overview/office-add-in-code-samples"/>
     <AppDomains>
-        <AppDomain>https://app4.wclsolution.com/outlook</AppDomain>
+        <AppDomain>https://localhost:3000/outlook</AppDomain>
     </AppDomains>
     <Hosts>
         <Host Name="Mailbox"/>
@@ -77,12 +77,12 @@
             </Hosts>
             <Resources>
                 <bt:Images>
-                    <bt:Image id="Icon.16x16" DefaultValue="https://app4.wclsolution.com/icon-16.png"/>
-                    <bt:Image id="Icon.32x32" DefaultValue="https://app4.wclsolution.com/icon-32.png"/>
-                    <bt:Image id="Icon.80x80" DefaultValue="https://app4.wclsolution.com/icon-80.png"/>
+                    <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/icon-16.png"/>
+                    <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/icon-32.png"/>
+                    <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/icon-80.png"/>
                 </bt:Images>
                 <bt:Urls>
-                    <bt:Url id="Taskpane.Url" DefaultValue="https://app4.wclsolution.com/outlook"/>
+                    <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/outlook"/>
                 </bt:Urls>
                 <bt:ShortStrings>
                     <bt:String id="GroupLabel" DefaultValue="Item Multi-select"/>

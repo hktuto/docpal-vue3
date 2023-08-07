@@ -30,19 +30,24 @@ async function getMessage() {
       // do something with the error
       console.log('error', asyncResult);
     } else {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(asyncResult.value, "text/html");
-      const div = doc.createElement('div')
-      div.innerText = toFromText;
-      div.style.width = '100%';
-      div.style.display = 'block';
-      div.style.marginBottom = '24px';
-      doc.body.insertBefore(div, doc.body.firstChild);
-      // create html file to File
+      console.log(asyncResult.value.trim())
       emits('submit', [{...form,
-        emailId: Office.context.mailbox.item.itemId,
-        blob: new Blob([doc.documentElement.innerHTML], {type: 'text/html'})
-      }]);
+          emailId: Office.context.mailbox.item.itemId,
+          blob: new Blob([asyncResult.value.trim()], {type: 'text/html'})
+        }]);
+      // const parser = new DOMParser();
+      // const doc = parser.parseFromString(asyncResult.value, "text/html");
+      // const div = doc.createElement('div')
+      // // div.innerText = toFromText;
+      // // div.style.width = '100%';
+      // // div.style.display = 'block';
+      // // div.style.marginBottom = '24px';
+      // // doc.body.insertBefore(div, doc.body.firstChild);
+      // // create html file to File
+      // emits('submit', [{...form,
+      //   emailId: Office.context.mailbox.item.itemId,
+      //   blob: new Blob([doc.documentElement.innerHTML], {type: 'text/html'})
+      // }]);
     }
   });
 }
