@@ -306,7 +306,7 @@ watch(list, (val) => {
     gap: var(--app-padding);
 }
 .searchInput{
-    width: 100px;
+    width: auto;
 }
 </style>
 <style lang="scss">
