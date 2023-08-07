@@ -39,6 +39,7 @@
             </div>
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
+                    <LazyHtmlViewer v-if="readerType === 'html'" :doc="doc" />
                     <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
@@ -79,7 +80,9 @@ const readerType = computed(() => {
     const properties = doc.value.properties as any
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
     if(!mineType) return "pdf"; // set to pdf for testing
-    
+    if(mineType.includes('text/html')) {
+      return 'html';
+    }
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text') || mineType.includes('photoshop') || mineType.includes('psd') || mineType.includes('illustrator')  ) {
       
       return 'pdf';
