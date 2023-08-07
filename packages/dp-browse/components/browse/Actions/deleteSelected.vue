@@ -48,7 +48,7 @@ async function checkAllShareInternal () {
         pList.push(checkShareInternal(element))
     });
     await Promise.all(pList)
-    return `<span class="color__danger">${msg} ${$t('msg_isShareInternalFiles')}, </span>` 
+    return msg ? `<span class="color__danger">${msg} ${$t('msg_isShareInternalFiles')}, </span>` : ''
     async function checkShareInternal (row) {
         const isShareInternal = await CheckShareInternalApi({
             documentId: row.id
