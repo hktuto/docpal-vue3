@@ -9,7 +9,7 @@ export const useUpload = () => {
     const ext = useState('ext', () => "");
     const result = useState<any>('uploadResult', () => ({}));
     const docTypeList = ref<DocType[]>([])
-    
+    const fileDocTypeList = ref<DocType[]>([])
     const fileBuffer = ref();
     
     const form = reactive({
@@ -38,7 +38,9 @@ export const useUpload = () => {
     async function getDocTypeList() {
      const list = await getDocTypeListApi()
         docTypeList.value = list.filter( item => !item.isFolder && item.name !== 'Audio' && item.name !== 'Video' && item.name !== 'Picture')
+        fileDocTypeList.value = list.filter( item => !item.isFolder )
     }
+    
     async function CheckDuplicate() {
         const res = await duplicateDetectionApi({path:form.path, titles:[form.fileName]})
         if(res[form.fileName]) {
@@ -127,6 +129,7 @@ export const useUpload = () => {
         form,
         Upload,
         docTypeList,
+        fileDocTypeList,
         docTypeChange,
         CheckDuplicate,
         result,
