@@ -1,8 +1,8 @@
 <template>
     <div class="drag-outer"
        ref="dragWrap"
-       @mouseenter="state.isHover = true"
-       @mouseleave="state.isHover = state.isMousedown = false"
+       :style="`--cursor: ${state.isMousedown ? 'grabbing' : 'grab'}`"
+       @mouseleave="state.isMousedown = false"
        @mouseup.stop="state.isMousedown = false"
        @mousemove="dragMousemove">
     <div class="drag-inner"
@@ -28,15 +28,18 @@ const props = withDefaults(defineProps<{
   }
 })
 const dragElement = ref()
+const dragWrap = ref()
 const state = reactive({
     isMousedown: false,
-    isHover: false,
     moveStart: {},
     translate: {x: 0, y: 0},
-    scale: 1
+    scale: 1,
+    scrollTopStart: 0,
+    scrollLeftStart: 0
 })
 function handleScroll(e) {
-    if (state.isHover) {
+    if (e.ctrlKey) {
+        event.preventDefault();
         let speed = e.wheelDelta / 120
         if (e.wheelDelta > 0 && state.scale < props.scaleZoom.max) {
             state.scale += 0.2 * speed
@@ -48,17 +51,21 @@ function handleScroll(e) {
     }
 }
 function dragMousedown(event) {
+    event.preventDefault();
     state.moveStart.x = event.clientX
     state.moveStart.y = event.clientY
+    state.scrollTopStart = dragWrap.value.scrollTop
+    state.scrollLeftStart = dragWrap.value.scrollLeft
     state.isMousedown = true
 }
 function dragMousemove(event) {
     if (state.isMousedown) {
-        state.translate.x += (event.clientX - state.moveStart.x) / state.scale
-        state.translate.y += (event.clientY - state.moveStart.y) / state.scale
-        dragElement.value.style.transform = `scale(${state.scale}) translate(${state.translate.x}px, ${state.translate.y}px)`
-        state.moveStart.x = event.clientX
-        state.moveStart.y = event.clientY
+        const xDiff = event.clientX - state.moveStart.x;
+        const yDiff = event.clientY - state.moveStart.y;
+        const scrollTop = state.scrollTopStart - yDiff;
+        const scrollLeft = state.scrollLeftStart - xDiff;
+        dragWrap.value.scrollTop = scrollTop;
+        dragWrap.value.scrollLeft = scrollLeft;
     }
 }
 onMounted(() => {
@@ -70,7 +77,7 @@ onMounted(() => {
   .drag-outer {
     height:100%;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
     float: left;
     display: flex;
     background-color:#fff;
@@ -81,10 +88,8 @@ onMounted(() => {
       display: flex;
       justify-content: center;
       align-items: center;
-      cursor: grab;
+      cursor: var(--cursor);
       user-select: none;
-      width:100%;
-      height:100%;
       >* {
         -webkit-user-drag: none;
         user-drag: none;
