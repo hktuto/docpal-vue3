@@ -38,7 +38,6 @@ const state = reactive({
     scrollLeftStart: 0
 })
 function handleScroll(e) {
-    console.log(dragElement);
     if (e.ctrlKey) {
         event.preventDefault();
         let speed = e.wheelDelta / 120
