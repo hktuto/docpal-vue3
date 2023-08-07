@@ -1,8 +1,11 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
-import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi} from 'dp-api'
+import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 export const useUser = () => {
+    const route = useRoute()
+    const router = useRouter()
+    const publicRouteList = ['/resetPassword', '/resetPassword/']
     const Cookies = useCookie('docpal-user')
     // @ts-ignore
     const appStore = useAppStore();
@@ -13,6 +16,7 @@ export const useUser = () => {
 
     const userPreference = useState<UserSetting>('userPreference');
     const settingStore = useSetting()
+    const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
 
@@ -51,6 +55,7 @@ export const useUser = () => {
 
     async function getUserSetting() {
         const userSetting = await GetSetting()
+        isLdapMode.value = await isLdapModeApi()
         const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
         if(!userSizeValid) {
           delete userSetting.size;
@@ -78,15 +83,20 @@ export const useUser = () => {
 
     }
 
-    async function verify() {
+    async function verify(path: string) {
         try {
+            const token = localStorage.getItem('token')
+            if(!token) throw new Error("no token");
             user.value = await Verify();
             Cookies.value = JSON.stringify(user.value)
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
-            dpLog("verify", error);
-            appStore.state = 'needAuth';
+            if(path && publicRouteList.includes(path)) {
+                appStore.state = 'ready';
+            } else {
+                appStore.state = 'needAuth';
+            }
             isLogin.value = false,
             token.value = "";
             refreshToken.value = "";
@@ -100,6 +110,9 @@ export const useUser = () => {
         const {access_token, refresh_token, isRequired2FA} = await Login({
             username,  password
         })
+        if(route.path && publicRouteList.includes(route.path)) {
+            router.push('/browse')
+        }
         token.value = access_token,
 
         // Cookies.value = access_token || ''
@@ -114,14 +127,11 @@ export const useUser = () => {
     }
     // docpal-user
     function logout(){
-        // await api.delete('/session');
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
         appStore.state = 'needAuth';
-        if(sessionStorage){
-            sessionStorage.removeItem('token');
-        };
+        localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
     }
 
@@ -134,7 +144,14 @@ export const useUser = () => {
         appStore.state = 'forgetPassword';
     }
     function getUserId () {
-        return user.value.userId || user.value.username
+        try {
+            return user.value.userId || user.value.username
+        } catch (error) {
+            return ''
+        }
+    }
+    function getIsLdapMode () {
+        return isLdapMode.value
     }
     return {
         // data
@@ -142,6 +159,7 @@ export const useUser = () => {
         user,
         userPreference,
         isLogin,
+        isLdapMode,
         // function
         login,
         verify,
@@ -150,6 +168,7 @@ export const useUser = () => {
         savePreference,
         getUserList,
         getUserId,
+        getIsLdapMode,
         userList,
         forgetPassword
     }

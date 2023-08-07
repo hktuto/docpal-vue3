@@ -19,7 +19,7 @@
         <div style="height: 100%; overflow: hidden;">
             <FromDesigner ref="FromDesignerRef" :fieldListApi="state.fieldListApi">
                 <template #submit>
-                    <el-button type="text" @click="handleSubmit">{{$t('submit')}}</el-button>
+                    <el-button type="text" :loading="state.submitLoading" @click="handleSubmit">{{$t('submit')}}</el-button>
                 </template>
             </FromDesigner>
         </div>
@@ -35,6 +35,7 @@ const route = useRoute()
 const router = useRouter()
 const state = reactive<State>({
     loading: false,
+    submitLoading: false,
     activeTaskId: '',
     workflowDetail: {},
     fieldListApi: {}
@@ -48,7 +49,13 @@ const state = reactive<State>({
             userTaskId: state.activeTaskId,
             jsonValue: JSON.stringify(json)
         }
-        await SaveTaskFormJsonApi(param)
+        state.submitLoading = true
+        try {
+            const res = await SaveTaskFormJsonApi(param)
+            if(!!res)  ElMessage.success($t('msg_successfullyModified'))
+        } catch (error) {
+        }
+        state.submitLoading = false
     }
     function handleFiledList () {
         // formProperties

@@ -1,5 +1,5 @@
 {
-  "name": "client--smart-folder",
+  "name": "client-share-me",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@vueuse/components": "^9.13.0",
-    "@vueuse/core": "^9.12.0",
+    "@vueuse/core": "^10.2.1",
     "eslint": "^8.28.0",
     "nuxt": "^3.4.3",
     "typescript": "^4.9.3",

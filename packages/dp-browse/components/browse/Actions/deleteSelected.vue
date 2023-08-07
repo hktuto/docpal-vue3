@@ -1,22 +1,27 @@
 <template>
+  <BrowseActionsButton id="deleteSelectActionButton" :label="$t('delete')" @click="deleteSelected()">
     <SvgIcon src="/icons/file/delete.svg" round content="delete"
-        @click="deleteSelected()"></SvgIcon>
+        ></SvgIcon>
+  </BrowseActionsButton>
 </template>
 
 <script lang="ts" setup>
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { trashApi } from 'dp-api'
+import { trashApi, CheckShareInternalApi } from 'dp-api'
 const props = defineProps<{
     selected: any
 }>()
 const emits = defineEmits(['success'])
-const { t } = useI18n()
-function deleteSelected () {
-    ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+async function deleteSelected () {
+    let msg = await checkAllShareInternal()
+    msg += $t('msg_confirmWhetherToDelete')
+    ElMessageBox.confirm(msg, {
+        dangerouslyUseHTMLString: true,
+    })
     .then(async() => {
         const noti = ElNotification({
-            title: t('delete'),
+            title: $t('delete'),
             icon: Loading,
             dangerouslyUseHTMLString: true,
             showClose: true,
@@ -35,6 +40,22 @@ function deleteSelected () {
             duration: 2000
         });
     })
+}
+async function checkAllShareInternal () {
+    let msg = ''
+    let pList = []
+    props.selected.forEach((element) => {
+        pList.push(checkShareInternal(element))
+    });
+    await Promise.all(pList)
+    return `<span class="color__danger">${msg} ${$t('msg_isShareInternalFiles')}, </span>` 
+    async function checkShareInternal (row) {
+        const isShareInternal = await CheckShareInternalApi({
+            documentId: row.id
+        })
+        if (msg) msg += ','
+        if (isShareInternal) msg += row.name
+    }
 }
 onMounted(() => {
 })

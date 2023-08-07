@@ -72,18 +72,14 @@ defineExpose({ handleOpen, handleClose })
 </style>
 <style lang="scss">
 .reader-dialog {
-    margin: unset;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    min-height: 80vh;
-    max-height: 90vh;
-    width: 80vw;
+  --el-dialog-margin-top: var(--app-padding) !important;
+    --el-dialog-width: calc(100vw - 2 * var(--app-padding)) !important;
+    height: calc( 100vh - 2 * var(--app-padding));
+  max-width: 1024px;
+  max-height: 1024px;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     &-main{
-        max-height: 70vh;
         width: 100%;
         height: 100%;
         margin: auto;

@@ -11,6 +11,7 @@
   "scripts": {},
   "devDependencies": {
     "consola": "^3.1.0",
+    "cross-env": "^7.0.3",
     "v-form": "github:hktuto/v-form-designer"
   },
   "dependencies": {

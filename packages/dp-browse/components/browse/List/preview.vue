@@ -2,10 +2,10 @@
     <div class="preview-container"
         :style="`--img-size:${state.imgSize}px;`" @contextmenu="(event) => handleRightClick(doc, event, true)">
         <div class="preview-main">
-            <div v-if="state.tableData.length === 0" class="emptyList">
+            <div v-if="list.length === 0" class="emptyList">
                 empty list
             </div>
-            <div v-for="item in state.tableData" :key="item.id"
+            <div v-for="item in list" :key="item.id"
                 class="doc-container"
                 @dblclick="handleDblclick(item)" 
                 @contextmenu.stop="(event) => handleRightClick(item, event)">
@@ -14,31 +14,28 @@
                 </template>
                 <template v-else>
                     <BrowseItemIcon class="folderIcon" :type="item.isFolder ? 'folder' : 'file'" status="general"/>
+                    <DropzoneContainer v-if="item.isFolder" :doc="item" class="folderDropzone backgroundDrop"></DropzoneContainer>
                 </template>
                 <div class="name">{{item.name}}</div>
             </div>
         </div>
-        <div class="footer">
-            <el-input-number v-model="state.imgSize" :step="20" :min="60" :max="200" @change="handleChange" />
-            <el-pagination
-                v-bind="pageParams"
-                @size-change="(pageSize) => handlePaginationChange(1, pageSize)"
-                @current-change="(pageNum) => handlePaginationChange(pageNum, pageParams.pageSize)" />
-        </div>
+        
     </div>
 </template>
 
 <script lang="ts" setup>
 import { GetChildThumbnail, DocumentThumbnailGetApi, TABLE, defaultTableSetting } from 'dp-api'
+import {openFileDetail} from "~/utils/browseHelper";
 const route = useRoute()
 const router = useRouter()
-const props = defineProps<{doc:true}>();
+const props = defineProps<{doc:true,list:any[]}>();
+const {list} = toRefs(props)
 const emit = defineEmits([
     'select-change'
 ])
+
 const state = reactive<State>({
     loading: false,
-    tableData: [],
     imgSize: 100
 })
 
@@ -47,20 +44,11 @@ function imgError(event) {
     event.target.src = '/icons/file-general.svg'
 }
 // #region module: page 
-    const pageParams = ref({
-        idOrPath: '/',
-        total: 0,
-        currentPage: 1,
-        pageSize: 50,
-        pageSizes: [10, 20, 30, 40, 50, 100],
-        layout: 'total, sizes, prev, pager, next, jumper',
-    })
-    async function getList (param:any) {
+
+    async function getList () {
         state.loading = true
         try {
-            const res = await GetChildThumbnail(param)
-            state.tableData = []
-            res.entryList.forEach(async (item) => {
+          for (const item of list.value) {
                 if (!item.isFolder) {
                     try{
                         const blob = await DocumentThumbnailGetApi(item.id)
@@ -77,39 +65,32 @@ function imgError(event) {
                         item.blobUrl = urlCreator.createObjectURL(blob)
                     } 
                 }
-                state.tableData.push({...item})
-            })
-            pageParams.value.currentPage = param.pageNumber + 1
-            pageParams.value.total = res.totalSize
+            }
         } catch (error) {
             
         }
         state.loading = false
     }
-    function handlePaginationChange (page: number, pageSize: number, path?: string, isFolder?: boolean) {
-        if(!pageSize) pageSize = pageParams.value.pageSize
-        const time = new Date().valueOf().toString()
-        
-        router.push({ 
-            query: { page, pageSize, time, path: path || pageParams.value.idOrPath, isFolder} 
-        })
-    }
+
     watch(
-        () => route.query,
-        async (newval) => {
-            const { page, pageSize, path, isFolder } = newval
-            // 点击导航头时，isFolder 为 undefined,需要排除 undefined 的情况
-            if (isFolder === 'false') return
-            pageParams.value.idOrPath = path || pageParams.value.idOrPath
-            pageParams.value.pageIndex = page ? (Number(page) - 1) : 0
-            pageParams.value.pageSize = Number(pageSize) || pageParams.value.pageSize
-            getList({pageNumber: pageParams.value.pageIndex, pageSize: pageParams.value.pageSize, idOrPath:  pageParams.value.idOrPath})
+        list,
+        async () => {
+          getList()
         },
         { immediate: true }
     )
 // #endregion
-function handleDblclick (row) {
-    handlePaginationChange(1, pageParams.value.pageSize, row.path, row.isFolder)
+function handleDblclick (row:any) {
+  if(!row.isFolder) {
+    openFileDetail(row.path, {
+      showInfo:true,
+      showHeaderAction:true
+    })
+  }else{
+    router.push({
+      query: { path: row.path, isFolder: row.isFolder}
+    })
+  }
 }
 function handleRightClick (item, event, isEmpty: boolean = false) {
     event.preventDefault();
@@ -147,6 +128,7 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
         color: var(--color-grey-700);
         > *{
             width: calc(var(--img-size) + var(--app-padding) * 2);
+          position: relative;
         }
     }
 }
@@ -186,5 +168,13 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
 }
 .folderIcon{
     --icon-size: 100%;
+}
+.backgroundDrop{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 </style>

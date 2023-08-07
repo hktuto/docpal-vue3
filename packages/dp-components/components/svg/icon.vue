@@ -1,5 +1,5 @@
 <template>
-<div class="flex-x-center">
+<div v-if="src" class="flex-x-center">
     <template v-if="content">
         <el-tooltip :content="content">
             <template v-if="round">
@@ -21,6 +21,7 @@
         <component :is="InlineSvg" :class="svgClass" :src="src"></component>
     </template>
 </div>
+<div v-else></div>
 </template>
 
 <script lang="ts" setup>
@@ -41,7 +42,7 @@ const svgClass = computed(() => {
     width: var(--icon-size, );
     height: var(--icon-size, 24px);
     fill: currentColor;
-    color: var(--icon-color, #AEB6BA);
+    color: var(--icon-color, --color-grey-500);
     &:hover {
         opacity: 0.7;
     }
@@ -55,7 +56,7 @@ const svgClass = computed(() => {
     font-size: var(--icon-size, 18px);
     width: var(--icon-bg-size, 32px);
     height: var(--icon-bg-size, 32px);
-    color: var(--icon-color, #181a1b)!important;
+    color: var(--icon-color, --color-grey-950)!important;
     background-color: var(--icon-bg-color, var(--color-grey-150));
     border-radius: 50%;
     display: grid;
@@ -65,14 +66,14 @@ const svgClass = computed(() => {
         width: var(--icon-size, 18px);
         height: var(--icon-size, 18px);
         &:hover{
-            color: var(--icon-hover-color, white);
+            color: var(--icon-hover-color, --color-grey-0000);
         }
     }
     &:hover{
         opacity: 0.8;
-        color: var(--icon-hover-color, white);
+        color: var(--icon-hover-color, --color-grey-0000);
         svg{
-            color: var(--icon-hover-color, white)!important;
+            color: var(--icon-hover-color, --color-grey-0000)!important;
         }
     }
 }

@@ -53,9 +53,10 @@ function handleOptions (exitList) {
     function userListFilter() {
         return state.groupList.reduce((prev, item) => {
             const index = exitList.findIndex(exitItem => exitItem.id === item.id)
-            if (index === -1 && item.isCanModified) {
+            if (index === -1) {
                 item.value = item.id
                 item.label = item.name
+                if (!item.isCanModified) item.disabled = true
                 prev.push(item)
             }
             return prev

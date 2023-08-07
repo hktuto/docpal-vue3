@@ -1,5 +1,10 @@
 <template>
-    <FromRenderer :class="{vformReadonly: state.readonly}" ref="FromRendererRef" :formJson="formJson" :data="formData"></FromRenderer>
+    <FromRenderer :class="{vformReadonly: state.readonly, workflowForm: true}" ref="FromRendererRef" :formJson="formJson" :data="formData"
+        @previewFileInit="handlePreviewFileInit">
+        <template v-slot:previewFile="{data}">
+            <WorkflowDetailReader class="WorkflowDetailReader" ref="WorkflowReaderRef"></WorkflowDetailReader>
+        </template>
+    </FromRenderer>
 </template>
 
 <script lang="ts" setup>
@@ -11,8 +16,13 @@ const state = reactive({
     formData: {}, 
     formJson: {},
     writableIds: [],
-    readonly: false
+    readonly: false,
 })
+const WidgetNames = {
+    arr: ['sub-form'],
+    upload: ['file-upload'],
+    select: ['select']
+}
 const FromRendererRef = ref()
 // #region module: set
     async function setForm (json: string | object, data?: object, properties:any[] = []) {
@@ -27,21 +37,28 @@ const FromRendererRef = ref()
         }
     }
     async function handleData(data) {
-        const result = Object.keys(data).reduce((prev, key) => {
-            if (data[key]!== null) prev[key] = data[key]
-            return prev
-        }, {})
-        const widgets = FromRendererRef.value.vFormRenderRef.getFieldWidgets()
+        // 处理sub-form
+        const arrWidgetKeys = getWidgetNames(WidgetNames.arr)
+        const uploadWidgetKeys = getWidgetNames(WidgetNames.upload)
+        const selectWidgetKeys = getWidgetNames(WidgetNames.select, true)
+        const result = [] 
+        const pList = []
         
-        for(let i = 0; i < widgets.length; i++) {
-            const widgetItem = widgets[i]
-            if (widgetItem.type === 'file-upload') {
-                if (data[widgetItem.name]) result[widgetItem.name] = await revertUploadFile(data[widgetItem.name])
-            } else if (widgetItem.type === 'select' && widgetItem.field.options.multiple) {
-                if (data[widgetItem.name]) result[widgetItem.name] = data[widgetItem.name].split(',')
-            }
-        }
+        Object.keys(data).forEach((key) => {
+            pList.push(revert(key, data[key]))
+        })
+        await Promise.all(pList)
         return result
+        async function revert(key, value) {
+            if (arrWidgetKeys.includes(key))
+                result[key] = value ? JSON.parse(value) : []
+            else if (uploadWidgetKeys.includes(key))  
+                result[key] = await revertUploadFile(value)
+            else if (selectWidgetKeys.includes(key)) 
+                result[key] = value ? value.split(',') : ''
+            else if (value!== null) 
+                result[key] = value
+        }
     }
     async function revertUploadFile(ids) {
         const pList = []
@@ -88,6 +105,7 @@ const FromRendererRef = ref()
         return dataDeArray(data)
     }
     function dataDeArray (formDatas: Object) {
+        const arrWidgetKeys = getWidgetNames(WidgetNames.arr)
         const data = Object.keys(formDatas).reduce((prev,key) => {
             if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
                 prev[key] = formDatas[key]
@@ -98,25 +116,42 @@ const FromRendererRef = ref()
         Object.keys(data).forEach((key, _index) => {
             const _data = toRaw(data[key])
             if (_data instanceof Array) {
-                const idArrs = []
-                if(_data.length > 0 && (!!_data[0].response || !!_data[0].id)) {
-                    _data.forEach(item => {
+                if (arrWidgetKeys.includes(key)) {
+                    data[key] = JSON.stringify(_data)
+                } else if (_data.length > 0 && (!!_data[0].response || !!_data[0].id)) {
+                    const values = _data.reduce((prev, item) => {
                         if(item.response) {
                             item.response = item.response.data ? item.response.data : item.response
-                            idArrs.push(item.response[0].contentId)
+                            prev.push(item.response[0].contentId)
                         } else {
-                            idArrs.push(item.id)
+                            prev.push(item.id)
                         }
-                    })
+                        return prev
+                    }, [])
+                    data[key] = values.join(',')
                 } else {
-                    _data.forEach(item => {
-                        idArrs.push(item)
-                    })
+                    const values = _data.reduce((prev, item) => {
+                        prev.push(item)
+                        return prev
+                    },[])
+                    data[key] = values.join(',')
                 }
-                data[key] = idArrs.join(',')
             }
         })
         return data
+    }
+    function getWidgetNames (widgetNames: string [], checkMultiple: boolean = false) {
+        const containerWidgets = FromRendererRef.value.vFormRenderRef.getContainerWidgets()
+        const fieldWidgets = FromRendererRef.value.vFormRenderRef.getFieldWidgets()
+        return [...containerWidgets, ...fieldWidgets].reduce((prev,item) => {
+            if(widgetNames.includes(item.type)) {
+                if (checkMultiple) {
+                    if (item.field.options.multiple) prev.push(item.name)
+                }
+                else prev.push(item.name)
+            }
+            return prev
+        }, [])
     }
 // #endregion
 // #region module:
@@ -129,6 +164,12 @@ const FromRendererRef = ref()
         FromRendererRef.value.vFormRenderRef.disableForm()
     }
 // #endregion
+// #region module: WorkflowReader
+    const WorkflowReaderRef = ref()
+    function handlePreviewFileInit (fileId: string) {
+        if (WorkflowReaderRef.value && fileId) WorkflowReaderRef.value.init(fileId)
+    }
+// #endregion
 onMounted(() => {
     
 })
@@ -136,10 +177,14 @@ const { formData, formJson } = toRefs(state)
 defineExpose({ setForm, getFormData, disableForm, enableForm })
 </script>
 
-<style scoped>
-.formContainer {
+<style lang="scss" scoped>
+.workflowForm {
     height: 100%;
     overflow: hidden;
-    overflow-y: auto;
+    :deep(.el-form) {
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 }
 </style>

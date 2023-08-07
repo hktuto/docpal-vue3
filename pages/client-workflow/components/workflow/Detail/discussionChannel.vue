@@ -1,9 +1,9 @@
 <template>
 <div class="grid-layout">
-    <el-button :class="['icon', state.expended? 'rotate': 'revert'] "
+    <el-button v-if="!noToggle" :class="['icon', state.expended? 'rotate': 'revert'] "
         @click="handelExpand" :icon="ArrowLeftBold" circle />
-    <div :class="[{'discussionChannel--expand': state.expended }, 'discussionChannel']">
-        <h4 class="title">{{ $t('common_discussionChannel') }}</h4>
+    <div :class="[{'discussionChannel--expand': !noToggle? state.expended : true }, 'discussionChannel', {noToggle}]">
+        <h4 v-if="!noToggle" class="title">{{ $t('common_discussionChannel') }}</h4>
         <div class="commentViewBox">
             <CommentCard v-for="(item) in state.commentList" :key="item.id" :commentInfo="item"></CommentCard>
         </div>
@@ -17,7 +17,8 @@
 import { getProcessCommentApi, sendProcessCommentsApi } from 'dp-api'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 const props = defineProps<{
-    id: string
+    id: string,
+    noToggle: boolean,
 }>()
 const userId:string = useUser().getUserId()
 const state = reactive({
@@ -66,7 +67,11 @@ watch(() => props.id, (newValue) => {
     &--expand {
         width: 380px;
         transition: all .5s;
+
     }
+  &.noToggle{
+    grid-template-rows: 1fr min-content;
+  }
     h4 {
         line-height: 2rem;
         margin: unset;

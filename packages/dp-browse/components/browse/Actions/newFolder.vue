@@ -1,22 +1,18 @@
 <template>
-    <!-- <div class="actionIconContainer" @click="iconClickHandler(doc)"> -->
     <div>
         <SvgIcon src="/icons/file/newFolder.svg"  
-            content="new folder"
+            content="tip.new_folder"
             round
             @click="iconClickHandler(doc)"></SvgIcon>
-        <!-- <el-tooltip content="new folder">
-            <el-icon >
-                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M128 192v640h768V320H485.76L357.504 192H128zm-32-64h287.872l128.384 128H928a32 32 0 0 1 32 32v576a32 32 0 0 1-32 32H96a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32zm384 416V416h64v128h128v64H544v128h-64V608H352v-64h128z"></path></svg>
-            </el-icon>
-        </el-tooltip> -->
-        <el-dialog v-model="dialogOpened" append-to-body 
+        <el-dialog class="scroll-dialog" v-model="dialogOpened" append-to-body 
                     :close-on-click-modal="false">
             <template #title>
                 <strong class="primaryTitle">{{ $t('filePopover_newFolder') }}</strong>
                 {{ 'in /' + state.doc.name }}
             </template>
-            <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" />
+            <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" 
+                @formChange="formChange"/>
+            <MetaEditForm ref="MetaFormRef"></MetaEditForm>
             <template #footer>
                 <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{$t('submit')}}</el-button>
             </template>
@@ -42,6 +38,7 @@ const state = reactive({
     doc: {}
 })
 const FromRendererRef = ref()
+const MetaFormRef = ref()
 function iconClickHandler(doc:any){
     dialogOpened.value = true
     state.docPath = doc.path 
@@ -53,17 +50,22 @@ function iconClickHandler(doc:any){
     
 }
 const formJson = getJsonApi('fileNewFolder.json')
-
+function formChange ({fieldName,newValue,oldValue,formModel}) {
+    if(fieldName[0] === 'type') MetaFormRef.value.initMeta(fieldName[1])
+}
 async function handleSubmit () {
-    console.log("handleSubmit")
-    state.loading = true
     try {
         const timestamp = new Date().valueOf()
+        const metaFormData = MetaFormRef.value.getData()
+        if(!metaFormData) return
         const data = await FromRendererRef.value.vFormRenderRef.getFormData()
         const parentPath = state.docPath === '/' ? '' : state.docPath
+        state.loading = true
         const params = {
             ...data,
-            idOrPath: `${parentPath}/new Folder${timestamp}`,
+            properties: metaFormData,
+            // idOrPath: `${parentPath}/new Folder${timestamp}`,
+            idOrPath: `${parentPath}/${data.name}`,
         }
         
         const { isDuplicate } = await duplicateNameFilter(state.doc.path, [data]);
@@ -75,7 +77,6 @@ async function handleSubmit () {
         emits('success', state.doc)
         state.loading = false
     } catch (error) {
-        console.log(error)
         if(error.message === 'dpTip_duplicateFileName') {
             ElMessage({
                 message: t(error.message) as string,
@@ -97,4 +98,5 @@ function handleReset() {
 onMounted(() => {
     useEventListener(document, 'docActionAddFolder', (event) => iconClickHandler(event.detail))  
 })
+defineExpose({ iconClickHandler })
 </script>

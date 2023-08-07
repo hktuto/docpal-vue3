@@ -1,18 +1,22 @@
 <template>
-  <div class="actionIconContainer" @click="uploadDialog(doc)">
+  <div class="actionIconContainer" >
   <!-- <SvgIcon src="/icons/file/upload.svg" round content="upload"
           @click="uploadDialog"></SvgIcon> -->
-    <el-tooltip content="upload">
-      <el-icon >
-        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" ><path fill="currentColor" d="M160 832h704a32 32 0 1 1 0 64H160a32 32 0 1 1 0-64zm384-578.304V704h-64V247.296L237.248 490.048 192 444.8 508.8 128l316.8 316.8-45.312 45.248L544 253.696z"></path></svg>
-      </el-icon>
-    </el-tooltip>
+    <BrowseActionsButton id="uploadActionButton" :label="$t('tip.upload')" @click="uploadDialog(doc)">
+    
+      <el-tooltip content="upload">
+        <el-icon >
+          <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" ><path fill="currentColor" d="M160 832h704a32 32 0 1 1 0 64H160a32 32 0 1 1 0-64zm384-578.304V704h-64V247.296L237.248 490.048 192 444.8 508.8 128l316.8 316.8-45.312 45.248L544 253.696z"></path></svg>
+        </el-icon>
+      </el-tooltip>
+    </BrowseActionsButton>
     <el-dialog v-model="dialogOpened" append-to-body class="browseUploadDialog">
       <template #title>
           <strong class="primaryTitle">{{ $t('filePopover_newFiles') }}</strong>
           {{ 'in ' + state._doc.path }}
       </template>
-      <FileUpload class="sidebar" @change="tableDataAdd"></FileUpload>
+      <FileUpload class="sidebar"
+        :accept="accept" @change="tableDataAdd"></FileUpload>
       <div class="header">
         <span>{{$t('filePopover_batchTip')}}</span>
         <el-select v-model="state.documentType" class="el-icon--right" filterable default-first-option >
@@ -97,7 +101,8 @@ const emits = defineEmits(['success'])
 const dialogOpened = ref(false)
 
 const props = defineProps<{
-    doc: any
+    doc: any,
+    accept: string
 }>()
 const state = reactive({
   loading: false,

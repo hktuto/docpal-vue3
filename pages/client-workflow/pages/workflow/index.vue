@@ -1,5 +1,6 @@
 <template>
 <NuxtLayout class="fit-height withPadding">
+
     <div class="buttons--absolute">
         <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
         <WorkflowPopoverPersonal />
@@ -65,12 +66,16 @@ watch(() => route.query, (q) => {
   height: 100%;
 }
 .grid-layout {
-    display: grid;
-    grid-template-rows: min-content 1fr;
+    display: flex;
+    flex-flow: column nowrap;
+    width:100%;
     height: 100%;
     overflow: hidden;
-    :deep(.el-tab-pane) {
+    :deep {
+
+      .el-tab-pane{
         height: 100%;
+      }
     }
 }
 .buttons--absolute {
@@ -78,8 +83,22 @@ watch(() => route.query, (q) => {
     right: calc(var(--app-padding) * 2);
     top: calc(var(--app-padding) * 2);
     z-index: 2;
+  @media  (max-width : 1024px) {
+    top: initial;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center
+  }
 }
 .tag-container {
+  :deep {
+    .el-tabs__content {
+      height: 100%;
+    }
+  }
     :deep .el-tabs__nav-wrap:first {
         width: calc(100% - 338px);
         &::after {
@@ -98,5 +117,9 @@ watch(() => route.query, (q) => {
             z-index: var(--el-index-normal);
         }
     }
+  @media  (max-width : 1024px) {
+    padding-bottom : 40px;
+  }
 }
+
 </style>

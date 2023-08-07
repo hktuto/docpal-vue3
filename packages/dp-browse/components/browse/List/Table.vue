@@ -1,43 +1,59 @@
 <template>
-<div class="tableContainer"  >
-    <Table
-        v-if="tableData"
-        v-loading="loading"
-        :columns="tableSetting.columns"
-        :table-data="tableData"
-        :options="options"
-            @command="handleAction"
-            @row-dblclick="handleDblclick"
-            @row-contextmenu="handleRightClick"
-            @selection-change="handleSelect"
-            @contextmenu="handleEmptyRightClick">
-            <template #docName="{ row, index }">
-                <div class="nameContainer">
-                    <div :class="{selectContainer:true, checked: isSelected(row)}">
-                        <div v-if="options.selectable(row, index)" class="rowCheckbox">
-                            <SvgIcon class="checkIcon" src="/icons/white_check.svg" />
+<div :class="['tableContainer']" 
+    >
+    
+        <Table
+            v-if="list"
+            v-loading="loading"
+            :class="{ dragActive: state.dragActive }"
+            :columns="tableSetting.columns"
+            :table-data="list"
+            :options="options"
+                @command="handleAction"
+                @row-dblclick="handleDblclick"
+                @row-contextmenu="handleRightClick"
+                @selection-change="handleSelect"
+                @contextmenu="handleEmptyRightClick">
+                <template #docName="{ row, index }">
+                    <div class="nameContainer" :data-row-name="row.name">
+                        <div :class="{selectContainer:true, checked: isSelected(row)}">
+                            <div v-if="options.selectable(row, index)" class="rowCheckbox">
+                                <SvgIcon class="checkIcon" src="/icons/white_check.svg" />
+                            </div>
+                            <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" :mimeType="row.mimeType" status="general"/>
                         </div>
-                        <BrowseItemIcon class="icon" :type="row.isFolder ? 'folder' : 'file'" status="general"/>
+                        <div class="label">{{row.name}}</div>
+                        <DropzoneContainer v-if="row.isFolder" :doc="row" class="folderDropzone backgroundDrop"></DropzoneContainer>
+                        
                     </div>
-                    <div class="label">{{row.name}}</div>
-                </div>
-            </template>
-    </Table>
+                </template>
+                <template #tags="{ row, index }">
+                    <el-tag v-for="tag in row.tags">{{ tag }}</el-tag>
+                </template>
+                <template #contributors="{ row, index }">
+                    <el-tag v-for="tag in row.contributors">{{ tag }}</el-tag>
+                </template>
+        </Table>
+        
+        <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
 </div>
+
 </template>
 
 
 <script lang="tsx" setup>
 import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
-import {TableV2FixedDir} from 'element-plus'
-import type { Column, RowClassNameGetter } from 'element-plus'
+import {openFileDetail} from "~/utils/browseHelper";
+
 const emit = defineEmits([
     'right-click',
     'select-change',
 ])
 const selectedItems = ref<any>([])
-const props = defineProps<{doc: any}>();
-const { doc } = toRefs(props) 
+const props = defineProps<{list: any}>();
+const { list } = toRefs(props) 
+
+
 // #region module: page
 const { t } = useI18n()
 const route = useRoute()
@@ -47,78 +63,65 @@ const pageParams = ref({
     pageNumber: 0,
     pageSize: 100
 })
+
+const tableKey = TABLE.CLIENT_BROWSE
+const tableSetting = defaultTableSetting[tableKey]
+
 const state = reactive<State>({
     loading: false,
-    tableData: [],
     options: {
         multiSelect: true,
         showPagination: false,
         selectable: (row, index) => {
             return !row.isFolder
-        }
+        },
+      sortKey: tableKey
     },
-    curDoc: {}
+    curDoc: {},
+
+    dragActive: false
 })
-const tableKey = TABLE.CLIENT_BROWSE
-const tableSetting = defaultTableSetting[tableKey]
-
-async function getList (param:any) {
-    const res = await GetChildThumbnail(param)
-    if(res.totalSize === 0 || res.entryList.length === 0){
-        return;
-    }
-    state.tableData.push(...res.entryList)
-    if(state.tableData.length < res.totalSize ) {
-        param.pageNumber++;
-        return getList(param)
-    }else {
-        return
-    }
-}
 
 
-async function cleanList () {
-    state.tableData = []
-}
 
-function handleAction (command:string, row: any, rowIndex: number) {
+
+function handleAction (command:string, row: any, rowIndex: number, evt:MouseEvent) {
     switch (command) {
         case 'disabled':
             handleDisabled(row)
             break
+      case 'rightClick':
+        handleRightClick(row, null, evt)
     }
 }
 
 function handleDisabled (_row:any) {
 
 }
-watch(
-    doc,
-    async (newVal:any) => {
-        console.log('doc change', newVal)
-        // 重置數據
-        cleanList()
-        pageParams.value = {
-            idOrPath: newVal.path || '/',
-            pageNumber: 0,
-            pageSize: 100
-        }
-        getList(pageParams.value)
-    },
-    { immediate: true, deep:true }
-)
+
 const { tableData, options, loading } = toRefs(state)
 // #endregion
 
 
 function handleDblclick (row:any) {
+  
     state.curDoc = row;
-    router.push({
-        query: {
-            path: row.path,
-            isFolder: row.isFolder
-        }
-    });
+    if(row.isFolder) {
+      router.push({
+          query: {
+              path: row.path,
+              isFolder: row.isFolder
+          }
+      });
+      return 
+      
+    }
+    
+    openFileDetail(row.path, {
+      showInfo:true,
+      showHeaderAction:true
+    })
+    
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()
@@ -168,6 +171,8 @@ function handleSelect (rows:any) {
     emit('select-change', rows)
 }
 
+onMounted(() => {
+})
 
 </script>
 
@@ -179,6 +184,10 @@ function handleSelect (rows:any) {
         flex-flow: row nowrap;
         column-gap: var(--app-padding);
         align-items: center;
+        position: relative;
+      .label{
+        word-break: break-all;
+      }
     }
 }
 :deep(.el-checkbox.is-disabled) {
@@ -202,6 +211,7 @@ function handleSelect (rows:any) {
 .selectContainer{
     --container-size: 40px;
     --check-size: 40px;
+    --icon-size: 2rem;
     width: var(--container-size);
     height: var(--container-size);
     position: relative;
@@ -227,7 +237,7 @@ function handleSelect (rows:any) {
         transition: all .2s ease-in-out;
     }
     .rowCheckbox{
-        --check-size: 26px;
+        --check-size: 32px;
         --icon-color: transparent;
         --icon-size: calc(var(--check-size) - 8px);
         position: absolute;
@@ -244,5 +254,34 @@ function handleSelect (rows:any) {
             height: var(--icon-size);
         }
     }
+}
+.FileUpload2 {
+    pointer-events: auto!important;
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+.backgroundDrop{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.folderDropzone{
+    &.isOverDropZone{
+        border-left: 1px solid var(--primary-color);
+        &:after{
+            background: linear-gradient(90deg, var(--primary-color-03) 0%,  rgba(189, 189, 189, 0) 100%);
+            outline : none;
+        }
+    }
+}
+</style>
+<style lang="scss">
+.forbidden-childe-pointer-events * {
+    pointer-events: none;
 }
 </style>

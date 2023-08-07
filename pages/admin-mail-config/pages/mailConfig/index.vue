@@ -1,17 +1,19 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <div class="flex-x-end">
-            <el-button @click="uploadXlsx">{{$t('import')}}
-                <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
-            </el-button>
-            <el-button type="primary" @click="handleSubmit">{{$t('dpTool_save')}}</el-button>
+        <div>
+            <div class="flex-x-end">
+                <el-button @click="uploadXlsx">{{$t('import')}}
+                    <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
+                </el-button>
+                <el-button type="primary" @click="handleSubmit">{{$t('dpTool_save')}}</el-button>
+            </div>
+            <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
         </div>
-        <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetMailConfigApi, SaveMailConfigApi, getJsonApi } from 'dp-api'
 const formJson = getJsonApi('admin/mailConfig.json')
 const FromRendererRef = ref()
@@ -23,8 +25,12 @@ async function handleGet() {
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     const res = await SaveMailConfigApi(data)
-    const url = res
-    window.open(url,'_blank')
+    if (data.authenticationMethod === 'DEFAULT') {
+        ElMessage.success($t('msg_successfullyModified'))
+    } else {
+        const url = res
+        window.open(url,'_blank')
+    }
 }
 // #region module: import
     const inputRef = ref()

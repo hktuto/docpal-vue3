@@ -18,21 +18,20 @@
     <video v-else-if="state.fileType === 'video/mp4'" controls style="width: 100%">
         <source :src="state.url" :type="state.fileType" />
     </video>
-    <el-image v-else-if="state.fileType.includes('image/')"
-            :src="state.url" fit="contain"
-            :preview-src-list="[state.url]">
-        <template #error>
-            <div class="image-slot">
-                <el-icon><icon-picture /></el-icon>
-            </div>
-        </template>
-    </el-image>
+    <ReaderImgMouse v-else-if="state.fileType.includes('image/')">
+        <el-image
+                :src="state.url" fit="contain">
+            <template #error>
+                <div class="image-slot">
+                    <el-icon><icon-picture /></el-icon>
+                </div>
+            </template>
+        </el-image>
+    </ReaderImgMouse>
     <template v-else-if="state.fileType">
         <h2 class="noSupportContainer">
-            4444
             {{ $t('msg_thisFormatFileIsNotSupported') }}
         </h2>
-        
     </template>
 </template>
 
@@ -62,10 +61,6 @@ function handleDownload() {
     downloadBlob(props.blob, props.name, props.blob.type)
 }
 watch(() => props.blob, (newBlob:Blob) => {
-    console.log('ssssssssssssssssss');
-    
-    console.log({newBlob}, 'sssssssssssssssssssssssssssssssss');
-    
     if( !newBlob ) return
     state.fileType = newBlob.type
     

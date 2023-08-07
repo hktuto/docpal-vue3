@@ -28,6 +28,8 @@ export const getUniqueName = async(file:any) => {
  * @returns {isDuplicate: boolean, list: any[]}
  */
 export const duplicateNameFilter = async (idOrPath: string, list:any) => {
+  console.log({list});
+  
   try {
       let result = false
       const titles = list.reduce((prev:any, item:any) => {
@@ -64,6 +66,7 @@ export const duplicateNameFilter = async (idOrPath: string, list:any) => {
  * @param userId user id to check permissions for, if null, no permissions will be returned
  */
 export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
+  console.log("getDocumentDetail", idOrPath)
   const response = await GetDocDetail(idOrPath);
   try {
     response.displayMeta = await GetDocumentAdditionalApi({documentType: response.type})
@@ -90,6 +93,18 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
 const deepCopy  = (data:any) => {
     if (!data) return {}
     return JSON.parse(JSON.stringify(data));
+}
+
+export type FileDetailOptions = {
+    showInfo: boolean,
+    showHeaderAction: boolean
+}
+export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
+    const ev = new CustomEvent('openFilePreview', {detail: {
+            pathOrId,
+            options
+        }})
+    document.dispatchEvent(ev);
 }
 
 export function downloadUrl(url:string, name:string){

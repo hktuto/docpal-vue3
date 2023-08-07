@@ -69,7 +69,7 @@ async function handleOptions (exitList) {
     function listFilter() {
         return state.docType.keywords.reduce((prev, item) => {
             const index = exitList.findIndex(exitItem => exitItem.metaData === item.name)
-            if (index === -1) {
+            if (index === -1 && item.type !== 'complex') {
                 item.value = item.name
                 item.label = item.name
                 prev.push(item)

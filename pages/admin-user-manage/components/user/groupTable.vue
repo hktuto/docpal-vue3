@@ -47,6 +47,10 @@ function handleUserDblclick () {}
 function handleAction (command, row: any, index: number) {
     switch (command) {
       case 'delete':
+        if (!row.isCanModified) {
+            ElMessage.warning($t('dpTip_cannotDelete'))
+            return
+        }
         handleDelete(row)
         break
       default:

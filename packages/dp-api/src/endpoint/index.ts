@@ -10,6 +10,7 @@ export * from './notification'
 export * from './watermark'
 export * from './language'
 export * from './folder-cabinet'
+export * from './internal-share'
 
 export * from './ocrAPi'
 

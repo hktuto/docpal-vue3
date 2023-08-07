@@ -19,7 +19,9 @@
         <el-form :model="form" ref="FormRef" @submit.native.prevent>
           <el-form-item :label="$t('role.auditor')">
             <el-select v-model="form.user_approver_id" multiple filterable clearable>
-              <el-option v-for="item in userListFilter" :key="item.userId" :label="item.userId" :value="item.userId" ></el-option>
+              <template v-for="item in userListFilter">
+                <el-option v-if="item.userId" :key="item.userId" :label="item.userId" :value="item.userId" ></el-option>
+              </template>
             </el-select>
           </el-form-item>
         </el-form>
@@ -118,11 +120,11 @@ const loading = ref(false)
       const canApproval = ref(false)
 
       async function handelAudit (approved:boolean) {
-        if (!!approved && props.doc.isCheckedOut) {
+        // if (!!approved && props.doc.isCheckedOut) {
 
-          ElMessage.error(`${t('dpTip_versoionError')}`)
-          return
-        }
+        //   ElMessage.error(`${t('dpTip_versoionError')}`)
+        //   return
+        // }
         const param = {
           properties: {
             documentId: props.doc.id,
@@ -131,9 +133,9 @@ const loading = ref(false)
           }
         }
         loading.value = true
-        const res = await auditAdhocApi(param)
+        const result = await auditAdhocApi(param)
         loading.value = false
-        if(res) {
+        if(result) {
           canApproval.value = false
           // 有延迟
           // TODO : add api

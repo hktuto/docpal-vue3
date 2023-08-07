@@ -114,7 +114,7 @@ export const downloadDocRecord = async(params) => {
         return api.post('/nuxeo/document/createFolders', param).then(res => res.data.data)
     }
     export const CreateDocumentApi = async(param) => {
-        return api.post('/nuxeo/document/createDocument', param).then(res => res.data.data)
+        return api.post('/nuxeo/document/createDocument', param, {timeout:0}).then(res => res.data.data)
     }
     export const patchDocumentApi = async(param) => {
         return api.patch('/nuxeo/document', param).then(res => res.data.data)
@@ -131,7 +131,10 @@ export const downloadDocRecord = async(params) => {
     export const DocumentThumbnailGetApi = async(idOrPath:string) => {
         return api.post('/nuxeo/document/thumbnail', {idOrPath},{
             responseType: 'blob',
-            timeout: 0
+            timeout: 0,
+            headers:{
+                'noThrowError' : "true"
+            }
         }).then(res =>res.data)
     }
     export const DocumentThumbnailListGetApi = async(idOrPaths:string []) => {
@@ -155,6 +158,9 @@ export const downloadDocRecord = async(params) => {
     }
     export const RestoreByIdApi = async (idOrPath: string) => {
         return await api.post('/nuxeo/document/restore', { idOrPath }).then(() => true)
+    }
+    export const DeleteAllApi = async () => {
+        return await api.delete('/nuxeo/document/purge').then(() => true)
     }
 // #endregion
 

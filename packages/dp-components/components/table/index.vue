@@ -1,16 +1,17 @@
 <template>
     <div class="dp-table-container">
-        <div class="tableHeader">
+        <div :class="['tableHeader', headerClass]">
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-            <TableSortButton ref="TableSortButtonRef" v-if="_options.sortKey" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
-            <!-- <TableSortButton :columns="columns" sortKey="test"  @reorderColumn="reorderColumn"></TableSortButton> -->
-            <div>
-                <slot name="suffixSortButton"></slot>
-            </div>
+
+            <slot name="suffixSortButton">
+
+            </slot>
+
         </div>
         <div class="dp-table-container--main">
+          <template v-if="!isSmallMobile">
             <el-table
                 ref="tableRef"
                 :data="tableData"
@@ -57,7 +58,57 @@
                         </TableColumn>
                     </template>
                 </template>
+                <el-table-column v-if="_options.sortKey" :width="40">
+                  <template #header="{ column, $index }">
+                    <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+                  </template>
+                </el-table-column>
             </el-table>
+          </template>
+          <template v-else>
+            <div v-if="_options.sortKey" class="cardSortContainer">
+              <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+            </div>
+            <div ref="tableCardRef" class="cardList">
+              <div v-if="tableData.length === 0" class="noData">
+                {{ $t('noData')}}
+              </div>
+             <TableCard
+                v-for="(item, rowIndex) in tableData"
+                :key="'card_'+ rowIndex"
+                :row="item"
+                :column="columns__sub"
+                @row-contextmenu="handleRightClick"
+                @selection-change="handleSelectionChange"
+                @row-click="handleRowClick"
+                @row-dblclick="handleRowDblclick"
+                @cell-click="handleCellClick"
+                @sort-change="handleSortChange"
+              >
+                <template v-for="(col, index) in columns__sub" :key="index">
+                  <template v-if="!col.hide">
+                    <template v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'" >
+                      <input
+                        type="checkbox"
+
+                        @change="(val) => cardSelectedChange(rowIndex, val)"
+                      />
+                    </template>
+                    <TableCardItem v-else :col="col" :rowData="item" :rowIndex="index" :class="col.class" @command="handleAction">
+                      <template #customHeader="{ slotName, column, index }">
+                        <slot :name="slotName" :column="column" :index="index" />
+                      </template>
+                      <!-- 自定义表头插槽 -->
+                      <!-- 自定义列插槽 -->
+                      <template #default="{ slotName, row, index }">
+                        <slot :name="slotName" :row="row" :index="index" />
+                      </template>
+                    </TableCardItem>
+                  </template>
+                </template>
+              </TableCard>
+            </div>
+          </template>
         </div>
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
@@ -73,7 +124,9 @@
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
 
-const { isMobileOrTablet } = useDevice()
+
+
+const { isSmallMobile, isMobile } = useLayout()
 
 export type SortParams = {
     column: TableColumnCtx<T | any>,
@@ -84,9 +137,11 @@ export type SortParams = {
 const props = defineProps<{
     tableData: Array<object>, // table的数据
     columns: Table.Column[], // 每列的配置项
-    options?: Table.Options
+    options?: Table.Options,
+    headerClass?: string
 }>()
 const tableRef = ref();
+const tableCardRef = ref();
 
 const clickTimeoutId = ref<NodeJS.Timeout>();
 const selectChangeTimeoutId = ref<NodeJS.Timeout>();
@@ -98,7 +153,8 @@ const _options = computed<Table.Options>(() => {
         tooltipEffect: 'dark',
         showHeader: true,
         showPagination: false,
-        height: '100%'
+        height: '100%',
+        scrollbarAlwaysOn: true
     }
     return Object.assign(option, props?.options)
 })
@@ -158,8 +214,8 @@ const indexMethod = (index: number) => {
         emit('pagination-change', currentPage, _paginationConfig.value.pageSize)
     }
     // 按钮组事件
-    const handleAction = (command: Table.Command, row: any, index: number) => {
-        emit('command', command, row, index)
+    const handleAction = (command: Table.Command, row: any, index: number, evt: Event) => {
+        emit('command', command, row, index, evt)
     }
 
     // 多选事件
@@ -170,15 +226,33 @@ const indexMethod = (index: number) => {
             emit('selection-change', val)
         }, 200);
     }
+
+    const cardSelection = ref<number[]>([]);
+      const cardSelectedChange = (index:any, ev:any) => {
+        const val = ev.target.checked as boolean;
+        if(val) {
+          cardSelection.value.push(index)
+        }else{
+          // find index from cardSelection
+          const e = cardSelection.value.findIndex( it => it === index);
+          cardSelection.value.splice(e, 1);
+        }
+        const selectedItem = cardSelection.value.map( i => props.tableData[i]);
+        emit('selection-change', selectedItem)
+    }
+
+    watch(props.tableData, () => {
+      // clean card data
+      cardSelection.value = []
+    })
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-        if(isMobileOrTablet) {
+        if(isMobile.value) {
           emit('row-dblclick', row, column, event)
           return ;
         }
         clearTimeout(clickTimeoutId.value);
         clickTimeoutId.value = setTimeout(() => {
-            console.log("single click")// 双击事件返回
             if(_options.value.multiSelect) handleShift(row)
             emit('row-click', row, column, event)
         }, 200);
@@ -308,7 +382,7 @@ onMounted(() => {
     })
 })
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
-defineExpose({ reorderColumn })
+defineExpose({ reorderColumn, tableRef })
 </script>
 <style lang="scss" scoped>
 :deep(.el-image__inner) {
@@ -340,18 +414,32 @@ defineExpose({ reorderColumn })
 
 .tableHeader{
     width: 100%;
-    display: grid;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
     align-items: flex-end;
-    grid-template-columns: 1fr min-content min-content;
     gap: var(--app-padding);
     .headerLeftExpand {
         overflow: hidden;
+        display: flex;
+        align-items: center;
     }
     &>:deep(.el-button)  {
         margin-bottom: 10px;
     }
 }
-
+.cardSortContainer{
+  width: 100%;
+  margin-bottom: 32px;
+  z-index: 2;
+  position: relative;
+}
+.noData{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
 </style>
 <style lang="scss">
 .shiftSelect {
@@ -365,7 +453,57 @@ defineExpose({ reorderColumn })
         max-width: 80%;
         line-height: 1.5rem;
     }
+  @media( max-width: 640px) {
+    display: flex;
+    flex-flow: column nowrap;
+
+  }
+}
+.cardList{
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--app-padding);
+  padding-inline: 4px;
+}
+@media (max-width : 640px) {
+  .el-pagination__total, .el-pagination__sizes, .el-pagination__jump {
+    display: none;
+  }
 }
 
+.table-responsive-header {
+    display: grid!important;
+    grid-template-columns: 1fr min-content;
+    margin-bottom: var(--app-padding);
+    .headerLeftExpand {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        align-items: flex-end!important;
+    }
+    .suffixSortButton {
+        display: flex;
+    }
+}
+@media (max-width : 1024px) {
+    .table-responsive-header {
+        width: 100%;
+        grid-template-columns: 1fr;
+        .headerLeftExpand {
+            gap: var(--app-padding);
+            grid-template-columns: unset;
+        }
+    }
+}
 </style>
-
+<style lang="scss">
+.el-table__row {
+    color: var(--color-grey-900);
+}
+.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+    background-color: var(--color-b3);
+}
+</style>

@@ -40,6 +40,7 @@ const emit = defineEmits(['submit'])
         } else {
             form.oldAssignee = ''
             form.assignee = ''
+            form.id = row.id
         }
         state.userList = await getUserListApi()
         state.userList = state.userList.filter(item => item.userId !== row.assignee && item.userId)

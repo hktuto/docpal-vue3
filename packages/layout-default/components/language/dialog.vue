@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" class="" :title="$t('languageSet')"
-    :close-on-click-modal="false" draggable :modal="false"
+    :close-on-click-modal="false" draggable :modal="false" append-to-body
     >
     <el-input v-model="filter" placeholder="Search"></el-input>
     <div class="table-container" v-loading="state.loading">
@@ -27,9 +27,9 @@
 <script lang="ts" setup>
 import { } from 'dp-api'
 import { TABLE, defaultTableSetting } from 'dp-api'
-const { 
-    getLanguageKeys, 
-    getLanguageListStore, 
+const {
+    getLanguageKeys,
+    getLanguageListStore,
     getLanguageList,
     setLanguageStores } = useLanguage()
 const emits = defineEmits([
@@ -62,7 +62,7 @@ async function handleSubmit (row) {
     try {
         await setLanguageStores(row)
     } catch (error) {
-        
+
     }
     row.loading = false
 }

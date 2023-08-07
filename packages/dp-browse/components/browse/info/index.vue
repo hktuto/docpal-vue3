@@ -1,15 +1,17 @@
 <template>
 <Interact
+    rel="interactEl"
+    :draggable="draggable"
     :resizable="true"
-    :resizeOption="{
-            edges: { left: true, right: false, bottom: false, top: false }
-        }"
+    :resizeOption="resizeOption"
     :style="style"
-    :class="{infoContainer:true, infoOpened:!infoOpened}"
+    :class="{infoContainer:true, infoOpened:!infoOpened, draggable }"
     @resizemove="resizeMove"
+    @dragmove="dragmove"
 >
 <!-- doc preview and name -->
 <div class="infoHeaderSection">
+    <slot name="header" />
     <div class="headerTopRow">
         <div class="name">{{ doc.name }}</div>
         <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
@@ -40,6 +42,9 @@
     <!-- <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">
         <BrowseInfoRelate v-if="currentTab === 'relate'"  :doc="detail" />
     </el-tab-pane> -->
+    <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
+      <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail, permission}" />
+    </el-tab-pane>
 </el-tabs>
   <div v-else v-loading="loading" class="loadingContainer">
     {{ detail }}
@@ -51,12 +56,25 @@
 import { useEventListener } from '@vueuse/core'
 import {DocDetail} from "dp-api";
 
-const props = defineProps<{
-    doc: any,
-    infoOpened:boolean,
-    hidePreview:boolean,
-}>()
+const { infoSlots } = useBrowse()
+const props = withDefaults(defineProps<{
+    doc?: any,
+    infoOpened?:boolean,
+    hidePreview?:boolean,
+    draggable?:boolean,
+    resizeOption?: any
+}>(),{
+    doc: null,
+    infoOpened: false,
+    hidePreview: false,
+    draggable: false,
+    resizeOption: {
+        edges: { left: true, right: false, bottom: false, top: false }
+    }
+})
+const interactEl = ref();
 const userId:string = useUser().getUserId()
+const { isMobile } = useLayout()
 const { doc } = toRefs(props)
 const currentTab = ref('info')
 const maxWidth = 600;
@@ -73,7 +91,12 @@ const style = computed(() => {
     }
     let result:any = {};
     if(w.value) {
-    result.width = `${w.value}px`
+      result.width = `${isMobile.value ? (window.innerWidth - 24) : w.value > (window.innerWidth - 24) ? (window.innerWidth - 24) : w.value}px`
+    }
+
+    if(props.draggable) {
+        result.left = `${x.value}px`
+        result.top = `${y.value}px`
     }
     return result
 })
@@ -86,6 +109,11 @@ function resizeMove(event:any) {
 const loading = ref(false);
 const detail = ref<DocDetail>();
 const permission = ref<any>();
+
+function dragmove(event:any) {
+    x.value += event.dx;
+    y.value += event.dy;
+}
 
 async function docUpdated() {
     
@@ -118,6 +146,9 @@ watch(doc, async() => {
     docUpdated()
 },{immediate:true})
 
+defineExpose({
+    interactEl
+})
 </script>
 
 <style lang="scss" scoped>
@@ -135,6 +166,7 @@ watch(doc, async() => {
   .name {
     font-weight: 800;
     font-size: 1.2rem;
+    word-break: break-all;
   }
 }
 .infoContainer {
@@ -153,6 +185,13 @@ watch(doc, async() => {
     &.infoOpened{
         padding:0;
     }
+    &.draggable{
+        cursor: move;
+        position: fixed;
+    }
+  @media (max-width: 640px) {
+    margin-left: 0;
+  }
 }
 .infoTagContainer{
     height: 100%;
@@ -185,5 +224,15 @@ watch(doc, async() => {
             width: 100%;
         }
     }
+}
+
+.resize-drag {
+  box-sizing: border-box;
+  background: #41b883;
+
+  /* To prevent interact.js warnings */
+  user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
 }
 </style>

@@ -13,7 +13,7 @@ export const useAppStore = defineStore('app', () => {
     const needAuthEl = ref<HTMLElement>();
     const readyElement = ref<HTMLElement>();
 
-    
+
     const online = useOnline();
     const user = useUser();
 
@@ -70,7 +70,7 @@ export const useAppStore = defineStore('app', () => {
         displayState,
 
         appLoadingList,
-        appInit
+        appInit,
     }
-    
+
 })

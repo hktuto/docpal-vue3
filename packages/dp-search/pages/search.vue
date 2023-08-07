@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div class="search-page">
-            <SearchFilterLeft :searchParams="state.searchParams"></SearchFilterLeft>
+            <SearchFilterLeft ref="SearchFilterLeftRef" :ready="state.firstReady"></SearchFilterLeft>
             <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                     @pagination-change="handlePaginationChange"
                     @row-dblclick="handleDblclick">
@@ -28,15 +28,17 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
 // #region module: page
     const route = useRoute()
     const router = useRouter()
+    const SearchFilterLeftRef = ref()
     let pageParams = {
         currentPageIndex: 0,
         pageSize: 20
     }
     const state = reactive<State>({
+        firstReady: false,
         loading: false,
         tableData: [],
-        options: { 
-            showPagination: true, 
+        options: {
+            showPagination: true,
             paginationConfig: {
                 total: 0,
                 currentPage: 1,
@@ -65,8 +67,8 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        router.push({ 
-            query: { ...route.query, ...pageParams, currentPageIndex:page, pageSize, time } 
+        router.push({
+            query: { ...route.query, ...pageParams, currentPageIndex:page, pageSize, time }
         })
     }
 
@@ -76,13 +78,16 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return
             pageParams = getSearchParamsArray({...newVal})
-            
+
             state.searchParams = pageParams
+            if(!state.firstReady) SearchFilterLeftRef.value.initForm(state.searchParams)
+
             // pageParams = {...newVal}
             pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-            
-            getList(pageParams)
+
+            await getList(pageParams)
+            state.firstReady = true
         },
         { debounce: 200, maxWait: 500, immediate: true }
     )
@@ -107,17 +112,21 @@ async function handleDblclick (row) {
     } else if(row.type === 'Collection') {
         goRoute(row.id, '/collection', 'tab')
     } else{
-        ReaderRef.value.handleOpen()
-        previewFile.loading = true
-        try {
-            previewFile.id = row.id
-            previewFile.path = row.path
-            previewFile.name = row.name
-            previewFile.blob = await GetDocumentPreview(row.id)
-        } catch (error) {
-            
-        }
-        previewFile.loading = false
+      openFileDetail(row.path, {
+        showInfo:true,
+        showHeaderAction:true
+      })
+        // ReaderRef.value.handleOpen()
+        // previewFile.loading = true
+        // try {
+        //     previewFile.id = row.id
+        //     previewFile.path = row.path
+        //     previewFile.name = row.name
+        //     previewFile.blob = await GetDocumentPreview(row.id)
+        // } catch (error) {
+        //
+        // }
+        // previewFile.loading = false
     }
 }
 function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
@@ -136,8 +145,18 @@ function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
 }
 .search-page {
     height: 100%;
-    display: grid;
-    grid-template-columns: min-content 1fr;
+    display: flex;
+    flex-flow: row nowrap;
     gap: var(--app-padding);
+    overflow: hidden;
+    position: relative;
+    @media(max-width : 1024px) {
+      flex-flow: column nowrap;
+      //grid-template-columns: 1fr;
+      //grid-template-rows: min-content 1fr ;
+    }
+  .dp-table-container{
+    flex: 1 0 80%;
+  }
 }
 </style>

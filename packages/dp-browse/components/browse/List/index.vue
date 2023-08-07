@@ -1,13 +1,14 @@
 <template>
     <div class="listContainer">
         <div class="left">
+          <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" />
             <el-tabs v-model="modelProps" @tab-click="tabChange">
-            <el-tab-pane label="Table" name="table" class="h100">
-                <browse-list-table v-if="modelProps === 'table'" :doc="doc" :loading="pending" 
+            <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100">
+                <browse-list-table v-if="modelProps === 'table'" :list="children" :loading="pending" 
                     @select-change="handleSelectionChange" />
             </el-tab-pane>
-            <el-tab-pane label="Preview" name="preview" class="h100">
-                <browse-list-preview v-if="modelProps === 'preview'" :doc="doc" :permission="permission" />
+            <el-tab-pane :label="$t('browse_list_preview')" name="preview" class="h100">
+                <browse-list-preview v-if="modelProps === 'preview'" :list="children"  :permission="permission" />
             </el-tab-pane>
             </el-tabs>
         </div>
@@ -18,8 +19,16 @@
 </template>
 
 <script lang="ts" setup>
-import { GetChild } from 'dp-api'
+import {GetChild, GetChildThumbnail} from 'dp-api'
 import { ViewType } from "../../browseType";
+const { isMobile } = useLayout()
+const pageParams = ref({
+  idOrPath: '/',
+  pageNumber: 0,
+  pageSize: 100
+})
+const children = ref<any[]>([]);
+
 const emits = defineEmits([
     'select-change',
     'update:viewType',
@@ -41,6 +50,37 @@ function tabChange(tab: TabsPaneContext, event: Event) {
 function handleSelectionChange (rows) {
     emits('select-change', rows)
 }
+
+async function getList (param:any):Promise<any> {
+  const res = await GetChildThumbnail(param)
+  if(res.totalSize === 0 || res.entryList.length === 0){
+    return;
+  }
+  children.value.push(...res.entryList)
+  if(children.value.length < res.totalSize ) {
+    param.pageNumber++;
+    return getList(param)
+  }else {
+    return
+  }
+}
+
+
+async function cleanList () {
+  children.value = []
+}
+
+watch( doc, () => {
+  cleanList()
+  pageParams.value = {
+    idOrPath: doc.value.path || '/',
+    pageNumber: 0,
+    pageSize: 100
+  }
+  getList(pageParams.value)
+},{
+  immediate:true
+})
 </script>
 <style lang="scss" scoped>
 .h100 {
@@ -50,10 +90,21 @@ function handleSelectionChange (rows) {
     display: grid;
     grid-template-columns: 1fr min-content;
     overflow: hidden;
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      .right {
+        z-index: 2;
+        position: absolute;
+        left: 0;
+        top: var(--app-padding);
+        
+      }
+    }
 }
 .left, .right{
     height: 100%;
     overflow: hidden;
+    position: relative;
 }
 :deep {
         .el-tabs {
@@ -73,4 +124,13 @@ function handleSelectionChange (rows) {
             overflow-x: hidden;
         }
     }
+
+.backgroundDrop{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
 </style>

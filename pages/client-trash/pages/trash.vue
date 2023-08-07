@@ -1,35 +1,34 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-                @command="handleAction"
-                @pagination-change="handlePaginationChange"
-                @selection-change="handleSelectionChange"
-                @row-dblclick="handleDblclick">
-                
-                <template #docIcon="{ row, index }">
-                    <BrowseItemIcon :type="row.isFolder ? 'folder' : 'file'"/>
-                </template>
-                <template #actions>
-                    <div>
-                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
-                        <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
-                    </div>
-                </template>
-            </Table>
-            <ReaderDialog ref="ReaderRef" v-bind="previewFile">
-                <template #actions>
-                    <el-button @click="handleRestoreOne(previewFile.id)">{{$t('trash_actions_restore')}}</el-button>
-                    <el-button @click="handleDeleteOne(previewFile.id)"> {{$t('trash_actions_delete')}}</el-button>
-                </template>
-            </ReaderDialog>
-            <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
-            <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
+      <Table  :columns="tableSetting.columns" :table-data="tableData" :options="options"
+              @command="handleAction"
+              @pagination-change="handlePaginationChange"
+              @selection-change="handleSelectionChange"
+              @row-dblclick="handleDblclick"
+              v-loading="state.loading">
+
+        <template #docIcon="{ row, index }">
+          <div class="nameItem">
+            <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
+            <div class="label">{{row.name}}</div>
+          </div>
+        </template>
+        <template #preSortButton>
+          <div style="margin-bottom: 3px">
+            <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
+            <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
+            <el-button type="danger" @click="handleDeleteAll"> {{$t('trash_actions_deleteAll')}} </el-button>
+          </div>
+        </template>
+      </Table>
+      <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
+      <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
     </NuxtLayout>
 </template>
 
 
 <script lang="ts" setup>
-import { GetTrashApi, DeleteByIdApi, RestoreByIdApi, GetDocumentPreview, TABLE, defaultTableSetting, Login } from 'dp-api'
+import { GetTrashApi, DeleteByIdApi, RestoreByIdApi, DeleteAllApi, GetDocumentPreview, TABLE, defaultTableSetting, Login } from 'dp-api'
 import { ElNotification } from 'element-plus'
 import { RefreshLeft, Delete } from '@element-plus/icons-vue'
 // #region module: page
@@ -39,6 +38,8 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
         pageIndex: 0,
         pageSize: 20
     }
+const tableKey = TABLE.CLIENT_TRASH
+const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -49,11 +50,12 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
                 total: 0,
                 currentPage: 1,
                 pageSize: pageParams.pageSize
-            }
+            },
+            rowKey: 'id',
+            sortKey: tableKey
         }
     })
-    const tableKey = TABLE.CLIENT_TRASH
-    const tableSetting = defaultTableSetting[tableKey]
+
 
     async function getList (param) {
         state.loading = true
@@ -71,6 +73,7 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
+        // scroll top
         router.push({
             query: { page, pageSize, time }
         })
@@ -79,9 +82,12 @@ import { RefreshLeft, Delete } from '@element-plus/icons-vue'
         () => route.query,
         async (newval) => {
             const { page, pageSize } = newval
-            pageParams.pageIndex = (Number(page) - 1) || 0
-            pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-            getList(pageParams)
+            nextTick(() => {
+
+              pageParams.pageIndex = (Number(page) - 1) || 0
+              pageParams.pageSize = Number(pageSize) || pageParams.pageSize
+              getList(pageParams)
+            })
         },
         { immediate: true }
     )
@@ -92,7 +98,6 @@ const selectedRow = ref([])
 function handleSelectionChange (rows) {
     selectedRow.value = rows
 }
-const ReaderRef = ref()
 const previewFile = reactive({
     blob: null,
     name: '',
@@ -106,16 +111,10 @@ const previewFile = reactive({
 })
 async function handleDblclick (row) {
     if (row.isFolder) return
-    ReaderRef.value.handleOpen()
-    previewFile.loading = true
-    try {
-        previewFile.blob = await GetDocumentPreview(row.id)
-    } catch (error) {
-
-    }
-    previewFile.id = row.id
-    previewFile.name = row.name
-    previewFile.loading = false
+    openFileDetail(row.path, {
+      showInfo:true,
+      showHeaderAction:true
+    })
 }
 // #region module: delete
     const batchAction = ref('')
@@ -196,10 +195,8 @@ async function handleDblclick (row) {
             ElNotification.success(`${$i18n.t('commons_success')}` )
         }
     }
-    const deleteOnePopoverShow = ref(false)
     async function handleDeleteOne (id, row?) {
         if(!!row) row.deleteOnePopoverShow = false
-        deleteOnePopoverShow.value = false
         loading.value = true
         try {
             await deleteOne(id)
@@ -207,7 +204,6 @@ async function handleDblclick (row) {
 
         }
         setTimeout(async () => {
-            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
         }, 500)
@@ -221,7 +217,6 @@ async function handleDblclick (row) {
         }
         // 系统会延时 还原
         setTimeout(async () => {
-            ReaderRef.value.handleClose()
             handlePaginationChange(pageParams.pageIndex + 1)
             loading.value = false
         }, 500)
@@ -246,6 +241,14 @@ async function handleDblclick (row) {
             return idOrPath
         }
     }
+    async function handleDeleteAll () {
+        state.loading = true
+        await DeleteAllApi()
+        setTimeout(async() => {
+            await handlePaginationChange(0)
+            state.loading = false
+        }, 2000)
+    }
 // #endregion
 async function handleDownload (row: any) {
     const params = {
@@ -263,5 +266,12 @@ async function handleDownload (row: any) {
   padding: calc(var(--app-padding) * 2 );
   position: relative;
   height: 100%;
+}
+.nameItem{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--app-padding);
 }
 </style>

@@ -1,5 +1,5 @@
 import {api} from '../';
-import { Response } from '../model';
+import { pageParams, Response, paginationData } from '../model';
 import { UserSetting, LoginRequest, LoginResponse, User } from '../model/user';
 export type membershipAddParams = {
     groupId: string,
@@ -16,10 +16,19 @@ export const UserSettingSaveApi = async(data:UserSetting) => {
 export const Login = async(data: LoginRequest):Promise<LoginResponse> => {
     return await api.post<Response<LoginResponse>>('/auth/nuxeo/login',data).then(res => res.data.data)
 }
-
 export const Verify = async():Promise<User> => {
     return api.get<Response<User>>('/nuxeo/user/getApplication').then(res => res.data.data);
 }
+export const isLdapModeApi = async()=> {
+    return await api.get('/docpal/relation/isLdapMode').then(res => res.data.data);
+}
+export const checkValidTokenApi = async(token) => {
+    return api.get(`/nuxeo/user/confirmReset?token=${token}`).then(res => res.data.data);
+}
+export const resetPasswordApi = async(params) => {
+    return api.post('/nuxeo/user/resetPassword', params).then(res => res.data.data);
+}
+
 export const GetUserDetailApi = async (userId: string) => {
     return await api.get(`/nuxeo/user/${userId}`).then(res => res.data.data);
 }
@@ -29,6 +38,25 @@ export const getUserListApi = async(refresh: boolean = false):Promise<User[]> =>
     let response = await api.post<Response<User[]>>('/nuxeo/identity/users', {}).then(res => res.data.data);
     userListStore = [...response.sort((a,b)=> (a.username.localeCompare(b.username) ))]
     return userListStore
+}
+
+let conditions = []
+export const getAllUsersApi = async(param: pageParams) => {
+    const response = await api.post('/nuxeo/identity/getAllUsers', param).then(res => res.data.data);
+    conditions = response.conditions
+    return response.page
+    // { entryList: response.entryList, totalSize: response.totalSize }
+}
+export const getConditionsApi = async() => {
+    return conditions
+}
+export const getAllUserAndActiveCountApi = async() => {
+    const response = await api.post('/nuxeo/identity/getLicenseUserNumAndActiveCount').then(res => res.data.data);
+    return response
+}
+export const SetUserStatusApi = async(params) => {
+    const response = await api.put('/nuxeo/user/status', params).then(res => res.data.data);
+    return response
 }
 export const CreateUserApi = async(param) => {
     const response = await api.post('/nuxeo/identity/user', param).then(res => res.data.data);

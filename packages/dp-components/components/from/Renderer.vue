@@ -2,9 +2,10 @@
     <div class="formContainer">
         <client-only>
             <v-form-render ref="vFormRenderRef" :form-json="fromJsonNormalizer" :form-data="data" :option-data="options" @formChange="formChange" 
-                @file-preview="handleFilePreview">
-                <template v-for="(idx, slotName) in $slots" #[slotName]>
-                    <slot :name="slotName"></slot>
+                @file-preview="handleFilePreview"
+                @emit="handleEmit">
+                <template v-for="(idx, slotName) in $slots" #[slotName]="data">
+                    <slot :name="slotName" :data="data"></slot>
                 </template> 
             </v-form-render>
         </client-only>
@@ -53,7 +54,9 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
     function formChange(fieldName, newValue, oldValue, formModel) {
         emits('formChange', {fieldName,newValue,oldValue,formModel})
     }
-
+    function handleEmit (funName, newValue, oldValue) {
+        emits(funName, newValue, oldValue)
+    }
     const ReaderRef = ref()
     const previewFile = reactive({
         blob: null,

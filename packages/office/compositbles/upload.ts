@@ -18,6 +18,8 @@ export const useUpload = () => {
         docType: null as any,
         displayMeta: [],
         metadata:{} as any,
+        emailId: "",
+        blob: "" as any,
     })
     
     async function docTypeChange(){
@@ -126,6 +128,7 @@ export const useUpload = () => {
         Upload,
         docTypeList,
         docTypeChange,
+        CheckDuplicate,
         result,
         mineType,
         ext

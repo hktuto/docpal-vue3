@@ -6,7 +6,8 @@
             </el-icon>
         </el-tooltip>
     </div>   -->
-    <SvgIcon src="/icons/file/info.svg"  
+    
+    <SvgIcon id="infoActionButton" src="/icons/file/info.svg"  
                 content="info"
                 round
                 @click="itemClicked"></SvgIcon>
@@ -25,4 +26,10 @@ onMounted(() => {
 })
 </script>
 
+
+<style lang="scss">
+#infoActionButton{
+    color: var(--color-grey-900);
+}
+</style>
 

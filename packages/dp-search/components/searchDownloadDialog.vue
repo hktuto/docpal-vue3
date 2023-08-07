@@ -86,12 +86,16 @@ defineExpose({ handleOpen })
 .search-download-container {
     height: 40vh;
     display: grid;
+    overflow: hidden;
     grid-template-columns: 1fr 1fr;
     gap: var(--app-padding);
     &-box {
+      height: 100%;
+      overflow: hidden;
         display: grid;
         grid-template-rows: 52px 1fr;
         .list-group {
+          overflow: auto;
             padding: var(--app-padding);
             border: 1px solid var(--color-grey-050);
             background: var(--color-grey-050);
@@ -127,6 +131,7 @@ defineExpose({ handleOpen })
 
 </style>
 <style lang="scss">
+
 .search-download-dialog {
     .el-dialog__body {
         padding: 0 20px;

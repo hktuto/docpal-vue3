@@ -61,6 +61,9 @@ const displayMenu = computed(
   overflow-y: auto;
   overflow-x: hidden;
   transition : width .2s ease-in-out;
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
   &.opened {
     width: max-content;
   }

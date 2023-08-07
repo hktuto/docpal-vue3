@@ -1,14 +1,39 @@
 <template>
-    <div v-show="state.visible" ref="FileRightClickPopoverRef" class="fileRightClick-container">
+    <div v-show="state.visible" ref="FileRightClickPopoverRef" 
+        style="--icon-size: 20px"
+        class="fileRightClick-container">
         <el-menu :default-active="state.defaultActive" @select="handleSelect" v-loading="state.loading">
-            <el-menu-item index="docActionAddFolder" v-show="state.canWrite && state.doc.isFolder && state.actions.addFolder" >{{$t('filePopover_newFolder')}}</el-menu-item>
-            <el-menu-item index="docActionAddFile" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >{{$t('filePopover_uploadFolder')}}</el-menu-item>
-            <el-menu-item index="docActionRename" v-show="state.canWrite && state.actions.rename">{{$t('filePopover_rename')}}</el-menu-item>
-            <el-menu-item index="docActionCopy" v-show="state.actions.copy">{{$t('filePopover_copy')}}</el-menu-item>
-            <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">{{$t('filePopover_cut')}}</el-menu-item>
-            <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">{{$t('filePopover_paste')}}</el-menu-item>
-            <el-menu-item index="docActionDelete" v-show="state.canWrite && state.actions.delete"> {{$t('filePopover_delete')}}</el-menu-item>
-            <el-menu-item index="docActionRefresh" v-show="state.actions.refresh">{{$t('common_refresh')}}</el-menu-item>
+            <el-menu-item index="docActionAddFolder" v-show="state.canWrite && state.doc.isFolder && state.actions.addFolder" >
+                <SvgIcon class="el-icon--left" src="/icons/file/folder-add.svg"></SvgIcon>
+                {{$t('filePopover_newFolder')}}</el-menu-item>
+            <!-- <el-menu-item index="docActionAddFile" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >{{$t('filePopover_uploadFolder')}}</el-menu-item> -->
+            <el-menu-item index="docActionUploadFile" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >
+                <SvgIcon class="el-icon--left" src="/icons/file/file-upload.svg"></SvgIcon>
+                {{$t('filePopover_uploadFile')}}</el-menu-item>
+            <el-menu-item index="docActionUploadFolder" v-show="state.canWrite && state.doc.isFolder && state.actions.addFile" >
+                <SvgIcon class="el-icon--left" src="/icons/file/folder-upload.svg"></SvgIcon>
+                {{$t('filePopover_uploadFolder')}}</el-menu-item>
+            <el-menu-item index="docActionRename" v-show="state.canWrite && state.actions.rename">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-rename.svg"></SvgIcon>
+                {{$t('filePopover_rename')}}</el-menu-item>
+            <el-menu-item index="docActionCopy" v-show="state.actions.copy">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-copy.svg"></SvgIcon>
+                {{$t('filePopover_copy')}}</el-menu-item>
+            <el-menu-item index="docActionCut" v-show="state.canWrite && state.actions.cut">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-cut.svg"></SvgIcon>
+                {{$t('filePopover_cut')}}</el-menu-item>
+            <el-menu-item index="docActionPaste" v-show="state.canWrite && state.copyItem.path && state.actions.paste">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-paste.svg"></SvgIcon>
+                {{$t('filePopover_paste')}}</el-menu-item>
+            <el-menu-item index="docActionInternalShare" v-show="state.canManage && state.actions.internalShare">
+                <SvgIcon class="el-icon--left" src="/icons/menu/shareMe.svg"></SvgIcon>
+                {{$t('filePopover_internalShare')}}</el-menu-item>
+            <el-menu-item index="docActionDelete" v-show="state.canWrite && state.actions.delete"> 
+                <SvgIcon class="el-icon--left" src="/icons/menu/trash.svg"></SvgIcon>
+                {{$t('filePopover_delete')}}</el-menu-item>
+            <el-menu-item index="docActionRefresh" v-show="state.actions.refresh">
+                <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg"></SvgIcon>
+                {{$t('common_refresh')}}</el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -38,8 +63,10 @@ const state = reactive({
         paste: true,
         delete: true,
         refresh: true,
+        internalShare: true
     },
     canWrite: false,
+    canManage: false,
     loading: false
 })
 const userId:string = useUser().getUserId()
@@ -48,10 +75,13 @@ async function handleRightClick (detail: any) {
 
     state.visible = true
     state.doc = detail.doc
+    console.log(state.doc);
+    
     await handleAction(detail)
     state.defaultActive = []
     FileRightClickPopoverRef.value.style.left = detail.pageX + 'px'
     FileRightClickPopoverRef.value.style.top = detail.pageY + 'px'
+    
     const popoverHeight = FileRightClickPopoverRef.value.offsetHeight
     const popoverWidth = FileRightClickPopoverRef.value.offsetWidth
     const windowHeight = window.innerHeight
@@ -61,7 +91,8 @@ async function handleRightClick (detail: any) {
         const top = detail.pageY - popoverHeight
         FileRightClickPopoverRef.value.style.top = top + 'px'
     }
-    if (detail.pageX + popoverWidth > windowHeight) {
+    if (detail.pageX + popoverWidth > windowWidth) {
+        
         const left = detail.pageX - popoverWidth
         FileRightClickPopoverRef.value.style.left = left + 'px'
     }
@@ -70,7 +101,7 @@ async function handleAction (detail:any) {
     if (detail.actions) state.actions = { ...state._actions,  ...detail.actions}
     else state.actions = { ...state._actions }
     if (props.permission) {
-        state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission.permission })
+        setPermission(props.permission.permission)
         return
     }
     state.loading = true
@@ -78,13 +109,20 @@ async function handleAction (detail:any) {
         const idOrPath = detail.doc.path === '/' ? '/' : detail.doc.id
         const permission = await GetDocPermission(idOrPath, userId);
         if(!permission) throw new Error("null");
-        state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission.permission })
+        setPermission(permission.permission)
     } catch (error) {
-        if (props.permission)
-            state.canWrite = AllowTo({feature:'ReadWrite', userPermission: props.permission.permission })
-        else state.canWrite = false
+        if (props.permission) {
+            setPermission(props.permission.permission)
+        }
+        else {
+            setPermission('Read')
+        }
     }
     state.loading = false
+}
+function setPermission(permission) {
+    state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission })
+    state.canManage = AllowTo({feature:'ManageRecord', userPermission: permission })
 }
 function hidePopover () {
     if (!state.visible) return
@@ -117,17 +155,15 @@ function handleSelect (command: string) {
     document.dispatchEvent(ev)
     emits('rightActionClick', command)
 }
-onMounted(() => {
-    useEventListener(document, 'fileRightClick', (evt) => handleRightClick(evt.detail))  
-    useEventListener(document, 'mouseup', hidePopover)  
-})
+useEventListener(document, 'fileRightClick', (evt:any) => handleRightClick(evt.detail))
+useEventListener(document, 'mouseup', hidePopover)
 </script>
 <style lang="scss" scoped>
 .fileRightClick-container {
     box-shadow: var(--el-box-shadow-light);
     position: fixed;
     z-index: 9999;
-    width: 180px;
+    min-width: 180px;
     .el-menu-item {
         height: unset;
         line-height: unset;

@@ -1,19 +1,21 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <template #headerLeft>{{$t('file_browse')}}</template>
-        <h3>
-            <template v-if="state.code === '601'">
-                {{$t('Document not found, please make sure the idOrPath is correct')}}
-            </template>
-            <template v-else-if="state.code === '605'">
-                {{$t('Please confirm that you have permission for this document:en-US')}}
-            </template>
-        </h3>
         <div>
-            <el-button @click="goRoute()">{{$t('back to the root level')}}</el-button>
-            <el-button v-if="state.code === '601' && state.splitPaths.length > 2" @click="goRoute(false)">{{$t('back to the previous level')}}</el-button>
-            <span class="el-icon--right">{{$t('automatic back to the root level')}}: </span>
-            <span> {{state.second}}s ...</span>
+            <h3>    
+                <template v-if="state.code === '601'">
+                    {{$t('Document not found, please make sure the idOrPath is correct')}}
+                </template>
+                <template v-else-if="state.code === '605'">
+                    {{$t('Please confirm that you have permission for this document:en-US')}}
+                </template>
+            </h3>
+            <div>
+                <el-button @click="goRoute()">{{$t('back to the root level')}}</el-button>
+                <el-button v-if="state.code === '601' && state.splitPaths.length > 2" @click="goRoute(false)">{{$t('back to the previous level')}}</el-button>
+                <span class="el-icon--right">{{$t('automatic back to the root level')}}: </span>
+                <el-tag @click="stop"> {{state.second}}s ...</el-tag>
+            </div>
         </div>
     </NuxtLayout>
 </template>
@@ -30,6 +32,9 @@ const state = reactive({
     splitPaths: [],
     intervale: null
 })
+function stop() {
+    clearInterval(state.interval)
+}
 function goRoute (isRoot: boolean = true) {
     let fullPath = '/browse'
     if (!isRoot) {

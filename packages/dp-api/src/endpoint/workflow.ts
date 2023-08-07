@@ -145,5 +145,5 @@ export const startAdhocApi = async(params) => {
 }
 
 export const auditAdhocApi = async(params) => {
-    return await api.post('/docpal/workflow/submitAdhocApproval', params ).then(res => res.data.data);
+    return await api.post('/docpal/workflow/submitAdhocApproval', params ).then(res => res.data.result);
 }

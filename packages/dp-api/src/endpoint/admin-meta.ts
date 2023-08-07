@@ -94,10 +94,12 @@ export const GetMetaSettingList = async():Promise<metaSetting[]> => {
         }
         return prev
     }, [])
-    console.log(metaList, metaSettingData)
     Object.keys(metaSettingData).forEach(key => {
         const item = metaList.find((prevItem) => prevItem.documentType === key)
-        if(!!item) item.related = metaSettingData[item.documentType].related
+        if(!!item) {
+            item.related = metaSettingData[item.documentType].related
+            item.isFolder = metaSettingData[key].isFolder
+        }
         else {
         // else if(metaSettingData[key].related && metaSettingData[key].related.length > 0){
                 metaList.push({ ...metaSettingData[key], documentType: key })

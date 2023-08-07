@@ -10,6 +10,10 @@ html, body {
     box-sizing: border-box;
 }
 
+.noScroll{
+  overflow: hidden;
+}
+
 .appThemeBg {
     // background-image : url('/images/bg-light.jpg');
     // background-size: cover;
@@ -23,7 +27,7 @@ html.dark {
         // background-size: cover;
         // background-repeat: no-repeat;
         // background-position: center center;
-    } 
+    }
     .glass{
         /* From https://css.glass */
         background: rgba(33, 33, 33, 0.8);
@@ -103,17 +107,19 @@ html.dark {
         }
     }
 }
+$--scroll-dialog-height: fit-content;
 .scroll-dialog {
     display: flex;
     flex-direction: column;
     margin: 0 !important;
     position: absolute;
-    top: 45%;
+    top: 52%;
     left: 50%;
     transform: translate(-50%,-50%);
     max-height: 80%;
     width: 60%;
-    min-width: 600px;
+    height: var(--scroll-dialog-height);
+    min-width: 280px;
     .el-dialog__body {
         flex: 1;
         overflow: auto;
@@ -123,12 +129,15 @@ html.dark {
     .el-form-item__error{
         display: none
     }
+  @media(max-width: 640px){
+    --el-dialog-width : 80% !important;
+  }
 }
 @-webkit-keyframes fadeOut {
     0% { opacity: 1;}
     99% { opacity: 0.01;width: 100%; height: 100%;}
     100% { opacity: 0;width: 0; height: 0;}
-}  
+}
 @keyframes fadeOut {
     0% { opacity: 1;}
     99% { opacity: 0.01;width: 100%; height: 100%;}
@@ -153,4 +162,26 @@ html.dark {
 .el-cascader-panel {
     max-width: 60vw;
     overflow-x: auto;
+}
+
+.el-tabs{
+  max-width: calc( 100vw - (var(--app-padding) * 4) + 60px);
+  @media(max-width: 1024px){
+    max-width: calc( 100vw - var(--app-padding) * 4);
+  }
+}
+
+.el-tabs__item{
+  @media(max-width: 1024px) {
+    display:block !important;
+    text-align: left;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+.el-popper {
+    max-height: 70vh;
+    overflow: auto;
 }

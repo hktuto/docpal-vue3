@@ -1,5 +1,15 @@
 <template>
     <div ref="filterContainerRef" class="filterContainer">
+      <div class="formShrink" @click="opened = true">
+        Filter
+        <div class="iconContainer">
+          <arrow-down />
+        </div>
+      </div>
+      <div :class="{formContainerDialog:true, opened}">
+        <div v-if="isMobile" class="dialogCloseBtn" @click="opened = false">
+          <SvgIcon src="/icons/close.svg" />
+        </div>
         <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
         <div class="filterContainer-footer">
             <el-row :gutter="10">
@@ -12,34 +22,38 @@
             </el-row>
             <el-button type="info" @click="handleDownload">{{$t('export')}}</el-button>
         </div>
-        <WidthShrinker :targetDom="filterContainerRef"></WidthShrinker>
+      </div>
         <SearchDownloadDialog ref="SearchDownloadDialogRef" />
     </div>
 </template>
 
 <script lang="ts" setup>
+
 import { deepCopy, getJsonApi, getSearchParamsArray } from 'dp-api'
+import {ArrowDown} from "@element-plus/icons-vue";
 const props = defineProps<{
-    searchParams: any
+    searchParams: any,
+    ready: boolean
 }>()
+const { isMobile } = useLayout()
 const route = useRoute()
 const router = useRouter()
 const emits = defineEmits(['submit'])
 const filterJson = getJsonApi('search.json')
 const FromRendererRef = ref()
 const filterContainerRef = ref()
-const state = reactive({
-    changeEvent: false
-})
+
+const opened = ref(false);
+const formModelData = ref<any>({});
 function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
-    if(!state.changeEvent) return
+    if(!props.ready) return
     const _data = dataHandle(formModel)
     goRoute(_data)
 }
-function goRoute(formModel) {
+function goRoute(formModel:any) {
     const searchBackPath = route.query.searchBackPath || ''
     const time = new Date().valueOf().toString()
-
+    formModelData.value = formModel
     router.push({
         query: {
             ...formModel,
@@ -54,15 +68,17 @@ function handleSubmit () {
     const data = FromRendererRef.value.vFormRenderRef.getFormData(false)
     const _data = dataHandle(data)
     goRoute(_data)
+  if(opened ) {
+    opened.value = false
+  }
 }
 
 function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()
 }
-function initForm () {
-    setTimeout(async() => {
-        const searchParams = deepCopy(props.searchParams)
-        let key = props.searchParams.paramsInTextSearch
+function initForm (searchParams) {
+  nextTick(async() => {
+        let key = searchParams.paramsInTextSearch
         if(!!key) searchParams.keyword = key
         searchParams.includeFolder = searchParams.includeFolder ? '1' : '0'
         if(searchParams.hight) {
@@ -79,8 +95,8 @@ function initForm () {
         }
         // searchParams.includeFolder = searchParams.includeFolder === '1' || searchParams.includeFolder === 1;
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
-        state.changeEvent = true
-    }, 800)
+        formModelData.value = FromRendererRef.value.vFormRenderRef.getFormData(false)
+    })
 }
 const SearchDownloadDialogRef = ref()
 function dataHandle (formModel) {
@@ -96,18 +112,21 @@ function handleDownload () {
     SearchDownloadDialogRef.value.handleOpen(_data)
 }
 onMounted(() => {
-    initForm()
 })
-defineExpose({ handleSubmit })
+defineExpose({ handleSubmit, initForm })
 </script>
 
 <style lang="scss" scoped>
 .filterContainer{
     height: 100%;
-    display: grid;
-    grid-template-rows: 1fr min-content;
+    display: flex;
+    flex-flow: column nowrap;
     overflow: hidden;
     min-width: 320px;
+  flex: 0 0 auto;
+  @media(max-width: 1024px) {
+    height: auto;
+  }
     .formContainer {
         overflow-x: hidden;
         overflow-y: auto;
@@ -120,5 +139,38 @@ defineExpose({ handleSubmit })
             width: 100%;
         }
     }
+}
+.formShrink{
+  display: none;
+  width: 100%;
+  position: relative;
+  font-size: .8rem;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  .iconContainer{
+    width: 1rem;
+  }
+  @media (max-width: 1024px) {
+    display: flex;
+  }
+}
+.formContainerDialog{
+  display: none;
+  background: var(--color-grey-0000);
+  @media (min-width: 1024px) {
+    display: block !important;
+
+  }
+  &.opened {
+    display: block;
+    position: fixed;
+    z-index: 9;
+    left: var(--app-padding);
+    right: var(--app-padding);
+    top: calc( var(--app-padding) + 60px );
+    bottom: var(--app-padding);
+
+  }
 }
 </style>
