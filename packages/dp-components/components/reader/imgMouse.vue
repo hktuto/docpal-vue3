@@ -69,7 +69,7 @@ function dragMousemove(event) {
     }
 }
 onMounted(() => {
-    useEventListener(dragElement, 'mousewheel', handleScroll)
+    useEventListener(dragWrap, 'mousewheel', handleScroll)
 })
 </script>
 
