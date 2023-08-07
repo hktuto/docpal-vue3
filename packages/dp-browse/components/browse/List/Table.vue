@@ -7,13 +7,23 @@
             v-loading="loading"
             :class="{ dragActive: state.dragActive }"
             :columns="tableSetting.columns"
-            :table-data="list"
+            :table-data="filterList"
             :options="options"
                 @command="handleAction"
                 @row-dblclick="handleDblclick"
                 @row-contextmenu="handleRightClick"
                 @selection-change="handleSelect"
                 @contextmenu="handleEmptyRightClick">
+                <template #nameFilter="{column, index}">
+                    <el-input
+                        v-model="keywords"
+                        size="mini"
+                        :placeholder="$t(column.label)"
+                        class="searchInput"
+                        clearable
+                        @clear="keywords = ''"
+                    />
+                </template>
                 <template #docName="{ row, index }">
                     <div class="nameContainer" :data-row-name="row.name">
                         <div :class="{selectContainer:true, checked: isSelected(row)}">
@@ -52,7 +62,12 @@ const emit = defineEmits([
 const selectedItems = ref<any>([])
 const props = defineProps<{list: any}>();
 const { list } = toRefs(props) 
-
+const keywords = ref('')
+const filterList = computed(() => {
+    return list.value.filter((item:any) => {
+        return !keywords.value || item.name.toLowerCase().includes(keywords.value.toLowerCase())
+    })
+})
 
 // #region module: page
 const { t } = useI18n()
@@ -174,6 +189,9 @@ function handleSelect (rows:any) {
 onMounted(() => {
 })
 
+watch(list, (val) => {
+    keywords.value = "";
+})
 </script>
 
 <style lang="scss" scoped>
@@ -278,6 +296,17 @@ onMounted(() => {
             outline : none;
         }
     }
+}
+.headerSearchContainer{
+    float: left;
+    display: flex;
+    flex-flow:  row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-padding);
+}
+.searchInput{
+    width: 100px;
 }
 </style>
 <style lang="scss">

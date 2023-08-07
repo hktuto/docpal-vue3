@@ -459,7 +459,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_BROWSE] : {
         columns: [
             // { id: '4', type: 'selection' },
-            { id: '1', slot: 'docName', label: 'table_name', prop: 'name', sortable: true },
+            { id: '1', slot: 'docName', label: 'table_name', prop: 'name', sortable: true, headerSlot:"nameFilter" },
            
             { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
                 formatList: [
