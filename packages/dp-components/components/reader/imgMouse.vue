@@ -38,15 +38,16 @@ const state = reactive({
     scrollLeftStart: 0
 })
 function handleScroll(e) {
+    console.log(dragElement);
     if (e.ctrlKey) {
         event.preventDefault();
         let speed = e.wheelDelta / 120
         if (e.wheelDelta > 0 && state.scale < props.scaleZoom.max) {
             state.scale += 0.2 * speed
-            dragElement.value.style.transform = `scale(${state.scale}) translate(${state.translate.x}px, ${state.translate.y}px)`
+            dragElement.value.style.scale = state.scale
         } else if (e.wheelDelta < 0 && state.scale > props.scaleZoom.min) {
             state.scale += 0.2 * speed
-            dragElement.value.style.transform = `scale(${state.scale}) translate(${state.translate.x}px, ${state.translate.y}px)`
+            dragElement.value.style.scale = state.scale
         }
     }
 }
@@ -74,28 +75,18 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-  .drag-outer {
+.drag-outer {
     height:100%;
     width: 100%;
     overflow: auto;
-    float: left;
-    display: flex;
     background-color:#fff;
-    justify-content: center;
-    align-items: center;
     .drag-inner {
-      transform-origin: center center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: var(--cursor);
-      user-select: none;
-      >* {
-        -webkit-user-drag: none;
-        user-drag: none;
-      }
-      img{object-fit:contain; width:100%; height:100%}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: var(--cursor);
+        transform-origin: top left;
     }
-  }
+}
 </style>
 
