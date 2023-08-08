@@ -111,7 +111,8 @@ export enum TABLE {
     ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
 
     PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
-    ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
+    ADMIN_FOLDER_CABINET = 'adminFolderCabinet',
+    ADMIN_HOLD_POLICIES_MANAGE = 'adminHoldPoliciesManage'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -148,7 +149,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.META_PROFILE_DIALOG] :{
         columns: [
             { property: 'title', label: 'title' },
-            { property: 'name', label: 'name' }
+            { property: 'name', label: 'tableHeader_name' }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -1256,7 +1257,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_GROUP_MANAGE]: {
         columns: [
-            { id: '1', label: 'name', prop: 'name' },
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
             { id: '2', label: 'Identifer', prop: 'id' }
         ],
         events: [],
@@ -1462,7 +1463,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_BULK_IMPORT_CONFIG_FORM]: {
         columns: [
             { id: '1', prop: 'title', label: 'title' },
-            { id: '2', prop: 'name', label: 'name' }
+            { id: '2', prop: 'name', label: 'tableHeader_name' }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -1504,7 +1505,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_SCHEMA_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'name' },
+            { id: '1', prop: 'name', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",
@@ -1535,7 +1536,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_DOC_TYPE_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'name' },
+            { id: '1', prop: 'name', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",
@@ -1872,8 +1873,40 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['delete'],
         slots: [],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_HOLD_POLICIES_MANAGE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'policyName' },
+            { id: '2', label: 'user_active', slot: 'active', prop: 'status' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
     }
-    
 }
 
 export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
