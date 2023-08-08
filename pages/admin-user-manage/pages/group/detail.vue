@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" backPath="/user">
+    <NuxtLayout class="fit-height withPadding" backPath="/group">
        <div class="userDetailSection">
             <div class="list">
                 <KeywordFilter :list="state.groupList" attr="name"
