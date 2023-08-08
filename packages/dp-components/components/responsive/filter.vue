@@ -2,6 +2,8 @@
   <div ref="responsiveRef"
    class="responsive-container" v-element-size="onResize">
      <div class="flex-x-start">
+        <el-input v-if="inputKey" v-model="state.inputValue" :placeholder="$t(inputPlaceHolder)"
+            @input="handleChange"></el-input>
         <div v-for="item in state.list" :key="item.label" :ref="el => { boxRefs[item.label] = el }">
             <ResponsiveSelect  :selectData="item" @change="handleChange"/>
         </div>
@@ -32,6 +34,13 @@
 import { ArrowDownBold } from '@element-plus/icons-vue'
 import { vElementSize } from '@vueuse/components'
 import { deepCopy } from 'dp-api'
+
+const props = withDefaults(defineProps<{
+    inputKey: string,
+    inputPlaceHolder: string
+}>(), {
+  inputPlaceHolder: 'tip.filterByName'
+})
 const emits = defineEmits(['form-change', 'clear-filter'])
 export type option = {
     label: string,
@@ -56,7 +65,9 @@ const state = reactive<state>({
     list: [],
     moreList: [],
     moreSelected: 0,
-    padding: 15
+    padding: 15,
+    inputValue: '',
+    interval: null
 })
 // #region module: onResize
     function onResize({ width, height }: { width: number; height: number }) {
@@ -124,7 +135,7 @@ const state = reactive<state>({
 const responsiveRef = ref()
 function init(list: ResSelectData[]) {
     state.list = list.reduce((prev, item) => {
-        if(!item.isMultiple) item.isMultiple = true
+        if(item.isMultiple !== false) item.isMultiple = true
         item.value = []
         prev.push(item)
         return prev
@@ -134,26 +145,31 @@ function init(list: ResSelectData[]) {
     })
 }
 function handleChange (filedData: {fieldName: string, value: any}) {
-    state.moreSelected = 0
-    const formModel = state.list.reduce((prev,item) => {
-        if(item.belong) {
-            if(!prev[item.belong]) prev[item.belong] = {}
-            prev[item.belong][item.key] = item.isMultiple ? item.value : item.value.join(',')
-        }
-        else if(item.value && item.value.length > 0){
-            prev[item.key] = item.isMultiple ? item.value : item.value.join(',')
-        }
-        if(state.moreList.find(m => m.key === item.key)) {
-            state.moreSelected += item.value.length
-        }
-        return prev
-    }, {})
-    setTimeout(() => {
+    if(state.interval) clearInterval(state.interval)
+    state.interval = setInterval(() => {
+        state.moreSelected = 0
+        const formModel = state.list.reduce((prev,item) => {
+            if(item.belong) {
+                if(!prev[item.belong]) prev[item.belong] = {}
+                prev[item.belong][item.key] = item.isMultiple ? item.value : item.value.join(',')
+            }
+            else if(item.value && item.value.length > 0){
+                prev[item.key] = item.isMultiple ? item.value : item.value.join(',')
+            }
+            if(state.moreList.find(m => m.key === item.key)) {
+                state.moreSelected += item.value.length
+            }
+            return prev
+        }, {})
+        if(props.inputKey) formModel[props.inputKey] = state.inputValue
+        
         emits('form-change', deepCopy(formModel), filedData)
         onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
-    },200)
+        clearInterval(state.interval)
+    }, 200)
 }
 function handleFilter () {
+    state.inputValue = ''
     state.list.forEach(item => {
         item.value = []
     })
