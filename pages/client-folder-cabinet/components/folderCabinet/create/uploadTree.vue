@@ -41,7 +41,7 @@
 
 
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { deepCopy, GetCabinetResultApi, GetCabinetTemplateApi } from 'dp-api'
 const props = defineProps<{
     treeData: Object
@@ -131,14 +131,20 @@ function handleMetaChange (properties: any) {
         const files = Array.from(e.target.files)
         state.treeItem.loading = true
         const pList = []
+        const childData = getParentChildren(state.treeItem)
         files.forEach(async(file) => {
             pList.push(append(file))
         })
         e.target.value = '' // 解决不能上传相同文件问题
         const res = await Promise.all(pList)
         state.treeItem.loading = false
-
+        
         async function append(file) {
+            const index = childData.findIndex(item => item.label === file.name)
+            if(index > -1) {
+                ElMessage.warning('tip.fileExists')
+                return
+            }
             const param = {
                 id: new Date().valueOf() + num++,
                 raw: file,
@@ -149,6 +155,23 @@ function handleMetaChange (properties: any) {
                 metaList: await MetaFormRef2.value.metaListGet(state.treeItem.documentType, {})
             }
             treeRef.value.append(param, state.treeItem)
+        }
+        function getParentChildren (curTreeItem) {
+            if(!curTreeItem.parentId) return
+            const pNode = treeRef.value.getNode(curTreeItem.parentId)
+            const children = []
+            getChild([pNode])
+            return children
+            function getChild(nodes) {
+                nodes.forEach(node => {
+                    if(!node.isLeaf) {
+                        if(node.data && node.data.folder === false && node.data.children){
+                            children.push(...node.data.children)
+                        } 
+                        if(node.childNodes) getChild(node.childNodes)
+                    }
+                })
+            }
         }
     }
     function handleDeleteFile (treeItem) {
