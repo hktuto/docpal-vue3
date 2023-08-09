@@ -1,4 +1,4 @@
-import { pageParams } from './../model/index';
+
 import {api} from '../';
 import { BreadResponse, DocDetail, GetChildResponse, 
     pageParams, collectionRemoveDocParams, collectionCreateParams,

@@ -485,9 +485,11 @@ importers:
   packages/unit-test:
     specifiers:
       '@playwright/test': ^1.36.1
+      dp-api: workspace:*
       playwright-teamcity-reporter: ^0.2.0
     devDependencies:
       '@playwright/test': 1.36.1
+      dp-api: link:../dp-api
       playwright-teamcity-reporter: 0.2.0
 
   pages/admin-acl:
@@ -10290,7 +10292,7 @@ packages:
   /unplugin/1.4.0:
     resolution: {integrity: sha512-5x4eIEL6WgbzqGtF9UV8VEC/ehKptPXDS6L2b0mv4FRMkJxRtjaJfOWDd6a8+kYbqsjklix7yWP0N3SUepjXcg==}
     dependencies:
-      acorn: 8.9.0
+      acorn: 8.10.0
       chokidar: 3.5.3
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.5.0

@@ -1,5 +1,5 @@
 import {api} from '../';
-import {  } from '../model/user';
+
 export type vMode = 'groupAllowList' | 'userAllowList'
 export const GetVirtualfolderApi = async() => {
     try {
