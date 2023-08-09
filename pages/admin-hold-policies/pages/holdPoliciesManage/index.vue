@@ -131,7 +131,7 @@ function handleDblclick(row) {
     const ResponsiveFilterRef = ref()
     async function getFilter() {
         const data = [
-            { key: "status", label: "Active", type: "string", isMultiple: false,
+            { key: "status", label: "user_active", type: "string", isMultiple: false,
                 options: [
                     { label: "noActive", value: "D" },
                     { label: "isActive", value: "A" }

@@ -25,7 +25,7 @@
                 </el-button>
             </template>
         </el-popover>
-        <el-button style="margin: unset" text @click="handleFilter">{{$t('button.clearFilter')}}</el-button>
+        <el-button v-show="state.selected > 0" style="margin: unset" text @click="handleFilter">{{$t('button.clearFilter')}}</el-button>
      </div>
   </div>
 </template>
@@ -64,6 +64,7 @@ const boxRefs = ref({})
 const state = reactive<state>({
     list: [],
     moreList: [],
+    selected: 0,
     moreSelected: 0,
     padding: 15,
     inputValue: '',
@@ -148,13 +149,16 @@ function handleChange (filedData: {fieldName: string, value: any}) {
     if(state.interval) clearInterval(state.interval)
     state.interval = setInterval(() => {
         state.moreSelected = 0
+        state.selected = 0
         const formModel = state.list.reduce((prev,item) => {
             if(item.belong) {
                 if(!prev[item.belong]) prev[item.belong] = {}
                 prev[item.belong][item.key] = item.isMultiple ? item.value : item.value.join(',')
+                state.selected ++
             }
             else if(item.value && item.value.length > 0){
                 prev[item.key] = item.isMultiple ? item.value : item.value.join(',')
+                state.selected ++
             }
             if(state.moreList.find(m => m.key === item.key)) {
                 state.moreSelected += item.value.length
@@ -173,6 +177,8 @@ function handleFilter () {
     state.list.forEach(item => {
         item.value = []
     })
+    state.selected = 0
+    state.moreSelected = 0
     emits('clear-filter')
     emits('form-change', {}, null )
 }
