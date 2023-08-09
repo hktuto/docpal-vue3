@@ -24,7 +24,7 @@
                         <template v-if="selectData.type === 'date'">
                             {{formatDate(item.label)}}
                         </template>
-                        <template v-else> {{item.label}} </template>
+                        <template v-else> {{$t(item.label)}} </template>
                     </el-checkbox>
                 </el-checkbox-group>
             </template>
