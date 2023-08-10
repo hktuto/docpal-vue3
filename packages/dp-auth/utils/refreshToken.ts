@@ -1,7 +1,8 @@
 import mem from "mem";
 import { api } from 'dp-api'
 
-const refreshTokenFn = async () => {
+export const refreshTokenFn = async () => {
+    console.log("refresh token")
     const refreshToken = localStorage.getItem('refreshToken');
     const Cookies = useCookie('docpal-user')
     const {user} = useUser()
@@ -14,18 +15,18 @@ const refreshTokenFn = async () => {
 
       if (!access_token) {
         localStorage.removeItem("refreshToken");
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
       }
       
       Cookies.value = JSON.stringify(user.value) 
       localStorage.setItem("refreshToken", refresh_token);
-      sessionStorage.setItem("token", access_token);
+      localStorage.setItem("token", access_token);
       return {
         refresh_token, access_token
       };
     } catch (error) {
       localStorage.removeItem("refresh_token");
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
     }
   };
 

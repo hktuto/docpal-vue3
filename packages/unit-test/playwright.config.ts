@@ -28,7 +28,6 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-    baseURL: process.env.BASEURL || 'https://app4.wclsolution.com',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
@@ -36,16 +35,10 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name:"setup",
-      testMatch: /global.setup\.ts/,
-    },
-    {
       name: 'chromium',
-      dependencies: ['setup'],
       testMatch: '**/**/*.spec.ts',
       use: { 
         ...devices['Desktop Chrome'],
-        storageState: STORAGE_STATE,
       },
     },
 

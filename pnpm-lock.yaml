@@ -485,9 +485,11 @@ importers:
   packages/unit-test:
     specifiers:
       '@playwright/test': ^1.36.1
+      dp-api: workspace:*
       playwright-teamcity-reporter: ^0.2.0
     devDependencies:
       '@playwright/test': 1.36.1
+      dp-api: link:../dp-api
       playwright-teamcity-reporter: 0.2.0
 
   pages/admin-acl:
