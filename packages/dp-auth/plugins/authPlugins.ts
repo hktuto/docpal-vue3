@@ -43,13 +43,14 @@ export default defineNuxtPlugin((nuxtApp) => {
                 router.push(`/error/${error.response.status}`)
                 return
             } else if (messageErrorCode.includes(error?.response?.status)) {
-                messageError(error, { router, route })
+               
                 if(error?.response?.status === 403 ) {
-                    console.log('403, logout', error?.response?.status, config?.sent)
+                    messageError(error, { router, route })
                     config.sent = false;
                     logout();
                     return Promise.resolve();
                 }
+                messageError(error, { router, route })
             }
         
             
