@@ -42,6 +42,7 @@ export type DocDetail = {
         "dc:valid" ?: any,
     },
     type: string,
+    documentType?: string,
     version: string
     displayMeta?: any
     canWrite ?: boolean,

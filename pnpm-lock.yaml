@@ -423,7 +423,7 @@ importers:
       '@microsoft/office-js': 1.1.86
       blob-util: 2.0.2
     devDependencies:
-      '@nuxt/devtools': 0.7.5_nuxt@3.5.3
+      '@nuxt/devtools': 0.7.6_nuxt@3.5.3
       '@types/node': 18.16.18
       '@types/office-js': 1.0.330
       dp-api: link:../dp-api
@@ -1014,6 +1014,26 @@ importers:
       eslint: 8.43.0
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
       typescript: 4.9.5
+
+  pages/client-hold-policies:
+    specifiers:
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^10.2.1
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.4.3
+      typescript: ^4.9.3
+      v-form: github:hktuto/v-form-designer
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 10.2.1
+      dp-api: link:../../packages/dp-api
+      eslint: 8.43.0
+      nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
+      typescript: 4.9.5
+      v-form: github.com/hktuto/v-form-designer/cb23c0c1c7490d5d7ac47a19556e7e1614fd9849
 
   pages/client-share-list:
     specifiers:
@@ -2145,8 +2165,8 @@ packages:
     resolution: {integrity: sha512-GBzP8zOc7CGWyFQS6dv1lQz8VVpz5C2yRszbXufwG/9zhStTIH50EtD87NmWbTMwXDvZLNg8GIpb1UFdH93JCA==}
     dev: true
 
-  /@nuxt/devtools-kit/0.7.5_nuxt@3.5.3:
-    resolution: {integrity: sha512-Zadd4s2vHlFQYRBLqmCADLMs1qxht8KKCZzfdhEdCAHby/s3EkfnYIuRUBlrfuAuNxa4cyExKFpeDpQ67N5fIQ==}
+  /@nuxt/devtools-kit/0.7.6_nuxt@3.5.3:
+    resolution: {integrity: sha512-2jSQ1rgStZifRHtfsdqmmvq/O5NskLCwg34JPchBRAx9Kv5IadABlBIWz1jLuaGarI/jsEEAmA5EpfxI5z/PJQ==}
     peerDependencies:
       nuxt: ^3.6.5
       vite: '*'
@@ -2160,8 +2180,8 @@ packages:
       - supports-color
     dev: true
 
-  /@nuxt/devtools-wizard/0.7.5:
-    resolution: {integrity: sha512-A8Urgy3hJBi3MSDEsr3yzOhO1jHoE80cQHmQUqAD8sD2e2fQSOwaH5CZMVGPbnSCWDfbchy+1cCwJ30JuEfeKg==}
+  /@nuxt/devtools-wizard/0.7.6:
+    resolution: {integrity: sha512-XCznlUTk66ApYJygGc+6FVborAp2F4PAIvY4b6dVSUf1f47Hs3CPe6eEdatarmEqiTmFMInaX4y8z1hDXrFF0Q==}
     hasBin: true
     dependencies:
       consola: 3.2.3
@@ -2207,15 +2227,15 @@ packages:
       - vite
     dev: true
 
-  /@nuxt/devtools/0.7.5_nuxt@3.5.3:
-    resolution: {integrity: sha512-Uxjow3J0QcYnbgMA8XR/1myr6Nw8P5vA/PMxTTj8LKqSZhd2+BgjnAg1gRUmMeKQCvkUfNOD+AqTK2HOBdHaBw==}
+  /@nuxt/devtools/0.7.6_nuxt@3.5.3:
+    resolution: {integrity: sha512-2x/eS0KbzTCK4+OozSZTcbjndM2ySy84MltF/suwLP7Wp/ehY8vzRp+yMTksxLjsf0sbiAa4K8WJCzKd8wLXxA==}
     hasBin: true
     peerDependencies:
       nuxt: ^3.6.5
       vite: '*'
     dependencies:
-      '@nuxt/devtools-kit': 0.7.5_nuxt@3.5.3
-      '@nuxt/devtools-wizard': 0.7.5
+      '@nuxt/devtools-kit': 0.7.6_nuxt@3.5.3
+      '@nuxt/devtools-wizard': 0.7.6
       '@nuxt/kit': 3.6.5
       birpc: 0.2.12
       boxen: 7.1.1
@@ -2245,7 +2265,7 @@ packages:
       sirv: 2.0.3
       unimport: 3.1.3
       vite-plugin-inspect: 0.7.35_@nuxt+kit@3.6.5
-      vite-plugin-vue-inspector: 3.5.0
+      vite-plugin-vue-inspector: 3.6.0
       wait-on: 7.0.1
       which: 3.0.1
       ws: 8.13.0
@@ -10290,7 +10310,7 @@ packages:
   /unplugin/1.4.0:
     resolution: {integrity: sha512-5x4eIEL6WgbzqGtF9UV8VEC/ehKptPXDS6L2b0mv4FRMkJxRtjaJfOWDd6a8+kYbqsjklix7yWP0N3SUepjXcg==}
     dependencies:
-      acorn: 8.9.0
+      acorn: 8.10.0
       chokidar: 3.5.3
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.5.0
@@ -10676,8 +10696,8 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-vue-inspector/3.5.0:
-    resolution: {integrity: sha512-dDoxEi5VWkfsKflVUYxElC3XD/MOn8s/6mjCqWRDlFIQ+OsY0cW5PNTbqxGllbBBCr5SDnDmPWFS1vMJxrLVEw==}
+  /vite-plugin-vue-inspector/3.6.0:
+    resolution: {integrity: sha512-Fi+9JaMx/reuic+MWbrdw8g5TwZM5a/BmdBT8OKKZi3rK4Qw3wND9smT+Ld+Daitbgly17uvuCiull2KV/hEBQ==}
     peerDependencies:
       vite: ^3.0.0-0 || ^4.0.0-0
     dependencies:

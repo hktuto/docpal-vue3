@@ -68,9 +68,9 @@ function handleRefresh(){
                     >
                         <template #header>
                             <div class="infoHeaderActions">
+                                <BrowseActionsHold  :doc="doc" />
                                 <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                                 <BrowseActionsSubscribe  :doc="doc" />
-                                
                                 <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" @success="handleRefresh"/>
                                 <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
                                 <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc"  />

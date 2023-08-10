@@ -6,26 +6,16 @@
                     <template #preSortButton>
                         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
                             inputKey="policyName"/>
-                    </template>  
-                    <template #suffixSortButton>
-                        <el-button @click="handleAdd">{{$t('button.add')}}</el-button>
-                    </template>
-                    <template #active="{row, index}">
-                        <el-switch v-model="row.status" 
-                            active-value="A" inactive-value="D"
-                            :loading="row.loading"
-                            @change="(value) => handleSetStatus(value, row)"
-                            />
-                    </template>
+                    </template> 
                 </Table>
-        <HoldPoliciesAddDialog ref="HoldPoliciesAddDialogRef" @update="handlePaginationChange" />
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-    GetHoldPoliciesPageApi,
+    GetHoldConditionsApi,
+    GetHoldsPageApi,
     DeleteHoldPolicyApi,
     UpdateHoldPolicyStatusApi,
     defaultTableSetting, TABLE
@@ -38,7 +28,7 @@ import {
         pageNum: 0,
         pageSize: 20
     }
-    const tableKey = TABLE.ADMIN_HOLD_POLICIES_MANAGE
+    const tableKey = TABLE.CLIENT_HOLD_POLICIES
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
@@ -61,7 +51,7 @@ import {
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetHoldPoliciesPageApi({ ...param, ...state.extraParams })
+            const res = await GetHoldsPageApi({ ...param, ...state.extraParams })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -130,14 +120,7 @@ function handleDblclick(row) {
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
-        const data = [
-            { key: "status", label: "user_active", type: "string", isMultiple: false,
-                options: [
-                    { label: "noActive", value: "D" },
-                    { label: "isActive", value: "A" }
-                ]
-            }
-        ]
+        const data = await GetHoldConditionsApi()
         ResponsiveFilterRef.value.init(data)
     }
     function handleFilterFormChange(formModel) {

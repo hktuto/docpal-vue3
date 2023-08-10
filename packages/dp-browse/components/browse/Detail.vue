@@ -10,6 +10,7 @@
                 
                 <CollapseMenu @openedChange="mobileActionsOpenedChanged">
                   <template #default="{collapse}">
+                    <BrowseActionsHold :doc="doc" />
                     <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
                     <BrowseActionsSubscribe  :doc="doc" />
                     <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
@@ -48,6 +49,7 @@
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
                 </h2>
                 <div class="info">
+                  1231
                   <BrowseInfo v-if="options.showInfo" :doc="doc" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false" />
                 </div>
             </div>
@@ -101,7 +103,9 @@ const readerType = computed(() => {
 async function openPreview({detail}:any) {
   show.value = false
   options.value = detail.options
-  const response = await getDocumentDetail(detail.pathOrId, userId)
+  // const response = await getDocumentDetail(detail.pathOrId, userId)
+  const response = await getDocumentDetailSync(detail.pathOrId, userId);
+
   doc.value = response.doc
   permission.value = response.permission
   show.value = true

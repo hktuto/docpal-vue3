@@ -1,44 +1,54 @@
 <template>
-    <div class="docInfoContainer">
-      <div class="infoSection">
-        <div class="infoTitle">{{$t('info_type')}}</div>
-        <div class="infoContent">{{ info.type }}</div>
-      </div>
-      <div v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')" class="infoSection">
-        <div class="infoTitle">{{ $t('info_version') }}</div>
-        <div class="infoContent"><BrowseInfoVersionPopover v-if="info.id" :doc="info"></BrowseInfoVersionPopover></div>
-      </div>
-      <div class="infoSection">
-        <div class="infoTitle">{{ $t('info_modified') }}</div>
-        <div class="infoContent">{{
-            displayTime(info.modifiedDate) === 'Invalid Date'
-              ? displayTime(info.createdDate)
-              : displayTime(info.modifiedDate)
-          }}</div>
-      </div>
-      <div class="infoSection">
-        <div class="infoTitle">{{ $t('info_created') }}</div>
-        <div class="infoContent">{{ displayTime(info.createdDate) }}</div>
-      </div>
-      <div class="infoSection">
-        <div class="infoTitle">{{ $t('info_by') }}</div>
-        <div class="infoContent">{{ info.createdBy }}</div>
-      </div>
-      <div class="infoSection">
-        <div class="infoTitle">{{ $t('info_contributors') }}</div>
-        <div class="infoContent tagList">
-          <div v-for="(contributor, index) in contributors"
-               :key="index" class="tag tableItemTags">
-            {{ contributor }}
-          </div>
+<div class="docInfoContainer">
+    <el-card>
+        <div class="infoSection">
+            <div class="infoTitle">{{$t('info_type')}}</div>
+            <div class="infoContent">{{ info.type }}</div>
         </div>
-    </div>
-      <BrowseInfoMeta v-bind="$props" @update="$emit('update')"/>
-      <BrowseInfoTag :doc="doc" @update="$emit('update')"/>
-      <BrowseInfoCollection :doc="doc" @update="$emit('update')" />
-      <BrowseInfoWorkflowSection v-if="!doc.isFolder" :doc="doc"></BrowseInfoWorkflowSection>
-      <BrowseInfoAcl :doc="doc" :permission="permission" />
-    </div>
+        <div v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')" class="infoSection">
+            <div class="infoTitle">{{ $t('info_version') }}</div>
+            <div class="infoContent"><BrowseInfoVersionPopover v-if="info.id" :doc="info"></BrowseInfoVersionPopover></div>
+        </div>
+        <div class="infoSection">
+            <div class="infoTitle">{{ $t('info_modified') }}</div>
+            <div class="infoContent">{{
+                displayTime(info.modifiedDate) === 'Invalid Date'
+                ? displayTime(info.createdDate)
+                : displayTime(info.modifiedDate)
+            }}</div>
+        </div>
+        <div class="infoSection">
+            <div class="infoTitle">{{ $t('info_created') }}</div>
+            <div class="infoContent">{{ displayTime(info.createdDate) }}</div>
+        </div>
+        <div class="infoSection">
+            <div class="infoTitle">{{ $t('info_by') }}</div>
+            <div class="infoContent">{{ info.createdBy }}</div>
+        </div>
+        <div class="infoSection">
+            <div class="infoTitle">{{ $t('info_contributors') }}</div>
+            <div class="infoContent tagList">
+                <div v-for="(contributor, index) in contributors"
+                    :key="index" class="tag tableItemTags">
+                    {{ contributor }}
+                </div>
+            </div>
+        </div>
+        <el-divider />
+        <BrowseInfoMeta v-bind="$props" @update="$emit('update')"/>
+    </el-card>
+    <el-card>
+        <BrowseInfoTag :doc="doc" @update="$emit('update')"/>
+        <BrowseInfoCollection :doc="doc" @update="$emit('update')" />
+    </el-card>
+    <el-card v-if="!doc.isFolder">
+        <BrowseInfoWorkflowSection :doc="doc"></BrowseInfoWorkflowSection>
+    </el-card>
+    <!-- <el-divider /> -->
+    <el-card>
+        <BrowseInfoAcl :doc="doc" :permission="permission" />
+    </el-card>
+</div>
 </template>
 
 <script lang="ts" setup>
