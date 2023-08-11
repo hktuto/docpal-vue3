@@ -21,19 +21,19 @@
         <div v-if="doc.holdDetail" v-click-outside="onClickOutside">
             <b>{{doc.holdDetail.removeProcessInstanceId ? $t('hp.pendingRemoveApproval') : $t('hp.pendingAddApproval')}}</b>
             <el-row :gutter="10">
-                <el-col :span="10"><small>{{$t('applyDate')}}</small></el-col>
+                <el-col :span="10"><small>{{$t('tableHeader_applyDate')}}</small></el-col>
                 <el-col :span="14">{{formatDate(doc.holdDetail.createdDate) }}</el-col>
             </el-row>
             <el-row :gutter="10">
-                <el-col :span="10"><small>{{$t('applyBy')}}</small></el-col>
+                <el-col :span="10"><small>{{$t('tableHeader_applyBy')}}</small></el-col>
                 <el-col :span="14">{{doc.holdDetail.applyBy}}</el-col>
             </el-row>
             <el-row :gutter="10">
-                <el-col :span="10"><small>{{$t('reason')}}</small></el-col>
+                <el-col :span="10"><small>{{$t('tableHeader_applyReason')}}</small></el-col>
                 <el-col :span="14" v-html="doc.holdDetail.applyReason || doc.holdDetail.removeReason"></el-col>
             </el-row>
             <el-row :gutter="10" v-if="userId !== doc.holdDetail.applyApprovedBy">
-                <el-col :span="10"><small>{{$t('approval')}}</small></el-col>
+                <el-col :span="10"><small>{{$t('approvedBy')}}</small></el-col>
                 <el-col :span="14">{{doc.holdDetail.applyApprovedBy}}</el-col>
             </el-row>
             <template v-else>
