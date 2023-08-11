@@ -30,7 +30,7 @@
             </el-row>
             <el-row :gutter="10">
                 <el-col :span="10"><small>{{$t('tableHeader_applyReason')}}</small></el-col>
-                <el-col :span="14" v-html="doc.holdDetail.applyReason || doc.holdDetail.removeReason"></el-col>
+                <el-col :span="14" v-html="doc.holdStatus === 'P' ? doc.holdDetail.applyReason : doc.holdDetail.removeReason"></el-col>
             </el-row>
             <el-row :gutter="10" v-if="userId !== doc.holdDetail.applyApprovedBy">
                 <el-col :span="10"><small>{{$t('approvedBy')}}</small></el-col>
@@ -103,7 +103,7 @@ const userId:string = useUser().getUserId()
     }
 // #endregion
 
-// #region module: status: D
+// #region module: status: P/L
     function onClickOutside () {
         state.dVisible = false
     }

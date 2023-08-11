@@ -5,7 +5,7 @@
                     @command="handleAction">
                     <template #preSortButton>
                         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                            inputKey="policyName"/>
+                            inputKey="documentName"/>
                     </template> 
                 </Table>
     </NuxtLayout>

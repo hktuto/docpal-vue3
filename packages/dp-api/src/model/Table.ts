@@ -1141,9 +1141,9 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'documentName' },
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
-            { id: '3', label: 'tableHeader_policy', prop: 'policyHoldName' },
-            { id: '4', label: 'Apply By', prop: 'applyBy' },
-            { id: '5', label: 'Approver', prop: 'applyApprovedBy' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyHoldName' },
+            { id: '4', label: 'tableHeader_applyBy', prop: 'applyBy' },
+            { id: '5', label: 'tableHeader_approver', prop: 'applyApprovedBy' },
             { id: '6', label: 'tableHeader_confirmAt', prop: 'applyApprovedDate',
                 formatList: [
                     {
