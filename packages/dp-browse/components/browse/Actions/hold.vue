@@ -14,7 +14,7 @@
     </el-dropdown>
     
     <el-popover
-        v-else-if="doc.isFolder && doc.holdDetail && (doc.holdDetail.removeProcessInstanceId || doc.holdDetail.applyProcessInstanceId)"
+        v-else-if="doc.holdStatus === 'P' || doc.holdStatus === 'L'"
         :visible="state.dVisible"
         placement="bottom"
         :width="250">   
@@ -37,9 +37,8 @@
                 <el-col :span="14">{{doc.holdDetail.applyApprovedBy}}</el-col>
             </el-row>
             <template v-else>
-                <el-button type="primary" size="small" :loading="state.loading" @click="handelAudit('R')">{{ $t('workflow_startAdhocWorkflow_approve') }}</el-button>
-                <el-button type="primary" size="small" :loading="state.loading" @click="handelAudit('A')">{{ $t('workflow_startAdhocWorkflow_approve') }}</el-button>
-                <el-button type="danger" size="small" :loading="state.loading" @click="handelAudit('D')">{{ $t('workflow_startAdhocWorkflow_reject') }}</el-button>
+                <el-button type="primary" size="small" :loading="state.loading" @click="handelAudit(true)">{{ $t('workflow_startAdhocWorkflow_approve') }}</el-button>
+                <el-button type="danger" size="small" :loading="state.loading" @click="handelAudit(false)">{{ $t('workflow_startAdhocWorkflow_reject') }}</el-button>
             </template>
         </div>
         <template #reference>
@@ -108,7 +107,7 @@ const userId:string = useUser().getUserId()
     function onClickOutside () {
         state.dVisible = false
     }
-    async function handelAudit (approved:'A' | 'D') {
+    async function handelAudit (approved: boolean) {
         state.loading = true
         const result = await SetDocumentHoldApi(props.doc.holdDetail.id, approved)
         if (result) await refreshHold()
@@ -118,7 +117,7 @@ const userId:string = useUser().getUserId()
 // #endregion
 async function refreshHold () {
     const res = await GetDocumentHoldApi(props.doc.id)
-    props.doc.holdStatus = res.status
+    props.doc.holdStatus = res?.status || ''
     props.doc.holdDetail = res
 }
 async function getHoldPolicies () {

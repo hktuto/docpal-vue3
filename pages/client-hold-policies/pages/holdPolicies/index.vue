@@ -86,16 +86,6 @@ import {
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 
-const HoldPoliciesAddDialogRef = ref()
-function handleAdd () {
-    HoldPoliciesAddDialogRef.value.handleOpen()
-}
-async function handleSetStatus (status, row) {
-    if(!row.id) return
-    const isSuccess = await UpdateHoldPolicyStatusApi(row.id, status)
-    if(isSuccess !== true) row.status = row.status === 'A' ? 'D' : 'A'
-    else ElMessage.success($t('dpMsg_success'))
-}
 function handleAction (command, row: any, index: number) {
     switch (command) {
         case 'delete':
@@ -106,17 +96,8 @@ function handleAction (command, row: any, index: number) {
     }
 }
 async function deleteItem(id: string) {
-    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
-    if(action !== 'confirm') return
-    await DeleteHoldPolicyApi(id)
-    handlePaginationChange(pageParams.pageNum + 1)
 }
-function handleDblclick(row) {
-    HoldPoliciesAddDialogRef.value.handleOpen({
-        ...row,
-        isEdit: true
-    })
-}
+function handleDblclick(row) {}
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
