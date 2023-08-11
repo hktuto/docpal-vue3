@@ -39,15 +39,16 @@ async function handleSubmit() {
         state.loading = true
         if(state.isEdit) await UpdateHoldPolicyApi(params)
         else await CreateHoldPolicyApi(params)
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        
         state.visible = false
         emits('update')
     } catch (error) {
     }
     state.loading = false
 }
-function handleOpen(setting) {
+async function handleOpen(setting) {
     state.visible = true
+    await FromRendererRef.value.vFormRenderRef.resetForm()
     if(setting && setting.isEdit) {
         state.isEdit = true
         state.setting = setting
@@ -57,6 +58,7 @@ function handleOpen(setting) {
         })
     } else {
         state.isEdit = false
+        state.setting = {}
         setTimeout(() => { FromRendererRef.value.vFormRenderRef.resetForm() })
     }
 }
