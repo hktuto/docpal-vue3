@@ -93,7 +93,7 @@ const userId:string = useUser().getUserId()
         holdDetail.isRemoveReasonReq = holdDetail.isRemoveReasonReq
         holdDetail.approvedBy = holdDetail.removeApprovalId
         if(!holdDetail.isRemoveAuto) BrowseActionsHoldAddDialogRef.value.handleOpen(holdDetail)
-        else removeHold()
+        else removeHold({})
     }
     async function removeHold (params?, cb?) {
         params.id = props.doc.holdDetail.id
