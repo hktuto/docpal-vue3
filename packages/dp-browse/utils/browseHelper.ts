@@ -71,7 +71,6 @@ export const duplicateNameFilter = async (idOrPath: string, list:any) => {
  * @param userId user id to check permissions for, if null, no permissions will be returned
  */
 export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
-  console.log("getDocumentDetail", idOrPath)
   const response = await GetDocDetail(idOrPath);
   try {
     response.displayMeta = await GetDocumentAdditionalApi({documentType: response.type})
@@ -96,7 +95,6 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
     
 }
 export const getDocumentDetailSync = async (idOrPath: string, userId?:string) => {
-  console.log("getDocumentDetail", idOrPath)
   let doc: any = {
     holdStatus: ''
   }
@@ -122,7 +120,7 @@ export const getDocumentDetailSync = async (idOrPath: string, userId?:string) =>
   }
   async function getHoldStatus(id: string) {
     const res = await GetDocumentHoldApi(id)
-    doc.holdStatus = res.status || ''
+    doc.holdStatus = res?.status || ''
     doc.holdDetail = res
   } 
 }
