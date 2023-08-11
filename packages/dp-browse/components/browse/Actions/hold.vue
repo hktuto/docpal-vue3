@@ -73,7 +73,7 @@ const userId:string = useUser().getUserId()
 // #region module: status: R || ''
     const BrowseActionsHoldAddDialogRef = ref()
     function handleAdd(holdDetail) {
-        holdDetail.operation = 'A'
+        holdDetail.operation = 'ADD'
         holdDetail.approvedBy = holdDetail.holdApprovalId
         if(!holdDetail.isHoldAuto) BrowseActionsHoldAddDialogRef.value.handleOpen(holdDetail)
         else addHold({ holdPolicyId: holdDetail.id })
@@ -89,7 +89,7 @@ const userId:string = useUser().getUserId()
     function handleRemoveHold() {
         const holdDetail = state.holdList.find(item => item.id === props.doc.holdDetail.policyHoldId) 
         if(!holdDetail) return
-        holdDetail.operation = 'R'
+        holdDetail.operation = 'REMOVE'
         holdDetail.isRemoveReasonReq = holdDetail.isRemoveReasonReq
         holdDetail.approvedBy = holdDetail.removeApprovalId
         if(!holdDetail.isRemoveAuto) BrowseActionsHoldAddDialogRef.value.handleOpen(holdDetail)

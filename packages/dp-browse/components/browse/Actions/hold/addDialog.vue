@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('user_newUser')"
+<el-dialog v-model="state.visible" :title="state.setting.operation === 'ADD' ? $t('hp.addHold') : $t('hp.removeHold')"
     :close-on-click-modal="false"
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" />
@@ -25,7 +25,7 @@ async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        if(state.setting.operation === 'A') {
+        if(state.setting.operation === 'ADD') {
             emits('submit', {
                 holdPolicyId: data.id,
                 holdApprovalId: data.approvedBy,
