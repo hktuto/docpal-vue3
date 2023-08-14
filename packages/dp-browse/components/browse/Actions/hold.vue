@@ -22,19 +22,20 @@
             <b>{{doc.holdDetail.removeProcessInstanceId ? $t('hp.pendingRemoveApproval') : $t('hp.pendingAddApproval')}}</b>
             <el-row :gutter="10">
                 <el-col :span="10"><small>{{$t('tableHeader_applyDate')}}</small></el-col>
-                <el-col :span="14">{{formatDate(doc.holdDetail.createdDate) }}</el-col>
+                <el-col :span="14">{{doc.holdStatus === 'P' ? formatDate(doc.holdDetail.createdDate) : formatDate(doc.holdDetail.removeDate)}}</el-col>
             </el-row>
             <el-row :gutter="10">
                 <el-col :span="10"><small>{{$t('tableHeader_applyBy')}}</small></el-col>
-                <el-col :span="14">{{doc.holdDetail.applyBy}}</el-col>
+                <el-col :span="14">{{doc.holdStatus === 'P' ? doc.holdDetail.applyBy : doc.holdDetail.removeBy}}</el-col>
             </el-row>
             <el-row :gutter="10">
                 <el-col :span="10"><small>{{$t('tableHeader_applyReason')}}</small></el-col>
                 <el-col :span="14" v-html="doc.holdStatus === 'P' ? doc.holdDetail.applyReason : doc.holdDetail.removeReason"></el-col>
             </el-row>
-            <el-row :gutter="10" v-if="userId !== doc.holdDetail.applyApprovedBy">
+            <el-row :gutter="10" v-if="(doc.holdStatus === 'P' && userId !== doc.holdDetail.applyApprovedBy) || 
+                (doc.holdStatus === 'L' && userId !== doc.holdDetail.removeApprovedBy)">
                 <el-col :span="10"><small>{{$t('approvedBy')}}</small></el-col>
-                <el-col :span="14">{{doc.holdDetail.applyApprovedBy}}</el-col>
+                <el-col :span="14">{{doc.holdStatus === 'P' ? doc.holdDetail.applyApprovedBy : doc.holdDetail.removeApprovedBy}}</el-col>
             </el-row>
             <template v-else>
                 <el-button type="primary" size="small" :loading="state.loading" @click="handelAudit(true)">{{ $t('workflow_startAdhocWorkflow_approve') }}</el-button>
