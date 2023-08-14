@@ -88,16 +88,21 @@ import {
 
 function handleAction (command, row: any, index: number) {
     switch (command) {
-        case 'delete':
-            deleteItem(row.id)
+        case 'goRoute':
+            goRoute(row.documentId)
             break
+        
         default:
             break
     }
 }
-async function deleteItem(id: string) {
+async function goRoute(documentId: string) {
+    router.push(`/browse?path=${documentId}`)
 }
-function handleDblclick(row) {}
+function handleDblclick(row) {
+    goRoute(row.documentId)
+}
+
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
