@@ -84,6 +84,7 @@ export enum TABLE {
     CLIENT_FOLDER_CABINET = 'clientFolderCabinet',
     CLIENT_INTERNAL_SHEAR_ME = 'clientInternalShareMe',
     CLIENT_INTERNAL_SHEAR_OTHER = 'clientInternalShareOther',
+    CLIENT_HOLD_POLICIES = "clientHoldPolicies",
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -1134,6 +1135,55 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
             { slot: 'tags', label: 'dpTable_tags', prop: 'tags' },
         ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_HOLD_POLICIES]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyHoldName' },
+            { id: '4', label: 'tableHeader_applyBy', prop: 'applyBy' },
+            { id: '5', label: 'tableHeader_approver', prop: 'applyApprovedBy' },
+            { id: '6', label: 'tableHeader_confirmAt', prop: 'applyApprovedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "applyApprovedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            // {   
+            //     id: '3',
+            //     "type": "",
+            //     "label": "dpTable_actions",
+            //     class: "slotTopRight",
+            //     "prop": "",
+            //     "align": "center",
+            //     "width": 100,
+            //     "hide": false,
+            //     "system": false,
+            //     "showOverflowTooltip": false,
+            //     "formatList": [],
+            //     "buttons": [
+            //         {
+            //             "name": "",
+            //             "type": "text",
+            //             "command": "delete",
+            //             "suffixIcon": "/icons/menu/trash.svg",
+            //             "index": 0
+            //         }
+            //     ],
+            //     "prefixIcon": "",
+            //     "suffixIcon": "",
+            // }
+        ],
+        events: ['delete'],
+        slots: [],
         options: { pageSize: 20 }
     },
 

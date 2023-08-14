@@ -5,27 +5,17 @@
                     @command="handleAction">
                     <template #preSortButton>
                         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                            inputKey="policyName"/>
-                    </template>  
-                    <template #suffixSortButton>
-                        <el-button @click="handleAdd">{{$t('button.add')}}</el-button>
-                    </template>
-                    <template #active="{row, index}">
-                        <el-switch v-model="row.status" 
-                            active-value="A" inactive-value="D"
-                            :loading="row.loading"
-                            @change="(value) => handleSetStatus(value, row)"
-                            />
-                    </template>
+                            inputKey="documentName"/>
+                    </template> 
                 </Table>
-        <HoldPoliciesAddDialog ref="HoldPoliciesAddDialogRef" @update="handlePaginationChange" />
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-    GetHoldPoliciesPageApi,
+    GetHoldConditionsApi,
+    GetHoldsPageApi,
     DeleteHoldPolicyApi,
     UpdateHoldPolicyStatusApi,
     defaultTableSetting, TABLE
@@ -38,7 +28,7 @@ import {
         pageNum: 0,
         pageSize: 20
     }
-    const tableKey = TABLE.ADMIN_HOLD_POLICIES_MANAGE
+    const tableKey = TABLE.CLIENT_HOLD_POLICIES
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
@@ -61,7 +51,7 @@ import {
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetHoldPoliciesPageApi({ ...param, ...state.extraParams })
+            const res = await GetHoldsPageApi({ ...param, ...state.extraParams })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -96,16 +86,6 @@ import {
     const { tableData, options, loading } = toRefs(state)
 // #endregion
 
-const HoldPoliciesAddDialogRef = ref()
-function handleAdd () {
-    HoldPoliciesAddDialogRef.value.handleOpen()
-}
-async function handleSetStatus (status, row) {
-    if(!row.id) return
-    const isSuccess = await UpdateHoldPolicyStatusApi(row.id, status)
-    if(isSuccess !== true) row.status = row.status === 'A' ? 'D' : 'A'
-    else ElMessage.success($t('dpMsg_success'))
-}
 function handleAction (command, row: any, index: number) {
     switch (command) {
         case 'delete':
@@ -116,28 +96,12 @@ function handleAction (command, row: any, index: number) {
     }
 }
 async function deleteItem(id: string) {
-    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
-    if(action !== 'confirm') return
-    await DeleteHoldPolicyApi(id)
-    handlePaginationChange(pageParams.pageNum + 1)
 }
-function handleDblclick(row) {
-    HoldPoliciesAddDialogRef.value.handleOpen({
-        ...row,
-        isEdit: true
-    })
-}
+function handleDblclick(row) {}
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
-        const data = [
-            { key: "status", label: "user_active", type: "string", isMultiple: false,
-                options: [
-                    { label: "noActive", value: "D" },
-                    { label: "isActive", value: "A" }
-                ]
-            }
-        ]
+        const data = await GetHoldConditionsApi()
         ResponsiveFilterRef.value.init(data)
     }
     function handleFilterFormChange(formModel) {

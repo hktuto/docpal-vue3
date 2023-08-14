@@ -1,0 +1,28 @@
+{
+  "name": "client-hold-policies",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "scripts": {
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.admin.dev --port 3333",
+    "build": "nuxi build .playground",
+    "generate": "nuxi generate .playground",
+    "preview": "nuxi preview .playground",
+    "postinstall": "nuxi prepare",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    
+  },
+  "devDependencies": {
+    "v-form": "github:hktuto/v-form-designer",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@vueuse/components": "^9.13.0",
+    "@vueuse/core": "^10.2.1",
+    "eslint": "^8.28.0",
+    "nuxt": "^3.4.3",
+    "typescript": "^4.9.3",
+    "dp-api":"workspace:*"
+  }
+}

@@ -10,15 +10,16 @@
                 
                 <CollapseMenu @openedChange="mobileActionsOpenedChanged">
                   <template #default="{collapse}">
-                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/>
+                    <BrowseActionsHold :doc="doc" />
+                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @success="handleRefresh"/>
                     <BrowseActionsSubscribe  :doc="doc" />
                     <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
-                    <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission })" @success="handleRefresh"/>
+                    <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" @success="handleRefresh"/>
                     <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
-                    <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc"  />
-                    <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                    <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission, holdStatus })"  :doc="doc"  />
+                    <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                     <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                    <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                    <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })" :doc="doc" />
                     <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                     <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
     
@@ -74,6 +75,7 @@ const options = ref<FileDetailOptions>({
   showHeaderAction: false,
 })
 const emit = defineEmits(['close'])
+const holdStatus = computed( () => (doc.value?.holdStatus) || '')
 
 const readerType = computed(() => {
     if(!doc.value) return "";
@@ -101,7 +103,9 @@ const readerType = computed(() => {
 async function openPreview({detail}:any) {
   show.value = false
   options.value = detail.options
-  const response = await getDocumentDetail(detail.pathOrId, userId)
+  // const response = await getDocumentDetail(detail.pathOrId, userId)
+  const response = await getDocumentDetailSync(detail.pathOrId, userId);
+
   doc.value = response.doc
   permission.value = response.permission
   show.value = true
