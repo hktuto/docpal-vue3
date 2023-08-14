@@ -1157,30 +1157,30 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            // {   
-            //     id: '3',
-            //     "type": "",
-            //     "label": "dpTable_actions",
-            //     class: "slotTopRight",
-            //     "prop": "",
-            //     "align": "center",
-            //     "width": 100,
-            //     "hide": false,
-            //     "system": false,
-            //     "showOverflowTooltip": false,
-            //     "formatList": [],
-            //     "buttons": [
-            //         {
-            //             "name": "",
-            //             "type": "text",
-            //             "command": "delete",
-            //             "suffixIcon": "/icons/menu/trash.svg",
-            //             "index": 0
-            //         }
-            //     ],
-            //     "prefixIcon": "",
-            //     "suffixIcon": "",
-            // }
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "goRoute",
+                        "suffixIcon": "/icons/file/position.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
         ],
         events: ['delete'],
         slots: [],
