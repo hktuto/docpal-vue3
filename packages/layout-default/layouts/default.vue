@@ -4,7 +4,7 @@
         <div ref="sidebarEl" id="sidebarContainer" :class="{opened}">
             <Logo class="logo" :mode="logo"/>
             <Menu :opened="opened" :class="{opened}"/>
-            <div v-if="menu.length > 0" :class="{expand:true, opened}" >
+            <div  :class="{expand:true, opened}" >
               <div class="menuActions" style="--icon-color: var(--color-grey-500)">
                 <Language v-if="mode === 'development'"></Language>
                 <!-- <NotificationBadge v-if="feature.notification"/> -->
