@@ -70,7 +70,7 @@ const state = reactive({
             const { level, value } = node;
             const idOrPath = level == 0 ? "/" : value
             setTimeout(async() => {
-                let res = await GetChildThumbnail({idOrPath})
+                let res = await GetChildThumbnail({idOrPath, pageSize: 100000})
                 const nodes = res.entryList.reduce((prev, item) => { 
                     if (item.isFolder) prev.push({
                         value: item.path,

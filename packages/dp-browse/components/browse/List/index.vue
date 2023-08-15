@@ -25,7 +25,7 @@ const { isMobile } = useLayout()
 const pageParams = ref({
   idOrPath: '/',
   pageNumber: 0,
-  pageSize: 100
+  pageSize: 1000
 })
 const children = ref<any[]>([]);
 
