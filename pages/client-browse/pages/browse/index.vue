@@ -66,7 +66,7 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import {DocDetail, GetChildThumbnail} from 'dp-api';
+import { DocDetail } from 'dp-api';
 import {watch, ref, computed} from 'vue'
 import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
 import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper';
