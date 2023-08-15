@@ -30,6 +30,6 @@ export default defineNuxtConfig({
     extends: [
         ...customLayer()
     ],
-    ...playgroundConfig({}),
+    ... playgroundConfig({}),
 
 })
