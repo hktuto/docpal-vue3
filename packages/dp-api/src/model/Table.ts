@@ -518,6 +518,7 @@ export const defaultTableSetting: TableColumnSetting = {
             // { id: '4', type: 'selection' },
             { id: '2', label: 'table_name', prop: 'name' },
             { id: '3', slot: 'watermark', label: 'watermark' },
+            { id: '5', slot: 'readOnly', label: 'readOnly' },
             { id: '4', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {

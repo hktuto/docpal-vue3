@@ -3,7 +3,7 @@
             @row-dblclick="handleDblclick">
             <template #actions="{ row, $index }">
                 <el-button v-if="row.watermarkStatus === 'NO'" type="primary" text>{{$t('Converting')}}...</el-button>
-                <el-button v-else-if="!row.watermarkStatus || row.watermarkStatus === 'YES'" type="primary" :loading="row.downloading" @click="handleAction('download', row, $index)">{{$t('download')}}</el-button>
+                <el-button v-else-if="(!row.watermarkStatus || row.watermarkStatus === 'YES') && !row.readOnly" type="primary" :loading="row.downloading" @click="handleAction('download', row, $index)">{{$t('download')}}</el-button>
                 <el-button v-else text type="danger">{{$t('Conversion failed')}}</el-button>
             </template>    
         </Table>

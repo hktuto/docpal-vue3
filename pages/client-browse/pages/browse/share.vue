@@ -83,15 +83,13 @@ async function handleDblclick (row) {
     previewFile.id = row.id
 }
 async function handleSubmit () {
-  console.log('handleSubmit');
     state.loading = true
 
     try {
       const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
       const param = {
         emailList: formData.emailList,
-        documentIdList: documentIdListGet(),
-        watermarkList: watermarkListGet(),
+        documentList: documentIdListGet(),
         password: formData.password ? formData.password : '',
         tokenLiveInMinutes: diffMinute(formData.dueDate)
       }
@@ -106,14 +104,20 @@ async function handleSubmit () {
       ElMessage.error(error.message)
     }
     state.loading = false
-    function watermarkListGet() {
-        return state.minTypeShareList.reduce((prev,item) => {
-            if (item.watermark) prev[item.id] = item.watermark
-            return prev
-        }, {})
-    }
+    // function watermarkListGet() {
+    //     return state.minTypeShareList.reduce((prev,item) => {
+    //         if (item.watermark) prev[item.id] = item.watermark
+            
+    //         return prev
+    //     }, {})
+    // }
     function documentIdListGet () {
-        return state.minTypeShareList.map(item => (item.id))
+        return state.minTypeShareList.map((item:any) => ({
+            docId:item.id,
+            readOnly:item.readOnly,
+            watermarkTemplateId: item.watermark || ""
+        })
+        )
     }
 }
 function handleDeleteRow (row) {
