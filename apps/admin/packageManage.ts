@@ -5,7 +5,6 @@ export function customLayer():string[] {
 
     // default style
     
-    packages.push('../../pages/admin-workflow-form');
     // all stores
    
     packages.push('../../packages/dp-browse');
