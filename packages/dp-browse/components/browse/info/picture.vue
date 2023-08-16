@@ -21,7 +21,9 @@
 </template>
 
 <script lang="ts" setup>
-import { Download } from '@element-plus/icons-vue'
+import { ElNotification, ElMessage } from 'element-plus'
+import { Download, Loading } from '@element-plus/icons-vue'
+import { DamDownloadApi } from 'dp-api'
 const props = defineProps<{doc: any}>();
 
 const { displayTime } = useTime()
@@ -59,22 +61,31 @@ function formatter (row, column) {
     }
 
 function fileSizeFilter (bytes) {
-      bytes = Number(bytes)
-      const units = ["B", "KB", "MB", "GB", "TB"]
-      let unit = ''
-      for (let i = 1; bytes / 1024 >= 1; i++) {
-        unit = units[i]
-        bytes = bytes / 1024
-      }
-      return bytes.toFixed(2) + unit
-    }
-    function handleDownload (row) {
-        // TODO : download file
-      const { externalEndpoint } = useSetting();
-      let origin = externalEndpoint?.value?.docpal
-      origin = origin.includes('http') ? origin : 'https://' + origin
-      const a = row.data || row.content.data
-      const url = a.replace(/(http(s)?:\/\/).*?(?=\/)/, origin)
-      downloadUrl(url, row.filename)
-    }
+  bytes = Number(bytes)
+  const units = ["B", "KB", "MB", "GB", "TB"]
+  let unit = ''
+  for (let i = 1; bytes / 1024 >= 1; i++) {
+    unit = units[i]
+    bytes = bytes / 1024
+  }
+  return bytes.toFixed(2) + unit
+}
+async function handleDownload (row) {
+  const noti = ElNotification({
+    title: $i18n.t('download'),
+    icon: Loading,
+    dangerouslyUseHTMLString: true,
+    message: `<div title="${row.filename}">${row.filename}</div>`,
+    showClose: true,
+    customClass: 'loading-notification',
+    duration: 0,
+    position: 'bottom-right'
+  });
+  try {
+    const response = await DamDownloadApi(props.doc.id, row.content.data)
+    downloadBlob(response, row.filename)
+  } catch (error) {
+  }
+  noti.close()
+}
 </script>
