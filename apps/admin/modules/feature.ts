@@ -23,7 +23,7 @@ const coreFeatures = {
     MESSAGE_QUEUE: "../../../pages/admin-message-queue",
     META_MANAGE: "../../../pages/admin-meta-manage",
     SHARE: "../../../pages/admin-share-list",
-    WATERMARK: "../../../pages/admin-watermark",
+    WATERMARK: ["../../../pages/admin-watermark", "../../../packages/dp-watermark"],
     DAM: "../../../pages/admin-dam",
     TABLE_SETTING: "../../../pages/admin-table-setting",
     USER_MANAGE: "../../../pages/admin-user-manage",
@@ -33,11 +33,6 @@ const coreFeatures = {
     INTERNAL_SHARE: "../../../pages/admin-internal-share",
     HOLD_POLICIES: "../../../pages/admin-hold-policies",
     BROWSE_STORE: '../../../packages/dp-browse',
-    TRASH: '../../../pages/client-trash',
-    SHARE_LIST: "../'../../pages/client-share-list",
-    COLLECTION:"../../../pages/client-collection",
-    SHARE_ME: "../../../pages/client-share-me",
-    SHARE_OTHER: "../../../pages/client-share-other",
 }
 export default defineNuxtModule({
     meta: {
@@ -74,11 +69,13 @@ export default defineNuxtModule({
         // loop coreFeatures
         Object.keys(coreFeatures).forEach((key:string) => {
             if(Array.isArray(coreFeatures[key])) {
-                coreFeatures[key].forEach((path:string) => {
-                    nuxt.options._layers.push(createLayers(path as string))
+                coreFeatures[key].forEach((p:string) => {
+                    console.log(p)
+                    nuxt.options._layers.push(createLayers(p as string))
                 })
+            }else {
+                nuxt.options._layers.push(createLayers(coreFeatures[key] as string))
             }
-            nuxt.options._layers.push(createLayers(coreFeatures[key] as string))
         })
     }
   })
