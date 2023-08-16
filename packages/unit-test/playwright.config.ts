@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
 import * as path from "path";
-
-
+dotenv.config();
 export const STORAGE_STATE = path.join(__dirname, 'storage/test.json');
 console.log("STORAGE_STATE", STORAGE_STATE);
 /**
