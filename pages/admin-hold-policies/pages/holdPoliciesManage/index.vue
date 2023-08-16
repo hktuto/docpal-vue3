@@ -36,7 +36,9 @@ import {
     const router = useRouter()
     const pageParams = {
         pageNum: 0,
-        pageSize: 20
+        pageSize: 20,
+        orderBy: 'createdDate',
+        isDesc: true
     }
     const tableKey = TABLE.ADMIN_HOLD_POLICIES_MANAGE
     const tableSetting = defaultTableSetting[tableKey]

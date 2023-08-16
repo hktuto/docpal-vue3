@@ -1928,9 +1928,23 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_HOLD_POLICIES_MANAGE]: {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'policyName' },
-            { id: '2', label: 'user_active', slot: 'active', prop: 'status' },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'user_active', slot: 'active', prop: 'status', width: 100 },
             {   
-                id: '3',
+                id: '5',
                 "type": "",
                 "label": "dpTable_actions",
                 class: "slotTopRight",
