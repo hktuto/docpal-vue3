@@ -13,7 +13,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "v-form": "github:hktuto/v-form-designer"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",

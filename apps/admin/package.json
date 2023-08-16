@@ -17,6 +17,6 @@
     "dp-api":"workspace:*"
   },
   "dependencies": {
-    "v-form": "github:hktuto/v-form-designer"
+    
   }
 }
