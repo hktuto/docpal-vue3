@@ -3,7 +3,7 @@ import axios from 'axios';
 import path from 'path';
 
 export const api = axios.create({
-    baseURL: process.env.ADMIN_ENDPOINT || 'https://admin.app4.wclsolution.com/api',
+    baseURL: process.env.CLIENT_ENDPOINT || 'https://app4.wclsolution.com/api',
     timeout: 50000,
 })
 const features = {
@@ -61,6 +61,7 @@ export default defineNuxtModule({
             Object.keys(data).forEach((key:string) => {
                 if(!data[key] || !features[key]) return
                 if(Array.isArray(features[key])) {
+                    
                     features[key].forEach((path:string) => {
                         nuxt.options._layers.push(createLayers(path as string))
                     })
@@ -69,10 +70,14 @@ export default defineNuxtModule({
                 }
             })
     } catch (error) {
-        
     }
         // loop coreFeatures
         Object.keys(coreFeatures).forEach((key:string) => {
+            if(Array.isArray(coreFeatures[key])) {
+                coreFeatures[key].forEach((path:string) => {
+                    nuxt.options._layers.push(createLayers(path as string))
+                })
+            }
             nuxt.options._layers.push(createLayers(coreFeatures[key] as string))
         })
     }
