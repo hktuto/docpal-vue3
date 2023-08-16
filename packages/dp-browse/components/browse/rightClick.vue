@@ -40,9 +40,8 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import { DocDetail, GetDocPermission } from 'dp-api'
+import { DocDetail, GetDocPermission, GetDocumentHoldApi } from 'dp-api'
 import { AllowTo } from '~/utils/permissionHelper'
-
 const props = defineProps<{
     permission?: any
 }>()
@@ -75,7 +74,6 @@ async function handleRightClick (detail: any) {
 
     state.visible = true
     state.doc = detail.doc
-    console.log(state.doc);
     
     await handleAction(detail)
     state.defaultActive = []
@@ -107,9 +105,11 @@ async function handleAction (detail:any) {
     state.loading = true
     try {
         const idOrPath = detail.doc.path === '/' ? '/' : detail.doc.id
-        const permission = await GetDocPermission(idOrPath, userId);
+        const permission = await GetDocPermission(idOrPath, userId)
+        const hold = await GetDocumentHoldApi(detail.doc.id)
+        const holdStatus = hold?.status || ''
         if(!permission) throw new Error("null");
-        setPermission(permission.permission)
+        setPermission(permission.permission, holdStatus)
     } catch (error) {
         if (props.permission) {
             setPermission(props.permission.permission)
@@ -120,9 +120,9 @@ async function handleAction (detail:any) {
     }
     state.loading = false
 }
-function setPermission(permission) {
-    state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission })
-    state.canManage = AllowTo({feature:'ManageRecord', userPermission: permission })
+function setPermission(permission, holdStatus? = '') {
+    state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission, holdStatus })
+    state.canManage = AllowTo({feature:'ManageRecord', userPermission: permission, holdStatus })
 }
 function hidePopover () {
     if (!state.visible) return

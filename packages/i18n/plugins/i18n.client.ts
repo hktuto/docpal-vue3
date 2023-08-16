@@ -15,7 +15,7 @@ export default defineNuxtPlugin(async({
     const appStore = useAppStore($pinia);
 
     for ( const lang of availableLocales) {
-        appStore.appLoadingList.push( {key:`Set Langauge : ${lang}`, function:setLanguage($i18n, lang, localeKey, baseUrl)})
+        appStore.appLoadingList.push( {key:`Getting Language Pack : ${lang}`, function:setLanguage($i18n, lang, localeKey, baseUrl)})
         // get locale
     }
 

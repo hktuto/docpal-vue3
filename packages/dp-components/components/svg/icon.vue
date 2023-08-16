@@ -3,7 +3,7 @@
     <template v-if="content">
         <el-tooltip :content="content">
             <template v-if="round">
-                <span class="svg-icon-round">
+                <span :class="svgRoundClass">
                     <component :is="InlineSvg" :class="svgClass" :src="src"></component>
                 </span>
             </template>
@@ -13,7 +13,7 @@
         </el-tooltip>
     </template>
     <template v-else-if="round">
-        <span class="svg-icon-round">
+        <span :class="svgRoundClass">
             <component :is="InlineSvg" :class="svgClass" :src="src"></component>
         </span>
     </template>
@@ -29,10 +29,16 @@ import InlineSvg from 'vue-inline-svg';
 const props = defineProps<{
     src: string,
     round?: boolean,
-    content?: string
+    content?: string,
+    disabled?: boolean
 }>()
 const svgClass = computed(() => {
+    if(props.disabled) return 'svg-icon svg-icon-disabled'
     return 'svg-icon'
+})
+const svgRoundClass = computed(() => {
+    if(props.disabled) return 'svg-icon-round svg-icon-round-disabled'
+    return 'svg-icon-round'
 })
 </script>
 
@@ -75,6 +81,15 @@ const svgClass = computed(() => {
         svg{
             color: var(--icon-hover-color, --color-grey-0000)!important;
         }
+    }
+    &-disabled  {
+        cursor: unset;
+        background-color: var(--icon-bg-color, var(--color-grey-300));
+        svg:hover { 
+            opacity: unset;
+            cursor: unset;
+        }
+        &:hover { opacity: unset }
     }
 }
 </style>

@@ -2,6 +2,7 @@ import { api } from 'dp-api';
 import { useLanguage } from '../composables/language';
 export default defineNuxtPlugin(({$i18n,_route}) => {
     const { addLanguageKeys } = useLanguage()
+    const router = useRouter()
     if( typeof window !== undefined) {
         // @ts-ignore
         window.$api = api;
@@ -10,6 +11,8 @@ export default defineNuxtPlugin(({$i18n,_route}) => {
             const cookie = useCookie(name)
             return cookie.value || {}
         }
+        // @ts-ignore
+        window.$router = router
         // @ts-ignore
         window.$i18n = $i18n
         // @ts-ignore

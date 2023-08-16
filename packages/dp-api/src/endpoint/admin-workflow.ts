@@ -1,5 +1,5 @@
 import {api} from '../';
-import { getJsonApi } from '../json';
+// import { getJsonApi } from '../json';
 export type GetTaskFormJsonParams = {
     processKey: string,
     userTaskId: string
@@ -40,10 +40,7 @@ export const GetTaskFormJsonApi = async(param: GetTaskFormJsonParams):Promise<Ge
             userTaskId: res[0].userTaskId
         }
     } catch (error) {
-        const json = getJsonApi('null.json')
-        return {
-            json
-        }
+        return ({})
     }
 }
 export const SaveTaskFormJsonApi = async(param: GetTaskFormJsonRes):Promise<GetTaskFormJsonRes> => {

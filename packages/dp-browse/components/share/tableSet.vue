@@ -11,6 +11,9 @@
                 <el-option v-for="item in state.watermarkList" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
         </template>
+        <template #readOnly="{ row, index }">
+            <el-switch v-model="row.readOnly"  active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+        </template>
 </Table>
 </template>
 
@@ -60,7 +63,6 @@ function handleDblclick (row:any) {
 }
 onMounted(async() => {
     state.watermarkList = await getWatermarkTemplates() 
-    console.log(state.watermarkList, 'watermarkList');
 })
 </script>
 

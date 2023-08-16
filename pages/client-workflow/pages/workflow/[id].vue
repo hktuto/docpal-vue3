@@ -1,11 +1,11 @@
 <template>
 <NuxtLayout class="fit-height withPadding " :backPath="`/workflow?tab=${backState}`">
     <div class="grid-layout">
-        <div class="info_panel">
-            <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>
-            <WorkflowDetailInfo v-else :taskDetail="taskDetail" @change="handleTaskInfoChange"></WorkflowDetailInfo>
-        </div>
         <el-tabs v-model="activeTab" class="grid-layout-tab" @tab-change="tabChange">
+            <el-tab-pane class="grid-layout-tab-pane" :label="$t('workflow_info')" name="info" v-loading="state.loading">
+                <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>
+                <WorkflowDetailInfo v-else :taskDetail="taskDetail" @change="handleTaskInfoChange"></WorkflowDetailInfo>
+            </el-tab-pane>
             <el-tab-pane class="grid-layout-tab-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
                 <WorkflowDetailFormRender ref="vFormRef" />
                 <div class="grid-layout-tab-pane--btns" v-if="isAssigneeUser">
@@ -50,7 +50,7 @@ const state = reactive({
     processState: {
         'completeTask': 'completeTask',
     },
-    activeTab: 'form',
+    activeTab: 'info',
     taskDetail: {},
     activityList: [],
     loading: false,
@@ -204,7 +204,7 @@ watch(() => route.query, (q) => {
 <style lang="scss" scoped>
 .grid-layout {
     display: grid;
-    grid-template-columns: min-content 1fr min-content;
+    grid-template-columns: 1fr min-content;
     height: 100%;
     gap: var(--app-padding);
     overflow: hidden;

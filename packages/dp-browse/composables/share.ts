@@ -7,11 +7,12 @@ export const useShareStore = defineStore('ShareStore', () => {
     })
     async function getMineTypeShareList(list:any) {
         const data = await DocumentThumbnailListGetApi(state.shareList.map((item:any) => item.id))
-        return data
+        return data.map((item:any) => {
+            return {...item, readOnly: true}
+        })
     }
     function updateShareList(list:any) {
         state.shareList = [...list]
-        console.log('updateShareList?????????????????????????');
         sessionStorage.setItem('shareList', JSON.stringify(state.shareList))
     }
 

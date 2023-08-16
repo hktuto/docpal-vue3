@@ -4,16 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test --reporter=html,playwright-teamcity-reporter",
+    "test": "playwright test --reporter=html,playwright-teamcity-reporter ",
     "test:ui": "playwright test --ui",
     "report": "playwright show-report",
-    "record": "playwright codegen localhost:3000"
+    "record": "playwright codegen "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.36.1",
-    "playwright-teamcity-reporter": "^0.2.0"
+    "playwright-teamcity-reporter": "^0.2.0",
+    "dp-api":"workspace:*"
   }
 }

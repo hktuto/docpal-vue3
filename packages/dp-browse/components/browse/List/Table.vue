@@ -52,7 +52,7 @@
 
 
 <script lang="tsx" setup>
-import { GetChildThumbnail, GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
+import { GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
 import {openFileDetail} from "~/utils/browseHelper";
 
 const emit = defineEmits([
