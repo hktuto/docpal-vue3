@@ -42,13 +42,13 @@ watch(() => route.params.id, (newJsonName) => {
     border-bottom: 1px solid #ddd;
     padding-bottom: var(--app-padding);
 }
-:deep(.main-container .v-form-container .v-form-panel .el-tabs__content) {
-    overflow: hidden;
-    .el-tab-pane {
-        overflow: hidden;
-        height: 100%;
-    }
-}
+// :deep(.main-container .v-form-container .v-form-panel .el-tabs__content) {
+//     overflow: hidden;
+//     .el-tab-pane {
+//         overflow: hidden;
+//         height: 100%;
+//     }
+// }
 :deep(.form-widget-container) {
     position: relative;
 }

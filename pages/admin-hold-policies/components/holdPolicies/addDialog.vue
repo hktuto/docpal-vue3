@@ -48,19 +48,18 @@ async function handleSubmit() {
 }
 async function handleOpen(setting) {
     state.visible = true
-    await FromRendererRef.value.vFormRenderRef.resetForm()
-    if(setting && setting.isEdit) {
-        state.isEdit = true
-        state.setting = setting
-        setTimeout(async () => {
+    setTimeout(async() => {
+        await FromRendererRef.value.vFormRenderRef.resetForm()
+        if(setting && setting.isEdit) {
+            state.isEdit = true
+            state.setting = setting
             await FromRendererRef.value.vFormRenderRef.setFormData({...state.setting})
             state.loading = false
-        })
-    } else {
-        state.isEdit = false
-        state.setting = {}
-        setTimeout(() => { FromRendererRef.value.vFormRenderRef.resetForm() })
-    }
+        } else {
+            state.isEdit = false
+            state.setting = {}
+        }
+    })
 }
 
 defineExpose({ handleOpen })
