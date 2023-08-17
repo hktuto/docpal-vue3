@@ -54,7 +54,15 @@ export default defineNuxtModule({
               }
             })
     } catch (error) {
-        
+        Object.keys(features).forEach((key:string) => {
+              if(Array.isArray(features[key])) {
+                  features[key].forEach((path:string) => {
+                      nuxt.options._layers.push(createLayers(path as string))
+                  })
+              } else {
+                  nuxt.options._layers.push(createLayers(features[key] as string))
+              }
+            })
     }
         // loop coreFeatures
         Object.keys(coreFeatures).forEach((key:string) => {
