@@ -14,6 +14,10 @@ export class BrowsePage {
         this.page.goto('/browse');
     }
 
+    async addFolder(name:string) {
+
+    }
+
     async addItemToDelete(name:string) {
         const url = await this.page.url();
         const urlObj = new URL(url);
