@@ -25,13 +25,11 @@ export class HoldPolicyManagePage {
     async add(holdPolicy: HoldPolicy) {
         this.policyNames.push(holdPolicy.policyName)
         console.log('add:',holdPolicy.policyName);
-        await this.page.goto(`${this.baseUrl}/holdPoliciesManage`);
+        // await this.page.goto(`${this.baseUrl}/holdPoliciesManage`);
         await this.page.getByRole('button', { name: 'Add' }).click();
         await this.page.getByLabel('Policy Name').click(); 
         await this.page.getByLabel('Policy Name').fill(holdPolicy.policyName);
         if (!holdPolicy.autoAdd) {
-            console.log(holdPolicy.autoAdd, 'holdPolicy.autoAdd',holdPolicy.policyName);
-            
             await this.page.locator('.add-auto .el-switch').click();
             await this.page.locator('.add-reason .el-switch').click();
             await this.page.locator('.add-approval .el-input__inner').click();
@@ -39,7 +37,6 @@ export class HoldPolicyManagePage {
             await this.page.locator('.add-approval .el-input__inner').press('Enter')
         }
         if(!holdPolicy.autoRemove) {
-            console.log(holdPolicy.autoRemove, 'holdPolicy.autoRemove',holdPolicy.policyName);
             await this.page.locator('.remove-auto .el-switch').click();
             await this.page.locator('.remove-reason .el-switch').click();
             await this.page.locator('.remove-approval .el-input__inner').click();
@@ -66,10 +63,11 @@ export class HoldPolicyManagePage {
         await this.page.getByRole('button', { name: 'Submit' }).click();
     }
   
-    async removeAll() {
+    async removeAll(policyNames?: string []) {
+        if(!policyNames) policyNames = this.policyNames
         // this.policyNames = ['ut_AA','ut_AD','ut_DA','ut_DD']
-        for( let i in this.policyNames) {
-            await this.remove(this.policyNames[i])
+        for( let i in policyNames) {
+            await this.remove(policyNames[i])
         }
     }
 }
