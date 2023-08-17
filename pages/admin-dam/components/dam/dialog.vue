@@ -214,10 +214,10 @@ const editSourceTypeChange = async(value) => {
     function dubValidate (_rule, value, callback) {
         if (value === '') {
             callback(new Error($i18n.t('form_common_requird') as string));
-        } else if (formData.value.operation.action === 'rotate' && 
+        } else if (state.data.operation.action === 'rotate' && 
             !/^-?\d+([<>])?$/.test(value)){
             callback(new Error($i18n.t('dpTip.formatError') as string));
-        } else if (formData.value.operation.action === 'compress' && 
+        } else if (state.data.operation.action === 'compress' && 
             !/^[1-9]\d*$/.test(value)){
             callback(new Error($i18n.t('dpTip.enterNumber') as string));
         }else {
