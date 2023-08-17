@@ -1,7 +1,7 @@
 <template>
 <div>
-    <el-dropdown v-if="doc.isFolder && (!doc.holdStatus || doc.holdStatus === 'R')" id="newActionButton">
-        <SvgIcon src="/icons/file/lock.svg" round></SvgIcon>
+    <el-dropdown v-if="doc.isFolder && (!doc.holdStatus || doc.holdStatus === 'R')">
+        <SvgIcon id="hd-lock-img" src="/icons/file/lock.svg" round></SvgIcon>
         <template #dropdown>
             <el-dropdown-menu>
                 <el-dropdown-item v-for="item in state.holdList" 
@@ -43,12 +43,12 @@
             </template>
         </div>
         <template #reference>
-            <SvgIcon disabled :src="doc.holdDetail.removeProcessInstanceId ? '/icons/file/lock.svg' : '/icons/file/unlock.svg'" round
+            <SvgIcon id="hd-pending-approval-img" disabled :src="doc.holdDetail.removeProcessInstanceId ? '/icons/file/lock.svg' : '/icons/file/unlock.svg'" round
                 @click="state.dVisible = !state.dVisible"
                 ></SvgIcon>
         </template>
     </el-popover>
-    <SvgIcon v-else-if="doc.holdStatus === 'A'" src="/icons/file/unlock.svg" round 
+    <SvgIcon v-else-if="doc.holdStatus === 'A'" id="hd-unlock-img" src="/icons/file/unlock.svg" round 
         :content="$t('hp.removeHold')"
         @click="handleRemoveHold"></SvgIcon>
     
