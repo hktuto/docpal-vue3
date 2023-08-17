@@ -36,10 +36,10 @@ const pictureViews = computed(() => {
           console.log("Video", props.doc.properties['vid:transcodedVideos']);
           if(!props.doc.properties['vid:transcodedVideos'] || props.doc.properties['vid:transcodedVideos'].length === 0) return [];
           const list = props.doc.properties['vid:transcodedVideos'].map(item => ({
-              ...item.content,
+              content: item.content,
               width: item.info.width,
               height: item.info.height,
-              filename: item.name,
+              filename: item.content.name,
               format: item.info.format,
           }));
           console.log("list", list)
@@ -71,11 +71,12 @@ function fileSizeFilter (bytes) {
   return bytes.toFixed(2) + unit
 }
 async function handleDownload (row) {
+  const name = row.filename || row.content.name
   const noti = ElNotification({
     title: $i18n.t('download'),
     icon: Loading,
     dangerouslyUseHTMLString: true,
-    message: `<div title="${row.filename}">${row.filename}</div>`,
+    message: `<div title="${name}">${name}</div>`,
     showClose: true,
     customClass: 'loading-notification',
     duration: 0,
@@ -83,7 +84,7 @@ async function handleDownload (row) {
   });
   try {
     const response = await DamDownloadApi(props.doc.id, row.content.data)
-    downloadBlob(response, row.filename)
+    downloadBlob(response, name)
   } catch (error) {
   }
   noti.close()
