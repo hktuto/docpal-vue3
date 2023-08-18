@@ -12,10 +12,11 @@ test.describe('hold process', () => {
     })
     await adminPage.goto('/holdPoliciesManage')
     const holdPolicyManagePage = new HoldPolicyManagePage(page, process.env.ADMIN_BASEURL as string);
-    await holdPolicyManagePage.add(hd_data.DD);
-    await holdPolicyManagePage.add(hd_data.AA);
-    await holdPolicyManagePage.add(hd_data.AD);
-    await holdPolicyManagePage.add(hd_data.DA);
+    const policyNames = Object.keys(hd_data)
+    for( let pn of policyNames) {
+      await holdPolicyManagePage.add(hd_data[pn])
+      await holdPolicyManagePage.activeHold(hd_data[pn].policyName)
+    }
   });
 
   test('client-hold', async ({page}) => {
@@ -45,6 +46,7 @@ test.describe('hold process', () => {
     })
     await adminPage.goto('/holdPoliciesManage')
     const holdPolicyManagePage = new HoldPolicyManagePage(page, process.env.ADMIN_BASEURL as string);
+    const policyNames = Object.keys(hd_data)
     await holdPolicyManagePage.removeAll(['ut_AA','ut_AD','ut_DA','ut_DD']);
   })
 })
