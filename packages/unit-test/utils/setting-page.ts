@@ -17,6 +17,9 @@ export class SettingsPage {
       await this.page.getByLabel('password').fill(account.password);
       await this.page.getByRole('button', {name: 'Submit'}).press('Enter');
       // await expect(this.page).toHaveURL(/.*browse/);
+      console.log('set languageSwitchContainer');
+      await this.page.locator('.languageSwitchContainer').click();
+      await this.page.getByRole('menuitem', { name: 'ENG' }).click();
     }
     async goto(path: string) {
       await this.page.goto(`${this.baseUrl}${path}`);

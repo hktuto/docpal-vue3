@@ -16,6 +16,7 @@ export class BrowseHoldPage {
     }
     // #region module: file
         async addFolder (name:string) {
+            console.log('addFolder：', name);
             await this.page.locator('#newActionButton').click();
             await this.page.getByRole('menuitem', { name: 'New Folder' }).click();
             await this.page.getByLabel('File Name').fill(name);
@@ -24,6 +25,7 @@ export class BrowseHoldPage {
             await expect(this.page.getByRole('cell', { name: name })).toHaveCount(1);
         }
         async addDocToDelete(name:string) {
+            console.log('addDocToDelete:', name);
             const url = await this.page.url();
             const urlObj = new URL(url);
             this.itemToDelete.push({
@@ -39,11 +41,12 @@ export class BrowseHoldPage {
         }
 
         async deleteDoc(item: Item) {
+            console.log('addDocToDelete:', item.name, item.parentPath);
             if(!item.parentPath) {
                 return;
             }
             await this.settingPage.goto(`/browse?path=${item.parentPath}`);
-            await this.page.getByPlaceholder('Name').fill(item.name);
+            // await this.page.getByPlaceholder('Name').fill(item.name);
             await this.page.getByRole('cell', { name: item.name }).click({
                 button: 'right'
             });
@@ -60,6 +63,7 @@ export class BrowseHoldPage {
 
     // #region module: hold
         async docAddHold(holdPolicy: HoldPolicy) {
+            console.log('docAddHold:', holdPolicy);
             await this.page.locator('.hd-lock-img').click();
             await this.page.getByRole('menuitem', { name: holdPolicy.policyName }).click();
             if (!holdPolicy.autoAdd) {
