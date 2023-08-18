@@ -11,6 +11,7 @@ const features = {
     SEARCH: "../../../packages/dp-search",
     WORKFLOW: ["../../../pages/admin-workflow-form", "../../../pages/admin-workflow-manage"],
     FOLDER_CABINET: "../../../pages/admin-folder-cabinet",
+    SHARE_EXTERNAL: "../../../pages/admin-share-list",
 }
 const coreFeatures = {
     ACL: "../../../pages/admin-acl",
@@ -22,7 +23,7 @@ const coreFeatures = {
     LOG_MANAGE: "../../../pages/admin-log-manage",
     MESSAGE_QUEUE: "../../../pages/admin-message-queue",
     META_MANAGE: "../../../pages/admin-meta-manage",
-    SHARE: "../../../pages/admin-share-list",
+    
     WATERMARK: ["../../../pages/admin-watermark", "../../../packages/dp-watermark"],
     DAM: "../../../pages/admin-dam",
     TABLE_SETTING: "../../../pages/admin-table-setting",
