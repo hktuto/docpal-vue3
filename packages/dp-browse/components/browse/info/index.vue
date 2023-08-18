@@ -33,7 +33,7 @@
         <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_comments')" name="comments">
-        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" />
+        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :disabled="['A','L', 'P'].includes(holdStatus)"/>
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
         <BrowseInfoPicture :doc="detail" />
@@ -86,6 +86,7 @@ const h = ref(0);
 const x = ref(0);
 const y = ref(0);
 const route = useRoute()
+const holdStatus = computed( () => (doc.value?.holdStatus) || '')
 const style = computed(() => {
     if(!props.infoOpened) return {
         width: '0px',

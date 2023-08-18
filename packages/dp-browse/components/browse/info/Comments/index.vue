@@ -2,9 +2,10 @@
   <div class="comments" v-loading="state.loading">
     <!-- <span class="title">{{ $t('rightDetail_comments') }}</span> -->
     <CommentViewBox :commentList="state.commentList" 
+                    :disabled="disabled"
                     @handleReply="handleReply"
                     @handleReplyDelete="handleReplyDelete"></CommentViewBox>
-    <CommentInputBox v-model="state.commentInfo.text" @handleAdd="handleAddComment"></CommentInputBox>
+    <CommentInputBox v-if="!disabled" v-model="state.commentInfo.text" @handleAdd="handleAddComment"></CommentInputBox>
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import anime from 'animejs'
 import { CommentsGetApi, CommentsDeleteApi, CommentsAddApi } from 'dp-api'
 const props = defineProps<{
     doc: any,
+    disabled: boolean
 }>()
 const state = reactive({
     loading: false,

@@ -11,6 +11,7 @@ import { SaveAnnotation, GetAnnotation } from 'dp-api'
 type PdfJsOptions = {
     print: boolean,
     loadAnnotations: boolean,
+    readOnly: boolean
 }
 const props = withDefaults(defineProps<{
     annotations: Map<string,any>,
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<{
     options:{
         print: false,
         loadAnnotations: false,
+        readOnly: true
     }
 })
 const display = ref(false)
