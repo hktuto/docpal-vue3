@@ -1,27 +1,28 @@
 <template>
-<div v-if="src" class="flex-x-center">
-    <template v-if="content">
-        <el-tooltip :content="content">
-            <template v-if="round">
-                <span :class="svgRoundClass">
+<div  class="flex-x-center">
+    <template v-if="src">
+        <template v-if="content">
+            <el-tooltip :content="content">
+                <template v-if="round">
+                    <span :class="svgRoundClass">
+                        <component :is="InlineSvg" :class="svgClass" :src="src"></component>
+                    </span>
+                </template>
+                <template v-else>
                     <component :is="InlineSvg" :class="svgClass" :src="src"></component>
-                </span>
-            </template>
-            <template v-else>
+                </template>
+            </el-tooltip>
+        </template>
+        <template v-else-if="round">
+            <span :class="svgRoundClass">
                 <component :is="InlineSvg" :class="svgClass" :src="src"></component>
-            </template>
-        </el-tooltip>
-    </template>
-    <template v-else-if="round">
-        <span :class="svgRoundClass">
+            </span>
+        </template>
+        <template v-else>
             <component :is="InlineSvg" :class="svgClass" :src="src"></component>
-        </span>
-    </template>
-    <template v-else>
-        <component :is="InlineSvg" :class="svgClass" :src="src"></component>
+        </template>
     </template>
 </div>
-<div v-else></div>
 </template>
 
 <script lang="ts" setup>

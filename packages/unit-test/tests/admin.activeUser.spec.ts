@@ -1,5 +1,14 @@
 import { test } from '@playwright/test';
 import { admin, expect} from '../utils/admin';
+test.beforeAll(async () => {
+    console.log(process.env.BASEURL)
+    console.log('Before tests');
+});
+
+test.afterAll(async () => {
+    console.log(process.env.BASEURL)
+    console.log('After tests');
+});
 test.describe('User CAL Management ', () => {
     admin('Set Active Disabled', async ({page}) => {
         await page.goto('https://admin.app4.wclsolution.com/user');
