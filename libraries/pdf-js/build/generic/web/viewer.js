@@ -13724,7 +13724,7 @@ var _app_options = __webpack_require__(5);
 var _pdf_link_service = __webpack_require__(7);
 var _app = __webpack_require__(2);
 const pdfjsVersion = '3.4.0';
-const pdfjsBuild = '60bb0b0';
+const pdfjsBuild = 'b351501';
 const AppConstants = {
   LinkTarget: _pdf_link_service.LinkTarget,
   RenderingStates: _ui_utils.RenderingStates,
@@ -13892,10 +13892,6 @@ function messageFromParent(ev) {
   if (colorMode === "dark") {
     document.getElementsByTagName("html")[0].classList.add("dark");
   }
-  if (options.readOnly === true) {
-    const els = [document.querySelector("#editorModeButtons"), document.querySelector("#saveAnnotation"), document.querySelector("#print")];
-    els.forEach(el => el.classList.add("hidden"));
-  }
   if (annotations instanceof Map) {
     window.annotations = annotations;
   } else {
@@ -13906,6 +13902,10 @@ function messageFromParent(ev) {
     els.forEach(el => el.classList.add("hidden"));
   } else {
     els.forEach(el => el.classList.remove("hidden"));
+  }
+  if (options.readOnly === true) {
+    const hiddenEL = [document.querySelector("#editorModeButtons"), document.querySelector("#saveAnnotation"), document.querySelector("#print")];
+    hiddenEL.forEach(el => el.classList.add("hidden"));
   }
   window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad(url);

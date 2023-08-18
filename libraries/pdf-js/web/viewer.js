@@ -230,15 +230,7 @@ function messageFromParent(ev) {
   if (colorMode === "dark") {
     document.getElementsByTagName("html")[0].classList.add("dark");
   }
-  if( options.readOnly === true){
-    // hide annotation tools
-    const els = [
-      document.querySelector("#editorModeButtons"),
-      document.querySelector("#saveAnnotation"),
-      document.querySelector("#print"),
-    ]
-    els.forEach(el => el.classList.add("hidden"));
-  }
+  
   // check if annotations is Map or not
   if (annotations instanceof Map) {
     window.annotations = annotations;
@@ -256,6 +248,16 @@ function messageFromParent(ev) {
     els.forEach(el => el.classList.add("hidden"));
   } else {
     els.forEach(el => el.classList.remove("hidden"));
+  }
+
+  if( options.readOnly === true){
+    // hide annotation tools
+    const hiddenEL = [
+      document.querySelector("#editorModeButtons"),
+      document.querySelector("#saveAnnotation"),
+      document.querySelector("#print"),
+    ];
+    hiddenEL.forEach(el => el.classList.add("hidden"));
   }
 
   window.PDFViewerApplicationOptions.set("locale", newLocal);
