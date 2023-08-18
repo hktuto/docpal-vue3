@@ -1,6 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
                 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="options"
+                    @pagination-change="handlePaginationChange"
                     @row-dblclick="handleDblclick"
                     @command="handleAction">
                     <template #preSortButton>
