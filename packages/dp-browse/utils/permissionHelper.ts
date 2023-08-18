@@ -16,7 +16,7 @@ type AllowToArgs = {
 }
 export const AllowTo = ({feature, userPermission, holdStatus}:AllowToArgs) => {
     if(!holdStatus) holdStatus = ''
-    if (!userPermission || ['A', 'L'].includes(holdStatus) && feature !== 'Read' ) {
+    if (!userPermission || ['A', 'L', 'P'].includes(holdStatus) && feature !== 'Read' ) {
         return false;
     }
     return PermissionArray.indexOf(userPermission) >= PermissionArray.indexOf(feature);

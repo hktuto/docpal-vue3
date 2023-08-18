@@ -58,6 +58,7 @@ export default defineNuxtModule({
             })
     } catch (error) {
         console.log("No Feature API")
+        nuxt.options.runtimeConfig.feature = {};
         Object.keys(features).forEach((key:string) => {
               if(Array.isArray(features[key])) {
                   features[key].forEach((path:string) => {

@@ -39,6 +39,7 @@
 type PdfJsOptions = {
     print: boolean,
     loadAnnotations: boolean,
+    readOnly: boolean
 }
 const props = withDefaults(defineProps<{
     id: string,
@@ -51,6 +52,7 @@ const props = withDefaults(defineProps<{
     options:{
         print: false,
         loadAnnotations: false,
+        readOnly: true
     }
 })
 const state = reactive({

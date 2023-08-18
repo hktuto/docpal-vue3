@@ -10,6 +10,7 @@
                 
                 <CollapseMenu @openedChange="mobileActionsOpenedChanged">
                   <template #default="{collapse}">
+                    <!-- {{AllowTo({feature:'Read', userPermission:permission.permission, holdStatus })}} -->
                     <BrowseActionsHold :doc="doc" />
                     <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @success="handleRefresh"/>
                     <BrowseActionsSubscribe  :doc="doc" />
@@ -23,7 +24,7 @@
                     <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
                     <BrowseActionsShare  v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
     
-                    
+                     <!-- {{AllowTo({feature:'Read', userPermission:permission.permission, holdStatus })}} -->
                     <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
                     
                   </template>
@@ -41,7 +42,7 @@
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
                     <LazyHtmlViewer v-if="readerType === 'html'" :doc="doc" />
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print}" />
+                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print, readOnly: !AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
                 </div>
@@ -49,6 +50,7 @@
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
                 </h2>
                 <div class="info">
+                  
                   <BrowseInfo v-if="options.showInfo" :doc="doc" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false" />
                 </div>
             </div>

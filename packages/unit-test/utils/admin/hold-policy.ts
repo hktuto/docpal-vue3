@@ -46,10 +46,8 @@ export class HoldPolicyManagePage {
         await this.page.getByRole('button', { name: 'Submit' }).click();
     }
     async activeHold(policyName: string) {
-        console.log('active:',policyName);
         const reg = new RegExp( `^${policyName}.*`)
-        await this.page.getByRole('row', { name: reg }).locator('span').nth(3).click();
-        await this.page.getByRole('row', { name: reg }).locator('span').nth(3).click();
+        await this.page.getByRole('row', { name: reg }).locator('.el-switch__core').click();
     }
     async remove(policyName: string) {
         console.log('remove:',policyName);
