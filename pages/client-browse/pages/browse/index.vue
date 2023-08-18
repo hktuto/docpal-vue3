@@ -71,7 +71,6 @@ import {watch, ref, computed} from 'vue'
 import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
 import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper';
 
-const { public:{feature} } = useRuntimeConfig();
 
 // #region refs
 const breadCrumb = ref();
