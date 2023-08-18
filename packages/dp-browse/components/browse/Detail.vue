@@ -42,7 +42,7 @@
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
                     <LazyHtmlViewer v-if="readerType === 'html'" :doc="doc" />
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print, readOnly: AllowTo({feature:'Read', userPermission:permission.permission, holdStatus })}" />
+                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print, readOnly: !AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
                 </div>
