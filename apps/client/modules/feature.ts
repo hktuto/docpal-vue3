@@ -13,15 +13,14 @@ const features = {
     SEARCH: "../../../packages/dp-search",
     WORKFLOW: "../../../pages/client-workflow",
     FOLDER_CABINET: "../../../pages/client-folder-cabinet",
+    SHARE_EXTERNAL:"../../../pages/client-share-list",
+    SHARE_INTERNAL:["../../../pages/client-share-me", "../../../pages/client-share-other"]
 }
 const coreFeatures = {
     RELATED_FOLDER: "../../../packages/dp-related-folder",
     BROWSE_STORE: '../../../packages/dp-browse',
     TRASH: '../../../pages/client-trash',
-    SHARE_LIST: "../'../../pages/client-share-list",
     COLLECTION:"../../../pages/client-collection",
-    SHARE_ME: "../../../pages/client-share-me",
-    SHARE_OTHER: "../../../pages/client-share-other",
     HOLD_POLICIES: "../../../pages/client-hold-policies",
 }
 export default defineNuxtModule({
@@ -44,6 +43,9 @@ export default defineNuxtModule({
       try {
           const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
           console.log(data)
+          nuxt.options.runtimeConfig.public.feature = data
+
+            console.log(nuxt.options.runtimeConfig)
             Object.keys(data).forEach((key:string) => {
               if(!data[key] || !features[key]) return
               if(Array.isArray(features[key])) {

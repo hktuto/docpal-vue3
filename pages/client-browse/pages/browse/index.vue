@@ -22,7 +22,7 @@
                         <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })" :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :class="{actionDivider:true, collapse}"></div>
-                        <BrowseActionsUploadRequest v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :path="doc.path" />
+                        <BrowseActionsUploadRequest v-if="feature.UPLOAD_REQUEST" v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :path="doc.path" />
 
 
                         </template>
@@ -32,7 +32,7 @@
                     </div>
                     <!-- 多选 -->
                     <div v-show="selectList.length !== 0" id="browseHeaderRight" class="selectedAction">
-                        <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
+                        <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
                         <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :selected="selectList" @success="handleRefresh"/>
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
@@ -70,6 +70,9 @@ import { DocDetail } from 'dp-api';
 import {watch, ref, computed} from 'vue'
 import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
 import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper';
+
+const { public:{feature} } = useRuntimeConfig();
+
 // #region refs
 const breadCrumb = ref();
 const shareStore = useShareStore()
@@ -86,6 +89,7 @@ const forceRefresh = ref(false)
 const loading = ref(false)
 const auth = useUser();
 const userId:string = useUser().getUserId()
+const { public:{feature} } = useRuntimeConfig();
 const selectList = ref<any[]>([])
 // #endregion
 provide('selectList', selectList)

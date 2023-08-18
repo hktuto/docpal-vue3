@@ -21,7 +21,7 @@
                     <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
                     <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })" :doc="doc" />
                     <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
-                    <BrowseActionsShare v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
+                    <BrowseActionsShare  v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
     
                     
                     <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
@@ -76,6 +76,7 @@ const options = ref<FileDetailOptions>({
 })
 const emit = defineEmits(['close'])
 const holdStatus = computed( () => (doc.value?.holdStatus) || '')
+const { public:{feature} } = useRuntimeConfig();
 
 const readerType = computed(() => {
     if(!doc.value) return "";
