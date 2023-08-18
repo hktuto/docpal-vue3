@@ -11,6 +11,7 @@ import { useEventListener } from '@vueuse/core'
 type PdfJsOptions = {
     print: boolean,
     loadAnnotations: boolean,
+    readOnly: boolean
 }
 const props = withDefaults(defineProps<{
     doc?: any,
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<{
     options:{
         print: false,
         loadAnnotations: false,
+        readOnly: false
     }
 })
 
