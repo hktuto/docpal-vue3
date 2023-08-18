@@ -43,6 +43,7 @@ export default defineNuxtModule({
       // ...
       try {
           const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
+          console.log(data)
             Object.keys(data).forEach((key:string) => {
               if(!data[key] || !features[key]) return
               if(Array.isArray(features[key])) {
@@ -54,6 +55,7 @@ export default defineNuxtModule({
               }
             })
     } catch (error) {
+        console.log("No Feature API")
         Object.keys(features).forEach((key:string) => {
               if(Array.isArray(features[key])) {
                   features[key].forEach((path:string) => {
