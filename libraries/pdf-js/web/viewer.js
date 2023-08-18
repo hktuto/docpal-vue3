@@ -250,15 +250,7 @@ function messageFromParent(ev) {
     els.forEach(el => el.classList.remove("hidden"));
   }
 
-  if( options.readOnly === true){
-    // hide annotation tools
-    const hiddenEL = [
-      document.querySelector("#editorModeButtons"),
-      document.querySelector("#saveAnnotation"),
-      document.querySelector("#print"),
-    ];
-    hiddenEL.forEach(el => el.classList.add("hidden"));
-  }
+  
 
   window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad(url);
@@ -268,10 +260,22 @@ function messageFromParent(ev) {
     ".saveAnnotationButton"
   );
 
-  saveAnnotationButton.forEach(el => {
-    el.removeEventListener("click", saveAnnotation);
-    el.addEventListener("click", saveAnnotation);
-  });
+  if( options.readOnly === true){
+    // hide annotation tools
+    const hiddenEL = [
+      document.querySelector("#editorModeButtons"),
+      document.querySelector("#saveAnnotation"),
+      document.querySelector("#print"),
+    ];
+    hiddenEL.forEach(el => el.classList.add("hidden"));
+    saveAnnotationButton.forEach(el => el.classList.add("hidden"));
+  } else {
+    
+    saveAnnotationButton.forEach(el => {
+      el.removeEventListener("click", saveAnnotation);
+      el.addEventListener("click", saveAnnotation);
+    });
+  }
 }
 
 function saveAnnotation() {

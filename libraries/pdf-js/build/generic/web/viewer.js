@@ -13724,7 +13724,7 @@ var _app_options = __webpack_require__(5);
 var _pdf_link_service = __webpack_require__(7);
 var _app = __webpack_require__(2);
 const pdfjsVersion = '3.4.0';
-const pdfjsBuild = 'b351501';
+const pdfjsBuild = '3676a51';
 const AppConstants = {
   LinkTarget: _pdf_link_service.LinkTarget,
   RenderingStates: _ui_utils.RenderingStates,
@@ -13903,17 +13903,19 @@ function messageFromParent(ev) {
   } else {
     els.forEach(el => el.classList.remove("hidden"));
   }
-  if (options.readOnly === true) {
-    const hiddenEL = [document.querySelector("#editorModeButtons"), document.querySelector("#saveAnnotation"), document.querySelector("#print")];
-    hiddenEL.forEach(el => el.classList.add("hidden"));
-  }
   window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad(url);
   const saveAnnotationButton = document.querySelectorAll(".saveAnnotationButton");
-  saveAnnotationButton.forEach(el => {
-    el.removeEventListener("click", saveAnnotation);
-    el.addEventListener("click", saveAnnotation);
-  });
+  if (options.readOnly === true) {
+    const hiddenEL = [document.querySelector("#editorModeButtons"), document.querySelector("#saveAnnotation"), document.querySelector("#print")];
+    hiddenEL.forEach(el => el.classList.add("hidden"));
+    saveAnnotationButton.forEach(el => el.classList.add("hidden"));
+  } else {
+    saveAnnotationButton.forEach(el => {
+      el.removeEventListener("click", saveAnnotation);
+      el.addEventListener("click", saveAnnotation);
+    });
+  }
 }
 function saveAnnotation() {
   sendMessageToParent("annotation", window.annotations);
