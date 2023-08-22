@@ -40,7 +40,6 @@ const router = useRouter()
 const state = reactive({
     loading: false,
     activeTab: '',
-    loading: false,
     tabList: [],
     uploadList: [],
     uploading: false
