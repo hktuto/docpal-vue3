@@ -1,9 +1,9 @@
 <template>
     <div class="emptyContainer">
         <div :style="`--button-width: ${width + 20}px`" class="iconContainer">
-            <SvgIcon class="svg"  :src="'/icons/menu/watermark.svg'"/>
-            <h3 ref="el">{{$t('retention.notFound')}}</h3>
-            <el-button class="add-button" type="primary" @click="handleAdd">{{$t('retention.create')}}</el-button>
+            <SvgIcon class="svg"  :src="'/icons/menu/retention.svg'"/>
+            <h3 ref="el">{{$t('rp.notFound')}}</h3>
+            <el-button class="add-button" type="primary" @click="handleAdd">{{$t('rp.create')}}</el-button>
         </div>
         <RetentionAddDialog ref="RetentionAddDialogRef" @update="emit('update')" />
     </div>

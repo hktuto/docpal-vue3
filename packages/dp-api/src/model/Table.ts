@@ -1991,7 +1991,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { id: '5', label: 'tableHeader_isAuto', slot: 'isAuto', prop: 'isAuto', width: 100, align: 'center' },
+            { id: '5', label: 'rp.isAuto', slot: 'isAuto', prop: 'isAuto', width: 150, align: 'center' },
             { id: '6', label: 'user_active', slot: 'active', prop: 'status', width: 100 },
             {   
                 id: '7',

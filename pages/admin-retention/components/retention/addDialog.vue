@@ -1,7 +1,7 @@
 <template>
 <el-dialog 
     class="scroll-dialog retention-add-dialog"
-    v-model="state.visible" :title="$t('holdPolicies.create')"
+    v-model="state.visible" :title="$t('rp.create')"
     :close-on-click-modal="false" append-to-body
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson">
