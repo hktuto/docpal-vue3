@@ -51,7 +51,7 @@ const userId:string = useUser().getUserId()
     const tableSetting = ref(defaultTableSetting[tableKey])
     const state = reactive<State>({
         loading: false,
-        activeTab: 'pending',
+        activeTab: 'pendingApproval',
         tableData: [],
         options: {
             showPagination: true,
