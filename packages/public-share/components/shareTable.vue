@@ -8,7 +8,7 @@
                 <el-button v-else text type="danger" disabled>{{$t('Conversion failed')}}</el-button>
             </template>    
         </Table>
-    <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
+    <ReaderDialog ref="ReaderRef" v-bind="previewFile" :options="{readOnly:true, print:false, loadAnnotations:false}">
         <!-- <template #actions>
             <el-button :icon="Download" :loading="previewFile.downloading" @click="handleAction('download', previewFile)">{{$t('download')}}</el-button>
         </template> -->
