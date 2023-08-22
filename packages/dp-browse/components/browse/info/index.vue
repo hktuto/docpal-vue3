@@ -33,7 +33,7 @@
         <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_comments')" name="comments">
-        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" />
+        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :disabled="['A','L', 'P'].includes(holdStatus)"/>
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
         <BrowseInfoPicture :doc="detail" />
@@ -54,7 +54,8 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import {DocDetail} from "dp-api";
+import {deepCopy, DocDetail} from "dp-api";
+import { getDocumentDetailSync } from '../../../utils/browseHelper';
 
 const { infoSlots } = useBrowse()
 const props = withDefaults(defineProps<{
@@ -62,7 +63,8 @@ const props = withDefaults(defineProps<{
     infoOpened?:boolean,
     hidePreview?:boolean,
     draggable?:boolean,
-    resizeOption?: any
+    resizeOption?: any,
+    listData?: any
 }>(),{
     doc: null,
     infoOpened: false,
@@ -83,7 +85,8 @@ const w = ref(400);
 const h = ref(0);
 const x = ref(0);
 const y = ref(0);
-
+const route = useRoute()
+const holdStatus = computed( () => (doc.value?.holdStatus) || '')
 const style = computed(() => {
     if(!props.infoOpened) return {
         width: '0px',
@@ -116,29 +119,34 @@ function dragmove(event:any) {
 }
 
 async function docUpdated() {
-    
-  loading.value = true;
-  try {
-      // @ts-ignore
-      detail.value = null; // set detail to null to reset all tab
-      // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
-      if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
-        currentTab.value = 'info'
-      }
-    
-      // get detail
-      const response = await getDocumentDetail(doc.value.id, userId);
-      detail.value = response.doc;
-      permission.value = response.permission;
-      //scroll to top
-      const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
-      if(tabContent) {
-        tabContent.scrollTop = 0;
-      }
-  } catch (error) {
-    
-  }
-  loading.value = false;
+    if(props.listData && doc.value.id === props.listData.doc.id) {
+        detail.value = deepCopy(props.listData.doc)
+        permission.value = props.listData.permission;
+        return
+    }
+    loading.value = true;
+    try {
+        // @ts-ignore
+        detail.value = null; // set detail to null to reset all tab
+        // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
+        if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
+            currentTab.value = 'info'
+        }
+        
+        // get detail
+        //   const response = await getDocumentDetail(doc.value.id, userId);
+        const response = await getDocumentDetailSync(doc.value.id, userId);
+        detail.value = response.doc;
+        permission.value = response.permission;
+        //scroll to top
+        const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
+        if(tabContent) {
+            tabContent.scrollTop = 0;
+        }
+    } catch (error) {
+        
+    }
+    loading.value = false;
 }
 
 watch(doc, async() => {

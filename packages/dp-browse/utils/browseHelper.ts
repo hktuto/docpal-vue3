@@ -1,4 +1,11 @@
-import {duplicateDetectionApi, GetDocDetail, GetDocPermission, GetDocumentAdditionalApi} from "dp-api";
+import {
+  duplicateDetectionApi, 
+  GetDocDetail, 
+  GetDocPermission, 
+  GetDocumentAdditionalApi, 
+  DocDetail,
+  GetDocumentHoldApi
+} from "dp-api";
 import * as mime from 'mime-types'
 export const isRoot = (path:string):boolean => {
     return path === "/";
@@ -28,8 +35,6 @@ export const getUniqueName = async(file:any) => {
  * @returns {isDuplicate: boolean, list: any[]}
  */
 export const duplicateNameFilter = async (idOrPath: string, list:any) => {
-  console.log({list});
-  
   try {
       let result = false
       const titles = list.reduce((prev:any, item:any) => {
@@ -66,7 +71,6 @@ export const duplicateNameFilter = async (idOrPath: string, list:any) => {
  * @param userId user id to check permissions for, if null, no permissions will be returned
  */
 export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
-  console.log("getDocumentDetail", idOrPath)
   const response = await GetDocDetail(idOrPath);
   try {
     response.displayMeta = await GetDocumentAdditionalApi({documentType: response.type})
@@ -89,7 +93,37 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
     };
   }  
     
+}
+export const getDocumentDetailSync = async (idOrPath: string, userId?:string) => {
+  let doc: any = {
+    holdStatus: ''
   }
+  let permission: any = {}
+  try {
+    doc = await GetDocDetail(idOrPath)
+    let pList = []
+    pList.push(getDocumentAdditional(doc.type))
+    pList.push(getPermission())
+    pList.push(getHoldStatus(doc.id))
+    await Promise.all(pList) 
+  } catch (error) {}
+  return { doc, permission }
+
+  async function getDocumentAdditional (documentType: string) {
+    doc.displayMeta = await GetDocumentAdditionalApi({ documentType })
+  }
+  async function getPermission() {
+    if(userId) {
+      const _permission:any = await GetDocPermission(idOrPath, userId);
+      if(!!_permission) permission = _permission
+    }
+  }
+  async function getHoldStatus(id: string) {
+    const res = await GetDocumentHoldApi(id)
+    doc.holdStatus = res?.status || ''
+    doc.holdDetail = res
+  } 
+}
 const deepCopy  = (data:any) => {
     if (!data) return {}
     return JSON.parse(JSON.stringify(data));

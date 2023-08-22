@@ -84,6 +84,7 @@ export enum TABLE {
     CLIENT_FOLDER_CABINET = 'clientFolderCabinet',
     CLIENT_INTERNAL_SHEAR_ME = 'clientInternalShareMe',
     CLIENT_INTERNAL_SHEAR_OTHER = 'clientInternalShareOther',
+    CLIENT_HOLD_POLICIES = "clientHoldPolicies",
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -111,7 +112,8 @@ export enum TABLE {
     ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
 
     PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
-    ADMIN_FOLDER_CABINET = 'adminFolderCabinet'
+    ADMIN_FOLDER_CABINET = 'adminFolderCabinet',
+    ADMIN_HOLD_POLICIES_MANAGE = 'adminHoldPoliciesManage'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -148,7 +150,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.META_PROFILE_DIALOG] :{
         columns: [
             { property: 'title', label: 'title' },
-            { property: 'name', label: 'name' }
+            { property: 'name', label: 'tableHeader_name' }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -516,6 +518,7 @@ export const defaultTableSetting: TableColumnSetting = {
             // { id: '4', type: 'selection' },
             { id: '2', label: 'table_name', prop: 'name' },
             { id: '3', slot: 'watermark', label: 'watermark' },
+            { id: '5', slot: 'readOnly', label: 'readOnly' },
             { id: '4', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
@@ -1135,6 +1138,55 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_HOLD_POLICIES]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyHoldName' },
+            { id: '4', label: 'tableHeader_applyBy', prop: 'applyBy' },
+            { id: '5', label: 'tableHeader_approver', prop: 'applyApprovedBy' },
+            { id: '6', label: 'tableHeader_confirmAt', prop: 'applyApprovedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "applyApprovedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "goRoute",
+                        "suffixIcon": "/icons/file/position.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
+    },
 
 
     [TABLE.PUBLIC_SHARE]: {
@@ -1256,7 +1308,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_GROUP_MANAGE]: {
         columns: [
-            { id: '1', label: 'name', prop: 'name' },
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
             { id: '2', label: 'Identifer', prop: 'id' }
         ],
         events: [],
@@ -1462,7 +1514,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_BULK_IMPORT_CONFIG_FORM]: {
         columns: [
             { id: '1', prop: 'title', label: 'title' },
-            { id: '2', prop: 'name', label: 'name' }
+            { id: '2', prop: 'name', label: 'tableHeader_name' }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -1504,7 +1556,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_SCHEMA_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'name' },
+            { id: '1', prop: 'name', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",
@@ -1535,7 +1587,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_DOC_TYPE_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'name' },
+            { id: '1', prop: 'name', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",
@@ -1872,8 +1924,54 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['delete'],
         slots: [],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_HOLD_POLICIES_MANAGE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'policyName' },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+            {   
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
     }
-    
 }
 
 export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {

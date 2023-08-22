@@ -1,7 +1,7 @@
 <template>
 <div class="commentViewBox">
     <CommentCard v-for="item in commentList" :key="item.id" :commentInfo="item" :replyItem="state.replyItem"
-        canDelete canReply
+        :canDelete="!disabled" :canReply="!disabled"
         @handleReplyBox="handleReplyBox"
         @handleReplyDelete="handleReplyDelete(item)">
         <CommentInputBox v-show="inputShow(item)" 
@@ -10,7 +10,7 @@
             @handleAdd="handleAddReply"></CommentInputBox>
         <div class="replyListBox" v-show="item.replyListShow">
             <CommentCard  v-for="(rItem) in item.children" :key="rItem.id" :commentInfo="rItem"
-                    canDelete
+                    :canDelete="!disabled"
                     @handleReplyDelete="handleReplyDelete(rItem, item)" />
         </div>
     </CommentCard>
@@ -20,6 +20,7 @@
 import anime from 'animejs'
 const props = defineProps<{
     commentList: any,
+    disabled: boolean
 }>()
 const state = reactive({
     replyItem: null

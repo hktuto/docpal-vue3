@@ -137,7 +137,7 @@ export const useUploadStore = () => {
             const item = uploadFiles[i]
             if (!status || status === 'finish') {
                 let skip = false;
-                if (!isChildren) {
+                 if (!isChildren) {
                     const {isDuplicate} = await duplicateNameFilter(parentPath, [item]);
                     skip = isDuplicate
                     if (isDuplicate) item.status = 'skip';
@@ -172,6 +172,7 @@ export const useUploadStore = () => {
             }
             uploadState.value.uploadRequestList[requestIndex].count++
         }
+        console.log('finish upload');
     }
     
     async function handleCreateDocument (doc: any, parentPath: string) {
@@ -200,6 +201,10 @@ export const useUploadStore = () => {
     function getUploadRequestList () {
         return uploadState.value.uploadRequestList
     }
+
+    watch(uploadState, (newState) => {
+
+    })
 
     return {
         getUploadFiles,

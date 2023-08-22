@@ -1,4 +1,4 @@
-import { pageParams } from './../model/index';
+
 import {api} from '../';
 import { BreadResponse, DocDetail, GetChildResponse, 
     pageParams, collectionRemoveDocParams, collectionCreateParams,
@@ -307,7 +307,12 @@ export const conversionDownloadFileApi = async(idOrPath:string) => {
         timeout: 0
     }).then(res => res.data)
 }
-
+export const DamDownloadApi = async(documentId:string, intranetUri: string) =>  {
+    return api.post('/nuxeo/document/dam/download', { documentId, intranetUri },{
+        responseType: 'blob',
+        timeout: 0
+    }).then(res => res.data);
+}
 // #endregion
 
 

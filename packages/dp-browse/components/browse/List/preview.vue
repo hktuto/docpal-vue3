@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import { GetChildThumbnail, DocumentThumbnailGetApi, TABLE, defaultTableSetting } from 'dp-api'
+import { DocumentThumbnailGetApi, TABLE, defaultTableSetting } from 'dp-api'
 import {openFileDetail} from "~/utils/browseHelper";
 const route = useRoute()
 const router = useRouter()

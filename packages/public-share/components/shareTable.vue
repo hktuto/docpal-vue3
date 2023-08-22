@@ -2,12 +2,13 @@
     <Table  :columns="tableSetting.columns" :table-data="tableData" 
             @row-dblclick="handleDblclick">
             <template #actions="{ row, $index }">
-                <el-button v-if="row.watermarkStatus === 'NO'" type="primary" text>{{$t('Converting')}}...</el-button>
-                <el-button v-else-if="!row.watermarkStatus || row.watermarkStatus === 'YES'" type="primary" :loading="row.downloading" @click="handleAction('download', row, $index)">{{$t('download')}}</el-button>
-                <el-button v-else text type="danger">{{$t('Conversion failed')}}</el-button>
+                <el-button v-if="row.readOnly" type="primary" text disabled>{{$t('readOnly')}}</el-button>
+                <el-button v-else-if="row.watermarkStatus === 'NO'" type="primary" text disabled>{{$t('Converting')}}...</el-button>
+                <el-button v-else-if="(!row.watermarkStatus || row.watermarkStatus === 'YES')" type="primary" :loading="row.downloading" @click="handleAction('download', row, $index)">{{$t('download')}}</el-button>
+                <el-button v-else text type="danger" disabled>{{$t('Conversion failed')}}</el-button>
             </template>    
         </Table>
-    <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
+    <ReaderDialog ref="ReaderRef" v-bind="previewFile" :options="{readOnly:true, print:false, loadAnnotations:false}">
         <!-- <template #actions>
             <el-button :icon="Download" :loading="previewFile.downloading" @click="handleAction('download', previewFile)">{{$t('download')}}</el-button>
         </template> -->
