@@ -895,6 +895,24 @@ importers:
       nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
       typescript: 4.9.5
 
+  pages/admin-retention:
+    specifiers:
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      '@vueuse/components': ^9.13.0
+      '@vueuse/core': ^10.2.1
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.4.3
+      typescript: ^4.9.3
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
+      '@vueuse/components': 9.13.0
+      '@vueuse/core': 10.2.1
+      dp-api: link:../../packages/dp-api
+      eslint: 8.43.0
+      nuxt: 3.5.3_2jcgcerbs6bi4debdtwega5q6u
+      typescript: 4.9.5
+
   pages/admin-share-list:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
@@ -1602,7 +1620,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.22.5
+      '@babel/types': 7.22.10
     dev: true
 
   /@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression/7.22.5_@babel+core@7.22.5:
@@ -5756,7 +5774,7 @@ packages:
   /builtins/5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.5.2
+      semver: 7.5.4
     dev: true
 
   /bundle-name/3.0.0:
@@ -8243,6 +8261,7 @@ packages:
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    requiresBuild: true
     dev: true
 
   /fill-range/4.0.0:
