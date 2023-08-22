@@ -1,53 +1,119 @@
 <template>
-    <div class="emptyContainer">
-        <div :style="`--button-width: ${width + 20}px`" class="iconContainer">
-            <SvgIcon class="svg"  :src="'/icons/menu/watermark.svg'"/>
-            <h3 ref="el">{{$t('folderCabinet.notFound')}}</h3>
-            <el-button class="add-button" type="primary" @click="handleAdd">{{$t('folderCabinet.create')}}</el-button>
+<NuxtLayout class="fit-height withPadding"
+    backPath="/retention" 
+    :pageTitle="`${$t('admin_retention')}>${state.setting.policyName}`" >
+    <div class="rd-container" v-loading="state.loading">
+        <div class="rd-container--title flex-x-between">
+            <div>
+                {{$t('user_active')}}
+                <el-switch class="el-icon--right"
+                    v-model="state.setting.status" 
+                    active-value="A" inactive-value="D"
+                    :loading="state.activeLoading"
+                    @change="handleSetStatus" />
+            </div>
+            <div>
+                <el-button type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button>
+                <el-button type="primary" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+            </div>
         </div>
+        <FromRenderer class="rd-container--main" ref="FromRendererRef" :form-json="formJson"></FromRenderer>
+        <div class="rd-container--right"></div>
     </div>
+</NuxtLayout>
 </template>
-
 <script lang="ts" setup>
-import { getJsonApi, CreateCabinetTemplateApi } from 'dp-api'
-import { useElementSize } from '@vueuse/core'
-const emit = defineEmits(['update'])
-const el = ref()
-const { width, height } = useElementSize(el)
-const RetentionAddDialogRef = ref()
-function handleAdd () {
-    RetentionAddDialogRef.value.handleOpen()
+import { ElMessageBox } from 'element-plus'
+import { 
+    getJsonApi, 
+    GetRetentionDetailApi, 
+    UpdateRetentionStatusApi,
+    UpdateRetentionApi, 
+    DeleteRetentionApi } from 'dp-api'
+const emits = defineEmits([
+    'update'
+])
+const state = reactive({
+    loading: false,
+    activeLoading: false,
+    setting: {},
+})
+const router = useRouter()
+const route = useRoute()
+const FromRendererRef = ref()
+const formJson = getJsonApi('admin/retention.json')
+async function handleSubmit() {
+    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    if(!data) return
+    const params = {
+        ...state.setting,
+        ...data,
+        actionType: data.actionType ? 'D' : 'A',
+        status: state.setting.status
+    }
+    try {
+        state.loading = true
+        await UpdateRetentionApi(params)
+        emits('update')
+    } catch (error) {
+        init()
+    }
+    state.loading = false
 }
+async function handleDelete (collection) {
+    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
+    if(action !== 'confirm') return
+    state.loading = true
+    try {
+        const result = await DeleteRetentionApi(route.params.id)
+        if(!!result) router.push('/retention')
+    } catch (error) {
+    }
+    state.loading = false
+}
+async function init() {
+    state.loading = true
+    let setting = await GetRetentionDetailApi(route.params.id)
+    setTimeout(async() => {
+        state.setting = setting
+        state.setting.actionType = setting.actionType === 'D' ? true : false
+        await FromRendererRef.value.vFormRenderRef.setFormData({...state.setting})
+        state.loading = false
+    })
+}
+async function handleSetStatus (status) {
+    if(!state.setting.id) return
+    state.activeLoading = true
+    try {
+        const isSuccess = await UpdateRetentionStatusApi(state.setting.id, status)
+        if(isSuccess !== true) state.setting.status = state.setting.status === 'A' ? 'D' : 'A'
+        else ElMessage.success($t('dpMsg_success'))
+    } catch (error) {
+    }
+    state.activeLoading = false
+}
+onMounted(() => {
+    init()
+})
 </script>
-
-
 <style lang="scss" scoped>
-.emptyContainer{
+.rd-container {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    grid-template-rows: min-content 1fr;
+    grid-column-gap: var(--app-padding);
+    grid-row-gap: var(--app-padding);
     height: 100%;
-    width: var(--button-width);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
 }
-.iconContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    h3{
-        font-size: 1.5rem;
-        font-weight: 200;
-        color: #8796A4;
-        margin: 0;
-        margin-bottom: 1rem;
-    }
-    .svg {
-        --icon-size: calc(var(--button-width) / 1.2);
-        // width: var(--button-width);
-        color: #8796A4;
-        margin-bottom: 1rem;
-    }
+
+.rd-container--title { 
+    grid-area: 1 / 1 / 2 / 2;
 }
-.add-button {
-    width: var(--button-width)
+.rd-container--main { 
+    grid-area: 2 / 1 / 3 / 2; 
+    overflow-y: auto;
+    overflow-x: hidden;
 }
+.rd-container--right { grid-area: 1 / 2 / 3 / 3; }
 </style>

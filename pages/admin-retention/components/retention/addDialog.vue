@@ -1,7 +1,7 @@
 <template>
 <el-dialog 
-    class="scroll-dialog"
-    v-model="state.visible" :title="state.isEdit ? $t('holdPolicies.edit') : $t('holdPolicies.create')"
+    class="scroll-dialog retention-add-dialog"
+    v-model="state.visible" :title="$t('holdPolicies.create')"
     :close-on-click-modal="false" append-to-body
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson">
@@ -12,7 +12,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, CreateHoldPolicyApi, UpdateHoldPolicyApi } from 'dp-api'
+import { getJsonApi, CreateRetentionApi } from 'dp-api'
 const emits = defineEmits([
     'update'
 ])
@@ -20,7 +20,6 @@ const state = reactive({
     loading: false,
     visible: false,
     setting: {},
-    isEdit: false
 })
 const router = useRouter()
 const form = reactive({
@@ -33,13 +32,12 @@ async function handleSubmit() {
     if(!data) return
     const params = {
         ...state.setting,
-        ...data
+        ...data,
+        actionType: data.actionType ? 'D' : 'A'
     }
     try {
         state.loading = true
-        if(state.isEdit) await UpdateHoldPolicyApi(params)
-        else await CreateHoldPolicyApi(params)
-        
+        await CreateRetentionApi(params)
         state.visible = false
         emits('update')
     } catch (error) {
@@ -50,20 +48,14 @@ async function handleOpen(setting) {
     state.visible = true
     setTimeout(async() => {
         await FromRendererRef.value.vFormRenderRef.resetForm()
-        if(setting && setting.isEdit) {
-            state.isEdit = true
-            state.setting = setting
-            await FromRendererRef.value.vFormRenderRef.setFormData({...state.setting})
-            state.loading = false
-        } else {
-            state.isEdit = false
-            state.setting = {}
-        }
+        state.setting = {}
     })
 }
 
 defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
+<style lang="scss">
+.retention-add-dialog {
+    min-width: 900px;
+}
 </style>

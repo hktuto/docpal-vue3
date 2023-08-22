@@ -14,6 +14,12 @@
                     <template #suffixSortButton>
                         <el-button @click="handleAdd">{{$t('button.add')}}</el-button>
                     </template>
+                    <template #docType="{row, index}">
+                        <el-tag class="el-icon--left table-tag" v-for="item in row.triggers">{{item.documentType}}</el-tag>
+                    </template>
+                    <template #period="{row, index}">
+                        {{row.periodNum}} {{calDate(row.periodUnit) }}
+                    </template>
                     <template #active="{row, index}">
                         <el-switch v-model="row.status" 
                             active-value="A" inactive-value="D"
@@ -21,18 +27,24 @@
                             @change="(value) => handleSetStatus(value, row)"
                             />
                     </template>
+                    <template #isAuto="{ row }">
+                        <el-icon v-if="row.isAuto" style="--color: var(--primary-color)"><Select /></el-icon>
+                        <el-icon v-else style="--color: #F56C6C"><CloseBold /></el-icon>
+                    </template>
                 </Table>
-      </template>
+        </template>
         <RetentionAddDialog ref="RetentionAddDialogRef" @update="handlePaginationChange" />
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
+import { Select, CloseBold } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-    GetHoldPoliciesPageApi,
-    DeleteHoldPolicyApi,
-    UpdateHoldPolicyStatusApi,
+    GetRetentionPageApi,
+    DeleteRetentionApi,
+    UpdateRetentionStatusApi,
+    GetRetentionConditionsApi,
     defaultTableSetting, TABLE
 } from 'dp-api'
 
@@ -45,7 +57,7 @@ import {
         orderBy: 'createdDate',
         isDesc: true
     }
-    const tableKey = TABLE.ADMIN_HOLD_POLICIES_MANAGE
+    const tableKey = TABLE.ADMIN_RETENTION_MANAGE
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
@@ -68,7 +80,7 @@ import {
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetHoldPoliciesPageApi({ ...param, ...state.extraParams })
+            const res = await GetRetentionPageApi({ ...param, ...state.extraParams })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -109,7 +121,7 @@ function handleAdd () {
 }
 async function handleSetStatus (status, row) {
     if(!row.id) return
-    const isSuccess = await UpdateHoldPolicyStatusApi(row.id, status)
+    const isSuccess = await UpdateRetentionStatusApi(row.id, status)
     if(isSuccess !== true) row.status = row.status === 'A' ? 'D' : 'A'
     else ElMessage.success($t('dpMsg_success'))
 }
@@ -125,26 +137,16 @@ function handleAction (command, row: any, index: number) {
 async function deleteItem(id: string) {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
-    await DeleteHoldPolicyApi(id)
+    await DeleteRetentionApi(id)
     handlePaginationChange(pageParams.pageNum + 1)
 }
 function handleDblclick(row) {
-    RetentionAddDialogRef.value.handleOpen({
-        ...row,
-        isEdit: true
-    })
+    router.push(`/retention/${row.id}`)
 }
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
-        const data = [
-            { key: "status", label: "user_active", type: "string", isMultiple: false,
-                options: [
-                    { label: "noActive", value: "D" },
-                    { label: "isActive", value: "A" }
-                ]
-            }
-        ]
+        const data = await GetRetentionConditionsApi()
         ResponsiveFilterRef.value.init(data)
     }
     function handleFilterFormChange(formModel) {
@@ -152,6 +154,23 @@ function handleDblclick(row) {
         handlePaginationChange(1)
     }
 // #endregion
+function calDate (unit: string) {
+    let date = ''
+    switch (unit) {
+        case 'Y':
+            date = 'common_years'
+            break;
+        case 'M':
+            date = 'common_months'
+            break;
+        case 'D':
+            date = 'common_days'
+            break;
+        default:
+            break;
+    }
+    return $t(date)
+}
 onMounted(() => {
     getFilter()
 })
