@@ -44,7 +44,7 @@ const FormRef = ref()
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/folderCabinet.json')
 function handleDocTypeChange (data) {
-    if (state.editReady) form.labelRule = []
+    // if (state.editReady) form.labelRule = []
     state.curDocType = data.value
     state.dragList = data.metaList.reduce((prev, item) => {
         if((item.dataType === 'string' || item.dataType === 'date') && item.isRequire) {
