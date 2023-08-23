@@ -6,32 +6,33 @@
               <div class="fileNameContainer">
                 <div class="fileName">{{ doc.name }}</div>
               </div>
-              <div v-if="options.showHeaderAction" class="actions">
-                
-                <CollapseMenu @openedChange="mobileActionsOpenedChanged">
-                  <template #default="{collapse}">
-                    <!-- {{AllowTo({feature:'Read', userPermission:permission.permission, holdStatus })}} -->
-                    <BrowseActionsHold :doc="doc" />
-                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @success="handleRefresh"/>
-                    <BrowseActionsSubscribe  :doc="doc" />
-                    <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
-                    <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" @success="handleRefresh"/>
-                    <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
-                    <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission, holdStatus })"  :doc="doc"  />
-                    <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
-                    <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                    <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })" :doc="doc" />
-                    <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
-                    <BrowseActionsShare  v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
-    
-                     <!-- {{AllowTo({feature:'Read', userPermission:permission.permission, holdStatus })}} -->
-                    <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
-                    
-                  </template>
-                </CollapseMenu>
-                <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
-                <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
-                <div  :class="{actionDivider:true, collapse}"></div>
+              <div class="actions">
+                <template v-if="options.showHeaderAction" >
+                  <CollapseMenu @openedChange="mobileActionsOpenedChanged">
+                    <template #default="{collapse}">
+                      <!-- {{AllowTo({feature:'Read', userPermission:permission.permission, holdStatus })}} -->
+                      <BrowseActionsHold :doc="doc" />
+                      <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @success="handleRefresh"/>
+                      <BrowseActionsSubscribe  :doc="doc" />
+                      <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
+                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" @success="handleRefresh"/>
+                      <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
+                      <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission, holdStatus })"  :doc="doc"  />
+                      <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                      <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
+                      <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })" :doc="doc" />
+                      <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" class="actionDivider"></div>
+                      <BrowseActionsShare  v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
+      
+                      <!-- {{AllowTo({feature:'Read', userPermission:permission.permission, holdStatus })}} -->
+                      <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
+                      
+                    </template>
+                  </CollapseMenu>
+                  <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :class="{actionDivider:true, collapse}"></div>
+                  <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
+                  <div  :class="{actionDivider:true, collapse}"></div>
+                </template>
                 <div class="actionIconContainer" @click="closePreview">
                   <el-icon >
                     <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>

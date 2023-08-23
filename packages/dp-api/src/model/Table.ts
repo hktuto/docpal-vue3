@@ -85,6 +85,8 @@ export enum TABLE {
     CLIENT_INTERNAL_SHEAR_ME = 'clientInternalShareMe',
     CLIENT_INTERNAL_SHEAR_OTHER = 'clientInternalShareOther',
     CLIENT_HOLD_POLICIES = "clientHoldPolicies",
+    CLIENT_RETENTION_DONE = "clientRetentionDone",
+    CLIENT_RETENTION_PENDING= "clientRetentionPending",
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -1188,8 +1190,57 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [],
         options: { pageSize: 20 }
     },
-
-
+    [TABLE.CLIENT_RETENTION_DONE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
+            { id: '4', label: 'tableHeader_approver', prop: 'approver' },
+            { id: '6', label: 'tableHeader_confirmAt', prop: 'approvedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "approvedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+        ],
+        events: [],
+        slots: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_RETENTION_PENDING]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
+            // { id: '4', label: 'tableHeader_approver', prop: 'approver' },
+            { id: '4', label: 'tableHeader_dueDate', prop: 'dueDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "dueDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', slot: 'action', label: 'tableHeader_actions', width: 100, align: 'center' }
+        ],
+        events: [],
+        slots: [
+            { slot: 'action', label: 'tableHeader_actions', width: 100, align: 'center' }
+        ],
+        options: { pageSize: 20 }
+    },
     [TABLE.PUBLIC_SHARE]: {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'title' },
