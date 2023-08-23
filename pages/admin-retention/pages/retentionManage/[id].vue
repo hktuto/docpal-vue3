@@ -1,6 +1,6 @@
 <template>
 <NuxtLayout class="fit-height withPadding"
-    backPath="/retention" 
+    backPath="/retentionManage" 
     :pageTitle="`${$t('admin_retention')}>${state.setting.policyName}`" >
     <div class="rd-container" v-loading="state.loading">
         <div class="rd-container--title flex-x-between">
@@ -66,7 +66,7 @@ async function handleDelete (collection) {
     state.loading = true
     try {
         const result = await DeleteRetentionApi(route.params.id)
-        if(!!result) router.push('/retention')
+        if(!!result) router.push('/retentionManage')
     } catch (error) {
     }
     state.loading = false

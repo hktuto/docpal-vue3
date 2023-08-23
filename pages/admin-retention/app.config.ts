@@ -4,8 +4,8 @@ export default defineAppConfig({
   menu:[
     {
       name:"admin_retention",
-      routeName:"retention",
-      url:"/retention",
+      routeName:"retentionManage",
+      url:"/retentionManage",
       icon: "/icons/menu/retention.svg",
       order:2,
     }

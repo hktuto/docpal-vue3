@@ -141,7 +141,7 @@ async function deleteItem(id: string) {
     handlePaginationChange(pageParams.pageNum + 1)
 }
 function handleDblclick(row) {
-    router.push(`/retention/${row.id}`)
+    router.push(`/retentionManage/${row.id}`)
 }
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()

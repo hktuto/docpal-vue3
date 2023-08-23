@@ -7,7 +7,7 @@ export function customLayer():string[] {
     
     // all stores
     
-    packages.push('../../pages/admin-retention')
+    // packages.push('../../pages/admin-retention')
     packages.push('../../packages/dp-browse');
     packages.push('../../packages/dp-search');
     packages.push("../../packages/dp-stores")
