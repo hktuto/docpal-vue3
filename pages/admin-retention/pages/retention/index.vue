@@ -1,9 +1,9 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
-        <template v-if="!state.loading && state.options.paginationConfig.total === 0">
+        <!-- <template v-if="!state.loading && state.options.paginationConfig.total === 0">
             <RetentionEmpty @update="handlePaginationChange" />
         </template>
-        <template v-else>
+        <template v-else> -->
                 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="options"
                     @row-dblclick="handleDblclick"
                     @command="handleAction">
@@ -32,7 +32,7 @@
                         <el-icon v-else style="--color: #F56C6C"><CloseBold /></el-icon>
                     </template>
                 </Table>
-        </template>
+        <!-- </template> -->
         <RetentionAddDialog ref="RetentionAddDialogRef" @update="handlePaginationChange" />
     </NuxtLayout>
 </template>
