@@ -89,6 +89,7 @@ defineExpose({ handleOpen, handleClose })
         align-items: center;
     }
     .el-dialog__body{
+        overflow: auto;
         display: flex;
         padding: var(--app-padding) var(--el-dialog-padding-primary);
     }
