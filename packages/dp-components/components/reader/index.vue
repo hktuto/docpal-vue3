@@ -67,10 +67,7 @@ function handleDownload() {
 }
 watch(() => props.blob, (newBlob:Blob) => {
     if( !newBlob ) return
-    console.log({newBlob});
-    
     state.fileType = newBlob.type
-    
     const urlCreator = window.URL || window.webkitURL
     state.url = urlCreator.createObjectURL(newBlob)
 }, { immediate: true })
