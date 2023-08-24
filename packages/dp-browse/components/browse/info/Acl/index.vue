@@ -90,7 +90,7 @@ const EverythingList = computed(() => {
     }
     function handleEdit (ace) {
       
-      if (ace.type !== 'local' ||!AllowTo({feature:'ManageRecord', userPermission: props.permission.permission})) return
+      if (ace.type !== 'local' ||!AllowTo({feature:'ManageRecord', permission })) return
       dialogEl.value.handleOpen(deepCopy(ace), true)
     }
     function handleAdd (type?:string) {

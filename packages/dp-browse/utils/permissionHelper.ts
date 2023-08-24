@@ -1,3 +1,9 @@
+export type AllPermission = {
+    permission: Permission,
+    print: boolean,
+    hold: any,
+    retention: any
+}
 export type Permission = "Read" | "ReadWrite" | "ManageRecord" | "ManageLegalHold" | "Everything";
 /**
  * A: active
@@ -11,12 +17,16 @@ const PermissionArray:Permission[] = ["Read", "ReadWrite", "ManageRecord","Manag
 
 type AllowToArgs = {
     feature: Permission;
-    userPermission: Permission;
-    holdStatus?: HoldStatus
+    permission: AllPermission
 }
-export const AllowTo = ({feature, userPermission, holdStatus}:AllowToArgs) => {
-    if(!holdStatus) holdStatus = ''
-    if (!userPermission || ['A', 'L', 'P'].includes(holdStatus) && feature !== 'Read' ) {
+export const AllowTo = ({feature, permission}:AllowToArgs) => {
+    if (!!permission.hold) {
+        const holdLock = ['A', 'L', 'P'].includes(permission.hold.status)
+        if (holdLock) return false
+    }
+    const userPermission = permission.permission
+    // ['A', 'L', 'P'].includes(holdStatus)
+    if (!userPermission || feature === 'Read') {
         return false;
     }
     return PermissionArray.indexOf(userPermission) >= PermissionArray.indexOf(feature);
