@@ -6,6 +6,9 @@
     <template v-else-if="state.fileType === 'application/pdf' && state.url" >
         <ReaderPdf v-bind="props" :no-annotation="!!annotations" ></ReaderPdf>
     </template>
+    <template v-else-if="state.fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' && state.url" >
+        <ReaderExcel :src="state.url"></ReaderExcel>
+    </template>
     <template v-else-if="state.fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
         <ReaderDocx v-bind="props"></ReaderDocx>
     </template>
@@ -64,6 +67,8 @@ function handleDownload() {
 }
 watch(() => props.blob, (newBlob:Blob) => {
     if( !newBlob ) return
+    console.log({newBlob});
+    
     state.fileType = newBlob.type
     
     const urlCreator = window.URL || window.webkitURL

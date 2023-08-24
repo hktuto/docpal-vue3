@@ -254,6 +254,7 @@ importers:
       '@interactjs/types': ^1.10.17
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       '@types/mime-types': ^2.1.1
+      '@vue-office/excel': ^1.4.0
       '@vueuse/components': ^9.13.0
       '@vueuse/core': ^9.13.0
       animejs: ^3.2.1
@@ -273,6 +274,7 @@ importers:
       vuedraggable: ^4.1.0
     dependencies:
       '@interactjs/types': 1.10.17
+      '@vue-office/excel': 1.4.0
       animejs: 3.2.1
       bpmn-js: 9.4.1
       dayjs: 1.11.8
@@ -4603,6 +4605,18 @@ packages:
     transitivePeerDependencies:
       - rollup
     dev: true
+
+  /@vue-office/excel/1.4.0:
+    resolution: {integrity: sha512-Pxbqkmi0qIM4G58ARn5AB1L0kyetlgEKYUzH5IX+zzhoFpTWiPYpFs6QsChPkQueQh/vjpIUmY6QT6mEH6yvkQ==}
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.7.1
+      vue: ^2.0.0 || >=3.0.0
+      vue-demi: ^0.13.11
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dev: false
 
   /@vue/babel-helper-vue-transform-on/1.0.2:
     resolution: {integrity: sha512-hz4R8tS5jMn8lDq6iD+yWL6XNB699pGIVLk7WSJnn1dbpjaazsjZQkieJoRX6gW5zpYSCFqQ7jUquPNY65tQYA==}
