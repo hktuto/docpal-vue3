@@ -57,36 +57,39 @@ export const CheckDocumentTypeUsedApi = async(documentType: string) => {
 }
 
 export const GetRetentionDocPageApi = async(params: pageParams):Promise<paginationData> => {
-    const retentionData = {
-        "id": 0,
-        "policyRetentionId": '123456',
-        "documentId": "10bf27ad-c1fa-4fbc-af19-7f0880ca9a04",
-        "documentName": "20238月1416-09-43.png",
-        "documentPath": "/default-domain/0818/20238月1416-09-43.png",
-        "status": "string",
-        "createdDate": "2023-08-23T05:42:48.404Z",
-        "modifiedDate": "2023-08-23T05:42:48.404Z",
-        "policyName": "string",
-        "approver": "string"
-    }
+    // const retentionData = {
+    //     "id": 0,
+    //     "policyRetentionId": '123456',
+    //     "documentId": "10bf27ad-c1fa-4fbc-af19-7f0880ca9a04",
+    //     "documentName": "20238月1416-09-43.png",
+    //     "documentPath": "/default-domain/0818/20238月1416-09-43.png",
+    //     "status": "string",
+    //     "createdDate": "2023-08-23T05:42:48.404Z",
+    //     "modifiedDate": "2023-08-23T05:42:48.404Z",
+    //     "policyName": "string",
+    //     "approver": "string"
+    // }
     const res = await api.post<Response<paginationData>>('/docpal/policy/retentions/document/page', params ).then(res => res.data.data);
-    res.entryList.push(retentionData)
+    // res.entryList.push(retentionData)
     return res
 }
 export const GetRetentionDocConditionsApi = async() => {
     return await api.get('/docpal/policy/retentions/document/page/conditions').then(res => res.data.data);
 }
 export const GetRetentionEventsApi = async() => {
-    // return await api.get('/docpal/policy/retentions/document/page/conditions').then(res => res.data.data);
-    return {
-        '123456': [
-            { "id": 86766, "policyRetentionId": 86759, "eventType": "extent", "eventLabel": "extent 1d", "eventValue": "1", "createdDate": "2023-08-23T03:16:49Z", "modifiedDate": "2023-08-23T03:16:49Z" },
-            { "id": 86767, "policyRetentionId": 86759, "eventType": "now", "eventLabel": "now", "createdDate": "2023-08-23T03:16:49Z", "modifiedDate": "2023-08-23T03:16:49Z" }
-        ]
-    }
+    return await api.get('/docpal/policy/retentions/events').then(res => res.data.data);
+    // return {
+    //     '123456': [
+    //         { "id": 86766, "policyRetentionId": 86759, "eventType": "extent", "eventLabel": "extent 1d", "eventValue": "1", "createdDate": "2023-08-23T03:16:49Z", "modifiedDate": "2023-08-23T03:16:49Z" },
+    //         { "id": 86767, "policyRetentionId": 86759, "eventType": "now", "eventLabel": "now", "createdDate": "2023-08-23T03:16:49Z", "modifiedDate": "2023-08-23T03:16:49Z" }
+    //     ]
+    // }
 }
 export const SubmitRetentionEventApi = async(params) => {
-    console.log({params});
-    // return await api.get('/docpal/policy/retentions/document/page/conditions').then(res => res.data.data);
-    return true
+    return await api.post('/docpal/policy/retentions/submitEvent', params).then(res => res.data.data);
+    // return true
+}
+
+export const AuditRetentionApi = async(documentId: string, status: boolean) => {
+    return await api.patch(`/docpal/policy/documents/${documentId}/approval/${status}`).then(res => res.data.data);
 }

@@ -7,17 +7,30 @@
             inputKey="policyName"/>
     </template>
     <template #action="{ row }">
-        <el-dropdown v-if="!!row && !!row.policyRetentionId">
-            <span class="el-dropdown-link" >
-                <el-button text><el-icon><MoreFilled /></el-icon></el-button>
-            </span>
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item v-for="item in state.events[row.policyRetentionId]" :key="item.id"
-                        @click="handleEvent(item)">{{item.eventLabel}}</el-dropdown-item>
-                </el-dropdown-menu>
+        <template v-if="row.status !== 'P'">
+            <template v-if="row.applyApprovedBy === userId">
+                <el-button class="approval-btn" size="small" type="primary" @click="handleApprove(true, row)">{{$t('workflow_startAdhocWorkflow_approve')}}</el-button>
+                <el-button class="approval-btn" size="small" type="danger" @click="handleApprove(false, row)">{{$t('workflow_startAdhocWorkflow_reject')}}</el-button>
             </template>
-        </el-dropdown>
+            <template v-else>
+                <div>
+                    {{$t('status.pendingApproval')}}
+                </div>
+            </template>
+        </template>
+        <template v-else>
+            <el-dropdown v-if="!!row && !!row.policyRetentionId">
+                <span class="el-dropdown-link" >
+                    <el-button text><el-icon><MoreFilled /></el-icon></el-button>
+                </span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item v-for="item in state.events[row.policyRetentionId]" :key="item.id"
+                            @click="handleEvent(item, row)">{{item.eventLabel}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+        </template>
     </template>
 </Table>
 </template>
@@ -30,9 +43,10 @@ import {
     GetRetentionDocConditionsApi,
     GetRetentionEventsApi,
     SubmitRetentionEventApi,
+    AuditRetentionApi,
     defaultTableSetting, TABLE
 } from 'dp-api'
-
+const userId:string = useUser().getUserId()
 // #region module: page
     const route = useRoute()
     const router = useRouter()
@@ -133,11 +147,19 @@ function handleDblclick(row) {
     async function getEvents() {
         state.events = await GetRetentionEventsApi()
     }
-    async function handleEvent (event) {
+    async function handleEvent (event, row) {
         let msg = $t('msg_confirmWhetherToExecuteCommand')
         const action = await ElMessageBox.confirm(`${msg}: ${event.eventLabel}`)
         if(action !== 'confirm') return
-        await SubmitRetentionEventApi(event)
+        await SubmitRetentionEventApi({ eventId: event.id, documentId: row.documentId })
+        handlePaginationChange(1)
+    }
+    async function handleApprove(state, row) {
+        let msg = $t('msg_confirmWhetherToExecuteCommand')
+        const command = state ? $t('workflow_startAdhocWorkflow_approve') : $t('workflow_startAdhocWorkflow_reject')
+        const action = await ElMessageBox.confirm(`${msg}: ${command}`)
+        if(action !== 'confirm') return
+        await AuditRetentionApi(row.documentId, state)
         handlePaginationChange(1)
     }
 // #endregion
@@ -158,5 +180,10 @@ onMounted(() => {
     & > .el-button {
         margin: unset;
     }
+}
+.approval-btn {
+    width: 70px;
+    margin-left: 0;
+    margin-top: calc(var(--app-padding) / 3);
 }
 </style>

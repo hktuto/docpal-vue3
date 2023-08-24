@@ -22,7 +22,7 @@ const coreFeatures = {
     TRASH: '../../../pages/client-trash',
     COLLECTION:"../../../pages/client-collection",
     HOLD_POLICIES: "../../../pages/client-hold-policies",
-    // RETENTION: "../../../pages/client-retention"
+    RETENTION: "../../../pages/client-retention"
 }
 export default defineNuxtModule({
     meta: {

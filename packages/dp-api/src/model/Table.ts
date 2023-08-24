@@ -1220,11 +1220,11 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
             { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
             // { id: '4', label: 'tableHeader_approver', prop: 'approver' },
-            { id: '4', label: 'tableHeader_dueDate', prop: 'dueDate',
+            { id: '4', label: 'tableHeader_dueDate', prop: 'expireDate',
                 formatList: [
                     {
                         "joiner": "",
-                        "prop": "dueDate",
+                        "prop": "expireDate",
                         "formatFun": "dateFormat",
                         "params": {
                             "format": ""

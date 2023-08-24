@@ -65,7 +65,7 @@ export const DeleteHoldApi = async(params: DeleteHold) => {
 export const GetDocumentHoldApi = async(documentId: string) => {
     return await api.get(`/docpal/policy/documents/document/${documentId}`).then(res => res.data.data);
 }
-export const SetDocumentHoldApi = async(documentId: string, status: 'A' | 'D' | 'R') => {
+export const SetDocumentHoldApi = async(documentId: string, status: boolean) => {
     return await api.patch(`/docpal/policy/documents/${documentId}/status/${status}`).then(res => res.data.data);
 }
 export const GetHoldConditionsApi = async() => {
