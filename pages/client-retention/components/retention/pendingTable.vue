@@ -7,7 +7,7 @@
             inputKey="policyName"/>
     </template>
     <template #action="{ row }">
-        <template v-if="row.status !== 'P'">
+        <template v-if="row.status === 'P'">
             <template v-if="row.applyApprovedBy === userId">
                 <el-button class="approval-btn" size="small" type="primary" @click="handleApprove(true, row)">{{$t('workflow_startAdhocWorkflow_approve')}}</el-button>
                 <el-button class="approval-btn" size="small" type="danger" @click="handleApprove(false, row)">{{$t('workflow_startAdhocWorkflow_reject')}}</el-button>
