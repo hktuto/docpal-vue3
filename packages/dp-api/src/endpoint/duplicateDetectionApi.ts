@@ -36,9 +36,9 @@ type permissionStoredType = {
 } 
 const permissionStored:permissionStoredType = {}
 export const GetDocPermission = async(idOrPath:string, userId:string, refresh: boolean = false):Promise<permissionType> => {
-    if(!!permissionStored[`${idOrPath}-${userId}`] && !refresh) {
-        return permissionStored[`${idOrPath}-${userId}`]
-    }
+    // if(!!permissionStored[`${idOrPath}-${userId}`] && !refresh) {
+    //     return permissionStored[`${idOrPath}-${userId}`]
+    // }
     const res = await api.get<Response<permissionType>>(`/nuxeo/document/acl/permission?docId=${idOrPath}&userId=${userId}`).then(res => res.data.data);
     permissionStored[`${idOrPath}-${userId}`] = res
     return res
