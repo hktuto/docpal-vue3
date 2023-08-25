@@ -134,7 +134,7 @@ function handleAction (command, row: any, index: number) {
     }
 }
 function handleDblclick(row) {
-    openFileDetail(row.documentPath, {
+    openFileDetail(row.documentId, {
       showInfo: true,
       showHeaderAction: true
     })
