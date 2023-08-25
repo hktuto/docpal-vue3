@@ -7,6 +7,9 @@
         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
             inputKey="documentName"/>
     </template>  
+    <template #approver="{ row }">
+        {{ row.applyApprovedBy ? row.applyApprovedBy : $t('System') }}
+    </template>
     <template #confirmAt="{ row }">
         {{ row.applyApprovedDate ? formatDate(row.applyApprovedDate) : formatDate(row.modifiedDate) }}
     </template>

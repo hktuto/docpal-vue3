@@ -166,7 +166,7 @@ function handleDblclick(row) {
         const command = state ? $t('workflow_startAdhocWorkflow_approve') : $t('workflow_startAdhocWorkflow_reject')
         const action = await ElMessageBox.confirm(`${msg}: ${command}`)
         if(action !== 'confirm') return
-        await AuditRetentionApi(row.documentId, state)
+        await AuditRetentionApi(row.id, state)
         handlePaginationChange()
     }
 // #endregion

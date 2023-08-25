@@ -1195,11 +1195,12 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '1', label: 'tableHeader_name', prop: 'documentName' },
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
             { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
-            { id: '4', label: 'tableHeader_approver', prop: 'approver', width: 150 },
+            { id: '4', label: 'tableHeader_approver', slot: 'approver', width: 150 },
             { id: '6', label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150},
         ],
         events: [],
         slots: [
+            { label: 'tableHeader_approver', slot: 'approver', width: 150 },
             { label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150 }
         ],
         options: { pageSize: 20 }
