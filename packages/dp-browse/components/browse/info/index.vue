@@ -86,7 +86,7 @@ const h = ref(0);
 const x = ref(0);
 const y = ref(0);
 const route = useRoute()
-const holdStatus = computed( () => (props.listData?.permission?.hold?.status) || '')
+const holdStatus = computed( () => (props.listData?.permission?.hold?.status) || props.listData?.permission?.retention?.status, '')
 const style = computed(() => {
     if(!props.infoOpened) return {
         width: '0px',
