@@ -90,8 +90,8 @@ export const SubmitRetentionEventApi = async(params) => {
     // return true
 }
 
-export const AuditRetentionApi = async(documentId: string, status: boolean) => {
-    return await api.patch(`/docpal/policy/documents/${documentId}/approval/${status}`).then(res => res.data.data);
+export const AuditRetentionApi = async(id: string, status: boolean) => {
+    return await api.patch(`/docpal/policy/retentions/${id}/approval/${status}`).then(res => res.data.data);
 }
 export const RefreshRetentionDocApi = async() => {
     return await api.get('/docpal/policy/retentions/scan/document').then(res => res.data.data);
