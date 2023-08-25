@@ -6,7 +6,8 @@
         <template v-else> -->
                 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="options"
                     @row-dblclick="handleDblclick"
-                    @command="handleAction">
+                    @command="handleAction"
+                    @pagination-change="handlePaginationChange">
                     <template #preSortButton>
                         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
                             inputKey="policyName"/>

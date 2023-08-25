@@ -20,10 +20,8 @@ type AllowToArgs = {
     permission: AllPermission
 }
 export const AllowTo = ({feature, permission}:AllowToArgs) => {
-    if (!!permission.hold) {
-        const holdLock = ['A', 'L', 'P'].includes(permission.hold.status)
-        if (holdLock) return false
-    }
+    if (!!permission.hold && ['A', 'L', 'P'].includes(permission.hold.status)) return false
+    if (!!permission.retention && permission.retention.status === 'A') return false
     const userPermission = permission.permission
     // ['A', 'L', 'P'].includes(holdStatus)
     if (!userPermission || feature === 'Read') {

@@ -80,6 +80,7 @@ const state = reactive<state>({
         Object.keys(boxRefs.value).reduce((prev, key) => {
             if (!prev) prev = defaultWidth
             const _boxRef = boxRefs.value[key]
+            if(!_boxRef) return
             const index = state.list.findIndex(m => m.label === key)
             if(index === -1) return
             const item = state.list[index]

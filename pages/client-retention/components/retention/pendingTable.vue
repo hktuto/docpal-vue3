@@ -1,10 +1,14 @@
 <template>
 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="options"
     @row-dblclick="handleDblclick"
-    @command="handleAction">
+    @command="handleAction"
+    @pagination-change="handlePaginationChange">
     <template #preSortButton>
         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-            inputKey="policyName"/>
+            inputKey="documentName"/>
+    </template>
+    <template #suffixSortButton>
+        <el-button text :loading="state.refreshLoading" @click="handleRefresh">{{$t('common_refresh')}}</el-button>
     </template>
     <template #action="{ row }">
         <template v-if="row.status === 'P'">
@@ -44,6 +48,7 @@ import {
     GetRetentionEventsApi,
     SubmitRetentionEventApi,
     AuditRetentionApi,
+    RefreshRetentionDocApi,
     defaultTableSetting, TABLE
 } from 'dp-api'
 const userId:string = useUser().getUserId()
@@ -55,12 +60,14 @@ const userId:string = useUser().getUserId()
         pageSize: 20,
         orderBy: 'createdDate',
         isDesc: true,
-        status: 'D'
+        // status: 'D',
+        states: ['D', 'P']
     }
     const tableKey = TABLE.CLIENT_RETENTION_PENDING
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
+        refreshLoading: false,
         tableData: [],
         options: {
             multiSelect: true,
@@ -163,6 +170,12 @@ function handleDblclick(row) {
         handlePaginationChange(1)
     }
 // #endregion
+async function handleRefresh() {
+    state.refreshLoading = true
+    await RefreshRetentionDocApi()
+    state.refreshLoading = false
+    handlePaginationChange(1)
+}
 onMounted(() => {
     getFilter()
     getEvents()

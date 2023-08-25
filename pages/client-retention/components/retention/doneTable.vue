@@ -1,10 +1,11 @@
 <template>
 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="options"
     @row-dblclick="handleDblclick"
-    @command="handleAction">
+    @command="handleAction"
+    @pagination-change="handlePaginationChange">
     <template #preSortButton>
         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-            inputKey="policyName"/>
+            inputKey="documentName"/>
     </template>  
 </Table>
 </template>
@@ -26,7 +27,7 @@ import {
         pageSize: 20,
         orderBy: 'createdDate',
         isDesc: true,
-        status: 'A'
+        states: ['A']
     }
     const tableKey = TABLE.CLIENT_RETENTION_DONE
     const tableSetting = defaultTableSetting[tableKey]
