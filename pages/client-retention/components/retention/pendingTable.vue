@@ -159,7 +159,7 @@ function handleDblclick(row) {
         const action = await ElMessageBox.confirm(`${msg}: ${event.eventLabel}`)
         if(action !== 'confirm') return
         await SubmitRetentionEventApi({ eventId: event.id, documentId: row.documentId })
-        handlePaginationChange(1)
+        handlePaginationChange()
     }
     async function handleApprove(state, row) {
         let msg = $t('msg_confirmWhetherToExecuteCommand')
@@ -167,7 +167,7 @@ function handleDblclick(row) {
         const action = await ElMessageBox.confirm(`${msg}: ${command}`)
         if(action !== 'confirm') return
         await AuditRetentionApi(row.documentId, state)
-        handlePaginationChange(1)
+        handlePaginationChange()
     }
 // #endregion
 async function handleRefresh() {

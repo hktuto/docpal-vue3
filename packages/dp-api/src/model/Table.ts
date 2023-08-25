@@ -1195,23 +1195,13 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '1', label: 'tableHeader_name', prop: 'documentName' },
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
             { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
-            { id: '4', label: 'tableHeader_approver', prop: 'approver' },
-            { id: '6', label: 'tableHeader_confirmAt', prop: 'approvedDate',
-                formatList: [
-                    {
-                        "joiner": "",
-                        "prop": "approvedDate",
-                        "formatFun": "dateFormat",
-                        "params": {
-                            "format": ""
-                        },
-                        "index": 0
-                    }
-                ]
-            },
+            { id: '4', label: 'tableHeader_approver', prop: 'approver', width: 150 },
+            { id: '6', label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150},
         ],
         events: [],
-        slots: [],
+        slots: [
+            { label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150 }
+        ],
         options: { pageSize: 20 }
     },
     [TABLE.CLIENT_RETENTION_PENDING]: {
@@ -1220,7 +1210,7 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
             { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
             // { id: '4', label: 'tableHeader_approver', prop: 'approver' },
-            { id: '4', label: 'tableHeader_dueDate', prop: 'expireDate',
+            { id: '4', label: 'tableHeader_dueDate', prop: 'expireDate', width: 150,
                 formatList: [
                     {
                         "joiner": "",
