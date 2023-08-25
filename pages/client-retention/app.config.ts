@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"retention",
       url:"/retention",
       icon: "/icons/menu/retention.svg",
-      order:2,
+      order: 9999,
     }
   ],
 })
