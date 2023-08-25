@@ -13,7 +13,7 @@
                     <div v-show="selectList.length === 0 && doc.path !== '/'" id="browseHeaderRight" class="folderAction">
                     <CollapseMenu>
                         <template #default="{collapse}">
-                        <BrowseActionsHold :permission="permission" :doc="doc" @setHold="(status)=>listData.doc.holdStatus = status"/>
+                        <BrowseActionsHold :permission="permission" :doc="doc" />
                         <BrowseActionsSubscribe  :doc="doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
@@ -94,7 +94,6 @@ const selectList = ref<any[]>([])
 provide('selectList', selectList)
 const routePath = computed( () => (route.query.path as string) || '/')
 const infoOpened = ref(false);
-const holdStatus = computed( () => (listData.value.doc?.holdStatus) || '')
 
 
 

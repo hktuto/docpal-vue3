@@ -106,8 +106,6 @@ async function handleAction (detail:any) {
     try {
         const idOrPath = detail.doc.path === '/' ? '/' : detail.doc.id
         const permission = await GetDocPermission(idOrPath, userId)
-        const hold = await GetDocumentHoldApi(detail.doc.id)
-        const holdStatus = hold?.status || ''
         if(!permission) throw new Error("null");
         setPermission(permission)
     } catch (error) {
@@ -120,7 +118,7 @@ async function handleAction (detail:any) {
     }
     state.loading = false
 }
-function setPermission(permission, holdStatus? = '') {
+function setPermission(permission) {
     state.canWrite = AllowTo({feature:'ReadWrite', permission })
     state.canManage = AllowTo({feature:'ManageRecord', permission })
 }

@@ -78,7 +78,6 @@ const options = ref<FileDetailOptions>({
   showHeaderAction: false,
 })
 const emit = defineEmits(['close'])
-const holdStatus = computed( () => (doc.value?.holdStatus) || '')
 const { public:{feature} } = useRuntimeConfig();
 
 const readerType = computed(() => {

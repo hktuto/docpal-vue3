@@ -7,7 +7,6 @@ const { public:{feature} } = useRuntimeConfig();
 const doc = ref({
     name:""
 });
-const holdStatus = computed( () => (doc.value?.holdStatus) || '')
 const { relatedChildren } = useRelatedFolder();
 
 function closePreview(){
