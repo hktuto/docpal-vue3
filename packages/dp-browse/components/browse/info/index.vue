@@ -33,7 +33,7 @@
         <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_comments')" name="comments">
-        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :disabled="['A','L', 'P'].includes(holdStatus)"/>
+        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :disabled="checkPermission(permission)"/>
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
         <BrowseInfoPicture :doc="detail" />
@@ -64,7 +64,8 @@ const props = withDefaults(defineProps<{
     hidePreview?:boolean,
     draggable?:boolean,
     resizeOption?: any,
-    listData?: any
+    listData?: any,
+    permission?: any,
 }>(),{
     doc: null,
     infoOpened: false,
@@ -86,7 +87,15 @@ const h = ref(0);
 const x = ref(0);
 const y = ref(0);
 const route = useRoute()
-const holdStatus = computed( () => (props.listData?.permission?.hold?.status) || props.listData?.permission?.retention?.status, '')
+function checkPermission(permission) {
+    if(!!permission?.hold?.status) {
+        return ['A', 'L', 'P'].includes(permission.hold.status)
+    }
+    else if(!!permission?.retention?.status) {
+        return ['A', 'D', 'P'].includes(permission.retention.status)
+    }
+    else return false 
+}
 const style = computed(() => {
     if(!props.infoOpened) return {
         width: '0px',
@@ -121,7 +130,7 @@ function dragmove(event:any) {
 async function docUpdated() {
     if(props.listData && doc.value.id === props.listData.doc.id) {
         detail.value = deepCopy(props.listData.doc)
-        permission.value = props.listData.permission;
+        permission.value = props.permission;
         return
     }
     loading.value = true;
