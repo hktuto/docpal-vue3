@@ -189,4 +189,8 @@ onMounted(() => {
         margin: unset;
     }
 }
+.table-tag {
+    margin-top: calc(var(--app-padding) / 6);
+    margin-bottom: calc(var(--app-padding) / 6);
+}
 </style>

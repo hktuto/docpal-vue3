@@ -13,8 +13,8 @@
     <template #action="{ row }">
         <template v-if="row.status === 'P'">
             <template v-if="row.applyApprovedBy === userId">
-                <el-button class="approval-btn" size="small" type="primary" @click="handleApprove(true, row)">{{$t('workflow_startAdhocWorkflow_approve')}}</el-button>
-                <el-button class="approval-btn" size="small" type="danger" @click="handleApprove(false, row)">{{$t('workflow_startAdhocWorkflow_reject')}}</el-button>
+                <el-button class="approval-btn" size="small" type="primary" @click.stop="handleApprove(true, row)">{{$t('workflow_startAdhocWorkflow_approve')}}</el-button>
+                <el-button class="approval-btn" size="small" type="danger" @click.stop="handleApprove(false, row)">{{$t('workflow_startAdhocWorkflow_reject')}}</el-button>
             </template>
             <template v-else>
                 <div>
@@ -25,12 +25,12 @@
         <template v-else>
             <el-dropdown v-if="!!row && !!row.policyRetentionId">
                 <span class="el-dropdown-link" >
-                    <el-button text><el-icon><MoreFilled /></el-icon></el-button>
+                    <el-button @click.stop text><el-icon><MoreFilled /></el-icon></el-button>
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item v-for="item in state.events[row.policyRetentionId]" :key="item.id"
-                            @click="handleEvent(item, row)">{{item.eventLabel}}</el-dropdown-item>
+                            @click.stop="handleEvent(item, row)">{{item.eventLabel}}</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
