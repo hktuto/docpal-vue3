@@ -1599,7 +1599,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_SCHEMA_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'tableHeader_name' },
+            { id: '1', prop: 'keyword', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",
@@ -1630,7 +1630,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_DOC_TYPE_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'tableHeader_name' },
+            { id: '1', prop: 'docTypeId', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",

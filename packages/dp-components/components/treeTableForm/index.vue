@@ -10,7 +10,7 @@
                 round :content="$t('checkData')"
                     @click="handleValid"></SvgIcon>
                 <el-button type="primary" :icon="Plus" size="small" circle 
-                            :disabled="_options.childLen === 1"
+                            :disabled="_options.childLen === 1 || disabled"
                             @click="handleAdd()"/>
             </div>
         </div>
@@ -52,7 +52,7 @@
                                 <template #default="{ row, $index }">
                                     <el-form-item :prop="`${row.dpRowId}.${col.prop}`">
                                         <slot :name="col.slot" :row="row" :index="$index" >
-                                            <el-input v-model="row[col.prop]"></el-input>
+                                            <el-input v-model="row[col.prop]" :disabled="disabled"></el-input>
                                         </slot>
                                     </el-form-item>
                                 </template>
@@ -72,7 +72,7 @@
                             type="primary" :icon="Plus" size="small" circle 
                             @click="handleAddChild(row, $index)"/>
                         <el-button type="danger" :icon="Minus" size="small" circle 
-                            :disabled="$index === 0 && _options.childLen === 1"
+                            :disabled="$index === 0 && _options.childLen === 1 || disabled"
                             @click="handleDelete(row, $index)"/>
                     </template>
                 </el-table-column>
@@ -89,7 +89,8 @@ const props = defineProps<{
     tableData: Array<object>, // table的数据
     columns: Table.Column[], // 每列的配置项
     options?: Table.Options,
-    treeTableFormRule?: object
+    treeTableFormRule?: object,
+    disabled?: boolean
 }>()
 const tableRef = ref();
 

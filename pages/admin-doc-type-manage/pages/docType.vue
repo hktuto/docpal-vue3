@@ -11,7 +11,7 @@
                         <el-button class="button" type="primary"
                             @click="handleSchemaDialogShow()">{{$t('common_new')}}</el-button>
                     </div>
-                    <KeywordFilter :list="state.schemaList" attr="name"
+                    <KeywordFilter :list="state.schemaList" attr="keyword"
                         @filter="handleUserFilter"></KeywordFilter>
                 </template>
                 <Table :columns="schemaTableSetting.columns" :table-data="state._schemaList"
@@ -25,7 +25,7 @@
                         <el-button class="button" type="primary"
                             @click="handleDocTypeDialogShow()">{{$t('common_new')}}</el-button>
                     </div>
-                    <KeywordFilter :list="state.docTypeList" attr="name"
+                    <KeywordFilter :list="state.docTypeList" attr="docTypeId"
                         @filter="handleGroupFilter"></KeywordFilter>
                 </template>
                 <Table :columns="docTypeTableSetting.columns" :table-data="state._docTypeList"
