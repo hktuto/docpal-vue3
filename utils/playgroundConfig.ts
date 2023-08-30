@@ -12,6 +12,14 @@ const defaultConfig = {
         pdfReaderUrl: process.env.pdfReaderUrl || 'http://localhost:8888/web/viewer.html',
         LOCAL_KEY: process.env.LOCAL_KEY || 'client,meta',
         PROXY: process.env.PROXY || 'https://app4.wclsolution.com/api',
+        keycloakConfig: {
+          "url": process.env.keycloakUrl,
+          "realm": process.env.keycloakRealm,
+          "clientId": process.env.keycloakClientId,
+          "ssl-required": "external",
+          "public-client": true,
+          "confidential-port": 0
+        }
       }
   },
   vite:{
@@ -31,4 +39,17 @@ const makeConfig = (options:RuntimeOption) => {
    
   return defaultConfig
 }
+export const skeycloakConfig = (options:RuntimeOption) => {
+  console.log(process.env);
+  
+  return {
+    "url": process.env.keycloakUrl,
+    "ralm": process.env.keycloakRealm,
+    "clientId": process.env.keycloakClientId,
+    "ssl-required": "external",
+    "public-client": true,
+    "confidential-port": 0
+  }
+}
+   
 export default makeConfig

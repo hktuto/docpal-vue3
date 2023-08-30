@@ -1,8 +1,8 @@
 <template>
     <div class="appThemeBg">
-    <div v-if="appStore.displayState === 'needAuth'" ref="needAuthEl" class="LoginContainer">
+    <!-- <div v-if="appStore.displayState === 'needAuth'" ref="needAuthEl" class="LoginContainer">
       <LazyLoginForm :showForgetPassword="showForgetPassword" />
-    </div>
+    </div> -->
     <div v-if="appStore.displayState === 'forgetPassword'" ref="forgetPassword" class="LoginContainer">
       <LazyForgetPassword  />
     </div>
@@ -28,7 +28,8 @@
 const appStore  = useAppStore()
 import { api } from 'dp-api'
 const route = useRoute()
-const {token, verify} = useUser();
+const router = useRouter()
+const {token, verify, errorPages} = useUser();
 
 const { globalSlots } = useLayout()
 const { uploadState } = useUploadStore()
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   showForgetPassword: true
 })
+
 onMounted(async () => {
   window.addEventListener('beforeunload', function (e) {
     if(uploadState.value.uploadRequestList.length > 0) {
@@ -46,15 +48,19 @@ onMounted(async () => {
       e.returnValue = $i18n.t('tip.beforeunload');
     }
   });
-  await appStore.appInit();
-  const t = localStorage.getItem('token') as string;
-  if(localStorage && t) {
-    api.defaults.headers.common['Authorization'] = 'Bearer ' + t;
-    token.value = t;
+  if (errorPages.includes(route.path)) {
+    // appStore.state = 'ready'
+    router.push('/')
+    // return
   }
-  verify(route.path);
+  await appStore.appInit();
+  verify();
 })
-
+watch(() => appStore.displayState, (newValue) => {
+  if(newValue === 'needAuth') {
+    window.location.reload()
+  }
+})
 </script>
 
 

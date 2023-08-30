@@ -213,11 +213,13 @@ importers:
       dp-api: workspace:*
       eslint: ^8.28.0
       jwt-decode: ^3.1.2
+      keycloak-js: ^22.0.1
       mem: ^9.0.2
       nuxt: ^3.4.3
       typescript: ^4.9.3
     dependencies:
       jwt-decode: 3.1.2
+      keycloak-js: 22.0.1
       mem: 9.0.2
     devDependencies:
       '@nuxtjs/eslint-config-typescript': 12.0.0_2jcgcerbs6bi4debdtwega5q6u
@@ -508,12 +510,14 @@ importers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
       dp-api: workspace:*
       eslint: ^8.28.0
+      keycloak-js: ^22.0.1
       nuxt: ^3.4.3
       sass: ^1.58.0
       typescript: ^4.9.3
       v-form: github:hktuto/v-form-designer
       vue-inline-svg: ^3.1.2
     dependencies:
+      keycloak-js: 22.0.1
       vue-inline-svg: 3.1.2
     devDependencies:
       '@element-plus/nuxt': 1.0.5
@@ -4569,7 +4573,7 @@ packages:
       '@babel/core': 7.22.5
       '@babel/plugin-transform-typescript': 7.22.5_@babel+core@7.22.5
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.22.5
-      vite: 4.3.9
+      vite: 4.3.9_sass@1.63.4
       vue: 3.3.4
     transitivePeerDependencies:
       - supports-color
@@ -4582,7 +4586,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.3.9
+      vite: 4.3.9_sass@1.63.4
       vue: 3.3.4
     dev: true
 
@@ -5594,7 +5598,6 @@ packages:
 
   /base64-js/1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
-    dev: true
 
   /big-integer/1.6.51:
     resolution: {integrity: sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==}
@@ -9972,6 +9975,10 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
+  /js-sha256/0.9.0:
+    resolution: {integrity: sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==}
+    dev: false
+
   /js-stringify/1.0.2:
     resolution: {integrity: sha512-rtS5ATOo2Q5k1G+DADISilDA6lv79zIiwFd6CcjuIxGKLFm5C+RLImRscVap9k55i+MOZwgliw+NejvkLuGD5g==}
     dev: true
@@ -10172,6 +10179,13 @@ packages:
 
   /jwt-decode/3.1.2:
     resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
+
+  /keycloak-js/22.0.1:
+    resolution: {integrity: sha512-5cwOzMTMW2HuKGaIHv50BJHz2o8ID+YgzaaXKNwOk0XqD6ZOPD/jQXvqTz+Z8ID5cP46zVWnNiTouFK41NbPOQ==}
+    dependencies:
+      base64-js: 1.5.1
+      js-sha256: 0.9.0
     dev: false
 
   /keypress/0.1.0:
@@ -15651,7 +15665,7 @@ packages:
       strip-ansi: 6.0.1
       tiny-invariant: 1.3.1
       typescript: 4.9.5
-      vite: 4.3.9
+      vite: 4.3.9_sass@1.63.4
       vscode-languageclient: 7.0.0
       vscode-languageserver: 7.0.0
       vscode-languageserver-textdocument: 1.0.8
