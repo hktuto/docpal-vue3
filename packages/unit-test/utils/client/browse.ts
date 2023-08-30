@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { clientURL } from '../url';
 import {client, expect } from './index';
 
 type Item = {
@@ -11,11 +12,15 @@ export class BrowsePage {
 
     constructor(private p: Page) {
         this.page = p;
-        this.page.goto('/browse');
+        this.page.goto(clientURL + '/browse');
     }
 
     async addFolder(name:string) {
-
+        await this.page.locator('#newActionButton').click();
+        await this.page.getByRole('menuitem', { name: 'New Folder' }).click();
+        await this.page.getByLabel('File Name').fill(name);
+        await this.page.getByRole('button', { name: 'Submit' }).click();
+        await this.addItemToDelete(name)
     }
 
     async addItemToDelete(name:string) {
