@@ -99,30 +99,28 @@ async function handleAction (detail:any) {
     if (detail.actions) state.actions = { ...state._actions,  ...detail.actions}
     else state.actions = { ...state._actions }
     if (props.permission) {
-        setPermission(props.permission.permission)
+        setPermission(props.permission)
         return
     }
     state.loading = true
     try {
         const idOrPath = detail.doc.path === '/' ? '/' : detail.doc.id
         const permission = await GetDocPermission(idOrPath, userId)
-        const hold = await GetDocumentHoldApi(detail.doc.id)
-        const holdStatus = hold?.status || ''
         if(!permission) throw new Error("null");
-        setPermission(permission.permission, holdStatus)
+        setPermission(permission)
     } catch (error) {
         if (props.permission) {
-            setPermission(props.permission.permission)
+            setPermission(props.permission)
         }
         else {
-            setPermission('Read')
+            setPermission({ permission: 'Read' })
         }
     }
     state.loading = false
 }
-function setPermission(permission, holdStatus? = '') {
-    state.canWrite = AllowTo({feature:'ReadWrite', userPermission: permission, holdStatus })
-    state.canManage = AllowTo({feature:'ManageRecord', userPermission: permission, holdStatus })
+function setPermission(permission) {
+    state.canWrite = AllowTo({feature:'ReadWrite', permission })
+    state.canManage = AllowTo({feature:'ManageRecord', permission })
 }
 function hidePopover () {
     if (!state.visible) return

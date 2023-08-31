@@ -85,6 +85,8 @@ export enum TABLE {
     CLIENT_INTERNAL_SHEAR_ME = 'clientInternalShareMe',
     CLIENT_INTERNAL_SHEAR_OTHER = 'clientInternalShareOther',
     CLIENT_HOLD_POLICIES = "clientHoldPolicies",
+    CLIENT_RETENTION_DONE = "clientRetentionDone",
+    CLIENT_RETENTION_PENDING= "clientRetentionPending",
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -113,7 +115,8 @@ export enum TABLE {
 
     PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
     ADMIN_FOLDER_CABINET = 'adminFolderCabinet',
-    ADMIN_HOLD_POLICIES_MANAGE = 'adminHoldPoliciesManage'
+    ADMIN_HOLD_POLICIES_MANAGE = 'adminHoldPoliciesManage',
+    ADMIN_RETENTION_MANAGE = 'adminRetentionManage'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1187,8 +1190,48 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [],
         options: { pageSize: 20 }
     },
-
-
+    [TABLE.CLIENT_RETENTION_DONE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
+            { id: '4', label: 'tableHeader_approver', slot: 'approver', width: 150 },
+            { id: '6', label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150},
+        ],
+        events: [],
+        slots: [
+            { label: 'tableHeader_approver', slot: 'approver', width: 150 },
+            { label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150 }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_RETENTION_PENDING]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
+            // { id: '4', label: 'tableHeader_approver', prop: 'approver' },
+            { id: '4', label: 'tableHeader_dueDate', prop: 'expireDate', width: 150,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "expireDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', slot: 'action', label: 'tableHeader_actions', width: 100, align: 'center' }
+        ],
+        events: [],
+        slots: [
+            { slot: 'action', label: 'tableHeader_actions', width: 100, align: 'center' }
+        ],
+        options: { pageSize: 20 }
+    },
     [TABLE.PUBLIC_SHARE]: {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'title' },
@@ -1556,7 +1599,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_SCHEMA_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'tableHeader_name' },
+            { id: '1', prop: 'keyword', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",
@@ -1587,7 +1630,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_DOC_TYPE_LIST]: {
         columns: [
-            { id: '1', prop: 'name', label: 'tableHeader_name' },
+            { id: '1', prop: 'docTypeId', label: 'tableHeader_name' },
             {   
                 id: '2',
                 "type": "",
@@ -1971,7 +2014,60 @@ export const defaultTableSetting: TableColumnSetting = {
         events: ['delete'],
         slots: [],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_RETENTION_MANAGE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'policyName' },
+            { id: '2', label: 'docType_documentType', slot: 'docType' },
+            { id: '3', label: 'rp.period', prop: 'periodNum', slot: 'period'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', label: 'rp.isAuto', slot: 'isAuto', prop: 'isAuto', width: 150, align: 'center' },
+            { id: '6', label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [
+            { label: 'docType_documentType', slot: 'docType' },
+            { label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+        ],
+        options: { pageSize: 20 }
     }
+    
 }
 
 export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {

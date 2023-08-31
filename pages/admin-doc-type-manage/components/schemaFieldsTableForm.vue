@@ -1,10 +1,11 @@
 <template>
     <TreeTableForm ref="TreeTableFormRef" :columns="tableSetting.columns" :table-data="state.tableData"
         :treeTableFormRule="state.rules"
-        :options="state.options">
+        :options="state.options"
+        :disabled="!canEdit">
         <template #title>{{$t('fields')}}</template>
         <template #type="{row}">
-            <el-select v-model="row.type">
+            <el-select v-model="row.type" :disabled="!canEdit">
                 <el-option v-for="(item, index) in state.fieldTypeList"
                      :key="index" :label="item" :value="item" :disabled="item === 'complex'" />
             </el-select>
@@ -61,7 +62,7 @@
 
         </template>
         <template #multiple="{row}">
-            <el-checkbox v-model="row.isMultiValue"></el-checkbox>
+            <el-checkbox v-model="row.isMultiValue" :disabled="!canEdit"></el-checkbox>
         </template>
     </TreeTableForm>
 </template>
@@ -74,7 +75,9 @@ import {
     GetCanContainListApi,
     isComplexType,
     TABLE, defaultTableSetting } from 'dp-api'
-
+const props = defineProps<{
+    canEdit: boolean
+}>()
 const TreeTableFormRef = ref()
 const tableKey = TABLE.ADMIN_SCHEMA_FIELDS_FORM
 const tableSetting = defaultTableSetting[tableKey]

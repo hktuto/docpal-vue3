@@ -1,11 +1,10 @@
 
-import { test as base, expect } from '@playwright/test';
-base.use({
-    baseURL: process.env.ADMIN_BASEURL || 'https://admin.app4.wclsolution.com',
-})
+import { test as base } from '@playwright/test';
+import { adminURL } from '../url';
+
 export const admin = base.extend({
     page: async ({ page }, use, scope) => {
-        await page.goto('/');
+        await page.goto(adminURL + '/');
         await page.getByLabel('username').fill(process.env.CLIENT_USER || 'seantsang');
         await page.getByLabel('password').fill(process.env.CLIENT_PASSWORD ||'aaAA1234');
         await page.getByRole('button', {name: 'Submit'}).press('Enter');
@@ -18,5 +17,7 @@ export const admin = base.extend({
     },
 })
 
-exports.expect = expect;
+
+
+export { expect } from '@playwright/test';
         

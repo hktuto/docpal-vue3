@@ -78,8 +78,8 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
       const idPath = response.path === '/' ? '/' : idOrPath
       const permission:any = await GetDocPermission(idPath, userId);
       if(!permission) throw new Error("no permission");
-      response.canWrite = AllowTo({feature:'ReadWrite', userPermission:permission.permission })
-      response.canEdit = AllowTo({feature:'ReadWrite', userPermission:permission.permission })
+      response.canWrite = AllowTo({feature:'ReadWrite', permission: permission })
+      response.canEdit = AllowTo({feature:'ReadWrite', permission: permission })
       return {
         permission,
         doc: response
@@ -96,7 +96,6 @@ export const getDocumentDetail = async (idOrPath: string, userId?:string) => {
 }
 export const getDocumentDetailSync = async (idOrPath: string, userId?:string) => {
   let doc: any = {
-    holdStatus: ''
   }
   let permission: any = {}
   try {
@@ -104,7 +103,7 @@ export const getDocumentDetailSync = async (idOrPath: string, userId?:string) =>
     let pList = []
     pList.push(getDocumentAdditional(doc.type))
     pList.push(getPermission())
-    pList.push(getHoldStatus(doc.id))
+    // pList.push(getHoldStatus(doc.id))
     await Promise.all(pList) 
   } catch (error) {}
   return { doc, permission }
@@ -115,6 +114,7 @@ export const getDocumentDetailSync = async (idOrPath: string, userId?:string) =>
   async function getPermission() {
     if(userId) {
       const _permission:any = await GetDocPermission(idOrPath, userId);
+      if(!_permission.hold) _permission.hold = {}
       if(!!_permission) permission = _permission
     }
   }

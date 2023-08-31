@@ -28,7 +28,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         if (error?.response?.status === 401 && !config?.sent) {
             console.log('401, retrying with new token', error?.response?.status, config?.sent)
             config.sent = true;
-            const result = await memoizedRefreshToken();
+            const result = await refreshTokenFn();
             if (result?.access_token) {
                 config.headers = {
                     ...config.headers,

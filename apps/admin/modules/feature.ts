@@ -14,6 +14,7 @@ const features = {
     SHARE_EXTERNAL: "../../../pages/admin-share-list",
 }
 const coreFeatures = {
+    Retention: "../../../pages/admin-retention",
     ACL: "../../../pages/admin-acl",
     AUDIT: "../../../pages/admin-audit",
     BULK_IMPORT_CONFIG: "../../../pages/admin-bulk-import-config",
