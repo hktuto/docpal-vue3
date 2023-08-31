@@ -92,29 +92,17 @@ export const useUser = () => {
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
-            // keyClock run here 
-            // keyclock.init(auth => {
-                // if(auth){
-                    // get token
-                    
-                // } else {
-                //     isLogin.value = false,
-                //     token.value = "";
-                //     refreshToken.value = "";
-                //     if(localStorage){
-                //         sessionStorage.removeItem('token');
-                //     }
-                // }
-                    
-            // })
-
-            // old code
-            // if(path && publicRouteList.includes(path)) {
-            //     appStore.state = 'ready';
-            // } else {
-            //     appStore.state = 'needAuth';
-            // }
-            
+            if(path && publicRouteList.includes(path)) {
+                appStore.state = 'ready';
+            } else {
+                appStore.state = 'needAuth';
+            }
+            isLogin.value = false,
+            token.value = "";
+            refreshToken.value = "";
+            if(sessionStorage){
+                sessionStorage.removeItem('token');
+            }
         }
     }
 
