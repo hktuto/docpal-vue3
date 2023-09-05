@@ -55,7 +55,7 @@ function iconClickHandler(){
             anime({
                 targets: '#shareToQueue',
                 translateX: shareDraggableButton.offsetLeft - shareToQueue.offsetLeft,
-                translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop - 50,
+                translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop - 60,
                 duration: 750,
                 easing: 'easeInOutQuad'
             })
