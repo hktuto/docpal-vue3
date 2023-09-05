@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" :backPath="route.query.backPath">
+    <NuxtLayout class="fit-height withPadding" :backPath="state.backPath" :pageTitle="$t('share.shareQueue')">
         <main class="share-main" v-loading="state.loading">
             <FromRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
             <div class="div2" v-loading="previewFile.loading">
@@ -45,7 +45,8 @@ const FromRendererRef = ref()
 const state = reactive({
     minTypeShareList: [],
     interval: null,
-    loading: false
+    loading: false,
+    backPath: '/browse'
 })
 
 const previewFile = reactive({
@@ -98,7 +99,7 @@ async function handleSubmit () {
         const response = await shareRequestApi(param)
         ElMessage.success($i18n.t('share_success'))
         updateShareList([])
-        router.push(route.query.backPath)
+        router.push(state.backPath)
     } catch (error) {
       console.log(error);
       ElMessage.error(error.message)
@@ -127,15 +128,18 @@ function handleDeleteRow (row) {
 }
 function handleDiscard () {
     updateShareList([])
-    router.push(route.query.backPath)
+    router.push(state.backPath)
 }
 onMounted(async() => {
+    state.backPath = route?.query?.backPath ? route.query.backPath : '/browse'
+    console.log(state.backPath);
+    
     try {
         state.minTypeShareList = await getMineTypeShareList()
     } catch (error) {
 
     }
-    if(state.minTypeShareList.length === 0) router.push(route.query.backPath)
+    if(state.minTypeShareList.length === 0) router.push(state.backPath)
     const mimeTypeList = state.minTypeShareList.reduce((prev, item) => {
         if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
         return prev

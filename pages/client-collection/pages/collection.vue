@@ -16,12 +16,17 @@
             </div>
             <div class="collection-main">
                 <div class="flex-x-between">
-                    <div class="flex-x-start">{{curCollection.name}}
+                    <div class="flex-x-between">{{curCollection.name}}
                         <SvgIcon src="/icons/edit.svg" class="el-icon--right"
                             @click="openDialog(true)"/>
                     </div>
-                    <el-button v-if="selectedDocs.length > 1"
-                        @click="handleMulDelete">{{$t('delete')}}</el-button>
+                    <div class="flex-x-center">
+                        <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
+                        <SvgIcon v-if="state.tableData.length > 0"  src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
+                            @click="handleShare"></SvgIcon>
+                        <el-button v-if="selectedDocs.length > 1"
+                            @click="handleMulDelete">{{$t('delete')}}</el-button>
+                    </div>
                 </div>
                 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                     @selection-change="handleSelectionChange"
@@ -40,11 +45,15 @@
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, ArrowDownBold } from '@element-plus/icons-vue'
-import { getCollectionApi, DeleteByIdApi, removeCollectionApi, getCollectionDoc, createCollectionApi, patchDocApi,
+import { getCollectionApi, getCollectionDocAllApi, DeleteByIdApi, removeCollectionApi, getCollectionDoc, createCollectionApi, patchDocApi,
         TABLE, defaultTableSetting, idOrPathParams } from 'dp-api'
+import anime from 'animejs'
+import { set } from "@vueuse/core";
 const { t } = useI18n();
 const route = useRoute()
 const router = useRouter()
+
+const { state:shareState, addToShareList } = useShareStore()
 const pageParams = {
     pageIndex: 0,
     pageSize: 20
@@ -198,6 +207,30 @@ const state = reactive<State>({
         style.collapse = !style.collapse
     }
 // #endregion
+
+async function handleShare () {
+    const data = await getCollectionDocAllApi(state.curCollection.id)
+    addToShareList(data)
+
+    nextTick(() => {
+        const shareDraggableButton = document.getElementById('share-draggable-button')
+        const shareToQueue = document.getElementById('shareToQueue')
+        shareToQueue.style.transform = 'none'
+        shareToQueue.style.display = 'block'
+        if(shareDraggableButton) {
+            anime({
+                targets: '#shareToQueue',
+                translateX: shareDraggableButton.offsetLeft - shareToQueue.offsetLeft,
+                translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop - 50,
+                duration: 750,
+                easing: 'easeInOutQuad'
+            })
+        }
+        setTimeout(() => {
+            shareToQueue.style.display = 'none'
+        }, 750)
+    })
+}
 function handleDblclick (row) {
   if(row.isFolder) {
 
@@ -326,5 +359,9 @@ onMounted(() => {
         }
 
     }
+}
+#shareToQueue {
+    z-index: 100;
+    display: none;
 }
 </style>
