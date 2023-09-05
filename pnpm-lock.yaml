@@ -525,7 +525,7 @@ importers:
       nuxt: 3.7.0_amf3cutw5g24rslvztweq5gqje
       sass: 1.66.1
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/89fa0a6d732e54dd84f992b6f0555bbdb5bf29f0
+      v-form: github.com/hktuto/v-form-designer/0a969ad85aea71df9f24f1e0995bdc97b0574b02
 
   packages/office:
     specifiers:
@@ -16970,6 +16970,26 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
+  github.com/hktuto/v-form-designer/0a969ad85aea71df9f24f1e0995bdc97b0574b02:
+    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/0a969ad85aea71df9f24f1e0995bdc97b0574b02}
+    name: v-form
+    version: 3.0.16
+    dependencies:
+      '@element-plus/icons-vue': 0.2.7_vue@3.3.4
+      axios: 0.24.0
+      clipboard: 2.0.11
+      core-js: 3.32.1
+      element-plus: 2.3.12_vue@3.3.4
+      file-saver: 2.0.5
+      mitt: 3.0.1
+      sortablejs: 1.14.0
+      vue: 3.3.4
+      vue3-quill: 0.2.9
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - debug
+    dev: true
+
   github.com/hktuto/v-form-designer/89fa0a6d732e54dd84f992b6f0555bbdb5bf29f0:
     resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/89fa0a6d732e54dd84f992b6f0555bbdb5bf29f0}
     name: v-form
@@ -16988,3 +17008,4 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - debug
+    dev: false
