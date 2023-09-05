@@ -51,7 +51,7 @@ function iconClickHandler(doc:any){
 }
 const formJson = getJsonApi('fileNewFolder.json')
 function formChange ({fieldName,newValue,oldValue,formModel}) {
-    if(fieldName[0] === 'type') MetaFormRef.value.initMeta(fieldName[1])
+    if(fieldName === 'type') MetaFormRef.value.initMeta(newValue)
 }
 async function handleSubmit () {
     try {
