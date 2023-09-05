@@ -121,7 +121,7 @@ defineExpose({ handleSubmit, initForm })
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
-    overflow: hidden;
+    overflow: auto;
     min-width: 320px;
   flex: 0 0 auto;
   @media(max-width: 1024px) {

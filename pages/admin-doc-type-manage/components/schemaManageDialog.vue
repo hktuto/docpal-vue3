@@ -17,14 +17,14 @@
                         prop="prefix"
                         :rules="[{ required: true, message: $t('form_common_requird')}]"
                 >
-                    <el-input v-model="formData.prefix" ></el-input>
+                    <el-input v-model="formData.prefix" :disabled="!state.canEdit"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
     </el-form>
-    <SchemaFieldsTableForm ref="SchemaFieldsTableFormRef"></SchemaFieldsTableForm>
+    <SchemaFieldsTableForm ref="SchemaFieldsTableFormRef" :canEdit="state.canEdit"></SchemaFieldsTableForm>
     <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
+        <el-button v-if="state.canEdit" :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
     </template>
 </el-dialog>
 </template>
@@ -45,7 +45,8 @@ const tableSetting = defaultTableSetting[tableKey]
 const state = reactive({
     loading: false,
     visible: false,
-    isEdit: false
+    isEdit: false,
+    canEdit: true
 })
 const formData = reactive({
     id: '',
@@ -111,10 +112,11 @@ async function getFormData () {
 
 function handleOpen(data) {
     state.visible = true
+    state.canEdit = data ? data.canEdit : true
     setTimeout(async () => {
         if(!!data) {
             state.isEdit = true
-            const schemaDetail = await GetSchemaApi(data.name)
+            const schemaDetail = await GetSchemaApi(data.keyword)
             SchemaFieldsTableFormRef.value.TreeTableFormRef.initTable(revertFields(schemaDetail.fields))
             formData.id = schemaDetail.id
             formData.prefix = schemaDetail.prefix

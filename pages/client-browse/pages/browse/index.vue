@@ -13,16 +13,16 @@
                     <div v-show="selectList.length === 0 && doc.path !== '/'" id="browseHeaderRight" class="folderAction">
                     <CollapseMenu>
                         <template #default="{collapse}">
-                        <BrowseActionsHold  :doc="doc" @setHold="(status)=>listData.doc.holdStatus = status"/>
+                        <BrowseActionsHold :permission="permission" :doc="doc" />
                         <BrowseActionsSubscribe  :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :class="{actionDivider:true, collapse}"></div>
-                        <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @success="handleRefresh"/>
-                        <!-- <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" @success="handleRefresh"/> -->
-                        <BrowseActionsNew v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @success="handleRefresh"/>
-                        <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
-                        <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })" :doc="doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :class="{actionDivider:true, collapse}"></div>
-                        <BrowseActionsUploadRequest v-if="feature.UPLOAD_REQUEST" v-show="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :path="doc.path" />
+                        <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
+                        <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
+                        <!-- <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/> -->
+                        <BrowseActionsNew v-show="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
+                        <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                        <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
+                        <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
+                        <BrowseActionsUploadRequest v-if="feature.UPLOAD_REQUEST" v-show="AllowTo({feature:'ReadWrite', permission })" :path="doc.path" />
 
 
                         </template>
@@ -32,8 +32,8 @@
                     </div>
                     <!-- 多选 -->
                     <div v-show="selectList.length !== 0" id="browseHeaderRight" class="selectedAction">
-                        <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" />
-                        <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :selected="selectList" @success="handleRefresh"/>
+                        <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
+                        <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission })" :selected="selectList" @success="handleRefresh"/>
                         <div class="actionDivider"></div>
                         <BrowseActionsInfo :doc="doc" @click="infoOpened = !infoOpened"/>
 
@@ -49,7 +49,7 @@
                 <template #default="{doc, permission}" >
                     <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :listData="listData" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
                     <BrowseRightClick></BrowseRightClick>
-                    <!-- <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission })" v-show="false" :doc="doc" @success="handleRefresh"/> -->
+                    <!-- <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" v-show="false" :doc="doc" @success="handleRefresh"/> -->
                 </template>
             </BrowseList>
         </div>
@@ -94,7 +94,6 @@ const selectList = ref<any[]>([])
 provide('selectList', selectList)
 const routePath = computed( () => (route.query.path as string) || '/')
 const infoOpened = ref(false);
-const holdStatus = computed( () => (listData.value.doc?.holdStatus) || '')
 
 
 

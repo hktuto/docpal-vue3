@@ -7,7 +7,6 @@ const { public:{feature} } = useRuntimeConfig();
 const doc = ref({
     name:""
 });
-const holdStatus = computed( () => (doc.value?.holdStatus) || '')
 const { relatedChildren } = useRelatedFolder();
 
 function closePreview(){
@@ -70,17 +69,17 @@ function handleRefresh(){
                     >
                         <template #header>
                             <div class="infoHeaderActions">
-                                <BrowseActionsHold  :doc="doc" />
-                                <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @success="handleRefresh"/>
+                                <BrowseActionsHold  :doc="doc" :permission="permission"/>
+                                <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
                                 <BrowseActionsSubscribe  :doc="doc" />
-                                <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" @success="handleRefresh"/>
-                                <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', userPermission: permission.permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
-                                <BrowseActionsDownload v-if="AllowTo({feature:'Read', userPermission: permission.permission })"  :doc="doc"  />
-                                <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', userPermission: permission.permission, holdStatus })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
-                                <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission })" :doc="doc" />
-                                <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', userPermission:permission.permission, holdStatus })" :doc="doc" />
+                                <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefresh"/>
+                                <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
+                                <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
+                                <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                                <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
+                                <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                                 
-                                <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', userPermission: permission.permission })" :doc="doc" :hideAfterClick="true" />
+                                <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
                             </div>
                         </template>
                     </BrowseInfo>

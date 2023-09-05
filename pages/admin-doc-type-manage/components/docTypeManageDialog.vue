@@ -4,11 +4,11 @@
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" >
         <template v-slot:tableForm>
-            <SchemaFieldsTableForm ref="SchemaFieldsTableFormRef"></SchemaFieldsTableForm>
+            <SchemaFieldsTableForm ref="SchemaFieldsTableFormRef" :canEdit="state.canEdit"></SchemaFieldsTableForm>
         </template>
     </FromRenderer>
     <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
+        <el-button v-if="state.canEdit" :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
     </template>
 </el-dialog>
 </template>
@@ -31,7 +31,8 @@ const tableSetting = defaultTableSetting[tableKey]
 const state = reactive({
     loading: false,
     visible: false,
-    isEdit: false
+    isEdit: false,
+    canEdit: true
 })
 async function handleSubmit () {
     state.loading = true
@@ -84,15 +85,16 @@ function revertFields (fields) {
 }
 function handleOpen(data) {
     state.visible = true
+    state.canEdit = data ? data.canEdit : true
     setTimeout(async () => {
         if(!!data) {
             state.isEdit = true
-            const docTypeDetail = await GetDocTypeApi(data.name)
+            const docTypeDetail = await GetDocTypeApi(data.docTypeId)
             docTypeDetail.extraSchemas = docTypeDetail.extraSchemas.map(item => (item.id))
             console.log(docTypeDetail.extraSchemas);
-            
+            docTypeDetail.canEdit = data.canEdit
       
-        SchemaFieldsTableFormRef.value.TreeTableFormRef.initTable(revertFields(docTypeDetail.customSchema))
+            SchemaFieldsTableFormRef.value.TreeTableFormRef.initTable(revertFields(docTypeDetail.customSchema))
             FromRendererRef.value.vFormRenderRef.setFormData(docTypeDetail)
             // FormRef.value.clearValidate()
         }

@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"holdPolicies",
       url:"/holdPolicies",
       icon: "/icons/menu/holdPoliciesManage.svg",
-      order:4,
+      order: 9999,
     }
   ],
 })

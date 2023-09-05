@@ -30,17 +30,23 @@ async function handleSubmit () {
                 holdPolicyId: data.id,
                 holdApprovalId: data.approvedBy,
                 applyReason: data.reason
-            }, () => state.visible = false)
+            }, () => {
+                state.visible = false
+                state.loading = false
+            })
         } else {
             emits('remove', {
                 id: data.id,
                 removeReason: data.reason
-            }, () => state.visible = false)
+            }, () => {
+                state.visible = false
+                state.loading = false
+            })
         }
     } catch (error) {
-        
+        state.loading = false
     }
-    state.loading = false
+    
 }
 function handleOpen(setting) {
     state.visible = true

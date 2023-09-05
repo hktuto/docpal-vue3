@@ -35,7 +35,6 @@
 </template>
 
 <script lang="ts" setup>
-import { getJsonApi } from 'dp-api'
 const props = withDefaults(defineProps<{
     dropList: any,
     dragList: any,
@@ -48,7 +47,6 @@ const props = withDefaults(defineProps<{
     nullTip: 'tip.pleaseGoToConfigDisplayMetaOrSelectDocumentType'
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('admin/dragSelect.json')
 
 function handleClose(element) {
     console.log(props.dropList, element);
