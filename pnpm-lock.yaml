@@ -283,8 +283,8 @@ importers:
       interactjs: 1.10.17
       mime-types: 2.1.35
       tiff.js: 1.0.0
-      v-code-diff: 1.5.0
-      v-form: github.com/hktuto/v-form-designer/c530e9dd471f34ff777603fbd8313e8495d2a210
+      v-code-diff: 1.7.1
+      v-form: github.com/hktuto/v-form-designer/89fa0a6d732e54dd84f992b6f0555bbdb5bf29f0
       vue-inline-svg: 3.1.2
       vuedraggable: 4.1.0
     devDependencies:
@@ -525,7 +525,7 @@ importers:
       nuxt: 3.5.3_6bslz4e6n5adwvys7lutvfehrm
       sass: 1.63.4
       typescript: 4.9.5
-      v-form: github.com/hktuto/v-form-designer/c530e9dd471f34ff777603fbd8313e8495d2a210
+      v-form: github.com/hktuto/v-form-designer/89fa0a6d732e54dd84f992b6f0555bbdb5bf29f0
 
   packages/office:
     specifiers:
@@ -16807,10 +16807,10 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  github.com/hktuto/v-form-designer/c530e9dd471f34ff777603fbd8313e8495d2a210:
-    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/c530e9dd471f34ff777603fbd8313e8495d2a210}
+  github.com/hktuto/v-form-designer/89fa0a6d732e54dd84f992b6f0555bbdb5bf29f0:
+    resolution: {tarball: https://codeload.github.com/hktuto/v-form-designer/tar.gz/89fa0a6d732e54dd84f992b6f0555bbdb5bf29f0}
     name: v-form
-    version: 3.0.14
+    version: 3.0.15
     dependencies:
       '@element-plus/icons-vue': 0.2.7_vue@3.3.4
       axios: 0.24.0
