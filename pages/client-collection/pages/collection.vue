@@ -48,7 +48,6 @@ import { Delete, ArrowDownBold } from '@element-plus/icons-vue'
 import { getCollectionApi, getCollectionDocAllApi, DeleteByIdApi, removeCollectionApi, getCollectionDoc, createCollectionApi, patchDocApi,
         TABLE, defaultTableSetting, idOrPathParams } from 'dp-api'
 import anime from 'animejs'
-import { set } from "@vueuse/core";
 const { t } = useI18n();
 const route = useRoute()
 const router = useRouter()

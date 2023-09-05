@@ -1,19 +1,21 @@
 <template>
-    <div>
-      <BrowseActionsButton id="shareActionButton" :label="$t('tip.addToShare')"  >
-        <el-badge :value="shareState.shareList.length" :max="99" 
-            :hidden="shareState.shareList.length === 0">
-            <SvgIcon src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
-                @click="iconClickHandler"></SvgIcon>
-        </el-badge>
+    <div class="flex-x-center">
+        <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
+        <BrowseActionsButton id="shareActionButton" :label="$t('tip.addToShare')"  >
+            <el-badge :value="shareState.shareList.length" :max="99" 
+                :hidden="shareState.shareList.length === 0">
+                <SvgIcon src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
+                    @click="iconClickHandler"></SvgIcon>
+            </el-badge>
 
-      </BrowseActionsButton>
+        </BrowseActionsButton>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
 import { getJsonApi } from 'dp-api'
+import anime from 'animejs'
 const router = useRouter()
 const route = useRoute()
 const { state:shareState, addToShareList } = useShareStore()
@@ -44,5 +46,29 @@ function iconClickHandler(){
         const ev = new CustomEvent('closeFilePreview')
         document.dispatchEvent(ev);
     }
+     nextTick(() => {
+        const shareDraggableButton = document.getElementById('share-draggable-button')
+        const shareToQueue = document.getElementById('shareToQueue')
+        shareToQueue.style.transform = 'none'
+        shareToQueue.style.display = 'block'
+        if(shareDraggableButton) {
+            anime({
+                targets: '#shareToQueue',
+                translateX: shareDraggableButton.offsetLeft - shareToQueue.offsetLeft,
+                translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop - 50,
+                duration: 750,
+                easing: 'easeInOutQuad'
+            })
+        }
+        setTimeout(() => {
+            shareToQueue.style.display = 'none'
+        }, 750)
+    })
 }
 </script>
+<style lang="scss" scoped>
+#shareToQueue {
+    z-index: 100;
+    display: none;
+}
+</style>
