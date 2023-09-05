@@ -18,8 +18,9 @@
                 @delete="handleDeleteRow"></ShareTableSet>
             <div class="div4 flex-x-end">
                 <div>
-                    <el-button @click="handleDiscard">{{$t('discard')}}</el-button>
-                    <el-button @click="handleSubmit">{{$t('confirm')}}</el-button>
+                    <el-button type="primary" @click="handleAddMore">{{$t('button.addMore')}}</el-button>
+                    <el-button type="info" @click="handleDiscard">{{$t('discard')}}</el-button>
+                    <el-button type="primary" @click="handleSubmit">{{$t('confirm')}}</el-button>
                 </div>
             </div>
         </main>
@@ -28,7 +29,7 @@
 
 
 <script lang="ts" setup>
-import { ElMessage, ElNotification } from 'element-plus'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import {
     prepareShareDownloadApi,
     getPrepareShareDownloadUrlApi,
@@ -126,8 +127,13 @@ function handleDeleteRow (row) {
     state.minTypeShareList.splice(index, 1)
     updateShareList(state.minTypeShareList)
 }
-function handleDiscard () {
+async function handleDiscard () {
+    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
+    if(action !== 'confirm') return
     updateShareList([])
+    router.push(state.backPath)
+}
+function handleAddMore () {
     router.push(state.backPath)
 }
 onMounted(async() => {

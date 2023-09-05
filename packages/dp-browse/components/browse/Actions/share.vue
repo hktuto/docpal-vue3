@@ -3,7 +3,7 @@
         <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
         <BrowseActionsButton id="shareActionButton" :label="$t('tip.addToShare')"  >
             <el-badge :value="shareState.shareList.length" :max="99" 
-                :hidden="shareState.shareList.length === 0" type="primary">
+                :hidden="shareState.shareList.length === 0" type="success">
                 <SvgIcon src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
                     @click="iconClickHandler"></SvgIcon>
             </el-badge>
