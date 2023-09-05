@@ -3,7 +3,7 @@
     :handle="handle">
     <div class="flex-x-center">
         <el-icon ref="handle" class="cursor-move"><Rank /></el-icon>
-        <el-badge class="el-icon--right" :value="shareState.shareList.length" :max="99">{{$t('share.shareQueue')}}</el-badge>
+        <el-badge class="el-icon--right" :value="shareState.shareList.length" :max="99" type="primary">{{$t('share.shareQueue')}}</el-badge>
         <el-button class="ml-30" type="primary" text @click="handleShare">{{$t('share.share')}}</el-button>
     </div>
   <!-- Drag me! I am at {{x}}, {{y}} -->
