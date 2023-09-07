@@ -1834,7 +1834,7 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
             // { id: '1', label: 'tableHeader_name', prop: 'documentName'},
             { id: '2', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
-            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserId',},
+            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds',},
             { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
                 formatList: [
                     {
