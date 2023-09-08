@@ -6,6 +6,6 @@ pnpm i --shamefully-hoist
 ```
 1. 開始開發
 ```bash
-   pnpm run dev
+   pnpm run dev 
 ```
 
