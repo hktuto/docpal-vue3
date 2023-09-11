@@ -102,16 +102,16 @@ import { GetShareOthersApi, DeleteShareApi, TABLE, defaultTableSetting } from 'd
 // #endregion
 // TODO:预览，由于后端数据暂时没法支持预览，所以先不做预览
 function handleDblclick (row) {
-    if(row.isFolder) {
-        // shareFolderId 目录下一层rootId，用于breadcrumbs划分
-        sessionStorage.setItem('shareFolderId', row.documentId)
-        router.push(`/shareOtherFolder?path=${row.documentId}`)
-    }
-    else {
+    if(!row.isFolder || row.isFolder === 'false') {
         openFileDetail(row.documentId, {
             showInfo:true,
             showHeaderAction:true
         })
+    }
+    else {
+        // shareFolderId 目录下一层rootId，用于breadcrumbs划分
+        sessionStorage.setItem('shareFolderId', row.documentId)
+        router.push(`/shareOtherFolder?path=${row.documentId}`)
     }
 }
 function handleRightClick (row: any, column: any, event: MouseEvent) {
