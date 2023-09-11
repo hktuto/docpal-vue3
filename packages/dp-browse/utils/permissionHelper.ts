@@ -24,8 +24,9 @@ export const AllowTo = ({feature, permission}:AllowToArgs) => {
     if (!!permission.retention && permission.retention.status) return false
     const userPermission = permission.permission
     // ['A', 'L', 'P'].includes(holdStatus)
-    if (!userPermission || feature === 'Read') {
-        return false;
-    }
+    // FIXME: Y add this?
+    // if (!userPermission || feature === 'Read') {
+    //     return false;
+    // }
     return PermissionArray.indexOf(userPermission) >= PermissionArray.indexOf(feature);
 };
