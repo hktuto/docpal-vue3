@@ -12,13 +12,18 @@ import NestedList from '@editorjs/nested-list';
 import  Paragraph from '@editorjs/paragraph';
 import VariableOptions from '../../editorComponents/variableOptions';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     options:any,
-    data:any
-}>()
+    data:any,
+    variable:any
+}>(),{
+    options:{},
+    data:{},
+    variable:[]
+})
 
-const editor = ref();
-
+const { variable } = toRefs(props);
+const editor = ref<EditorJS | null>(null);
 function setupEditor() {
     // init editorjs
     editor.value = new EditorJS({
@@ -44,6 +49,9 @@ function setupEditor() {
             },
             variableOptions: {
                 class: VariableOptions,
+                config:{
+                    variables: variable.value
+                }
             }
         },
         i18n:{
@@ -81,32 +89,44 @@ function setupEditor() {
                     }
                 },
             }
-        }
+        },
+        onChange: (api, event) => {
+            const data = api.saver.save().then((outputData) => {
+                calculateVariable(outputData);
+            });
+        },
     })
 }
 
 function dispose(){
-    editor.value.destroy();
+    editor.value?.destroy();
     editor.value = null;
 }
 async function setData(data:any) {
-    await editor.value.isReady;
-    await editor.value.render(data);
+    await editor.value?.isReady;
+    await editor.value?.render(data);
 }
 async function getData() {
-    const outputData = await editor.value.save();
-    console.log(outputData);
+    const outputData = await editor.value?.save();
     return outputData;
 }
 
 async function getHTML() {
-    const outputData = await editor.value.save();
+    const outputData = await editor.value?.save();
     const html = "";
+    if(!outputData) return;
     for( const block of outputData.blocks) {
         console.log(block)
     }
-    return {
-        html
+    return html
+}
+
+function calculateVariable(data:any) {
+    const variable = [];
+    for( const block of data.blocks) {
+        if(block.type === 'variableOptions') {
+            variable.push(block.data.variable)
+        }
     }
 }
 
@@ -135,4 +155,4 @@ defineExpose({
     width: 100%;
     height: 100%;
 }
-</style>
+</style>../../editorComponents/VariableOptions
