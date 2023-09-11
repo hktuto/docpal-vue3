@@ -21,7 +21,6 @@
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsUploadRequest v-if="feature.UPLOAD_REQUEST" v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :path="listData.doc.path" />
-
                         </template>
                     </CollapseMenu>
                     <div :class="{actionDivider:true, collapse}"></div>
@@ -31,8 +30,10 @@
             <div v-else-if="selectList.length !== 0" class="browseHeader--multi selectedAction">
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
                 <CollapseMenu>
+                    <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
                     <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission: listData.permission })"
                         :doc="listData.doc" :selectedList="selectList"/>
+                    <BrowseActionsCollection :selectedList="selectList" @clearSelected="handleClearSelected"></BrowseActionsCollection>
                     <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :selected="selectList" @success="handleRefresh"
                         />
                     <!-- <div class="actionDivider"></div> -->
@@ -136,6 +137,10 @@ async function handleRefresh () {
 
 function handleSelectionChange (rows:any) {
     selectList.value = [...rows]
+}
+function handleClearSelected() {
+    const ev = new CustomEvent('setTableSelection')
+    document.dispatchEvent(ev)
 }
 watch(()=>routePath, async(newRoute, oldRoute) => {
     loading.value = true;
