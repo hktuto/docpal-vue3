@@ -26,6 +26,8 @@ function handleCommand(newLocale:any) {
     locale.value = newLocale
     userPreference.value.language = newLocale;
     savePreference()
+    // refresh page
+    window.location.reload()
     // TODO : save to user preference
 }
 
