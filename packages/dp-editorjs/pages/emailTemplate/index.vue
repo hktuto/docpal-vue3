@@ -2,17 +2,24 @@
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
             @row-dblclick="handleDblclick"
-            @command="handleAction"
             @pagination-change="handlePaginationChange">
             <template #preSortButton>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                    inputKey="name"/>
+                    inputKey="subject"/>
             </template>  
             <template #suffixSortButton>
-                <el-button @click="handleAdd">{{$t('button.add')}}</el-button>
+                <el-button type="info" @click="handleEditEmailLayout">{{$t('button.editEmailLayout')}}</el-button>
+                <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
             </template>
-            <template #docType="{row, index}">
-                <el-tag class="el-icon--left table-tag" v-for="item in row.triggers">{{item.documentType}}</el-tag>
+            <template #emailAction="{row, index}">
+                <el-button class="emailActionButton" type="text" size="small" 
+                    @click="handleDblclick(row)">
+                    <SvgIcon src="/icons/edit.svg" ></SvgIcon>
+                </el-button>
+                <el-button v-if="row.createdBy !== 'system'" class="emailActionButton" type="text" size="small"
+                    @click="handleDeleteTemplate">
+                    <SvgIcon src="/icons/menu/trash.svg" ></SvgIcon>
+                </el-button>
             </template>
         </Table>
     </NuxtLayout>
@@ -93,55 +100,53 @@ import {
     )
 // #endregion
 
-function handleAction (command, row: any, index: number) {
-    switch (command) {
-        case 'delete':
-            deleteItem(row.id)
-            break
-        default:
-            break
-    }
-}
-async function deleteItem(id: string) {
+async function handleDeleteTemplate(id: string) {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
     await DeleteEmailTemplateApi(id)
     handlePaginationChange(pageParams.pageNum + 1)
 }
 function handleDblclick(row) {
-    router.push(`/retentionManage/${row.id}`)
+    router.push(`/emailTemplate/${row.id}`)
+}
+function handleAdd () {
+    router.push(`/emailTemplate/new`)
 }
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
-        const data = await GetEmailLayoutAllApi()
-        // ResponsiveFilterRef.value.init(data)
+        const layouts = await GetEmailLayoutAllApi()
+        const filters = [
+            { key: "createdBy", label: "emailTemplate.layout", type: "string", 
+                options: layouts.map(item => ({
+                    value: item.id,
+                    label: item.name
+                })) }
+        ]
+        ResponsiveFilterRef.value.init(filters)
     }
     function handleFilterFormChange(formModel) {
         state.extraParams = formModel
         handlePaginationChange(1)
     }
 // #endregion
-
+function handleEditEmailLayout () {
+    router.push('/layoutTemplate')
+}
 onMounted(() => {
     getFilter()
 })
 </script>
 
 <style lang="scss" scoped>
-.pageContainer{
-  height: 100%;
-  overflow: auto;
-  padding: calc( var(--app-padding) * 2);
-}
+
 :deep(.tableHeader) {
     margin-bottom: 10px;
     & > .el-button {
         margin: unset;
     }
 }
-.table-tag {
-    margin-top: calc(var(--app-padding) / 6);
-    margin-bottom: calc(var(--app-padding) / 6);
+.emailActionButton {
+    padding: unset;
 }
 </style>
