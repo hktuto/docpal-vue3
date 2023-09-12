@@ -6,7 +6,7 @@ export default defineAppConfig({
             name:"admin_emailTemplate",
             routeName:"emailTemplate",
             url:"/emailTemplate",
-            icon: "/icons/menu/emailTemplate.svg",
+            icon: "/icons/menu/mailConfig.svg",
             order: 10001,
         }
     ]
