@@ -34,6 +34,8 @@ export class SelectionUtils {
     this.commandRemoveFormat = 'removeFormat';
   }
 
+  currentRange;
+
   /**
    * Returns selected anchor
    * {@link https://developer.mozilla.org/ru/docs/Web/API/Selection/anchorNode}

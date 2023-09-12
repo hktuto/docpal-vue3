@@ -1,14 +1,14 @@
 
 
 import './index.scss';
-import {IconLink} from './icon.js';
+import {IconLink} from '../utils/icon.js';
 /**
  * Import functions
  */
 import * as Dom from '../utils/dom';
 import { SelectionUtils } from '../utils/selection';
 import { Utils } from '../utils/utils';
-import { InlineTool } from '@editorjs/editorjs';
+import { InlineTool, InlineToolConstructorOptions } from '@editorjs/editorjs';
 
 const IconUnlink = IconLink;
 
@@ -51,6 +51,15 @@ const NavDirection = {
  * Link Autocomplete Tool for EditorJS
  */
 export default class VariableOptions implements InlineTool {
+  api: any;
+  config: any;
+  selection: SelectionUtils;
+  searchEndpointUrl: any;
+  searchQueryParam: any;
+  nodes: { toolButtons: HTMLElement | undefined; toolButtonLink:  HTMLElement | undefined; toolButtonUnlink:  HTMLElement | undefined; actionsWrapper:  HTMLElement | undefined; inputWrapper:  HTMLElement | undefined; inputField:  HTMLElement | undefined; searchResults:  HTMLElement | undefined; linkDataWrapper:  HTMLElement | undefined; linkDataTitleWrapper:  HTMLElement | undefined; linkDataName:  HTMLElement | undefined; linkDataDescription:  HTMLElement | undefined; linkDataURL:  HTMLElement | undefined; };
+  tagName: string;
+  KEYS: { ENTER: number; UP: number; DOWN: number; };
+  typingTimer: null;
   /**
    * Specifies Tool as Inline Toolbar Tool
    *
@@ -129,7 +138,7 @@ export default class VariableOptions implements InlineTool {
    * @param {object} options.config — initial config for the tool
    * @param {object} options.api — methods from Core
    */
-  constructor({ config, api }) {
+  constructor({ config, api }:InlineToolConstructorOptions) {
     /**
      * Essential tools
      */
@@ -143,52 +152,28 @@ export default class VariableOptions implements InlineTool {
     this.searchEndpointUrl = this.config.endpoint;
     this.searchQueryParam = this.config.queryParam;
 
-    /**
-     * Tool's nodes list
-     *
-     * toolButtons
-     *   |- toolButtonLink
-     *   |- toolButtonUnlink
-     *
-     * actionsWrapper
-     *   |- inputWrapper
-     *   |    |- inputField
-     *   |    |- loader
-     *   |
-     *   |- searchResults
-     *   |    |- searchItemWrapper
-     *   |    |    |- searchItemName
-     *   |    |    |- searchItemDescription
-     *   |    |
-     *   |    |- ...
-     *   |
-     *   |- linkDataWrapper
-     *        |- URL
-     *        |- name
-     *        |- description
-     */
     this.nodes = {
-      toolButtons: null,
-      toolButtonLink: null,
-      toolButtonUnlink: null,
+      toolButtons: undefined,
+      toolButtonLink: undefined,
+      toolButtonUnlink: undefined,
 
-      actionsWrapper: null,
-      inputWrapper: null,
-      inputField: null,
+      actionsWrapper: undefined,
+      inputWrapper: undefined,
+      inputField: undefined,
 
-      searchResults: null,
+      searchResults: undefined,
 
-      linkDataWrapper: null,
-      linkDataTitleWrapper: null,
-      linkDataName: null,
-      linkDataDescription: null,
-      linkDataURL: null,
+      linkDataWrapper: undefined,
+      linkDataTitleWrapper: undefined,
+      linkDataName: undefined,
+      linkDataDescription: undefined,
+      linkDataURL: undefined,
     };
 
     /**
      * Define tag name for a link element
      */
-    this.tagName = 'A';
+    this.tagName = 'VAR';
 
     /**
      * Key codes
@@ -210,7 +195,7 @@ export default class VariableOptions implements InlineTool {
    *
    * @returns {HTMLDivElement}
    */
-  render() {
+  render():HTMLElement {
     /**
      * Create wrapper for buttons
      *
@@ -263,7 +248,7 @@ export default class VariableOptions implements InlineTool {
      */
     this.nodes.inputWrapper = Dom.make('div', VariableOptions.CSS.field);
     this.nodes.inputField = Dom.make('input', VariableOptions.CSS.fieldInput, {
-      placeholder: this.api.i18n.t(this.isServerEnabled ? DICTIONARY.pasteOrSearch : DICTIONARY.pasteALink),
+      placeholder: this.api.i18n.t(DICTIONARY.pasteALink),
     });
 
     this.nodes.inputWrapper.appendChild(this.nodes.inputField);
@@ -649,8 +634,13 @@ export default class VariableOptions implements InlineTool {
     /**
      * Create a link by default browser's function
      */
-    document.execCommand('createLink', false, href);
-
+    // document.execCommand('createLink', false, href);
+    const newTag = Dom.make(this.tagName, [VariableOptions.CSS.searchItem]);
+    newTag.innerHTML = href;
+    newTag.dataset['href'] = href;
+    this.selection.currentRange.insertNode(newTag);
+    // this.selection.savedSelectionRange.insertNode(newTag);
+    this.api.selection.expandToTag(newTag);
     /**
      * Get this link element
      */
@@ -659,13 +649,7 @@ export default class VariableOptions implements InlineTool {
     /**
      * Fill up link element's dataset
      */
-    Object.keys(element.dataset).forEach(key => {
-      if (key === 'href') {
-        return;
-      }
-
-      newLink.dataset[key] = element.dataset[key];
-    });
+    
 
     /**
      * Collapse selection and close toolbar
@@ -697,10 +681,11 @@ export default class VariableOptions implements InlineTool {
      * @type {boolean}
      */
     const isLinkSelected = this.nodes.toolButtonUnlink.classList.contains(this.api.styles.inlineToolButtonActive);
-
+    console.log(isLinkSelected)
     /**
      * Create a fake selection
      */
+    this.selection.currentRange = range;
     this.selection.setFakeBackground();
     this.selection.save();
 
@@ -717,17 +702,19 @@ export default class VariableOptions implements InlineTool {
       /**
        * Get the nearest link tag
        */
-      const parentAnchor = this.selection.findParentTag('A');
-
+      const parentAnchor = this.selection.findParentTag(this.tagName);
+      console.log(parentAnchor)
       /**
        * Expand selection
        */
       this.selection.expandToTag(parentAnchor);
-
+      const text = range.extractContents();
+      range.insertNode(text);
+      parentAnchor?.remove();
       /**
        * Remove the link
        */
-      document.execCommand('unlink');
+      // document.execCommand('unlink');
 
       /**
        * Remove fake selection and close toolbar
@@ -756,8 +743,8 @@ export default class VariableOptions implements InlineTool {
     /**
      * Find the nearest link tag
      */
-    const parentA = this.selection.findParentTag(this.tagName);
-
+    const parentA = this.api.selection.findParentTag(this.tagName);
+    console.log("parent", parentA, this.tagName)
     /**
      * If no link tag then do nothing
      */

@@ -4,6 +4,11 @@ $color-bg-gray: rgba(232, 232, 235, 0.49);
 
 $loader-color: rgba(29, 32, 43, 0.3);
 
+variable-select{
+    background: var(--primary-color);
+    padding: 2 4px;
+    color: #fff;
+}
 .ce-link-autocomplete {
     &__icon-wrapper svg {
         display: block;

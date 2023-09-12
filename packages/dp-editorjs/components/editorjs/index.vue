@@ -11,7 +11,7 @@ import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import  Paragraph from '@editorjs/paragraph';
 import VariableOptions from '../../editorComponents/variableOptions';
-
+import VariableSelect from '../../editorComponents/variableSelect';
 const props = withDefaults(defineProps<{
     options:any,
     data:any,
@@ -47,12 +47,24 @@ function setupEditor() {
                 class: Paragraph,
                 inlineToolbar: true,
             },
-            variableOptions: {
+            VariableOptions: {
                 class: VariableOptions,
                 config:{
                     variables: variable.value
                 }
-            }
+            },
+            // variableOptions: {
+            //     class: VariableOptions,
+            //     config:{
+            //         variables: variable.value
+            //     }
+            // },
+            // VariableSelect:{
+            //     class: VariableSelect,
+            //     config:{
+            //         variables: variable.value
+            //     }
+            // }
         },
         i18n:{
             messages:{

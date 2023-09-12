@@ -30,7 +30,7 @@ function handleCommand(newLocale:any) {
 }
 
 onMounted(() => {
-    locale.value = userPreference.value.language
+    locale.value = userPreference.value?.language || 'en';
 })
 </script>
 
