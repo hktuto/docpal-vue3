@@ -403,7 +403,6 @@ export default class VariableOptions implements InlineTool {
        */
       try{
         this.toggleLoadingState(true);
-        console.log(searchString, this.config);
         const items = await this.searchRequest(searchString);
         this.generateSearchList(items);
       } catch (e) {
