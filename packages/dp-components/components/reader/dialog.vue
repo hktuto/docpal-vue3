@@ -14,7 +14,7 @@
     </div>
 
     <template #footer>
-        <el-button v-if="!loading && blob && !_options.noDownload"  :icon="Download" @click="handleDownload">{{$t('download')}}</el-button>
+        <!-- <el-button v-if="!loading && blob && !_options.noDownload"  :icon="Download" @click="handleDownload">{{$t('download')}}</el-button> -->
         <slot name="actions"></slot>
     </template>
 </el-dialog>
