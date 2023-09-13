@@ -1,7 +1,10 @@
 <template>
 <div v-if="hold">
     <el-dropdown v-if="doc.isFolder && (!hold.status || hold.status === 'R')">
-        <SvgIcon class="hd-lock-img" src="/icons/file/lock.svg" round></SvgIcon>
+        <BrowseActionsButton id="shareActionButton" :label="svgContent"  >
+            <SvgIcon class="hd-lock-img" src="/icons/file/lock.svg" round
+                :content="svgContent"></SvgIcon>
+        </BrowseActionsButton>
         <template #dropdown>
             <el-dropdown-menu class="hd-list--menu">
                 <el-dropdown-item v-for="item in state.holdList" 
@@ -43,14 +46,19 @@
             </template>
         </div>
         <template #reference>
-            <SvgIcon class="hd-pending-approval-img" disabled :src="hold.removeProcessInstanceId ? '/icons/file/lock.svg' : '/icons/file/unlock.svg'" round
-                @click="state.dVisible = !state.dVisible"
-                ></SvgIcon>
+            <BrowseActionsButton id="shareActionButton" :label="svgContent"  >
+                <SvgIcon class="hd-pending-approval-img" disabled :src="hold.removeProcessInstanceId ? '/icons/file/lock.svg' : '/icons/file/unlock.svg'" round
+                    :content="svgContent"
+                    @click="state.dVisible = !state.dVisible"
+                    ></SvgIcon>
+            </BrowseActionsButton>
         </template>
     </el-popover>
-    <SvgIcon v-else-if="hold.status === 'A'" class="hd-unlock-img" src="/icons/file/unlock.svg" round 
-        :content="$t('hp.removeHold')"
-        @click="handleRemoveHold"></SvgIcon>
+    <BrowseActionsButton v-else-if="hold.status === 'A'" id="shareActionButton" :label="svgContent"  >
+        <SvgIcon class="hd-unlock-img" src="/icons/file/unlock.svg" round 
+            :content="svgContent"
+            @click="handleRemoveHold"></SvgIcon>
+    </BrowseActionsButton>
     
     <BrowseActionsHoldAddDialog ref="BrowseActionsHoldAddDialogRef" 
         @submit="addHold"
@@ -73,6 +81,18 @@ const state = reactive({
     holdList: [],
     dVisible: false,
     loading: false
+})
+const svgContent = computed(() => {
+    switch(hold.value.status) {
+        case 'A':
+            return $t('hp.removeHold')
+        case 'P':
+            return $t('hp.pendingAddApproval')
+        case 'L':
+            return $t('hp.pendingRemoveApproval')
+        default:
+            return $t('hp.addHold')
+    }
 })
 const userId:string = useUser().getUserId()
 // #region module: status: R || ''

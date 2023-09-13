@@ -5,7 +5,20 @@ export type GetChildResponse = {
     name: string,
     path: string
 }
-
+export type SimplifiedDocDetail = {
+    id: string,
+    name: string,
+    path: string,
+    isFolder: boolean,
+    modifiedDate: string,
+    createdDate: string,
+    mimeType: string,
+    documentType: string,
+    contributors: string[],
+    tags: string[],
+    version: string,
+    collections: string[]
+}
 export type DocDetail = {
     createdBy?:string,
     createdDate?:string,

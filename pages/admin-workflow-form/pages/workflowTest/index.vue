@@ -34,6 +34,12 @@
         <el-button @click="replaceResData()">统一替换res.data为res.data.data</el-button>
         <el-button @click="replaceResData('res.data.data.data', 'res.data.data')">统一替换res.data.data.data为res.data.data</el-button>
     </section>
+    <section>
+        <h4>用于查找数据</h4>
+        <el-input style="width:40%" v-model="findKey" placeholder="请输入需要findKey" />
+
+        <el-button @click="findData(findKey)">查找数据</el-button>
+    </section>
 </div>
 </template>
 
@@ -233,6 +239,29 @@ async function getData () {
                 console.log(data[0].jsonValue);
                 saveJson(data[0])
             }
+        })
+    }
+// #endregion
+// #region module: 查找数据
+    const findKey = ref()
+    async function findData (key: string) {
+        const arr = await getData()
+        const result = []
+        arr.forEach(arrItem => {
+            arrItem.userTasks.forEach(taskItem => {
+                result.push({processKey: arrItem.key, userTaskId: taskItem.id })
+            })
+            result.push({processKey: arrItem.key, userTaskId: 'complete' })
+        });
+        result.forEach(async (resultItem,index) => {
+            const data = await getJson(resultItem)
+            if( data[0] && data[0].jsonValue) {
+                let jsonValue = data[0].jsonValue
+                const result = jsonValue.indexOf(key)
+                if(result !== -1) console.log(resultItem.processKey, '-', resultItem.userTaskId);
+            }
+            if(index === result.length - 1) console.log('done: not found');
+            
         })
     }
 // #endregion
