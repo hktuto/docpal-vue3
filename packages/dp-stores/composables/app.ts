@@ -24,11 +24,13 @@ export const useAppStore = defineStore('app', () => {
         setDisplayState(state.value)
     }, 500)
     const setDisplayState = (value: AppState) => {
-        state.value = value
+        if(state.value === value) state.value = value
         displayState.value = value
         if(value === 'needAuth') {
             const superAdmin = sessionStorage.getItem('superAdmin')
             if(superAdmin === 'superAdmin') {
+                
+                
                 displayState.value = 'defaultLogin' 
                 return
             }
@@ -63,7 +65,6 @@ export const useAppStore = defineStore('app', () => {
                 }
                 break;
         }
-        debounceChangeState();
     })
 
     watch(online, async(bool) => {
