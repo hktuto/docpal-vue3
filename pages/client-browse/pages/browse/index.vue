@@ -11,7 +11,7 @@
                 <div id="browseHeaderRight" class="folderAction">
                     <CollapseMenu>
                         <template #default="{collapse}">
-                        <BrowseActionsHold permission: listData.permission :doc="listData.doc" />
+                        <BrowseActionsHold :permission="listData.permission" :doc="listData.doc" />
                         <BrowseActionsSubscribe  :doc="listData.doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @success="handleRefresh"/>
