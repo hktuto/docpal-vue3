@@ -26,13 +26,14 @@ const formJson = getJsonApi('admin/adminGroupUserForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
+    const user = state.userList.find(item => item.userId === data.id)
     try {
         const param = {
-            userId: data.id,
             groupId: props.group.id,
+            ...user
         }
         await MembershipAddApi(param)
-        state.visible = false
+        setTimeout(() => { state.visible = false }, 300)
         FromRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {
