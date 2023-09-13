@@ -40,6 +40,7 @@
             <UploadStructure></UploadStructure>
           </InteractDrawer>
         </main>
+        <SharePublicButton></SharePublicButton>
     </div>
 </template>
 

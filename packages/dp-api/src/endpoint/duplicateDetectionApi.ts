@@ -169,6 +169,8 @@ export const downloadDocRecord = async(params) => {
         const { entryList, totalSize } = await api.get('/nuxeo/collection', { params }).then(res =>res.data.data);
         return {entryList, totalSize}
     }
+    
+    
     export const removeCollectionApi = async (params: collectionRemoveDocParams) => {
         return await api.delete('/nuxeo/collection/remove', { data: params }).then(res =>res.data.data);
     }
@@ -177,6 +179,10 @@ export const downloadDocRecord = async(params) => {
     }
     export const getCollectionDocApi = async (idOrPath: string) => {
         return await api.post('/nuxeo/document/collections', {idOrPath}).then(res =>res.data.data);
+    }
+    export const getCollectionDocAllApi= async (idOrPath: string) => {
+        const { entryList } = await api.post('/nuxeo/collection/allDocuments', {idOrPath}).then(res =>res.data.data);
+        return entryList
     }
     export const getCollectionDoc = async (idOrPath: string) => {
         const { entryList, totalSize } = await api.post('/nuxeo/collection/documents', { idOrPath }).then(res =>res.data.data);

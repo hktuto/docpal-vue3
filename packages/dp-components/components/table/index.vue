@@ -226,7 +226,7 @@ const indexMethod = (index: number) => {
             emit('selection-change', val)
         }, 200);
     }
-
+    
     const cardSelection = ref<number[]>([]);
       const cardSelectedChange = (index:any, ev:any) => {
         const val = ev.target.checked as boolean;
@@ -366,6 +366,18 @@ function reorderColumn (displayList, initColumn: boolean = true) {
         }
     };
 // #endregion
+function toggleSelection (rows?: any[]) {
+    if (rows) {
+        rows.forEach((row) => {
+            // TODO: improvement typing when refactor table
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            tableRef.value!.toggleRowSelection(row, undefined)
+        })
+    } else {
+        tableRef.value!.clearSelection()
+    }
+}
 onMounted(() => {
     onKeyDown('Control', (e) => {
       CtrlDown = true
@@ -382,7 +394,7 @@ onMounted(() => {
     })
 })
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
-defineExpose({ reorderColumn, tableRef })
+defineExpose({ reorderColumn, toggleSelection, tableRef })
 </script>
 <style lang="scss" scoped>
 :deep(.el-image__inner) {

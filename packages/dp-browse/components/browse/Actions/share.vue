@@ -1,82 +1,74 @@
 <template>
-    <!-- <div class="actionIconContainer" @click="iconClickHandler"> -->
-    <div>
-      <BrowseActionsButton id="shareActionButton" :label="$t('tip.share')" @click="iconClickHandler" >
-        
-        <SvgIcon src="/icons/file/share.svg" round content="share"
-            ></SvgIcon>
-      </BrowseActionsButton>
-        <!-- <el-tooltip content="share">
-            <el-icon >
-                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="m679.872 348.8-301.76 188.608a127.808 127.808 0 0 1 5.12 52.16l279.936 104.96a128 128 0 1 1-22.464 59.904l-279.872-104.96a128 128 0 1 1-16.64-166.272l301.696-188.608a128 128 0 1 1 33.92 54.272z"></path></svg>
-            </el-icon>
-        </el-tooltip> -->
-        <el-dialog v-model="state.dialogOpened" class="scroll-dialog" append-to-body
-            :close-on-click-modal="false"
-            :title="$t('share_shareFiles')">
-            <FromRenderer ref="FromRendererRef" :form-json="formJson"/>
-            <template #footer>
-                <el-button @click="handleSubmit"> {{$t('confirm')}} </el-button>
-            </template>
-        </el-dialog>
+    <div class="flex-x-center">
+        <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
+        <BrowseActionsButton id="shareActionButton" :label="$t('tip.addToShare')"  >
+            <el-badge :value="shareState.shareList.length" :max="99" 
+                :hidden="shareState.shareList.length === 0" type="success">
+                <SvgIcon src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
+                    @click="iconClickHandler"></SvgIcon>
+            </el-badge>
+
+        </BrowseActionsButton>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
 import { getJsonApi } from 'dp-api'
+import anime from 'animejs'
 const router = useRouter()
 const route = useRoute()
-const { state:shareState, updateShareList } = useShareStore()
+const { state:shareState, addToShareList } = useShareStore()
 // const shareList = inject('selectList')
 const props = defineProps<{
+    selectedList: any,
     doc: any,
     hideAfterClick: boolean
 }>()
-const state = reactive({
-    dialogOpened: false
-})
 function iconClickHandler(){
     if (!props.doc.isFolder) {
-        updateShareList([props.doc])
+        addToShareList([props.doc])
     }
-    else if (shareState.shareList.length === 0) {
+    else if (props.selectedList.length === 0) {
         ElNotification.warning($i18n.t('dpTip_noSelection'))
         return
     }
-    
-    router.push({
-        path: '/browse/share',
-        query: {
-            backPath: route.fullPath
+    else {
+        addToShareList(props.selectedList)
+    }
+    // router.push({
+    //     path: '/browse/share',
+    //     query: {
+    //         backPath: route.fullPath
+    //     }
+    // })
+    if(props.hideAfterClick) {
+        const ev = new CustomEvent('closeFilePreview')
+        document.dispatchEvent(ev);
+    }
+     nextTick(() => {
+        const shareDraggableButton = document.getElementById('share-draggable-button')
+        const shareToQueue = document.getElementById('shareToQueue')
+        shareToQueue.style.transform = 'none'
+        shareToQueue.style.display = 'block'
+        if(shareDraggableButton) {
+            anime({
+                targets: '#shareToQueue',
+                translateX: shareDraggableButton.offsetLeft - shareToQueue.offsetLeft,
+                translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop - 60,
+                duration: 750,
+                easing: 'easeInOutQuad'
+            })
         }
+        setTimeout(() => {
+            shareToQueue.style.display = 'none'
+        }, 750)
     })
-  if(props.hideAfterClick) {
-    const ev = new CustomEvent('closeFilePreview')
-    document.dispatchEvent(ev);
-  }
-    // state.dialogOpened = true
-    // open upload dialog
-
 }
-const formJson = getJsonApi('shareRequest.json')
-const FromRendererRef = ref()
-// async function handleSubmit () {
-//     const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
-//     const param = {
-//         emailList: formData.emailList,
-//         documentIdList: shareList.value.map(item => (item.id)),
-//         password: formData.password ? formData.password : '',
-//         tokenLiveInMinutes: diffMinute(formData.dueDate)
-//         // tokenTime: handleTokenTime(form.value.time,form.value.timeUnit)
-//     }
-//     try {
-//         const response = await shareRequestApi(param)
-//         if(response.errorCode) throw new Error(res.message || 'error');
-//         ElMessage.success($i18n.t('share_success'))
-//         state.dialogOpened = false
-//     } catch (error) {
-//         // ElMessage.error(error.message)
-//     }
-// }
 </script>
+<style lang="scss" scoped>
+#shareToQueue {
+    z-index: 100;
+    display: none;
+}
+</style>

@@ -1,4 +1,6 @@
 <template>
+<div class="LoginContainer">
+    <LoadingBg></LoadingBg>
     <div class="fromContainer card glass">
         <Logo class="logo" mode="withName"/>
     <template v-if="status === 'submitted'">
@@ -7,7 +9,7 @@
         </div>
       </template>
       <template v-else>
-        <el-form label-position="top" ref="FormRef" size="small" :status-icon="true" :model="form" @submit.native.prevent>
+        <el-form label-position="top" ref="FormRef" :status-icon="true" :model="form" @submit.native.prevent>
           <template v-if="status === 'beforeSubmit'">
               <el-form-item :label="$t('login_username')" prop="userId" class="intro"
                         :rules="[{ required: true, message: $t('form_common_requird')}]">
@@ -19,7 +21,7 @@
           </template>
         </el-form>
       </template>
-      <el-button class="intro" @click="appStore.setDisplayState('needAuth')" link>
+      <el-button class="intro" @click="login" link>
         {{ $t('login') }}
       </el-button>
       <div v-if="state.time > 0">
@@ -28,15 +30,18 @@
         </h3>
       </div>
     </div>
+</div>
 </template>
 
 
 <script lang="ts" setup>
 import { ElMessage} from 'element-plus'
 import { ForgetPasswordApi } from 'dp-api'
+const { public: { DEFAULT_PATH } } = useRuntimeConfig();
 const appStore = useAppStore();    
 const status = ref('beforeSubmit')
 const loading = ref(false)
+const router = useRouter()
 const state = reactive({
   time: 0,
   timer: null
@@ -73,14 +78,30 @@ function returnLogin () {
         state.time --
         if(state.time === 0) {
             clearInterval(state.timer)
-            appStore.setDisplayState('needAuth')
+            login()
         }
     }, 1000)
+}
+function login() {
+    router.push({
+      path: DEFAULT_PATH,
+      query: {
+        superAdmin: 'superAdmin'
+      }
+    })
+    appStore.setDisplayState('needAuth')
 }
 </script> 
 
 
 <style scoped lang="scss">
+.LoginContainer{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: var(--el-component-size-small);
+}
 .fromContainer{
     min-width: 300px;
     max-width: 600px;

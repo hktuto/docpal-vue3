@@ -72,6 +72,9 @@ html.dark {
         opacity: .8;
     }
 }
+.color__primary {
+    color: var(--primary-color);
+}
 .color__primary__hover {
     color: var(--primary-color);
     opacity: .5;

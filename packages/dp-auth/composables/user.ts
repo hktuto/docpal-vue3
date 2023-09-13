@@ -2,7 +2,11 @@
 import { useSetting } from './../../dp-stores/composables/setting';
 import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
+
+
 export const useUser = () => {
+    // @ts-ignore
+    const keycloak = window.$keycloak
     const route = useRoute()
     const router = useRouter()
     const publicRouteList = ['/resetPassword', '/resetPassword/']
@@ -19,7 +23,8 @@ export const useUser = () => {
     const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
-
+    const errorPages = ['/error/503','/error/404']
+    const publicPages = ['/forgetPassword', '/resetPassword']
     const colorModeOption = [
         {
             id: '1',
@@ -82,7 +87,6 @@ export const useUser = () => {
         await UserSettingSaveApi(userPreference.value)
 
     }
-
     async function verify(path: string) {
         try {
             const token = localStorage.getItem('token')
@@ -93,9 +97,9 @@ export const useUser = () => {
             await getUserSetting();
         } catch (error) {
             if(path && publicRouteList.includes(path)) {
-                appStore.state = 'ready';
+                appStore.setDisplayState('ready');
             } else {
-                appStore.state = 'needAuth';
+                appStore.setDisplayState('needAuth');
             }
             isLogin.value = false,
             token.value = "";
@@ -104,6 +108,44 @@ export const useUser = () => {
                 sessionStorage.removeItem('token');
             }
         }
+    }
+    async function keycloakLogin() {
+        console.log('keycloakLoginkeycloakLoginkeycloakLogin');
+        
+        try {
+            const authenticated = await keycloak.init({onLoad: 'login-required'})
+            if(!authenticated) {
+                throw new Error("unAuth");
+            } else {
+                callApi()
+            }
+        } catch (error) {
+            // window.location.reload();
+            isLogin.value = false,
+            token.value = "";
+            refreshToken.value = "";
+            sessionStorage.removeItem('token');
+        }
+    }
+    async function callApi() {
+        // 使用令牌来调用您的 API
+        await keycloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
+        const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
+                                headers: {
+                                    Authorization : 'Bearer ' + keycloak.token
+                                }
+                            }).then( res => { return res.data.data })
+
+        token.value = data.access_token 
+        refreshToken.value = data.refresh_token
+        localStorage.setItem('token', token.value);
+        localStorage.setItem('refreshToken', refreshToken.value);
+        user.value = await Verify();
+        Cookies.value = JSON.stringify(user.value)
+        isLogin.value = true;
+        api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
+        await getUserSetting();
+        appStore.state = 'ready'
     }
 
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
@@ -130,9 +172,12 @@ export const useUser = () => {
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
-        appStore.state = 'needAuth';
+        
+        sessionStorage.clear()
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
+        if(keycloak.token) keycloak.logout()
+        else appStore.setDisplayState('needAuth')
     }
 
     async function getUserList() {
@@ -140,9 +185,6 @@ export const useUser = () => {
         userList.value = list;
     }
 
-    function forgetPassword() {
-        appStore.state = 'forgetPassword';
-    }
     function getUserId () {
         try {
             return user.value.userId || user.value.username
@@ -157,12 +199,15 @@ export const useUser = () => {
         // data
         token,
         user,
+        errorPages,
+        publicPages,
         userPreference,
         isLogin,
         isLdapMode,
         // function
         login,
         verify,
+        keycloakLogin,
         logout,
         getUserSetting,
         savePreference,
@@ -170,6 +215,5 @@ export const useUser = () => {
         getUserId,
         getIsLdapMode,
         userList,
-        forgetPassword
     }
 }
