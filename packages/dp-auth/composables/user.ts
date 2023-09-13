@@ -79,7 +79,7 @@ export const useUser = () => {
             },
             {...userSetting}
         )
-        appStore.state = 'ready';
+        appStore.setDisplayState('ready') 
         settingStore.init()
     }
 
@@ -145,7 +145,7 @@ export const useUser = () => {
         isLogin.value = true;
         api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
         await getUserSetting();
-        appStore.state = 'ready'
+        appStore.setDisplayState('ready');
     }
 
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
@@ -173,11 +173,14 @@ export const useUser = () => {
         token.value = "";
         refreshToken.value = "";
         
-        sessionStorage.clear()
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
+        
         if(keycloak.token) keycloak.logout()
-        else appStore.setDisplayState('needAuth')
+        else{
+            appStore.setDisplayState('needAuth')
+            sessionStorage.clear()
+        } 
     }
 
     async function getUserList() {
