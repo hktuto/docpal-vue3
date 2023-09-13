@@ -70,7 +70,9 @@ function returnLogin () {
 }
 function login() {
     router.push(DEFAULT_PATH)
-    appStore.setDisplayState('needAuth')
+    setTimeout(() => {
+      appStore.setDisplayState('needAuth')
+    },200)
 }
 onMounted(async () => {
     try {
