@@ -77,7 +77,7 @@ export default class VariableOptions implements InlineTool {
    */
   static get sanitize() {
     return {
-      a: true,
+      var: true,
     };
   }
 
@@ -680,7 +680,6 @@ export default class VariableOptions implements InlineTool {
      * @type {boolean}
      */
     const isLinkSelected = this.nodes.toolButtonUnlink.classList.contains(this.api.styles.inlineToolButtonActive);
-    console.log(isLinkSelected)
     /**
      * Create a fake selection
      */
@@ -743,7 +742,6 @@ export default class VariableOptions implements InlineTool {
      * Find the nearest link tag
      */
     const parentA = this.api.selection.findParentTag(this.tagName);
-    console.log("parent", parentA, this.tagName)
     /**
      * If no link tag then do nothing
      */
@@ -804,8 +802,8 @@ export default class VariableOptions implements InlineTool {
    * @returns {Promise<any[]>}
    */
   searchRequest(inputValue:string):any[] {
-    const { variable } = this.config as any;
-    const allOptions:Set<string> = new Set(variable);
+    const { variables } = this.config as any;
+    const allOptions:Set<string> = new Set(variables);
     allOptions.add(inputValue);
     return Array.from(allOptions).map((item) => ({
       name: item,

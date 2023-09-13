@@ -8,7 +8,6 @@ import VariableOptions from './variableOptions';
 export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) => {
 
     const editor = ref();
-    const editingVariable = ref<string[]>([]);
 
     function createEditor():void{
         editor.value = new EditorJS({
@@ -58,12 +57,6 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
                         "InlineCode": "InlineCode",
                     },
                     blockTunes: {
-                        /**
-                         * Each subsection is the i18n dictionary that will be passed to the corresponded Block Tune plugin
-                         * The name of a plugin should be equal the name you specify in the 'tunes' section for that plugin
-                         *
-                         * Also, there are few internal block tunes: "delete", "moveUp" and "moveDown"
-                         */
                         "delete": {
                             "Delete": "Delete"
                         },
@@ -94,11 +87,70 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
     }
 
     function calculateVariable(data:any) {
-        const variable:string[] = [];
+        const newVariable:string[] = [];
         for( const block of data.blocks) {
-            console.log(block);
+            var t = document.createElement('template');
+            t.innerHTML = block.data.text;
+            // found by tag name "var"
+            const variables = t.content.querySelectorAll('var');
+            variables.forEach((variable) => {
+                newVariable.push(variable.textContent as string);
+            });
+            // remove t from memory
+            t.remove();
         }
-        editingVariable.value = variable;
+        // remove duplicate
+        
+        // variable.value = [... new Set(newVariable)];
+    }
+
+    async function getData(){
+        const data = await editor.value?.save();
+        let html = '';
+        for( const block of data.blocks) {
+            switch(block.type){
+                case 'header':
+                    html += `<h${block.data.level}>${htmlToString(block.data.text)}</h${block.data.level}>`;
+                    break;
+                case 'paragraph':
+                    html += `<p>${htmlToString(block.data.text)}</p>`;
+                    break;
+                case 'list':
+                    html += `<ul>${ block.data.items.map( (item:string) => `<li>${htmlToString(item)}</li>`) }</ul>`;
+                    break;
+                case 'table':
+                    html += `<table>${blockToTable(block.data.content)}</table>`;
+                    break;
+            }
+                
+        }
+        return {
+            html,
+            json: data
+        }
+    }
+
+    function blockToTable(block:any):string{
+        let html = '';
+        for( const row of block){
+            html += '<tr>';
+            for( const cell of row){
+                html += `<td>${htmlToString(cell)}</td>`;
+            }
+            html += '</tr>';
+        }
+        return html;
+    }
+
+    function htmlToString(html:string):string{
+        var t = document.createElement('template');
+        t.innerHTML = html;
+        const variables = t.content.querySelectorAll('var');
+        // replace all var tag with span
+        variables.forEach((variable) => {
+            variable.replaceWith('${' + variable.textContent+'}');
+        });
+        return t.innerHTML;
     }
     
 
@@ -106,7 +158,8 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
         createEditor,
         dispose,
         setData,
-        variable
+        variable,
+        getData
     }
 
     
