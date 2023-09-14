@@ -37,14 +37,18 @@ const props = withDefaults(defineProps<{
   showForgetPassword: true
 })
 function handleAuth() {
-  const superAdmin = route.query.superAdmin
-  if(superAdmin === 'superAdmin' && endPoint === 'admin') {
+  const superAdmin = route.query.
+  
+  if(publicPages.includes(route.path)) {
+    appStore.setDisplayState('ready') 
+  }
+  else if(superAdmin === 'superAdmin' && endPoint === 'admin') {
     appStore.setDisplayState('defaultLogin') 
     sessionStorage.setItem('superAdmin', superAdmin)
     verify()
   } else {
     sessionStorage.removeItem('superAdmin')
-    keycloakLogin();
+    // keycloakLogin();
   }
 }
 onMounted(async () => {
@@ -55,10 +59,7 @@ onMounted(async () => {
     }
   });
   console.log(publicPages.includes(route.path), route.path)
-  if(publicPages.includes(route.path)) {
-    appStore.setDisplayState('ready') 
-    return
-  }
+  
   if (errorPages.includes(route.path)) {
     router.push('/')
   }
