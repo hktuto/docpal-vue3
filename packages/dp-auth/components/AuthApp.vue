@@ -48,16 +48,17 @@ function handleAuth() {
   }
 }
 onMounted(async () => {
-  if(publicPages.includes(route.path)) {
-    appStore.setDisplayState('ready') 
-    return
-  }
   window.addEventListener('beforeunload', function (e) {
     if(uploadState.value.uploadRequestList.length > 0) {
       e.preventDefault();
       e.returnValue = $i18n.t('tip.beforeunload');
     }
   });
+  console.log(publicPages.includes(route.path), route.path)
+  if(publicPages.includes(route.path)) {
+    appStore.setDisplayState('ready') 
+    return
+  }
   if (errorPages.includes(route.path)) {
     router.push('/')
   }
