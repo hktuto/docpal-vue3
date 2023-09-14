@@ -84,12 +84,11 @@ function returnLogin () {
 }
 function login() {
     router.push({
-      path: DEFAULT_PATH,
-      query: {
-        superAdmin: 'superAdmin'
-      }
+      path: DEFAULT_PATH
     })
-    appStore.setDisplayState('needAuth')
+    setTimeout(() => {
+      appStore.setDisplayState('needAuth')
+    },200)
 }
 </script> 
 
