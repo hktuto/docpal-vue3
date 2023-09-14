@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<{
   showForgetPassword: true
 })
 function handleAuth() {
-  const superAdmin = route.query.
+  const superAdmin = route.query.superAdmin
   
   if(publicPages.includes(route.path)) {
     appStore.setDisplayState('ready') 
