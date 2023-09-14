@@ -23,8 +23,8 @@ export const useUser = () => {
     const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
-    const errorPages = ['/error/503','/error/404']
-    const publicPages = ['/forgetPassword', '/resetPassword']
+    const errorPages = ['/error/503','/error/503/','/error/404','/error/404/']
+    const publicPages = ['/forgetPassword','/forgetPassword/', '/resetPassword', '/resetPassword/']
     const colorModeOption = [
         {
             id: '1',

@@ -48,7 +48,7 @@ function handleAuth() {
     verify()
   } else {
     sessionStorage.removeItem('superAdmin')
-    // keycloakLogin();
+    keycloakLogin();
   }
 }
 onMounted(async () => {
@@ -58,14 +58,11 @@ onMounted(async () => {
       e.returnValue = $i18n.t('tip.beforeunload');
     }
   });
-  console.log(publicPages.includes(route.path), route.path)
-  
   if (errorPages.includes(route.path)) {
     router.push('/')
   }
   await appStore.appInit();
   handleAuth()
-  
 })
 </script>
 
