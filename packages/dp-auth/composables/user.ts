@@ -3,7 +3,7 @@ import { useSetting } from './../../dp-stores/composables/setting';
 import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 import Keycloak from 'keycloak-js'
-
+let dpKeyCloak: any
 export const useUser = () => {
     const route = useRoute()
     const router = useRouter()
@@ -24,7 +24,7 @@ export const useUser = () => {
     const errorPages = ['/error/503','/error/503/','/error/404','/error/404/']
     const publicPages = ['/forgetPassword','/forgetPassword/', '/resetPassword', '/resetPassword/']
     const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
-    let keycloak: any
+    
     const colorModeOption = [
         {
             id: '1',
@@ -112,12 +112,13 @@ export const useUser = () => {
         }
     }
     async function keycloakLogin() {
-        console.log('keycloakLogin', {keycloak});
+        console.log('keycloakLogin', {dpKeyCloak});
         try {
-            const authenticated = await keycloak.init({onLoad: 'login-required'})
+            const authenticated = await dpKeyCloak.init({onLoad: 'login-required'})
             if(!authenticated) {
                 throw new Error("unAuth");
-            } else {
+            } 
+            else {
                 callApi()
             }
         } catch (error) {
@@ -131,10 +132,11 @@ export const useUser = () => {
     async function callApi() {
         // 使用令牌来调用您的 API
         try {
-            await keycloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
-            const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
+            console.log(dpKeyCloak.token);
+            await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
+            const data = await api.get('/docpal/systemfeature/keyCloak-token-verification',{ 
                                     headers: {
-                                        Authorization : 'Bearer ' + keycloak.token
+                                        Authorization : 'Bearer ' + dpKeyCloak.token
                                     }
                                 }).then( res => { return res.data.data })
 
@@ -182,7 +184,7 @@ export const useUser = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         
-        if(keycloak.token) keycloak.logout()
+        if(dpKeyCloak && dpKeyCloak.token) dpKeyCloak.logout()
         else{
             appStore.setDisplayState('needAuth')
             sessionStorage.clear()
@@ -194,11 +196,16 @@ export const useUser = () => {
         userList.value = list;
     }
     async function beforeLogin() {
-        if(!keycloak || !keycloak.token) {
-            await setKeyCloak()
-            // @ts-ignore
-            keycloak = window.$keycloak
+        if(isLogin.value) {
+            appStore.setDisplayState('ready') 
+            return
         }
+        
+        // @ts-ignore
+        if(!dpKeyCloak) {
+            await setKeyCloak()
+        }
+        // @ts-ignore
         const superAdmin = route.query.superAdmin
         if(superAdmin === 'superAdmin' && endPoint === 'admin') {
             appStore.setDisplayState('defaultLogin') 
@@ -221,7 +228,8 @@ export const useUser = () => {
         console.log({config});
         
         // @ts-ignore
-        window.$keycloak = new Keycloak(config)
+        dpKeyCloak = new Keycloak(config)
+        console.log({dpKeyCloak});
     }
     function getUserId () {
         try {

@@ -47,7 +47,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 if(error?.response?.status === 403 ) {
                     messageError(error, { router, route })
                     config.sent = false;
-                    logout();
+                    // logout();
                     return Promise.resolve();
                 }
                 messageError(error, { router, route })
