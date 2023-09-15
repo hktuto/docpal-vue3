@@ -210,14 +210,12 @@ export const useUser = () => {
         }
     }
     async function setKeyCloak() {
-        const { setIsLdapMode, getIsLdapMode } = useUser();
         await setIsLdapMode()
-        const isLdapMode = await getIsLdapMode();
         const config = {
             // @ts-ignore
             ...keycloakConfig,
             // @ts-ignore
-            realm: isLdapMode ? keycloakConfig.ldapRealm : keycloakConfig.realm
+            realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm
         }
         // @ts-ignore
         window.$keycloak = new Keycloak(config)
