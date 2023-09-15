@@ -194,7 +194,7 @@ export const useUser = () => {
         userList.value = list;
     }
     async function beforeLogin() {
-        if(!keycloak) {
+        if(!keycloak && !keycloak.token) {
             await setKeyCloak()
             // @ts-ignore
             keycloak = window.$keycloak
