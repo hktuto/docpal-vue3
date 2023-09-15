@@ -24,10 +24,10 @@
 // check app ready, if no go to login
 const appStore  = useAppStore()
 import { api } from 'dp-api'
-const { public: { endPoint } } = useRuntimeConfig();
+
 const route = useRoute()
 const router = useRouter()
-const {token, verify, keycloakLogin, errorPages, publicPages} = useUser();
+const {token, beforeLogin, errorPages, publicPages} = useUser();
 
 const { globalSlots } = useLayout()
 const { uploadState } = useUploadStore()
@@ -36,21 +36,6 @@ const props = withDefaults(defineProps<{
 }>(), {
   showForgetPassword: true
 })
-function handleAuth() {
-  const superAdmin = route.query.superAdmin
-  
-  if(publicPages.includes(route.path)) {
-    appStore.setDisplayState('ready') 
-  }
-  else if(superAdmin === 'superAdmin' && endPoint === 'admin') {
-    appStore.setDisplayState('defaultLogin') 
-    sessionStorage.setItem('superAdmin', superAdmin)
-    verify()
-  } else {
-    sessionStorage.removeItem('superAdmin')
-    keycloakLogin();
-  }
-}
 onMounted(async () => {
   window.addEventListener('beforeunload', function (e) {
     if(uploadState.value.uploadRequestList.length > 0) {
@@ -62,7 +47,7 @@ onMounted(async () => {
     router.push('/')
   }
   await appStore.appInit();
-  handleAuth()
+  beforeLogin()
 })
 </script>
 

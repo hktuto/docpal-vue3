@@ -2,11 +2,9 @@
 import { useSetting } from './../../dp-stores/composables/setting';
 import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
-
+import Keycloak from 'keycloak-js'
 
 export const useUser = () => {
-    // @ts-ignore
-    const keycloak = window.$keycloak
     const route = useRoute()
     const router = useRouter()
     const publicRouteList = ['/resetPassword', '/resetPassword/']
@@ -25,6 +23,8 @@ export const useUser = () => {
     const userList = useState<User[]>('userList', () => ([]));
     const errorPages = ['/error/503','/error/503/','/error/404','/error/404/']
     const publicPages = ['/forgetPassword','/forgetPassword/', '/resetPassword', '/resetPassword/']
+    const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
+    let keycloak: any
     const colorModeOption = [
         {
             id: '1',
@@ -60,7 +60,7 @@ export const useUser = () => {
 
     async function getUserSetting() {
         const userSetting = await GetSetting()
-        isLdapMode.value = await isLdapModeApi()
+        
         const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
         if(!userSizeValid) {
           delete userSetting.size;
@@ -87,7 +87,7 @@ export const useUser = () => {
         await UserSettingSaveApi(userPreference.value)
 
     }
-    async function verify(path: string) {
+    async function verify() {
         try {
             const token = localStorage.getItem('token')
             if(!token) throw new Error("no token");
@@ -96,6 +96,7 @@ export const useUser = () => {
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
+            const path = route.path
             if(path && publicRouteList.includes(path)) {
                 appStore.setDisplayState('ready');
             } else {
@@ -110,8 +111,7 @@ export const useUser = () => {
         }
     }
     async function keycloakLogin() {
-        console.log('keycloakLoginkeycloakLoginkeycloakLogin');
-        
+        console.log('keycloakLogin');
         try {
             const authenticated = await keycloak.init({onLoad: 'login-required'})
             if(!authenticated) {
@@ -129,23 +129,28 @@ export const useUser = () => {
     }
     async function callApi() {
         // 使用令牌来调用您的 API
-        await keycloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
-        const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
-                                headers: {
-                                    Authorization : 'Bearer ' + keycloak.token
-                                }
-                            }).then( res => { return res.data.data })
+        try {
+            await keycloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
+            const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
+                                    headers: {
+                                        Authorization : 'Bearer ' + keycloak.token
+                                    }
+                                }).then( res => { return res.data.data })
 
-        token.value = data.access_token 
-        refreshToken.value = data.refresh_token
-        localStorage.setItem('token', token.value);
-        localStorage.setItem('refreshToken', refreshToken.value);
-        user.value = await Verify();
-        Cookies.value = JSON.stringify(user.value)
-        isLogin.value = true;
-        api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
-        await getUserSetting();
-        appStore.setDisplayState('ready');
+            token.value = data.access_token 
+            refreshToken.value = data.refresh_token
+            localStorage.setItem('token', token.value);
+            localStorage.setItem('refreshToken', refreshToken.value);
+            user.value = await Verify();
+            Cookies.value = JSON.stringify(user.value)
+            isLogin.value = true;
+            api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
+            await getUserSetting();
+            appStore.setDisplayState('ready');
+        } catch (error) {
+            // logout()
+        }
+        
     }
 
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
@@ -187,13 +192,45 @@ export const useUser = () => {
         const list = await getUserListApi();
         userList.value = list;
     }
-
+    async function beforeLogin() {
+        if(!keycloak) {
+            await setKeyCloak()
+            // @ts-ignore
+            keycloak = window.$keycloak
+        }
+        const superAdmin = route.query.superAdmin
+        if(superAdmin === 'superAdmin' && endPoint === 'admin') {
+            appStore.setDisplayState('defaultLogin') 
+            sessionStorage.setItem('superAdmin', superAdmin)
+            await setIsLdapMode()
+            verify()
+        } else {
+            sessionStorage.removeItem('superAdmin')
+            keycloakLogin();
+        }
+    }
+    async function setKeyCloak() {
+        const { setIsLdapMode, getIsLdapMode } = useUser();
+        await setIsLdapMode()
+        const isLdapMode = await getIsLdapMode();
+        const config = {
+            // @ts-ignore
+            ...keycloakConfig,
+            // @ts-ignore
+            realm: isLdapMode ? keycloakConfig.ldapRealm : keycloakConfig.realm
+        }
+        // @ts-ignore
+        window.$keycloak = new Keycloak(config)
+    }
     function getUserId () {
         try {
             return user.value.userId || user.value.username
         } catch (error) {
             return ''
         }
+    }
+    async function setIsLdapMode () {
+        isLdapMode.value = await isLdapModeApi()
     }
     function getIsLdapMode () {
         return isLdapMode.value
@@ -210,13 +247,14 @@ export const useUser = () => {
         // function
         login,
         verify,
-        keycloakLogin,
         logout,
         getUserSetting,
         savePreference,
         getUserList,
         getUserId,
+        setIsLdapMode,
         getIsLdapMode,
         userList,
+        beforeLogin
     }
 }
