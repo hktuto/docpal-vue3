@@ -31,5 +31,11 @@ export default defineNuxtConfig({
         ...customLayer()
     ],
     ... playgroundConfig({}),
+    //  for local preview dev only
+    // nitro:{
+    //     routeRules:{
+    //         "/api/**" :{proxy:"https://app2.wclsolution.com/api/**"},
+    //     }
+    // }
 
 })
