@@ -177,6 +177,7 @@ export const useUser = () => {
     }
     // docpal-user
     function logout(){
+        if(!isLogin.value) return
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
@@ -207,7 +208,9 @@ export const useUser = () => {
         }
         // @ts-ignore
         const superAdmin = route.query.superAdmin
-        if(superAdmin === 'superAdmin' && endPoint === 'admin') {
+        if(publicPages.includes(route.path)) {
+            appStore.setDisplayState('ready') 
+        }else if(superAdmin === 'superAdmin' && endPoint === 'admin') {
             appStore.setDisplayState('defaultLogin') 
             sessionStorage.setItem('superAdmin', superAdmin)
             await setIsLdapMode()
@@ -225,11 +228,8 @@ export const useUser = () => {
             // @ts-ignore
             realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm
         }
-        console.log({config});
-        
         // @ts-ignore
         dpKeyCloak = new Keycloak(config)
-        console.log({dpKeyCloak});
     }
     function getUserId () {
         try {
