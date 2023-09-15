@@ -7,7 +7,7 @@
                     <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']" @click="handleCollapse"><ArrowDownBold /></el-icon>
                 </div>
                 <div class="collection-list" style="--color: #F56C6C">
-                    <div v-for="item in collectionList" :class="['collection-item','cursorPointer', {'current': curCollection.id === item.id}]" @click="handleTabClick(item)">
+                    <div v-for="item in state.collectionList" :class="['collection-item','cursorPointer', {'current': state.curCollection.id === item.id}]" @click="handleTabClick(item)">
                         <span class="ellipsis" :title="item.name">{{item.name}}</span>
                         <el-icon class="color__danger__hover cursorPointer"
                             @click.stop="handleDelete(item)"><Delete /></el-icon>
@@ -16,19 +16,21 @@
             </div>
             <div class="collection-main">
                 <div class="flex-x-between">
-                    <div class="flex-x-between">{{curCollection.name}}
+                    <div class="flex-x-between">{{state.curCollection.name}}
                         <SvgIcon src="/icons/edit.svg" class="el-icon--right"
                             @click="openDialog(true)"/>
                     </div>
                     <div class="flex-x-center">
                         <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
-                        <SvgIcon v-if="state.tableData.length > 0"  src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
-                            @click="handleShare"></SvgIcon>
-                        <el-button v-if="selectedDocs.length > 1"
-                            @click="handleMulDelete">{{$t('delete')}}</el-button>
+                        <template v-if="state">
+                            <SvgIcon v-if="state.tableData && state.tableData.length > 0"  src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
+                                @click="handleShare" />
+                            <el-button v-if="state.selectedDocs && state.selectedDocs.length > 1"
+                                @click="handleMulDelete">{{$t('delete')}}</el-button>
+                        </template>
                     </div>
                 </div>
-                <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                <Table :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
                     @selection-change="handleSelectionChange"
                     @pagination-change="handlePaginationChange"
                     @command="handleAction"
@@ -42,13 +44,11 @@
 
 
 <script lang="ts" setup>
-import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, ArrowDownBold } from '@element-plus/icons-vue'
 import { getCollectionApi, getCollectionDocAllApi, DeleteByIdApi, removeCollectionApi, getCollectionDoc, createCollectionApi, patchDocApi,
-        TABLE, defaultTableSetting, idOrPathParams } from 'dp-api'
+        TABLE, defaultTableSetting, idOrPathParams, getCollectionDocPageApi } from 'dp-api'
 import anime from 'animejs'
-const { t } = useI18n();
 const route = useRoute()
 const router = useRouter()
 
@@ -63,7 +63,7 @@ const state = reactive<State>({
     loading: false,
     tableData: [],
     options: {
-        // showPagination: true,
+        showPagination: true,
         paginationConfig: {
             total: 0,
             currentPage: 1,
@@ -79,11 +79,15 @@ const state = reactive<State>({
 // #region module: collectionList
     async function getCollectionList () {
         const res = await getCollectionApi()
-        state.collectionList = res.entryList
-        if(state.collectionList.length > 0) {
-            let index = state.collectionList.findIndex(item => item.id === route.query.tab)
-            if (index === -1) index = 0
-            handleTabClick(state.collectionList[index])
+        try {
+            state.collectionList = res.entryList
+            if(state.collectionList.length > 0) {
+                let index = state.collectionList.findIndex(item => item.id === route.query.tab)
+                if (index === -1) index = 0
+                handleTabClick(state.collectionList[index])
+            }
+        } catch (error) {
+            
         }
     }
     function handleTabClick(row) {
@@ -94,7 +98,7 @@ const state = reactive<State>({
         })
     }
     function handleDelete(row) {
-        ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+        ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
                 const res = await DeleteByIdApi(row.id)
                 getCollectionList()
@@ -107,13 +111,17 @@ const state = reactive<State>({
     async function getList (param, tab) {
         state.loading = true
         try {
-            const res = await getCollectionDoc(state.curCollection.id)
+            const res = await getCollectionDocPageApi({
+                idOrPath: state.curCollection.id,
+                pageSize: param.pageSize,
+                pageIndex: param.pageIndex + 1
+            })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageIndex + 1
         } catch (error) {
-
+            state.loading = false
         }
         state.loading = false
     }
@@ -150,7 +158,7 @@ const state = reactive<State>({
             documents: docIds,
             collection: { idOrPath: state.curCollection.id }
         }
-        ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+        ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
             .then(async() => {
                 state.loading = true
                 try {
@@ -260,7 +268,6 @@ function handleAction (command, row: any, index: number) {
 function handleSelectionChange(rows) {
     state.selectedDocs = deepCopy(rows)
 }
-const { tableData, options, loading, collectionList, curCollection, selectedDocs } = toRefs(state)
 onMounted(() => {
     getCollectionList()
 })
