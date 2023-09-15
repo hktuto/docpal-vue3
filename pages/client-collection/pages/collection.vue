@@ -111,11 +111,7 @@ const state = reactive<State>({
     async function getList (param, tab) {
         state.loading = true
         try {
-            const res = await getCollectionDocPageApi({
-                idOrPath: state.curCollection.id,
-                pageSize: param.pageSize,
-                pageIndex: param.pageIndex + 1
-            })
+            const res = await getCollectionDoc(state.curCollection.id)
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
