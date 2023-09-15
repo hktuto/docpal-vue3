@@ -134,7 +134,7 @@ export const useUser = () => {
         try {
             console.log(dpKeyCloak.token);
             await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
-            const data = await api.get('/docpal/systemfeature/keyCloak-token-verification',{ 
+            const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
                                     headers: {
                                         Authorization : 'Bearer ' + dpKeyCloak.token
                                     }
