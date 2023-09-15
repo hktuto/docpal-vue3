@@ -86,7 +86,7 @@ async function handleDblclick (row) {
 }
 async function handleSubmit () {
     state.loading = true
-
+    clearInterval(state.interval)
     try {
       const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
       const param = {
@@ -95,8 +95,6 @@ async function handleSubmit () {
         password: formData.password ? formData.password : '',
         tokenLiveInMinutes: diffMinute(formData.dueDate)
       }
-
-      console.log(formData);
         const response = await shareRequestApi(param)
         ElMessage.success($i18n.t('share_success'))
         updateShareList([])
@@ -130,10 +128,12 @@ function handleDeleteRow (row) {
 async function handleDiscard () {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
+    clearInterval(state.interval)
     updateShareList([])
     router.push(state.backPath)
 }
 function handleAddMore () {
+    clearInterval(state.interval)
     router.push(state.backPath)
 }
 onMounted(async() => {
