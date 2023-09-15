@@ -22,10 +22,12 @@
                     </div>
                     <div class="flex-x-center">
                         <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
-                        <SvgIcon v-if="state.tableData.length > 0"  src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
-                            @click="handleShare"></SvgIcon>
-                        <el-button v-if="selectedDocs.length > 1"
-                            @click="handleMulDelete">{{$t('delete')}}</el-button>
+                        <template v-if="state">
+                            <SvgIcon v-if="state.tableData && state.tableData.length > 0"  src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
+                                @click="handleShare" />
+                            <el-button v-if="state.selectedDocs && state.selectedDocs.length > 1"
+                                @click="handleMulDelete">{{$t('delete')}}</el-button>
+                        </template>
                     </div>
                 </div>
                 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
