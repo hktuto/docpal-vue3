@@ -112,7 +112,7 @@ export const useUser = () => {
         }
     }
     async function keycloakLogin() {
-        console.log('keycloakLogin');
+        console.log('keycloakLogin', {keycloak});
         try {
             const authenticated = await keycloak.init({onLoad: 'login-required'})
             if(!authenticated) {
@@ -218,6 +218,8 @@ export const useUser = () => {
             // @ts-ignore
             realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm
         }
+        console.log({config});
+        
         // @ts-ignore
         window.$keycloak = new Keycloak(config)
     }
