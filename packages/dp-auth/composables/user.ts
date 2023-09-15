@@ -88,6 +88,7 @@ export const useUser = () => {
 
     }
     async function verify() {
+        await appStore.appInit();
         try {
             const token = localStorage.getItem('token')
             if(!token) throw new Error("no token");

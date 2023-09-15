@@ -46,7 +46,6 @@ onMounted(async () => {
   if (errorPages.includes(route.path)) {
     router.push('/')
   }
-  await appStore.appInit();
   beforeLogin()
 })
 </script>
