@@ -177,6 +177,7 @@ export const useUser = () => {
     }
     // docpal-user
     function logout(){
+        if(!isLogin.value) return
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
@@ -225,11 +226,8 @@ export const useUser = () => {
             // @ts-ignore
             realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm
         }
-        console.log({config});
-        
         // @ts-ignore
         dpKeyCloak = new Keycloak(config)
-        console.log({dpKeyCloak});
     }
     function getUserId () {
         try {
