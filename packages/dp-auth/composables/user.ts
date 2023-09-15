@@ -208,7 +208,9 @@ export const useUser = () => {
         }
         // @ts-ignore
         const superAdmin = route.query.superAdmin
-        if(superAdmin === 'superAdmin' && endPoint === 'admin') {
+        if(publicPages.includes(route.path)) {
+            appStore.setDisplayState('ready') 
+        }else if(superAdmin === 'superAdmin' && endPoint === 'admin') {
             appStore.setDisplayState('defaultLogin') 
             sessionStorage.setItem('superAdmin', superAdmin)
             await setIsLdapMode()
