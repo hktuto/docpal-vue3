@@ -31,3 +31,6 @@ export const DeleteDamApi = async(params: string[]) => {
 export const GetDamSupportedFormat = async() => {
     return await api.get('/docpal/dam/getSupportedFormat').then(res => res.data.data)
 }
+export const GetDamSettingsApi = async() => {
+    return await api.get('/docpal/dam/settings').then(res => res.data.data)
+}
