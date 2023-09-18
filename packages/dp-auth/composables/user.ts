@@ -226,10 +226,18 @@ export const useUser = () => {
             // @ts-ignore
             ...keycloakConfig,
             // @ts-ignore
-            realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm
+            realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm,
+            url: getKeycloakUrl()
         }
         // @ts-ignore
         dpKeyCloak = new Keycloak(config)
+        function getKeycloakUrl () {
+            let origin = window.location.origin
+            if(origin.includes('https://admin')) origin.replace('https://admin', 'https://')
+            // @ts-ignore
+            else if(!origin.includes('https://')) return keycloakConfig.url
+            return origin +'/keycloak/'
+        }
     }
     function getUserId () {
         try {
