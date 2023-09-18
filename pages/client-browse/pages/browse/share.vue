@@ -86,7 +86,7 @@ async function handleDblclick (row) {
 }
 async function handleSubmit () {
     state.loading = true
-    clearInterval(state.interval)
+    if(!!state.interval) clearInterval(state.interval)
     try {
       const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
       const param = {
@@ -128,12 +128,12 @@ function handleDeleteRow (row) {
 async function handleDiscard () {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
-    clearInterval(state.interval)
+    if(!!state.interval) clearInterval(state.interval)
     updateShareList([])
     router.push(state.backPath)
 }
 function handleAddMore () {
-    clearInterval(state.interval)
+    if(!!state.interval) clearInterval(state.interval)
     router.push(state.backPath)
 }
 onMounted(async() => {
@@ -151,6 +151,9 @@ onMounted(async() => {
         return prev
     }, [])
     prepareShareDownloadApi(mimeTypeList)
+})
+onUnmounted(() => {
+    if(!!state.interval) clearInterval(state.interval)
 })
 </script>
 
