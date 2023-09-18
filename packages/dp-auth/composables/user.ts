@@ -229,6 +229,7 @@ export const useUser = () => {
             realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm,
             url: getKeycloakUrl()
         }
+        console.log({config})
         // @ts-ignore
         dpKeyCloak = new Keycloak(config)
         function getKeycloakUrl () {
