@@ -233,7 +233,7 @@ export const useUser = () => {
         dpKeyCloak = new Keycloak(config)
         function getKeycloakUrl () {
             let origin = window.location.origin
-            if(origin.includes('https://admin')) origin.replace('https://admin', 'https://')
+            if(origin.includes('https://admin')) origin.replace('https://admin.', 'https://')
             // @ts-ignore
             else if(!origin.includes('https://')) return keycloakConfig.url
             return origin +'/keycloak/'
