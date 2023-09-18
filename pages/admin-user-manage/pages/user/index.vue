@@ -82,7 +82,10 @@ import {ElMessage} from 'element-plus'
             const res = await getAllUsersApi({ ...param, ...state.extraParams, ...state.extraParamsFilter })
             if (!state.ready) getFilter()
             state.ready = true
-            state.tableData = res.entryList
+            state.tableData = res.entryList.map((item) => ({
+                ...item,
+                status: item.status === 'A' ? 'A' : 'D'
+            }))
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageNum + 1
@@ -161,7 +164,9 @@ function handleAction (command, row: any, index: number) {
     }
 }
 async function handleSetStatus (status, row) {
-    if(status === row.value || !row.userId) return
+    console.log(status,' status');
+    
+    if(status === row.value || !row.userId || status === null) return
     row.loading = true
     const res = await SetUserStatusApi(row)
     if (!res) {
