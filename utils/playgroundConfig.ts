@@ -17,6 +17,7 @@ const defaultConfig = {
         keycloakConfig: {
           "url": process.env.keycloakUrl,
           "realm": process.env.keycloakRealm,
+          "ldapRealm": process.env.keycloakLdapRealm,
           "clientId": process.env.keycloakClientId,
           "ssl-required": "external",
           "public-client": true,

@@ -28,7 +28,8 @@ export const useShareStore = defineStore('ShareStore', () => {
 
     function getUseWatermark(mimeType :string) {
         // check mintype is image, pdf or video
-        return ['image', 'pdf', 'video'].includes(mimeType)
+        const _mimeType = mimeType.split('/')[0]
+        return ['image', 'pdf', 'video'].includes(_mimeType)
     }
     onMounted(() => {
         const data = sessionStorage.getItem('shareList')
