@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/logManage",
       icon: "/icons/menu/log.svg",
       order:15,
+      parentId: "admin_system"
     }
   ],
 })

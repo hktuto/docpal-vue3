@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/docTemplate",
       icon: "/icons/menu/docTemplate.svg",
       order:99,
+      parentId: "admin_workflow"
     }
   ],
 })
