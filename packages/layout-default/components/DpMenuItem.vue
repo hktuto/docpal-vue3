@@ -11,7 +11,6 @@
         </el-sub-menu>
     </template>
     <template v-else>
-        <!-- <el-menu-item :class="{collapse, 'menu-item-selected': isMenuSelected(menu)}" :index="menu[nameKey]" :key="menu[nameKey]">  -->
         <el-menu-item :index="menu[nameKey]" :key="menu[nameKey]"> 
             <SvgIcon v-if="menu && menu.icon" class="icon" :src="menu.icon"></SvgIcon>
             <span>{{$t(menu[nameKey])}}</span> 
@@ -22,11 +21,9 @@
 <script lang="ts" setup>
 import type { TMenuOptions } from '../TreeMenu/index.vue'
 const props = withDefaults(defineProps<{
-    collapse: boolean,
     menu: MenuItem,
     options: TMenuOptions
 }>(),{
-    collapse: false
 })
 const route = useRoute()
 const nameKey = props.options?.nameKey ? props.options.nameKey : 'name'

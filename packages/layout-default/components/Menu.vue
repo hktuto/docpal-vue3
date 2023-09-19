@@ -7,13 +7,11 @@
         @close="handleClose"
         @select="handleSelect"
     >
-      <DpMenuItem v-for="item in displayMenu" :menu="item" :collapse="collapse"></DpMenuItem>
+      <DpMenuItem v-for="item in displayMenu" :menu="item"></DpMenuItem>
     </el-menu>
 </template>
 
 <script lang="ts" setup>
-// import InlineSvg from 'vue-inline-svg';
-
 const props = withDefaults(defineProps<{
     collapse: boolean
 }>(),{
