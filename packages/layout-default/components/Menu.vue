@@ -140,6 +140,7 @@ function handleSelect(key: string, keyPath: string[]) {
         @extend .menu-selected;
     }
 }
+
 :deep(.el-sub-menu) {
     &.is-active {
         .el-sub-menu__title {
@@ -160,6 +161,7 @@ function handleSelect(key: string, keyPath: string[]) {
         }
     }
 }
+
 :deep(.el-sub-menu__icon-arrow) {
     position: unset;
     top: unset;
@@ -169,5 +171,15 @@ function handleSelect(key: string, keyPath: string[]) {
 :deep(.el-sub-menu) {
     background: unset;
     box-shadow: unset;
+}
+.el-menu--collapse {
+    :deep(.el-sub-menu) {
+        &.is-opened {
+            .el-sub-menu__title { 
+                @extend .menu-selected;
+                opacity: .8;
+            }
+        }
+    }
 }
 </style>
