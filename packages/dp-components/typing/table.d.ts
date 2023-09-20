@@ -50,6 +50,7 @@ declare namespace Table {
         headerSlot?: string, // 自定义表头插槽名字
         children?: Column[] // 配置多级表头的数据集合, 具体用法可参考多级表头使用示例。
         formatList?: formatListType[] // 配置显示的属性（带格式）列表
+        defaultColumn?: boolean
     }
     interface Options {
         multiSelect: boolean,

@@ -22,7 +22,7 @@ export const useUser = () => {
 
     const userList = useState<User[]>('userList', () => ([]));
     const errorPages = ['/error/503','/error/503/','/error/404','/error/404/']
-    const publicPages = ['/forgetPassword','/forgetPassword/', '/resetPassword', '/resetPassword/']
+    const publicPages = ['/forgetPassword','/forgetPassword/', '/resetPassword', '/resetPassword/', '/language']
     const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
     
     const colorModeOption = [
