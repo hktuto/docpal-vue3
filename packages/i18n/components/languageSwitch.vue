@@ -4,8 +4,9 @@
       <ElDropdown  @command="handleCommand">
         <SvgIcon src="/icons/language.svg" round />
           <template #dropdown>
-              <ElDropdownMenu>
-                  <ElDropdownItem v-for="locale in availableLocales" :key="locale" :command="locale">
+              <ElDropdownMenu v-if="userPreference && userPreference.language">
+                  <ElDropdownItem v-for="locale in availableLocales" :key="locale" :command="locale"
+                    :disabled="userPreference.language === locale">
                       {{$t(locale)}}
                   </ElDropdownItem>
               </ElDropdownMenu>
@@ -15,25 +16,16 @@
 </template>
 
 <script lang="ts" setup>
-
-const {locale} = useI18n()
-const {userPreference,savePreference} = useUser()
-const {public:{availableLocales}} = useRuntimeConfig();
-
-
-const filterLang = computed(() => availableLocales.filter((item:string) => item !== locale.value))
+const router = useRouter()
+const { userPreference,savePreference } = useUser()
+const languageStore = useLanguage()
+const { public: { availableLocales } } = useRuntimeConfig();
 function handleCommand(newLocale:any) {
-    locale.value = newLocale
     userPreference.value.language = newLocale;
     savePreference()
-    // refresh page
-    window.location.reload()
-    // TODO : save to user preference
+    languageStore.loadLanguage(newLocale)
+    localStorage.setItem('v_form_locale', newLocale)
 }
-
-onMounted(() => {
-    locale.value = userPreference.value.language
-})
 </script>
 
 <style lang="scss" scoped>
