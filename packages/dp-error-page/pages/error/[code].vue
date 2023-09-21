@@ -8,16 +8,29 @@
             <div class='is-animate style1'>
                 <div v-for="item in codes">{{item}}</div>
             </div>
+            <div class="flex-x-end">
+              <el-button type="primary" text @click="goHome()">{{$t('home')}}</el-button>
+            </div>
         </el-card>
     </div>
 </template>
 
 <script lang="ts" setup>
 const route = useRoute()
+const router = useRouter()
+const { beforeLogin } = useUser(); 
 const codes = computed(() => {
     if (route.params.code) return route.params.code.split('')
     else return []
 })
+function goHome() {
+  router.push({
+    path: '/browse'
+  })
+  setTimeout(() => {
+    beforeLogin(true)
+  }, 200)
+}
 </script>
 
 <style lang="scss" scoped>

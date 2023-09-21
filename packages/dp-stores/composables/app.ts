@@ -5,6 +5,7 @@ import { useOnline } from '@vueuse/core'
 
 export const useAppStore = defineStore('app', () => {
     const router = useRouter()
+    const languageStore = useLanguage()
     const state = ref<AppState>('loading');
     const noEvent = ref(false);
     const displayState = ref<AppState>('loading');
@@ -40,6 +41,8 @@ export const useAppStore = defineStore('app', () => {
     }
     const appLoadingList = ref<any[]>([]);
     async function appInit(){
+        const locale = user.getDefaultLanguage()
+        appLoadingList.value.push({key:`Getting Language Pack : ${locale}`, function: languageStore.loadLanguage(locale)})
         for await ( const item of appLoadingList.value) {
             state.value = item.key;
             await item.function;

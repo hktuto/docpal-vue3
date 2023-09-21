@@ -21,8 +21,7 @@ export const useUser = () => {
     const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
-    const errorPages = ['/error/503','/error/503/','/error/404','/error/404/']
-    const publicPages = ['/forgetPassword','/forgetPassword/', '/resetPassword', '/resetPassword/']
+    const publicPages = ['/forgetPassword', '/resetPassword', '/language', '/error/503', '/error/404']
     const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
     
     const colorModeOption = [
@@ -73,7 +72,7 @@ export const useUser = () => {
             {
                 size: '14px',
                 folderView: 'tree',
-                language: 'en-US',
+                language: navigator.language,
                 color: 'system',
                 tableSettings: {}
             },
@@ -82,13 +81,15 @@ export const useUser = () => {
         appStore.setDisplayState('ready') 
         settingStore.init()
     }
-
+    function getDefaultLanguage() {
+        // return userPreference?.value?.language || navigator.language
+        return userPreference?.value?.language || 'zh' 
+    }
     async function savePreference() {
         await UserSettingSaveApi(userPreference.value)
 
     }
     async function verify() {
-        await appStore.appInit();
         try {
             const token = localStorage.getItem('token')
             if(!token) throw new Error("no token");
@@ -134,6 +135,7 @@ export const useUser = () => {
         try {
             console.log(dpKeyCloak.token);
             await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
+            await appStore.appInit();
             const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
                                     headers: {
                                         Authorization : 'Bearer ' + dpKeyCloak.token
@@ -196,26 +198,39 @@ export const useUser = () => {
         const list = await getUserListApi();
         userList.value = list;
     }
-    async function beforeLogin() {
+    /**
+     * public page 与 default login 需要提前 appInit
+     * keycloakLogin 在登陆成功后再 appInit
+     * @returns 
+     */
+    async function beforeLogin(goHome: boolean) {
+        console.log(isLogin.value, 'isLogin');
+        
         if(isLogin.value) {
             appStore.setDisplayState('ready') 
             return
         }
-        
-        // @ts-ignore
-        if(!dpKeyCloak) {
-            await setKeyCloak()
-        }
+        const _superAdmin = sessionStorage.getItem('superAdmin')
+
         // @ts-ignore
         const superAdmin = route.query.superAdmin
-        if(publicPages.includes(route.path)) {
+        if(!!publicPages.find(item => route.path.includes(item)) && !goHome) {
+            console.log('publicPages', route.path, publicPages);
+            
+            await appStore.appInit();
             appStore.setDisplayState('ready') 
-        }else if(superAdmin === 'superAdmin' && endPoint === 'admin' || superAdmin === 'clientSuperAdmin') {
+        }else if(superAdmin === 'superAdmin' && endPoint === 'admin' || superAdmin === 'clientSuperAdmin' || _superAdmin === 'superAdmin') {
+            console.log('superAdmin');
+            await appStore.appInit();
             appStore.setDisplayState('defaultLogin') 
             sessionStorage.setItem('superAdmin', 'superAdmin')
             await setIsLdapMode()
             verify()
         } else {
+            console.log('superAdpKeyCloakdmin');
+            if(!dpKeyCloak) {
+                await setKeyCloak()
+            }
             sessionStorage.removeItem('superAdmin')
             keycloakLogin();
         }
@@ -257,7 +272,6 @@ export const useUser = () => {
         // data
         token,
         user,
-        errorPages,
         publicPages,
         userPreference,
         isLogin,
@@ -272,6 +286,7 @@ export const useUser = () => {
         getUserId,
         setIsLdapMode,
         getIsLdapMode,
+        getDefaultLanguage,
         userList,
         beforeLogin
     }

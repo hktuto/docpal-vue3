@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/messageQueue",
       icon: "/icons/menu/dockerLog.svg",
       order:999,
+      parentId: "admin_system"
     }
   ],
 })

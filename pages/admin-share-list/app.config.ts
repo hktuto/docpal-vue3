@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/shareList",
       icon: "/icons/menu/share.svg",
       order:5,
+      parentId: "admin_share"
     }
   ],
 })

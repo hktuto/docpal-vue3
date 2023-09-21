@@ -10,7 +10,7 @@
                     {{$t('Please confirm that you have permission for this document:en-US')}}
                 </template>
             </h3>
-            <div>
+            <div v-if="state.path && state.path !== ''">
                 <el-button @click="goRoute()">{{$t('back to the root level')}}</el-button>
                 <el-button v-if="state.code === '601' && state.splitPaths.length > 2" @click="goRoute(false)">{{$t('back to the previous level')}}</el-button>
                 <span class="el-icon--right">{{$t('automatic back to the root level')}}: </span>
@@ -46,6 +46,7 @@ function goRoute (isRoot: boolean = true) {
     router.push(fullPath)
 }
 onMounted(() => {
+    if(!state.path || state.path === '') return
     state.splitPaths = state.path.split('/')
     state.interval = setInterval(() => {
         if(state.second === 0) {
@@ -55,6 +56,9 @@ onMounted(() => {
         }
         state.second --
     }, 1000)
+})
+onUnmounted(() => {
+    if(state.interval) clearInterval(state.interval)
 })
 </script>
 

@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/retentionManage",
       icon: "/icons/menu/retention.svg",
       order:86,
+      parentId: 'admin_policy'
     }
   ],
 })

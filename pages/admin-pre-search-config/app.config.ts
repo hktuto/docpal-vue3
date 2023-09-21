@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/preSearchConfig",
       icon: "/icons/menu/preSearchConfig.svg",
       order:11,
+      parentId: "admin_browse"
     }
   ],
 })

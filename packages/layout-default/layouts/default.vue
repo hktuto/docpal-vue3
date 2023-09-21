@@ -1,10 +1,10 @@
 <template>
     <div id="pageContainer" :class="{isMobile}" >
         <div id="fullPage"></div>
-        <div ref="sidebarEl" id="sidebarContainer" :class="{opened}">
+        <div ref="sidebarEl" id="sidebarContainer" :class="{'opened': !collapse}">
             <Logo class="logo" :mode="logo"/>
-            <Menu :opened="opened" :class="{opened}"/>
-            <div  :class="{expand:true, opened}" >
+            <Menu :collapse="collapse" />
+            <div  :class="{expand:true}" >
               <div class="menuActions" style="--icon-color: var(--color-grey-500)">
                 <Language v-if="mode === 'development'"></Language>
                 <!-- <NotificationBadge v-if="feature.notification"/> -->
@@ -13,7 +13,7 @@
                 <ColorSwitch />
                 <LanguageSwitch v-if="feature.multiLanguage" />
               </div>
-                <InlineSvg :src="opened ? '/icons/menu/closed.svg' : '/icons/menu/expanded.svg'" @click="toggleOpen"/>
+                <InlineSvg :src="collapse ? '/icons/menu/expanded.svg' : '/icons/menu/closed.svg'" @click="toggleOpen"/>
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
         </div>
@@ -55,8 +55,8 @@ const props = withDefaults(defineProps<{
 }>(), {
   showSearch: true
 })
-const opened = ref(false);
-const logo = computed(() =>  opened.value ? 'withName_white' : 'white_logo' )
+const collapse = ref(true)
+const logo = computed(() =>  collapse.value ? 'white_logo' : 'withName_white' )
 const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
@@ -66,14 +66,16 @@ const sidebarEl = ref();
 const { sideSlot } = useLayout()
 
 onClickOutside(sidebarEl, () => {
-  if(isMobile && opened.value) {
-    opened.value = false
+  if(isMobile && !collapse.value) {
+    collapse.value = true
   }
 })
 const state = reactive({
 })
 function toggleOpen() {
-     opened.value = !opened.value
+  collapse.value = !collapse.value
+  console.log(collapse.value);
+  
 }
 
 // #region module:
@@ -82,8 +84,6 @@ function toggleOpen() {
     InteractDrawerRef.value.handleSwitch()
   }
 // #endregion
-
-
 </script>
 
 <style lang="scss" scoped>

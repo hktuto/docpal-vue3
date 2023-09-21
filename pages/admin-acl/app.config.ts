@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"acl",
       url:"/acl",
       icon: "/icons/menu/acl.svg",
-      order:1,
+      order:1
     }
   ],
 })

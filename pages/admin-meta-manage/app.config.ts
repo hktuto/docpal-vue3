@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/meta",
       icon: "/icons/menu/meta.svg",
       order:7,
+      parentId: "admin_browse"
     }
   ],
 })

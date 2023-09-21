@@ -42,17 +42,5 @@ const makeConfig = (options:RuntimeOption) => {
    
   return defaultConfig
 }
-export const skeycloakConfig = (options:RuntimeOption) => {
-  console.log(process.env);
-  
-  return {
-    "url": process.env.keycloakUrl,
-    "ralm": process.env.keycloakRealm,
-    "clientId": process.env.keycloakClientId,
-    "ssl-required": "external",
-    "public-client": true,
-    "confidential-port": 0
-  }
-}
    
 export default makeConfig

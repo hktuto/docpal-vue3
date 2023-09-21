@@ -27,7 +27,7 @@ import { api } from 'dp-api'
 
 const route = useRoute()
 const router = useRouter()
-const {token, beforeLogin, errorPages, publicPages} = useUser();
+const {token, beforeLogin, publicPages} = useUser();
 
 const { globalSlots } = useLayout()
 const { uploadState } = useUploadStore()
@@ -43,9 +43,6 @@ onMounted(async () => {
       e.returnValue = $i18n.t('tip.beforeunload');
     }
   });
-  if (errorPages.includes(route.path)) {
-    router.push('/')
-  }
   beforeLogin()
 })
 </script>

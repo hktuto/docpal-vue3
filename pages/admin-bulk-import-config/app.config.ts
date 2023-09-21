@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/bulkImport",
       icon: "/icons/menu/bulkImportConfig.svg",
       order:12,
+      parentId: "admin_workflow"
     }
   ],
 })
