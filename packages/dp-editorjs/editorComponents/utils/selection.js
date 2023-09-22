@@ -386,7 +386,7 @@ export class SelectionUtils {
    */
   expandToTag(element) {
     const selection = window.getSelection();
-
+    console.log("selection", selection);
     selection.removeAllRanges();
     const range = document.createRange();
 

@@ -79,22 +79,18 @@ variable-select{
         outline: none;
         border: 0;
         border-radius: 5px;
-        font-size: 14px;
-        padding: 7px 10px;
+        font-size: inherit;
+        padding: 4px 5px;
         margin-bottom: 6px;
         box-sizing: border-box;
-        cursor: pointer;
-
+        background: var(--primary-color);
+        color: #fff;
         &:not(:last-of-type) {
         }
 
-        &:hover, &--selected {
-            background-color: $color-bg-gray;
-        }
-
         &-name {
-            font-size: 14px;
-            line-height: 16px;
+            font-size: inherit;
+            line-height: inherit;
 
             overflow:hidden;
             white-space:nowrap;
