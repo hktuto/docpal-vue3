@@ -1,61 +1,48 @@
 
 <script lang="ts" setup>
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
-const props = defineProps({
-    bpmn: {
-        type: String,
-        default: ""
-    }
-});
-const parser = new XMLParser( { 
-        ignoreAttributes: false,
-        attributeNamePrefix : "attr_",
-        cdataPropName:     "__cdata",
-        allowBooleanAttributes: true,
-        parseAttributeValue: true
-     });
-const builder = new XMLBuilder(
-    { 
-        ignoreAttributes: false,
-        attributeNamePrefix : "attr_",
-        cdataPropName:     "__cdata",
-        allowBooleanAttributes: true,
-        suppressBooleanAttributes: false
-     }
-);
 
-const { bpmn } = toRefs(props);
-const data = ref();
-const process = ref();
+import {useGraph} from '../../composables/userGraph';
 
-type StepFormField = {
-    id: string,
-    name: string,
-    type: string,
-    datePattern?:string
-    readable ?: boolean
-}
+///#region setup
+    const props = defineProps({
+        bpmn: {
+            type: String,
+            default: ""
+        }
+    });
+    const parser = new XMLParser( { 
+            ignoreAttributes: false,
+            attributeNamePrefix : "attr_",
+            cdataPropName:     "__cdata",
+            allowBooleanAttributes: true,
+            parseAttributeValue: true
+        });
+    const builder = new XMLBuilder(
+        { 
+            ignoreAttributes: false,
+            attributeNamePrefix : "attr_",
+            cdataPropName:     "__cdata",
+            allowBooleanAttributes: true,
+            suppressBooleanAttributes: false
+        }
+    );
 
-type Step = {
-    id: string,
-    name: string,
-    formFieldValidation: boolean,
-    formProperty: StepFormField[],
-    candidateGroups ?: string,
-    type: "UserTask" | "ServiceTask" | "StartEvent" | "EndEvent" | "ExclusiveGateway" | "ParallelGateway" | "InclusiveGateway",
-}
-type StepLink = {
-    id:string,
-    sourceRef: Step,
-    targetRef: Step,
-}
-const sequence = ref();
-function sequenceFlow(){
-    const step = process.value['sequenceFlow'];
-    // loop step
+    const { bpmn } = toRefs(props);
+    const scale = ref(1);
+    const data = ref();
+    const process = ref();
 
+    // 如果props.bpmn有值，就转换成 js 对象
+    onMounted(() => {
+        bpmnToJs();
+    })
+///#endregion setup
 
-}
+/// #region antV6
+const {generateMap} = useGraph('editorContainer');
+
+/// #endregion antV6
 
 function bpmnToJs() {
     const tempD = parser.parse(props.bpmn,);
@@ -65,6 +52,7 @@ function bpmnToJs() {
     }
     data.value = tempD;
     process.value = data.value['definitions']['process'];
+    generateMap();
     // data.value = convert.xml2js(props.bpmn, { compact: true, spaces: 4 });
 }
 
@@ -79,15 +67,7 @@ function createEmptyData(){
 }
 
 
-watch(bpmn, () => {
-    if(bpmn.value) {
-        bpmnToJs();
-    }else{
-        createEmptyData()
-    }
-},{
-    immediate: true
-});
+
 
 </script>
 
@@ -95,8 +75,15 @@ watch(bpmn, () => {
     <div style="overflow:auto">
         <Button @click="bpmnToJs">bpmnToJs</Button>
         <Button @click="jsToBpmn">jsToBpmn</Button>
-        <pre>
-            {{ process }}
-        </pre>
+        <div id="editorContainer">
+
+        </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+#editorContainer{
+    width: 100%;
+    height:100%;
+}
+</style>

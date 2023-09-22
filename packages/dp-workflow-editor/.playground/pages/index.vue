@@ -1,6 +1,8 @@
 <template>
     <NuxtLayout>
-        <WorkflowEditor v-if="bpmnFile" :bpmn="bpmnFile"/>
+        <ClientOnly>
+            <WorkflowEditor v-if="bpmnFile" :bpmn="bpmnFile"/>
+        </ClientOnly>
     </NuxtLayout>
 </template>
 
