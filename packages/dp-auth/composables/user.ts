@@ -1,6 +1,7 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
-import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
+import { useLanguage } from './../../dp-stores/composables/language'
+import { GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 import Keycloak from 'keycloak-js'
 let dpKeyCloak: any
@@ -23,7 +24,7 @@ export const useUser = () => {
     const userList = useState<User[]>('userList', () => ([]));
     const publicPages = ['/forgetPassword', '/resetPassword', '/language', '/error/503', '/error/404']
     const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
-    
+    const { loadLanguage } = useLanguage()
     const colorModeOption = [
         {
             id: '1',
@@ -80,10 +81,11 @@ export const useUser = () => {
         )
         appStore.setDisplayState('ready') 
         settingStore.init()
+        loadLanguage(getDefaultLanguage())
     }
     function getDefaultLanguage() {
-        // return userPreference?.value?.language || navigator.language
-        return userPreference?.value?.language || 'zh' 
+        return userPreference?.value?.language || navigator.language
+        // return userPreference?.value?.language || 'zh' 
     }
     async function savePreference() {
         await UserSettingSaveApi(userPreference.value)
