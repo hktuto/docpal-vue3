@@ -1,0 +1,288 @@
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
+  <process id="singleApprovalDemo" name="Single Approval Demo" isExecutable="true" flowable:candidateStarterGroups="Demo Approval Group">
+    <extensionElements>
+      <flowable:executionListener event="start" delegateExpression="${notificationListener}">
+        <flowable:field name="functionPoint">
+          <flowable:string><![CDATA[APPLY]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="notificationUserFromVariables">
+          <flowable:string><![CDATA[user_approver_id,copy_approver_id]]></flowable:string>
+        </flowable:field>
+      </flowable:executionListener>
+    </extensionElements>
+    <startEvent id="start" name="Start" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="user_creator_id" name="Creator ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_creator_name" name="Creator Name" type="string" readable="false"></flowable:formProperty>
+        <flowable:formProperty id="user_creator_email" name="Creator Email" type="string" readable="false"></flowable:formProperty>
+        <flowable:formProperty id="user_approver_id" name="Approver ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_approver_name" name="Approver" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_approver_email" name="Approver Email" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_copy_personnel_id" name="Copy Personnel ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="prospectName" name="Prospect Name" type="string"></flowable:formProperty>
+        <flowable:formProperty id="prospectId" name="Prospect Id" type="string"></flowable:formProperty>
+        <flowable:formProperty id="description" name="Description" type="string"></flowable:formProperty>
+        <flowable:formProperty id="submittedDate" name="Submit Date" type="date" datePattern="yyyy-MM-dd HH:mm:ss" readable="false"></flowable:formProperty>
+        <flowable:formProperty id="businessKey" name="Business Key" type="string"></flowable:formProperty>
+      </extensionElements>
+    </startEvent>
+    <userTask id="approvalForm" name="Start Approval Form" flowable:candidateGroups="Contract_Approval_Approvers" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="user_approver_id" name="Approver ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_approver_name" name="Approver" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_approver_email" name="Approver Email" type="string"></flowable:formProperty>
+        <flowable:formProperty id="approved" name="Approve" type="boolean"></flowable:formProperty>
+        <flowable:formProperty id="rejectReason" name="Reject Reason" type="string"></flowable:formProperty>
+        <flowable:formProperty id="token" name="Authentication Token" type="string"></flowable:formProperty>
+        <flowable:formProperty id="approveDate" name="Approve Date" type="date" datePattern="yyyy-MM-dd hh:mm"></flowable:formProperty>
+        <flowable:formProperty id="user_copy_personnel_id" name="Copy Personnel ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_creator_id" name="Creator ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_creator_name" name="Creator Name" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_creator_email" name="Creator Email" type="string"></flowable:formProperty>
+        <flowable:formProperty id="prospectName" name="Prospect Name" type="string"></flowable:formProperty>
+        <flowable:formProperty id="prospectId" name="Prospect Id" type="string"></flowable:formProperty>
+        <flowable:formProperty id="description" name="Description" type="string"></flowable:formProperty>
+        <flowable:formProperty id="submittedDate" name="Submit Date" type="date" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
+        <flowable:formProperty id="customerName" name="Customer Name" type="string"></flowable:formProperty>
+        <flowable:formProperty id="businessKey" name="Business Key" type="string"></flowable:formProperty>
+        <flowable:formProperty id="processInstanceId" name="Process Instance Id" type="string"></flowable:formProperty>
+        <flowable:formProperty id="approvedBy" name="Approved By" type="string"></flowable:formProperty>
+        <flowable:taskListener event="create" delegateExpression="${autoAssignTaskListener}">
+          <flowable:field name="assignee">
+            <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+          </flowable:field>
+        </flowable:taskListener>
+        <modeler:group-info-name-Contract_Approval_Approvers xmlns:modeler="http://flowable.org/modeler"><![CDATA[Contract Approval Approvers]]></modeler:group-info-name-Contract_Approval_Approvers>
+        <modeler:activiti-idm-candidate-group xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-group>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="createDocumentServiceTask" name="Create Document Based On User Input Service Task" flowable:delegateExpression="${approvedDelegate}"></serviceTask>
+    <serviceTask id="submitFormNotification" name="Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.submitted]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="emailTemplateId">
+          <flowable:string><![CDATA[notification.contractApproval.submitted]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="end" name="End"></endEvent>
+    <exclusiveGateway id="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F"></exclusiveGateway>
+    <serviceTask id="completedApprovedNotification" name="Completed Approved Notification to Creator, Copy and Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.approved]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="renewOrCr">
+          <flowable:expression><![CDATA[${variables:get(renewalOrCr)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="creatorId">
+          <flowable:expression><![CDATA[${variables:get(user_creator_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="country">
+          <flowable:expression><![CDATA[${variables:get(country)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="caseId">
+          <flowable:expression><![CDATA[${variables:get(caseId)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="customerCode">
+          <flowable:expression><![CDATA[${variables:get(customerCode)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="customerName">
+          <flowable:expression><![CDATA[${variables:get(customerName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="contractId">
+          <flowable:expression><![CDATA[${variables:get(contractId)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="crId">
+          <flowable:expression><![CDATA[${variables:get(crId)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="rejectApprovedNotification" name="Reject Approved Notification to creator， copy creator" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.reject]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="creatorId">
+          <flowable:expression><![CDATA[${variables:get(user_creator_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="taskDueNotification" name="Task Due Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.taskdue]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="creatorId">
+          <flowable:expression><![CDATA[${variables:get(user_creator_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <boundaryEvent id="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" attachedToRef="approvalForm" cancelActivity="false">
+      <timerEventDefinition>
+        <timeDuration>P3D</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <sequenceFlow id="sid-4997F99D-0C86-4C63-8974-A52EBC38C4F3" sourceRef="start" targetRef="submitFormNotification"></sequenceFlow>
+    <sequenceFlow id="sid-12A74733-1783-454C-80B9-A66E0ACDF034" sourceRef="submitFormNotification" targetRef="approvalForm"></sequenceFlow>
+    <sequenceFlow id="sid-A641DB66-3A1C-45A4-A03C-3FF308F8BC44" sourceRef="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" targetRef="taskDueNotification"></sequenceFlow>
+    <sequenceFlow id="sid-E6B2EE69-B671-4564-BFF5-0A7BEE7FC110" sourceRef="approvalForm" targetRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F"></sequenceFlow>
+    <sequenceFlow id="sid-65BE74D6-A548-4E70-8B5F-6D919EDDC1BF" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="rejectApprovedNotification">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approved}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-C909A9BF-4EBD-49F6-97B4-B7B823900C32" sourceRef="rejectApprovedNotification" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="sid-2060190D-232A-4C95-8D17-CFCE24A7395B" sourceRef="completedApprovedNotification" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="sid-FE76A11C-6B59-429C-9228-DF4D7EF675C8" sourceRef="createDocumentServiceTask" targetRef="completedApprovedNotification"></sequenceFlow>
+    <sequenceFlow id="sid-D04FB86E-F550-433E-A8A9-D2E0E7668D9B" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="createDocumentServiceTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_singleApprovalDemo">
+    <bpmndi:BPMNPlane bpmnElement="singleApprovalDemo" id="BPMNPlane_singleApprovalDemo">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="29.99999999999997" width="29.999999999999986" x="108.99961117701498" y="240.00000000000003"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approvalForm" id="BPMNShape_approvalForm">
+        <omgdc:Bounds height="79.99999999999997" width="100.0" x="375.0000000000003" y="215.00000000000009"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createDocumentServiceTask" id="BPMNShape_createDocumentServiceTask">
+        <omgdc:Bounds height="79.99999999999997" width="99.99999999999977" x="660.0" y="215.00000000000003"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="submitFormNotification" id="BPMNShape_submitFormNotification">
+        <omgdc:Bounds height="80.0" width="99.99999999999997" x="210.00000000000003" y="215.00000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="28.0" width="28.0" x="1025.0" y="241.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" id="BPMNShape_sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F">
+        <omgdc:Bounds height="40.0" width="40.0" x="535.0" y="235.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="completedApprovedNotification" id="BPMNShape_completedApprovedNotification">
+        <omgdc:Bounds height="80.0" width="100.0" x="845.0" y="215.00000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rejectApprovedNotification" id="BPMNShape_rejectApprovedNotification">
+        <omgdc:Bounds height="79.99999999999994" width="99.99999999999994" x="505.00000000000006" y="360.0000000000003"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="taskDueNotification" id="BPMNShape_taskDueNotification">
+        <omgdc:Bounds height="79.99999999999996" width="99.99999999999994" x="505.00000000000006" y="95.50000000000007"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" id="BPMNShape_sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70">
+        <omgdc:Bounds height="31.0" width="31.0" x="438.4828223711957" y="199.2251165506482"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-2060190D-232A-4C95-8D17-CFCE24A7395B" id="BPMNEdge_sid-2060190D-232A-4C95-8D17-CFCE24A7395B" flowable:sourceDockerX="99.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="944.9499999999605" y="255.00000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1025.0" y="255.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-12A74733-1783-454C-80B9-A66E0ACDF034" id="BPMNEdge_sid-12A74733-1783-454C-80B9-A66E0ACDF034" flowable:sourceDockerX="49.999999999999986" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="39.999999999999986">
+        <omgdi:waypoint x="309.95000000000005" y="255.00000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="374.9999999999849" y="255.00000000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-65BE74D6-A548-4E70-8B5F-6D919EDDC1BF" id="BPMNEdge_sid-65BE74D6-A548-4E70-8B5F-6D919EDDC1BF" flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="49.99999999999994" flowable:targetDockerY="12.35156249999983">
+        <omgdi:waypoint x="555.0" y="274.94150713725077"></omgdi:waypoint>
+        <omgdi:waypoint x="555.0" y="360.0000000000003"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-C909A9BF-4EBD-49F6-97B4-B7B823900C32" id="BPMNEdge_sid-C909A9BF-4EBD-49F6-97B4-B7B823900C32" flowable:sourceDockerX="49.99999999999997" flowable:sourceDockerY="39.99999999999997" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="604.9499999993286" y="400.0000000000002"></omgdi:waypoint>
+        <omgdi:waypoint x="1039.0" y="400.0000000000002"></omgdi:waypoint>
+        <omgdi:waypoint x="1039.0" y="268.94992830946825"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-D04FB86E-F550-433E-A8A9-D2E0E7668D9B" id="BPMNEdge_sid-D04FB86E-F550-433E-A8A9-D2E0E7668D9B" flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="19.0" flowable:targetDockerY="39.99999999999997">
+        <omgdi:waypoint x="574.9419621273166" y="255.0"></omgdi:waypoint>
+        <omgdi:waypoint x="659.9999999999441" y="255.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E6B2EE69-B671-4564-BFF5-0A7BEE7FC110" id="BPMNEdge_sid-E6B2EE69-B671-4564-BFF5-0A7BEE7FC110" flowable:sourceDockerX="50.0" flowable:sourceDockerY="39.999999999999986" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
+        <omgdi:waypoint x="474.94999999996105" y="255.00000000000003"></omgdi:waypoint>
+        <omgdi:waypoint x="535.0" y="255.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4997F99D-0C86-4C63-8974-A52EBC38C4F3" id="BPMNEdge_sid-4997F99D-0C86-4C63-8974-A52EBC38C4F3" flowable:sourceDockerX="14.999999999999993" flowable:sourceDockerY="14.999999999999986" flowable:targetDockerX="49.999999999999986" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="138.94961018898252" y="255.00000000000003"></omgdi:waypoint>
+        <omgdi:waypoint x="210.00000000000003" y="255.00000000000003"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-FE76A11C-6B59-429C-9228-DF4D7EF675C8" id="BPMNEdge_sid-FE76A11C-6B59-429C-9228-DF4D7EF675C8" flowable:sourceDockerX="49.999999999999886" flowable:sourceDockerY="39.999999999999986" flowable:targetDockerX="14.0" flowable:targetDockerY="39.99999999999994">
+        <omgdi:waypoint x="759.9499999999734" y="255.0"></omgdi:waypoint>
+        <omgdi:waypoint x="844.9999999999696" y="255.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A641DB66-3A1C-45A4-A03C-3FF308F8BC44" id="BPMNEdge_sid-A641DB66-3A1C-45A4-A03C-3FF308F8BC44" flowable:sourceDockerX="16.0" flowable:sourceDockerY="16.0" flowable:targetDockerX="49.99999999999997" flowable:targetDockerY="39.99999999999998">
+        <omgdi:waypoint x="454.4828223711957" y="199.2251165506482"></omgdi:waypoint>
+        <omgdi:waypoint x="454.4828223711957" y="135.50000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="505.00000000000006" y="135.50000000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
