@@ -46,7 +46,18 @@ export const stepOptions = {
         body: {
           stroke: 'red',
           borderRadius: 10,
+          rx: 8,
+          ry: 8,
         },
+        text:{
+          fontSize: 10,
+          "refX": 0.5,
+          "refY": 0.5,
+          "textAnchor": "middle",
+          "textVerticalAnchor": "middle",
+          "fontFamily": "Arial, helvetica, sans-serif",
+          "text": "node"
+        }
       },
       markup: [
         {
@@ -72,7 +83,7 @@ export const edgeOptions = {
     },
 }
 
-export const bpmnToX6 = (bpmn: any): Model.FromJSONData => {
+export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONData => {
   // step 1 : get bpmn data
   const process = bpmn['definitions']['process'];
   const nodes = [];
@@ -119,8 +130,24 @@ export const bpmnToX6 = (bpmn: any): Model.FromJSONData => {
   exclusiveGateway.forEach((gateway: any) => {
     data.nodes?.push({
       id: gateway['attr_id'],
-      shape: 'step-node',
+      shape: 'circle',
       label: gateway['attr_name'],
+      width: 100,
+      height: 100,
+      attrs:{
+        body: {
+          fill: '#fff',
+          stroke: '#8f8f8f',
+          strokeWidth: 1,
+        },
+        label: {
+          refX: 0.5,
+          refY: '100%',
+          refY2: 4,
+          textAnchor: 'middle',
+          textVerticalAnchor: 'top',
+        },
+      }
     });
   });
 
@@ -133,16 +160,22 @@ export const bpmnToX6 = (bpmn: any): Model.FromJSONData => {
     });
   });
 
-  // step 8: add endEvent
-  data.nodes?.push({
-    id: endEvent['attr_id'],
-    shape: 'step-node',
-    label: endEvent['attr_name'],
-  });
+  if(!options.hideEnd) {
 
+    // step 8: add endEvent
+    data.nodes?.push({
+      id: endEvent['attr_id'],
+      shape: 'step-node',
+      label: endEvent['attr_name'],
+    });
+    
+  }
 
   // add edge 
   sequenceFlow.forEach((flow: any) => {
+    if( (flow['attr_targetRef'] === endEvent['attr_id'] || flow['attr_sourceRef'] === endEvent['attr_id']) && options.hideEnd ) {
+      return;
+    }
     data.edges?.push({
       source: flow['attr_sourceRef'],
       target: flow['attr_targetRef'],

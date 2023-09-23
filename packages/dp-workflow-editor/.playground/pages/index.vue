@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 
-const demoFile = "/bpmn/Multiple_Approval.xml";
+const demoFile = "/bpmn/single.xml";
 const bpmnFile = ref();
 
 async function getDemoFile() {

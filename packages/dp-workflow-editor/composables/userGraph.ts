@@ -3,7 +3,9 @@ import { DagreLayout } from '@antv/layout'
 import { graphOptions, stepOptions, edgeOptions } from '../utils/graphHelper'
 Graph.registerNode(
     'step-node',
-    stepOptions);
+    stepOptions,
+    true
+    );
 
 Graph.registerEdge(
     'dag-edge',
