@@ -3,6 +3,7 @@
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 
 import {useGraph} from '../../composables/userGraph';
+import { bpmnToX6 } from '../../utils/graphHelper';
 
 ///#region setup
     const props = defineProps({
@@ -51,14 +52,13 @@ function bpmnToJs() {
         delete tempD['?xml'];
     }
     data.value = tempD;
-    process.value = data.value['definitions']['process'];
-    generateMap();
+    const graphData = bpmnToX6(data.value);
+    generateMap(graphData);
     // data.value = convert.xml2js(props.bpmn, { compact: true, spaces: 4 });
 }
 
 function jsToBpmn() {
     const xml = builder.build(data?.value);
-    console.log(xml);
     // add xml header
 }
 
@@ -66,19 +66,18 @@ function createEmptyData(){
     data.value = {};
 }
 
-
+defineExpose({
+    bpmnToJs,
+    jsToBpmn,
+})
 
 
 </script>
 
 <template>
-    <div style="overflow:auto">
-        <Button @click="bpmnToJs">bpmnToJs</Button>
-        <Button @click="jsToBpmn">jsToBpmn</Button>
-        <div id="editorContainer">
+     <div id="editorContainer">
 
-        </div>
-    </div>
+</div>
 </template>
 
 <style lang="scss" scoped>

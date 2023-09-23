@@ -36,60 +36,39 @@ Graph.registerConnector(
 export const useGraph = (elementId:string) => {
 
     
-    function generateMap() {
+    function generateMap(data: Model.FromJSONData) {
         const graph: Graph = new Graph({
             container: document.getElementById(elementId) as HTMLElement,
-            connecting: {
-                snap: true,
-                allowBlank: false,
-                allowLoop: false,
-                highlight: true,
-                connector: 'algo-connector',
-                connectionPoint: 'anchor',
-                anchor: 'center',
-                validateMagnet({ magnet }) {
-                  return magnet.getAttribute('port-group') !== 'top'
-                },
-                createEdge() {
-                    return graph.createEdge({
-                        shape: 'dag-edge',
-                        attrs: {
-                            line: {
-                            strokeDasharray: '5 5',
-                            },
-                        },
-                        zIndex: -1,
-                  })
-                },
-            },
+            // connecting: {
+            //     snap: true,
+            //     allowBlank: false,
+            //     allowLoop: false,
+            //     highlight: true,
+            //     // validateMagnet({ magnet }) {
+            //     //   return magnet.getAttribute('port-group') !== 'top'
+            //     // },
+            //     // createEdge() {
+            //     //     return graph.createEdge({
+            //     //         shape: 'dag-edge',
+            //     //         attrs: {
+            //     //             line: {
+            //     //             strokeDasharray: '5 5',
+            //     //             },
+            //     //         },
+            //     //         zIndex: -1,
+            //     //   })
+            //     // },
+            // },
           ...graphOptions,
             
         })
-        const data: Model.FromJSONData = {
-          nodes: [],
-          edges: [],
-        }
-
-        data.nodes?.push({
-            id: 'start',
-            shape: 'step-node',
-            label: 'start',
-        },{
-          id: 'user',
-          shape: 'step-node',
-          label: 'user', 
-        })
-        data.edges?.push({
-          source: 'start',
-          target: 'user',
-          shape: "dag-edge",
-        })
+        
         
         const dagreLayout = new DagreLayout({
           type: 'dagre',
           rankdir: 'LR',
-          ranksep: 35,
-          nodesep: 15,
+          ranksep: 50,
+          nodesep: 50,
         })
         const model = dagreLayout.layout(data)
         graph.fromJSON(model)
