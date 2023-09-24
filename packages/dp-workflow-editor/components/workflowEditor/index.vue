@@ -1,7 +1,7 @@
 
 <script lang="ts" setup>
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
-
+import { Graph, Node } from '@antv/x6'
 import {useGraph} from '../../composables/userGraph';
 import { bpmnToX6 } from '../../utils/graphHelper';
 import {ServiceNode, userNode} from '../../utils/graphNode';
@@ -33,10 +33,9 @@ ServiceNode
     );
 
     const { bpmn } = toRefs(props);
-    const scale = ref(1);
     const data = ref();
-    const process = ref();
-
+    const graph = ref<Graph>();
+    const tooltip = ref('')
     // 如果props.bpmn有值，就转换成 js 对象
     onMounted(() => {
         bpmnToJs();
@@ -56,8 +55,44 @@ function bpmnToJs() {
     }
     data.value = tempD;
     const graphData = bpmnToX6(data.value);
-    generateMap(graphData);
+    graph.value = generateMap(graphData);
+    graph.value.on('node:dblclick',({node}) => {
+        dblClickHandler(node)
+    })
+    graph.value.on('node:mouseenter',({e, node}) => {
+        showTooltip(e, node);
+    })
+    graph.value.on('node:mouseleave',() => {
+        hideTooltip();
+    })
     // data.value = convert.xml2js(props.bpmn, { compact: true, spaces: 4 });
+}
+
+function showTooltip(e:MouseEvent, node:Node) {
+    const data = node.getData();
+    if(data.attr_name === undefined){
+        return;
+    }
+    tooltip.value = data.attr_name || "";
+    const {clientX, clientY} = e;
+    const toolTipsContainer = document.querySelector('.toolTipsContainer') as HTMLElement;
+    toolTipsContainer.style.left = `${clientX}px`;
+    toolTipsContainer.style.top = `${clientY}px`;
+    toolTipsContainer.style.display = 'block';
+}
+
+function hideTooltip() {
+    const toolTipsContainer = document.querySelector('.toolTipsContainer') as HTMLElement;
+    toolTipsContainer.style.display = 'none';
+}
+
+
+function dblClickHandler(node:Node) {
+    const data = node.getData();
+    if(data.type === 'userTask'){
+        // open dialog
+    
+    }
 }
 
 function jsToBpmn() {
@@ -78,9 +113,16 @@ defineExpose({
 </script>
 
 <template>
-     <div id="editorContainer">
+    <div class="editorContainer">
+        <div  class="toolTipsContainer">
+            {{ tooltip }}
+        </div>
+        <div class="sidePanelContainer">
 
-</div>
+        </div>
+        <div id="editorContainer"></div>
+    </div>
+
 </template>
 
 <style lang="scss" scoped>
@@ -88,4 +130,22 @@ defineExpose({
     width: 100%;
     height:100%;
 }
+.editorContainer{
+    width: 100%;
+    height:100%;
+    position: relative;
+}
+.toolTipsContainer{
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    display: none;
+    z-index: 2;
+    font-size: 0.8rem;
+    max-width: 120px;;
+}
+
 </style>

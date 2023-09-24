@@ -208,7 +208,22 @@ export const ServiceNode = Graph.registerNode(
 export const ExclusiveNode = Graph.registerNode(
     'exclusive-node',
     {
-
+      inherit: 'circle',
+      width:60,
+      height:60,
+      attrs:{
+        body: {
+          fill: '#26C7D6',
+          strokeWidth: 0,
+        },
+        label: {
+          refX: 0.5,
+          refY: '100%',
+          refY2: 4,
+          textAnchor: 'middle',
+          textVerticalAnchor: 'top',
+        },
+      }
     },
 true
 )

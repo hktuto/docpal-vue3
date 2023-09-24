@@ -37,7 +37,7 @@ export const useGraph = (elementId:string) => {
 
 
     
-    function generateMap(data: Model.FromJSONData) {
+    function generateMap(data: Model.FromJSONData): Graph {
         const graph: Graph = new Graph({
             container: document.getElementById(elementId) as HTMLElement,
             // connecting: {
@@ -74,13 +74,8 @@ export const useGraph = (elementId:string) => {
         const model = dagreLayout.layout(data)
         graph.fromJSON(model)
         graph.centerContent()
-
-        // register cell click event
-        graph.on('node:dblclick', ({ e, x, y, node, view }) => {
-            console.log(node, view)
-        })
-        
-
+        return graph;
+      
     }
     
 
