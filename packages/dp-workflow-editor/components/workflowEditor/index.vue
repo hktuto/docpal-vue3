@@ -4,7 +4,10 @@ import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 
 import {useGraph} from '../../composables/userGraph';
 import { bpmnToX6 } from '../../utils/graphHelper';
+import {ServiceNode, userNode} from '../../utils/graphNode';
 
+// register node
+ServiceNode
 ///#region setup
     const props = defineProps({
         bpmn: {

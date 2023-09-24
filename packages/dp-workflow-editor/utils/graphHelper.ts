@@ -38,39 +38,6 @@ export const graphOptions = {
     },
 }
 
-export const stepOptions = {
-    inherit: 'rect',
-    width: 80,
-    height: 80,
-    attrs: {
-        body: {
-          stroke: 'red',
-          borderRadius: 10,
-          rx: 8,
-          ry: 8,
-        },
-        text:{
-          fontSize: 10,
-          "refX": 0.5,
-          "refY": 0.5,
-          "textAnchor": "middle",
-          "textVerticalAnchor": "middle",
-          "fontFamily": "Arial, helvetica, sans-serif",
-          "text": "node"
-        }
-      },
-      markup: [
-        {
-          tagName: 'rect',
-          selector: 'body',
-        },
-        {
-          tagName: 'text',
-          selector: 'label',
-        },
-      ],
-        
-}
 
 export const edgeOptions = {
     inherit: 'edge',
@@ -104,26 +71,46 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
   // step 3 : push start node
   data.nodes?.push({
     id: startEvent['attr_id'],
-    shape: 'step-node',
+    shape: 'form-node',
     label: startEvent['attr_name'],
+    data: startEvent
+    
   });
 
   // step 4 : add userTask
   userTask.forEach((task: any) => {
     data.nodes?.push({
       id: task['attr_id'],
-      shape: 'step-node',
+      shape: 'form-node',
       label: task['attr_name'],
+      data: task
     });
   });
 
   // step 5: add serviceTask
   serviceTask.forEach((task: any) => {
-    data.nodes?.push({
-      id: task['attr_id'],
-      shape: 'step-node',
-      label: task['attr_name'],
-    });
+    if(task['attr_flowable:delegateExpression'] === "${sendNotificationDelegate}") {
+      data.nodes?.push({
+        id: task['attr_id'],
+        shape: 'email-node',
+        label: task['attr_name'],
+      });
+    } else if (task['attr_flowable:delegateExpression'] === "${approvedDelegate}") {
+      data.nodes?.push({
+        id: task['attr_id'],
+        shape: 'document-node',
+        label: task['attr_name'],
+        data: task
+      });
+    }else{
+      data.nodes?.push({
+        id: task['attr_id'],
+        shape: 'form-node',
+        label: task['attr_name'],
+        data: task
+      });
+    }
+    console.log(task['attr_flowable:delegateExpression'])
   });
 
   // step 6: add exclusiveGateway
@@ -131,9 +118,9 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
     data.nodes?.push({
       id: gateway['attr_id'],
       shape: 'circle',
-      label: gateway['attr_name'],
-      width: 100,
-      height: 100,
+      label: "approval",
+      width: 60,
+      height: 60,
       attrs:{
         body: {
           fill: '#fff',
@@ -155,7 +142,7 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
   boundaryEvent.forEach((event: any) => {
     data.nodes?.push({
       id: event['attr_id'],
-      shape: 'step-node',
+      shape: 'user-node',
       label: event['attr_name'],
     });
   });
@@ -183,7 +170,6 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
     });
   });
 
-  console.log(bpmn,data);
 
   // finally return data
   return data;
