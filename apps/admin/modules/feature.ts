@@ -35,6 +35,7 @@ const coreFeatures = {
     INTERNAL_SHARE: "../../../pages/admin-internal-share",
     HOLD_POLICIES: "../../../pages/admin-hold-policies",
     BROWSE_STORE: '../../../packages/dp-browse',
+    WORKFLOW_EDITOR: '../../../packages/dp-workflow-editor',
 }
 export default defineNuxtModule({
     meta: {
