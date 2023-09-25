@@ -34,7 +34,8 @@ export type TableColumnItem = {
     formatList?: any[],
     buttons?: any[],
     prefixIcon?: string,
-    suffixIcon?: string
+    suffixIcon?: string,
+    defaultColumn?: boolean
 }
 export type TableBase = {
     commands: any[]
@@ -109,6 +110,7 @@ export enum TABLE {
     ADMIN_VOCABULARY_CHILD_FORM = 'adminVocabularyChildForm',
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
+    ADMIN_WORKFLOW_EDITOR_MANAGE = 'adminWorkflowEditorManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
     ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
@@ -362,7 +364,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },
-            { id: '7', slot: 'docIcon', label: 'tableHeader_name' },
+            { id: '7', slot: 'docIcon', label: 'tableHeader_name', defaultColumn: true },
             // { id: '1', label: 'tableHeader_name', prop: 'name' },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
@@ -418,7 +420,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_COLLECTION] : {
         columns: [
-            { id: '1', label: 'table_name', prop: 'name' },
+            { id: '1', label: 'table_name', prop: 'name', defaultColumn: true },
             { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
@@ -464,7 +466,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_BROWSE] : {
         columns: [
             // { id: '4', type: 'selection' },
-            { id: '1', slot: 'docName', label: 'table_name', prop: 'name', sortable: true, headerSlot:"nameFilter" },
+            { id: '1', slot: 'docName', label: 'table_name', prop: 'name', sortable: true, headerSlot:"nameFilter", defaultColumn: true },
            
             { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
                 formatList: [
@@ -519,7 +521,7 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             // { id: '1', type: 'selection' },
             // { id: '4', type: 'selection' },
-            { id: '2', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'table_name', prop: 'name', defaultColumn: true },
             { id: '3', slot: 'watermark', label: 'watermark' },
             { id: '5', slot: 'readOnly', label: 'readOnly' },
             { id: '4', label: 'table_modifiedDate', prop: 'modifiedDate', 
@@ -568,7 +570,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_FOLDER_CABINET]: {
         columns: [
-            { id: '7', label: 'tableHeader_status', slot: 'status',width: 60 },
+            { id: '7', label: 'tableHeader_status', slot: 'status',width: 60, defaultColumn: true },
             { id: '1', label: 'tableHeader_name', prop: 'label' },
             { id: '2', label: 'tableHeader_modifiedDate', prop: 'modifiedDate',
                 formatList: [
@@ -631,7 +633,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SHARE_LIST] : {
         columns: [
-            { id: '1', label: 'tableHeader_emailList', prop: 'emailList', 
+            { id: '1', label: 'tableHeader_emailList', prop: 'emailList', defaultColumn: true, 
                 formatList: [
                     {
                         "joiner": "",
@@ -701,7 +703,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_INTERNAL_SHEAR_ME] : {
         columns: [
-            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
             // { id: '2', label: 'tableHeader_name', prop: 'documentName'},
             { id: '3', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
             { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
@@ -757,7 +759,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_INTERNAL_SHEAR_OTHER] : {
         columns: [
-            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
             // { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
             { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds' },
             { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
@@ -814,7 +816,7 @@ export const defaultTableSetting: TableColumnSetting = {
     
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
-            { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true },
+            { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true, defaultColumn: true },
             { id: '2', label: 'dpTable_location', prop: 'documentId', showOverflowTooltip: true },
             { id: '3', label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
             { id: '4', label: 'dpTable_status', prop: 'status',
@@ -850,7 +852,7 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { id: '1', type: 'selection' },
             { id: '2', type: 'expand', slot: 'expand' },
-            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true },
+            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true, defaultColumn: true },
             { id: '4', label: 'dpDocument_fileType', prop: 'type', slot: 'documentType', sortable: true },
             {   
                 id: '5',
@@ -884,7 +886,7 @@ export const defaultTableSetting: TableColumnSetting = {
         columns: [
             { id: '1', type: 'selection' },
             { id: '2', type: 'expand', slot: 'expand' },
-            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true },
+            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true, defaultColumn: true },
             { id: '4', label: 'dpDocument_fileType', prop: 'documentType', slot: 'documentType', sortable: true },
             { id: '5', label: 'dpTool_approve', prop: 'approve', slot: 'approve', sortable: true, align: 'center' },
         ],
@@ -933,7 +935,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_MY_TASK] : {
         columns: [
-            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey', defaultColumn: true },
             { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName'},
             { id: '3', label: 'common_status', prop: 'name', },
             { id: '4', label: 'workflow_assignee', prop: 'assignee', },
@@ -969,7 +971,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_COMPLETE_TASK] : {
         columns: [
-            { id: '1', label: 'table_name', prop: 'businessKey', sortable: true },
+            { id: '1', label: 'table_name', prop: 'businessKey', sortable: true, defaultColumn: true },
             { id: '2', label: 'workflow_workflow', prop: 'processDefinitionName' },
             // { label: 'workflow_workflow', property: 'name', sortable: true },
             { id: '3', label: 'workflow_createDate', prop: 'createDate', 
@@ -1017,7 +1019,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_WORKFLOW_ACTIVE_TASK] : {
         columns: [
-            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey', defaultColumn: true },
             { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
             { id: '3', label: 'workflow_assignee', prop: 'assignee',  },
             { id: '4', label: 'workflow_createDate', prop: 'createDate', 
@@ -1039,7 +1041,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_ADHOC_SUBMITTED_TASK] : {
         columns: [
-            { id: '1', label: 'table_path', prop: 'documentPath' },
+            { id: '1', label: 'table_path', prop: 'documentPath', defaultColumn: true },
             { id: '2', label: 'role.approvers', prop: 'user_approver_id' },
             { id: '3', label: 'workflow_createDate', prop: 'startTime',
                 formatList: [
@@ -1060,7 +1062,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_ADHOC_APPROVAL_TASK] : {
         columns: [
-            { id: '1', label: 'table_path', prop: 'documentPath' },
+            { id: '1', label: 'table_path', prop: 'documentPath', defaultColumn: true },
             { id: '2', label: 'role.creator', prop: 'user_creator_id' },
             { id: '3', label: 'workflow_createDate', prop: 'startTime',
                 formatList: [
@@ -1081,7 +1083,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_ADHOC_COMPLETED_TASK] : {
         columns: [
-            { id: '1', label: 'table_path', prop: 'documentPath'},
+            { id: '1', label: 'table_path', prop: 'documentPath', defaultColumn: true},
             { id: '2', label: 'info_version', prop: 'documentApprovalVersion', align: 'right', width: '80' },
             { id: '3', label: 'role.creator', prop: 'user_creator_id', width: '150' },
             { id: '4', label: 'workflow_createDate', prop: 'startTime', align: 'center', width: '180',
@@ -1117,7 +1119,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SEARCH] : {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
             { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180',
@@ -1143,7 +1145,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_HOLD_POLICIES]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '1', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
             { id: '3', label: 'tableHeader_policyName', prop: 'policyHoldName' },
             { id: '4', label: 'tableHeader_applyBy', prop: 'applyBy' },
@@ -1192,7 +1194,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_RETENTION_DONE]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '1', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
             { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
             { id: '4', label: 'tableHeader_approver', slot: 'approver', width: 150 },
@@ -1207,7 +1209,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_RETENTION_PENDING]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '1', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
             { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
             { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
             // { id: '4', label: 'tableHeader_approver', prop: 'approver' },
@@ -1234,7 +1236,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.PUBLIC_SHARE]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'title' },
+            { id: '1', label: 'tableHeader_name', prop: 'title', defaultColumn: true },
             { id: '2', label: 'tableHeader_modifiedDate', prop: 'lastModified',
                 formatList: [
                     {
@@ -1281,7 +1283,7 @@ export const defaultTableSetting: TableColumnSetting = {
 
     [TABLE.ADMIN_LOG_MANAGE]: {
         columns: [
-            { id: '1', label: 'service', prop: 'service' },
+            { id: '1', label: 'service', prop: 'service', defaultColumn: true },
             { id: '2', label: 'effectiveLevel', prop: 'effectiveLevel' },
             { id: '3', label: 'configuredLevel', prop: 'configuredLevel', slot: 'configuredLevel' }
         ],
@@ -1293,7 +1295,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_USER_MANAGE]: {
         columns: [
-            { id: '1', label: 'username', prop: 'username', "width": 200, showOverflowTooltip: true  },
+            { id: '1', label: 'username', prop: 'username', "width": 200, showOverflowTooltip: true, defaultColumn: true  },
             // { id: '2', label: 'Identifer', prop: 'userId' },
             { id: '3', label: 'user_email', prop: 'email', "width": 250, showOverflowTooltip: true  },
             { id: '4', label: 'user_groupName', slot: 'group' },
@@ -1319,7 +1321,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_USER_GROUP_MANAGE]: {
         columns: [
-            { id: '1', label: 'user_groupName', prop: 'name' },
+            { id: '1', label: 'user_groupName', prop: 'name', defaultColumn: true },
             { id: '2', label: 'user_groupIdentifer', prop: 'id' },
             {   
                 id: '3',
@@ -1351,7 +1353,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_GROUP_MANAGE]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
             { id: '2', label: 'Identifer', prop: 'id' }
         ],
         events: [],
@@ -1359,7 +1361,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_GROUP_USER_MANAGE]: {
         columns: [
-            { id: '1', label: 'username', prop: 'username' },
+            { id: '1', label: 'username', prop: 'username', defaultColumn: true },
             { id: '2', label: 'user_groupIdentifer', prop: 'userId' },
             {   
                 id: '3',
@@ -1392,7 +1394,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_META_MANAGE]: {
         columns: [
             { id: '1', slot: 'icon', label: '', width: 50 },
-            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true },
             { id: '3', slot: 'displayMeta', label: 'docType_displayMeta' },
             { id: '4', slot: 'relatedDocument', label: 'docType_relatedDocument' },
         ],
@@ -1406,7 +1408,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_META_DISPLAY]: {
         columns: [
-            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true },
+            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true },
             { id: '2', label: 'form_vocabulary', prop: 'vocabulary', showOverflowTooltip: true },
             { id: '3', label: 'form_length', prop: 'length'},
             { id: '4', slot: 'isRequire', label:'form_isRequire', width: 70 },
@@ -1445,7 +1447,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_META_RELATED]: {
         columns: [
-            { id: '1', label: 'dpTable_documentType', prop: 'type'},
+            { id: '1', label: 'dpTable_documentType', prop: 'type', defaultColumn: true},
             { id: '2', label: 'rightDetail_meta', prop: 'meta' },
             {   
                 id: '3',
@@ -1478,7 +1480,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_BULK_IMPORT]: {
         columns: [
             { id: '1', slot: 'icon', label: '', width: 50 },
-            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true },
             { id: '3', slot: 'metaMapping', label: 'docType_metaMapping' },
             { id: '4', slot: 'bulkImportConfig', label: 'docType_captureProfile' },
         ],
@@ -1492,7 +1494,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_BULK_IMPORT_META]: {
         columns: [
-            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true },
+            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true },
             { id: '2', label: 'table_label', prop: 'label', showOverflowTooltip: true },
             {   
                 id: '3',
@@ -1524,7 +1526,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_BULK_IMPORT_CONFIG]: {
         columns: [
-            { id: '1', label: 'dpTable_id', prop: 'profileID' },
+            { id: '1', label: 'dpTable_id', prop: 'profileID', defaultColumn: true },
             { id: '2', label: 'dpTable_name', prop: 'profileName' },
             {   
                 id: '3',
@@ -1556,7 +1558,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_BULK_IMPORT_CONFIG_FORM]: {
         columns: [
-            { id: '1', prop: 'title', label: 'title' },
+            { id: '1', prop: 'title', label: 'title', defaultColumn: true },
             { id: '2', prop: 'name', label: 'tableHeader_name' }
         ],
         events: [],
@@ -1564,7 +1566,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_DAM]: {
         columns: [
-            { id: '2', label: 'DAM_fileType', prop: 'sourceType', width: 200, showOverflowTooltip: true },
+            { id: '2', label: 'DAM_fileType', prop: 'sourceType', width: 200, showOverflowTooltip: true, defaultColumn: true },
             { id: '3', slot: 'targetTypes', label: 'DAM_convertion' },
             {   
                 id: '4',
@@ -1599,7 +1601,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_SCHEMA_LIST]: {
         columns: [
-            { id: '1', prop: 'keyword', label: 'tableHeader_name' },
+            { id: '1', prop: 'keyword', label: 'tableHeader_name', defaultColumn: true},
             {   
                 id: '2',
                 "type": "",
@@ -1630,7 +1632,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_DOC_TYPE_LIST]: {
         columns: [
-            { id: '1', prop: 'docTypeId', label: 'tableHeader_name' },
+            { id: '1', prop: 'docTypeId', label: 'tableHeader_name', defaultColumn: true },
             {   
                 id: '2',
                 "type": "",
@@ -1662,35 +1664,19 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_SCHEMA_FIELDS_FORM]: {
         columns: [
             { id: '1', prop: 'id', label: 'docType_id' },
-            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
             { id: '3', slot: 'type', label: 'docType_type', prop: 'type' },
             // { id: '4', slot: 'setting' },
             { id: '5', prop: 'defaultValue', label: 'docType_defaultValue' },
             { id: '6', slot: 'multiple', label: 'multiple', prop: 'isMultiValue', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
         ],
         events: [],
-        options: { pageSize: 20 }
-    },
-    [TABLE.ADMIN_SCHEMA_FIELDS_FORM]: {
-        columns: [
-            { id: '1', prop: 'id', label: 'docType_id' },
-            { id: '2', prop: 'label', label: 'docType_label' },
-            { id: '3', slot: 'type', label: 'docType_type', prop: 'type' },
-            // { id: '4', slot: 'setting' },
-            { id: '5', prop: 'defaultValue', label: 'docType_defaultValue' },
-            { id: '6', slot: 'multiple', label: 'multiple', prop: 'isMultiValue', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
-        ],
-        events: [],
-        slots: [
-            { slot: 'type', label: 'docType_type', prop: 'type' },
-            { slot: 'multiple', label: 'multiple', prop: 'isMultiValue', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
-        ],
         options: { pageSize: 20 }
     },
     [TABLE.ADMIN_VOCABULARY_SIMPLE_FORM]: {
         columns: [
             { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
-            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
             { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
             { id: '4', prop: 'order', label: 'order', defaultValue: 0 }
         ],
@@ -1704,7 +1690,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_VOCABULARY_CHILD_FORM]: {
         columns: [
             { id: '1', prop: 'id', label: 'docType_id' },
-            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
             { id: '3', slot: 'parentEntryID', prop: 'parentEntryID', label: 'parentEntryID' },
             
             { id: '4', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
@@ -1721,7 +1707,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_VOCABULARY_TREE_FORM]: {
         columns: [
             { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
-            { id: '2', prop: 'label', label: 'docType_label' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
             { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
             { id: '4', prop: 'order', label: 'order', defaultValue: 0 }
         ],
@@ -1735,7 +1721,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_WORKFLOW_MANAGE]: {
         columns: [
             { id: '1', type: 'selection' },
-            { id: '2', label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id: '2', label: 'table_name', prop: 'taskInstance.businessKey', defaultColumn: true },
             { id: '3', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
             { id: '4', label: 'role.creator', prop: 'taskInstance.startUserId' },
             { id: '5', label: 'workflow_assignee', prop: 'assignee' },
@@ -1802,9 +1788,56 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.ADMIN_WORKFLOW_EDITOR_MANAGE]: {
+        columns: [
+            { id: '2', label: 'table_name', prop: 'name', defaultColumn: true },
+            { id: '6', label: 'workflow_createDate', prop: 'createdDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            {   
+                id: '8',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'reallocate'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.ADMIN_MESSAGE_QUEUE]: {
         columns: [
-            { id: '2', label: 'table_fileName', prop: 'fileName' },
+            { id: '2', label: 'table_fileName', prop: 'fileName', defaultColumn: true },
             { id: '3', label: 'table_path', prop: 'logicalPath', showOverflowTooltip: true },
             { id: '4', label: 'category', prop: 'category' },
             { id: '5', label: 'dpTable_status', prop: 'status' },
@@ -1831,7 +1864,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_INTERNAL_SHEAR] : {
         columns: [
-            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName' },
+            { id: '1', slot: 'docIcon', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
             // { id: '1', label: 'tableHeader_name', prop: 'documentName'},
             { id: '2', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
             { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds',},
@@ -1888,7 +1921,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_AUDIT]: {
         columns: [
-            { id: '1', label: 'User', prop: 'principalName' },
+            { id: '1', label: 'User', prop: 'principalName', defaultColumn: true },
             { id: '2', slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true },
             { id: '3', label: 'category', prop: 'eventCategory' },
             { id: '4', label: 'Event', prop: 'eventId',
@@ -1926,7 +1959,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.PUBLIC_LANGUAGE_SET]: {
         columns: [
-            { id: '1', label: 'key', prop: 'key' },
+            { id: '1', label: 'key', prop: 'key', defaultColumn: true },
             { id: '2', label: 'en-US', prop: 'en-US', slot: 'enUS' },
             { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zhCN' },
             { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zhHK' },
@@ -1937,7 +1970,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_FOLDER_CABINET]: {
         columns: [
-            { id: '1', label: 'docType_label', prop: 'label' },
+            { id: '1', label: 'docType_label', prop: 'label', defaultColumn: true },
             { id: '2', label: 'docType_documentType', prop: 'documentType' },
             {   
                 id: '3',
@@ -1970,7 +2003,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_HOLD_POLICIES_MANAGE]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'policyName' },
+            { id: '1', label: 'tableHeader_name', prop: 'policyName', defaultColumn: true },
             { id: '3', label: 'role.creator', prop: 'createdBy' },
             { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
                 formatList: [
@@ -2017,7 +2050,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_RETENTION_MANAGE]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'policyName' },
+            { id: '1', label: 'tableHeader_name', prop: 'policyName', defaultColumn: true },
             { id: '2', label: 'docType_documentType', slot: 'docType' },
             { id: '3', label: 'rp.period', prop: 'periodNum', slot: 'period'},
             { id: '4', label: 'workflow_createDate', prop: 'createdDate', 

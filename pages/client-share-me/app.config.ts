@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/shareMe",
       icon: "/icons/menu/shareMe.svg",
       order:88,
+      parentId: 'file_share_module',
     }
   ],
 })

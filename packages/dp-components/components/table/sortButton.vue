@@ -20,7 +20,7 @@
                     {{$t(element.label || element.type)}}
                   </div>
                   <div class="show">
-                    <el-switch v-model="element.show" @change="handleSubmit"/>
+                    <el-switch v-model="element.show" :disabled="element.defaultColumn" @change="handleSubmit"/>
                   </div>
                 </div>
             </template>

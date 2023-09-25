@@ -11,6 +11,7 @@ export const useLanguage = defineStore('Language', () => {
     const route = useRoute()
     const languageKeys = new Set<string>()
     const localeSectionKeys = useNuxtApp().$config.public.LOCAL_KEY.split(',');
+    const i18n: any = useNuxtApp().$i18n
     
     const languageStores = new Map();
     const languageKeysStores = new Map();
@@ -144,7 +145,6 @@ export const useLanguage = defineStore('Language', () => {
         }, 800)) 
     }
     async function restored (locales: string[], sections: string[]) {
-        const i18n: any = useNuxtApp().$i18n
         await getLanguageListStore(locales, sections)
         locales.forEach(locale => {
             const newLanguage = {}
@@ -169,6 +169,26 @@ export const useLanguage = defineStore('Language', () => {
             return { ...result, result: false}
         }
     }
+    async function loadLanguage(locale: string) {
+        if (locale.includes('en')) locale = 'en-US'
+        if (locale.includes('zh') && locale !== 'zh-HK') locale = 'zh-CN'
+        if (!i18n.availableLocales.includes(locale)) {
+            const jsonKeys = {}
+            console.log(i18n);
+            
+            // @ts-ignore
+            for await ( const languageKey of localeSectionKeys) {
+                try {
+                    const { languageContent } = await GetLanguageApi(locale, languageKey)
+                    Object.assign(jsonKeys, languageContent);
+                } catch (error) {
+        
+                }
+            }
+            i18n.setLocaleMessage(locale, jsonKeys);
+        }
+        i18n.setLocale(locale)
+    }
     watch(() => route.path, () => {
         languageKeys.clear()
     })
@@ -181,6 +201,8 @@ export const useLanguage = defineStore('Language', () => {
         getLanguageList,
         getLanguageListStore,
 
-        setLanguageStores
+        setLanguageStores,
+        loadLanguage
     }
 })
+
