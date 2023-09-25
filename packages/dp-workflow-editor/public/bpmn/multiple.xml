@@ -81,9 +81,6 @@
         <flowable:field name="description">
           <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
         </flowable:field>
-        <flowable:field name="emailTemplateId">
-          <flowable:string><![CDATA[notification.contractApproval.submitted]]></flowable:string>
-        </flowable:field>
       </extensionElements>
     </serviceTask>
     <endEvent id="end" name="End"></endEvent>

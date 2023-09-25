@@ -1,5 +1,5 @@
 <template>
-    <NuxtPage />
+    <AuthApp />
 </template>
 
 
