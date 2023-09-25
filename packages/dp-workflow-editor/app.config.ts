@@ -11,6 +11,7 @@ export default defineAppConfig({
         url:"/workflowEditor",
         icon: "/icons/menu/workflowEditor.svg",
         order:2,
+        parentId: "admin_workflow"
     }]
 })
 
