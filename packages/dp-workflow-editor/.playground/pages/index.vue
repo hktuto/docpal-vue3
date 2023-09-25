@@ -1,8 +1,7 @@
 <template>
-    <div class="pageContainer">
-
-   <WorkflowEditor v-if="bpmnFile" :bpmn="bpmnFile"/>
-    </div>
+    <NuxtLayout class="pageContainer">
+        <WorkflowEditor v-if="bpmnFile" :bpmn="bpmnFile"/>
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>

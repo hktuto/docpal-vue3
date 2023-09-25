@@ -40,10 +40,13 @@ ServiceNode
     const tooltip = ref('')
     const sidePanelOpened = ref(false);
     const selectedData = ref();
+    const workflowForm = ref();
     // 如果props.bpmn有值，就转换成 js 对象
     onMounted(() => {
         bpmnToJs();
+
     })
+
 ///#endregion setup
 
 /// #region antV6
@@ -75,25 +78,30 @@ function bpmnToJs() {
 
 function initForm() {
    const process = data.value?.definitions?.process;
-    const allField:any = {};
+    const form:any = {};
     // startEvent form
     const startEvent = process?.startEvent;
     if(startEvent){
-        const form = getForm(startEvent);
-        form.forEach(item => {
-            allField[item.attr_id] = item;
+        const formItem = getForm(startEvent);
+        formItem.forEach(item => {
+            form[item.attr_id] = item;
         })
     }
     // userTask form
     const userTask = Array.isArray(process?.userTask) ? process?.userTask : [process?.userTask];
     userTask.forEach(item => {
-        const form = getForm(item);
-        form.forEach(item => {
-            allField[item.attr_id] = item;
+        const formItem = getForm(item);
+        formItem.forEach(item => {
+            form[item.attr_id] = item;
         })
     })
-
-    console.log(allField)
+    workflowForm.value = {
+        attr_name: process?.attr_name,
+        attr_id: process?.attr_id,
+        ['attr_flowable:candidateStarterGroups']: process?.['attr_flowable:candidateStarterGroups'],
+        form
+    };
+    console.log(process);
 }
 
 function getForm(item):any[] {
@@ -143,13 +151,21 @@ function dblClickHandler(node:Node) {
         
     }
 }
-
+function editInfo() {
+    sidePanelOpened.value = true;
+    selectedData.value = {
+        type: 'workflowForm',
+    };
+}
 function closeSidePanel() {
+    
     sidePanelOpened.value = false;
 }
 
 function saveForm(updatedData:any) {
-
+    console.log(updatedData);
+    data.value.definitions.process.attr_name = updatedData.attr_name;
+    
 }
 
 
@@ -183,16 +199,23 @@ defineExpose({
         <div  class="toolTipsContainer">
             {{ tooltip }}
         </div>
-        <div v-if="selectedData" :class="{sidePanelContainer:true , sidePanelOpened}">
-            <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="selectedData" @close="closeSidePanel" @submit="saveForm" />
-            <WorkflowEditorUserTaskForm v-if="selectedData.type === 'userTask'" :data="selectedData" @close="closeSidePanel" @submit="saveForm" />
+        <div :class="{sidePanelContainer:true , sidePanelOpened}">
+            <template v-if="selectedData">
+
+                <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="workflowForm" @close="closeSidePanel" @submit="saveForm" />
+                <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" @close="closeSidePanel" @submit="saveForm" />
+            </template>
         </div>
         
         <div id="editorContainer"></div>
-        <div class="footer">
-            <button @click="jsToBpmn">jsToBpmn</button>
+        <div v-if="data" class="footer">
+            <div class="name">
+                {{ data.definitions.process.attr_name }}
+                <ElButton type="primary" @click="editInfo">edit info</ElButton>
+            </div>
+            <!-- <button @click="jsToBpmn">jsToBpmn</button>
             <button @click="bpmnToJs">bpmnToJs</button>
-            <button @click="createEmptyData">createEmptyData</button>
+            <button @click="createEmptyData">createEmptyData</button> -->
         </div>
     </div>
 
@@ -218,6 +241,18 @@ defineExpose({
     z-index: 2;
     background: #fff;
     padding: var(--app-padding);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-content: center;
+     .name{
+        flex: 1 0 auto;
+        font-size: 1.2rem;
+        font-weight: bold;
+        display: flex;
+        flex-flow: row nowrap;
+        gap: var(--app-padding);
+     }
 }
 
 .toolTipsContainer{

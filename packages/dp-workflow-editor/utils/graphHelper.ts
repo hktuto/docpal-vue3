@@ -1,6 +1,7 @@
 import { Graph, Node, Model, Path } from '@antv/x6'
 export const graphOptions = {
             grid:true,
+            autoResize:true,
             background: {
               color: '#F2F7FA',
             },
