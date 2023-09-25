@@ -2,7 +2,7 @@ export default defineAppConfig({
     feature: {
         darkMode: true,
         multiLanguage: true,
-        userAuth: false,
+        userAuth: true,
         search: false
     },
     menu:[{
