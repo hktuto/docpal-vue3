@@ -110,6 +110,7 @@ export enum TABLE {
     ADMIN_VOCABULARY_CHILD_FORM = 'adminVocabularyChildForm',
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
+    ADMIN_WORKFLOW_EDITOR_MANAGE = 'adminWorkflowEditorManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
     ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
@@ -1787,6 +1788,53 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.ADMIN_WORKFLOW_EDITOR_MANAGE]: {
+        columns: [
+            { id: '2', label: 'table_name', prop: 'name', defaultColumn: true },
+            { id: '6', label: 'workflow_createDate', prop: 'createdDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            {   
+                id: '8',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'reallocate'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.ADMIN_MESSAGE_QUEUE]: {
         columns: [
             { id: '2', label: 'table_fileName', prop: 'fileName', defaultColumn: true },

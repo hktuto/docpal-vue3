@@ -1,6 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
+            @command="handleAction"
             @row-dblclick="handleDblclick"
             @pagination-change="handlePaginationChange">
             <template #preSortButton>
@@ -10,17 +11,8 @@
             <template #suffixSortButton>
                 <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
             </template>
-            <template #emailAction="{row, index}">
-                <el-button class="emailActionButton" type="text" size="small" 
-                    @click="handleDblclick(row)">
-                    <SvgIcon src="/icons/edit.svg" ></SvgIcon>
-                </el-button>
-                <!-- <el-button v-if="row.createdBy !== 'system'" class="emailActionButton" type="text" size="small"
-                    @click="handleDeleteTemplate">
-                    <SvgIcon src="/icons/menu/trash.svg" ></SvgIcon>
-                </el-button> -->
-            </template>
         </Table>
+        <WorkflowEditorDialog ref="WorkflowEditorDialogRef" @refresh="handlePaginationChange" />
     </NuxtLayout>
 </template>
 
@@ -41,7 +33,7 @@ import {
         orderBy: 'createdDate',
         isDesc: true
     }
-    const tableKey = TABLE.CLIENT_INTERNAL_SHEAR_ME
+    const tableKey = TABLE.ADMIN_WORKFLOW_EDITOR_MANAGE
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
@@ -97,18 +89,19 @@ import {
         { immediate: true }
     )
 // #endregion
-
-async function handleDeleteTemplate(id: string) {
-    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
-    if(action !== 'confirm') return
-    // await DeleteEmailTemplateApi(id)
-    handlePaginationChange(pageParams.pageNum + 1)
+function handleAction (command:sting, row: any, rowIndex: number) {
+    switch (command) {
+        case 'edit':
+            handleDblclick(row)
+            break
+    }
 }
 function handleDblclick(row) {
     router.push(`/workflowEditor/${row.id}`)
 }
+const WorkflowEditorDialogRef = ref()
 function handleAdd () {
-    router.push(`/workflowEditor/new`)
+    WorkflowEditorDialogRef.value.handleOpen()
 }
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
@@ -117,9 +110,7 @@ function handleAdd () {
         handlePaginationChange(1)
     }
 // #endregion
-function handleEditEmailLayout () {
-    router.push('/layoutTemplate')
-}
+
 onMounted(() => {
 })
 </script>
