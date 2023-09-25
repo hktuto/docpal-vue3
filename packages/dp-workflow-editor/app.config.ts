@@ -4,8 +4,14 @@ export default defineAppConfig({
         multiLanguage: true,
         userAuth: true,
         search: false
-      },
-      menu:[]
+    },
+    menu:[{
+        name:"admin_workflowEditor",
+        routeName:"workflowEditor",
+        url:"/workflowEditor",
+        icon: "/icons/menu/workflowEditor.svg",
+        order:2,
+    }]
 })
 
 
