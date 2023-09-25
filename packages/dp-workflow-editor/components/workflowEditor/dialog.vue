@@ -9,7 +9,7 @@
             :rules="[{ required: true, message: $t('render.hint.fieldRequired'), trigger: 'blur' }]">
             <el-input v-model="state.form.name" />
         </el-form-item>
-        <el-form-item :label="$t('admin_docTemplate')" prop="template">
+        <el-form-item :label="$t('workflowEditor.template')" prop="template">
             <el-radio-group v-model="state.form.template">
                 <el-radio v-for="item in state.templateList" :key="item.id" :label="item.id">
                     <div class="workflow-template-step">
