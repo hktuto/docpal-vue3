@@ -122,8 +122,8 @@ function showTooltip(e:MouseEvent, node:Node) {
     tooltip.value = data.attr_name || "";
     const {clientX, clientY} = e;
     const toolTipsContainer = document.querySelector('.toolTipsContainer') as HTMLElement;
-    toolTipsContainer.style.left = `${clientX}px`;
-    toolTipsContainer.style.top = `${clientY}px`;
+    toolTipsContainer.style.left = `${clientX - 60}px`;
+    toolTipsContainer.style.top = `${clientY - 40}px`;
     toolTipsContainer.style.display = 'block';
 }
 
@@ -165,7 +165,7 @@ function closeSidePanel() {
 function saveForm(updatedData:any) {
     console.log(updatedData);
     data.value.definitions.process.attr_name = updatedData.attr_name;
-    
+
 }
 
 
