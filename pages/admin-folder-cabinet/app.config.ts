@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/folderCabinet",
       icon: "/icons/menu/folderCabinet.svg",
       order:2,
+      parentId: "admin_browse"
     }
   ],
 })

@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/holdPoliciesManage",
       icon: "/icons/menu/holdPoliciesManage.svg",
       order:86,
+      parentId: 'admin_policy'
     }
   ],
 })

@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/mailConfig",
       icon: "/icons/menu/mailConfig.svg",
       order: 10001,
+      parentId: "admin_system"
     }
   ],
 })

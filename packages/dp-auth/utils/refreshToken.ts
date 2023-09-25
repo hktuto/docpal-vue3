@@ -11,7 +11,7 @@ export const refreshTokenFn = async () => {
             headers:{
                 Authorization : 'Bearer ' + refreshToken
             }
-        }).then( res => { console.log(res.data); return res.data})
+        }).then( res => { console.log(res.data); return res.data.data})
 
       if (!access_token) {
         localStorage.removeItem("refreshToken");
