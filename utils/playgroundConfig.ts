@@ -14,15 +14,6 @@ const defaultConfig = {
         PROXY: process.env.PROXY || 'https://app4.wclsolution.com/api',
         endPoint: process.env.endPoint || 'client',
         DEFAULT_PATH: process.env.endPoint === 'admin' ? '/acl' : '/browse',
-        keycloakConfig: {
-          "url": process.env.keycloakUrl,
-          "realm": process.env.keycloakRealm,
-          "ldapRealm": process.env.keycloakLdapRealm,
-          "clientId": process.env.keycloakClientId,
-          "ssl-required": "external",
-          "public-client": true,
-          "confidential-port": 0
-        }
       }
   },
   vite:{

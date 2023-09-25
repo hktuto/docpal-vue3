@@ -1,7 +1,8 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
+import { ElMessage } from 'element-plus'
 import { useSetting } from './../../dp-stores/composables/setting';
 import { useLanguage } from './../../dp-stores/composables/language'
-import { GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
+import { GetSetting, UserSettingSaveApi, getKeyCloakPropertyApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 import Keycloak from 'keycloak-js'
 let dpKeyCloak: any
@@ -23,7 +24,7 @@ export const useUser = () => {
 
     const userList = useState<User[]>('userList', () => ([]));
     const publicPages = ['/forgetPassword', '/resetPassword', '/language', '/error/503', '/error/404']
-    const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
+    const { public: { endPoint } } = useRuntimeConfig();
     const { loadLanguage } = useLanguage()
     const colorModeOption = [
         {
@@ -226,35 +227,38 @@ export const useUser = () => {
             await appStore.appInit();
             appStore.setDisplayState('defaultLogin') 
             sessionStorage.setItem('superAdmin', 'superAdmin')
-            await setIsLdapMode()
+            setIsLdapMode(await getIsLdapMode())
             verify()
         } else {
-            console.log('superAdpKeyCloakdmin');
             if(!dpKeyCloak) {
-                await setKeyCloak()
+                const result = await setKeyCloak()
+                if(!result) return 
             }
             sessionStorage.removeItem('superAdmin')
             keycloakLogin();
         }
     }
     async function setKeyCloak() {
-        await setIsLdapMode()
-        const config = {
+        const config = await getKeyCloakPropertyApi()
+        if(!config.keyCloakProperty.url ||
+           !config.keyCloakProperty.realm ||
+           !config.keyCloakProperty.clientId ||
+           !config.keyCloakProperty.sslRequired) {
             // @ts-ignore
-            ...keycloakConfig,
-            // @ts-ignore
-            realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm,
-            url: getKeycloakUrl()
+            ElMessage.error($i18n.t('dpTip_keycloakError'))
+            return false
         }
-        // @ts-ignore
-        dpKeyCloak = new Keycloak(config)
-        function getKeycloakUrl () {
-            let origin = window.location.origin
-            if(origin.includes('https://admin')) origin = origin.replace('https://admin.', 'https://')
+        setIsLdapMode(config.isLdap)
+        dpKeyCloak = new Keycloak({
+            "url": config.keyCloakProperty.url,
+            "realm": config.keyCloakProperty.realm, // ldap: docpal_third_party
+            "clientId": config.keyCloakProperty.clientId,
             // @ts-ignore
-            else if(!origin.includes('https://')) return keycloakConfig.url
-            return origin +'/keycloak/'
-        }
+            "ssl-required": config.keyCloakProperty.sslRequired,
+            "public-client": config.keyCloakProperty.publicClient,
+            "confidential-port": config.keyCloakProperty.confidentialPort
+        })
+        return true
     }
     function getUserId () {
         try {
@@ -263,8 +267,8 @@ export const useUser = () => {
             return ''
         }
     }
-    async function setIsLdapMode () {
-        isLdapMode.value = await isLdapModeApi()
+    async function setIsLdapMode (isLdap: boolean) {
+        isLdapMode.value = isLdap
     }
     function getIsLdapMode () {
         return isLdapMode.value
