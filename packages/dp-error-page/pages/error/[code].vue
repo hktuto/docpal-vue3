@@ -18,17 +18,16 @@
 <script lang="ts" setup>
 const route = useRoute()
 const router = useRouter()
-const { beforeLogin } = useUser(); 
+const appStore = useAppStore();
+const { beforeLogin, logoutKeyCloak } = useUser(); 
 const codes = computed(() => {
     if (route.params.code) return route.params.code.split('')
     else return []
 })
 function goHome() {
-  router.push({
-    path: '/browse'
-  })
+  router.push('/')
   setTimeout(() => {
-    beforeLogin(true)
+    logoutKeyCloak()
   }, 200)
 }
 </script>

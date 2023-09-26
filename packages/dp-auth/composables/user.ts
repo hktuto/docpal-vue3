@@ -143,8 +143,13 @@ export const useUser = () => {
                                     headers: {
                                         Authorization : 'Bearer ' + dpKeyCloak.token
                                     }
-                                }).then( res => { return res.data.data })
-
+                                }).then( res => { 
+                                    if(!res.data || !res.data.data) {
+                                        handleKeycloakLoginFail()
+                                    }
+                                    return res.data.data 
+                                })
+            if (!data) return
             token.value = data.access_token 
             refreshToken.value = data.refresh_token
             localStorage.setItem('token', token.value);
@@ -156,11 +161,15 @@ export const useUser = () => {
             await getUserSetting();
             appStore.setDisplayState('ready');
         } catch (error) {
-            // logout()
+            handleKeycloakLoginFail()
         }
-        
     }
-
+    function handleKeycloakLoginFail () {
+        setTimeout(() => {
+            router.push('/error/503?message=message')
+            appStore.setDisplayState('ready');
+        }, 200)
+    }
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
         const {access_token, refresh_token, isRequired2FA} = await Login({
             username,  password
@@ -189,14 +198,17 @@ export const useUser = () => {
         
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        
         if(dpKeyCloak && dpKeyCloak.token) dpKeyCloak.logout()
         else{
             appStore.setDisplayState('needAuth')
             sessionStorage.clear()
         } 
     }
-
+    function logoutKeyCloak() {
+        if(dpKeyCloak && dpKeyCloak.token) {
+            dpKeyCloak.logout()
+        }
+    }
     async function getUserList() {
         const list = await getUserListApi();
         userList.value = list;
@@ -285,6 +297,7 @@ export const useUser = () => {
         login,
         verify,
         logout,
+        logoutKeyCloak,
         getUserSetting,
         savePreference,
         getUserList,
