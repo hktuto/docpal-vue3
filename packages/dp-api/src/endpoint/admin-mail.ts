@@ -44,6 +44,7 @@ export const SaveMailConfigCodeApi = async(params) => {
         const res = await api.post('/docpal/template/email/layout/page', params).then(res => res.data.data)
         return res
     }
+    
     export const DeleteEmailLayoutApi = async(id) => {
         const res = await api.delete(`/docpal/template/email/layout/${id}`).then(res => res.data.data)
         return res

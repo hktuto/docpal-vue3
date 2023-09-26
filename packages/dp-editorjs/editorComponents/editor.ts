@@ -8,12 +8,11 @@ import VariableOptions from './variableOptions';
 export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) => {
 
     const editor = ref();
-
     function createEditor():void{
         editor.value = new EditorJS({
             holderId: editorId,
             autofocus: true,
-            data,
+            data:data.value,
             tools:{
                 header: {
                     class: Header,
@@ -74,6 +73,11 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
                     calculateVariable(outputData);
                 });
             },
+            onReady:() => {
+                if(data.value.emailTemplateJson) {
+                    setData(JSON.parse(data.value.emailTemplateJson));
+                }
+            }
         })
     }
 
@@ -83,6 +87,7 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
     }
 
     function setData(data:any):void{
+        console.log(editor.value, data)
         editor.value?.render(data);
     }
 
@@ -148,7 +153,7 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
         const variables = t.content.querySelectorAll('var');
         // replace all var tag with span
         variables.forEach((variable) => {
-            variable.replaceWith('${' + variable.textContent+'}');
+            variable.replaceWith('${' + variable.textContent + '}');
         });
         return t.innerHTML;
     }

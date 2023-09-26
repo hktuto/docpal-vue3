@@ -79,7 +79,7 @@ export const useUser = () => {
             },
             {...userSetting}
         )
-        appStore.setDisplayState('ready') 
+        appStore.setDisplayState('ready')
         settingStore.init()
     }
 
@@ -111,7 +111,7 @@ export const useUser = () => {
     }
     async function keycloakLogin() {
         console.log('keycloakLoginkeycloakLoginkeycloakLogin');
-        
+
         try {
             const authenticated = await keycloak.init({onLoad: 'login-required'})
             if(!authenticated) {
@@ -129,14 +129,17 @@ export const useUser = () => {
     }
     async function callApi() {
         // 使用令牌来调用您的 API
+      try {
+
+
         await keycloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
-        const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
+        const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{
                                 headers: {
                                     Authorization : 'Bearer ' + keycloak.token
                                 }
                             }).then( res => { return res.data.data })
 
-        token.value = data.access_token 
+        token.value = data.access_token
         refreshToken.value = data.refresh_token
         localStorage.setItem('token', token.value);
         localStorage.setItem('refreshToken', refreshToken.value);
@@ -146,6 +149,14 @@ export const useUser = () => {
         api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
         await getUserSetting();
         appStore.setDisplayState('ready');
+      } catch (error) {
+        // window.location.reload();
+        isLogin.value = false,
+        token.value = "";
+        refreshToken.value = "";
+        sessionStorage.removeItem('token');
+        keycloak.logout()
+      }
     }
 
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
@@ -172,15 +183,15 @@ export const useUser = () => {
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
-        
+
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        
+
         if(keycloak.token) keycloak.logout()
         else{
             appStore.setDisplayState('needAuth')
             sessionStorage.clear()
-        } 
+        }
     }
 
     async function getUserList() {
