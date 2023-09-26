@@ -5,6 +5,10 @@
     <el-form ref="formRef" :model="state.form" label-position="top"
         class="demo-ruleForm" status-icon
     >
+        <el-form-item :label="$t('dpTable_label')" prop="name"
+            :rules="[{ required: true, message: $t('render.hint.fieldRequired'), trigger: 'blur' }]">
+            <el-input v-model="state.form.name" />
+        </el-form-item>
         <el-form-item :label="$t('workflowEditor.template')" prop="template">
             <el-radio-group v-model="state.form.template">
                 <el-radio v-for="item in state.templateList" :key="item.id" :label="item.id">
@@ -24,10 +28,16 @@
 </template>
 <script lang="ts" setup>
 import { Select, CloseBold } from '@element-plus/icons-vue'
-const router = useRouter()
+import { UploadWorkflowApi } from 'dp-api'
+const emits = defineEmits([
+    'refresh'
+])
 const state = reactive({
+    loading: false,
     visible: false,
+    setting: {},
     form: {
+        name: '',
         template: 'Single'
     },
     templateList: [
@@ -37,12 +47,35 @@ const state = reactive({
 })
 const formRef = ref()
 async function handleSubmit () {
-    router.push(`/workflowEditor/new?template=${state.form.template}`)
+    const valid = await formRef.value.validate()
+    if(!valid) return
+    state.loading = true
+    try {
+        const formData = new FormData()
+        formData.append('name', state.form.name)
+        formData.append('file', await getXMLFile(state.form.template))
+        await UploadWorkflowApi(formData)
+        state.visible = false
+        emits('refresh')
+    } catch (error) {
+        state.loading = false
+    }
+    state.loading = false
 }
-
+async function getXMLFile(template: string) {
+    const singleFile = "/bpmn/single.xml";
+    const multipleFile = "/bpmn/multiple.xml";
+    const templatePath = template === 'Single' ? singleFile : multipleFile
+    const response = await fetch(templatePath);
+    const blob = await response.blob()
+    return blob;
+}
 function handleOpen(setting) {
     state.visible = true
     state.loading = false
+    nextTick(() => {
+        formRef.value.resetFields()
+    })
 }
 onMounted(async() => {
 })

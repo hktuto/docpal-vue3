@@ -19,3 +19,6 @@ export const GetWorkflowDraftXMLApi = async(draftId: string) => {
         timeout: 0
     }).then(res => res.data);
 }
+export const ValidateWorkflowXMLApi = async(file) => {
+    return api.post('/docpal/workflow/process/definition/validation', file).then(res => res.data.data);
+}

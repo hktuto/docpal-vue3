@@ -165,6 +165,7 @@ function closeSidePanel() {
 function saveForm(updatedData:any) {
     console.log(updatedData);
     data.value.definitions.process.attr_name = updatedData.attr_name;
+    data.value.definitions.process.attr_id = updatedData.attr_name.trim().replaceAll(' ', '');
 }
 
 function saveStep(stepData) {
@@ -253,13 +254,17 @@ function jsToBpmn() {
     //     documentTemplate: string // sprint 13 
     // }
 }
-function getBlob () {
+function getWorkflowData () {
     console.log(graph.value);
     
     const xml = builder.build(data?.value);
     // create blob file
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-    return blob
+    const name = data.value.definitions.process.attr_name
+    const key = data.value.definitions.process.attr_id
+    return {
+        blob, name, key
+    }
 }
 function createEmptyData(){
     data.value = {};
@@ -268,7 +273,7 @@ function createEmptyData(){
 defineExpose({
     bpmnToJs,
     jsToBpmn,
-    getBlob
+    getWorkflowData
 })
 
 
