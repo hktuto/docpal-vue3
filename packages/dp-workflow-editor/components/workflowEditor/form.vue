@@ -10,7 +10,7 @@ import { useGraph } from "../../composables/userGraph";
                 <ElInput v-model="data.attr_name" placeholder="Name" />
                 <ElInput v-model="data['attr_flowable:candidateStarterGroups']" placeholder="candidate groups" />
             </div>
-            <div class="fields">
+            <!-- <div class="fields">
                 <div class="title">
                     Form Fields
                 </div>
@@ -25,7 +25,7 @@ import { useGraph } from "../../composables/userGraph";
             </div>
             <div class="add">
                 <ElButton type="primary" @click="add">Add</ElButton>
-            </div>
+            </div> -->
         </div>
         <div class="footer">
             <ElButton @click="$emit('close')">Close</ElButton>
@@ -65,6 +65,7 @@ function nameChanged(newValue:string) {
     padding: var(--app-padding);
     .formContainer{
         overflow: auto;
+        flex: 1 0 auto;
     }
 }
 .fields{

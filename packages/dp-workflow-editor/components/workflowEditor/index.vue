@@ -165,7 +165,52 @@ function closeSidePanel() {
 function saveForm(updatedData:any) {
     console.log(updatedData);
     data.value.definitions.process.attr_name = updatedData.attr_name;
+}
 
+function saveStep(stepData) {
+    const newData = {...stepData};
+    // find step in data
+    let step = getStepFromData(stepData.attr_id);
+    if(step){
+        delete newData.type;
+        step = {
+            ...step,
+            ...newData
+        }
+        console.log(step)
+    }
+    console.log(data.value)
+    // update graph
+    const node = graph.value?.getCellById(stepData.attr_id);
+    if(node){
+        node.setAttrs({
+            label: {
+                text: stepData.attr_name
+            }
+        })
+        node.setData(step);
+    }
+}
+
+
+function getStepFromData(stepId) {
+    const process = data.value?.definitions?.process;
+    // if startEvent id === stepId
+    if(process?.startEvent?.attr_id === stepId){
+        return process?.startEvent;
+    }
+    const userTask = Array.isArray(process?.userTask) ? process?.userTask : [process?.userTask];
+    const step = userTask.find(item => item.attr_id === stepId);
+    if(step){
+        return step;
+    }
+    // serviceTask
+    const serviceTask = Array.isArray(process?.serviceTask) ? process?.serviceTask : [process?.serviceTask];
+    const serviceStep = serviceTask.find(item => item.attr_id === stepId);
+    if(serviceStep){
+        return serviceStep;
+    }
+    return null;
 }
 
 
@@ -203,7 +248,7 @@ defineExpose({
             <template v-if="selectedData">
 
                 <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="workflowForm" @close="closeSidePanel" @submit="saveForm" />
-                <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" @close="closeSidePanel" @submit="saveForm" />
+                <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" @close="closeSidePanel" @submit="saveStep" />
             </template>
         </div>
         
@@ -212,6 +257,9 @@ defineExpose({
             <div class="name">
                 {{ data.definitions.process.attr_name }}
                 <ElButton type="primary" @click="editInfo">edit info</ElButton>
+            </div>
+            <div class="actions">
+                <slot name="actions"></slot>
             </div>
             <!-- <button @click="jsToBpmn">jsToBpmn</button>
             <button @click="bpmnToJs">bpmnToJs</button>
