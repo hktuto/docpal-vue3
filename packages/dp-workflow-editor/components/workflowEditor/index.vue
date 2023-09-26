@@ -170,16 +170,9 @@ function saveForm(updatedData:any) {
 function saveStep(stepData) {
     const newData = {...stepData};
     // find step in data
-    let step = getStepFromData(stepData.attr_id);
-    if(step){
-        delete newData.type;
-        step = {
-            ...step,
-            ...newData
-        }
-        console.log(step)
-    }
-    console.log(data.value)
+    delete newData.type;
+    setStepData(stepData.attr_id, newData);
+
     // update graph
     const node = graph.value?.getCellById(stepData.attr_id);
     if(node){
@@ -188,29 +181,57 @@ function saveStep(stepData) {
                 text: stepData.attr_name
             }
         })
-        node.setData(step);
+        node.setData(newData);
     }
 }
 
 
-function getStepFromData(stepId) {
-    const process = data.value?.definitions?.process;
+function setStepData(stepId, newData) {
+    
     // if startEvent id === stepId
-    if(process?.startEvent?.attr_id === stepId){
-        return process?.startEvent;
+    if(data.value?.definitions?.process?.startEvent?.attr_id === stepId){
+        data.value.definitions.process.startEvent = {
+            ...data.value?.definitions?.process?.startEvent,
+            ...newData
+        }
+        return;
     }
-    const userTask = Array.isArray(process?.userTask) ? process?.userTask : [process?.userTask];
-    const step = userTask.find(item => item.attr_id === stepId);
-    if(step){
-        return step;
+    if(Array.isArray(data.value?.definitions?.process.userTask)) {
+        const index = data.value?.definitions?.process.userTask.findIndex(item => item.attr_id === stepId);
+        if(index > -1){
+            data.value.definitions.process.userTask[index] = {
+                ...data.value?.definitions?.process.userTask[index],
+                ...newData
+            }
+            return;
+        }
+    }else{
+        if(data.value?.definitions?.process.userTask?.attr_id === stepId){
+            data.value.definitions.process.userTask = {
+                ...data.value?.definitions?.process.userTask,
+                ...newData
+            }
+            return;
+        }
     }
-    // serviceTask
-    const serviceTask = Array.isArray(process?.serviceTask) ? process?.serviceTask : [process?.serviceTask];
-    const serviceStep = serviceTask.find(item => item.attr_id === stepId);
-    if(serviceStep){
-        return serviceStep;
+    if(Array.isArray(data.value?.definitions?.process.serviceTask)) {
+        const index = data.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === stepId);
+        if(index > -1){
+            data.value.definitions.process.serviceTask[index] = {
+                ...data.value?.definitions?.process.serviceTask[index],
+                ...newData
+            }
+            return;
+        }
+    }else{
+        if(data.value?.definitions?.process.serviceTask?.attr_id === stepId){
+            data.value.definitions.process.serviceTask = {
+                ...data.value?.definitions?.process.serviceTask,
+                ...newData
+            }
+            return;
+        }
     }
-    return null;
 }
 
 
