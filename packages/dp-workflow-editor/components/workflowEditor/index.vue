@@ -216,8 +216,14 @@ function getStepFromData(stepId) {
 
 function jsToBpmn() {
     const xml = builder.build(data?.value);
-    // add xml header
-
+    // create blob file
+    const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
+    // add blob to form data
+    const formData = new FormData();
+    formData.append('file', blob, 'workflow.bpmn.xml');
+    formData.append('name', data.value.definitions.process.attr_name);
+    formData.append('key', data.value.definitions.process.attr_id);
+    
     // {
     //     file: Blob,
     //     name: string,
