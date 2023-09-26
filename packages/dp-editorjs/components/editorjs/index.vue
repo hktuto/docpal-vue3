@@ -53,18 +53,6 @@ function setupEditor() {
                     variables: variable.value
                 }
             },
-            // variableOptions: {
-            //     class: VariableOptions,
-            //     config:{
-            //         variables: variable.value
-            //     }
-            // },
-            // VariableSelect:{
-            //     class: VariableSelect,
-            //     config:{
-            //         variables: variable.value
-            //     }
-            // }
         },
         i18n:{
             messages:{
@@ -84,12 +72,6 @@ function setupEditor() {
                     "InlineCode": "InlineCode",
                 },
                 blockTunes: {
-                    /**
-                     * Each subsection is the i18n dictionary that will be passed to the corresponded Block Tune plugin
-                     * The name of a plugin should be equal the name you specify in the 'tunes' section for that plugin
-                     *
-                     * Also, there are few internal block tunes: "delete", "moveUp" and "moveDown"
-                     */
                     "delete": {
                         "Delete": "Delete"
                     },
@@ -167,4 +149,4 @@ defineExpose({
     width: 100%;
     height: 100%;
 }
-</style>../../editorComponents/VariableOptions
+</style>

@@ -1,7 +1,6 @@
 <template>
 <NuxtLayout class="fit-height withPadding" backPath="/emailTemplate" :pageTitle="$t('admin_emailTemplate')">
     <div v-if="ready" class="pageContent">
-        
         <div class="actions">
             <div v-if="data" class="name">
                 {{ data.subject }}
@@ -26,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { api, GetEmailLayoutPageApi } from 'dp-api';
+import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
     import { useEditor } from '~/editorComponents/editor';
 
     const route = useRoute()
@@ -37,7 +36,7 @@
     const selectedLayout = ref<any>(null);
     const mode = ref<'desktop' | 'mobile'>('desktop');
 
-    const editor = useEditor('emailContent', {}, variables);
+
 
     /**
      * Step 1: 從後端取得 template 資料
@@ -48,9 +47,12 @@
         const body = data.data.body;
         await getVariableFromBody(body);
         await getTemplateLayout(data.data.emailLayoutId);
+        
         ready.value = true;
         return data.data;
     });
+
+  const editor = useEditor('emailContent', data, variables);
 
     /**
      * Step 2 : 從 body 中取得所有的變數
@@ -69,7 +71,6 @@
         }
         // remove duplicates
         variables.value = [...new Set(variables.value)];
-        console.log(variables.value)
     }
 
     /**
@@ -98,7 +99,13 @@
 
     async function save() {
         const {html, json} = await editor.getData();
-        console.log(html)
+        // test save json to backend
+        const result = await UpdateEmailTemplateApi({
+          ...data.value,
+            emailLayoutId: selectedLayout.value,
+            emailTemplateJson: JSON.stringify(json),
+        })
+        console.log(html, json, result)
     }
 
 
