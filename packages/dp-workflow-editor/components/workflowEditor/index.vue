@@ -232,7 +232,14 @@ function jsToBpmn() {
     //     documentTemplate: string // sprint 13 
     // }
 }
-
+function getBlob () {
+    console.log(graph.value);
+    
+    const xml = builder.build(data?.value);
+    // create blob file
+    const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
+    return blob
+}
 function createEmptyData(){
     data.value = {};
 }
@@ -240,6 +247,7 @@ function createEmptyData(){
 defineExpose({
     bpmnToJs,
     jsToBpmn,
+    getBlob
 })
 
 
