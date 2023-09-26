@@ -12,6 +12,7 @@ export * from './language'
 export * from './folder-cabinet'
 export * from './internal-share'
 export * from './hold-policies'
+export * from './retention'
 
 export * from './ocrAPi'
 

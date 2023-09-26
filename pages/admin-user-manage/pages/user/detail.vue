@@ -27,7 +27,9 @@ const state = reactive({
 
 async function getUser() {
     const userId = route.query.id
-    state.curUser = await GetUserDetailApi(userId)
+    const data = await GetUserDetailApi(userId)
+    data.status = data.status === 'A' ? 'A' : 'D'
+    state.curUser = data
 }
 onMounted(async() => {
     getUser()

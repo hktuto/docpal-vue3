@@ -25,7 +25,6 @@
         <el-button v-if="showForgetPassword" @click="userStore.forgetPassword" link>
             {{ $t('login_forgetPassword') }}
         </el-button>
-
     </div>
 </template>
 

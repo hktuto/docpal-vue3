@@ -6,6 +6,8 @@ export type  MenuItem = {
     role?: string[],
     public?: boolean,
     order: number,
+    parentId?: string,
+    parentOrder?: number
 }
 
 declare module '@nuxt/schema' {
@@ -19,6 +21,6 @@ declare module '@nuxt/schema' {
         userAuth : boolean,
         search: boolean,
       },
-      appMenu:[] // set apps display menu
+      appMenu?:[] // set apps display menu
     }
   }

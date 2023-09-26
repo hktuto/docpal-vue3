@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" :backPath="route.query.backPath">
+    <NuxtLayout class="fit-height withPadding" :backPath="state.backPath" :pageTitle="$t('share.shareQueue')">
         <main class="share-main" v-loading="state.loading">
             <FromRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
             <div class="div2" v-loading="previewFile.loading">
@@ -18,8 +18,9 @@
                 @delete="handleDeleteRow"></ShareTableSet>
             <div class="div4 flex-x-end">
                 <div>
-                    <el-button @click="handleDiscard">{{$t('discard')}}</el-button>
-                    <el-button @click="handleSubmit">{{$t('confirm')}}</el-button>
+                    <el-button type="primary" @click="handleAddMore">{{$t('button.addMore')}}</el-button>
+                    <el-button type="info" @click="handleDiscard">{{$t('discard')}}</el-button>
+                    <el-button type="primary" @click="handleSubmit">{{$t('confirm')}}</el-button>
                 </div>
             </div>
         </main>
@@ -28,7 +29,7 @@
 
 
 <script lang="ts" setup>
-import { ElMessage, ElNotification } from 'element-plus'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import {
     prepareShareDownloadApi,
     getPrepareShareDownloadUrlApi,
@@ -45,7 +46,8 @@ const FromRendererRef = ref()
 const state = reactive({
     minTypeShareList: [],
     interval: null,
-    loading: false
+    loading: false,
+    backPath: '/browse'
 })
 
 const previewFile = reactive({
@@ -84,7 +86,7 @@ async function handleDblclick (row) {
 }
 async function handleSubmit () {
     state.loading = true
-
+    if(!!state.interval) clearInterval(state.interval)
     try {
       const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
       const param = {
@@ -93,12 +95,10 @@ async function handleSubmit () {
         password: formData.password ? formData.password : '',
         tokenLiveInMinutes: diffMinute(formData.dueDate)
       }
-
-      console.log(formData);
         const response = await shareRequestApi(param)
         ElMessage.success($i18n.t('share_success'))
         updateShareList([])
-        router.push(route.query.backPath)
+        router.push(state.backPath)
     } catch (error) {
       console.log(error);
       ElMessage.error(error.message)
@@ -125,22 +125,35 @@ function handleDeleteRow (row) {
     state.minTypeShareList.splice(index, 1)
     updateShareList(state.minTypeShareList)
 }
-function handleDiscard () {
+async function handleDiscard () {
+    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
+    if(action !== 'confirm') return
+    if(!!state.interval) clearInterval(state.interval)
     updateShareList([])
-    router.push(route.query.backPath)
+    router.push(state.backPath)
+}
+function handleAddMore () {
+    if(!!state.interval) clearInterval(state.interval)
+    router.push(state.backPath)
 }
 onMounted(async() => {
+    state.backPath = route?.query?.backPath ? route.query.backPath : '/browse'
+    console.log(state.backPath);
+    
     try {
         state.minTypeShareList = await getMineTypeShareList()
     } catch (error) {
 
     }
-    if(state.minTypeShareList.length === 0) router.push(route.query.backPath)
+    if(state.minTypeShareList.length === 0) router.push(state.backPath)
     const mimeTypeList = state.minTypeShareList.reduce((prev, item) => {
         if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
         return prev
     }, [])
     prepareShareDownloadApi(mimeTypeList)
+})
+onUnmounted(() => {
+    if(!!state.interval) clearInterval(state.interval)
 })
 </script>
 

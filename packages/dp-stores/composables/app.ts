@@ -1,10 +1,11 @@
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from 'pinia'
-type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | 'offline' | "forgetPassword"
+type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | 'offline' | 'forgetPassword' | 'defaultLogin'
 import { useOnline } from '@vueuse/core'
 
 export const useAppStore = defineStore('app', () => {
-
+    const router = useRouter()
+    const languageStore = useLanguage()
     const state = ref<AppState>('loading');
     const noEvent = ref(false);
     const displayState = ref<AppState>('loading');
@@ -20,11 +21,28 @@ export const useAppStore = defineStore('app', () => {
     const fadeOutClass = "fadeOut"
 
     const debounceChangeState = useDebounceFn(() => {
-        displayState.value = state.value
+        // displayState.value = state.value
+        setDisplayState(state.value)
     }, 500)
-
+    const setDisplayState = (value: AppState) => {
+        if(state.value === value) state.value = value
+        displayState.value = value
+        if(value === 'needAuth') {
+            const superAdmin = sessionStorage.getItem('superAdmin')
+            if(superAdmin === 'superAdmin') {
+                
+                
+                displayState.value = 'defaultLogin' 
+                return
+            }
+            router.go(0)
+            // window.location.reload()
+        }
+    }
     const appLoadingList = ref<any[]>([]);
     async function appInit(){
+        const locale = user.getDefaultLanguage()
+        appLoadingList.value.push({key:`Getting Language Pack : ${locale}`, function: languageStore.loadLanguage(locale)})
         for await ( const item of appLoadingList.value) {
             state.value = item.key;
             await item.function;
@@ -32,7 +50,7 @@ export const useAppStore = defineStore('app', () => {
     }
 
     watch(state, (_newState, oldState ) => {
-        dpLog(_newState)
+        dpLog(_newState, displayState.value)
         switch(oldState) {
             case 'loading':
                 if(loadingEl.value) {
@@ -50,7 +68,6 @@ export const useAppStore = defineStore('app', () => {
                 }
                 break;
         }
-        debounceChangeState();
     })
 
     watch(online, async(bool) => {
@@ -68,7 +85,7 @@ export const useAppStore = defineStore('app', () => {
         needAuthEl,
         readyElement,
         displayState,
-
+        setDisplayState,
         appLoadingList,
         appInit,
     }

@@ -9,8 +9,9 @@ export const CreateSchemasApi = async(params) => {
 }
 // 修改使用，只能修改自定义Schema，系统Schema不允许修改
 export const GetCustomSchemaListApi = async() => {
-    const res = await api.get('/nuxeo/studio/listCustomSchemaIDs').then(res => res.data.data)
-    return res.map(item => ({name: item }))
+    // const res = await api.get('/nuxeo/studio/listCustomSchemaIDs').then(res => res.data.data)
+    const res = await api.get('/nuxeo/studio/listAllSchemaIDs').then(res => res.data.data)
+    return res
 }
 // 选择使用
 export const GetSchemaListApi = async() => {
@@ -39,8 +40,9 @@ export const CreateDocTypesApi = async(params) => {
 }
 // 修改使用，只能修改自定义DocType，系统DocType不允许修改
 export const GetCustomDocTypeListApi = async() => {
-    const res = await api.get('/nuxeo/studio/listCustomDocTypeIDs').then(res => res.data.data)
-    return res.map(item => ({name: item }))
+    // const res = await api.get('/nuxeo/studio/listCustomDocTypeIDs').then(res => res.data.data)
+    const res = await api.get('/nuxeo/studio/listAllDocTypeIDs').then(res => res.data.data)
+    return res
 }
 // 选择使用
 export const GetFieldTypesListApi = async() => {

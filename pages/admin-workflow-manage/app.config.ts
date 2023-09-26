@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/workflowManage",
       icon: "/icons/menu/workflow.svg",
       order:10,
+      parentId: "admin_workflow"
     }
   ],
 })

@@ -1,7 +1,10 @@
 <template>
-<div>
-    <el-dropdown v-if="doc.isFolder && (!doc.holdStatus || doc.holdStatus === 'R')">
-        <SvgIcon class="hd-lock-img" src="/icons/file/lock.svg" round></SvgIcon>
+<div v-if="hold">
+    <el-dropdown v-if="doc.isFolder && (!hold.status || hold.status === 'R')">
+        <BrowseActionsButton id="shareActionButton" :label="svgContent"  >
+            <SvgIcon class="hd-lock-img" src="/icons/file/lock.svg" round
+                :content="svgContent"></SvgIcon>
+        </BrowseActionsButton>
         <template #dropdown>
             <el-dropdown-menu class="hd-list--menu">
                 <el-dropdown-item v-for="item in state.holdList" 
@@ -14,28 +17,28 @@
     </el-dropdown>
     
     <el-popover
-        v-else-if="doc.holdStatus === 'P' || doc.holdStatus === 'L'"
+        v-else-if="hold.status === 'P' || hold.status === 'L'"
         :visible="state.dVisible"
         placement="bottom"
         :width="250">   
-        <div v-if="doc.holdDetail" v-click-outside="onClickOutside">
-            <b>{{doc.holdDetail.removeProcessInstanceId ? $t('hp.pendingRemoveApproval') : $t('hp.pendingAddApproval')}}</b>
+        <div v-if="hold" v-click-outside="onClickOutside">
+            <b>{{hold.removeProcessInstanceId ? $t('hp.pendingRemoveApproval') : $t('hp.pendingAddApproval')}}</b>
             <el-row :gutter="10">
                 <el-col :span="10"><small>{{$t('tableHeader_applyDate')}}</small></el-col>
-                <el-col :span="14">{{doc.holdStatus === 'P' ? formatDate(doc.holdDetail.createdDate) : formatDate(doc.holdDetail.removeDate)}}</el-col>
+                <el-col :span="14">{{hold.status === 'P' ? formatDate(hold.createdDate) : formatDate(hold.removeDate)}}</el-col>
             </el-row>
             <el-row :gutter="10">
                 <el-col :span="10"><small>{{$t('tableHeader_applyBy')}}</small></el-col>
-                <el-col :span="14">{{doc.holdStatus === 'P' ? doc.holdDetail.applyBy : doc.holdDetail.removeBy}}</el-col>
+                <el-col :span="14">{{hold.status === 'P' ? hold.applyBy : hold.removeBy}}</el-col>
             </el-row>
             <el-row :gutter="10">
                 <el-col :span="10"><small>{{$t('tableHeader_applyReason')}}</small></el-col>
-                <el-col :span="14" v-html="doc.holdStatus === 'P' ? doc.holdDetail.applyReason : doc.holdDetail.removeReason"></el-col>
+                <el-col :span="14" v-html="hold.status === 'P' ? hold.applyReason : hold.removeReason"></el-col>
             </el-row>
-            <el-row :gutter="10" v-if="(doc.holdStatus === 'P' && userId !== doc.holdDetail.applyApprovedBy) || 
-                (doc.holdStatus === 'L' && userId !== doc.holdDetail.removeApprovedBy)">
+            <el-row :gutter="10" v-if="(hold.status === 'P' && userId !== hold.applyApprovedBy) || 
+                (hold.status === 'L' && userId !== hold.removeApprovedBy)">
                 <el-col :span="10"><small>{{$t('approvedBy')}}</small></el-col>
-                <el-col :span="14">{{doc.holdStatus === 'P' ? doc.holdDetail.applyApprovedBy : doc.holdDetail.removeApprovedBy}}</el-col>
+                <el-col :span="14">{{hold.status === 'P' ? hold.applyApprovedBy : hold.removeApprovedBy}}</el-col>
             </el-row>
             <template v-else>
                 <el-button type="primary" size="small" :loading="state.loading" @click="handelAudit(true)">{{ $t('workflow_startAdhocWorkflow_approve') }}</el-button>
@@ -43,14 +46,19 @@
             </template>
         </div>
         <template #reference>
-            <SvgIcon class="hd-pending-approval-img" disabled :src="doc.holdDetail.removeProcessInstanceId ? '/icons/file/lock.svg' : '/icons/file/unlock.svg'" round
-                @click="state.dVisible = !state.dVisible"
-                ></SvgIcon>
+            <BrowseActionsButton id="shareActionButton" :label="svgContent"  >
+                <SvgIcon class="hd-pending-approval-img" disabled :src="hold.removeProcessInstanceId ? '/icons/file/lock.svg' : '/icons/file/unlock.svg'" round
+                    :content="svgContent"
+                    @click="state.dVisible = !state.dVisible"
+                    ></SvgIcon>
+            </BrowseActionsButton>
         </template>
     </el-popover>
-    <SvgIcon v-else-if="doc.holdStatus === 'A'" class="hd-unlock-img" src="/icons/file/unlock.svg" round 
-        :content="$t('hp.removeHold')"
-        @click="handleRemoveHold"></SvgIcon>
+    <BrowseActionsButton v-else-if="hold.status === 'A'" id="shareActionButton" :label="svgContent"  >
+        <SvgIcon class="hd-unlock-img" src="/icons/file/unlock.svg" round 
+            :content="svgContent"
+            @click="handleRemoveHold"></SvgIcon>
+    </BrowseActionsButton>
     
     <BrowseActionsHoldAddDialog ref="BrowseActionsHoldAddDialogRef" 
         @submit="addHold"
@@ -60,15 +68,31 @@
 
 <script lang="ts" setup>
 import { ClickOutside as vClickOutside } from 'element-plus'
-import { AddHoldApi,GetDocumentHoldApi, GetHoldPoliciesApi, SetDocumentHoldApi, DeleteHoldApi, deepCopy } from 'dp-api'
+import { AddHoldApi,GetDocPermission, GetHoldPoliciesApi, SetDocumentHoldApi, DeleteHoldApi, deepCopy } from 'dp-api'
 const status = ref('D')
 const props = defineProps<{
-    doc: any
+    doc: any,
+    permission: any
 }>()
+const hold = computed(() => {
+    return props.permission?.hold ? props.permission.hold : {}
+})
 const state = reactive({
     holdList: [],
     dVisible: false,
     loading: false
+})
+const svgContent = computed(() => {
+    switch(hold.value.status) {
+        case 'A':
+            return $t('hp.removeHold')
+        case 'P':
+            return $t('hp.pendingAddApproval')
+        case 'L':
+            return $t('hp.pendingRemoveApproval')
+        default:
+            return $t('hp.addHold')
+    }
 })
 const userId:string = useUser().getUserId()
 // #region module: status: R || ''
@@ -88,7 +112,7 @@ const userId:string = useUser().getUserId()
 // #endregion
 // #region module: status: A
     function handleRemoveHold() {
-        const holdDetail = state.holdList.find(item => item.id === props.doc.holdDetail.policyHoldId) 
+        const holdDetail = state.holdList.find(item => item.id === hold.value.policyHoldId) 
         if(!holdDetail) return
         holdDetail.operation = 'REMOVE'
         holdDetail.isRemoveReasonReq = holdDetail.isRemoveReasonReq
@@ -97,7 +121,7 @@ const userId:string = useUser().getUserId()
         else removeHold({})
     }
     async function removeHold (params?, cb?) {
-        params.id = props.doc.holdDetail.id
+        params.id = hold.value.id
         const res = await DeleteHoldApi(params)
         if(res) await refreshHold()
         if(cb) cb()
@@ -110,16 +134,17 @@ const userId:string = useUser().getUserId()
     }
     async function handelAudit (approved: boolean) {
         state.loading = true
-        const result = await SetDocumentHoldApi(props.doc.holdDetail.id, approved)
+        const result = await SetDocumentHoldApi(hold.value.id, approved)
         if (result) await refreshHold()
         state.dVisible = false
         state.loading = false
     }
 // #endregion
 async function refreshHold () {
-    const res = await GetDocumentHoldApi(props.doc.id)
-    props.doc.holdStatus = res?.status || ''
-    props.doc.holdDetail = res
+    const _permission = await GetDocPermission(props.doc.id, userId, true)
+    if(!_permission) _permission = {}
+    if(!_permission.hold) _permission.hold = {}
+    props.permission.hold = _permission.hold
 }
 async function getHoldPolicies () {
     state.holdList = await GetHoldPoliciesApi()

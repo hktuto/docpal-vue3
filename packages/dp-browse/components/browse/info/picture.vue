@@ -23,9 +23,11 @@
 <script lang="ts" setup>
 import { ElNotification, ElMessage } from 'element-plus'
 import { Download, Loading } from '@element-plus/icons-vue'
-import { DamDownloadApi } from 'dp-api'
+import { DamDownloadApi, GetDamSettingsApi } from 'dp-api'
 const props = defineProps<{doc: any}>();
-
+const state = reactive({
+  damSettings: {}
+})
 const { displayTime } = useTime()
 const pictureViews = computed(() => {
     switch(props.doc.type) {
@@ -33,22 +35,32 @@ const pictureViews = computed(() => {
           if(!props.doc?.properties || !props.doc.properties['picture:views']) return [];
           return props.doc.properties['picture:views'].filter(item => item.tag === 'custom')
         case 'Video' :
-          console.log("Video", props.doc.properties['vid:transcodedVideos']);
           if(!props.doc.properties['vid:transcodedVideos'] || props.doc.properties['vid:transcodedVideos'].length === 0) return [];
-          const list = props.doc.properties['vid:transcodedVideos'].map(item => ({
-              content: item.content,
-              width: item.info.width,
-              height: item.info.height,
-              filename: item.content.name,
-              format: item.info.format,
-          }));
-          console.log("list", list)
+          const list = props.doc.properties['vid:transcodedVideos'].reduce((prev, item) => {
+            if(filterMimeType(item.info.format)) {
+              prev.push({
+                content: item.content,
+                width: item.info.width,
+                height: item.info.height,
+                filename: item.content.name,
+                format: item.info.format,
+              })
+            }
+            return prev
+          }, []);
           return list;
         default:
           return []
         }
 })
-
+function filterMimeType(format: string) {
+  try {
+    const _mimeType = props.doc?.properties['file:content']['mime-type'].split('/').pop()
+    return state.damSettings[_mimeType].find(item => item.targetType === format)
+  } catch (error) {
+    return false    
+  }
+}
 function formatter (row, column) {
       switch(column.property) {
         case "fileSize": 
@@ -89,4 +101,7 @@ async function handleDownload (row) {
   }
   noti.close()
 }
+onMounted(async() => {
+  state.damSettings = await GetDamSettingsApi()
+})
 </script>

@@ -42,7 +42,9 @@ const { data, refresh, pending } = useAsyncData(() => GetBreadcrumb(props.path))
 
 const displayBread = computed(() => data.value?.filter(d => d.isFolder)|| []);
 
-watch(props, () => refresh())
+watch(props, () => {
+    refresh()
+})
 
 async function goParent() {
     const path = data.value[data.value.length - 2]? data.value[data.value.length - 2].path : props.rootPath;

@@ -36,7 +36,7 @@ watch(() => route.params.id, (newJsonName) => {
     gap: var(--app-padding);
 }
 :deep(.left-toolbar) {
-    display: none;
+    // display: none;
 }
 .flex-x-between {
     border-bottom: 1px solid #ddd;

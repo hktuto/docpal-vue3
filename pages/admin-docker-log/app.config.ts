@@ -8,6 +8,9 @@ export default defineAppConfig({
       url:"/dockerLog",
       icon: "/icons/menu/dockerLog.svg",
       order:99,
+      parentId: "admin_system",
+      parentIcon: "/icons/menu/system.svg",
+      parentOrder: 10086
     }
   ],
 })

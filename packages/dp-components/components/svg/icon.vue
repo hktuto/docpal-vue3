@@ -1,5 +1,5 @@
 <template>
-<div  class="flex-x-center">
+<div class="flex-x-center">
     <template v-if="src">
         <template v-if="content">
             <el-tooltip :content="content">
@@ -22,6 +22,9 @@
             <component :is="InlineSvg" :class="svgClass" :src="src"></component>
         </template>
     </template>
+    <div class="anime-opacity">
+        <slot></slot>
+    </div>
 </div>
 </template>
 
@@ -92,5 +95,13 @@ const svgRoundClass = computed(() => {
         }
         &:hover { opacity: unset }
     }
+}
+.flex-x-center {
+}
+.anime-opacity {
+    display: none;
+    opacity: 0;
+    top: 0;
+    left: 0;
 }
 </style>

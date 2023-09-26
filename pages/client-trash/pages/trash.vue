@@ -113,7 +113,7 @@ async function handleDblclick (row) {
     if (row.isFolder) return
     openFileDetail(row.path, {
       showInfo:true,
-      showHeaderAction:true
+      showHeaderAction: false
     })
 }
 // #region module: delete

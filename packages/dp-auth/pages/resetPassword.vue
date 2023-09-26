@@ -15,7 +15,7 @@
                 <FromRenderer ref="FromRendererRef" :form-json="formJson" />
                 <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
             </template>
-            <el-button class="login-button" text @click="appStore.state = 'needAuth'"> {{ $t('login') }} </el-button>
+            <el-button class="login-button" text @click="login"> {{ $t('login') }} </el-button>
         </el-card>
     </div>
 </template>
@@ -29,7 +29,7 @@ const emits = defineEmits([
     'refresh'
 ])
 const appStore = useAppStore();  
-
+const { public: { DEFAULT_PATH } } = useRuntimeConfig();
 const state = reactive({
     loading: false,
     displayStatus: 'reset',
@@ -64,9 +64,15 @@ function returnLogin () {
         state.time --
         if(state.time === 0) {
             clearInterval(state.timer)
-            appStore.state = 'needAuth'
+            login()
         }
     }, 1000)
+}
+function login() {
+    router.push(DEFAULT_PATH)
+    setTimeout(() => {
+      appStore.setDisplayState('needAuth')
+    },200)
 }
 onMounted(async () => {
     try {

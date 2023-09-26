@@ -1,27 +1,35 @@
 import { defineStore } from 'pinia'
-import { DocumentThumbnailListGetApi } from 'dp-api'
+import { DocumentThumbnailListGetApi,SimplifiedDocDetail } from 'dp-api'
 
 export const useShareStore = defineStore('ShareStore', () => {
     const state = reactive({
-        shareList: <any>[]
+        shareList: <SimplifiedDocDetail[]>[]
     })
-    async function getMineTypeShareList(list:any) {
-        const data = await DocumentThumbnailListGetApi(state.shareList.map((item:any) => item.id))
-        return data.map((item:any) => {
+    async function getMineTypeShareList() {
+        // const data = await DocumentThumbnailListGetApi(state.shareList.map((item:any) => item.id))
+        return state.shareList.map((item:any) => {
             return {...item, readOnly: true}
         })
     }
-    function updateShareList(list:any) {
+    function updateShareList(list: SimplifiedDocDetail[]) {
         state.shareList = [...list]
+        sessionStorage.setItem('shareList', JSON.stringify(state.shareList))
+    }
+    function addToShareList(list: SimplifiedDocDetail[], className: string) {
+        if(!state.shareList) state.shareList = []
+        list.forEach(item => {
+            if(state.shareList.findIndex(i => {
+                if(item.isFolder) return -1
+                return i.id === item.id
+            }) === -1) state.shareList.push(item)
+        })
         sessionStorage.setItem('shareList', JSON.stringify(state.shareList))
     }
 
     function getUseWatermark(mimeType :string) {
         // check mintype is image, pdf or video
-        if (mimeType.includes('image') || mimeType.includes('pdf') || mimeType.includes('video')) {
-            return true
-        }
-        return false
+        const _mimeType = mimeType.split('/')[0]
+        return ['image', 'pdf', 'video'].includes(_mimeType)
     }
     onMounted(() => {
         const data = sessionStorage.getItem('shareList')
@@ -31,6 +39,7 @@ export const useShareStore = defineStore('ShareStore', () => {
         getUseWatermark,
         getMineTypeShareList,
         updateShareList,
+        addToShareList,
         state
     }
 })

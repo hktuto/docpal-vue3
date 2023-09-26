@@ -8,6 +8,7 @@ export default defineAppConfig({
       url:"/audit",
       icon: "/icons/menu/audit.svg",
       order:2,
+      parentId: "admin_system"
     }
   ],
 })

@@ -8,6 +8,8 @@ export default defineAppConfig({
       url:"/dam",
       icon: "/icons/menu/dam.svg",
       order:7,
+      parentId: "admin_browse",
+      parentIcon: "/icons/menu/browser.svg"
     }
   ],
 })

@@ -129,6 +129,7 @@ async function removeLocalAcl (row: any) {
         await removeACLApi({ idOrPath: props.doc.id, userId: row.userId})
         emits('refresh')
     } catch (error) {
+        row.loading = false
         return 'cancel'
     }
     row.loading = false

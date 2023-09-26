@@ -1,10 +1,7 @@
 <template>
     <div class="appThemeBg">
-    <div v-if="appStore.displayState === 'needAuth'" ref="needAuthEl" class="LoginContainer">
+    <div v-if="appStore.displayState === 'defaultLogin'" ref="needAuthEl" class="LoginContainer">
       <LazyLoginForm :showForgetPassword="showForgetPassword" />
-    </div>
-    <div v-if="appStore.displayState === 'forgetPassword'" ref="forgetPassword" class="LoginContainer">
-      <LazyForgetPassword  />
     </div>
     <div v-else-if="appStore.displayState != 'ready'" ref="loadingEl" class="loadingContainer">
       <div class="contain">
@@ -27,8 +24,10 @@
 // check app ready, if no go to login
 const appStore  = useAppStore()
 import { api } from 'dp-api'
+
 const route = useRoute()
-const {token, verify} = useUser();
+const router = useRouter()
+const {token, beforeLogin, publicPages} = useUser();
 
 const { globalSlots } = useLayout()
 const { uploadState } = useUploadStore()
@@ -40,23 +39,13 @@ const props = withDefaults(defineProps<{
 onMounted(async () => {
   window.addEventListener('beforeunload', function (e) {
     if(uploadState.value.uploadRequestList.length > 0) {
-      // Cancel the event
-      // Chrome requires returnValue to be set
       e.preventDefault();
       e.returnValue = $i18n.t('tip.beforeunload');
     }
   });
-  await appStore.appInit();
-  const t = localStorage.getItem('token') as string;
-  if(localStorage && t) {
-    api.defaults.headers.common['Authorization'] = 'Bearer ' + t;
-    token.value = t;
-  }
-  verify(route.path);
+  beforeLogin()
 })
-
 </script>
-
 
 <style lang="scss" scoped>
 .appThemeBg{

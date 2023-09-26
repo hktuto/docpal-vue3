@@ -6,8 +6,10 @@ export default defineAppConfig({
       name:"admin_User",
       routeName:"user",
       url:"/user",
+      urls: ['/user/detail'],
       icon: "/icons/menu/userManage.svg",
       order:4,
+      parentId: "admin_UserAndGroup"
     },
     {
       name:"user_groups",
@@ -15,6 +17,7 @@ export default defineAppConfig({
       url:"/group",
       icon: "/icons/menu/group.svg",
       order:4,
+      parentId: "admin_UserAndGroup"
     }
   ],
 })

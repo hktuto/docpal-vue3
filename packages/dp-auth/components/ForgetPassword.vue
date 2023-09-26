@@ -19,7 +19,7 @@
           </template>
         </el-form>
       </template>
-      <el-button class="intro" @click="appStore.state = 'needAuth'" link>
+      <el-button class="intro" @click="appStore.setDisplayState('needAuth')" link>
         {{ $t('login') }}
       </el-button>
       <div v-if="state.time > 0">
@@ -73,7 +73,7 @@ function returnLogin () {
         state.time --
         if(state.time === 0) {
             clearInterval(state.timer)
-            appStore.state = 'needAuth'
+            appStore.setDisplayState('needAuth')
         }
     }, 1000)
 }

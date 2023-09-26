@@ -1,7 +1,10 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
 import { useSetting } from './../../dp-stores/composables/setting';
-import {GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
+import { useLanguage } from './../../dp-stores/composables/language'
+import { GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
+import Keycloak from 'keycloak-js'
+let dpKeyCloak: any
 export const useUser = () => {
     const route = useRoute()
     const router = useRouter()
@@ -19,7 +22,9 @@ export const useUser = () => {
     const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
-
+    const publicPages = ['/forgetPassword', '/resetPassword', '/language', '/error/503', '/error/404']
+    const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
+    const { loadLanguage } = useLanguage()
     const colorModeOption = [
         {
             id: '1',
@@ -55,7 +60,7 @@ export const useUser = () => {
 
     async function getUserSetting() {
         const userSetting = await GetSetting()
-        isLdapMode.value = await isLdapModeApi()
+        
         const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
         if(!userSizeValid) {
           delete userSetting.size;
@@ -68,22 +73,25 @@ export const useUser = () => {
             {
                 size: '14px',
                 folderView: 'tree',
-                language: 'en-US',
+                language: navigator.language,
                 color: 'system',
                 tableSettings: {}
             },
             {...userSetting}
         )
-        appStore.state = 'ready';
+        appStore.setDisplayState('ready') 
         settingStore.init()
+        loadLanguage(getDefaultLanguage())
     }
-
+    function getDefaultLanguage() {
+        return userPreference?.value?.language || navigator.language
+        // return userPreference?.value?.language || 'zh' 
+    }
     async function savePreference() {
         await UserSettingSaveApi(userPreference.value)
 
     }
-
-    async function verify(path: string) {
+    async function verify() {
         try {
             const token = localStorage.getItem('token')
             if(!token) throw new Error("no token");
@@ -92,10 +100,11 @@ export const useUser = () => {
             isLogin.value = true;
             await getUserSetting();
         } catch (error) {
+            const path = route.path
             if(path && publicRouteList.includes(path)) {
-                appStore.state = 'ready';
+                appStore.setDisplayState('ready');
             } else {
-                appStore.state = 'needAuth';
+                appStore.setDisplayState('needAuth');
             }
             isLogin.value = false,
             token.value = "";
@@ -104,6 +113,51 @@ export const useUser = () => {
                 sessionStorage.removeItem('token');
             }
         }
+    }
+    async function keycloakLogin() {
+        console.log('keycloakLogin', {dpKeyCloak});
+        try {
+            const authenticated = await dpKeyCloak.init({onLoad: 'login-required'})
+            if(!authenticated) {
+                throw new Error("unAuth");
+            } 
+            else {
+                callApi()
+            }
+        } catch (error) {
+            // window.location.reload();
+            isLogin.value = false,
+            token.value = "";
+            refreshToken.value = "";
+            sessionStorage.removeItem('token');
+        }
+    }
+    async function callApi() {
+        // 使用令牌来调用您的 API
+        try {
+            console.log(dpKeyCloak.token);
+            await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
+            await appStore.appInit();
+            const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
+                                    headers: {
+                                        Authorization : 'Bearer ' + dpKeyCloak.token
+                                    }
+                                }).then( res => { return res.data.data })
+
+            token.value = data.access_token 
+            refreshToken.value = data.refresh_token
+            localStorage.setItem('token', token.value);
+            localStorage.setItem('refreshToken', refreshToken.value);
+            user.value = await Verify();
+            Cookies.value = JSON.stringify(user.value)
+            isLogin.value = true;
+            api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
+            await getUserSetting();
+            appStore.setDisplayState('ready');
+        } catch (error) {
+            // logout()
+        }
+        
     }
 
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
@@ -127,21 +181,81 @@ export const useUser = () => {
     }
     // docpal-user
     function logout(){
+        if(!isLogin.value) return
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
-        appStore.state = 'needAuth';
+        
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
+        
+        if(dpKeyCloak && dpKeyCloak.token) dpKeyCloak.logout()
+        else{
+            appStore.setDisplayState('needAuth')
+            sessionStorage.clear()
+        } 
     }
 
     async function getUserList() {
         const list = await getUserListApi();
         userList.value = list;
     }
+    /**
+     * public page 与 default login 需要提前 appInit
+     * keycloakLogin 在登陆成功后再 appInit
+     * @returns 
+     */
+    async function beforeLogin(goHome: boolean) {
+        console.log(isLogin.value, 'isLogin');
+        
+        if(isLogin.value) {
+            appStore.setDisplayState('ready') 
+            return
+        }
+        const _superAdmin = sessionStorage.getItem('superAdmin')
 
-    function forgetPassword() {
-        appStore.state = 'forgetPassword';
+        // @ts-ignore
+        const superAdmin = route.query.superAdmin
+        if(!!publicPages.find(item => route.path.includes(item)) && !goHome) {
+            console.log('publicPages', route.path, publicPages);
+            
+            await appStore.appInit();
+            appStore.setDisplayState('ready') 
+        }else if(superAdmin === 'superAdmin' && endPoint === 'admin' || superAdmin === 'clientSuperAdmin' || _superAdmin === 'superAdmin') {
+            console.log('superAdmin');
+            await appStore.appInit();
+            appStore.setDisplayState('defaultLogin') 
+            sessionStorage.setItem('superAdmin', 'superAdmin')
+            await setIsLdapMode()
+            verify()
+        } else {
+            console.log('superAdpKeyCloakdmin');
+            if(!dpKeyCloak) {
+                await setKeyCloak()
+            }
+            sessionStorage.removeItem('superAdmin')
+            keycloakLogin();
+        }
+    }
+    async function setKeyCloak() {
+        await setIsLdapMode()
+        const config = {
+            // @ts-ignore
+            ...keycloakConfig,
+            // @ts-ignore
+            realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm,
+            url: getKeycloakUrl()
+        }
+        console.log({config})
+        // @ts-ignore
+        dpKeyCloak = new Keycloak(config)
+        function getKeycloakUrl () {
+            let origin = window.location.origin
+            if(origin.includes('https://admin')) origin = origin.replace('https://admin.', 'https://')
+            // @ts-ignore
+            else if(!origin.includes('https://')) return keycloakConfig.url
+            return origin +'/keycloak/'
+        }
     }
     function getUserId () {
         try {
@@ -150,6 +264,9 @@ export const useUser = () => {
             return ''
         }
     }
+    async function setIsLdapMode () {
+        isLdapMode.value = await isLdapModeApi()
+    }
     function getIsLdapMode () {
         return isLdapMode.value
     }
@@ -157,6 +274,7 @@ export const useUser = () => {
         // data
         token,
         user,
+        publicPages,
         userPreference,
         isLogin,
         isLdapMode,
@@ -168,8 +286,10 @@ export const useUser = () => {
         savePreference,
         getUserList,
         getUserId,
+        setIsLdapMode,
         getIsLdapMode,
+        getDefaultLanguage,
         userList,
-        forgetPassword
+        beforeLogin
     }
 }

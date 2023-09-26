@@ -3,6 +3,7 @@
     >
     
         <Table
+            ref="TableRef"
             v-if="list"
             v-loading="loading"
             :class="{ dragActive: state.dragActive }"
@@ -54,13 +55,15 @@
 <script lang="tsx" setup>
 import { GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
 import {openFileDetail} from "~/utils/browseHelper";
-
+import { useEventListener } from '@vueuse/core'
 const emit = defineEmits([
     'right-click',
     'select-change',
 ])
 const selectedItems = ref<any>([])
 const props = defineProps<{list: any}>();
+const TableRef = ref()
+
 const { list } = toRefs(props) 
 const keywords = ref('')
 const filterList = computed(() => {
@@ -185,13 +188,18 @@ function handleSelect (rows:any) {
     selectedItems.value = rows
     emit('select-change', rows)
 }
-
+function toggleSelection (rows:any[]) {
+    console.log(TableRef.value, rows);
+    TableRef.value.toggleSelection(rows)
+}
 onMounted(() => {
+    useEventListener(document, 'setTableSelection', (event) => toggleSelection(event.detail?.rows || undefined))
 })
 
 watch(list, (val) => {
     keywords.value = "";
 })
+defineExpose({ TableRef })
 </script>
 
 <style lang="scss" scoped>
