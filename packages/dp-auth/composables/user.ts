@@ -156,6 +156,7 @@ export const useUser = () => {
             api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
             await getUserSetting();
             appStore.setDisplayState('ready');
+            router.push('/browse')
         } catch (error) {
             handleKeycloakLoginFail()
         }
@@ -236,14 +237,15 @@ export const useUser = () => {
             appStore.setDisplayState('defaultLogin') 
             sessionStorage.setItem('superAdmin', 'superAdmin')
             setIsLdapMode(await getIsLdapMode())
-            verify()
+            await verify()
+            router.push('/browse')
         } else {
             if(!dpKeyCloak) {
                 const result = await setKeyCloak()
                 if(!result) return 
             }
             sessionStorage.removeItem('superAdmin')
-            keycloakLogin();
+            await keycloakLogin();
         }
     }
     async function setKeyCloak() {
