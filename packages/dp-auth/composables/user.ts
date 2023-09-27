@@ -123,10 +123,7 @@ export const useUser = () => {
                 throw new Error("unAuth");
             } 
             else {
-                await callApi()
-                setTimeout(() => {
-                    router.push('/browse')
-                }, 500)
+                callApi()
             }
         } catch (error) {
             // window.location.reload();
@@ -158,7 +155,6 @@ export const useUser = () => {
             isLogin.value = true;
             api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
             await getUserSetting();
-            
             appStore.setDisplayState('ready');
         } catch (error) {
             handleKeycloakLoginFail()
@@ -207,6 +203,8 @@ export const useUser = () => {
     function logoutKeyCloak() {
         if(dpKeyCloak && dpKeyCloak.token) {
             dpKeyCloak.logout()
+        } else {
+            appStore.setDisplayState('needAuth')
         }
     }
     async function getUserList() {
@@ -240,15 +238,14 @@ export const useUser = () => {
             appStore.setDisplayState('defaultLogin') 
             sessionStorage.setItem('superAdmin', 'superAdmin')
             setIsLdapMode(await getIsLdapMode())
-            await verify()
-            router.push('/browse')
+            verify()
         } else {
             if(!dpKeyCloak) {
                 const result = await setKeyCloak()
                 if(!result) return 
             }
             sessionStorage.removeItem('superAdmin')
-            await keycloakLogin();
+            keycloakLogin();
         }
     }
     async function setKeyCloak() {
