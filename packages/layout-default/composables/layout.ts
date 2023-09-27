@@ -31,11 +31,10 @@ export const useLayout = () => {
 
 
   function allowFeature(f: pageFeatures) {
-    console.log(pageFeatures[f]);
     // if(f === 'DOC_COMMENT') return false
     // if(f === 'DOC_ANNOTATION') return false
     // if(f === 'WORKFLOW_ADHOC') return false
-    if(f === 'WATERMARK') return false
+    // if(f === 'WATERMARK') return false
     // @ts-ignore
     return feature[pageFeatures[f]]
   }
