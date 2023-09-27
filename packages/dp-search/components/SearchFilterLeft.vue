@@ -20,7 +20,7 @@
                     <el-button type="primary" @click="handleSubmit">{{$t('search')}}</el-button>
                 </el-col>
             </el-row>
-            <el-button type="info" @click="handleDownload">{{$t('export')}}</el-button>
+            <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" @click="handleDownload">{{$t('export')}}</el-button>
         </div>
       </div>
         <SearchDownloadDialog ref="SearchDownloadDialogRef" />
@@ -35,7 +35,7 @@ const props = defineProps<{
     searchParams: any,
     ready: boolean
 }>()
-const { isMobile } = useLayout()
+const { isMobile, allowFeature } = useLayout()
 const route = useRoute()
 const router = useRouter()
 const emits = defineEmits(['submit'])

@@ -19,7 +19,7 @@
         <el-tab-pane :label="$t('workflow_ActiveTask')" name="activeTask">
             <WorkflowActiveTask v-if="activeTab === 'activeTask'" ref="WorkflowRef"/>
         </el-tab-pane>
-        <el-tab-pane :label="$t('workflow_adhocTask')" name="adhocTask">
+        <el-tab-pane v-if="allowFeature('WORKFLOW_ADHOC')" :label="$t('workflow_adhocTask')" name="adhocTask">
             <WorkflowAdhocTask v-if="activeTab === 'adhocTask'" ref="WorkflowRef"/>
         </el-tab-pane>
     </el-tabs>
@@ -32,6 +32,7 @@
 import { exportProcessHistoryApi, exportTasksUserApi } from 'dp-api'
 const route = useRoute()
 const router = useRouter()
+const { allowFeature } = useLayout()
 const state = reactive({
     activeTab: 'completeTask',
     loading: false

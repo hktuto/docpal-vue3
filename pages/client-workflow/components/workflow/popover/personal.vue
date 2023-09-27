@@ -1,12 +1,14 @@
 <template>
-<el-dropdown @command="handleCommand">
+<el-dropdown v-if="allowFeature('GENERATE_TEMPLATE') || allowFeature('BULK_IMPORT')" @command="handleCommand">
     <el-button type="primary" class="el-icon--left">
         {{$t('workflow_personalWorkflow')}}<el-icon class="el-icon--right"><arrow-down /></el-icon>
     </el-button>
     <template #dropdown>
         <el-dropdown-menu>
-            <el-dropdown-item v-for="item in state.menuList" :key="item.id"
-                :command="item.id">{{$t(item.label)}}</el-dropdown-item>
+            <template v-for="item in state.menuList">
+                <el-dropdown-item v-if="item.show" :key="item.id"
+                    :command="item.id">{{$t(item.label)}}</el-dropdown-item>
+            </template>
         </el-dropdown-menu>
     </template>
 </el-dropdown>
@@ -21,10 +23,11 @@ import {  } from 'dp-api'
 import Template from './template.vue'
 import BulkImport from './bulkImport.vue'
 const emits = defineEmits([]);
+const { allowFeature } = useLayout()
 const state = reactive({
     menuList: [
-        { id: 'template', label: 'workflow_GenerateDocument' },
-        { id: 'bulkImport', label: 'workflow_bulkImport' }
+        { id: 'template', label: 'workflow_GenerateDocument', show: allowFeature('GENERATE_TEMPLATE') },
+        { id: 'bulkImport', label: 'workflow_bulkImport', show: allowFeature('BULK_IMPORT') }
     ]
 })
 const BulkImportDialogRef = ref()

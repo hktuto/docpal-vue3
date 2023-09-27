@@ -23,7 +23,14 @@ export const useUser = () => {
     const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
-    const publicPages = ['/forgetPassword', '/resetPassword', '/language', '/error/503', '/error/404']
+    const publicPages = [
+        '/forgetPassword', 
+        '/resetPassword', 
+        '/language', 
+        '/error/503', 
+        '/error/404',
+        '/FormEditor'
+    ]
     const { public: { endPoint } } = useRuntimeConfig();
     const { loadLanguage } = useLanguage()
     const colorModeOption = [
@@ -217,8 +224,7 @@ export const useUser = () => {
      * @returns 
      */
     async function beforeLogin(goHome: boolean) {
-        console.log(isLogin.value, 'isLogin');
-        
+        console.log(useRuntimeConfig());
         if(isLogin.value) {
             appStore.setDisplayState('ready') 
             return

@@ -5,7 +5,21 @@ type AppSlot = {
   order: number,
   component: any
 }
+enum pageFeatures {
+  DOC_COMMENT = 'DOC_COMMENT',
+  SUBSCRIBE = 'SUBSCRIBE',
+  UPLOAD_REQUEST = 'UPLOAD_REQUEST',
+  DOC_PRINT = 'DOC_PRINT',
+  BULK_IMPORT = 'BULK_IMPORT',
+  DAM_FILE_CONVERTION = 'DAM_FILE_CONVERTION',
+  SEARCH_EXPORT = 'SEARCH_EXPORT',
+  DOC_ANNOTATION = 'DOC_ANNOTATION',
+  GENERATE_TEMPLATE = 'GENERATE_TEMPLATE',
+  WATERMARK = 'WATERMARK',
+  WORKFLOW_ADHOC = 'WORKFLOW_ADHOC'
+}
 export const useLayout = () => {
+  const { public: { feature }} = useRuntimeConfig()
   const globalSlots = useState<AppSlot[]>('globalSlots', () => ([]))
   const breakpoints = useBreakpoints({
     mobile: 640,
@@ -14,9 +28,21 @@ export const useLayout = () => {
   })
   const isMobile = breakpoints.smallerOrEqual('laptop');
   const isSmallMobile = breakpoints.smallerOrEqual('mobile');
+
+
+  function allowFeature(f: pageFeatures) {
+    console.log(pageFeatures[f]);
+    // if(f === 'DOC_COMMENT') return false
+    // if(f === 'DOC_ANNOTATION') return false
+    // if(f === 'WORKFLOW_ADHOC') return false
+    if(f === 'WATERMARK') return false
+    // @ts-ignore
+    return feature[pageFeatures[f]]
+  }
   return {
     isSmallMobile,
     globalSlots,
-    isMobile
+    isMobile,
+    allowFeature
   }
 }

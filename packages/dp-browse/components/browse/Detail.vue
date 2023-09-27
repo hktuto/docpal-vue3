@@ -13,7 +13,7 @@
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <BrowseActionsHold :doc="doc" :permission="permission"/>
                       <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
-                      <BrowseActionsSubscribe  :doc="doc" />
+                      <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
                       <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefresh"/>
                       <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
@@ -43,7 +43,7 @@
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
                     <LazyHtmlViewer v-if="readerType === 'html'" :doc="doc" />
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true, print: permission.print, readOnly: !AllowTo({feature:'ReadWrite', permission })}" />
+                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
                 </div>
@@ -79,7 +79,7 @@ const options = ref<FileDetailOptions>({
 })
 const emit = defineEmits(['close'])
 const { public:{feature} } = useRuntimeConfig();
-
+const { allowFeature } = useLayout()
 const readerType = computed(() => {
     if(!doc.value) return "";
     const properties = doc.value.properties as any
