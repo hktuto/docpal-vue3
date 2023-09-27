@@ -123,7 +123,10 @@ export const useUser = () => {
                 throw new Error("unAuth");
             } 
             else {
-                callApi()
+                await callApi()
+                setTimeout(() => {
+                    router.push('/browse')
+                }, 500)
             }
         } catch (error) {
             // window.location.reload();
@@ -155,8 +158,8 @@ export const useUser = () => {
             isLogin.value = true;
             api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
             await getUserSetting();
+            
             appStore.setDisplayState('ready');
-            router.push('/browse')
         } catch (error) {
             handleKeycloakLoginFail()
         }
