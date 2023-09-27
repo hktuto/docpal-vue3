@@ -4,11 +4,12 @@ import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import  Paragraph from '@editorjs/paragraph';
 import VariableOptions from './variableOptions';
-
-export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) => {
+import LinkInlineTool from './variableLink';
+export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) => {
 
     const editor = ref();
     function createEditor():void{
+        console.log(editorId)
         editor.value = new EditorJS({
             holderId: editorId,
             autofocus: true,
@@ -26,6 +27,12 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
                     class: Table,
                     inlineToolbar: true,
                 },
+                link:{
+                    class: LinkInlineTool,
+                    config:{
+                        variables: variables.value
+                    }
+                },
                 paragraph: {
                     class: Paragraph,
                     inlineToolbar: true,
@@ -33,7 +40,7 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
                 VariableOptions: {
                     class: VariableOptions,
                     config:{
-                        variables: variable.value
+                        variables: variables.value
                     }
                 },
 
@@ -75,7 +82,11 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
             },
             onReady:() => {
                 if(data.value.emailTemplateJson) {
-                    setData(JSON.parse(data.value.emailTemplateJson));
+                    const json = JSON.parse(data.value.emailTemplateJson);
+                    // 不要渲染空的json
+                    if(json.blocks.length > 0) {
+                        setData(json);
+                    }
                 }
             }
         })
@@ -87,7 +98,6 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
     }
 
     function setData(data:any):void{
-        console.log(editor.value, data)
         editor.value?.render(data);
     }
 
@@ -97,21 +107,27 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
             var t = document.createElement('template');
             t.innerHTML = block.data.text;
             // found by tag name "var"
-            const variables = t.content.querySelectorAll('var');
-            variables.forEach((variable) => {
+            const newsVars = t.content.querySelectorAll('a.ce-text-item');
+            newsVars.forEach((variable) => {
                 newVariable.push(variable.textContent as string);
             });
+            const varLink = t.content.querySelectorAll('a.ce-link-item');
+            // push data-url to variable
+            varLink.forEach((variable) => {
+                newVariable.push(variable.getAttribute('data-url') as string);
+            })
             // remove t from memory
             t.remove();
         }
+        // variables.value = newVariable;
         // remove duplicate
         
-        // variable.value = [... new Set(newVariable)];
+        variables.value = [... new Set(newVariable)];
     }
 
     async function getData(){
         const data = await editor.value?.save();
-        let html = '';
+        let html = '<html><body>'
         for( const block of data.blocks) {
             switch(block.type){
                 case 'header':
@@ -129,10 +145,11 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
             }
                 
         }
+        html += '</body></html>';
         return {
             html,
             json: data,
-            variable: variable.value
+            variable: variables.value
         }
     }
 
@@ -150,13 +167,25 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
 
     function htmlToString(html:string):string{
         var t = document.createElement('template');
-        t.innerHTML = html;
-        const variables = t.content.querySelectorAll('var');
+        t.innerHTML = html;  
+        
+        const varText = t.content.querySelectorAll('a.ce-text-item');
         // replace all var tag with span
-        variables.forEach((variable) => {
-            variable.replaceWith('${' + variable.textContent + '}');
+        varText.forEach((variable) => {
+            
+            variable.replaceWith('<span th:text="${' + variable.textContent + '}"></span>');
         });
-        return t.innerHTML;
+        const varLink = t.content.querySelectorAll('a.ce-link-item');
+
+        varLink.forEach((variable) => {
+            // variable.setAttribute('href', '${' + variable.getAttribute('data-url') + '}');
+            // change href to th:href
+            variable.replaceWith(`<a th:href="${ '${' + variable.getAttribute('data-url') + '}' }">${variable.textContent} </a>`);
+        })
+        const stringHtml = t.innerHTML;
+        t.remove();
+        // wrap html and body tag in stringHtml
+        return stringHtml;
     }
     
 
@@ -164,7 +193,7 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
         createEditor,
         dispose,
         setData,
-        variable,
+        variables,
         getData
     }
 

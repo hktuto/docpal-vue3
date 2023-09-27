@@ -61,6 +61,7 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
      * Step 1: 從後端取得 template 資料
      */
     const {data} = useAsyncData(async () => {
+        // TODO : if id is new , create new dummy data
         const { data } = await api.get(`/docpal/template/email/template/${id}`);
         // loop template body and get all variables
         const body = data.data.body;
@@ -107,7 +108,7 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
      */
     const selectedLayoutHtml = computed(() => {
         if(!selectedLayout.value) return '';
-        const {layoutContent} = layouts.value.find(item => item.id === selectedLayout.value);
+        const {layoutContent} = layouts.value.find((item:any) => item.id === selectedLayout.value);
         nextTick(() => {
                 editor.dispose();
                 editor.createEditor();
@@ -116,20 +117,31 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
     })
 
 
-    async function save() {
+/**
+ *  儲存
+ */
+async function save() {
         const {html, json, variable} = await editor.getData();
         // test save json to backend
         const result = await UpdateEmailTemplateApi({
-          ...data.value,
+             ...data.value,
+          // TODO : send html to body
+          // url encode html
+            body: html,
             emailLayoutId: selectedLayout.value,
             emailTemplateJson: JSON.stringify(json),
             emailTemplateVariable: JSON.stringify(variable)
         })
-        console.log(html, json, result)
+  // console.log(html);
+        // TODO : add notification
     }
-    
-    async function sendTest(){
+
+/**
+ *  送出測試信
+ */
+async function sendTest(){
       testEmailDialog.value.send();
+      // TODO : add notification
     }
 
 

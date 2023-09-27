@@ -1,6 +1,4 @@
 
-
-import './index.scss';
 /**
  * Import functions
  */
@@ -8,7 +6,7 @@ import * as Dom from '../utils/dom';
 import { SelectionUtils } from '../utils/selection';
 import { Utils } from '../utils/utils';
 import { InlineTool, InlineToolConstructorOptions } from '@editorjs/editorjs';
-import {IconCurlyBrackets, IconCross} from '@codexteam/icons'
+import {IconLink, IconUnlink} from '@codexteam/icons'
 
 /**
  * @typedef {object} SearchItemData
@@ -48,7 +46,7 @@ const NavDirection = {
 /**
  * Link Autocomplete Tool for EditorJS
  */
-export default class VariableOptions implements InlineTool {
+export default class VariableLink implements InlineTool {
   api: any;
   config: any;
   selection: SelectionUtils;
@@ -127,8 +125,8 @@ export default class VariableOptions implements InlineTool {
       linkDataName: 'ce-link-autocomplete__link-data-name',
       linkDataDescription: 'ce-link-autocomplete__link-data-description',
       linkDataURL: 'ce-link-autocomplete__link-data-url',
-      
-      linkItem: 'ce-text-item',
+
+      linkItem: 'ce-link-item',
     };
   }
 
@@ -209,8 +207,8 @@ export default class VariableOptions implements InlineTool {
      *
      * @type {HTMLSpanElement}
      */
-    this.nodes.toolButtonLink = Dom.make('span', VariableOptions.CSS.iconWrapper, {
-      innerHTML: IconCurlyBrackets,
+    this.nodes.toolButtonLink = Dom.make('span', VariableLink.CSS.iconWrapper, {
+      innerHTML: IconLink,
     });
     this.nodes.toolButtons.appendChild(this.nodes.toolButtonLink);
 
@@ -219,8 +217,8 @@ export default class VariableOptions implements InlineTool {
      *
      * @type {HTMLSpanElement}
      */
-    this.nodes.toolButtonUnlink = Dom.make('span', VariableOptions.CSS.iconWrapper, {
-      innerHTML: IconCross,
+    this.nodes.toolButtonUnlink = Dom.make('span', VariableLink.CSS.iconWrapper, {
+      innerHTML: IconUnlink,
     });
     this.toggleVisibility(this.nodes.toolButtonUnlink, false);
     this.nodes.toolButtons.appendChild(this.nodes.toolButtonUnlink);
@@ -239,7 +237,7 @@ export default class VariableOptions implements InlineTool {
      *
      * @type {HTMLDivElement}
      */
-    this.nodes.actionsWrapper = Dom.make('div', [ VariableOptions.CSS.actionsWrapper ]);
+    this.nodes.actionsWrapper = Dom.make('div', [ VariableLink.CSS.actionsWrapper ]);
     this.toggleVisibility(this.nodes.actionsWrapper, false);
 
     /**
@@ -247,8 +245,8 @@ export default class VariableOptions implements InlineTool {
      *
      * @type {HTMLDivElement}
      */
-    this.nodes.inputWrapper = Dom.make('div', VariableOptions.CSS.field);
-    this.nodes.inputField = Dom.make('input', VariableOptions.CSS.fieldInput, {
+    this.nodes.inputWrapper = Dom.make('div', VariableLink.CSS.field);
+    this.nodes.inputField = Dom.make('input', VariableLink.CSS.fieldInput, {
       placeholder: this.api.i18n.t(DICTIONARY.pasteALink),
     });
 
@@ -260,7 +258,7 @@ export default class VariableOptions implements InlineTool {
      *
      * @type {HTMLDivElement}
      */
-    this.nodes.searchResults = Dom.make('div', VariableOptions.CSS.foundItems);
+    this.nodes.searchResults = Dom.make('div', VariableLink.CSS.foundItems);
     /**
      * To improve UX we need to remove any 'selected' classes from search results
      */
@@ -268,14 +266,14 @@ export default class VariableOptions implements InlineTool {
       const searchItems = this.getSearchItems();
 
       searchItems.forEach(item => {
-        item.classList.remove(VariableOptions.CSS.searchItemSelected);
+        item.classList.remove(VariableLink.CSS.searchItemSelected);
       });
     });
     /**
      * Enable search results click listener
      */
     this.nodes.searchResults.addEventListener('click', (event) => {
-      const closestSearchItem = event.target.closest(`.${VariableOptions.CSS.searchItem}`);
+      const closestSearchItem = event.target.closest(`.${VariableLink.CSS.searchItem}`);
 
       /**
        * If click target search item is missing then do nothing
@@ -306,19 +304,19 @@ export default class VariableOptions implements InlineTool {
     /**
      * Render link data block
      */
-    this.nodes.linkDataWrapper = Dom.make('div', VariableOptions.CSS.linkDataWrapper);
+    this.nodes.linkDataWrapper = Dom.make('div', VariableLink.CSS.linkDataWrapper);
     this.toggleVisibility(this.nodes.linkDataWrapper, false);
 
-    this.nodes.linkDataTitleWrapper = Dom.make('div', VariableOptions.CSS.linkDataTitleWrapper);
+    this.nodes.linkDataTitleWrapper = Dom.make('div', VariableLink.CSS.linkDataTitleWrapper);
     this.nodes.linkDataWrapper.appendChild(this.nodes.linkDataTitleWrapper);
     this.toggleVisibility(this.nodes.linkDataTitleWrapper, false);
 
-    this.nodes.linkDataName = Dom.make('div', VariableOptions.CSS.linkDataName);
+    this.nodes.linkDataName = Dom.make('div', VariableLink.CSS.linkDataName);
     this.nodes.linkDataTitleWrapper.appendChild(this.nodes.linkDataName);
-    this.nodes.linkDataDescription = Dom.make('div', VariableOptions.CSS.linkDataDescription);
+    this.nodes.linkDataDescription = Dom.make('div', VariableLink.CSS.linkDataDescription);
     this.nodes.linkDataTitleWrapper.appendChild(this.nodes.linkDataDescription);
 
-    this.nodes.linkDataURL = Dom.make('A', VariableOptions.CSS.linkDataURL);
+    this.nodes.linkDataURL = Dom.make('A', VariableLink.CSS.linkDataURL);
     this.nodes.linkDataWrapper.appendChild(this.nodes.linkDataURL);
 
     /**
@@ -358,9 +356,9 @@ export default class VariableOptions implements InlineTool {
      * Choose handler
      */
     switch (true) {
-      /**
-       * Handle arrow keys
-       */
+        /**
+         * Handle arrow keys
+         */
       case isArrowKey: {
         const direction = event.keyCode === this.KEYS.DOWN ? NavDirection.Next : NavDirection.Previous;
 
@@ -368,9 +366,9 @@ export default class VariableOptions implements InlineTool {
         break;
       }
 
-      /**
-       * Handle Enter key
-       */
+        /**
+         * Handle Enter key
+         */
       case isEnterKey:
         this.processEnterKeyPressed();
         break;
@@ -421,7 +419,7 @@ export default class VariableOptions implements InlineTool {
    * @returns {void}
    */
   toggleLoadingState(state) {
-    this.nodes.inputWrapper.classList.toggle(VariableOptions.CSS.fieldLoading, state);
+    this.nodes.inputWrapper.classList.toggle(VariableLink.CSS.fieldLoading, state);
   }
 
   /**
@@ -456,10 +454,10 @@ export default class VariableOptions implements InlineTool {
     }
 
     if (selectedItem) {
-      selectedItem.classList.remove(VariableOptions.CSS.searchItemSelected);
+      selectedItem.classList.remove(VariableLink.CSS.searchItemSelected);
     }
 
-    items[nextIndex].classList.add(VariableOptions.CSS.searchItemSelected);
+    items[nextIndex].classList.add(VariableLink.CSS.searchItemSelected);
   }
 
   /**
@@ -518,7 +516,7 @@ export default class VariableOptions implements InlineTool {
    * @returns {Element[]}
    */
   getSearchItems() {
-    const nodesList = this.nodes.searchResults.querySelectorAll(`.${VariableOptions.CSS.searchItem}`);
+    const nodesList = this.nodes.searchResults.querySelectorAll(`.${VariableLink.CSS.searchItem}`);
 
     return Array.from(nodesList);
   }
@@ -529,7 +527,7 @@ export default class VariableOptions implements InlineTool {
    * @returns {Element|null}
    */
   getSelectedItem() {
-    return this.nodes.searchResults.querySelector(`.${VariableOptions.CSS.searchItemSelected}`);
+    return this.nodes.searchResults.querySelector(`.${VariableLink.CSS.searchItemSelected}`);
   }
 
   /**
@@ -573,12 +571,12 @@ export default class VariableOptions implements InlineTool {
      * Fill up search list by new elements
      */
     items.forEach(item => {
-      const searchItem = Dom.make('div', [ VariableOptions.CSS.searchItem ]);
+      const searchItem = Dom.make('div', [ VariableLink.CSS.searchItem ]);
 
       /**
        * Create a name for a link
        */
-      const searchItemName = Dom.make('div', [ VariableOptions.CSS.searchItemName ], {
+      const searchItemName = Dom.make('div', [ VariableLink.CSS.searchItemName ], {
         innerText: item.name || item.href,
       });
 
@@ -588,7 +586,7 @@ export default class VariableOptions implements InlineTool {
        * Create a description element
        */
       if (item.description) {
-        const searchItemDescription = Dom.make('div', [ VariableOptions.CSS.searchItemDescription ], {
+        const searchItemDescription = Dom.make('div', [ VariableLink.CSS.searchItemDescription ], {
           innerText: item.description,
         });
 
@@ -635,12 +633,13 @@ export default class VariableOptions implements InlineTool {
      * Create a link by default browser's function
      */
     // document.execCommand('createLink', false, href);
-    // const newTag = Dom.make(this.tagName, [VariableOptions.CSS.searchItem]);
+    // const newTag = Dom.make(this.tagName, [VariableLink.CSS.searchItem]);
     // newTag.innerHTML = href;
     // newTag.dataset['href'] = href;
     // newTag.href = href;
     // this.selection.currentRange.insertNode(newTag);
-    document.execCommand('insertHtml', false, `<a href='${href}' class="${VariableOptions.CSS.linkItem}">${href}</a>` )
+    // document.execCommand('insertHtml', false, `<a href='${href}' class="${VariableLink.CSS.linkItem}">${href}</a>` )
+    document.execCommand('createLink', false, href )
     // this.selection.savedSelectionRange.insertNode(newTag);
     // this.api.selection.expandToTag(newTag);
     /**
@@ -649,11 +648,13 @@ export default class VariableOptions implements InlineTool {
     const newLink = this.selection.findParentTag(this.tagName);
     // if newLink exists, then add class
     if(newLink) {
+      newLink.classList.add(VariableLink.CSS.linkItem);
+      newLink.dataset.url = href;
     }
     /**
      * Fill up link element's dataset
      */
-    
+
 
     /**
      * Collapse selection and close toolbar
@@ -710,13 +711,13 @@ export default class VariableOptions implements InlineTool {
        * Expand selection
        */
       this.selection.expandToTag(parentAnchor);
-      const text = range.extractContents();
-      range.insertNode(text);
-      parentAnchor?.remove();
+      // const text = range.extractContents();
+      // range.insertNode(text);
+      // parentAnchor?.remove();
       /**
        * Remove the link
        */
-      // document.execCommand('unlink');
+      document.execCommand('unlink');
 
       /**
        * Remove fake selection and close toolbar
@@ -795,7 +796,7 @@ export default class VariableOptions implements InlineTool {
     /**
      * If not "isVisible" then add "hidden" class
      */
-    element.classList.toggle(VariableOptions.CSS.hidden, !isVisible);
+    element.classList.toggle(VariableLink.CSS.hidden, !isVisible);
   }
 
   /**
