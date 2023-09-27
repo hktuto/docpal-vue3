@@ -136,14 +136,10 @@ export const useUser = () => {
     async function callApi() {
         // 使用令牌来调用您的 API
         try {
-            console.log(dpKeyCloak.token);
             await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
             await appStore.appInit();
-            const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
-                                    headers: {
-                                        Authorization : 'Bearer ' + dpKeyCloak.token
-                                    }
-                                }).then( res => { 
+            localStorage.setItem('token', dpKeyCloak.token);
+            const data = await api.get('/docpal/systemfeature/keycloak-token-verification').then( res => { 
                                     if(!res.data || !res.data.data) {
                                         handleKeycloakLoginFail()
                                     }
@@ -260,6 +256,7 @@ export const useUser = () => {
             ElMessage.error($i18n.t('dpTip_keycloakError'))
             return false
         }
+
         setIsLdapMode(config.isLdap)
         dpKeyCloak = new Keycloak({
             "url": config.keyCloakProperty.url,
@@ -270,6 +267,7 @@ export const useUser = () => {
             "public-client": config.keyCloakProperty.publicClient,
             "confidential-port": config.keyCloakProperty.confidentialPort
         })
+
         return true
     }
     function getUserId () {
