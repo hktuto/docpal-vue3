@@ -8,7 +8,7 @@ export const useShareStore = defineStore('ShareStore', () => {
     async function getMineTypeShareList() {
         // const data = await DocumentThumbnailListGetApi(state.shareList.map((item:any) => item.id))
         return state.shareList.map((item:any) => {
-            if(!item.mimeType && item.properties['mimeType']) item.mimeType = item.properties['mimeType']
+            if(!item.mimeType && item.properties['file:content']['mime-type']) item.mimeType = item.properties['file:content']['mime-type']
             return {...item, readOnly: true}
         })
     }
