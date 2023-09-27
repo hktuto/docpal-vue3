@@ -131,7 +131,8 @@ export const useEditor = (editorId:string, data:any, variable:Ref<string[]> ) =>
         }
         return {
             html,
-            json: data
+            json: data,
+            variable: variable.value
         }
     }
 

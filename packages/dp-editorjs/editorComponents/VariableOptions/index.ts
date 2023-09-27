@@ -78,6 +78,7 @@ export default class VariableOptions implements InlineTool {
   static get sanitize() {
     return {
       var: true,
+      b: true,
     };
   }
 
@@ -326,9 +327,6 @@ export default class VariableOptions implements InlineTool {
     this.nodes.actionsWrapper.appendChild(this.nodes.inputWrapper);
     this.nodes.actionsWrapper.appendChild(this.nodes.searchResults);
     this.nodes.actionsWrapper.appendChild(this.nodes.linkDataWrapper);
-
-    const items = this.searchRequest("");
-        this.generateSearchList(items);
 
     return this.nodes.actionsWrapper;
   }
@@ -637,17 +635,18 @@ export default class VariableOptions implements InlineTool {
      * Create a link by default browser's function
      */
     // document.execCommand('createLink', false, href);
-    
-    const text = this.selection.currentRange.extractContents();
-    console.log(this.selection.savedSelectionRange)
     // const newTag = Dom.make(this.tagName, [VariableOptions.CSS.searchItem]);
     // newTag.innerHTML = href;
     // newTag.dataset['href'] = href;
-    
+    // newTag.href = href;
     // this.selection.currentRange.insertNode(newTag);
-    // // this.selection.savedSelectionRange.insertNode(newTag);
+    document.execCommand('insertHTML', false, `<a href='${href}'>${href}</a>` )
+    // this.selection.savedSelectionRange.insertNode(newTag);
     // this.api.selection.expandToTag(newTag);
-
+    /**
+     * Get this link element
+     */
+    const newLink = this.selection.findParentTag(this.tagName);
 
     /**
      * Fill up link element's dataset
@@ -690,6 +689,7 @@ export default class VariableOptions implements InlineTool {
     this.selection.currentRange = range;
     this.selection.setFakeBackground();
     this.selection.save();
+
     /**
      * Check if link is in the selection
      */

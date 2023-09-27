@@ -4,10 +4,14 @@ $color-bg-gray: rgba(232, 232, 235, 0.49);
 
 $loader-color: rgba(29, 32, 43, 0.3);
 
-variable-select{
+a.ce-link-autocomplete__search-item a{
     background: var(--primary-color);
-    padding: 2 4px;
+    padding: 2px 4px;
     color: #fff;
+    font-style: normal;
+    &:hover {
+        background: var(--primary-color) !important;
+    }
 }
 .ce-link-autocomplete {
     &__icon-wrapper svg {
@@ -79,18 +83,23 @@ variable-select{
         outline: none;
         border: 0;
         border-radius: 5px;
-        font-size: inherit;
-        padding: 4px 5px;
+        font-size: 14px;
+        padding: 7px 10px;
         margin-bottom: 6px;
         box-sizing: border-box;
-        background: var(--primary-color);
-        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        text-decoration:none !important;
         &:not(:last-of-type) {
         }
 
+        &:hover, &--selected {
+            background-color: $color-bg-gray;
+        }
+
         &-name {
-            font-size: inherit;
-            line-height: inherit;
+            font-size: 14px;
+            line-height: 16px;
 
             overflow:hidden;
             white-space:nowrap;
