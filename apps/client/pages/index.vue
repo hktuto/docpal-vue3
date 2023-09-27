@@ -3,11 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-
-const router = useRouter();
-
-router.push({
-    path:'/browse'
-})
-
+// router.push({
+//     path:'/browse'
+// })
 </script>
