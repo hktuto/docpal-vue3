@@ -78,6 +78,7 @@ export default class VariableOptions implements InlineTool {
   static get sanitize() {
     return {
       var: true,
+      b: true,
     };
   }
 
@@ -634,12 +635,14 @@ export default class VariableOptions implements InlineTool {
      * Create a link by default browser's function
      */
     // document.execCommand('createLink', false, href);
-    const newTag = Dom.make(this.tagName, [VariableOptions.CSS.searchItem]);
-    newTag.innerHTML = href;
-    newTag.dataset['href'] = href;
-    this.selection.currentRange.insertNode(newTag);
+    // const newTag = Dom.make(this.tagName, [VariableOptions.CSS.searchItem]);
+    // newTag.innerHTML = href;
+    // newTag.dataset['href'] = href;
+    // newTag.href = href;
+    // this.selection.currentRange.insertNode(newTag);
+    document.execCommand('insertHTML', false, `<a href='${href}'>${href}</a>` )
     // this.selection.savedSelectionRange.insertNode(newTag);
-    this.api.selection.expandToTag(newTag);
+    // this.api.selection.expandToTag(newTag);
     /**
      * Get this link element
      */

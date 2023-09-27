@@ -3,38 +3,57 @@
     <div v-if="ready" class="pageContent">
         <div class="actions">
             <div v-if="data" class="name">
-                {{ data.subject }}
-                <div class="editButton"></div>
+                <span class="span">{{ data.subject }}</span>
+                <div class="editButton">
+                  <SvgIcon :src="'/icons/edit.svg'" @click="editInfoOpened = true" />
+                </div>
             </div>
             <div class="action">
                 <ElSelect type="primary" v-model="selectedLayout" >
                     <ElOption v-for="item in layouts" :key="item.id" :label="item.name" :value="item.id"></ElOption>
                 </ElSelect>
-                <ElButton type="primary" size="small" >{{ $t('email_send_test') }}</ElButton>
+                <ElButton type="primary" size="small" @click="testEmailOpened = true">{{ $t('email_send_test') }}</ElButton>
                 <ElButton type="primary" size="small" @click="save">{{ $t('common_save') }}</ElButton>
             </div>
         </div>
-        <div class="email_content">
-            <div class="responsiveSizeEditorContainer"></div>
-            <div :class="{emailTemplateContainer:true, mode}" v-html="selectedLayoutHtml">
-
+        <div :class="`email_content ${mode}`">
+            <div class="responsiveSizeEditorContainer">
+              <SvgIcon :class="{desktop:true, active:mode === 'desktop'}" :src="'/icons/desktop.svg'" @click="mode = 'desktop'" />
+              <SvgIcon :class="{mobile:true, active:mode === 'mobile'}" :src="'/icons/smartphone.svg'" @click="mode = 'mobile'" />
+            </div>
+            <div :class="`emailTemplateContainer ${mode}`" v-html="selectedLayoutHtml">
+              
             </div>
         </div>
     </div>
+  <ElDialog ref="editInfoDialog" v-model="editInfoOpened" append-to-body destroy-on-close>
+    <EditorjsInfoForm v-if="data" :data="data" />
+    <template #footer>
+      <ElButton type="primary" @click="() => {save(); editInfoOpened = false}">{{ $t('common_save') }}</ElButton>
+    </template>
+  </ElDialog>
+  <ElDialog  v-model="testEmailOpened" append-to-body destroy-on-close>
+    <EditorjsTestDialog ref="testEmailDialog" v-if="data" :data="data" :variables="variables" />
+    <template #footer>
+      <ElButton type="primary" @click="() => {sendTest();testEmailOpened = false}">{{ $t('common_save') }}</ElButton>
+    </template>
+  </ElDialog>
 </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
 import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
-    import { useEditor } from '~/editorComponents/editor';
-
-    const route = useRoute()
-    const id = route.params.id;
-    const variables = ref<any[]>([]);
-    const ready = ref(false)
-    const layouts = ref<any[]>([]);
-    const selectedLayout = ref<any>(null);
-    const mode = ref<'desktop' | 'mobile'>('desktop');
+  import { useEditor } from '~/editorComponents/editor';
+  const editInfoOpened = ref(false);
+  const testEmailOpened = ref(false);
+  const testEmailDialog = ref();
+  const route = useRoute()
+  const id = route.params.id;
+  const variables = ref<any[]>([]);
+  const ready = ref(false)
+  const layouts = ref<any[]>([]);
+  const selectedLayout = ref<any>(null);
+  const mode = ref<'desktop' | 'mobile'>('desktop');
 
 
 
@@ -98,14 +117,19 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
 
 
     async function save() {
-        const {html, json} = await editor.getData();
+        const {html, json, variable} = await editor.getData();
         // test save json to backend
         const result = await UpdateEmailTemplateApi({
           ...data.value,
             emailLayoutId: selectedLayout.value,
             emailTemplateJson: JSON.stringify(json),
+            emailTemplateVariable: JSON.stringify(variable)
         })
         console.log(html, json, result)
+    }
+    
+    async function sendTest(){
+      testEmailDialog.value.send();
     }
 
 
@@ -119,16 +143,69 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
     display: flex;
     flex-direction: column;
     .actions{
+        display: grid;
+      grid-template-columns: 1fr min-content;
+      gap: var(--app-padding);
+      margin-bottom: 20px;
+        .name {
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: flex-start;
+          align-items: center;
+          gap: var(--app-padding);
+          flex:1 0 auto;
+          word-break: break-all;
+          span{
+            font-size: 1.2rem;
+            font-weight: bold;
+          }
+        }
+      .action{
         display: flex;
-        justify-content: space-between;
-        padding: 10px;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        gap: var(--app-padding);
+        > * {
+          margin:0;
+          
+        }
+      }
     }
     .email_content{
         flex: 1 0 auto;
-
+        position: relative;
+      &.desktop{
+        width: 100%;
+      }
+      &.mobile{
+        width: 375px;
+        margin: 0 auto;
+      }
     }
     .emailTemplateContainer{
         height: 100%;
     }
+}
+
+.responsiveSizeEditorContainer{
+  position: absolute;
+  left: calc(50% - 31px);
+  top: -15px;
+  width: 62px;
+  height: 30px;
+  background-color: #fff;
+  z-index: 2;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  --icon-color: var(--color-grey-600);
+  .desktop, .mobile{
+    cursor: pointer;
+    &.active{
+      --icon-color: var(--primary-color);
+    }
+  }
 }
 </style>
