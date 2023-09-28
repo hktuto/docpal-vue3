@@ -12,7 +12,7 @@ export default defineAppConfig({
       parentId: "admin_UserAndGroup"
     },
     {
-      name:"user_groups",
+      name:"admin_group",
       routeName:"group",
       url:"/group",
       icon: "/icons/menu/group.svg",

@@ -70,6 +70,9 @@ function toTree (data) {
             result.push({...item})
         }
     })
+    result.forEach(item => {
+        if(item.children) item.children = item.children.sort((a,b) => a.order - b.order)
+    })
     return result.sort((a,b) => a.order - b.order)
 }
 // const displayMenu = computed(

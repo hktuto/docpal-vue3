@@ -8,7 +8,7 @@ export default defineAppConfig({
       url:"/shareInternal",
       icon: "/icons/menu/shareMe.svg",
       order:88,
-      parentId: "admin_share"
+      parentId: "admin_shareManage"
     }
   ],
 })
