@@ -117,7 +117,10 @@ export enum TABLE {
     PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
     ADMIN_FOLDER_CABINET = 'adminFolderCabinet',
     ADMIN_HOLD_POLICIES_MANAGE = 'adminHoldPoliciesManage',
-    ADMIN_RETENTION_MANAGE = 'adminRetentionManage'
+    ADMIN_RETENTION_MANAGE = 'adminRetentionManage',
+    ADMIN_EMAIL_TEMPLATE = 'adminEmailTemplate',
+    ADMIN_EMAIL_LAYOUT = 'adminEmailLayout',
+
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -2051,7 +2054,92 @@ export const defaultTableSetting: TableColumnSetting = {
             { label: 'user_active', slot: 'active', prop: 'status', width: 100 },
         ],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_EMAIL_TEMPLATE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'subject' },
+            { id: '2', label: 'ID', prop: 'id', copy: true },
+            { id: '3', label: 'emailTemplate.layout', prop: 'emailLayoutName' },
+            { id: '4', label: 'role.creator', prop: 'createdBy', width: 100 },
+            { id: '5', label: 'dpTable_actions', slot: 'emailAction', "width": 100 },
+            // { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+            //     formatList: [
+            //         {
+            //             "joiner": "",
+            //             "prop": "createdDate",
+            //             "formatFun": "dateFormat",
+            //             "params": {
+            //                 "format": ""
+            //             },
+            //             "index": 0
+            //         }
+            //     ]
+            // },
+            
+        ],
+        events: ['delete'],
+        slots: [
+            { label: 'dpTable_actions', slot: 'emailAction' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_EMAIL_LAYOUT]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '3', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [
+            { label: 'docType_documentType', slot: 'docType' },
+            { label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+        ],
+        options: { pageSize: 20 }
     }
+
     
 }
 
