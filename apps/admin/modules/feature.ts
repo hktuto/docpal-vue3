@@ -24,7 +24,9 @@ const features = {
     LOG_MANAGE: "../../../pages/admin-log-manage",
     DOCUMENT_TYPE: "../../../pages/admin-doc-type-manage",
     MAIL_CONFIG: "../../../pages/admin-mail-config",
+    MAIL_TEMPLATE: "../../../pages/dp-editorjs",
     JOB_STATUS: "../../../pages/admin-message-queue",
+    
 }
 const coreFeatures = {
     Retention: "../../../pages/admin-retention",
