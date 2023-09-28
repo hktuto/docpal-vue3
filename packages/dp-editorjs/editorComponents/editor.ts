@@ -182,8 +182,11 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
             // change href to th:href
             variable.replaceWith(`<a th:href="${ '${' + variable.getAttribute('data-url') + '}' }">${variable.textContent} </a>`);
         })
-        const stringHtml = t.innerHTML;
+        var txt = document.createElement("textarea");
+        txt.innerHTML = t.innerHTML;
+        const stringHtml = txt.value;
         t.remove();
+        txt.remove();
         // wrap html and body tag in stringHtml
         return stringHtml;
     }
