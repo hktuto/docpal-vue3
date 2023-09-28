@@ -4,7 +4,7 @@
         :close-on-click-modal="false"
         append-to-body>
         <template #title>
-            {{ isEdit ? $t('dpDocument_acl_editLocal'): $t('dpDocument_acl_addLocal')}}
+            {{$t(state.title)}}
         </template>
         <FromRenderer ref="FromRendererRef" :form-json="formJson"/>
         <template #footer>
@@ -22,7 +22,8 @@ const state = reactive({
     isEdit: false,
     dialogVisible: false,
     internalShare: false,
-    doc: {}
+    doc: {},
+    title: 'dpDocument_acl_addLocal'
 })
 const FromRendererRef = ref()
 
@@ -67,6 +68,7 @@ function handleOpen (docDetail, isEdit: boolean = false, internalShare: boolean 
     state.doc = docDetail
     state.dialogVisible = true
     state.isEdit = isEdit
+    state.title = state.isEdit ? 'dpDocument_acl_editLocal' : 'dpDocument_acl_addLocal'
     state.internalShare = internalShare
     let params 
     if (isEdit) {
@@ -89,6 +91,7 @@ function handleOpen (docDetail, isEdit: boolean = false, internalShare: boolean 
             ...docDetail,
             permission: 'ReadWrite'
         }, false, true)
+        state.title = 'filePopover_internalShare'
     }
     async function createInternalShare(formData, cb) {
         try {
