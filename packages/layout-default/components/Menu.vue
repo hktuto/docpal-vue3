@@ -88,7 +88,9 @@ function handleSelect(key: string, keyPath: string[]) {
   } 
 }
 onMounted(() => {
-    displayMenu.value = toTree(menu)
+    nextTick(() => {
+        displayMenu.value = toTree(menu)
+    })
 })
 </script>
 
