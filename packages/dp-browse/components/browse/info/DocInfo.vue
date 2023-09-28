@@ -36,10 +36,8 @@
         </div>
         <el-divider />
         <BrowseInfoMeta v-bind="$props" @update="$emit('update')"/>
-    </el-card>
-    <el-card>
         <BrowseInfoTag :doc="doc" @update="$emit('update')"/>
-        <BrowseInfoCollection :doc="doc" @update="$emit('update')" />
+        <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" @update="$emit('update')" />
     </el-card>
     <el-card v-if="!doc.isFolder && allowFeature('WORKFLOW_ADHOC')">
         <BrowseInfoWorkflowSection :doc="doc"></BrowseInfoWorkflowSection>
