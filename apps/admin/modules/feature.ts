@@ -3,7 +3,7 @@ import axios from 'axios';
 import path from 'path';
 
 export const api = axios.create({
-    baseURL: process.env.CLIENT_ENDPOINT || 'https://app4.wclsolution.com/api',
+    baseURL: process.env.CLIENT_ENDPOINT || 'https://admin.app4.wclsolution.com/api',
     timeout: 50000,
 })
 const features = {
@@ -12,27 +12,26 @@ const features = {
     WORKFLOW: ["../../../pages/admin-workflow-form", "../../../pages/admin-workflow-manage"],
     FOLDER_CABINET: "../../../pages/admin-folder-cabinet",
     SHARE_EXTERNAL: "../../../pages/admin-share-list",
+    SHARE_INTERNAL: "../../../pages/admin-internal-share",
+    WATERMARK: ["../../../pages/admin-watermark", "../../../packages/dp-watermark"],
+    BULK_IMPORT: "../../../pages/admin-bulk-import-config",
+    AUDIT: "../../../pages/admin-audit",
+    DIRECTUS: "../../../pages/admin-directus",
+    DOCKER_LOG: "../../../pages/admin-docker-log",
+    VOCABULARY: "../../../pages/admin-vocabulary",
+    GENERATE_TEMPLATE: "../../../pages/admin-doc-template",
+    DAM_FILE_CONVERTION: "../../../pages/admin-dam",
+    LOG_MANAGE: "../../../pages/admin-log-manage",
+    DOCUMENT_TYPE: "../../../pages/admin-doc-type-manage",
+    MAIL_CONFIG: "../../../pages/admin-mail-config",
+    JOB_STATUS: "../../../pages/admin-message-queue",
 }
 const coreFeatures = {
     Retention: "../../../pages/admin-retention",
     ACL: "../../../pages/admin-acl",
-    AUDIT: "../../../pages/admin-audit",
-    BULK_IMPORT_CONFIG: "../../../pages/admin-bulk-import-config",
-    DOC_TEMPLATE: "../../../pages/admin-doc-template",
-    DOC_TYPE_MANAGE: "../../../pages/admin-doc-type-manage",
-    DOCKER_LOG: "../../../pages/admin-docker-log",
-    LOG_MANAGE: "../../../pages/admin-log-manage",
-    MESSAGE_QUEUE: "../../../pages/admin-message-queue",
     META_MANAGE: "../../../pages/admin-meta-manage",
-    
-    WATERMARK: ["../../../pages/admin-watermark", "../../../packages/dp-watermark"],
-    DAM: "../../../pages/admin-dam",
     TABLE_SETTING: "../../../pages/admin-table-setting",
     USER_MANAGE: "../../../pages/admin-user-manage",
-    VOCABULARY: "../../../pages/admin-vocabulary",
-    MAIL_CONFIG: "../../../pages/admin-mail-config",
-    DIRECTUS: "../../../pages/admin-directus",
-    INTERNAL_SHARE: "../../../pages/admin-internal-share",
     HOLD_POLICIES: "../../../pages/admin-hold-policies",
     BROWSE_STORE: '../../../packages/dp-browse',
 }
@@ -55,11 +54,11 @@ export default defineNuxtModule({
       // ...
       try {
           const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
-          console.log(data)
+        //   nuxt.options.runtimeConfig.public.features = data
             Object.keys(data).forEach((key:string) => {
                 if(!data[key] || !features[key]) return
                 if(Array.isArray(features[key])) {
-                    
+
                     features[key].forEach((path:string) => {
                         nuxt.options._layers.push(createLayers(path as string))
                     })

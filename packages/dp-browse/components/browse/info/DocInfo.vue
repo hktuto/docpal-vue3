@@ -41,7 +41,7 @@
         <BrowseInfoTag :doc="doc" @update="$emit('update')"/>
         <BrowseInfoCollection :doc="doc" @update="$emit('update')" />
     </el-card>
-    <el-card v-if="!doc.isFolder">
+    <el-card v-if="!doc.isFolder && allowFeature('WORKFLOW_ADHOC')">
         <BrowseInfoWorkflowSection :doc="doc"></BrowseInfoWorkflowSection>
     </el-card>
     <!-- <el-divider /> -->
@@ -57,7 +57,7 @@ const props = defineProps<{
     permission: any
 }>()
 const { displayTime } = useTime()
-
+const { allowFeature } = useLayout()
 const info = computed(() => {
     return (
     props.doc || {

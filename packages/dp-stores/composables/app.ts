@@ -30,8 +30,6 @@ export const useAppStore = defineStore('app', () => {
         if(value === 'needAuth') {
             const superAdmin = sessionStorage.getItem('superAdmin')
             if(superAdmin === 'superAdmin') {
-                
-                
                 displayState.value = 'defaultLogin' 
                 return
             }

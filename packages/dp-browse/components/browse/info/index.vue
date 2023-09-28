@@ -32,11 +32,11 @@
     <el-tab-pane :label="$t('rightDetail_ocr')" name="ocr">
         <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
     </el-tab-pane>
-    <el-tab-pane :label="$t('rightDetail_comments')" name="comments">
+    <el-tab-pane v-if="allowFeature('DOC_COMMENT')" :label="$t('rightDetail_comments')" name="comments">
         <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :disabled="checkPermission(permission)"/>
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder" :label="$t('convert_convert')" name="convert">
-        <BrowseInfoPicture :doc="detail" />
+        <BrowseInfoPicture v-if="allowFeature('DAM_FILE_CONVERTION')" :doc="detail" />
         <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
     </el-tab-pane>
     <!-- <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">
@@ -77,7 +77,7 @@ const props = withDefaults(defineProps<{
 })
 const interactEl = ref();
 const userId:string = useUser().getUserId()
-const { isMobile } = useLayout()
+const { isMobile, allowFeature } = useLayout()
 const { doc } = toRefs(props)
 const currentTab = ref('info')
 const maxWidth = 600;

@@ -1,5 +1,6 @@
 <template>
 <Table
+    ref="tableRef"
     v-loading="state.loading"
     :columns="tableSetting.columns"
     :table-data="tableData"
@@ -30,7 +31,7 @@ const emit = defineEmits([
 ])
 const route = useRoute()
 const router = useRouter()
-
+const { allowFeature } = useLayout()
 const state = reactive<State>({
     loading: false,
     // tableData: [],
@@ -40,6 +41,7 @@ const state = reactive<State>({
     },
     watermarkList: []
 })
+const tableRef = ref()
 const tableKey = TABLE.CLIENT_SHARE_SET
 const tableSetting = defaultTableSetting[tableKey]
 function getUseWatermark(mimeType :string) {
@@ -63,6 +65,14 @@ function handleDblclick (row:any) {
 }
 onMounted(async() => {
     state.watermarkList = await getWatermarkTemplates() 
+    if(!allowFeature('WATERMARK')) {
+        const index = tableSetting.columns.findIndex(item => item.id === 'watermark')
+        if(index === -1) return
+        tableSetting.columns.splice(index, 1)
+        nextTick(() => {
+            tableRef.value.reorderColumn(tableSetting.columns)
+        })
+    }
 })
 </script>
 
