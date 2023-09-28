@@ -7,8 +7,9 @@ export default defineAppConfig({
       routeName:"audit",
       url:"/audit",
       icon: "/icons/menu/audit.svg",
-      order:2,
-      parentId: "admin_system"
+      order:49,
+      parentId: "admin_system",
+      parentOrder: 10086
     }
   ],
 })

@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"watermark",
       url:"/watermark",
       icon: "/icons/menu/watermark.svg",
-      order:1,
+      order:2,
     }
   ],
 })
