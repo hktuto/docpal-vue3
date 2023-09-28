@@ -13,7 +13,7 @@
                     <ElOption v-for="item in layouts" :key="item.id" :label="item.name" :value="item.id"></ElOption>
                 </ElSelect>
                 <ElButton type="primary" size="small" @click="testEmailOpened = true">{{ $t('email_send_test') }}</ElButton>
-                <ElButton type="primary" size="small" @click="save">{{ $t('common_save') }}</ElButton>
+                <ElButton type="primary" size="small" @click="save">{{$t('common_save')}}</ElButton>
             </div>
         </div>
         <div :class="`email_content ${mode}`">
