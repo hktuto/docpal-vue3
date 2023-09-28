@@ -23,6 +23,7 @@ const { menu, feature } = useAppConfig();
 const {user} = useUser();
 const router = useRouter();
 const route = useRoute();
+const displayMenu = ref([])
 const menuActive = computed(() => {
     let _menu = menu.find(item => route.path.includes(item.url))
     return _menu?.name || ''
@@ -30,9 +31,6 @@ const menuActive = computed(() => {
 /**
  * filter Menu to difference role
  */
-const displayMenu = computed(() => {
-    return toTree(menu)
-})
 function toTree (data) {
     // 空数组
     const result = []
@@ -73,15 +71,9 @@ function toTree (data) {
     result.forEach(item => {
         if(item.children) item.children = item.children.sort((a,b) => a.order - b.order)
     })
+    console.log(result, 'menu')
     return result.sort((a,b) => a.order - b.order)
 }
-// const displayMenu = computed(
-//     () => menu
-//         .filter(m => m.role ? m.role.includes(user.value.role) : true)
-//         .filter(m => m.condition ? feature[m.condition] : true)
-//         .sort((a,b) => a.order - b.order)
-// )
-//#endregion
 
 function handleOpen(key: string, keyPath: string[]) {
 //   console.log('handleOpen', key, keyPath)
@@ -95,6 +87,9 @@ function handleSelect(key: string, keyPath: string[]) {
     if(!!_menu) router.push({ path: _menu.url })
   } 
 }
+onMounted(() => {
+    displayMenu.value = toTree(menu)
+})
 </script>
 
 
