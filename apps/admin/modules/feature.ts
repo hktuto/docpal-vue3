@@ -34,6 +34,8 @@ const coreFeatures = {
     USER_MANAGE: "../../../pages/admin-user-manage",
     HOLD_POLICIES: "../../../pages/admin-hold-policies",
     BROWSE_STORE: '../../../packages/dp-browse',
+    EMAIL_TEMPLATE: '../../../packages/dp-editorjs'
+    
 }
 export default defineNuxtModule({
     meta: {
