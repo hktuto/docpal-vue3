@@ -58,7 +58,8 @@ export default defineNuxtModule({
       // ...
       try {
           const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
-        //   nuxt.options.runtimeConfig.public.features = data
+            console.log(data)
+          //   nuxt.options.runtimeConfig.public.features = data
             Object.keys(data).forEach((key:string) => {
                 if(!data[key] || !features[key]) return
                 if(Array.isArray(features[key])) {
