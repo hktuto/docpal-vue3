@@ -749,7 +749,7 @@ export default class VariableOptions implements InlineTool {
     /**
      * If no link tag then do nothing
      */
-    if (!parentA) {
+    if (!parentA || !parentA.classList.contains(VariableOptions.CSS.linkItem)) {
       return;
     }
 

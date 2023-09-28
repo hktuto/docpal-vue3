@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
+import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi, CreateEmailTemplateApi} from 'dp-api';
   import { useEditor } from '~/editorComponents/editor';
   const editInfoOpened = ref(false);
   const testEmailOpened = ref(false);
@@ -54,14 +54,28 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
   const layouts = ref<any[]>([]);
   const selectedLayout = ref<any>(null);
   const mode = ref<'desktop' | 'mobile'>('desktop');
-
+  const router = useRouter()
+  
 
 
     /**
      * Step 1: 從後端取得 template 資料
      */
-    const {data} = useAsyncData(async () => {
+    const {data, refresh} = useAsyncData(async () => {
         // TODO : if id is new , create new dummy data
+      if(!id ||id === 'new') {
+        ready.value = true;
+        await getVariableFromBody("");
+        await getTemplateLayout("");
+        editInfoOpened.value = true;
+        return {
+          subject: 'new template',
+          body: '',
+          emailLayoutId: '',
+          emailTemplateJson: '',
+          emailTemplateVariable: ''
+        }
+      }
         const { data } = await api.get(`/docpal/template/email/template/${id}`);
         // loop template body and get all variables
         const body = data.data.body;
@@ -122,6 +136,21 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi} from 'dp-api';
  */
 async function save() {
         const {html, json, variable} = await editor.getData();
+        // if id is new , create new
+        if(id === 'new'){
+          const result = await CreateEmailTemplateApi({
+            ...data.value,
+            // TODO : send html to body
+            // url encode html
+            body: html,
+            emailLayoutId: selectedLayout.value,
+            emailTemplateJson: JSON.stringify(json),
+            emailTemplateVariable: JSON.stringify(variable)
+          })
+          router.push(`/emailTemplate/${result.id}`)
+          // TODO : add notification
+          return;
+        }
         // test save json to backend
         const result = await UpdateEmailTemplateApi({
              ...data.value,
@@ -178,6 +207,9 @@ async function sendTest(){
         justify-content: flex-start;
         align-items: center;
         gap: var(--app-padding);
+        .el-select{
+          width: 200px;
+        }
         > * {
           margin:0;
           

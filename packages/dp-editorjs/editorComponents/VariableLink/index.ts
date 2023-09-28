@@ -84,7 +84,7 @@ export default class VariableLink implements InlineTool {
    * @returns {string}
    */
   static get title() {
-    return 'Variable';
+    return 'Variable Link';
   }
 
   /**
@@ -93,7 +93,7 @@ export default class VariableLink implements InlineTool {
    * @returns {string}
    */
   get shortcut() {
-    return 'CMD+K';
+    return 'CMD+L';
   }
 
   /**
@@ -621,8 +621,12 @@ export default class VariableLink implements InlineTool {
     /**
      * Get link's href
      */
-    const href = element.dataset['href'];
-
+    let href = element.dataset['href'];
+    // check include in variables
+    // if yes wrap with ${}
+    if( this.config.variables.find((item:any) => item === href) ) {
+        href = '${' + href + '}';
+    }
     /**
      * Restore origin selection
      */
@@ -750,7 +754,8 @@ export default class VariableLink implements InlineTool {
     /**
      * If no link tag then do nothing
      */
-    if (!parentA) {
+    // 如果parent a存在，且class包含linkItem，则显示unlink
+    if (!parentA || !parentA.classList.contains(VariableLink.CSS.linkItem)) {
       return;
     }
 

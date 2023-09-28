@@ -17,7 +17,7 @@
                     <SvgIcon src="/icons/edit.svg" ></SvgIcon>
                 </el-button>
                 <el-button v-if="row.createdBy !== 'system'" class="emailActionButton" type="text" size="small"
-                    @click="handleDeleteTemplate">
+                    @click="handleDeleteTemplate(row.id)">
                     <SvgIcon src="/icons/menu/trash.svg" ></SvgIcon>
                 </el-button>
             </template>

@@ -9,7 +9,6 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
 
     const editor = ref();
     function createEditor():void{
-        console.log(editorId)
         editor.value = new EditorJS({
             holderId: editorId,
             autofocus: true,
@@ -114,11 +113,27 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
             const varLink = t.content.querySelectorAll('a.ce-link-item');
             // push data-url to variable
             varLink.forEach((variable) => {
-                newVariable.push(variable.getAttribute('data-url') as string);
+                const dataURL = variable.getAttribute('data-url');
+                const regex = /\${(.*?)}/g;
+                const matches = dataURL?.match(regex);
+                if(matches) {
+                    matches.forEach((variable:any) => {
+                        newVariable.push(variable.replace('${', '').replace('}', ''));
+                    })
+                }
             })
             // remove t from memory
             t.remove();
         }
+        // get string if ${} in data.subject
+        const regex = /\${(.*?)}/g;
+        const matches = data.subject.match(regex);
+        if(matches) {
+            matches.forEach((variable:any) => {
+                newVariable.push(variable.replace('${', '').replace('}', ''));
+            })
+        }
+        
         // variables.value = newVariable;
         // remove duplicate
         
@@ -180,7 +195,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         varLink.forEach((variable) => {
             // variable.setAttribute('href', '${' + variable.getAttribute('data-url') + '}');
             // change href to th:href
-            variable.replaceWith(`<a th:href="${ '${' + variable.getAttribute('data-url') + '}' }">${variable.textContent} </a>`);
+            variable.replaceWith(`<a th:href="${  variable.getAttribute('data-url')  }">${variable.textContent} </a>`);
         })
         var txt = document.createElement("textarea");
         txt.innerHTML = t.innerHTML;
