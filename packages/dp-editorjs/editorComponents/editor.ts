@@ -3,8 +3,8 @@ import Header from '@editorjs/header';
 import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import  Paragraph from '@editorjs/paragraph';
-import VariableOptions from './variableOptions';
-import LinkInlineTool from './variableLink';
+import VariableOptions from './VariableOptions';
+import LinkInlineTool from './VariableLink';
 export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) => {
 
     const editor = ref();
