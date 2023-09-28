@@ -3,7 +3,8 @@ import axios from 'axios';
 import path from 'path';
 
 export const api = axios.create({
-    baseURL: process.env.CLIENT_ENDPOINT || 'https://admin.app4.wclsolution.com/api',
+    // baseURL: process.env.CLIENT_ENDPOINT || 'https://admin.app4.wclsolution.com/api',
+    baseURL: 'https://admin.app4.wclsolution.com/api',
     timeout: 50000,
 })
 const features = {
