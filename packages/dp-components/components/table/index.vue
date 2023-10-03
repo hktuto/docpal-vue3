@@ -516,6 +516,6 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
     color: var(--color-grey-900);
 }
 .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
-    background-color: var(--color-b3);
+    background-color: var(--color-grey-050);
 }
 </style>
