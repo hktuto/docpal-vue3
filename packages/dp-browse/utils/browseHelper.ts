@@ -163,8 +163,10 @@ export function calFileNameAndExt(mimeType: string, name: string):string {
 }
 
 export function downloadBlob (blob:any, name:string, type = "application/octet-stream") {
+  
   const blobStream = new Blob([blob], { type })
   const fileName = name.includes('.') ? name : calFileNameAndExt(blob.type, name);
+  console.log(fileName, blob.type)
   const url = window.URL.createObjectURL(blobStream)
   downloadUrl(url, fileName)
 }
