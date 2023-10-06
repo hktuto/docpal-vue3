@@ -15,7 +15,7 @@ function toggleColor() {
 
 onMounted(() => {
     // get user preference
-    colorMode.preference = userPreference.value.color
+    colorMode.preference = userPreference.value?.color || 'light';
 })
 </script>
 
