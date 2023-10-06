@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"docTemplate",
       url:"/docTemplate",
       icon: "/icons/menu/docTemplate.svg",
-      order:99,
+      order:29,
       parentId: "admin_workflow"
     }
   ],

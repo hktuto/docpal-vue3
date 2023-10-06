@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"docType",
       url:"/docType",
       icon: "/icons/menu/docType.svg",
-      order:6,
+      order:39,
       parentId: "admin_browse"
     }
   ],

@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"logManage",
       url:"/logManage",
       icon: "/icons/menu/log.svg",
-      order:15,
+      order:69,
       parentId: "admin_system"
     }
   ],

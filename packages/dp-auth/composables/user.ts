@@ -1,7 +1,8 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
+import { ElMessage } from 'element-plus'
 import { useSetting } from './../../dp-stores/composables/setting';
 import { useLanguage } from './../../dp-stores/composables/language'
-import { GetSetting, UserSettingSaveApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
+import { GetSetting, UserSettingSaveApi, getKeyCloakPropertyApi, Login, api, Verify, getUserListApi, isLdapModeApi} from 'dp-api'
 import { User, UserSetting } from 'dp-api/src/model/user'
 import Keycloak from 'keycloak-js'
 let dpKeyCloak: any
@@ -22,8 +23,15 @@ export const useUser = () => {
     const isLdapMode = useState<boolean>('isLdapMode',() => false);
 
     const userList = useState<User[]>('userList', () => ([]));
-    const publicPages = ['/forgetPassword', '/resetPassword', '/language', '/error/503', '/error/404']
-    const { public: { endPoint, keycloakConfig } } = useRuntimeConfig();
+    const publicPages = [
+        '/forgetPassword', 
+        '/resetPassword', 
+        '/language', 
+        '/error/503', 
+        '/error/404',
+        '/FormEditor'
+    ]
+    const { public: { endPoint } } = useRuntimeConfig();
     const { loadLanguage } = useLanguage()
     const colorModeOption = [
         {
@@ -135,15 +143,16 @@ export const useUser = () => {
     async function callApi() {
         // 使用令牌来调用您的 API
         try {
-            console.log(dpKeyCloak.token);
             await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
             await appStore.appInit();
-            const data = await api.get('/docpal/systemfeature/keycloak-token-verification',{ 
-                                    headers: {
-                                        Authorization : 'Bearer ' + dpKeyCloak.token
+            localStorage.setItem('token', dpKeyCloak.token);
+            const data = await api.get('/docpal/systemfeature/keycloak-token-verification').then( res => { 
+                                    if(!res.data || !res.data.data) {
+                                        handleKeycloakLoginFail()
                                     }
-                                }).then( res => { return res.data.data })
-
+                                    return res.data.data 
+                                })
+            if (!data) return
             token.value = data.access_token 
             refreshToken.value = data.refresh_token
             localStorage.setItem('token', token.value);
@@ -155,11 +164,15 @@ export const useUser = () => {
             await getUserSetting();
             appStore.setDisplayState('ready');
         } catch (error) {
-            // logout()
+            handleKeycloakLoginFail()
         }
-        
     }
-
+    function handleKeycloakLoginFail () {
+        setTimeout(() => {
+            router.push('/error/503?message=message')
+            appStore.setDisplayState('ready');
+        }, 200)
+    }
     async function login(username:string, password: string):Promise<{isRequired2FA:boolean}> {
         const {access_token, refresh_token, isRequired2FA} = await Login({
             username,  password
@@ -188,14 +201,19 @@ export const useUser = () => {
         
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        
         if(dpKeyCloak && dpKeyCloak.token) dpKeyCloak.logout()
         else{
             appStore.setDisplayState('needAuth')
             sessionStorage.clear()
         } 
     }
-
+    function logoutKeyCloak() {
+        if(dpKeyCloak && dpKeyCloak.token) {
+            dpKeyCloak.logout()
+        } else {
+            appStore.setDisplayState('needAuth')
+        }
+    }
     async function getUserList() {
         const list = await getUserListApi();
         userList.value = list;
@@ -206,8 +224,7 @@ export const useUser = () => {
      * @returns 
      */
     async function beforeLogin(goHome: boolean) {
-        console.log(isLogin.value, 'isLogin');
-        
+        console.log(useRuntimeConfig());
         if(isLogin.value) {
             appStore.setDisplayState('ready') 
             return
@@ -226,36 +243,40 @@ export const useUser = () => {
             await appStore.appInit();
             appStore.setDisplayState('defaultLogin') 
             sessionStorage.setItem('superAdmin', 'superAdmin')
-            await setIsLdapMode()
+            setIsLdapMode(await getIsLdapMode())
             verify()
         } else {
-            console.log('superAdpKeyCloakdmin');
             if(!dpKeyCloak) {
-                await setKeyCloak()
+                const result = await setKeyCloak()
+                if(!result) return 
             }
             sessionStorage.removeItem('superAdmin')
             keycloakLogin();
         }
     }
     async function setKeyCloak() {
-        await setIsLdapMode()
-        const config = {
+        const config = await getKeyCloakPropertyApi()
+        if(!config.keyCloakProperty.url ||
+           !config.keyCloakProperty.realm ||
+           !config.keyCloakProperty.clientId ||
+           !config.keyCloakProperty.sslRequired) {
             // @ts-ignore
-            ...keycloakConfig,
-            // @ts-ignore
-            realm: isLdapMode.value ? keycloakConfig.ldapRealm : keycloakConfig.realm,
-            url: getKeycloakUrl()
+            ElMessage.error($i18n.t('dpTip_keycloakError'))
+            return false
         }
-        console.log({config})
-        // @ts-ignore
-        dpKeyCloak = new Keycloak(config)
-        function getKeycloakUrl () {
-            let origin = window.location.origin
-            if(origin.includes('https://admin')) origin = origin.replace('https://admin.', 'https://')
+
+        setIsLdapMode(config.isLdap)
+        dpKeyCloak = new Keycloak({
+            "url": config.keyCloakProperty.url,
+            "realm": config.keyCloakProperty.realm, // ldap: docpal_third_party
+            "clientId": config.keyCloakProperty.clientId,
             // @ts-ignore
-            else if(!origin.includes('https://')) return keycloakConfig.url
-            return origin +'/keycloak/'
-        }
+            "ssl-required": config.keyCloakProperty.sslRequired,
+            "public-client": config.keyCloakProperty.publicClient,
+            "confidential-port": config.keyCloakProperty.confidentialPort
+        })
+
+        return true
     }
     function getUserId () {
         try {
@@ -264,8 +285,8 @@ export const useUser = () => {
             return ''
         }
     }
-    async function setIsLdapMode () {
-        isLdapMode.value = await isLdapModeApi()
+    async function setIsLdapMode (isLdap: boolean) {
+        isLdapMode.value = isLdap
     }
     function getIsLdapMode () {
         return isLdapMode.value
@@ -282,6 +303,7 @@ export const useUser = () => {
         login,
         verify,
         logout,
+        logoutKeyCloak,
         getUserSetting,
         savePreference,
         getUserList,

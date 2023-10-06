@@ -3,11 +3,11 @@
 export default defineAppConfig({
   menu:[
     {
-      name:"setting_smart folder",
+      name:"admin_smartFolder",
       routeName:"preSearchConfig",
       url:"/preSearchConfig",
       icon: "/icons/menu/preSearchConfig.svg",
-      order:11,
+      order:1,
       parentId: "admin_browse"
     }
   ],

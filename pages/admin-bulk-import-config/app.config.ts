@@ -7,7 +7,7 @@ export default defineAppConfig({
       routeName:"bulkImport",
       url:"/bulkImport",
       icon: "/icons/menu/bulkImportConfig.svg",
-      order:12,
+      order:19,
       parentId: "admin_workflow"
     }
   ],

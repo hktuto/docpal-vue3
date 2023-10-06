@@ -59,7 +59,10 @@ const state = reactive({
             return
         }
         state.loading = true
-        state.metaList = await metaListGet(documentType, initData)
+        try {
+            state.metaList = await metaListGet(documentType, initData)
+        } catch (error) {
+        }
         state.loading = false
         return state.metaList
     }

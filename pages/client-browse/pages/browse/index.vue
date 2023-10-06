@@ -12,7 +12,7 @@
                     <CollapseMenu>
                         <template #default="{collapse}">
                         <BrowseActionsHold :permission="listData.permission" :doc="listData.doc" />
-                        <BrowseActionsSubscribe  :doc="listData.doc" />
+                        <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="listData.doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :class="{actionDivider:true, collapse}"></div>
                         <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @success="handleRefresh"/>
                         <!-- <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @success="handleRefresh"/> -->
@@ -20,7 +20,7 @@
                         <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @delete="itemDeleted" @success="handleRefresh"/>
                         <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" />
                         <div v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :class="{actionDivider:true, collapse}"></div>
-                        <BrowseActionsUploadRequest v-if="feature.UPLOAD_REQUEST" v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :path="listData.doc.path" />
+                        <BrowseActionsUploadRequest v-if="allowFeature('UPLOAD_REQUEST')" v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :path="listData.doc.path" />
                         </template>
                     </CollapseMenu>
                     <div :class="{actionDivider:true, collapse}"></div>
@@ -76,6 +76,7 @@ import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper'
 const breadCrumb = ref();
 const route = useRoute();
 const router = useRouter();
+const { allowFeature } = useLayout()
 const listData = ref<{
     doc: DocDetail;
     permission: Permission

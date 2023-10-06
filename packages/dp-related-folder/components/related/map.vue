@@ -4,6 +4,7 @@ const show = ref(false);
 const infoOpened = ref(false);
 const permission = ref();
 const { public:{feature} } = useRuntimeConfig();
+const { allowFeature } = useLayout()
 const doc = ref({
     name:""
 });
@@ -71,7 +72,7 @@ function handleRefresh(){
                             <div class="infoHeaderActions">
                                 <BrowseActionsHold  :doc="doc" :permission="permission"/>
                                 <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
-                                <BrowseActionsSubscribe  :doc="doc" />
+                                <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                                 <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefresh"/>
                                 <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
                                 <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />

@@ -20,7 +20,14 @@ export const Verify = async():Promise<User> => {
     return api.get<Response<User>>('/nuxeo/user/getApplication').then(res => res.data.data);
 }
 export const isLdapModeApi = async()=> {
-    return await api.get('/docpal/relation/isLdapMode').then(res => res.data.data);
+    try {
+        return await api.get('/docpal/relation/isLdapMode').then(res => res.data.data);
+    } catch (error) {
+        return false
+    }
+}
+export const getKeyCloakPropertyApi = async()=> {
+    return await api.get('/docpal/relation/getKeyCloakProperty').then(res => res.data.data);
 }
 export const checkValidTokenApi = async(token) => {
     return api.get(`/nuxeo/user/confirmReset?token=${token}`).then(res => res.data.data);
