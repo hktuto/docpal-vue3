@@ -24,3 +24,13 @@ export const aclUnblockApi = async(idOrPath) => {
     const res = await api.post('/nuxeo/document/acl/unblock', [{ idOrPath }]).then(res => res.data.data)
     return res
 }
+
+export const exportFolderStructureApi = async(idOrPath: string, name: string = "export") => {
+    try{
+      const res = await api.post('/nuxeo/folderStructure/export', { idOrPath }, { responseType: 'blob', timeout: 0 })
+      downloadBlob(res.data, name + '.zip', res.data.type )
+      return res
+    }catch(error){
+      return false
+    }
+  }
