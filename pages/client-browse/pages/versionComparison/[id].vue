@@ -1,5 +1,5 @@
 <template>
-     <NuxtLayout >
+     <NuxtLayout :pageTitle="state.title" :backPath="state.backPath">
         <page-container>
           <div class="flex__50 padding">
             <VersionHeader :doc="oldVersion" :canRestore="true" />
@@ -29,34 +29,39 @@
 
 <script lang="ts" setup>
 import { GetDocDetail, getSpecificVersionApi } from 'dp-api'
-    const route = useRoute(); 
-    const router = useRouter();
-    const newVersion = ref<Document>()
-    const oldVersion = ref<Document>()
-    const activeNames = ref(['1'])
-    const infoDiff = ref()
+const route = useRoute(); 
+const router = useRouter();
+const newVersion = ref<Document>()
+const oldVersion = ref<Document>()
+const activeNames = ref(['1'])
+const infoDiff = ref()
+const state = reactive({
+    title: '',
+    backPath: '/browse'
+})
+const init = async(path) => {
+    const idOrPath = path
+}
 
-    const init = async(path) => {
-      const idOrPath = path
-    }
-
-    const close = () => {
-      router.push( {
+const close = () => {
+    router.push( {
         path: `/browse/?path=${newVersion.value.path}`
-      })
-    }
+    })
+}
 
-    onMounted( async() => {
-      init(route.params.id as string);
-      newVersion.value = await GetDocDetail(route.params.id as string)
-      oldVersion.value = await getSpecificVersionApi({
+onMounted( async() => {
+    init(route.params.id as string);
+    newVersion.value = await GetDocDetail(route.params.id as string)
+    state.title = newVersion.value.name
+    state.backPath = `/browse/?path=${newVersion.value.path}`
+    oldVersion.value = await getSpecificVersionApi({
         idOrPath: route.params.id,
         versionNum: route.query.oldVersion
-      })
-      nextTick(() => {
-        infoDiff.value.handleData()
-      })
     })
+    nextTick(() => {
+        infoDiff.value.handleData()
+    })
+})
 </script>
 
 <style lang="scss" setup>
