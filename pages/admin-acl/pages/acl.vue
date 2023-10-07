@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
+    <NuxtLayout class="fit-height withPadding"  >
         <div class="grid-layout">
             <Tree ref="treeRef" :rootDataGetApi="rootDataGet"
                     :leafDataGetApi="leafDataGet"
@@ -14,15 +14,20 @@
             </Tree>
             <div class="main" v-loading="state.loading">
                 <div v-if="state.doc" class="topAction" >
-                    <h3>{{state.doc.name}}
+                    <h3 class="flex-x-start">{{state.doc.name}}
+                        <ExportFolderStructureButton v-show="state.doc.isFolder" class="el-icon--right"
+                            :export-id="state.doc.id" :export-name="state.doc.name"></ExportFolderStructureButton>
                         <!-- <ExportButton v-show="folderCurItem.isFolder" class="el-icon--right" :export-id="folderCurItem.id" :export-name="folderCurItem.name"></ExportButton> -->
                     </h3>
-                    <el-select v-if="state.doc.properties"
-                        v-model="state.doc.properties['sec:clearanceLevel']" clearable
-                        placeholder="Clearance Level"
-                        @change="clearanceLevelChange" >
-                        <el-option v-for="o in state.options" :key="o" :label="o" :value="o"/>
-                    </el-Select>
+                    <div class="right">
+                        <ExportZipButton v-show="state.doc.isFolder" :export-id="state.doc.id" :export-name="state.doc.name"></ExportZipButton>
+                        <el-select v-if="state.doc.properties"
+                            v-model="state.doc.properties['sec:clearanceLevel']" clearable
+                            placeholder="Clearance Level"
+                            @change="clearanceLevelChange" >
+                            <el-option v-for="o in state.options" :key="o" :label="o" :value="o"/>
+                        </el-Select>
+                    </div>
                 </div>
                 <div class="main-content" v-if="state.doc.name" >
                     <AclInherentTable v-if="state.doc.name !== 'Root'" :tableData="inheritedList" :doc="state.doc" @refresh="getAcls"></AclInherentTable>
@@ -215,6 +220,12 @@ async function clearanceLevelChange (value) {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            .right {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                gap: var(--app-padding);
+            }
         }
         &-content {
            overflow: auto;

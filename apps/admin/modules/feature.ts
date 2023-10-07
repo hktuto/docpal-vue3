@@ -4,6 +4,7 @@ import path from 'path';
 
 export const api = axios.create({
     baseURL: process.env.ADMIN_ENDPOINT || 'https://admin.app4.wclsolution.com/api',
+    // baseURL: 'https://admin.app4.wclsolution.com/api',
     timeout: 50000,
 })
 const features = {
@@ -24,7 +25,9 @@ const features = {
     LOG_MANAGE: "../../../pages/admin-log-manage",
     DOCUMENT_TYPE: "../../../pages/admin-doc-type-manage",
     MAIL_CONFIG: "../../../pages/admin-mail-config",
+    MAIL_TEMPLATE: "../../../pages/dp-editorjs",
     JOB_STATUS: "../../../pages/admin-message-queue",
+    
 }
 const coreFeatures = {
     Retention: "../../../pages/admin-retention",
@@ -34,6 +37,8 @@ const coreFeatures = {
     USER_MANAGE: "../../../pages/admin-user-manage",
     HOLD_POLICIES: "../../../pages/admin-hold-policies",
     BROWSE_STORE: '../../../packages/dp-browse',
+    EMAIL_TEMPLATE: '../../../packages/dp-editorjs'
+    
 }
 export default defineNuxtModule({
     meta: {
@@ -54,7 +59,8 @@ export default defineNuxtModule({
       // ...
       try {
           const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
-        //   nuxt.options.runtimeConfig.public.features = data
+            console.log(data)
+          //   nuxt.options.runtimeConfig.public.features = data
             Object.keys(data).forEach((key:string) => {
                 if(!data[key] || !features[key]) return
                 if(Array.isArray(features[key])) {

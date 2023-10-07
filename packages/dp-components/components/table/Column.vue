@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { CopyDocument } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 const tableHelper = useTableHelper()
 const props = defineProps<{ col: Table.Column }>()
@@ -17,6 +18,15 @@ function formatProp (row) {
 function getIcon (row, position='prefixIcon') {
     // dpLog(col[position]);
 
+}
+function handleCopy (text) {
+    const el = document.createElement('textarea');
+    el.value = text
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    window.alert('Copy 成功')
 }
 </script>
 <template>
@@ -75,7 +85,9 @@ function getIcon (row, position='prefixIcon') {
         <template v-else #default="{ row, $index }">
             <!-- 自定义slot (END) -->
             <!-- 默认渲染 (START) -->
-            <span :class="col.class">{{ formatProp(row) }}</span>
+            <span :class="col.class">{{ formatProp(row) }}
+                <el-icon v-if="col.copy" class="cursorPointer" color="#409EFC" @click="handleCopy(formatProp(row))"><CopyDocument /></el-icon>
+            </span>
             <!-- 默认渲染 (END) -->
         </template>
         <!-- 自定义表头 -->
