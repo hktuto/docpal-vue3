@@ -46,6 +46,7 @@
 
 <script lang="ts" setup>
 import { DownloadDocApi, downloadDocRecord, getSupportedFormatApi, submitExportRequestApi } from "dp-api"
+import { Download } from '@element-plus/icons-vue';
 import { ElNotification, ElMessage} from 'element-plus'
 import {useEventListener} from "@vueuse/core";
 const props = defineProps<{
@@ -112,33 +113,38 @@ onMounted(async () => {
 
 // #endregion
 async function downloadHandler(){
+    const id = new Date().valueOf() + props.doc.name
     const notification = ElNotification({
           title: '',
+          icon: Download,
           dangerouslyUseHTMLString: true,
-          message: `${props.doc.name}<i class="el-icon-loading"></i>`,
+          message: `<span id="${id}">0%</span> ${props.doc.name}`,
           showClose: false,
-          customClass: 'loading-notification',
+          customClass: 'download-notification',
           duration: 0,
           position: 'bottom-right'
         });
     try{
-      const blob = await DownloadDocApi(props.doc.id)
+      const blob = await DownloadDocApi(props.doc.id, (e) => {
+        const el = document.getElementById(id)
+        if(el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+      })
       await downloadBlob(blob, props.doc.name)
-      await DownloadDocApi(props.doc.id)
+    //   await DownloadDocApi(props.doc.id)
     } catch(error:any) {
         ElMessage.error(t('download_noFile') as string)
     }
     notification.close()
-   
 }
 async function downloadAsPdfHandler(){
     // TODO : impelment action
     const notification = ElNotification({
           title: '',
+          icon: Download,
           dangerouslyUseHTMLString: true,
-          message: `${props.doc.name}<i class="el-icon-loading"></i>`,
+          message: `${props.doc.name}`,
           showClose: false,
-          customClass: 'loading-notification',
+          customClass: 'download-notification',
           duration: 0,
           position: 'bottom-right'
         });

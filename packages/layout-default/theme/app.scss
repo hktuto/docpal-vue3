@@ -94,6 +94,22 @@ html.dark {
     white-space: nowrap;
     overflow: hidden;
 }
+.download-notification {
+    width: fit-content!important;
+    max-width: 180px;
+    padding: var(--app-padding)!important;
+    .el-notification__icon {
+    //    color: var(--primary-color);
+    }
+    .el-notification__group {
+        overflow: hidden;
+        .el-notification__content p{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+}
 .loading-notification  {
     width: fit-content!important;
     max-width: 180px;

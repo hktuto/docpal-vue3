@@ -15,6 +15,7 @@ const cancelAxiosWhiteList = [
     '/docpal/notification/page',
     '/docpal/notification/unRead/number',
     // setting
+    '/auth/nuxeo/token',
     '/nuxeo/admin/setting/tableColumn',
     '/nuxeo/admin/setting/language', 
     // export
@@ -30,6 +31,7 @@ const cancelAxiosWhiteList = [
     '/nuxeo/identity/users',
     '/nuxeo/search/getSearchExtends', 
 ]
+let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
     const { logout } = useUser()
     const router:any = nuxtApp.$router;

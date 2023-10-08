@@ -1,10 +1,12 @@
 <template>
-    <div v-if="state.type.includes('audio')" v-loading="state.loading" class="videoPlayerContainer" >
+<div style="height: 100%" v-loading="state.loading">
+    <div v-if="state.type.includes('audio')" class="videoPlayerContainer" >
         <audio  controls>
             <source :src="state.src" :type="state.type" />
         </audio>
     </div>
     <ReaderTiff v-else-if="state.type.includes('image/tiff')" v-bind="state" ></ReaderTiff>
+</div>
 </template>
 
 <script lang="ts" setup>
