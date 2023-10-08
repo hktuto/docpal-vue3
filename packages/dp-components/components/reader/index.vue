@@ -1,5 +1,4 @@
 <template>
-
     <template v-if="!state.url" >
         <div v-if="id">{{$t('fileNoExist')}}</div>
     </template>

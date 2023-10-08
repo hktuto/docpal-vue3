@@ -104,6 +104,7 @@ const readerType = computed(() => {
 });
 
 async function openPreview({detail}:any) {
+  cancelAxios()
   show.value = false
   options.value = detail.options
   // const response = await getDocumentDetail(detail.pathOrId, userId)
@@ -119,6 +120,7 @@ function mobileActionsOpenedChanged(bool:boolean) {
 }
 
 function closePreview(){
+  cancelAxios()
   show.value = false;
   doc.value = null
   permission.value = null;
