@@ -75,6 +75,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
                 }
             },
             onChange: (api, event) => {
+                
                 const data = api.saver.save().then((outputData) => {
                     calculateVariable(outputData);
                 });
@@ -127,13 +128,12 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         }
         // get string if ${} in data.subject
         const regex = /\${(.*?)}/g;
-        const matches = data.subject.match(regex);
+        const matches = data.subject?.match(regex);
         if(matches) {
             matches.forEach((variable:any) => {
                 newVariable.push(variable.replace('${', '').replace('}', ''));
             })
         }
-        
         // variables.value = newVariable;
         // remove duplicate
         
