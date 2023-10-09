@@ -148,13 +148,11 @@ export const useUploadStore = () => {
                 };
                 // get index of the item
                 const index = uploadState.value.uploadRequestList[requestIndex].docList.findIndex((doc: any) => doc.id === item.id)
-
                 if (parentPath === '/') parentPath = ''
                 uploadState.value.uploadRequestList[requestIndex].docList[index].status = 'loading'
                 const res = await handleCreateDocument(item, parentPath)
                 uploadState.value.uploadRequestList[requestIndex].docList[index].status = res ? 'finish' : 'error'
                 uploadState.value.uploadRequestList[requestIndex].docList[index].path  = res ? res.path : '';
-                
             } else {
                 const index = uploadState.value.uploadRequestList[requestIndex].docList.findIndex((doc: any) => doc.id === item.id)
                 uploadState.value.uploadRequestList[requestIndex].docList[index].path.status = 'skip'
@@ -177,7 +175,7 @@ export const useUploadStore = () => {
     
     async function handleCreateDocument (doc: any, parentPath: string) {
         let result
-        const document = {
+        const _document = {
           name: doc.name,
           idOrPath: `${parentPath}/${doc.name}`,
           type: doc.documentType,
@@ -185,13 +183,17 @@ export const useUploadStore = () => {
         }
         try {
             if(doc.isFolder) {
-                result = await CreateFoldersApi(document)
+                result = await CreateFoldersApi(_document)
             }
             else {
                 const formData = new FormData()
                 formData.append('files', doc.file)
-                formData.append('document', JSON.stringify(document))
-                result = await CreateDocumentApi(formData)
+                formData.append('document', JSON.stringify(_document))
+                result = await CreateDocumentApi(formData, (e: any) => {
+                    const id =`${doc.id}_progress`
+                    const el = document.getElementById(id)
+                    if(el) el.innerHTML = `${Math.round((e.loaded / e.total) * 100)}%`
+                })
             }
         } catch (error) {
             result = false
