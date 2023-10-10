@@ -12,7 +12,6 @@ export const client = base.extend<{} & { browsePage: BrowsePage }>({
         await page.goto(clientURL + '/');
         await login(page, process.env.CLIENT_USER || 'seantsang', process.env.CLIENT_PASSWORD ||'aaAA1234');
 
-        await page.getByRole('button', {name: 'Sign In'}).press('Enter');
         await expect(page).toHaveURL(/.*browse/);
 
         await changeLanguage(page, 'ENG'); 
@@ -21,7 +20,6 @@ export const client = base.extend<{} & { browsePage: BrowsePage }>({
     },
     browsePage: async ({ page }, use, scope) => {
         const browsePage = new BrowsePage(page);
-        await browsePage.goToFirstLevel();
         await use(browsePage);
         await browsePage.removeAll();
     }
