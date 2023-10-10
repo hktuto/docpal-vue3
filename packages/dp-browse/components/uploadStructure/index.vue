@@ -12,6 +12,7 @@
                 {{ uploadItem.name }}
               </div>
               <div class="uploadStatus">
+                <!-- <span :id="`${uploadItem.id}_progress`"></span> -->
                 {{ $t('upload_Status_' + uploadItem.status) }}
               </div>
             </div>

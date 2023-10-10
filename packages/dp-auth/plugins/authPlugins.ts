@@ -1,8 +1,37 @@
+// @ts-nocheck
+import axios from 'axios';
 import { api } from 'dp-api'
 import jwt_decode from "jwt-decode";
 import {refreshTokenFn} from "~/utils/refreshToken";
 import { ElMessage } from 'element-plus'
 const noRouteErrorPages = ['/FormEditor/', '/workflowForm/']
+const cancelAxiosWhiteList = [
+    // public
+    '/nuxeo/document/download',
+    '/nuxeo/document/isDuplicateName',
+    '/nuxeo/document/createDocument',
+    '/nuxeo/document/createFolders',
+    '/docpal/relation/queryLanguage',
+    '/docpal/notification/page',
+    '/docpal/notification/unRead/number',
+    // setting
+    '/auth/nuxeo/token',
+    '/nuxeo/admin/setting/tableColumn',
+    '/nuxeo/admin/setting/language', 
+    // export
+    '/docpal/cabinet/export',
+    '/nuxeo/search/exportCsv',
+    '/docpal/workflow/tasks/exportTasksUser',
+    '/docpal/workflow/history/exportProcessHistory',
+    // search
+    '/nuxeo/collection/all', 
+    '/nuxeo/tags/getAllTags', 
+    '/nuxeo/types',
+    '/nuxeo/search/textSearchTypes',
+    '/nuxeo/identity/users',
+    '/nuxeo/search/getSearchExtends', 
+]
+let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
     const { logout } = useUser()
     const router:any = nuxtApp.$router;
@@ -18,6 +47,10 @@ export default defineNuxtPlugin((nuxtApp) => {
         }  
         const token = localStorage.getItem('token');
         config.headers.Authorization = `Bearer ${token}` 
+        if(!config.headers.white && cancelAxiosWhiteList.every(item => !config.url.includes(item))) {
+            if(!window.canCancelAxios) window.canCancelAxios = []
+            config.cancelToken = new axios.CancelToken(function (c: any) { window.canCancelAxios.push({ key: config.headers.key || "", cancel: c }) });
+        }
         return config;
     },(error) => Promise.reject(error));
     api.interceptors.response.use((response) => response, async(error) => {

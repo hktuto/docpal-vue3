@@ -88,8 +88,10 @@ const readerType = computed(() => {
     if(mineType.includes('text/html')) {
       return 'html';
     }
+    if(mineType.includes('image/tiff')) {
+      return 'other';
+    }
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text') || mineType.includes('photoshop') || mineType.includes('psd') || mineType.includes('illustrator')  ) {
-      
       return 'pdf';
     }
     if(mineType.includes('video')) {
@@ -98,12 +100,11 @@ const readerType = computed(() => {
     if (mineType.includes('audio')) {
         return 'other';
     }
-    
-    
     return '';
 });
 
 async function openPreview({detail}:any) {
+  cancelAxios()
   show.value = false
   options.value = detail.options
   // const response = await getDocumentDetail(detail.pathOrId, userId)
@@ -119,6 +120,7 @@ function mobileActionsOpenedChanged(bool:boolean) {
 }
 
 function closePreview(){
+  cancelAxios()
   show.value = false;
   doc.value = null
   permission.value = null;
@@ -255,6 +257,7 @@ watch(show, (isShow) => {
   }
 }
 .preview{
+  overflow: hidden;
   &.mobileActionOpened{
     pointer-events: none;
   }

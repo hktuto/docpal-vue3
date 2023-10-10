@@ -68,8 +68,8 @@ function handlerRowClick (_row:any, _column:any, _event:any) {
     }
 function toVersionComparison (row:any) {
     // close detail
-    const ev = new CustomEvent('close-file-detail');
-    window.dispatchEvent(ev);
+    const ev = new CustomEvent('closeFilePreview');
+    document.dispatchEvent(ev);
     const path = `/versionComparison/${props.doc.id}`
     router.push({
         path,

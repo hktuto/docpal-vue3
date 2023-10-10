@@ -1,7 +1,7 @@
 <template>
     <div class="tiffContainer" v-if="!props.loading" ref="tiffRef">
-        <el-image :src="state.imgUrl" fit="contain"
-            :preview-src-list="[state.imgUrl]"/>
+        <el-image v-for="(item, index) in state.imgUrls" :src="item" fit="contain"
+            :preview-src-list="state.imgUrls" :initial-index="index"/>
     </div>
 </template>
 
@@ -9,14 +9,11 @@
 import { TiffV } from '../../stores/tiff.min.js'
 TiffV()
 const props = defineProps<{
-    annotations: Map<string,any>,
     blob: Blob,
-    name: String,
-    options: PdfJsOptions,
     loading: Boolean
 }>();
 const state = reactive({
-    imgUrl: '',
+    imgUrls: [],
     interval: null
 })
 const tiffRef = ref()
@@ -30,11 +27,18 @@ function blobToArrayBuffer(blob) {
         reader.readAsArrayBuffer(blob);
     });
 }
-
+function handleMultiTiff(tiffFile) {
+    const countDirectory = tiffFile.countDirectory()
+    for (let i = 0; i < countDirectory; i++) {
+        tiffFile.setDirectory(i)
+        state.imgUrls.push(tiffFile.toDataURL())
+    }
+}
 watch(() => props.blob, async(newBlob) => {
+    state.imgUrls = []
     const data = await blobToArrayBuffer(newBlob)
-    let url = new Tiff({buffer: data});
-    state.imgUrl = url.toDataURL();
+    let tiffFile = new Tiff({buffer: data});
+    handleMultiTiff(tiffFile)
 }, {
     immediate: true
 })
