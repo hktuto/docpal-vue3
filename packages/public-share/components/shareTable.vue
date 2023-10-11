@@ -80,6 +80,7 @@ const previewFile = reactive({
         noDownload: true,
         print: false,
         loadAnnotations: false,
+        readOnly: true
     }
 })
 </script>

@@ -26,7 +26,17 @@ const emits = defineEmits([
     'filter'
 ])
 const querySearch = (queryString: string, cb?: any) => {
-    const list = props.list
+    const list = props.list.reduce((prev,item) => {
+      if (item.children) {
+        item.children.forEach(cItem => {
+          cItem.parent = item[props.attr]
+          prev.push(cItem)
+        })
+      } else {
+        prev.push(item)
+      }
+      return prev
+    }, [])
     const results = queryString
         ? list.filter(createFilter(queryString))
         : list

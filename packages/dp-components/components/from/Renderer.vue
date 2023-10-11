@@ -67,6 +67,7 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
             noDownload: true,
             print: false,
             loadAnnotations: false,
+            readOnly: true
         }
     })
     async function handleFilePreview(fileInfo) {

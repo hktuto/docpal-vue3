@@ -9,6 +9,14 @@ export default defineAppConfig({
       icon: "/icons/menu/docTemplate.svg",
       order:29,
       parentId: "admin_workflow"
+    },
+    {
+      name:"admin_template",
+      routeName:"template",
+      url:"/template",
+      icon: "/icons/menu/docTemplate.svg",
+      order:29,
+      parentId: "admin_templateManagement"
     }
   ],
 })

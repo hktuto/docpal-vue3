@@ -8,7 +8,7 @@ export default defineAppConfig({
             url:"/emailTemplate",
             icon: "/icons/menu/mailConfig.svg",
             order: 10001,
-            parentId: "admin_template"
+            parentId: "admin_templateManagement"
         }
     ]
 })

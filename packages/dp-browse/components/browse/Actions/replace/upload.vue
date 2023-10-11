@@ -15,6 +15,7 @@
             :accept="accept">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">{{$t('common_dragFileHere')}}，{{$t('common_or')}} <em>{{$t('common_clickToUpload')}}</em></div>
+            <div v-if="accept" class="el-upload__accept">{{$t('file.onlyAccept')}} {{accept}}</div>
             <div class="el-upload__tip" slot="tip"> <slot name="tip"></slot> </div> 
         </el-upload>
     </div>
@@ -74,5 +75,14 @@ const onChange = async(file, fileList) => {
 <style lang="scss" scoped>
 :deep .el-upload-dragger {
   width: 100%;
+}
+.el-upload__accept {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 22px;
+  letter-spacing: 0px;
+    
+  font-feature-settings: "kern" on;
+  color: #9E9E9E;
 }
 </style>
