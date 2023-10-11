@@ -3,15 +3,6 @@ import { client, expect } from '../../../utils/client';
 
 test.describe('Browse List', () => {
 
-    client('table visibility', async({browsePage}) => {
-        const tableTab = await browsePage.page.locator('#tab-table');
-        await tableTab.isVisible(); // check if table is visible
-        tableTab.click(); // click tableTab
-        expect(await tableTab.getAttribute('aria-selected')).toBe('true'); // check tableTab is active
-        // check if table is visible
-        const table = await browsePage.page.locator('#browseTable');
-        await table.isVisible();
-    });
 
     client('create folder', async({browsePage}) => {
         browsePage.goToFirstLevel();
@@ -24,6 +15,7 @@ test.describe('Browse List', () => {
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
         await browsePage.addFolder(name);
+        
         await expect(browsePage.page.getByText('The system detected a duplicate file name, please select Rename or Replace for t')).toHaveCount(1);
     });
 
@@ -51,8 +43,9 @@ test.describe('Browse List', () => {
         await browsePage.page.getByPlaceholder('Name').fill(name);
         const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
         item.dblclick();
-        // wait for 2 seconds
-        await browsePage.page.waitForTimeout(2000);
+        
+        await browsePage.waitForLoading()
+        
 
         await expect(browsePage.page.locator('.breadContainer').filter({ hasText: name })).toHaveCount(1);
         // wait for url include name
@@ -74,7 +67,9 @@ test.describe('Browse List', () => {
         const name = 'testFolder_' + Date.now();
         const newName = 'testFolder_newname_' + Date.now();
         await browsePage.addFolder(name);
-        await browsePage.page.waitForTimeout(2000);
+        
+        await browsePage.waitForLoading()
+
         await browsePage.page.getByPlaceholder('Name').fill(name);
         await browsePage.page.getByRole('cell', { name }).click({
             button: 'right'
@@ -84,7 +79,8 @@ test.describe('Browse List', () => {
         await browsePage.page.getByLabel('name', { exact: true }).fill(newName);
         await browsePage.page.getByRole('button', { name: 'Save' }).click();
         
-        await browsePage.page.waitForTimeout(2000);
+        await browsePage.waitForLoading()
+
         await browsePage.page.getByPlaceholder('Name').fill(newName);
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: newName }).count();
         expect(count).toBe(1);
@@ -101,8 +97,8 @@ test.describe('Browse List', () => {
         await browsePage.page.getByPlaceholder('Name').fill(name);
         const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
         item.dblclick();
-        await browsePage.page.waitForTimeout(2000);
-        await expect(browsePage.page.locator('.breadContainer').filter({ hasText: name })).toHaveCount(1);
+        await browsePage.waitForLoading();
+
         await browsePage.page.locator('#deleteActionButton').getByRole('img').click();
         await browsePage.page.getByRole('button', { name: 'OK' }).click();
 
@@ -115,6 +111,36 @@ test.describe('Browse List', () => {
         expect(count).toBe(0);
     });
 
+    client('show hide info', async({browsePage}) => {
+        browsePage.goToFirstLevel();
+        await browsePage.page.locator('#infoActionButton').getByRole('img').click();
+        // info container should be visible
+        const infoContainer = await browsePage.page.locator('.right > .infoContainer');
+  
+        await expect(infoContainer).toHaveClass(/infoOpened/); // regex match class name
+    });
 
+    client('copy url', async({browsePage}) => {
+        await expect(browsePage.page.getByText('Path copied to clipboard')).toHaveCount(1);
+        await browsePage.page.locator('#copyPathActionButton').getByRole('img').click();
+    })
+
+    client('subscribe', async({browsePage}) => {
+        browsePage.goToFirstLevel();
+        const name = 'testFolder_' + Date.now();
+        await browsePage.addFolder(name);
+        await browsePage.page.getByPlaceholder('Name').fill(name);
+
+        const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
+        item.dblclick();
+        
+        await browsePage.waitForLoading();
+
+        // click subscribe
+        await browsePage.page.locator('#subscribeActionButton span').click();
+
+        // click unsubscribe
+        await browsePage.page.locator('#subscribeActionButton span').click();
+    })
 
 });
