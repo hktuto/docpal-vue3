@@ -15,6 +15,13 @@ export class BrowsePage {
         this.page.goto(clientURL + '/browse');
     }
 
+    async waitForLoading() {
+        // wait for loading
+        await this.page.waitForTimeout(500);
+        await this.page.waitForSelector('.el-loading-spinner', {state: "detached"});
+
+    }
+
     async addFolder(name:string) {
         await this.page.locator('#newActionButton').click();
         await this.page.getByRole('menuitem', { name: 'New Folder' }).click();
