@@ -27,5 +27,4 @@ export * from './admin-dam'
 export * from './admin-mail'
 export * from './admin-virtual-folder'
 export * from './admin-template'
-// export * from './folderStructure'
 
