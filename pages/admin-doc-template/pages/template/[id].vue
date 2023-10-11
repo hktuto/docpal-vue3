@@ -10,6 +10,7 @@
                         @click="handleEdit"></SvgIcon> 
                 </div>
                 <div class="flex-x-between">
+                    <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="$t('common_refresh')" @click="handleRefresh()" />
                     <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh()"/>
                     <TemplateReplaceButton :templateInfo="state.info" class="el-icon--right" @refresh="getPreviewFile()" />
                 </div>
