@@ -1,7 +1,7 @@
 <template>
     <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')"
         destroy-on-close append-to-body :close-on-click-modal="false">
-        <el-select v-model="form.templatePath" clearable
+        <el-select v-model="form.templatePath" clearable filterable
             @change="templateParamGet">
             <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
         </el-select>
