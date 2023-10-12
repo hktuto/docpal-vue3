@@ -31,7 +31,7 @@
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
                 <CollapseMenu>
                     <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
-                    <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission: listData.permission })"
+                    <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission: listData.permission })"
                         :doc="listData.doc" :selectedList="selectList"/>
                     <BrowseActionsCollection :selectedList="selectList" @clearSelected="handleClearSelected"></BrowseActionsCollection>
                     <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :selected="selectList" @success="handleRefresh"
