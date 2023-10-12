@@ -1,5 +1,5 @@
 <template>
-   <div class="infoSection" v-show="tags.length > 0 || doc.canWrite">
+   <div class="infoSection" v-show="tags.length > 0 || canWrite" >
      <div class="infoTitle">{{ $t('rightDetail_tags') }}</div>
     <div class="infoContent">
       <VueTagsInput
@@ -9,7 +9,7 @@
           :add-on-space="false" :add-on-comma="true" :add-on-blur="true"
           :placeholder="$t('tip.input')"
           :typeahead="true"
-          :disabled="!doc.canWrite"
+          :disabled="!canWrite"
           @tag-removed="handleTagsRemoved"
           @tag-added="handleTagsAdded"
         />
@@ -23,11 +23,14 @@ import '@james090500/vue-tagsinput/dist/style.css';
 import {DocumentAddTags, PatchTags, SearchTagByName} from 'dp-api'
 import { ElMessage } from 'element-plus'
 const props = defineProps<{
-  doc: any
+  doc: any,
+  permission: any
 }>()
 const { doc } = toRefs(props)
 const { t} = useI18n()
-
+const canWrite = computed(() => {
+  return AllowTo({feature:'ReadWrite', permission: props.permission })
+})
 // TODO : add api
 // const { patchTags } = UseTags()
 const emit = defineEmits(['update'])
