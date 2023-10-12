@@ -65,9 +65,9 @@ export class BrowsePage {
             return;
         }
         await this.page.goto(clientURL + `/browse?path=${item.parentPath}`);
+        await expect(this.page.locator('.clientPageContainer')).toHaveCount(1);
         await this.page.getByPlaceholder('Name').fill(item.name);
         const count = await this.page.locator('.nameContainer > .label').filter({ hasText: item.name }).count();
-        console.log('count', count)
         if(count === 1) {
             // if item is in the table, delete it
             await this.page.getByRole('cell', { name: item.name }).click({
