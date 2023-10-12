@@ -22,7 +22,7 @@
                       <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                       <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
-                      <BrowseActionsShare  v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
+                      <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
       
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
@@ -81,6 +81,7 @@ const emit = defineEmits(['close'])
 const { public:{feature} } = useRuntimeConfig();
 const { allowFeature } = useLayout()
 const readerType = computed(() => {
+  try {
     if(!doc.value) return "";
     const properties = doc.value.properties as any
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
@@ -101,6 +102,9 @@ const readerType = computed(() => {
         return 'other';
     }
     return '';
+  } catch (error) {
+    return ''
+  }
 });
 
 async function openPreview({detail}:any) {
