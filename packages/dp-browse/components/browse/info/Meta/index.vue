@@ -27,6 +27,11 @@
     const hasMeta = ref(false)
     const { t } = useI18n()
     const emit = defineEmits(['update'])
+
+    const canWrite = computed(() => {
+      return AllowTo({feature:'ReadWrite', permission: props.permission })
+    })
+
     const metaStructureByProperties = (metaList: any[], properties: string) => {
       if(!properties || !metaList) return []
       return  metaList.reduce((p, item) => {

@@ -5,7 +5,7 @@
     :resizable="true"
     :resizeOption="resizeOption"
     :style="style"
-    :class="{infoContainer:true, infoOpened:!infoOpened, draggable }"
+    :class="{infoContainer:true, infoOpened, draggable }"
     @resizemove="resizeMove"
     @dragmove="dragmove"
 >
@@ -188,7 +188,7 @@ defineExpose({
 }
 .infoContainer {
     margin-left: var(--app-padding);
-    padding: var(--app-padding);
+    
     background: var(--color-grey-0000);
     height: 100%;
     user-select: none;
@@ -199,8 +199,9 @@ defineExpose({
     grid-template-rows: min-content 1fr;
     border-radius: 12px;
     position: relative;
+    padding:0;
     &.infoOpened{
-        padding:0;
+        padding: var(--app-padding);
     }
     &.draggable{
         cursor: move;
