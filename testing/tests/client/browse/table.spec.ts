@@ -78,7 +78,7 @@ test.describe('Browse List', () => {
 
         await browsePage.page.getByLabel('name', { exact: true }).fill(newName);
         await browsePage.page.getByRole('button', { name: 'Save' }).click();
-        
+        await browsePage.page.waitForTimeout(2000);
         await browsePage.waitForLoading()
 
         await browsePage.page.getByPlaceholder('Name').fill(newName);
@@ -121,8 +121,9 @@ test.describe('Browse List', () => {
     });
 
     client('copy url', async({browsePage}) => {
-        await expect(browsePage.page.getByText('Path copied to clipboard')).toHaveCount(1);
+        browsePage.goToFirstLevel();
         await browsePage.page.locator('#copyPathActionButton').getByRole('img').click();
+        await expect(browsePage.page.getByText('Path copied to clipboard')).toHaveCount(1);
     })
 
     client('subscribe', async({browsePage}) => {
