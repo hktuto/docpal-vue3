@@ -86,7 +86,9 @@ export const useAppStore = defineStore('app', () => {
         licenseFeatures.value = data
         console.log(licenseFeatures.value);
     }
-
+    function getLicenseFeatures() {
+        return licenseFeatures.value
+    }
     return {
         state,
         noEvent,
@@ -98,6 +100,7 @@ export const useAppStore = defineStore('app', () => {
         appLoadingList,
         appInit,
         checkLicense,
+        getLicenseFeatures,
         licenseFeatures,
     }
 

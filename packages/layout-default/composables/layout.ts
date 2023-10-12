@@ -19,7 +19,7 @@ enum pageFeatures {
   WORKFLOW_ADHOC = 'WORKFLOW_ADHOC'
 }
 export const useLayout = () => {
-  const { public: { feature }} = useRuntimeConfig()
+  const { getLicenseFeatures } = useAppStore()
   const globalSlots = useState<AppSlot[]>('globalSlots', () => ([]))
   const breakpoints = useBreakpoints({
     mobile: 640,
@@ -31,6 +31,7 @@ export const useLayout = () => {
 
 
   function allowFeature(f: pageFeatures) {
+    const feature = getLicenseFeatures()
     if(!pageFeatures[f] || !feature || !feature[pageFeatures[f]]) return false
     // if(f === 'DOC_COMMENT') return false
     // if(f === 'DOC_ANNOTATION') return false
