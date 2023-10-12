@@ -3,7 +3,7 @@
 export default defineAppConfig({
     menu:[
         {
-            feature:'MAIL_TEMPLATE',
+            feature:'EMAIL_TEMPLATE',
             name:"admin_emailTemplate",
             routeName:"emailTemplate",
             url:"/emailTemplate",
