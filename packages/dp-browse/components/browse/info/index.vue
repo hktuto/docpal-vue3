@@ -127,8 +127,8 @@ function dragmove(event:any) {
     y.value += event.dy;
 }
 
-async function docUpdated() {
-    if(props.listData && doc.value.id === props.listData.doc.id) {
+async function docUpdated(forceRefresh?: boolean = false) {
+    if(props.listData && doc.value.id === props.listData.doc.id && !forceRefresh) {
         detail.value = deepCopy(props.listData.doc)
         permission.value = props.permission;
         return
@@ -141,6 +141,7 @@ async function docUpdated() {
         if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
             currentTab.value = 'info'
         }
+        console.log('updateaa1');
         
         // get detail
         //   const response = await getDocumentDetail(doc.value.id, userId);
