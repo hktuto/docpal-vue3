@@ -22,7 +22,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-log-manage');
     packages.push('../../pages/admin-doc-type-manage');
     packages.push('../../pages/admin-mail-config');
-    packages.push('../../pages/dp-editorjs');
+    packages.push('../../packages/dp-editorjs');
     packages.push('../../pages/admin-message-queue');
     // core
     packages.push('../../pages/admin-retention');
@@ -32,7 +32,6 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-user-manage');
     packages.push('../../pages/admin-hold-policies');
     packages.push('../../packages/dp-browse');
-
     packages.push('../../packages/dp-search');
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")
