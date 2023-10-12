@@ -5,7 +5,7 @@
     :resizable="true"
     :resizeOption="resizeOption"
     :style="style"
-    :class="{infoContainer:true, infoOpened:!infoOpened, draggable }"
+    :class="{infoContainer:true, infoOpened, draggable }"
     @resizemove="resizeMove"
     @dragmove="dragmove"
 >
@@ -127,8 +127,8 @@ function dragmove(event:any) {
     y.value += event.dy;
 }
 
-async function docUpdated() {
-    if(props.listData && doc.value.id === props.listData.doc.id) {
+async function docUpdated(forceRefresh?: boolean = false) {
+    if(props.listData && doc.value.id === props.listData.doc.id && !forceRefresh) {
         detail.value = deepCopy(props.listData.doc)
         permission.value = props.permission;
         return
@@ -141,6 +141,7 @@ async function docUpdated() {
         if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
             currentTab.value = 'info'
         }
+        console.log('updateaa1');
         
         // get detail
         //   const response = await getDocumentDetail(doc.value.id, userId);
@@ -188,7 +189,7 @@ defineExpose({
 }
 .infoContainer {
     margin-left: var(--app-padding);
-    padding: var(--app-padding);
+    
     background: var(--color-grey-0000);
     height: 100%;
     user-select: none;
@@ -199,8 +200,9 @@ defineExpose({
     grid-template-rows: min-content 1fr;
     border-radius: 12px;
     position: relative;
+    padding:0;
     &.infoOpened{
-        padding:0;
+        padding: var(--app-padding);
     }
     &.draggable{
         cursor: move;
