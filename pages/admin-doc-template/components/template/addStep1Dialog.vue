@@ -43,6 +43,7 @@ async function handleSubmit() {
                 id: state.setting.id,
                 fileType: state.setting.fileType
             })
+            emits('update')
         }
         else {
             const file = await createFile(formData.type, formData.name)
@@ -53,10 +54,10 @@ async function handleSubmit() {
             params.append('description', formData.description)
             const templateInfo = await CreateTemplateInfoApi(params)
             console.log(templateInfo);
-            TemplateAddStep2DialogRef.value.handleOpen(templateInfo)
+            router.push(`/template/${templateInfo.id}`)
+            // TemplateAddStep2DialogRef.value.handleOpen(templateInfo)
         }
         state.visible = false
-        emits('update')
     } catch (error) {
     }
     state.loading = false

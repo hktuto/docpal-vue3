@@ -12,7 +12,7 @@
                 <div class="flex-x-between">
                     <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="$t('common_refresh')" @click="handleRefresh()" />
                     <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh()"/>
-                    <TemplateReplaceButton :templateInfo="state.info" class="el-icon--right" @refresh="getPreviewFile()" />
+                    <TemplateReplaceButton :templateInfo="state.info" class="el-icon--right" @refresh="handleRefresh({ variables: true, preview: true })" />
                 </div>
             </div>
             <div v-loading="state.previewFile.loading">
@@ -25,7 +25,7 @@
             <el-button :loading="state.downloadLoading" @click="handleTest">{{$t('template.test')}}</el-button>
         </InteractDrawer>
     </div>
-    <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="handleInit('info')"></TemplateAddStep1Dialog>
+    <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
 </NuxtLayout>
 </template>
 
@@ -131,10 +131,10 @@ function handleEdit() {
     TemplateAddStep1DialogRef.value.handleOpen({ ...state.info, isEdit: true })
 }
 
-function handleRefresh () {
-    getInfo()
-    getVariables()
-    getPreviewFile()
+function handleRefresh (state) {
+    if(!state || state.info) getInfo()
+    if(!state || state.variables) getVariables()
+    if(!state || state.preview)getPreviewFile()
 }
 onMounted(async () => {
     getVariables()
