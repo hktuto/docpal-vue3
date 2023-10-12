@@ -27,8 +27,6 @@ const state = reactive({
     dialogOpened: false
 })
 async function goOffice(){
-    console.log('????????????????????????');
-    
     const token = await getOfficeTokenApi(props.doc.id)
     state.dialogOpened = true
     const baseUrl = officeUrl(props.doc.id, token)
