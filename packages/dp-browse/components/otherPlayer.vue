@@ -1,9 +1,12 @@
 <template>
-    <div v-loading="state.loading" class="videoPlayerContainer" >
-        <audio v-if="state.type.includes('audio')" controls>
+<div style="height: 100%" v-loading="state.loading">
+    <div v-if="state.type.includes('audio')" class="videoPlayerContainer" >
+        <audio  controls>
             <source :src="state.src" :type="state.type" />
         </audio>
     </div>
+    <ReaderTiff v-else-if="state.type.includes('image/tiff')" v-bind="state" ></ReaderTiff>
+</div>
 </template>
 
 <script lang="ts" setup>
@@ -14,6 +17,7 @@ const props = defineProps<{
 const state = reactive({
     type: '',
     src: '',
+    blob: null,
     loading: false
 })
 const {doc} = toRefs(props);
@@ -23,6 +27,7 @@ async function getData() {
         const blob = await GetDocumentPreview(props.doc.id);
         const url = window.URL.createObjectURL(blob);
         state.type = blob.type;
+        state.blob = blob
         state.src = url;
     } catch (error) {
         

@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'JOB_STATUS',
       name:"admin_message_queue",
       routeName:"messageQueue",
       url:"/messageQueue",

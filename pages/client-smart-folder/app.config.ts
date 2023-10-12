@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'SMART_FOLDER',
       name:"file_smartFolder",
       routeName:"smartFolder",
       url:"/smartFolder",

@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'BROWSE',
       name:"file_browse",
       routeName:'browse',
       url:"/browse",

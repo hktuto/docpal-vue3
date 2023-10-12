@@ -1,22 +1,13 @@
 <template>
     <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')"
         destroy-on-close append-to-body :close-on-click-modal="false">
-        <el-form ref="FormRef" :model="form"
-            label-position="top" v-loading="state.loading" @submit.native.prevent>
-            <el-form-item :label="$t('file_template')" prop="templatePath"
-                :rules="[{ required: true, message: $t('form_common_requird')}]">
-                <el-select v-model="form.templatePath" clearable
-                    value-key="path"
-                    @change="templateParamGet">
-                    <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item" />
-                </el-select>
-            </el-form-item>
-            <el-form-item  v-for="(item,index) in form.paramList" :key="index"
-                            :label="$t(item.key)" :prop="`paramList.${index}.value`"
-                            :rules="[{ required: true, message: $t('form_common_requird')}]">
-                <el-input type="text" v-model="item.value" />
-            </el-form-item>
-        </el-form>
+        <el-select v-model="form.templatePath" clearable filterable
+            @change="templateParamGet">
+            <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
+        </el-select>
+        <div style="min-height: 50px" v-loading="state.variableLoading">
+            <FromVariablesRenderer ref="FromVariablesRendererRef"/>
+        </div>
         <template #footer>
             <el-button @click="state.dialogVisible = false">{{$t('cancel')}}</el-button>
             <el-button v-if="state.canDownload" :loading="state.loading" @click="handleSubmit">{{$t('common_download')}}</el-button>
@@ -38,7 +29,7 @@ const route = useRoute()
 const state = reactive({
     dialogVisible: false,
     loading: false,
-
+    variableLoading: false,
     templateList: [],
     canSubmit: false,
     params: {
@@ -59,45 +50,39 @@ const form = reactive({
     }
 // #endregion
 async function handleSubmit() {
+    state.loading = true
     try {
-        state.loading = true
-        const valid = await FormRef.value.validate((valid, fields) => valid)
-        if (!valid) throw new Error(`${$i18n.t('incompleteData')}`);
-        const params = {  ...state.params, paramsMap: {} }
-        form.paramList.forEach(item => {  params.paramsMap[item.key] = item.value })
-        const res = await DownloadTemplateApi(params)
+        const data = await FromVariablesRendererRef.value.getData()
+        const res = await DownloadTemplateApi({
+            templatePath: form.templatePath,
+            paramsMap: data
+        })
         if(!res || res.errorCode) throw new Error(`${$i18n.t('responseMsg_errorCode_2')}`);
         downloadBlob(res, 'template')
         state.dialogVisible = false
     } catch (error) {
-        // ElMessage.error(error?.response?.data?.message || error.message)
     }
     state.loading = false
 }
-async function templateParamGet (templateItem: Object) {
-    dpLog({form}, 'form');
+const FromVariablesRendererRef = ref()
+async function templateParamGet (templatePath: string) {
     state.canDownload = false
-    form.templatePath = templateItem.path
+    state.variableLoading = true
     try {
-        const suffix = templateItem.name.split('.').pop()
-        if(['xlsx','xls','doc', 'docx','pptx', 'ppt'].includes(suffix)) {
-            state.params.fileType = suffix
-        } else {
-            throw new Error(`${$i18n.t('responseMsg_errorCode_2')}`);
-        }
-        state.params.name = templateItem.name
-        state.params.templatePath = templateItem.path
-        const res = await GetTemplateParamsApi(state.params)
-        if(!res.paramsList || res.paramsList.length === 0) {
-            form.paramList = []
-            ElMessage.error(`${$i18n.t('msg_requestDataIsEmpty')}`)
-            return
-        }
+        const res = await GetTemplateParamsApi({
+            templatePath
+        })
+        form.paramList = [...new Set(res.paramsList)].map(item => ({ 
+            name: item,
+            type: 'input',
+            required: true
+         }))
+        FromVariablesRendererRef.value.createJson(form.paramList)
         state.canDownload = true
-        form.paramList = [...new Set(res.paramsList)].map(item => ({ key: item, value: '' }))
     } catch (error) {
         // ElMessage.error(error?.response?.data?.message || error.message)
     }
+    state.variableLoading = false
 }
 onMounted(async () => {
     state.templateList = await GetTemplateListApi() || []

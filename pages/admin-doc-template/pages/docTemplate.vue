@@ -76,6 +76,7 @@ const state = reactive({
             noDownload: true,
             print: false,
             loadAnnotations: false,
+            readOnly: true
         }
     },
     permission: {

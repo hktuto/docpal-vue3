@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature: 'CORE',
       name:"admin_User",
       routeName:"user",
       url:"/user",
@@ -12,6 +13,7 @@ export default defineAppConfig({
       parentId: "admin_UserAndGroup"
     },
     {
+      feature: 'CORE',
       name:"admin_group",
       routeName:"group",
       url:"/group",

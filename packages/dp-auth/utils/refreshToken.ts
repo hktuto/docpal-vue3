@@ -7,6 +7,8 @@ export const refreshTokenFn = async () => {
     const Cookies = useCookie('docpal-user')
     const {user} = useUser()
     try {
+      localStorage.setItem("token", refreshToken as string);
+      // header设置无效
       const {access_token, refresh_token} = await api.post('/auth/nuxeo/token',{},{
             headers:{
                 Authorization : 'Bearer ' + refreshToken

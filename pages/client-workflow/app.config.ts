@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'WORKFLOW',
       name:"menus_workflow",
       routeName:"workflow",
       url:"/workflow",

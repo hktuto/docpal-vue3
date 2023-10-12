@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'WORKFLOW',
       name:"admin_runningWorkflow",
       routeName:"workflowManage",
       url:"/workflowManage",

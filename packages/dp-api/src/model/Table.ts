@@ -120,6 +120,7 @@ export enum TABLE {
     ADMIN_RETENTION_MANAGE = 'adminRetentionManage',
     ADMIN_EMAIL_TEMPLATE = 'adminEmailTemplate',
     ADMIN_EMAIL_LAYOUT = 'adminEmailLayout',
+    ADMIN_DOC_TEMPLATE = 'adminDocTemplate',
 
 }
 
@@ -1998,6 +1999,31 @@ export const defaultTableSetting: TableColumnSetting = {
                 "prefixIcon": "",
                 "suffixIcon": "",
             }
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DOC_TEMPLATE]: {
+        columns: [
+            { id: '10', label: '', slot: 'iconName', defaultColumn: true, width: 60 },
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'info_type', prop: 'fileType' },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'dpTable_actions', slot: 'templateAction', prop: 'status', width: 100 },
         ],
         events: ['delete'],
         slots: [],

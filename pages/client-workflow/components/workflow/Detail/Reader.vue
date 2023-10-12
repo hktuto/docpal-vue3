@@ -13,7 +13,10 @@ const previewFile = reactive({
     name: '',
     id: '',
     loading: false,
-    downloadLoading: false
+    downloadLoading: false,
+    options: {
+        readOnly: true
+    }
 })
 async function init (fileId: string) {
     previewFile.loading = true

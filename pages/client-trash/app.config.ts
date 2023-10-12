@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'TRASH',
       name:"file_trash",
       routeName:"trash",
       url:"/trash",
