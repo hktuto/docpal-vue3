@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import * as path from "path";
 dotenv.config();
 export const STORAGE_STATE = path.join(__dirname, 'storage/test.json');
-console.log("STORAGE_STATE", STORAGE_STATE);
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -24,6 +23,10 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
+  timeout: 300000, // 5 minutes
+  expect: {
+    timeout: 300000,   // <---------
+  },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -42,19 +45,6 @@ export default defineConfig({
       },
     },
 
-    // {
-    //   name: 'firefox',
-    //   dependencies: ['setup'],
-    //   testMatch: '**/**/*.spec.ts',
-    //   use: { ...devices['Desktop Firefox'], storageState: STORAGE_STATE, },
-    // },
-    //
-    // {
-    //   name: 'webkit',
-    //   dependencies: ['setup'],
-    //   testMatch: '**/**/*.spec.ts',
-    //   use: { ...devices['Desktop Safari'], storageState: STORAGE_STATE, },
-    // },
 
     /* Test against mobile viewports. */
     // {

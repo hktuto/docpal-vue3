@@ -143,4 +143,5 @@ test.describe('Browse List', () => {
         await browsePage.page.locator('#subscribeActionButton span').click();
     })
 
+
 });
