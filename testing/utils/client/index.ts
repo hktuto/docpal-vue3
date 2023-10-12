@@ -10,7 +10,7 @@ export const client = base.extend<{} & { browsePage: BrowsePage }>({
     page: async ({ page }, use, scope) => {
         
         await page.goto(clientURL + '/');
-        await login(page, process.env.CLIENT_USER || 'seantsang', process.env.CLIENT_PASSWORD ||'aaAA1234');
+        await login(page, process.env.CLIENT_USER || 'Administrator', process.env.CLIENT_PASSWORD ||"2'KMzF}zK2ZmwQe");
 
         await expect(page).toHaveURL(/.*browse/);
 

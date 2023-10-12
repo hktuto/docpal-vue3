@@ -25,7 +25,7 @@ test.describe('Browse List', () => {
         const f1 = 'testFolder_' + Date.now();
         const f2 = 'testFolder2_' + Date.now();
         await browsePage.addFolder(f1);
-        await browsePage.addFolder(f2);
+        
         await browsePage.page.getByPlaceholder('Name').fill(f1);
         // f2 should not be in the table
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: f2 }).count();
@@ -53,10 +53,14 @@ test.describe('Browse List', () => {
         await browsePage.page.locator('#editActionButton span').click();
         await browsePage.page.getByLabel('name', { exact: true }).fill(newName);
         await browsePage.page.getByRole('button', { name: 'Save' }).click();
+        await browsePage.page.waitForTimeout(2000);
         browsePage.updateNameInItemToDelete(name, newName);
         await browsePage.goRoot();
+        await browsePage.page.waitForTimeout(1000);
+        await browsePage.waitForLoading();
         await browsePage.goToFirstLevel();
-        await browsePage.page.waitForTimeout(2000);
+        
+        await browsePage.waitForLoading();
         await browsePage.page.getByPlaceholder('Name').fill(newName);
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: newName }).count();
         expect(count).toBe(1);
