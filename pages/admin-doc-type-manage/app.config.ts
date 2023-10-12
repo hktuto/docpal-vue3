@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'DOCUMENT_TYPE',
       name:"admin_docType",
       routeName:"docType",
       url:"/docType",

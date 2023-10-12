@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'MAIL_CONFIG',
       name:"admin_mailConfig",
       routeName:"mailConfig",
       url:"/mailConfig",

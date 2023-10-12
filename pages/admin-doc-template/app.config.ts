@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'GENERATE_TEMPLATE',
       name:"admin_docTemplate",
       routeName:"docTemplate",
       url:"/docTemplate",
@@ -11,6 +12,7 @@ export default defineAppConfig({
       parentId: "admin_workflow"
     },
     {
+      feature:'GENERATE_TEMPLATE',
       name:"admin_template",
       routeName:"template",
       url:"/template",

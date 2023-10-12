@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'AUDIT',
       name:"admin_audit",
       routeName:"audit",
       url:"/audit",

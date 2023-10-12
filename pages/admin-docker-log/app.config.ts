@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature: 'DOCKER_LOG',
       name:"admin_docker_log",
       routeName:"dockerLog",
       url:"/dockerLog",

@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'FOLDER_CABINET',
       name:"admin_folderCabinet",
       routeName:"folderCabinet",
       url:"/folderCabinet",
