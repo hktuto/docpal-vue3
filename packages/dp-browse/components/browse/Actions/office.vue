@@ -34,8 +34,7 @@ async function goOffice(){
     window.open(baseUrl, '_blank')
 }
 const officeUrl = (docId:string, token:string) =>{
-    let host = window.location.host;
-    host.replace('admin.', '')
+    let host = window.location.host.replace('admin.', '');
     if(!host.includes('localhost')){
         return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}?access_token=${token}`
     }else{
