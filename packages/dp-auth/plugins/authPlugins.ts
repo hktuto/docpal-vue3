@@ -6,6 +6,9 @@ import {refreshTokenFn} from "~/utils/refreshToken";
 import { ElMessage } from 'element-plus'
 const noRouteErrorPages = ['/FormEditor/', '/workflowForm/']
 const cancelAxiosWhiteList = [
+    // admin-acl
+    // '/nuxeo/document/children/thumbnail',
+    // '/nuxeo/document',
     // public
     '/nuxeo/document/download',
     '/nuxeo/document/isDuplicateName',
