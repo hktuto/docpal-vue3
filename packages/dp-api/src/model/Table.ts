@@ -66,6 +66,7 @@ export enum TABLE {
     ADHOC_Completed_TASK = 'adhocCompletedTask',
     ACTIVE_TASK = 'activeTask',
     CLIENT_TRASH = 'clientTrash',
+    CLIENT_SMART_FOLDER_LIST = 'clientSmartFolderList',
     CLIENT_SMART_FOLDER = 'clientSmartFolder',
     CLIENT_COLLECTION = 'clientCollection',
     CLIENT_SHARE_LIST = 'clientShareList',
@@ -281,6 +282,38 @@ export const defaultTableSetting: TableColumnSetting = {
             { slot: 'assignee', label: 'workflow_assignee', property: 'assignee', },
             { label: 'workflow_createDate', property: 'createDate', sortable: true },
             { label: 'workflow_dueDate', property: 'dueDate', sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SMART_FOLDER_LIST] : {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'dpDocument_fileType', slot: 'fileType' },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
         ],
         events: [],
         options: { pageSize: 20 }

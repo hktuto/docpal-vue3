@@ -3,15 +3,11 @@
         <template #headerLeft>
             <div class="pageHeaderContainer">
                 <!-- <el-icon class="el-icon--left cursorPointer icon__hover" @click="handleBack"><ArrowLeftBold /></el-icon> -->
-                {{$t(title)}}
+                {{$t('file_smartFolder')}}
             </div>
         </template>
         <template #breadcrumb>
-            <el-breadcrumb :separator-icon="ArrowRight">
-                <el-breadcrumb-item :to="{ path: backPath }">{{$t(title)}}</el-breadcrumb-item>
-                <el-breadcrumb-item v-for="(item,index) in state.breadcrumbs" :key="item.path"
-                    @click="goRoute(item.path, index === state.breadcrumbs.length - 1)">{{item.name}}</el-breadcrumb-item>
-            </el-breadcrumb>
+            <SmartFolderBreadCrumb :breadcrumbs="state.breadcrumbs"></SmartFolderBreadCrumb>
         </template>
     </Browse>
 </template>
@@ -19,16 +15,12 @@
 
 <script lang="ts" setup>
 import { ArrowLeftBold, ArrowRight } from '@element-plus/icons-vue'
-import Browse from '../../client-browse/pages/browse/index.vue'
+import Browse from '../../../client-browse/pages/browse/index.vue'
 import { GetBreadcrumb } from 'dp-api'
 const props = withDefaults(defineProps<{
-    backPath: string,
-    routePath: string,
-    title: string,
+    breadcrumbs: string,
 }>(), {
-  backPath: 'shareMe',
-  routePath: 'shareMeFolder',
-  title: 'file_share_me'
+  breadcrumbs: []
 })
 const router = useRouter()
 const route = useRoute()
@@ -43,31 +35,38 @@ function handleBack () {
 }
 function goRoute (path, disabled: boolean = false) {
     if(disabled) return
-    router.push(`${props.routePath}?path=${path}`)
+    router.push(path)
 }
-watch(() => route.query.path, async(nPath) => {
-    if (!nPath) {
-        if (state.rootPath) goRoute(state.rootPath)
-        else if (state.rootId) goRoute(state.rootId)
+function checkRoute() {
+    if(!route.query.rootId) goRoute('/smartFolder')
+    else if(!route.query.path) goRoute(`/smartFolder/${state.rootId}`)
+}
+watch(() => route.query, async(nq) => {
+    if (!nq) {
+        checkRoute()
         return
     }
-    const breadcrumbList = await GetBreadcrumb(nPath)
+    const breadcrumbList = await GetBreadcrumb(nq.path)
     if(!state.rootPath && state.rootId) {
         const rootItem = breadcrumbList.find(item => item.id === state.rootId)
         state.rootPath = rootItem.path
     }
     state.breadcrumbs = breadcrumbList.reduce((prev, item) => {
         if(item.path.includes(state.rootPath)) prev.push({
-            path: item.path,
-            name: item.name
+            path: `/smartFolder/${state.rootId}`,
+            name: item.name,
+            query: {
+                ...route.query,
+                path: item.path
+            }
         })
         return prev
     }, [])
+    state.breadcrumbs.unshift(...props.breadcrumbs)
 },{immediate:true, deep: true})
-
 onMounted(async() => {
-    state.rootId = sessionStorage.getItem('shareFolderId')
-    if(!route.query.path) goRoute(state.rootId)
+    state.rootId = route.query.rootId
+    checkRoute()
 })
 </script>
 
