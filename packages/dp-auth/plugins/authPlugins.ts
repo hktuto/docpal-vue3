@@ -33,6 +33,8 @@ const cancelAxiosWhiteList = [
     '/nuxeo/search/textSearchTypes',
     '/nuxeo/identity/users',
     '/nuxeo/search/getSearchExtends', 
+    // workflow
+    '/docpal/workflow/process/list'
 ]
 let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
