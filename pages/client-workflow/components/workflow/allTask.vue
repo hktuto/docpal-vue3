@@ -77,6 +77,7 @@ const userId:string = useUser().getUserId()
     watch(
         () => route.query,
         async (newval) => {
+            if(newval.tab !== state.tabName) return
             const { page, pageSize } = newval
             pageParams.pageIndex = (Number(page) - 1) > 0 ? (Number(page) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
