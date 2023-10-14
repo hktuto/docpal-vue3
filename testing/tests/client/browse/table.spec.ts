@@ -15,8 +15,7 @@ test.describe('Browse List', () => {
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
         await browsePage.addFolder(name);
-        
-        await expect(browsePage.page.getByText('The system detected a duplicate file name, please select Rename or Replace for t')).toHaveCount(1);
+        await browsePage.checkTextExist('The system detected a duplicate file name, please select Rename or Replace for t');
     });
 
     client('filter table by file name', async({browsePage}) => {
@@ -115,19 +114,12 @@ test.describe('Browse List', () => {
         expect(count).toBe(0);
     });
 
-    client('show hide info', async({browsePage}) => {
-        browsePage.goToFirstLevel();
-        await browsePage.page.locator('#infoActionButton').getByRole('img').click();
-        // info container should be visible
-        const infoContainer = await browsePage.page.locator('.right > .infoContainer');
-  
-        await expect(infoContainer).toHaveClass(/infoOpened/); // regex match class name
-    });
+    
 
     client('copy url', async({browsePage}) => {
         browsePage.goToFirstLevel();
         await browsePage.page.locator('#copyPathActionButton').getByRole('img').click();
-        await expect(browsePage.page.getByText('Path copied to clipboard')).toHaveCount(1);
+        await browsePage.checkTextExist('Path copied to clipboard');
     })
 
     client('subscribe', async({browsePage}) => {
@@ -147,6 +139,68 @@ test.describe('Browse List', () => {
         // click unsubscribe
         await browsePage.page.locator('#subscribeActionButton span').click();
     })
+
+    client('upload file', async({browsePage}) => {
+        browsePage.goToFirstLevel();
+        const name = 'testFolder_' + Date.now();
+        await browsePage.addFolder(name);
+        await browsePage.page.getByPlaceholder('Name').fill(name);
+
+        const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
+        item.dblclick();
+
+        await browsePage.waitForLoading();
+
+        await browsePage.page.locator('#newActionButton').click();
+        const [fileChooser] = await Promise.all([
+            // It is important to call waitForEvent before click to set up waiting.
+            browsePage.page.waitForEvent('filechooser'),
+            // Opens the file chooser.
+            browsePage.page.getByRole('menuitem', { name: 'File Upload' }).click(),
+          ])
+
+          await fileChooser.setFiles([
+            'uploads/testUpload.txt',
+          ])
+          await expect(browsePage.page).toHaveURL(/.*upload/);
+          await browsePage.page.getByRole('treeitem').locator('div').filter({ hasText: 'testUpload.txt' }).first().click();
+        await browsePage.page.getByRole('button', { name: 'Confirm' }).click();
+        
+
+        await browsePage.page.getByPlaceholder('Name').fill('testUpload.txt');
+
+        const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: 'testUpload.txt' }).count();
+        expect(count).toBe(1);
+
+    });
+
+    client('upload folder', async({browsePage}) => {
+
+        browsePage.goToFirstLevel();
+        const name = 'testFolder_' + Date.now();
+        await browsePage.addFolder(name);
+        await browsePage.page.getByPlaceholder('Name').fill(name);
+
+        const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
+        item.dblclick();
+
+        await browsePage.waitForLoading();
+
+        await browsePage.page.locator('#newActionButton').click();
+        const [fileChooser] = await Promise.all([
+            // It is important to call waitForEvent before click to set up waiting.
+            browsePage.page.waitForEvent('filechooser'),
+            // Opens the file chooser.
+            browsePage.page.getByRole('menuitem', { name: 'File Upload' }).click(),
+          ])
+
+          await fileChooser.setFiles([
+            'uploads/folderTest',
+          ])
+          await expect(browsePage.page).toHaveURL(/.*upload/);
+
+
+    });
 
 
 });

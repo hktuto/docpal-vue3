@@ -43,6 +43,13 @@ export class BrowsePage {
         });
     }
 
+    async openInfoPanel() {
+        await this.page.locator('#infoActionButton').getByRole('img').click();
+        const infoContainer = await this.page.locator('.right > .infoContainer');
+  
+        await expect(infoContainer).toHaveClass(/infoOpened/);
+    }
+
     async goRoot() {
         await this.page.locator('.breadItem').first().click();
     }
@@ -60,27 +67,39 @@ export class BrowsePage {
         }
     };
 
+    async checkTextExist(text: string) {
+        await expect(this.page.getByText(text)).toHaveCount(1);
+    }
+
     async deleteItem(item: Item) {
         if(!item.parentPath) {
             return;
         }
         await this.page.goto(clientURL + `/browse?path=${item.parentPath}`);
         await expect(this.page.locator('.clientPageContainer')).toHaveCount(1);
+        await this.waitForLoading();
         await this.page.getByPlaceholder('Name').fill(item.name);
-        const count = await this.page.locator('.nameContainer > .label').filter({ hasText: item.name }).count();
-        if(count === 1) {
-            // if item is in the table, delete it
-            await this.page.getByRole('cell', { name: item.name }).click({
-                button: 'right'
-            });
-            await this.page.getByRole('menuitem', { name: 'Delete' }).click();
-            await this.page.getByRole('button', { name: 'OK' }).click();
-        }
+        expect(this.page.locator('.nameContainer > .label').filter({ hasText: item.name })).toHaveCount(1);
+        await this.page.getByRole('cell', { name: item.name }).click({
+            button: 'right'
+        });
+        await this.page.getByRole('menuitem', { name: 'Delete' }).click();
+        await this.page.getByRole('button', { name: 'OK' }).click();
+        // wait for popup
+        
+        await expect(this.page.getByText('Item deleted')).toHaveCount(1);
+        // go to trash
+        await this.page.goto(clientURL + '/trash');
+        await expect(this.page.locator('.clientPageContainer')).toHaveCount(1);
+        await this.page.getByRole('button', { name: 'Delete All' }).click();
+        await this.waitForLoading()
     }
 
     async removeAll() {
+        const p:any[] = [];
         for( let i in this.itemToDelete) {
-           await this.deleteItem(this.itemToDelete[i])
+            p.push(this.deleteItem(this.itemToDelete[i]))
         }
+        await Promise.all(p);
     }
 }
