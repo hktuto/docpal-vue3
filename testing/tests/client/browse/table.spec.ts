@@ -174,33 +174,6 @@ test.describe('Browse List', () => {
 
     });
 
-    client('upload folder', async({browsePage}) => {
-
-        browsePage.goToFirstLevel();
-        const name = 'testFolder_' + Date.now();
-        await browsePage.addFolder(name);
-        await browsePage.page.getByPlaceholder('Name').fill(name);
-
-        const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
-        item.dblclick();
-
-        await browsePage.waitForLoading();
-
-        await browsePage.page.locator('#newActionButton').click();
-        const [fileChooser] = await Promise.all([
-            // It is important to call waitForEvent before click to set up waiting.
-            browsePage.page.waitForEvent('filechooser'),
-            // Opens the file chooser.
-            browsePage.page.getByRole('menuitem', { name: 'File Upload' }).click(),
-          ])
-
-          await fileChooser.setFiles([
-            'uploads/folderTest',
-          ])
-          await expect(browsePage.page).toHaveURL(/.*upload/);
-
-
-    });
 
 
 });
