@@ -2,6 +2,7 @@ import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from 'pinia'
 type AppState = 'loading' | 'language' | 'needAuth' | 'ready' | 'offline' | 'forgetPassword' | 'defaultLogin'
 import { useOnline } from '@vueuse/core'
+import { api } from "dp-api";
 
 export const useAppStore = defineStore('app', () => {
     const router = useRouter()
@@ -14,6 +15,7 @@ export const useAppStore = defineStore('app', () => {
     const needAuthEl = ref<HTMLElement>();
     const readyElement = ref<HTMLElement>();
 
+    const licenseFeatures = ref<any>({});
 
     const online = useOnline();
     const user = useUser();
@@ -50,7 +52,6 @@ export const useAppStore = defineStore('app', () => {
     }
 
     watch(state, (_newState, oldState ) => {
-        dpLog(_newState, displayState.value)
         switch(oldState) {
             case 'loading':
                 if(loadingEl.value) {
@@ -78,6 +79,16 @@ export const useAppStore = defineStore('app', () => {
             await user.verify();
         }
     })
+
+    async function checkLicense() {
+        const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
+        
+        licenseFeatures.value = data
+        console.log(licenseFeatures.value);
+    }
+    function getLicenseFeatures() {
+        return licenseFeatures.value
+    }
     return {
         state,
         noEvent,
@@ -88,6 +99,9 @@ export const useAppStore = defineStore('app', () => {
         setDisplayState,
         appLoadingList,
         appInit,
+        checkLicense,
+        getLicenseFeatures,
+        licenseFeatures,
     }
 
 })

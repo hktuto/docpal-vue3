@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature: 'DIRECTUS',
       name:"admin_directus",
       routeName:"directus",
       url:"/directus",

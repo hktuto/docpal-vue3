@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'DAM_FILE_CONVERTION',
       name:"admin_DAM",
       routeName:"dam",
       url:"/dam",

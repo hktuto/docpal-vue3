@@ -39,8 +39,10 @@ function handleGroupAddMemberFormShow() {
     UserAddGroupDialogRef.value.handleOpen(state.userList)
 }
 async function getMemberGroupList() {
-    state.userList = await GetMemberListApi({
-        groupName: props.group.id
+    setTimeout(async() => {
+        state.userList = await GetMemberListApi({
+            groupName: props.group.id
+        })
     })
 }
 function handleUserDblclick () {}

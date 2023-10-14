@@ -15,8 +15,8 @@
             <div class="main" v-loading="state.loading">
                 <div v-if="state.doc" class="topAction" >
                     <h3 class="flex-x-start">{{state.doc.name}}
-                        <ExportFolderStructureButton v-show="state.doc.isFolder" class="el-icon--right"
-                            :export-id="state.doc.id" :export-name="state.doc.name"></ExportFolderStructureButton>
+                        <!-- <ExportFolderStructureButton v-show="state.doc.isFolder" class="el-icon--right"
+                            :export-id="state.doc.id" :export-name="state.doc.name"></ExportFolderStructureButton> -->
                         <!-- <ExportButton v-show="folderCurItem.isFolder" class="el-icon--right" :export-id="folderCurItem.id" :export-name="folderCurItem.name"></ExportButton> -->
                     </h3>
                     <div class="right">

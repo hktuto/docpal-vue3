@@ -6,7 +6,7 @@
       <div class="infoContent">
         <div v-for="(item) in collections" :key="item.id" class="tag">
           <div class="label">{{item.name}}</div>
-          <SvgIcon :src="'/icons/close.svg'" v-if="doc.canWrite" class="deleteIcon" @click="handleDelete(item)"/>
+          <SvgIcon v-if="AllowTo({feature:'ReadWrite', permission: props.permission })" :src="'/icons/close.svg'" class="deleteIcon" @click="handleDelete(item)"/>
         </div>
         <div class="addTagButton">
           <SvgIcon :src="'/icons/add.svg'" @click="handleAddCollection"/>
@@ -22,7 +22,8 @@
 import {ElMessageBox } from 'element-plus'
 import {getCollectionDocApi, removeCollectionApi } from 'dp-api'
 const props = defineProps<{
-    doc: any
+    doc: any,
+    permission: any
 }>()
 const { doc } = toRefs(props)
 const { t } = useI18n()

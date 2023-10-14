@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'COLLECTION',
       name:"file_collections",
       routeName:"collection",
       url:"/collection",

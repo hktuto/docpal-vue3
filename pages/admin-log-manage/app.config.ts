@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'LOG_MANAGE',
       name:"admin_logManage",
       routeName:"logManage",
       url:"/logManage",

@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import { getJsonApi } from 'dp-api'
+const { loadLanguage } = useLanguage()
 const route = useRoute()
 const fromDesignerRef = ref()
 async function handleSave () {
@@ -25,6 +26,9 @@ watch(() => route.params.id, (newJsonName) => {
         fromDesignerRef.value.setFormJson(getJsonApi(newJsonName))
     })
 }, { immediate: true })
+onMounted(() => {
+    loadLanguage('en')
+})
 </script>
 <style lang="scss" scoped>
 .pageContainer {

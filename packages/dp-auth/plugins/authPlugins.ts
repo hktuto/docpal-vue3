@@ -6,6 +6,9 @@ import {refreshTokenFn} from "~/utils/refreshToken";
 import { ElMessage } from 'element-plus'
 const noRouteErrorPages = ['/FormEditor/', '/workflowForm/']
 const cancelAxiosWhiteList = [
+    // admin-acl
+    // '/nuxeo/document/children/thumbnail',
+    // '/nuxeo/document',
     // public
     '/nuxeo/document/download',
     '/nuxeo/document/isDuplicateName',
@@ -30,6 +33,8 @@ const cancelAxiosWhiteList = [
     '/nuxeo/search/textSearchTypes',
     '/nuxeo/identity/users',
     '/nuxeo/search/getSearchExtends', 
+    // workflow
+    '/docpal/workflow/process/list'
 ]
 let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {

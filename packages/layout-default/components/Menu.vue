@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<{
 
 //#region Set Menu
 const { menu, feature } = useAppConfig();
+const appStore = useAppStore();
 const {user} = useUser();
 const router = useRouter();
 const route = useRoute();
@@ -35,6 +36,8 @@ function toTree (data) {
     // 空数组
     const result = []
     if (!Array.isArray(data)) return result // 判断不是数组  直接返回
+    data = data.filter((item) => !item.feature || item.feature === 'CORE' || appStore.licenseFeatures[item.feature]) 
+    console.log(data)
     data.forEach(item => {
         delete item.children
     }) // 清空children
@@ -71,7 +74,6 @@ function toTree (data) {
     result.forEach(item => {
         if(item.children) item.children = item.children.sort((a,b) => a.order - b.order)
     })
-    console.log(result, 'menu')
     return result.sort((a,b) => a.order - b.order)
 }
 

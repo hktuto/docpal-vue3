@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'SMART_FOLDER',
       name:"admin_smartFolder",
       routeName:"preSearchConfig",
       url:"/preSearchConfig",

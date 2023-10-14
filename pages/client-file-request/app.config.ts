@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'UPLOAD_REQUEST',
       name:"file_fileRequest",
       routeName:"fileRequest",
       url:"/fileRequest",

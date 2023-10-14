@@ -224,7 +224,7 @@ export const useUser = () => {
      * @returns 
      */
     async function beforeLogin(goHome: boolean) {
-        console.log(useRuntimeConfig());
+        await appStore.checkLicense();
         if(isLogin.value) {
             appStore.setDisplayState('ready') 
             return

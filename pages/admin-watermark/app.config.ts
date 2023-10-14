@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature: 'WATERMARK',
       name:"admin_watermark",
       routeName:"watermark",
       url:"/watermark",
