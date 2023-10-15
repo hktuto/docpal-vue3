@@ -19,10 +19,11 @@ test.describe('Internal Share', () => {
         const tab = await browsePage.page.locator('div:nth-child(2) > .el-form-item > .el-form-item__content > .el-select > .select-trigger > .el-select__tags')
         tab.click();
         tab.locator('input').fill('seantsang');
-        tab.locator('input').press('Enter');
+        await browsePage.page.getByRole('listitem').click();
 
-        await browsePage.page.getByText('Internal SharingUserRightValidity periodPermanentLimitedSend Email NotificationS').click();
+        await browsePage.page.getByLabel('Right').click();
         await browsePage.page.locator('li').filter({ hasText: /^Manage$/ }).click();
+
         await browsePage.page.getByRole('button', { name: 'Submit' }).click();
         
         await browsePage.page.locator('#sidebarContainer div').filter({ hasText: 'Share Module' }).click();
@@ -40,7 +41,13 @@ test.describe('Internal Share', () => {
         await expect(browsePage.page).toHaveURL(/.*shareOther/);
         await browsePage.waitForLoading();
 
-        await browsePage.page.locator('#sidebarContainer div').filter({ hasText: 'Share Module' }).click();
+        await expect(browsePage.page.getByRole('cell', { name })).toHaveCount(1);
+
+        await browsePage.page.getByRole('row', { name: `${name} seantsang` }).getByRole('button').nth(1).click();
+        await browsePage.page.getByRole('button', { name: 'OK' }).click();
+        await browsePage.waitForLoading();
+
+        await expect(browsePage.page.getByRole('cell', { name })).toHaveCount(0);
 
 
     })
