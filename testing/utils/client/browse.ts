@@ -22,12 +22,14 @@ export class BrowsePage {
 
     }
 
-    async addFolder(name:string) {
+    async addFolder(name:string, addToDelete = true) {
         await this.page.locator('#newActionButton').click();
         await this.page.getByRole('menuitem', { name: 'New Folder' }).click();
         await this.page.getByLabel('File Name').fill(name);
         await this.page.getByRole('button', { name: 'Submit' }).click();
-        await this.addItemToDelete(name)
+        if(addToDelete) {
+            await this.addItemToDelete(name)
+        }
         await expect(this.page.getByRole('cell', { name })).toHaveCount(1);
     }
 
