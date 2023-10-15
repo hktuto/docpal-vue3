@@ -141,7 +141,7 @@ test.describe('Browse List', () => {
     })
 
     client('upload file', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
         await browsePage.page.getByPlaceholder('Name').fill(name);

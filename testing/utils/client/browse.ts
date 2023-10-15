@@ -15,6 +15,10 @@ export class BrowsePage {
         this.page.goto(clientURL + '/browse');
     }
 
+    async goto(path) {
+       await this.page.goto(clientURL + path);
+    }
+
     async waitForLoading() {
         // wait for loading
         await this.page.waitForTimeout(500);

@@ -4,9 +4,10 @@ import { clientURL } from '../url';
 import { BrowsePage } from './browse'
 import {login} from "../pre-test/login";
 import {changeLanguage} from "../pre-test/changeLanguage";
+import { CollectionPage } from './collection';
 
 
-export const client = base.extend<{} & { browsePage: BrowsePage }>({
+export const client = base.extend<{} & { browsePage: BrowsePage } & { collectionPage: CollectionPage}>({
     page: async ({ page }, use, scope) => {
         
         await page.goto(clientURL + '/');
@@ -22,7 +23,12 @@ export const client = base.extend<{} & { browsePage: BrowsePage }>({
         const browsePage = new BrowsePage(page);
         await use(browsePage);
         await browsePage.removeAll();
+    },
+    collectionPage: async ({ page }, use, scope) => {
+        const collectionPage = new CollectionPage(page);
+        await use(collectionPage);
     }
+
 })
 
 export { expect } from '@playwright/test';
