@@ -74,7 +74,6 @@ function toTree (data) {
     result.forEach(item => {
         if(item.children) item.children = item.children.sort((a,b) => a.order - b.order)
     })
-    console.log(result, 'menu')
     return result.sort((a,b) => a.order - b.order)
 }
 

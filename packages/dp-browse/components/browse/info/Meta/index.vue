@@ -2,7 +2,7 @@
     <div v-for="(item, index) in displayMeta" :key="item.metaData"  class="infoSection">
       <div class="infoTitle">{{ $t(item.metaData) }}</div>
       <div class="infoContent">
-        <template v-if="!AllowTo({feature:'ReadWrite', permission: props.permission })">
+        <template v-if="!canWrite">
           <span v-if="item.dataType === 'date'">{{ displayTime(item.value) }}</span>
           <span v-else>{{ item.value }}</span>
         </template>
@@ -17,10 +17,7 @@
     import {patchDocumentApi} from "dp-api";
     import {ElMessage} from "element-plus";
 
-    const props = defineProps<{
-      doc:any,
-      permission: any
-    }>();
+    const props = defineProps<{doc:any, permission:any}>();
     const displayMeta = ref<any[]>([])
     const { displayTime } = useTime();
     const { doc } = toRefs(props)

@@ -1,8 +1,8 @@
 <template>
-    <div class="languageSwitchContainer">
+    <div id="languageSwitcher" class="languageSwitchContainer">
 
-      <ElDropdown  @command="handleCommand">
-        <SvgIcon src="/icons/language.svg" round />
+      <ElDropdown id="languageSwitchContainerIcon"  @command="handleCommand">
+        <SvgIcon   src="/icons/language.svg" round />
           <template #dropdown>
               <ElDropdownMenu v-if="userPreference && userPreference.language">
                   <ElDropdownItem v-for="locale in availableLocales" :key="locale" :command="locale"
