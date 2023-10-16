@@ -144,7 +144,6 @@ export const useUser = () => {
         // 使用令牌来调用您的 API
         try {
             await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
-            await appStore.appInit();
             localStorage.setItem('token', dpKeyCloak.token);
             const data = await api.get('/docpal/systemfeature/keycloak-token-verification').then( res => { 
                                     if(!res.data || !res.data.data) {
@@ -161,13 +160,16 @@ export const useUser = () => {
             Cookies.value = JSON.stringify(user.value)
             isLogin.value = true;
             api.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
+            await appStore.appInit();
             await getUserSetting();
             appStore.setDisplayState('ready');
         } catch (error) {
+            console.log("handleKeycloakLoginFail", error);
             handleKeycloakLoginFail()
         }
     }
     function handleKeycloakLoginFail () {
+        dpKeyCloak.logout()
         setTimeout(() => {
             router.push('/error/503?message=message')
             appStore.setDisplayState('ready');
