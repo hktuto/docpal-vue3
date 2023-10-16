@@ -82,6 +82,7 @@ export class BrowsePage {
             return;
         }
         await this.page.goto(clientURL + `/browse?path=${item.parentPath}`);
+        await this.page.waitForTimeout(2000);
         await expect(this.page.locator('.clientPageContainer')).toHaveCount(1);
         await this.waitForLoading();
         await this.page.getByPlaceholder('Name').fill(item.name);
@@ -96,7 +97,7 @@ export class BrowsePage {
         await expect(this.page.getByText('Item deleted')).toHaveCount(1);
         // go to trash
         await this.page.goto(clientURL + '/trash');
-        await expect(this.page.locator('.clientPageContainer')).toHaveCount(1);
+        await this.waitForLoading();
         await this.page.getByRole('button', { name: 'Delete All' }).click();
         await this.waitForLoading()
     }
