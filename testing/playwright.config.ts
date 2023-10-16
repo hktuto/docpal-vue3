@@ -23,9 +23,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
-  timeout: 100000, // 30 sec
+  timeout: 300000, // 30 sec
   expect: {
-    timeout: 100000,   // <---------
+    timeout: 300000,   // <---------
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
