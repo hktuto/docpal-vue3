@@ -63,6 +63,7 @@ export class BrowsePage {
         const firstItemInTable = await this.page.locator('.nameContainer > .dropzone').first()
         const title = await firstItemInTable.innerText();
         await firstItemInTable.dblclick();
+        await this.waitForLoading();
         await expect(this.page.locator('.breadContainer').filter({ hasText: title })).toHaveCount(1);
     }
 

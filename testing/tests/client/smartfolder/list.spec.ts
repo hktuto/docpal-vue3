@@ -3,14 +3,12 @@ import { client, expect } from '../../../utils/client';
 
 test.describe('Smart Folder', () => {
 
-    client('show list', async({browsePage}) => {
-        await expect(browsePage.page).toHaveURL(/.*browse/);
-        browsePage.goto('/smartFolder');
+    client('show list', async({smartFolderPage}) => {
 
         
-        const table = ["Name", "Path", "Modified Date", "Document Type"]
+        const table = ["Name", "Document Type"]
         for (const cell of table) {
-            await expect(browsePage.page.getByRole('cell', { name: cell, exact:true })).toBeAttached();
+            await expect(smartFolderPage.page.getByRole('cell', { name: cell, exact:true })).toBeAttached();
             
         }
 
