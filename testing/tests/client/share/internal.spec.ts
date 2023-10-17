@@ -18,7 +18,7 @@ test.describe('Internal Share', () => {
 
         const tab = await browsePage.page.locator('div:nth-child(2) > .el-form-item > .el-form-item__content > .el-select > .select-trigger > .el-select__tags')
         tab.click();
-        tab.locator('input').fill('seantsang');
+        tab.locator('input').fill(process.env.CLIENT_USER || 'seantsang');
         await browsePage.page.getByRole('listitem').click();
 
         await browsePage.page.getByLabel('Right').click();
