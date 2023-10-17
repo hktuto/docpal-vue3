@@ -86,20 +86,22 @@ export class BrowsePage {
         await expect(this.page.locator('.clientPageContainer')).toHaveCount(1);
         await this.waitForLoading();
         await this.page.getByPlaceholder('Name').fill(item.name);
-        expect(this.page.locator('.nameContainer > .label').filter({ hasText: item.name })).toHaveCount(1);
-        await this.page.getByRole('cell', { name: item.name }).click({
-            button: 'right'
-        });
-        await this.page.getByRole('menuitem', { name: 'Delete' }).click();
-        await this.page.getByRole('button', { name: 'OK' }).click();
-        // wait for popup
-        
-        await expect(this.page.getByText('Item deleted')).toHaveCount(1);
-        // go to trash
-        await this.page.goto(clientURL + '/trash');
-        await this.waitForLoading();
-        await this.page.getByRole('button', { name: 'Delete All' }).click();
-        await this.waitForLoading()
+        const count = await this.page.locator('.nameContainer > .label').filter({ hasText: item.name }).count();
+        if(count !== 0) {
+            await this.page.getByRole('cell', { name: item.name }).click({
+                button: 'right'
+            });
+            await this.page.getByRole('menuitem', { name: 'Delete' }).click();
+            await this.page.getByRole('button', { name: 'OK' }).click();
+            // wait for popup
+            
+            await expect(this.page.getByText('Item deleted')).toHaveCount(1);
+            // go to trash
+            await this.page.goto(clientURL + '/trash');
+            await this.waitForLoading();
+            await this.page.getByRole('button', { name: 'Delete All' }).click();
+            await this.waitForLoading()
+        }
     }
 
     async removeAll() {

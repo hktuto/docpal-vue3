@@ -95,7 +95,7 @@ test.describe('Browse List', () => {
         // create folder
         await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
-        await browsePage.addFolder(name);
+        await browsePage.addFolder(name, false);
         // delete folder
         await browsePage.page.getByPlaceholder('Name').fill(name);
         const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
@@ -108,7 +108,7 @@ test.describe('Browse List', () => {
         await browsePage.goRoot();
         await browsePage.goToFirstLevel();
         
-        await browsePage.page.waitForTimeout(2000);
+        await browsePage.waitForLoading();
         await browsePage.page.getByPlaceholder('Name').fill(name);
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: name }).count();
         expect(count).toBe(0);
