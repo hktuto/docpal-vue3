@@ -5,10 +5,6 @@ test.describe('Retention List', () => {
 
     client('show list', async({retentionPage}) => {
 
-
-        retentionPage.page.getByRole('tab', { name: "Retention Done List", exact:true }).click();
-        await retentionPage.waitForLoading();
-
         const tabs = ["Retention Done List", "Retention Pending List"];
         for (const cell of tabs) {
             await expect(retentionPage.page.getByRole('tab', { name: cell, exact:true })).toBeAttached();

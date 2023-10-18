@@ -43,7 +43,7 @@ test.describe('Internal Share', () => {
 
         await expect(browsePage.page.getByRole('cell', { name })).toHaveCount(1);
 
-        await browsePage.page.getByRole('row', { name: `${name} seantsang` }).getByRole('button').nth(1).click();
+        await browsePage.page.getByRole('row', { name: `${name} ${process.env.CLIENT_USER || 'seantsang'}` }).getByRole('button').nth(1).click();
         await browsePage.page.getByRole('button', { name: 'OK' }).click();
         await browsePage.waitForLoading();
 
