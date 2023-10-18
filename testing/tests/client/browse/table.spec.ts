@@ -5,13 +5,13 @@ test.describe('Browse List', () => {
 
 
     client('create folder', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
     })
 
     client('create folder with same name', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
         await browsePage.addFolder(name);
@@ -19,7 +19,7 @@ test.describe('Browse List', () => {
     });
 
     client('filter table by file name', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         // create two folder
         const f1 = 'testFolder_' + Date.now();
         const f2 = 'testFolder2_' + Date.now();
@@ -84,7 +84,7 @@ test.describe('Browse List', () => {
 
         await browsePage.page.getByPlaceholder('Name').fill(newName);
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: newName }).count();
-        expect(count).toBe(1);
+        await expect(count).toBe(1);
         browsePage.updateNameInItemToDelete(name, newName);
 
     });
@@ -109,7 +109,7 @@ test.describe('Browse List', () => {
         await browsePage.waitForLoading();
         await browsePage.page.getByPlaceholder('Name').fill(name);
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: name }).count();
-        expect(count).toBe(0);
+        await expect(count).toBe(0);
     });
 
     

@@ -6,7 +6,7 @@ test.describe('Browse info', () => {
 
 
     client('update meta', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
 
@@ -31,7 +31,7 @@ test.describe('Browse info', () => {
     });
 
     client('update tag', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
 
@@ -62,7 +62,7 @@ test.describe('Browse info', () => {
 
     client('update category', async({browsePage}) => {
 
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
 
@@ -84,7 +84,7 @@ test.describe('Browse info', () => {
     });
 
     client('document comment', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
 
@@ -113,7 +113,7 @@ test.describe('Browse info', () => {
     })
 
     client('show activity', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
 
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);

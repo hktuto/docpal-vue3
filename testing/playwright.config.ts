@@ -29,6 +29,7 @@ export default defineConfig({
     ['html', { open: 'never' }],
     ['playwright-teamcity-reporter', {'testMetadataArtifacts': 'test-results', logConfig: false}],
   ],// 30 sec
+  timeout: 120000, // 2 min
   expect: {
     timeout: 120000,   // <---------
   },

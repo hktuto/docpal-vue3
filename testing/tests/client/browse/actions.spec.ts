@@ -6,13 +6,13 @@ test.describe('Browse Actions', () => {
 
 
     client('copy url', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         await browsePage.page.locator('#copyPathActionButton').getByRole('img').click();
         await browsePage.checkTextExist('Path copied to clipboard');
     })
 
     client('subscribe', async({browsePage}) => {
-        browsePage.goToFirstLevel();
+        await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
         await browsePage.addFolder(name);
         await browsePage.page.getByPlaceholder('Name').fill(name);
