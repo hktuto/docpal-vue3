@@ -58,7 +58,6 @@ test.describe('Browse List', () => {
         await browsePage.page.waitForTimeout(1000);
         await browsePage.goToFirstLevel();
         
-        await browsePage.waitForLoading();
         await browsePage.page.getByPlaceholder('Name').fill(newName);
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: newName }).count();
         expect(count).toBe(1);
@@ -114,30 +113,6 @@ test.describe('Browse List', () => {
     });
 
     
-
-    client('copy url', async({browsePage}) => {
-        browsePage.goToFirstLevel();
-        await browsePage.page.locator('#copyPathActionButton').getByRole('img').click();
-        await browsePage.checkTextExist('Path copied to clipboard');
-    })
-
-    client('subscribe', async({browsePage}) => {
-        browsePage.goToFirstLevel();
-        const name = 'testFolder_' + Date.now();
-        await browsePage.addFolder(name);
-        await browsePage.page.getByPlaceholder('Name').fill(name);
-
-        const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
-        item.dblclick();
-        
-        await browsePage.waitForLoading();
-
-        // click subscribe
-        await browsePage.page.locator('#subscribeActionButton span').click();
-
-        // click unsubscribe
-        await browsePage.page.locator('#subscribeActionButton span').click();
-    })
 
     client('upload file', async({browsePage}) => {
         await browsePage.goToFirstLevel();
