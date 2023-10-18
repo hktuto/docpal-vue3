@@ -71,6 +71,9 @@ export default defineNuxtPlugin((nuxtApp) => {
                     authorization: `Bearer ${result?.access_token}`,
                 };
             }
+            setTimeout(() => {
+                config.sent = false
+            }, 30000)
             localStorage.setItem('token', result?.access_token)
             return api(config);
         }

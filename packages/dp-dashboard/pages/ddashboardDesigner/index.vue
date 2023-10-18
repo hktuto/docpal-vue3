@@ -1,37 +1,27 @@
 <template>
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
+            @command="handleAction"
             @row-dblclick="handleDblclick"
             @pagination-change="handlePaginationChange">
             <template #preSortButton>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                    inputKey="subject"/>
+                    inputKey="name"/>
             </template>  
             <template #suffixSortButton>
-                <el-button type="info" @click="handleEditEmailLayout">{{$t('button.editEmailLayout')}}</el-button>
-                <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
-            </template>
-            <template #emailAction="{row, index}">
-                <el-button class="emailActionButton" type="text" size="small" 
-                    @click="handleDblclick(row)">
-                    <SvgIcon src="/icons/edit.svg" ></SvgIcon>
-                </el-button>
-                <el-button v-if="row.createdBy !== 'system'" class="emailActionButton" type="text" size="small"
-                    @click="handleDeleteTemplate(row.id)">
-                    <SvgIcon src="/icons/menu/trash.svg" ></SvgIcon>
-                </el-button>
+                <el-button type="primary" @click="handleAdd()">{{$t('button.add')}}</el-button>
             </template>
         </Table>
+        <DashboardDialog ref="DashboardDialogRef" @refresh="handlePaginationChange(1)"/>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-    GetEmailTemplatePageApi,
-    DeleteEmailTemplateApi,
-    GetEmailLayoutAllApi,
-    defaultTableSetting, TABLE
+    GetDashboardPageApi,
+    DeleteDashboardApi,
+    defaultTableSetting, TABLE, deepCopy
 } from 'dp-api'
 
 // #region module: page
@@ -43,7 +33,7 @@ import {
         orderBy: 'createdDate',
         isDesc: true
     }
-    const tableKey = TABLE.ADMIN_EMAIL_TEMPLATE
+    const tableKey = TABLE.ADMIN_DASHBOARD
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
@@ -66,7 +56,7 @@ import {
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetEmailTemplatePageApi({ ...param, ...state.extraParams })
+            const res = await GetDashboardPageApi({ ...param, ...state.extraParams })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -99,32 +89,32 @@ import {
         { immediate: true }
     )
 // #endregion
-
-async function handleDeleteTemplate(id: string) {
+function handleAction (command, row: any, index: number) {
+    switch (command) {
+        case 'delete':
+            handleDelete(row.id)
+            break
+        case 'edit':
+            handleAdd(row)
+            break
+        default:
+            break
+    }
+}
+async function handleDelete(id: string) {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
-    await DeleteEmailTemplateApi(id)
+    await DeleteDashboardApi(id)
     handlePaginationChange(pageParams.pageNum + 1)
 }
 function handleDblclick(row) {
-    router.push(`/emailTemplate/${row.id}`)
+    router.push(`/ddashboardDesigner/${row.id}`)
 }
-function handleAdd () {
-    router.push(`/emailTemplate/new`)
+const DashboardDialogRef = ref()
+function handleAdd (setting) {
+    DashboardDialogRef.value.handleOpen(deepCopy(setting))
 }
 // #region module: ResponsiveFilterRef
-    const ResponsiveFilterRef = ref()
-    async function getFilter() {
-        const layouts = await GetEmailLayoutAllApi()
-        const filters = [
-            { key: "emailLayoutId", label: "emailTemplate.layout", type: "string", 
-                options: layouts.map(item => ({
-                    value: item.id,
-                    label: item.name
-                })) }
-        ]
-        ResponsiveFilterRef.value.init(filters)
-    }
     function handleFilterFormChange(formModel) {
         state.extraParams = formModel
         handlePaginationChange(1)
@@ -134,7 +124,6 @@ function handleEditEmailLayout () {
     router.push('/layoutTemplate')
 }
 onMounted(() => {
-    getFilter()
 })
 </script>
 

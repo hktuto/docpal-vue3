@@ -1,80 +1,323 @@
 <template>
-    <el-card ref="cardRef" class="dashboard-item-main">sizeStatistics
+    <el-card ref="cardRef" class="dashboard-item-main">
         <div id="myEcharts" ref="chartRef" class="echart"></div>
+        <DocSizeStatisticsSetting ref="settingRef" 
+            @delete="handleDelete"
+            @refresh="handleRefresh"/>
     </el-card>
 </template>
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
+import { GetDocumentTypeOfSizeByRangeApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
-
+const props = withDefaults( defineProps<{
+    data?: any;
+    trendData?: any;
+    trendXAxis?: any[];
+    setting?: any;
+    id: string | number
+}>() , {
+    data: {},
+    trendData: {},
+    trendXAxis: [],
+    setting: {}
+})
 type EChartsOption = echarts.EChartsOption;
 const chartRef = ref()
 const cardRef = ref()
 let echartInstance
-function initStyle () {
-    const pHeight = cardRef.value.$el.offsetHeight
-    const pWidth = cardRef.value.$el.offsetWidth
-    chartRef.value.style = `height: ${pHeight - 10 }px; width: ${pWidth - 20}px`
-}
-function initChart() {
-    initStyle()
-    const options: EChartsOption = {
-        title: {
-            text: "2021年各月份销售量（单位：件）",
-            left: "center",
+const emits = defineEmits([
+    'refreshSetting', 'delete'
+])
+const setting = {
+    volumeSetting: {
+        options: {
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            },
+            yAxis: {
+                type: 'value'
+            }
         },
-        xAxis: {
-            type: "category",
-            data: [
-            "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"
-            ]
+        series: {
+            smooth: true,
+            type: 'line'
+        }
+    },
+    percentSetting: {
+        options: {
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            },
+            yAxis: {
+                type: 'value'
+            },
         },
-        tooltip: {
-            trigger: "axis"
+        series: {
+            smooth: true,
+            type: 'line'
+        }
+    },
+    brickSetting: {
+        options: {
+            xAxis: {
+                type: 'value',
+                show: false
+            },
+            yAxis: {
+                show: false,
+                type: 'category'
+            },
+            legend: {
+                bottom: '5%',
+                left: 'center'
+            }
         },
-        yAxis: {
-            type: "value"
+        series: {
+            type: 'bar',
+            stack: '总量',
+            label: {
+                normal: {
+                    position: 'inside', // 在内部显示，outseide 是在外部显示
+                    show: true,
+                    formatter: '{c}'
+                }
+            }, 
+            itemStyle: {
+                height: 50
+            }
+        }
+    },
+    barSetting: {
+        options: {
+            xAxis: {
+                type: 'value'
+            },
+            yAxis: {
+                data: [],
+                type: 'category',
+            },
+            legend: {
+                bottom: '5%',
+                left: 'center'
+            }
         },
-        series: [
-            {
-                data: [
-                    606, 542, 985, 687, 501, 787, 339, 706, 383, 684, 669, 737
-                ],
-                type: "line",
-                smooth: true,
-                itemStyle: {
-                    normal: {
-                        label: {
-                            show: true,
-                            position: "top",
-                            formatter: "{c}"
-                        }
+        series: {
+            type: 'bar',
+            label: {
+                normal: {
+                    position: 'inside', // 在内部显示，outseide 是在外部显示
+                    show: true,
+                    formatter: '{c}'
+                }
+            }
+        }
+    },
+    pieSetting: {
+        options: {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                bottom: '5%',
+                left: 'center'
+            }
+        },
+        series: {
+            type: 'pie',
+            radius: ['40%', '70%'],
+            itemStyle: {
+                borderRadius: 5,
+                borderColor: '#fff',
+                borderWidth: 1
+            },
+            label: {
+                normal: {
+                    position: 'inside', // 在内部显示，outseide 是在外部显示
+                    show: true,
+                    formatter: '{d}%'
+                }
+            }
+        }
+    },
+    defaultSetting: {
+        options: {
+            title: {
+                text: $t('dashboard.documentSize'),
+                left: "left",
+            },
+            toolbox: {
+                show: true,
+                showTitle: true, 
+                itemSize: 15, 
+                feature: {
+                    mySetting: {
+                        show: true,
+                        title: 'setting',
+                        icon: '',
+                        onclick: ()=> openSetting()
                     }
                 }
             }
-        ]
+        },
     }
+}
+const state = reactive({
+    data: {
+        Photo: 160,
+        File: 340,
+        video: 80,
+        Invoice: 400,
+        others: 120
+    },
+    trendData: {
+        photo: [10,20,50,60,5,15],
+        file: [100,200,10,5,3,12],
+        video: [10,20,50,5,3,2],
+        invoice: [100,100,50,120,10,20],
+        others: [10,20,15,15,30,30]
+    },
+    
+})
+const picStore = {
+}
+let options = {}
+
+// #region module: set
+    function initStyle () {
+        const pHeight = cardRef.value.$el.offsetHeight
+        const pWidth = cardRef.value.$el.offsetWidth
+        // 需要扣除 .el-card 的 padding
+        chartRef.value.style = `height: ${pHeight - 30 }px; width: ${pWidth - 40}px`
+    }
+    async function setMySettingIcon() {
+        
+    }
+    function getXAxis(chartData) {
+        const x = Object.keys(chartData).reduce((prev,item) => {
+            prev.push(item)
+            return prev
+        },[])
+        options.xAxis.data = x
+    }
+    function getSeries (chartData, type: string = 'pie', displayList: any[]) {
+        const data = Object.keys(chartData).reduce((prev,key) => {
+            const value = chartData[key]
+            const _sItem = {
+                value,
+                name: key
+            }
+            const dItem = displayList.find(item => item.documentType === key)
+            if(!!dItem && !!dItem.color) {
+                _sItem.itemStyle = {
+                    normal: {
+                        color: dItem.color
+                    }
+                }
+            } 
+            prev.push(_sItem)
+            return prev
+        },[])
+        return {
+            data,
+            ...setting[`${type}Setting`].series
+        }
+    }
+    function getTrendSeries (chartData, type: string = 'pie', displayList: any[]) {
+        return Object.keys(chartData).reduce((prev,key) => {
+            const values = chartData[key]
+            const _sItem = {
+                ...setting[`${type}Setting`].series,
+                name: key,
+                data: values instanceof Array ? values : [values]
+            }
+            if(!displayList) displayList = []
+            const dItem = displayList.find(item => item.documentType === key)
+            if(!!dItem && !!dItem.color) {
+                if(!_sItem.itemStyle) _sItem.itemStyle = {}
+                if(!_sItem.itemStyle.normal) _sItem.itemStyle.normal = {}
+                _sItem.itemStyle.normal.color = dItem.color
+            }
+            prev.push(_sItem)
+            return prev
+        },[])
+    }
+// #endregion
+async function initChart() {
+    if (echartInstance) echartInstance.clear()
     echartInstance = echarts.init(chartRef.value);
     echartInstance.setOption(options);
-    // 随着屏幕大小调节图表
-    useEventListener(window, 'resize', resize)
-    useEventListener(window, 'echarts-resize', resize)
 }
 function resize() {
-    console.log('resizein');
-    
     setTimeout(() => {
         initStyle()
-        console.log(echartInstance);
-        
-        echartInstance.resize();
+        if(echartInstance) echartInstance.resize();
     })
 }
-onMounted(() => {
-    nextTick(() => {
+// #region module: setting
+    const settingRef = ref()
+    function openSetting() {
+        settingRef.value.handleOpen()
+    }
+    async function handleInitChart(chartSetting) {
+        const chartType = chartSetting?.style || 'pie' 
+        const displayList = chartSetting?.displayList || []
+        options = { 
+            ...setting.defaultSetting.options, 
+            ...setting[`${chartType}Setting`].options 
+        }
+        if(!picStore.setting) picStore.setting = 'image://' + await parseSvg('/icons/setting.svg')
+        options.toolbox.feature.mySetting.icon = picStore.setting
+        switch(chartType) {
+            case 'pie':
+                options.series = getSeries(state.data, chartType, displayList)
+                break
+            case 'bar':
+                options.series = getTrendSeries(state.data, chartType)
+                break
+            case 'brick':
+                options.series = getTrendSeries(state.data, chartType)
+                break
+            case 'percent':
+                options.series = getTrendSeries(state.trendData, chartType)
+                options.xAxis.data = props.trendXAxis
+                break
+            case 'volume':
+                options.series = getTrendSeries(state.trendData, chartType)
+                options.xAxis.data = props.trendXAxis
+                break
+        }
+        console.log({options});
+        
         initChart()
+    }
+    function getData() {
+        state.data = GetDocumentTypeOfSizeByRangeApi()
+    }
+    function getTrendDate( ) {}
+    function handleDelete() {
+        emits('delete')
+    }
+    function handleRefresh(chartSetting) {
+        emits('refreshSetting', chartSetting)
+    }
+// #endregion
+onMounted(async() => {
+    nextTick(async() => {
+        initStyle()
+        // 随着屏幕大小调节图表
+        useEventListener(window, 'resize', resize)
     })
+})
+watch(() => props.setting, (newSetting) => {
+    handleInitChart(newSetting)
+}, {
+    immediate: true
 })
 defineExpose({
     resize

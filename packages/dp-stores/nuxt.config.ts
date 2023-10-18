@@ -2,6 +2,7 @@
 // @ts-ignore
 const ExcutingAnOrder = process.env.npm_lifecycle_script.split(' ')
 const env = ExcutingAnOrder[ExcutingAnOrder.length - 1];
+const dashboardProxy = process.env.DASHBOARD_PROXY?.replace('admin.', '')
 export default defineNuxtConfig({
     modules:[
         // 'dp/nuxt-session'
@@ -22,7 +23,11 @@ export default defineNuxtConfig({
                 changeOrigin: true,
                 prependPath: true,
             },
-            
+            '/dashboard':{
+                target: dashboardProxy,
+                changeOrigin: true,
+                prependPath: true,
+            },
         }
     }
 })

@@ -1,0 +1,68 @@
+<template>
+    <GridLayout :layout.sync="layout" 
+        :col-num="12"
+        :row-height="30"
+        :is-draggable="draggable"
+        :is-resizable="resizable">
+        <GridItem v-for="(item, index) in layout"
+                    class="dashboard-item"
+                    :static="item.static"
+                    :x="item.x"
+                    :y="item.y"
+                    :w="item.w"
+                    :h="item.h"
+                    :i="item.i"
+                    @resized="chartResize(item)"
+            >
+            <component :is="DocMap[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
+                :setting="item.setting"
+                @delete="handleDelete(item)"
+                @refreshSetting="(setting) => handleRefreshSetting(setting, item)"></component>
+        </GridItem>    
+    </GridLayout>
+</template>
+
+<script lang="ts" setup>
+import { GridLayout, GridItem } from "vue3-grid-layout-next"
+import DocAddOrientation from '../doc/addOrientation.vue'
+import DocTypePercentage from '../doc/typePercentage.vue'
+import DocSizeStatistics from '../doc/sizeStatistics.vue'
+const props = withDefaults( defineProps<{
+    layout: any[];
+    resizable?: boolean;
+    draggable?: boolean
+}>() , {
+    layout: [],
+    resizable: true,
+    draggable: true,
+})
+const emits = defineEmits([
+    'refreshSetting', 'delete'
+])
+const DocMap = {
+    'DocAddOrientation': DocAddOrientation,
+    'DocSizeStatistics': DocSizeStatistics,
+    'DocTypePercentage': DocTypePercentage,
+}
+const sheetRefs = ref({})
+
+function handleDelete (row) {
+    emits('delete', row.i)
+}
+function handleRefreshSetting (setting, row) {
+    row.setting = setting
+    emits('refreshSetting', row)
+}
+function chartResize(row) {
+    sheetRefs.value[row.i].resize()
+}
+</script>
+
+<style lang="scss" scoped>
+.dashboard-item {
+    background-color: aquamarine;
+    :deep(.dashboard-item-main) {
+        height: 100%;
+    }
+}
+</style>
