@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import * as path from "path";
 dotenv.config();
 export const STORAGE_STATE = path.join(__dirname, 'storage/test.json');
+
+const isCi = Boolean(process.env.CI);
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -16,16 +18,15 @@ export default defineConfig({
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: false,
+  forbidOnly: !!isCi,
   /* Retry on CI only */
-  retries: 0,
+  retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: 1,
+  workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['html', { open: 'never' }]
-  ],
-  timeout: 120000, // 30 sec
+  ],// 30 sec
   expect: {
     timeout: 120000,   // <---------
   },
