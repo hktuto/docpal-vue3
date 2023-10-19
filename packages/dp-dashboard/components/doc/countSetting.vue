@@ -37,7 +37,7 @@ async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        emits('refresh', structuredClone(toRaw(data)))
+        emits('refresh', {...data, icon: state.icon})
     } catch (error) {
         state.loading = false
     }
@@ -48,6 +48,7 @@ function handleOpen(setting) {
     state.visible = true
     setTimeout(async () => {
         state.setting = setting
+        state.icon = setting.icon
         await FromRendererRef.value.vFormRenderRef.setFormData(setting)
         state.loading = false
     })

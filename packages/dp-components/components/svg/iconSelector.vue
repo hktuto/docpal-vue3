@@ -28,7 +28,7 @@ const props = defineProps<{
     src: string
 }>()
 const dialogVisible = ref(false)
-const _src = ref(props.src)
+const _src = ref()
 const svgIconListRef = ref()
 const emit = defineEmits(['update:src'])
 function handleConfirm () {
@@ -36,6 +36,11 @@ function handleConfirm () {
     dialogVisible.value = false
     emit('update:src', _src.value)
 }
+watch(()=> props.src, (newValue) => {
+    _src.value = newValue
+}, {
+    immediate: true
+})
 </script>
 
 <style lang="scss" scoped>

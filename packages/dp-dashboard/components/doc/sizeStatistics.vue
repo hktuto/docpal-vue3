@@ -133,9 +133,9 @@ const setting = {
             type: 'pie',
             radius: ['40%', '70%'],
             itemStyle: {
-                borderRadius: 5,
-                borderColor: '#fff',
-                borderWidth: 1
+                // borderRadius: 5,
+                // borderColor: '#fff',
+                // borderWidth: 1
             },
             label: {
                 normal: {
@@ -169,19 +169,14 @@ const setting = {
     }
 }
 const state = reactive({
+    initData: [],
+    initTrendData: [],
     data: {
-        Photo: 160,
-        File: 340,
-        video: 80,
-        Invoice: 400,
-        others: 120
     },
-    trendData: {
-        photo: [10,20,50,60,5,15],
-        File: [100,200,10,5,3,12],
-        video: [10,20,50,5,3,2],
-        invoice: [100,100,50,120,10,20],
-        others: [10,20,15,15,30,30]
+    trendSizeData: {
+        test: '4156456'
+    },
+    trendPercentData: {
     },
     trendXAxis: []
 })
@@ -277,48 +272,103 @@ function resize() {
         options.toolbox.feature.mySetting.icon = picStore.setting
         switch(chartType) {
             case 'pie':
-                getData()
+                await getData(displayList)
                 options.series = getSeries(state.data, chartType, displayList)
                 break
             case 'bar':
-                getData()
+                await getData(displayList)
                 options.series = getTrendSeries(state.data, chartType, displayList)
                 break
             case 'brick':
-                getData()
+                await getData(displayList)
                 options.series = getTrendSeries(state.data, chartType, displayList)
                 break
             case 'percent':
-                getTrendData()
-                options.series = getTrendSeries(state.trendData, chartType, displayList)
-                options.xAxis.data = props.trendXAxis
+                await getTrendData(displayList, 'trendPercentData')
+                options.series = getTrendSeries(state.trendPercentData, chartType, displayList)
+                options.xAxis.data = state.trendXAxis
                 break
             case 'volume':
-                getTrendData()
-                options.series = getTrendSeries(state.trendData, chartType, displayList)
-                options.xAxis.data = props.trendXAxis
+                await getTrendData(displayList)
+                options.series = getTrendSeries(state.trendSizeData, chartType, displayList)
+                options.xAxis.data = state.trendXAxis
                 break
         }
-        console.log({options});
-        
         initChart()
     }
-    async function getData() {
-        // return
+    async function getData(displayList: any = []) {
+        if(!displayList || displayList.length === 0) return {}
         try {
-            const res = await GetDocTypeSizeApi()
-            console.log(res);
-            // state.data
+            if(!state.initData || state.initData.length === 0) {
+                const res = await GetDocTypeSizeApi()
+                state.initData = res
+            }
+            state.data = {}
+            let others = 0
+            state.data = state.initData.reduce((prev,item) => {
+                const index = displayList.findIndex((i) => i.documentType === item.key)
+                if(index === -1) others += item.count
+                else prev[item.key] = item.count
+                return prev
+            }, {})
+            state.data.others = others
         } catch (error) {
         }
     }
-    async function getTrendData( ) {
-        // return
+    async function getTrendData(displayList, dataType: string = 'trendSizeData') {
+        if(!displayList || displayList.length === 0) return {}
         try {
-            const res = await GetDocTypeSizeTrendApi()
-            console.log(res);
+            if(!state.initTrendData || state.initTrendData.length === 0) {
+                const res = await GetDocTypeSizeTrendApi()
+                state.initTrendData = res?.group_document_type?.buckets || []
+            }
+            let trendData
+            let monthTotal = {}
+            let others = []
+            state.trendXAxis = []
+            trendData = state.initTrendData.reduce((initPrev,initItem, initIndex) => {
+                const index = displayList.findIndex((i) => i.documentType === initItem.key)
+                if(index === -1) {
+                    initItem.group_by_time.buckets.reduce((prev, bucketsItem, index) => {
+                        if(!others[index]) others[index] = 0
+                        if(!monthTotal[index]) monthTotal[index] = 0
+                        others[index] += bucketsItem.cumulative_sum_mb.value
+                        if(initIndex === 0) {
+                            state.trendXAxis.push(bucketsItem.key_as_string)
+                        }
+                        monthTotal[index] += bucketsItem.cumulative_sum_mb.value
+                    }, [])
+                }
+                else {
+                    const t = initItem.group_by_time.buckets.reduce((prev, bucketsItem, index) => {
+                        prev.push(bucketsItem.cumulative_sum_mb.value)
+                        if(initIndex === 0) {
+                            state.trendXAxis.push(bucketsItem.key_as_string)
+                        }
+                        if(!monthTotal[index]) monthTotal[index] = 0
+                        monthTotal[index] += bucketsItem.cumulative_sum_mb.value
+                        return prev
+                    }, [])
+                    initPrev[initItem.key] = t
+                }
+                return initPrev
+            }, {})
             
-            //  state.trendData
+            trendData.others = others
+            if(dataType === 'trendPercentData') {
+                state[dataType] = Object.keys(trendData).reduce((prev, key) => {
+                    const item = trendData[key]
+                    console.log('trendData[key]',trendData[key]);
+                    prev[key] = item.reduce((_prev,_item, _index) => {
+                        if(monthTotal[_index] === 0) _prev.push(0)
+                        else _prev.push( _item / monthTotal[_index])
+                        return _prev
+                    }, [])
+                    return prev
+                }, {})
+            } else {
+                state[dataType] = trendData
+            }
         } catch (error) {
         }
     }

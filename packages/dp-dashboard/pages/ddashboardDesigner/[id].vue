@@ -27,13 +27,13 @@
             </div>
         </div>
         <div class="template-main-container">
-            <div style="height: 200px; width: 300px;background-color: red;">
+            <!-- <div style="height: 200px; width: 300px;background-color: red;">
 
                 <DocCount :setting="{
                     documentType: 'File',
                     color: 'red',
                     icon: '/icons/eye.svg'}"></DocCount>
-            </div>
+            </div> -->
             <DashboardDetail ref="DashboardDetailRef" :layout="state.layout"
                 @delete="handleDelete"
                 @refreshSetting="handleRefresh"></DashboardDetail>
@@ -83,7 +83,7 @@ function handleAdd(command) {
             setting = {
                 documentType: 'File',
                 color: 'red',
-                icon: '/icons/eye.svg'
+                icon: '/icons/file/info.svg'
             }
             break;
         case 'trend':

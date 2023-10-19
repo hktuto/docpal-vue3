@@ -1,5 +1,6 @@
 <template>
     <el-card ref="cardRef" class="dashboard-item-main">
+        <!-- <el-button @click="handleDelete"></el-button> -->
         <div id="myEcharts" ref="chartRef" class="echart"></div>
         <DocCountSetting ref="settingRef" 
             @delete="handleDelete"
@@ -9,7 +10,7 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { deepCopy, GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
+import { GetDocTypeCountApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
@@ -38,7 +39,7 @@ const setting = {
                         image: ''
                     },
                     left: 'center',
-                    top: 'center'
+                    top: '41%'
                 }]
             },
             toolbox: {
@@ -77,9 +78,8 @@ const setting = {
     }
 }
 const state = reactive({
+    initData: [],
     data: {
-        others: 160,
-        File: 340
     }
 })
 const picStore = {
@@ -115,9 +115,10 @@ async function initChart() {
     echartInstance.setOption(options);
 }
 function resize() {
-    setTimeout(() => {
+    setTimeout(async() => {
         initStyle()
-        if(echartInstance) echartInstance.resize();
+        await handleInitChart(props.setting)
+        echartInstance.resize()
     })
 }
 // #region module: setting
@@ -126,12 +127,9 @@ function resize() {
         settingRef.value.handleOpen(props.setting)
     }
     async function getIconStyle(iconSrc) {
-        console.log({chartRef});
-        
         const style = {
             image: await parseSvg(iconSrc),
             width: chartRef.value.clientWidth / 10,
-            height: chartRef.value.clientHeight / 7,
         }
         return style
     }
@@ -142,21 +140,26 @@ function resize() {
         // setting icon
         if(!picStore.setting) picStore.setting = 'image://' + await parseSvg('/icons/setting.svg')
         options.toolbox.feature.mySetting.icon = picStore.setting
-        
-        console.log({options});
         options.graphic.elements[0].style = await getIconStyle(chartSetting.icon)
         // data
-        getData()
+        await getData(chartSetting.documentType)
         options.series = getSeries(state.data)
-        console.log({options});
         initChart()
     }
-    async function getData() {
-        return
+    async function getData(documentType: string) {
         try {
-            const res = await GetDocTypeSizeApi()
-            console.log(res);
-            // state.data
+            if(!state.initData || state.initData.length === 0) {
+                const res = await GetDocTypeCountApi()
+                state.initData = res
+            }
+            let others = 0
+            state.data = state.initData.reduce((prev,item) => {
+                if(item.key === documentType) {
+                    prev[item.key] = item.count
+                } else others += item.count
+                return prev
+            }, {})
+            state.data.others = others
         } catch (error) {
         }
     }
@@ -187,9 +190,5 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.dashboard-item-main {
-    width: 100%;
-    height: 100%;
-    background-color: aquamarine;
-}
+
 </style>
