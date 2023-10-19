@@ -10,6 +10,7 @@ export const useOffice = () => {
     
     function initOffice() {
         // @ts-ignore
+        if(!Office) return;
         Office.onReady((info:any) => {
             console.log(info)
             host.value = info.host;
@@ -43,7 +44,7 @@ export const useOffice = () => {
             }else {
                 initOffice();
             }
-        }, 100)
+        }, 300)
     }
         
 
