@@ -37,19 +37,25 @@ export const UpdateDashboardApi = async(params: any) => {
     return res
 }
 
-// size1
-export const GetDocumentTypeOfSizeByRangeApi = async(timeFlag: string, queryList: boolean = true) => {
-    const res = await api.post('/docpal/dashboard/DocumentTypeOfSizeByRange', {
-        timeFlag,
-        queryList
-    }, {
+// size
+export const GetDocTypeSizeApi = async(params: any = {}) => {
+    const res = await api.post('/docpal/dashboard/DocumentTypeOfSizeByRange', params, {
         baseURL: '/dashboard'
     }).then(res => res.data.data)
     return res
 }
-export const QueryDocumentTypeCountApi = async(params: any) => {
-    const res = await api.post('/api/docpal/dashboard/queryDocumentTypeCount', params, {
+// size trend
+export const GetDocTypeSizeTrendApi = async(params: any= {}) => {
+    const res = await api.post('/docpal/dashboard/DocumentTypeOfSizeByMonthlyRangeCumulation', params, {
         baseURL: '/dashboard'
     }).then(res => res.data.data)
     return res
 }
+// count
+export const GetDocTypeCountApi = async(params: any) => {
+    const res = await api.post('/docpal/dashboard/DocumentTypeOfCountByRange', params, {
+        baseURL: '/dashboard'
+    }).then(res => res.data.data)
+    return res
+}
+

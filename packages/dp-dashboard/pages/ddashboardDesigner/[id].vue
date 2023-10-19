@@ -11,7 +11,7 @@
             <div>
                 <el-dropdown @command="handleAdd">
                     <el-button type="primary">
-                        Dropdown List<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                        {{$t('common_add')}}
                     </el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
@@ -27,6 +27,13 @@
             </div>
         </div>
         <div class="template-main-container">
+            <div style="height: 200px; width: 300px;background-color: red;">
+
+                <DocCount :setting="{
+                    documentType: 'File',
+                    color: 'red',
+                    icon: '/icons/eye.svg'}"></DocCount>
+            </div>
             <DashboardDetail ref="DashboardDetailRef" :layout="state.layout"
                 @delete="handleDelete"
                 @refreshSetting="handleRefresh"></DashboardDetail>
@@ -53,9 +60,6 @@ async function getInfo() {
     state.info = await GetDashboardApi(route.params.id)
     if(state.info.styleJson) state.layout = JSON.parse(state.info.styleJson)
 }
-function getData() {
-    
-}
 const DashboardDialogRef = ref()
 function handleEdit() {
     DashboardDialogRef.value.handleOpen(state.info)
@@ -75,10 +79,15 @@ function handleAdd(command) {
             }
             break;
         case 'count':
-            component = 'DocTypePercentage'
+            component = 'DocTypeCount'
+            setting = {
+                documentType: 'File',
+                color: 'red',
+                icon: '/icons/eye.svg'
+            }
             break;
         case 'trend':
-            component = 'DocAddOrientation'
+            component = 'DocTypeCoCount'
             break;
         default:
             break;
@@ -115,7 +124,6 @@ function handleRefresh (layoutSetting) {
 
 onMounted(async () => {
     getInfo()
-    getData()
 })
 </script>
 

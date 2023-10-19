@@ -9,18 +9,11 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { GetDocumentTypeOfSizeByRangeApi } from 'dp-api'
+import { deepCopy, GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
-    data?: any;
-    trendData?: any;
-    trendXAxis?: any[];
     setting?: any;
-    id: string | number
 }>() , {
-    data: {},
-    trendData: {},
-    trendXAxis: [],
     setting: {}
 })
 type EChartsOption = echarts.EChartsOption;
@@ -40,6 +33,10 @@ const setting = {
             },
             yAxis: {
                 type: 'value'
+            },
+            legend: {
+                bottom: '5%',
+                left: 'center'
             }
         },
         series: {
@@ -57,6 +54,10 @@ const setting = {
             yAxis: {
                 type: 'value'
             },
+            legend: {
+                bottom: '5%',
+                left: 'center'
+            }
         },
         series: {
             smooth: true,
@@ -87,7 +88,7 @@ const setting = {
                     show: true,
                     formatter: '{c}'
                 }
-            }, 
+            },
             itemStyle: {
                 height: 50
             }
@@ -158,7 +159,7 @@ const setting = {
                 feature: {
                     mySetting: {
                         show: true,
-                        title: 'setting',
+                        title: $t('dashboard.setting'),
                         icon: '',
                         onclick: ()=> openSetting()
                     }
@@ -177,12 +178,12 @@ const state = reactive({
     },
     trendData: {
         photo: [10,20,50,60,5,15],
-        file: [100,200,10,5,3,12],
+        File: [100,200,10,5,3,12],
         video: [10,20,50,5,3,2],
         invoice: [100,100,50,120,10,20],
         others: [10,20,15,15,30,30]
     },
-    
+    trendXAxis: []
 })
 const picStore = {
 }
@@ -240,6 +241,7 @@ let options = {}
             const dItem = displayList.find(item => item.documentType === key)
             if(!!dItem && !!dItem.color) {
                 if(!_sItem.itemStyle) _sItem.itemStyle = {}
+                else _sItem.itemStyle = deepCopy(_sItem.itemStyle) // 处理所有数据同一itemStyle问题
                 if(!_sItem.itemStyle.normal) _sItem.itemStyle.normal = {}
                 _sItem.itemStyle.normal.color = dItem.color
             }
@@ -262,7 +264,7 @@ function resize() {
 // #region module: setting
     const settingRef = ref()
     function openSetting() {
-        settingRef.value.handleOpen()
+        settingRef.value.handleOpen(props.setting)
     }
     async function handleInitChart(chartSetting) {
         const chartType = chartSetting?.style || 'pie' 
@@ -275,20 +277,25 @@ function resize() {
         options.toolbox.feature.mySetting.icon = picStore.setting
         switch(chartType) {
             case 'pie':
+                getData()
                 options.series = getSeries(state.data, chartType, displayList)
                 break
             case 'bar':
-                options.series = getTrendSeries(state.data, chartType)
+                getData()
+                options.series = getTrendSeries(state.data, chartType, displayList)
                 break
             case 'brick':
-                options.series = getTrendSeries(state.data, chartType)
+                getData()
+                options.series = getTrendSeries(state.data, chartType, displayList)
                 break
             case 'percent':
-                options.series = getTrendSeries(state.trendData, chartType)
+                getTrendData()
+                options.series = getTrendSeries(state.trendData, chartType, displayList)
                 options.xAxis.data = props.trendXAxis
                 break
             case 'volume':
-                options.series = getTrendSeries(state.trendData, chartType)
+                getTrendData()
+                options.series = getTrendSeries(state.trendData, chartType, displayList)
                 options.xAxis.data = props.trendXAxis
                 break
         }
@@ -296,16 +303,33 @@ function resize() {
         
         initChart()
     }
-    function getData() {
-        state.data = GetDocumentTypeOfSizeByRangeApi()
+    async function getData() {
+        // return
+        try {
+            const res = await GetDocTypeSizeApi()
+            console.log(res);
+            // state.data
+        } catch (error) {
+        }
     }
-    function getTrendDate( ) {}
+    async function getTrendData( ) {
+        // return
+        try {
+            const res = await GetDocTypeSizeTrendApi()
+            console.log(res);
+            
+            //  state.trendData
+        } catch (error) {
+        }
+    }
     function handleDelete() {
         emits('delete')
     }
     function handleRefresh(chartSetting) {
         emits('refreshSetting', chartSetting)
     }
+// #endregion
+// #region module: 
 // #endregion
 onMounted(async() => {
     nextTick(async() => {

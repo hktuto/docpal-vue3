@@ -24,8 +24,8 @@
 
 <script lang="ts" setup>
 import { GridLayout, GridItem } from "vue3-grid-layout-next"
-import DocAddOrientation from '../doc/addOrientation.vue'
-import DocTypePercentage from '../doc/typePercentage.vue'
+import DocTypeCoCount from '../doc/coCount.vue'
+import DocTypeCount from '../doc/count.vue'
 import DocSizeStatistics from '../doc/sizeStatistics.vue'
 const props = withDefaults( defineProps<{
     layout: any[];
@@ -40,9 +40,9 @@ const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
 const DocMap = {
-    'DocAddOrientation': DocAddOrientation,
+    'DocTypeCoCount': DocTypeCoCount,
+    'DocTypeCount': DocTypeCount,
     'DocSizeStatistics': DocSizeStatistics,
-    'DocTypePercentage': DocTypePercentage,
 }
 const sheetRefs = ref({})
 
