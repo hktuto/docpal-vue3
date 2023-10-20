@@ -32,7 +32,6 @@ export const useLayout = () => {
 
 
   function allowFeature(f: pageFeatures) {
-    console.log(pageFeatures);
     
     const feature = getLicenseFeatures()
     if(!pageFeatures[f] || !feature || !feature[pageFeatures[f]]) return false

@@ -123,9 +123,10 @@ export const useUser = () => {
         }
     }
     async function keycloakLogin() {
-        console.log('keycloakLogin', {dpKeyCloak});
+        
         try {
             const authenticated = await dpKeyCloak.init({onLoad: 'login-required'})
+            console.log('keycloakLogin', {authenticated});
             if(!authenticated) {
                 throw new Error("unAuth");
             } 

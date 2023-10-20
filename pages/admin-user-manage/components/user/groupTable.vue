@@ -7,7 +7,6 @@
                 @click="handleGroupAddMemberFormShow()">{{$t('user_addGroups')}}</el-button>
         </div>
     </template>
-    <!-- TODO slot item.isCanModified disabled actions -->
     <Table :columns="tableSetting.columns" :table-data="state.groupList"
         @row-dblclick="handleUserDblclick"
         @command="handleAction"></Table>
@@ -47,10 +46,6 @@ function handleUserDblclick () {}
 function handleAction (command, row: any, index: number) {
     switch (command) {
       case 'delete':
-        if (!row.isCanModified) {
-            ElMessage.warning($t('dpTip_cannotDelete'))
-            return
-        }
         handleDelete(row)
         break
       default:

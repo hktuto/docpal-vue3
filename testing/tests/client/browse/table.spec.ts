@@ -56,7 +56,6 @@ test.describe('Browse List', () => {
         browsePage.updateNameInItemToDelete(name, newName);
         await browsePage.goRoot();
         await browsePage.page.waitForTimeout(1000);
-        await browsePage.waitForLoading();
         await browsePage.goToFirstLevel();
         
         await browsePage.waitForLoading();
@@ -95,7 +94,7 @@ test.describe('Browse List', () => {
         // create folder
         await browsePage.goToFirstLevel();
         const name = 'testFolder_' + Date.now();
-        await browsePage.addFolder(name);
+        await browsePage.addFolder(name, false);
         // delete folder
         await browsePage.page.getByPlaceholder('Name').fill(name);
         const item = await browsePage.page.locator('.nameContainer > .dropzone').first();
@@ -108,7 +107,7 @@ test.describe('Browse List', () => {
         await browsePage.goRoot();
         await browsePage.goToFirstLevel();
         
-        await browsePage.page.waitForTimeout(2000);
+        await browsePage.waitForLoading();
         await browsePage.page.getByPlaceholder('Name').fill(name);
         const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: name }).count();
         expect(count).toBe(0);
@@ -163,14 +162,13 @@ test.describe('Browse List', () => {
             'uploads/testUpload.txt',
           ])
           await expect(browsePage.page).toHaveURL(/.*upload/);
-          await browsePage.page.getByRole('treeitem').locator('div').filter({ hasText: 'testUpload.txt' }).first().click();
+          await browsePage.page.getByRole('treeitem').locator('div').filter({ hasText: 'testUpload' }).first().click();
         await browsePage.page.getByRole('button', { name: 'Confirm' }).click();
         
 
-        await browsePage.page.getByPlaceholder('Name').fill('testUpload.txt');
+        await browsePage.page.getByPlaceholder('Name').fill('testUpload');
 
-        const count = await browsePage.page.locator('.nameContainer > .label').filter({ hasText: 'testUpload.txt' }).count();
-        expect(count).toBe(1);
+        await expect(browsePage.page.locator('.nameContainer > .label').filter({ hasText: 'testUpload' })).toHaveCount(1);
 
     });
 

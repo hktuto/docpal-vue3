@@ -1,21 +1,17 @@
 
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { adminURL } from '../url';
+import { login } from '../pre-test/login';
+import { changeLanguage } from '../pre-test/changeLanguage';
 
 export const admin = base.extend({
     page: async ({ page }, use, scope) => {
         await page.goto(adminURL + '/');
-        await page.getByLabel('username').fill(process.env.CLIENT_USER || 'seantsang');
-        await page.getByLabel('password').fill(process.env.CLIENT_PASSWORD ||'aaAA1234');
-        await page.getByRole('button', {name: 'Sign In'}).press('Enter');
-        // await expect(page).toHaveURL(/.*acl/);
+        await login(page, process.env.CLIENT_USER || 'Administrator', process.env.CLIENT_PASSWORD ||"2'KMzF}zK2ZmwQe");
 
-        await page.locator('#languageSwitchContainerIcon').click();
-        // check ENG button is disabled or not
-        const isClickable = await page.getByRole('menuitem', { name: 'ENG' }).getAttribute('aria-disabled');
-        if(!isClickable || isClickable === 'false') {
-            await page.getByRole('menuitem', {name: 'ENG'}).click();
-        }
+        await expect(page).toHaveURL(/.*acl/);                                                  
+
+        await changeLanguage(page, 'ENG'); 
         // Use signed-in page in the test.
         await use(page);
     },

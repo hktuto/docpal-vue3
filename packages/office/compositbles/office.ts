@@ -10,6 +10,7 @@ export const useOffice = () => {
     
     function initOffice() {
         // @ts-ignore
+        if(!Office) return;
         Office.onReady((info:any) => {
             console.log(info)
             host.value = info.host;
@@ -43,10 +44,16 @@ export const useOffice = () => {
             }else {
                 initOffice();
             }
-        }, 100)
+        }, 300)
     }
         
-
+    useHead({
+        script:[
+          {
+            src:"https://appsforoffice.microsoft.com/lib/1/hosted/office.js",
+          }
+        ]
+      })
     
     
     return {
