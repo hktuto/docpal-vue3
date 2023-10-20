@@ -10,7 +10,7 @@
                 "label": "dpDocument_fileName",
                 "labelAlign": "",
                 "type": "text",
-                "defaultValue": "new Folder",
+                "defaultValue": "",
                 "placeholder": "",
                 "columnWidth": "200px",
                 "size": "",
