@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 
 
-const ImageCropper = function(canvasEL:HTMLCanvasElement, blob:Blob, contrainerSize = 500, options = {scale:1}, ) {
+const ImageCropper = function(canvasEL:HTMLCanvasElement, blob:Blob, contrainerSize = 500, options = {scale:1}, changeToolCallback:Function ) {
 
     this.scale = options.scale ? options.scale * 100 : 150;
     this.blob = blob;
@@ -136,9 +136,11 @@ const ImageCropper = function(canvasEL:HTMLCanvasElement, blob:Blob, contrainerS
     }
 
     this.changeTool = (tool:string) => {
+        console.log("changeTool", tool)
         this.currentTool = tool;
         // toggle select tool 
-        this.fObj.selection = tool === 'select';
+        this.fObj.selection = !!(tool === 'select');
+        changeToolCallback(tool);
         // switch tool to set listener
     }
 
@@ -167,7 +169,8 @@ const ImageCropper = function(canvasEL:HTMLCanvasElement, blob:Blob, contrainerS
     this.createSquare = ({mouseX, mouseY}) => {
         const left = mouseX + this.upperCanvasEl.getBoundingClientRect().left  + this.currentTransform[0];
         const top = mouseY + this.upperCanvasEl.getBoundingClientRect().top + this.currentTransform[1];
-        const width = 600;
+        const width = 100;
+        console.log(left, top)
         const toolObj = new fabric.Rect({
             left,
             top,

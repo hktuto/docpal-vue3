@@ -1,0 +1,28 @@
+{
+  "name": "nissin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev --port 3000",
+    "build": "nuxi build .playground",
+    "generate": "nuxi generate .playground",
+    "preview": "nuxi preview .playground",
+    "postinstall": "nuxi prepare",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "fabric": "^5.3.0",
+    "pdf-img-convert": "^1.2.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@vueuse/components": "^9.13.0",
+    "@vueuse/core": "^10.2.1",
+    "dp-api": "workspace:*",
+    "eslint": "^8.28.0",
+    "nuxt": "^3.4.3",
+    "typescript": "^4.9.3"
+  }
+}

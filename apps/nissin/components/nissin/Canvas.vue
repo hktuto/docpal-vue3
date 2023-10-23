@@ -1,3 +1,55 @@
+
+<script lang="ts" setup>
+import ImageCropper from './cropper'
+type Tools = "move" | "scale" | "draw" | "select";
+
+type CanvasProps = {
+    image?: File,
+    canvasSize: number
+}
+const emit = defineEmits(['clear'])
+const props = withDefaults(defineProps<CanvasProps>(), {
+    image: null,
+    canvasSize: 600
+})
+const mainCanvas = ref();
+const canvas = ref();
+// canvas setting 
+
+const currentTool = ref<Tools>('move')
+const cropper = ref<any>();
+const {image, canvasSize} = toRefs(props);
+
+function cleanImg() {
+    currentTool.value = "move"
+        cropper.value = null;
+        emit('clear');
+}
+function changeTool(tool:Tools) {
+    console.log("Change tool on vue")
+    currentTool.value = tool;
+    if(cropper.value) {
+        cropper.value.changeTool(tool);
+    }
+}
+
+function drawBgImage() {
+
+}
+
+function toolChangeCallback(tool:Tools) {
+    console.log("toolChangeCallback", tool)
+    currentTool.value = tool;
+}
+
+async function initCanvas() {
+    console.log(image.value);
+    cropper.value = new ImageCropper(mainCanvas.value, image.value, canvasSize.value, toolChangeCallback)
+}
+
+onMounted(() => initCanvas())
+</script>
+
 <template>
     <div class="canvasContaienr">
         <div class="filename">{{image.name}}<el-button icon="el-icon-delete-solid" size="small" circle @click="cleanImg"></el-button></div>
@@ -16,66 +68,6 @@
     </div>
 </template>
 
-<script lang="ts" >
-import { defineComponent, ref, onMounted, toRefs } from '@nuxtjs/composition-api'
-import ImageCropper from './cropper'
-type Tools = "move" | "scale" | "draw" | "select";
-export default defineComponent({
-    props:{
-        image: {
-            type: File,
-        },
-        canvasSize:{
-            type:Number,
-            default: 600
-        }
-    },
-    setup(props,{emit}){
-        // dom element
-        const mainCanvas = ref();
-        const canvas = ref();
-        // canvas setting 
-        
-        const currentTool = ref<Tools>('move')
-        const cropper = ref();
-        const {image, canvasSize} = toRefs(props);
-
-        function cleanImg() {
-            currentTool.value = "move"
-                cropper.value = null;
-                emit('clear');
-        }
-        function changeTool(tool:Tools) {
-            currentTool.value = tool;
-            if(cropper.value) {
-                cropper.value.changeTool(tool);
-            }
-        }
-
-        function drawBgImage() {
-
-        }
-
-        async function initCanvas() {
-            console.log(image.value);
-            cropper.value = new ImageCropper(mainCanvas.value, image.value, canvasSize.value)
-        }
-
-        onMounted(() => initCanvas())
-        return {
-                // utils
-                currentTool,
-                // function
-                initCanvas,
-                changeTool,
-                cleanImg,
-                // element
-                mainCanvas,
-                cropper,
-        }
-    }
-})
-</script>
 
 
 <style lang="scss" scoped>

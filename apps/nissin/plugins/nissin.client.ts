@@ -1,15 +1,14 @@
 // @ts-ignore
-import dialog from '../components/nissin/dialog.vue';
-import Vue from 'vue'
-export default function() {
-    Vue.component('NissinDialog', dialog);
+import NissinDialog from '~/components/nissin/dialog.vue';
+
+export default defineNuxtPlugin(nuxtApp =>  {
     const item = {
         category:"business_processes",
         id:"test",
         key: "nissinArtworkContentApproval",
         name: "nissinArtworkContentApproval",
         // @ts-ignore
-        component: "NissinDialog",
+        component: NissinDialog,
         page: "/nissinArtworkContentApproval"
     }
     // @ts-ignore
@@ -24,4 +23,4 @@ export default function() {
     
     // add event listener to pinia store
     // 
-}
+})

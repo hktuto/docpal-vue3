@@ -10,7 +10,8 @@
         </el-dropdown-menu>
     </template>
 </el-dropdown>
-<el-dialog v-model="state.formDialogVisible" :title="state.selectedWorkflow.name"
+<component :is="state.selectedWorkflow.component" v-if="state.selectedWorkflow.component"  v-bind="$props" @close="state.selectedWorkflow = {}"  />
+<el-dialog v-else v-model="state.formDialogVisible" :title="state.selectedWorkflow.name"
     destroy-on-close append-to-body width="60%"
     :close-on-click-modal="false"
     class="scroll-dialog"
@@ -34,15 +35,24 @@ import {
     workflowProcessStartApi } from 'dp-api'
 const emits = defineEmits(['created']);
 const state = reactive({
-    availableWorkflow: [],
+    availableWorkflow: [] as any[],
     formDialogVisible: false,
-    selectedWorkflow: {},
+    selectedWorkflow: {} as any,
     loading: false
 })
 async function getAvailableWorkflow () {
-    state.availableWorkflow = await getAvailableWorkflowApi()
+    const allWorkflow = await getAvailableWorkflowApi();
+    //@ts-ignore
+    const customWorkflow = window.extraWorkflow || [];
+    state.availableWorkflow = [...allWorkflow, ...customWorkflow];
+    console.log(state.availableWorkflow);
 }
-async function workflowClickHandler (item: Workflow) {
+async function workflowClickHandler (item:any) {
+    console.log('workflow change', item)
+    if(item.component) {
+        state.selectedWorkflow = item
+        return
+    }
     state.formDialogVisible = true
     state.selectedWorkflow = deepCopy(item)
     initForm(item.key)
