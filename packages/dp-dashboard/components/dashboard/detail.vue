@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { GridLayout, GridItem } from "vue3-grid-layout-next"
-import DocTypeCoCount from '../doc/coCount.vue'
+import DocTypeCoCount from '../doc/coCount/index.vue'
 import DocTypeCount from '../doc/count.vue'
 import DocSizeStatistics from '../doc/sizeStatistics.vue'
 const props = withDefaults( defineProps<{

@@ -15,6 +15,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
 import { getJsonApi } from 'dp-api'
 const emits = defineEmits([
     'refresh', 'delete'
@@ -45,7 +46,9 @@ function handleOpen(setting) {
         state.loading = false
     })
 }
-function handleDelete() {
+async function handleDelete() {
+    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
+    if(action !== 'confirm') return
     emits('delete')
     state.visible = false
 }

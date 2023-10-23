@@ -67,8 +67,12 @@ function handleEdit() {
 function handleAdd(command) {
     let component = ''
     let setting = {} 
+    let w = 3
+    let h = 6
     switch (command) {
         case 'size':
+            w = 3
+            h = 6
             component = 'DocSizeStatistics'
             setting = {
                 style: 'pie',
@@ -79,6 +83,8 @@ function handleAdd(command) {
             }
             break;
         case 'count':
+            w = 3
+            h = 6
             component = 'DocTypeCount'
             setting = {
                 documentType: 'File',
@@ -87,7 +93,13 @@ function handleAdd(command) {
             }
             break;
         case 'trend':
+            w = 6
+            h = 12
             component = 'DocTypeCoCount'
+            setting = {
+                documentType: 'File',
+                color: 'red'
+            }
             break;
         default:
             break;
@@ -95,8 +107,8 @@ function handleAdd(command) {
     state.layout.push({
         x: (state.layout.length * 2) % 12,
         y: state.layout.length +  12, // puts it at the bottom
-        w: 3,
-        h: 6,
+        w,
+        h,
         i: new Date().valueOf(),
         component,
         setting

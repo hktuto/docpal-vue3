@@ -34,6 +34,9 @@ const setting = {
             yAxis: {
                 type: 'value'
             },
+            tooltip: {
+                trigger: 'item'
+            },
             legend: {
                 bottom: '5%',
                 left: 'center'
@@ -54,6 +57,9 @@ const setting = {
             yAxis: {
                 type: 'value'
             },
+            tooltip: {
+                trigger: 'item'
+            },
             legend: {
                 bottom: '5%',
                 left: 'center'
@@ -73,6 +79,9 @@ const setting = {
             yAxis: {
                 show: false,
                 type: 'category'
+            },
+            tooltip: {
+                trigger: 'item'
             },
             legend: {
                 bottom: '5%',
@@ -102,6 +111,9 @@ const setting = {
             yAxis: {
                 data: [],
                 type: 'category',
+            },
+            tooltip: {
+                trigger: 'item'
             },
             legend: {
                 bottom: '5%',
@@ -358,7 +370,6 @@ function resize() {
             if(dataType === 'trendPercentData') {
                 state[dataType] = Object.keys(trendData).reduce((prev, key) => {
                     const item = trendData[key]
-                    console.log('trendData[key]',trendData[key]);
                     prev[key] = item.reduce((_prev,_item, _index) => {
                         if(monthTotal[_index] === 0) _prev.push(0)
                         else _prev.push( _item / monthTotal[_index])
