@@ -1,16 +1,26 @@
 <template>
     <el-card class="dashboard-item-main">
         <template #header="{ close, titleId, titleClass }">
-            <h4>This is a custom header!</h4>
+            <h4>{{setting.documentType}}</h4>
             <SvgIcon src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
                 @click="openSetting"/>
         </template>
         <div class="trendContainer">
-            <DocCoCountFileCount ref="DocCoCountCountRef" :documentType="setting.documentType" />
-            <DocCoCountSize ref="DocCoCountSizeRef" :documentType="setting.documentType" />
+            <DocCoCountFileCount v-if="setting.showCount" ref="DocCoCountCountRef" 
+                :documentType="setting.documentType" 
+                :user="setting.user"/>
+            <DocCoCountSize v-if="setting.showSize" ref="DocCoCountSizeRef" 
+                :documentType="setting.documentType" 
+                :user="setting.user"/>
         </div>
         <div class="metaContainer" style="--trend-columns: 1fr 1fr 1fr 1fr">
-        
+            <DocCoCountMeta v-for="item in setting.displayList"
+                :ref="el =>{displayListRef[item.meta] = el}"
+                :documentType="setting.documentType"
+                :user="setting.user"
+                :meta="item.meta"
+                :data="metaData[`group_${item.meta}`]"
+                @drillDown="handleDrillDown"  />
         </div>
         <DocCoCountDialog ref="settingRef" 
             @delete="handleDelete"
@@ -19,6 +29,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowDown } from '@element-plus/icons-vue'
+import { GetCoCountMetaApi, GetCoCountMetaFilterApi } from 'dp-api'
 const props = withDefaults( defineProps<{
     setting?: any;
 }>() , {
@@ -27,15 +39,45 @@ const props = withDefaults( defineProps<{
 const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
+const metaData = ref({})
+const drillDownParams = ref({
+
+})
 const DocCoCountCountRef = ref()
 const DocCoCountSizeRef = ref()
+const displayListRef = ref({})
 function resize() {
     DocCoCountCountRef.value.resize()
     DocCoCountSizeRef.value.resize()
+    Object.keys(displayListRef.value).forEach(key => {
+        const item = displayListRef.value[key]
+        if(item) item.resize()
+    })
 }
 const settingRef = ref()
 function openSetting() {
     settingRef.value.handleOpen(props.setting)
+}
+async function getMetaData () {
+    const params = {
+        groupByMetadatas: props.setting.displayList.map(item => (item.meta)),
+        primaryType: props.setting.documentType,
+        creator: props.setting.user
+    }
+    metaData.value = await GetCoCountMetaApi(params)
+}
+async function handleDrillDown (metaData) {
+    drillDownParams.value[metaData.meta] = metaData.key
+    metaData.value = await GetCoCountMetaFilterApi({
+        filterByMetaDatas: drillDownParams.value,
+        creator: props.setting.user,
+        primaryType: props.setting.documentType,
+        groupByMetadatas: props.setting.displayList.map(item => (item.meta))
+    })
+    Object.keys(displayListRef.value).forEach(key => {
+        const item = displayListRef.value[key]
+        if(item) item.handleInitChart()
+    })
 }
 function handleDelete() {
     emits('delete')
@@ -43,11 +85,11 @@ function handleDelete() {
 function handleRefresh(chartSetting) {
     emits('refreshSetting', chartSetting)
 }
-watch(() => props.setting, (newSetting) => {
-    console.log(newSetting);
-    
+watch(() => props.setting, (newValue) => {
+    getMetaData()
 }, {
-    immediate: true
+    immediate: true,
+    deep: true
 })
 defineExpose({
     resize
@@ -89,7 +131,6 @@ defineExpose({
     flex-wrap: wrap;
     div {
         flex: 0 0 25%;
-        background-color: red;
     }
 }
 :deep(.co-count-chart) {

@@ -58,7 +58,11 @@ export const GetDocTypeCountApi = async(params: any = {}) => {
     return res
 }
 // co-count count
-export const GetCoCountCountApi = async(primaryType: string) => {
+export const GetCoCountCountApi = async(primaryType: string, creator?: string) => {
+    if(creator) return await GeCoCountCountSingleUserApi({
+        primaryType,
+        creator
+    })
     const res = await api.post('/docpal/dashboard/NewFilesOfUsersCountByDTypeBymonthlyCumulation', {primaryType}, {
         baseURL: '/dashboard'
     }).then(res => res.data.data)
@@ -71,7 +75,13 @@ export const GeCoCountCountSingleUserApi = async(params: any) => {
     return res
 }
 // co-count size
-export const GetCoCountSizeApi = async(primaryType: string) => {
+export const GetCoCountSizeApi = async(primaryType: string, creator?: string) => {
+    if (creator) {
+        return await GeCoCountSizeSingleUserApi({
+            primaryType,
+            creator
+        })
+    }
     const res = await api.post('/docpal/dashboard/NewFilesOfUsersSizeByDTypeBymonthlyCumulation', {primaryType}, {
         baseURL: '/dashboard'
     }).then(res => res.data.data)
@@ -85,6 +95,7 @@ export const GeCoCountSizeSingleUserApi = async(params: any) => {
 }
 // co-count meta
 export const GetCoCountMetaApi = async(params: any) => {
+    if (params.creator) return await GeCoCountMetaSingleUserApi(params)
     const res = await api.post('/docpal/dashboard/NewFilesOfUsersMetaByDTypeByRange', params, {
         baseURL: '/dashboard'
     }).then(res => res.data.data)
@@ -96,4 +107,20 @@ export const GeCoCountMetaSingleUserApi = async(params: any) => {
     }).then(res => res.data.data)
     return res
 }
+
+// co-count meta filter
+export const GetCoCountMetaFilterApi = async(params: any) => {
+    if (params.creator) return await GeCoCountMetaSingleUserApi(params)
+    const res = await api.post('/docpal/dashboard/NewFilesOfUserByDTypeByRangeFilterMatedata', params, {
+        baseURL: '/dashboard'
+    }).then(res => res.data.data)
+    return res
+}
+export const GeCoCountMetaFilterSingleUserApi = async(params: any) => {
+    const res = await api.post('/docpal/dashboard/NewFilesOfSpecifyUserByDTypeByRangeFilterMatedata', params, {
+        baseURL: '/dashboard'
+    }).then(res => res.data.data)
+    return res
+}
+
 

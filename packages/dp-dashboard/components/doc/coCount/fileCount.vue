@@ -9,9 +9,11 @@ import * as echarts from "echarts";
 import { GetCoCountCountApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
-    documentType?: string
+    documentType?: string,
+    user?: string
 }>() , {
-    documentType: ''
+    documentType: '',
+    user: ''
 })
 type EChartsOption = echarts.EChartsOption;
 const chartRef = ref()
@@ -101,7 +103,7 @@ function resize() {
     }
     async function getData(documentType: string) {
         try {
-            const res = await GetCoCountCountApi(documentType)
+            const res = await GetCoCountCountApi(documentType, props.user)
             state.xAxis = []
             const initData = res.group_document_type.buckets[0].group_by_time.buckets
             state.data = initData.reduce((prev,item) => {
@@ -122,10 +124,11 @@ onMounted(async() => {
         useEventListener(window, 'resize', resize)
     })
 })
-watch(() => props.documentType, (newDocumentType) => {
-    handleInitChart(newDocumentType)
+watch(() => props, (newValue) => {
+    handleInitChart(props.documentType)
 }, {
-    immediate: true
+    immediate: true,
+    deep: true
 })
 defineExpose({
     resize
