@@ -59,7 +59,9 @@ let options = {}
     }
 // #endregion
 async function initChart() {
-    if (!!echartInstance) echartInstance.clear()
+    if (!!echartInstance) {
+        echartInstance.dispose()
+    }
     echartInstance = echarts.init(chartRef.value);
     echartInstance.setOption(options);
     echartInstance.resize()

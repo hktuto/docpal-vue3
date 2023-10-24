@@ -13,6 +13,7 @@
                 :documentType="setting.documentType" 
                 :user="setting.user"/>
         </div>
+        <el-button v-if="state.drillDownFlag" :loading="state.drillDownBackLoading" @click="handleDrillDownBack" text>{{$t('dpButtom_back')}}</el-button>
         <div class="metaContainer" style="--trend-columns: 1fr 1fr 1fr 1fr">
             <DocCoCountMeta v-for="item in setting.displayList"
                 :ref="el =>{displayListRef[item.meta] = el}"
@@ -40,9 +41,12 @@ const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
 const metaData = ref({})
-const drillDownParams = ref({
-
+const state = reactive({
+    drillDownBackLoading: false,
+    drillDownFlag: false,
+    drillDownParams: {}
 })
+
 const DocCoCountCountRef = ref()
 const DocCoCountSizeRef = ref()
 const displayListRef = ref({})
@@ -66,18 +70,37 @@ async function getMetaData () {
     }
     metaData.value = await GetCoCountMetaApi(params)
 }
+async function handleDrillDownBack() {
+    state.drillDownParams = {}
+    state.drillDownBackLoading = true
+    try {
+        await getMetaData()
+        // Object.keys(displayListRef.value).forEach(key => {
+        //     const item = displayListRef.value[key]
+        //     if(item) item.handleInitChart()
+        // })
+        state.drillDownFlag = false
+    } catch (error) {
+        
+    }
+    state.drillDownBackLoading = false
+}
 async function handleDrillDown (metaData) {
-    drillDownParams.value[metaData.meta] = metaData.key
-    metaData.value = await GetCoCountMetaFilterApi({
-        filterByMetaDatas: drillDownParams.value,
-        creator: props.setting.user,
-        primaryType: props.setting.documentType,
-        groupByMetadatas: props.setting.displayList.map(item => (item.meta))
-    })
-    Object.keys(displayListRef.value).forEach(key => {
-        const item = displayListRef.value[key]
-        if(item) item.handleInitChart()
-    })
+    state.drillDownParams[metaData.meta] = metaData.key
+    try {
+        metaData.value = await GetCoCountMetaFilterApi({
+            filterByMetaDatas: state.drillDownParams,
+            creator: props.setting.user,
+            primaryType: props.setting.documentType,
+            groupByMetadatas: props.setting.displayList.map(item => (item.meta))
+        })
+        state.drillDownFlag = true
+        Object.keys(displayListRef.value).forEach(key => {
+            const item = displayListRef.value[key]
+            if(item) item.handleInitChart()
+        })
+    } catch (error) {
+    }
 }
 function handleDelete() {
     emits('delete')
