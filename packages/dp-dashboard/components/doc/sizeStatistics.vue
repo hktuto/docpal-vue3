@@ -286,24 +286,29 @@ function resize() {
             case 'pie':
                 await getData(displayList)
                 options.series = getSeries(state.data, chartType, displayList)
+                options.title.text = $t('dashboard.documentSize')
                 break
             case 'bar':
                 await getData(displayList)
                 options.series = getTrendSeries(state.data, chartType, displayList)
+                options.title.text = $t('dashboard.documentSize')
                 break
             case 'brick':
                 await getData(displayList)
                 options.series = getTrendSeries(state.data, chartType, displayList)
+                options.title.text = $t('dashboard.documentSize')
                 break
             case 'percent':
                 await getTrendData(displayList, 'trendPercentData')
                 options.series = getTrendSeries(state.trendPercentData, chartType, displayList)
                 options.xAxis.data = state.trendXAxis
+                options.title.text = $t('dashboard.documentPercent')
                 break
             case 'volume':
                 await getTrendData(displayList)
                 options.series = getTrendSeries(state.trendSizeData, chartType, displayList)
                 options.xAxis.data = state.trendXAxis
+                options.title.text = $t('dashboard.documentSize')
                 break
         }
         initChart()
