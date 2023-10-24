@@ -87,7 +87,9 @@ function initStyle () {
 // #region module: 
 // #endregion
 onMounted(async() => {
-    initStyle()
+    nextTick(() => {
+        initStyle()
+    })
 })
 onUnmounted(() => {
 })
