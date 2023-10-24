@@ -60,7 +60,6 @@ function chartResize(row) {
 
 <style lang="scss" scoped>
 .dashboard-item {
-    background-color: aquamarine;
     :deep(.dashboard-item-main) {
         height: 100%;
     }

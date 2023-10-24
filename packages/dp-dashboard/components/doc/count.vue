@@ -51,7 +51,7 @@ function resize() {
 function initStyle () {
     const pHeight = cardRef.value.offsetHeight
     const pWidth = cardRef.value.offsetWidth
-    state.width = Math.min(pHeight, pHeight) - 80
+    state.width = Math.min(pHeight, pHeight - 80)
     state.iconSize = state.width / 3 + 'px'
     // 需要扣除 .el-card 的 padding
 }
