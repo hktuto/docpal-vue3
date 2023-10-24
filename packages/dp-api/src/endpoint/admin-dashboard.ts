@@ -7,6 +7,7 @@ import {
 export const GetDashboardPageApi = async(params: pageParams):Promise<paginationData> => {
     // @ts-ignore
     const {externalEndpoint} = useSetting()
+    console.log("externalEndpoint", externalEndpoint.value.dashboard)
     const res = await api.post<Response<paginationData>>('/docpal/user/dashboard/page', params, {
         // check host name is localhost or not, if no change base url to process.env.DASHBOARD_PROXY
         baseURL: location.hostname === 'localhost' ? '/dashboard' : externalEndpoint.value.dashboard
