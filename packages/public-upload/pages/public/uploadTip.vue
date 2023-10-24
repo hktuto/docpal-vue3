@@ -4,7 +4,7 @@
     <div class="flex-x-start">
         <Logo class="logo" mode="withName" />
     </div>
-    <h1>{{$t(`tip_${tip}`)}}</h1>
+    <h1>{{$t(`dpTip_${tip}`)}}</h1>
 </el-card>
 </template>
 
