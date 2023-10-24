@@ -49,11 +49,10 @@ function resize() {
     initStyle()
 }
 function initStyle () {
-    const pHeight = cardRef.value.offsetHeight
-    const pWidth = cardRef.value.offsetWidth
-    state.width = Math.min(pHeight, pHeight - 80)
+    const pHeight = cardRef.value.offsetHeight - 80
+    const pWidth = cardRef.value.offsetWidth - 15
+    state.width = Math.min(pWidth, pHeight)
     state.iconSize = state.width / 3 + 'px'
-    // 需要扣除 .el-card 的 padding
 }
 // #region module: setting
     const settingRef = ref()
