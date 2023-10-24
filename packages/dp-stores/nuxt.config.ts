@@ -28,6 +28,11 @@ export default defineNuxtConfig({
                 changeOrigin: true,
                 prependPath: true,
             },
+        },
+        routeRules: {
+            '/dashboard': {
+                proxy: dashboardProxy
+            }
         }
     }
 })
