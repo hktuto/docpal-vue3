@@ -179,6 +179,9 @@ onMounted(async() => {
         useEventListener(window, 'resize', resize)
     })
 })
+onUnmounted(() => {
+    echartInstance.dispose()
+})
 watch(() => props.setting, (newSetting) => {
     handleInitChart(newSetting)
 }, {
