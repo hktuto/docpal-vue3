@@ -33,7 +33,9 @@ const setting = {
                 left: "left",
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                position: 'right'
+
             },
             legend: {
                 bottom: '5%',
@@ -42,6 +44,13 @@ const setting = {
         },
         series: {
             type: 'pie',
+            label: {
+                normal: {
+                    position: 'inside', // 在内部显示，outseide 是在外部显示
+                    show: true,
+                    formatter: '{c}',
+                }
+            }
         }
     }
 }
@@ -142,6 +151,6 @@ defineExpose({
 .co-count-meta {
     width: 100%;
     height: 100%;
-    min-height: 200px;
+    min-height: 500px;
 }
 </style>
