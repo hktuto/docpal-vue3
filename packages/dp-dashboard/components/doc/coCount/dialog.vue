@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dashboard.documentSizeSetting')"
+<el-dialog v-model="state.visible" :title="$t('dashboard.setting') + ' - ' + state.setting.documentType"
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"

@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dashboard.documentSizeSetting')"
+<el-dialog v-model="state.visible" :title="$t('dashboard.setting')"
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
@@ -7,7 +7,7 @@
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" >
         <template v-slot:chartIcon>
-            <el-form-item label="icon">
+            <el-form-item :label="$t('common_icon')">
                 <SvgIconSelector v-model:src="state.icon" />
             </el-form-item>
         </template>

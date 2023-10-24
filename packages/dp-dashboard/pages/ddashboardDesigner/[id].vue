@@ -98,7 +98,9 @@ function handleAdd(command) {
             component = 'DocTypeCoCount'
             setting = {
                 documentType: 'File',
-                color: 'red',
+                color: '#fff',
+                showCount: true,
+                showSize: true,
                 displayList: [
                     { meta: 'dc:creator' }
                 ]

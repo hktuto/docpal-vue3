@@ -1,5 +1,5 @@
 <template>
-    <el-card class="dashboard-item-main">
+    <el-card class="dashboard-item-main" :style="`--setting-color:${setting.color}`">
         <template #header="{ close, titleId, titleClass }">
             <h4>{{setting.documentType}}</h4>
             <SvgIcon src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
@@ -116,6 +116,7 @@ defineExpose({
     display: grid;
     grid-template-rows: min-content 1fr;
     overflow: hidden;
+    background-color: var(--setting-color, #fff);
 }
 .dashboard-item-main :deep(.el-card__body) {
     height: 100%;
