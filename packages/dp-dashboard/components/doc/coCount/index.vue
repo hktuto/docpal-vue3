@@ -75,18 +75,14 @@ async function handleDrillDownBack() {
     state.drillDownBackLoading = true
     try {
         await getMetaData()
-        // Object.keys(displayListRef.value).forEach(key => {
-        //     const item = displayListRef.value[key]
-        //     if(item) item.handleInitChart()
-        // })
         state.drillDownFlag = false
     } catch (error) {
         
     }
     state.drillDownBackLoading = false
 }
-async function handleDrillDown (metaData) {
-    state.drillDownParams[metaData.meta] = metaData.key
+async function handleDrillDown (metaParams) {
+    state.drillDownParams[metaParams.meta] = metaParams.key
     try {
         metaData.value = await GetCoCountMetaFilterApi({
             filterByMetaDatas: state.drillDownParams,
@@ -95,10 +91,6 @@ async function handleDrillDown (metaData) {
             groupByMetadatas: props.setting.displayList.map(item => (item.meta))
         })
         state.drillDownFlag = true
-        Object.keys(displayListRef.value).forEach(key => {
-            const item = displayListRef.value[key]
-            if(item) item.handleInitChart()
-        })
     } catch (error) {
     }
 }
