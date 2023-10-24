@@ -853,7 +853,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
             { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true, defaultColumn: true },
-            { id: '2', label: 'dpTable_location', prop: 'documentId', showOverflowTooltip: true },
+            { id: '2', label: 'dpTable_location', prop: 'logicalPath', showOverflowTooltip: true },
             { id: '3', label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
             { id: '4', label: 'dpTable_status', prop: 'status',
                 formatList: [
