@@ -58,7 +58,7 @@ const state = reactive({
 
 async function getInfo() {
     state.info = await GetDashboardApi(route.params.id)
-    if(state.info.styleJson) state.layout = JSON.parse(state.info.styleJson)
+    if(state.info && state.info.styleJson) state.layout = JSON.parse(state.info.styleJson)
 }
 const DashboardDialogRef = ref()
 function handleEdit() {
