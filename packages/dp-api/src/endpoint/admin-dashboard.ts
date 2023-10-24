@@ -110,7 +110,7 @@ export const GeCoCountMetaSingleUserApi = async(params: any) => {
 
 // co-count meta filter
 export const GetCoCountMetaFilterApi = async(params: any) => {
-    if (params.filterByMetaDatas) return await GeCoCountMetaFilterSingleUserApi(params)
+    if (params.creator) return await GeCoCountMetaFilterSingleUserApi(params)
     const res = await api.post('/docpal/dashboard/NewFilesOfUserByDTypeByRangeFilterMatedata', params, {
         baseURL: '/dashboard'
     }).then(res => res.data.data)
