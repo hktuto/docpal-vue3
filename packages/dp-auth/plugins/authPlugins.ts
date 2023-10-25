@@ -103,7 +103,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 })
 function getBaseUrl(baseURL) {
     const {externalEndpoint} = useSetting()
-    if(baseURL === '/dashboard') return externalEndpoint.value.dashboard
+    if(baseURL === '/dashboard') return 'https//' + externalEndpoint.value.dashboard
     return baseURL
 }
 function routeMatcher (path, routeList) {
