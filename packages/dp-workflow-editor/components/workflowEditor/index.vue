@@ -136,6 +136,7 @@ function dblClickHandler(node:Node) {
         selectedData.value = data;
     }
     if(data.type === 'serviceTask'){
+      console.log('selectedData', data)
         // open dialog
         sidePanelOpened.value = true;
         selectedData.value = data;
@@ -154,7 +155,6 @@ function closeSidePanel() {
 }
 
 function saveForm(updatedData:any) {
-    console.log(updatedData)
     data.value.definitions.process.attr_name = updatedData.attr_name;
     data.value.definitions.process.attr_id = updatedData.attr_name.trim().replaceAll(' ', '');
     if(updatedData['attr_flowable:candidateStarterGroups']) {
@@ -163,7 +163,64 @@ function saveForm(updatedData:any) {
     workflowForm.value = updatedData;
 }
 
-function saveStep(stepData) {
+function saveUserStep(stepData) {
+  console.log(stepData, 'stepData')
+    const newData = {...stepData};
+    // find step in data
+    delete newData.type;
+    setStepData(stepData.attr_id, newData);
+
+    // update graph
+    const node = graph.value?.getCellById(stepData.attr_id);
+    if(node){
+        node.setAttrs({
+            label: {
+                text: stepData.attr_name
+            }
+        })
+        node.setData(newData);
+    }
+    
+}
+
+
+function setStepData(stepId, newData) {
+    
+    // if startEvent id === stepId
+    if(data.value?.definitions?.process?.startEvent?.attr_id === stepId){
+        data.value.definitions.process.startEvent = {
+            ...data.value?.definitions?.process?.startEvent,
+            ...newData
+        }
+        return;
+    }
+    if(Array.isArray(data.value?.definitions?.process.userTask)) {
+        const index = data.value?.definitions?.process.userTask.findIndex(item => item.attr_id === stepId);
+        if(index > -1){
+            data.value.definitions.process.userTask[index] = newData
+            return;
+        }
+    }else{
+        if(data.value?.definitions?.process.userTask?.attr_id === stepId){
+            data.value.definitions.process.userTask = newData
+            return;
+        }
+    }
+    if(Array.isArray(data.value?.definitions?.process.serviceTask)) {
+        const index = data.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === stepId);
+        if(index > -1){
+            data.value.definitions.process.serviceTask[index] = newData
+            return;
+        }
+    }else{
+        if(data.value?.definitions?.process.serviceTask?.attr_id === stepId){
+            data.value.definitions.process.serviceTask = newData
+            return;
+        }
+    }
+}
+
+function saveEmailStep(stepData) {
     const newData = {...stepData};
     // find step in data
     delete newData.type;
@@ -181,56 +238,6 @@ function saveStep(stepData) {
     }
 }
 
-
-function setStepData(stepId, newData) {
-    
-    // if startEvent id === stepId
-    if(data.value?.definitions?.process?.startEvent?.attr_id === stepId){
-        data.value.definitions.process.startEvent = {
-            ...data.value?.definitions?.process?.startEvent,
-            ...newData
-        }
-        return;
-    }
-    if(Array.isArray(data.value?.definitions?.process.userTask)) {
-        const index = data.value?.definitions?.process.userTask.findIndex(item => item.attr_id === stepId);
-        if(index > -1){
-            data.value.definitions.process.userTask[index] = {
-                ...data.value?.definitions?.process.userTask[index],
-                ...newData
-            }
-            return;
-        }
-    }else{
-        if(data.value?.definitions?.process.userTask?.attr_id === stepId){
-            data.value.definitions.process.userTask = {
-                ...data.value?.definitions?.process.userTask,
-                ...newData
-            }
-            return;
-        }
-    }
-    if(Array.isArray(data.value?.definitions?.process.serviceTask)) {
-        const index = data.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === stepId);
-        if(index > -1){
-            data.value.definitions.process.serviceTask[index] = {
-                ...data.value?.definitions?.process.serviceTask[index],
-                ...newData
-            }
-            return;
-        }
-    }else{
-        if(data.value?.definitions?.process.serviceTask?.attr_id === stepId){
-            data.value.definitions.process.serviceTask = {
-                ...data.value?.definitions?.process.serviceTask,
-                ...newData
-            }
-            return;
-        }
-    }
-}
-
-
 function jsToBpmn() {
     const xml = builder.build(data?.value);
     // create blob file
@@ -240,14 +247,7 @@ function jsToBpmn() {
     formData.append('file', blob, 'workflow.bpmn.xml');
     formData.append('name', data.value.definitions.process.attr_name);
     formData.append('key', data.value.definitions.process.attr_id);
-    
-    // {
-    //     file: Blob,
-    //     name: string,
-    //     key: string,
-    //     emailTemplate: string /// 123,34455,555
-    //     documentTemplate: string // sprint 13 
-    // }
+  
 }
 function getWorkflowData () {
     const xml = builder.build(data?.value);
@@ -280,7 +280,8 @@ defineExpose({
         <div :class="{sidePanelContainer:true , sidePanelOpened}">
             <template v-if="selectedData">
                 <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="workflowForm" @close="closeSidePanel" @submit="saveForm" />
-                <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" @close="closeSidePanel" @submit="saveStep" />
+                <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveUserStep" />
+                <WorkflowEditorEmailForm v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
             </template>
         </div>
         
