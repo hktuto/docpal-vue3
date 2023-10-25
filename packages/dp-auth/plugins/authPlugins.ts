@@ -48,6 +48,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     api.interceptors.request.use( async(config) => {
         if(process.env.NODE_ENV !== 'development') {
             config.baseURL = getBaseUrl(config.baseURL)
+            config.headers['Access-Control-Allow-Credentials'] = true
+            config.headers['Access-Control-Allow-Origin'] = config.baseURL
         }
         config.headers = {
             'Accept-Language': locale.value,
