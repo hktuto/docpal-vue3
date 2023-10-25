@@ -41,12 +41,14 @@ let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
     const { logout } = useUser()
     const router:any = nuxtApp.$router;
-  const route:any = nuxtApp._route;
+    const route:any = nuxtApp._route;
     // Doing something with nuxtApp
     // setup api for token refresh
-    // @ts-ignore
     const { locale } = nuxtApp.$i18n
     api.interceptors.request.use( async(config) => {
+        if(process.env.NODE_ENV !== 'development') {
+            config.baseURL = getBaseUrl(config.baseURL)
+        }
         config.headers = {
             'Accept-Language': locale.value,
             ...config.headers,
@@ -97,7 +99,11 @@ export default defineNuxtPlugin((nuxtApp) => {
         return Promise.reject(error);
     });
 })
-
+function getBaseUrl(baseURL) {
+    const {externalEndpoint} = useSetting()
+    if(baseURL === '/dashboard') return externalEndpoint.value.dashboard
+    return baseURL
+}
 function routeMatcher (path, routeList) {
     let result = false
     routeList.forEach(item => {
