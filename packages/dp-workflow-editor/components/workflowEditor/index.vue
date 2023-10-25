@@ -129,15 +129,13 @@ function hideTooltip() {
 
 function dblClickHandler(node:Node) {
     const data = node.getData();
-    
+    console.log(node, data);
     if(data.type === 'userTask'){
-        console.log(data)
         // open dialog
         sidePanelOpened.value = true;
         selectedData.value = data;
     }
     if(data.type === 'serviceTask'){
-        console.log(data)
         // open dialog
         sidePanelOpened.value = true;
         selectedData.value = data;
@@ -156,9 +154,13 @@ function closeSidePanel() {
 }
 
 function saveForm(updatedData:any) {
-    console.log(updatedData);
+    console.log(updatedData)
     data.value.definitions.process.attr_name = updatedData.attr_name;
     data.value.definitions.process.attr_id = updatedData.attr_name.trim().replaceAll(' ', '');
+    if(updatedData['attr_flowable:candidateStarterGroups']) {
+      data.value.definitions.process['attr_flowable:candidateStarterGroups'] = updatedData['attr_flowable:candidateStarterGroups'];
+    }
+    workflowForm.value = updatedData;
 }
 
 function saveStep(stepData) {
