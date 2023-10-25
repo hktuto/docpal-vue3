@@ -4,12 +4,7 @@ import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 import { Graph, Node } from '@antv/x6'
 import {useGraph} from '../../composables/userGraph';
 import { bpmnToX6 } from '../../utils/graphHelper';
-import {ServiceNode} from '../../utils/graphNode';
 
-
-
-// register node
-ServiceNode
 ///#region setup
     const props = defineProps({
         bpmn: {
@@ -101,7 +96,6 @@ function initForm() {
         ['attr_flowable:candidateStarterGroups']: process?.['attr_flowable:candidateStarterGroups'],
         form
     };
-    console.log(process);
 }
 
 function getForm(item):any[] {
@@ -141,7 +135,6 @@ function dblClickHandler(node:Node) {
         // open dialog
         sidePanelOpened.value = true;
         selectedData.value = data;
-        console.log(selectedData.value)
     }
     if(data.type === 'serviceTask'){
         console.log(data)
@@ -255,8 +248,6 @@ function jsToBpmn() {
     // }
 }
 function getWorkflowData () {
-    console.log(graph.value);
-    
     const xml = builder.build(data?.value);
     // create blob file
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
@@ -286,7 +277,6 @@ defineExpose({
         </div>
         <div :class="{sidePanelContainer:true , sidePanelOpened}">
             <template v-if="selectedData">
-
                 <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="workflowForm" @close="closeSidePanel" @submit="saveForm" />
                 <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" @close="closeSidePanel" @submit="saveStep" />
             </template>

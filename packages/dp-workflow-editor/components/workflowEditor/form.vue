@@ -1,32 +1,51 @@
-import { useGraph } from "../../composables/userGraph";
 
 <template>
     <div class="workflowFormContainer">
-        <div class="formContainer">
+        <ElForm class="formContainer" label-position="top">
             <div class="infoSection">
                 <div class="title">
                     Info
                 </div>
-                <ElInput v-model="data.attr_name" placeholder="Name" />
-                <ElInput v-model="data['attr_flowable:candidateStarterGroups']" placeholder="candidate groups" />
+                <ElFormItem label="Name" >
+                    <ElInput v-model="data.attr_name" placeholder="Name" />
+                </ElFormItem>
+                <ElFormItem label="Candidate Group">
+                    <ElInput v-model="data['attr_flowable:candidateStarterGroups']" placeholder="candidate groups" />
+                </ElFormItem>
             </div>
-            <!-- <div class="fields">
+            <div class="fields">
                 <div class="title">
                     Form Fields
                 </div>
-                <div v-for="(value,key) in data.form" :key="value.attr_id" class="field">
-                    <ElInput v-model="value.attr_id" placeholder="id" />
-                    <ElInput v-model="value.attr_name" placeholder="Name" @change="nameChanged"  />
-                    <ElSelect v-model="value.attr_type">
-                        <ElOption v-for="option in formTypeOptions" :key="option.value" :label="option.label" :value="option.value" />
-                    </ElSelect>
-                    <SvgIcon :src="'/icons/delete.svg'" />
-                </div>
+                <table>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th></th>
+                    </tr>
+                    <tr v-for="(value,key) in data.form" :key="value.attr_id">
+                        <td>
+                            <ElInput v-model="value.attr_id" placeholder="id" />
+                        </td>
+                        <td>
+                            <ElInput v-model="value.attr_name" placeholder="Name" @change="nameChanged"  />
+                        </td>
+                        <td>
+                            <ElSelect v-model="value.attr_type">
+                                <ElOption v-for="option in formTypeOptions" :key="option.value" :label="option.label" :value="option.value" />
+                            </ElSelect>
+                        </td>
+                        <td>
+                            <SvgIcon @click="removeFormItem(key)" :src="'/icons/delete.svg'" />
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="add">
-                <ElButton type="primary" @click="add">Add</ElButton>
-            </div> -->
-        </div>
+                <ElButton type="primary" size="small" @click="add">Add</ElButton>
+            </div>
+        </ElForm>
         <div class="footer">
             <ElButton @click="$emit('close')">Close</ElButton>
             <ElButton type="primary" @click="$emit('submit', data)">Save</ElButton>
@@ -36,14 +55,18 @@ import { useGraph } from "../../composables/userGraph";
 
 
 <script lang="ts" setup>
-defineProps({
-    data: Object,
+const props = defineProps({
+    data: any,
 })
 defineEmits([])
 
 const { formTypeOptions } = useGraph();
 function add() {
     
+}
+
+function removeFormItem(key: any) {
+    console.log(props.data.form[key]);
 }
 
 function nameChanged(newValue:string) {
@@ -63,19 +86,25 @@ function nameChanged(newValue:string) {
     align-items: stretch;
     height: 100%;
     padding: var(--app-padding);
+    overflow: hidden;
     .formContainer{
         overflow: auto;
-        flex: 1 0 auto;
     }
 }
 .fields{
     display: flex;
     flex-flow: column nowrap;
     gap: var(--app-padding);
+    overflow: auto;
 }
 .field{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr min-content;
     gap: var(--app-padding);
+}
+th{
+    font-size: .8rem;
+    font-weight: normal;
+    text-align: left;
 }
 </style>
