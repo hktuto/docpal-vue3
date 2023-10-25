@@ -16,17 +16,6 @@ export default defineNuxtConfig({
           ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
         ],
     },
-    vite: {
-        server: {
-            proxy: {
-                '/dashboard':{
-                    target: dashboardProxy,
-                    changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/dashboard/, '')
-                }
-            }
-        }
-    },
     nitro:{
         devProxy:{
             '/api':{
@@ -41,13 +30,8 @@ export default defineNuxtConfig({
             }
         },
         routeRules: {
-            '/dashboard': { 
-                proxy: 'https://app4.wclsolution.com/public-api/report/v1/api',
-                headers: { 
-                    // @ts-ignore
-                    'Access-Control-Allow-Credentials': true,
-                    'Access-Control-Allow-Origin': 'https://app4.wclsolution.com'
-                }
+            '/dashboard/**': { 
+                proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**',
             },
         }
     }
