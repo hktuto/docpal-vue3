@@ -110,7 +110,7 @@ function getForm(item):any[] {
 
 function showTooltip(e:MouseEvent, node:Node) {
     const data = node.getData();
-    if(data.attr_name === undefined){
+    if(data && data.attr_name === undefined){
         return;
     }
     tooltip.value = data.attr_name || "";

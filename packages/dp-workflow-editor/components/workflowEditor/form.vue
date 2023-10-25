@@ -55,8 +55,10 @@
 
 
 <script lang="ts" setup>
-const props = defineProps({
-    data: any,
+const props = withDefaults(defineProps<{
+    data: Object
+}>(), {
+  data: {}
 })
 defineEmits([])
 

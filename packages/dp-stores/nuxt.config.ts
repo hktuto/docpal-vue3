@@ -2,7 +2,6 @@
 // @ts-ignore
 const ExcutingAnOrder = process.env.npm_lifecycle_script.split(' ')
 const env = ExcutingAnOrder[ExcutingAnOrder.length - 1];
-const dashboardProxy = process.env.DASHBOARD_PROXY?.replace('admin.', '')
 export default defineNuxtConfig({
     modules:[
         // 'dp/nuxt-session'
@@ -21,18 +20,18 @@ export default defineNuxtConfig({
             '/api':{
                 target: process.env.PROXY,
                 changeOrigin: true,
-                prependPath: true,
+                prependPath: true
             },
             '/dashboard':{
-                target: dashboardProxy,
+                target: process.env.DASHBOARD_PROXY,
                 changeOrigin: true,
-                prependPath: true,
+                prependPath: true
             }
-        },
-        routeRules: {
-            '/dashboard/**': { 
-                proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**',
-            },
         }
+        // routeRules: {
+        //     '/dashboard/**': { 
+        //         proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**'
+        //     }
+        // }
     }
 })

@@ -46,11 +46,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     // setup api for token refresh
     const { locale } = nuxtApp.$i18n
     api.interceptors.request.use( async(config) => {
-        // if(process.env.NODE_ENV !== 'development') {
-        //     config.baseURL = getBaseUrl(config.baseURL)
-        //     config.headers['Access-Control-Allow-Credentials'] = true
-        //     config.headers['Access-Control-Allow-Origin'] = config.baseURL
-        // }
+        if(process.env.NODE_ENV !== 'development') {
+            config.baseURL = getBaseUrl(config.baseURL)
+            config.headers['Access-Control-Allow-Credentials'] = true
+            config.headers['Access-Control-Allow-Origin'] = config.baseURL
+        }
         config.headers = {
             'Accept-Language': locale.value,
             ...config.headers,
@@ -102,8 +102,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     });
 })
 function getBaseUrl(baseURL) {
-    const {externalEndpoint} = useSetting()
-    if(baseURL === '/dashboard') return 'https//' + externalEndpoint.value.dashboard
+    const { public:{ DASHBOARD_PROXY } } = useRuntimeConfig();
+    if(baseURL === '/dashboard') return DASHBOARD_PROXY
     return baseURL
 }
 function routeMatcher (path, routeList) {
