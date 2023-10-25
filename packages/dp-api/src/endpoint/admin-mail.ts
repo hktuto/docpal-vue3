@@ -15,3 +15,7 @@ export const SaveMailConfigCodeApi = async(params) => {
     return res
 }
 
+export const GetEmailTemplatePageApi = async(params) => {
+    const res = await api.post('/docpal/template/email/template/page', params).then(res => res.data.data)
+    return res
+}
