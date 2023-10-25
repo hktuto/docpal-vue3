@@ -110,7 +110,7 @@ function handleAdd(command) {
             break;
     }
     state.layout.push({
-        x: (state.layout.length * 2) % 12,
+        x: (state.layout.length * 2) % 24,
         y: state.layout.length +  12, // puts it at the bottom
         w,
         h,

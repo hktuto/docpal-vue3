@@ -1,6 +1,6 @@
 <template>
     <GridLayout :layout.sync="layout" 
-        :col-num="12"
+        :col-num="24"
         :row-height="30"
         :is-draggable="draggable"
         :is-resizable="resizable">
