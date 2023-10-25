@@ -30,7 +30,14 @@ export default defineNuxtConfig({
             }
         },
         routeRules: {
-            '/dashboard/**': { proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**' },
+            '/dashboard': { 
+                proxy: 'https://app4.wclsolution.com/public-api/report/v1/api',
+                headers: { 
+                    // @ts-ignore
+                    'Access-Control-Allow-Credentials': true,
+                    'Access-Control-Allow-Origin': 'https://app4.wclsolution.com'
+                }
+            },
         }
     }
 })
