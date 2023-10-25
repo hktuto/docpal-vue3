@@ -38,17 +38,29 @@ const setting = {
 
             },
             legend: {
-                bottom: '5%',
-                left: 'center'
+                top: '20px',
+                right: '0px',
+                type: 'scroll',
+                orient: 'vertical',
+                itemWidth: 10,
+                itemHeight: 10,
+                tooltip: {
+                    show: true
+                },
+                formatter: function(name) {
+                    return echarts.format.truncateText(name, 50, '12px Microsoft Yahei', '…')
+                }
             }
         },
         series: {
             type: 'pie',
+            center: ['32%', '50%'],  
+            avoidLabelOverlap: true,
             label: {
                 normal: {
                     position: 'inside', // 在内部显示，outseide 是在外部显示
                     show: true,
-                    formatter: '{c}',
+                    formatter: '{d}%',
                 }
             }
         }
@@ -58,7 +70,24 @@ const state = reactive({
     data: [],
 })
 let options = {}
-
+function lineFeedLabel(data, length) {
+    //data 要处理的字符串
+    //length 每行显示长度
+    let word = ''
+    let num = Math.ceil(data.length / length) // 向上取整数
+    // 一行展示length个
+    if (num > 1) {
+    for (let i = 1; i <= num; i++) {
+        word += data.substr((i - 1) * length, length)
+        if (i < num) {
+        word += '\n'
+        }
+    }
+    } else {
+        word += data.substr(0, length)
+    }
+    return word
+}
 // #region module: set
     function initStyle () {
         const pHeight = cardRef.value.offsetHeight
@@ -154,6 +183,6 @@ defineExpose({
 .co-count-meta {
     width: 100%;
     height: 100%;
-    min-height: 500px;
+    min-height: 180px;
 }
 </style>

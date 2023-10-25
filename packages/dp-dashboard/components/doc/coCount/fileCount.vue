@@ -42,7 +42,9 @@ const setting = {
             },
             legend: {
                 bottom: '5%',
-                left: 'center'
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
             }
         },
         series: {

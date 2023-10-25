@@ -146,12 +146,12 @@ defineExpose({
     display: flex;
     flex-wrap: wrap;
     div {
-        flex: 0 0 25%;
+        flex: 0 0 33%;
     }
 }
 :deep(.co-count-chart) {
     width: 100%;
     height: 100%;
-    min-height: 300px;
+    min-height: 250px;
 }
 </style>

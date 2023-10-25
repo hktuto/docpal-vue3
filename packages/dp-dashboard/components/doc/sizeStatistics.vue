@@ -39,7 +39,9 @@ const setting = {
             },
             legend: {
                 bottom: '5%',
-                left: 'center'
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
             }
         },
         series: {
@@ -62,7 +64,9 @@ const setting = {
             },
             legend: {
                 bottom: '5%',
-                left: 'center'
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
             }
         },
         series: {
@@ -78,14 +82,16 @@ const setting = {
             },
             yAxis: {
                 show: false,
-                type: 'category'
+                data: [$t('dashboard.documentSize')]
             },
             tooltip: {
                 trigger: 'item'
             },
             legend: {
                 bottom: '5%',
-                left: 'center'
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
             }
         },
         series: {
@@ -117,7 +123,9 @@ const setting = {
             },
             legend: {
                 bottom: '5%',
-                left: 'center'
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
             }
         },
         series: {
@@ -137,9 +145,33 @@ const setting = {
                 trigger: 'item'
             },
             legend: {
+                itemWidth: 10,
+                itemHeight: 10,
                 bottom: '5%',
-                left: 'center'
-            }
+                left: 'center',
+                type: 'scroll',
+            },
+            title: [
+                {
+                    text: 143,
+                    subtext: $t('dashboard.totalStorage'),
+                    x: 'center',
+                    y: 'center',
+                    textStyle: {
+                        fontWeight: 'bolder',
+                        color: '#373D43',
+                    },
+                    subtextStyle: {
+                        fontWeight: 'bold',
+                        color: '#8796A4',
+                    },
+                },
+                {
+                    text: $t('dashboard.totalStorage'),
+                    x: 'left',
+                    y: 'top',
+                }
+            ]
         },
         series: {
             type: 'pie',
@@ -190,7 +222,10 @@ const state = reactive({
     },
     trendPercentData: {
     },
-    trendXAxis: []
+    trendXAxis: [],
+
+    width: 100,
+    totalStorage: 0
 })
 const picStore = {
 }
@@ -198,10 +233,11 @@ let options = {}
 
 // #region module: set
     function initStyle () {
-        const pHeight = cardRef.value.$el.offsetHeight
-        const pWidth = cardRef.value.$el.offsetWidth
+        const pHeight = cardRef.value.$el.offsetHeight -30
+        const pWidth = cardRef.value.$el.offsetWidth - 40
+        state.width = pWidth
         // 需要扣除 .el-card 的 padding
-        chartRef.value.style = `height: ${pHeight - 30 }px; width: ${pWidth - 40}px`
+        chartRef.value.style = `height: ${pHeight }px; width: ${pWidth}px`
     }
     async function setMySettingIcon() {
         
@@ -265,7 +301,13 @@ async function initChart() {
 function resize() {
     setTimeout(() => {
         initStyle()
-        if(echartInstance) echartInstance.resize();
+        if (props.setting.style === 'pie') {
+            options.title[0].textStyle.fontSize =Math.max(state.width / 32 , 14)
+            options.title[0].subtextStyle.fontSize =Math.max(state.width / 42 , 12)
+            initChart()
+            echartInstance.resize();
+        }
+        else if(echartInstance) echartInstance.resize();
     })
 }
 // #region module: setting
@@ -286,7 +328,11 @@ function resize() {
             case 'pie':
                 await getData(displayList)
                 options.series = getSeries(state.data, chartType, displayList)
-                options.title.text = $t('dashboard.documentSize')
+                options.title[0].text = state.totalStorage + 'MB'
+                options.title[0].textStyle.fontSize = state.width / 32 
+                options.title[0].subtextStyle.fontSize =Math.max(state.width / 42 , 10)
+                options.title[0].subtext = $t('dashboard.totalStorage')
+                options.title[1].text = $t('dashboard.documentSize')
                 break
             case 'bar':
                 await getData(displayList)
@@ -322,10 +368,12 @@ function resize() {
             }
             state.data = {}
             let others = 0
+            state.totalStorage = 0
             state.data = state.initData.reduce((prev,item) => {
                 const index = displayList.findIndex((i) => i.documentType === item.key)
                 if(index === -1) others += item.count
                 else prev[item.key] = item.count
+                state.totalStorage += item.count
                 return prev
             }, {})
             state.data.others = others

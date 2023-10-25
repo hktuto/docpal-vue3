@@ -15,9 +15,9 @@
                     </el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item command="size">size</el-dropdown-item>
-                            <el-dropdown-item command="count">count</el-dropdown-item>
-                            <el-dropdown-item command="trend">trend</el-dropdown-item>
+                            <el-dropdown-item command="size">{{$t('dashboard.docTypeSizeChart')}}</el-dropdown-item>
+                            <el-dropdown-item command="count">{{$t('dashboard.docTypeCountChart')}}</el-dropdown-item>
+                            <el-dropdown-item command="trend">{{$t('dashboard.docTypeChart')}}</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
