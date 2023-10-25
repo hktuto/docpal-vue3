@@ -27,7 +27,10 @@ export default defineNuxtConfig({
                 target: dashboardProxy,
                 changeOrigin: true,
                 prependPath: true,
-            },
+            }
+        },
+        routeRules: {
+            '/dashboard/**': { proxy: process.env.DASHBOARD_PROXY },
         }
     }
 })
