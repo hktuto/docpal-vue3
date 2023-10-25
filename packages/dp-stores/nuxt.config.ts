@@ -30,7 +30,7 @@ export default defineNuxtConfig({
             }
         },
         routeRules: {
-            '/dashboard/**': { proxy: process.env.DASHBOARD_PROXY },
+            '/dashboard/**': { proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**' },
         }
     }
 })
