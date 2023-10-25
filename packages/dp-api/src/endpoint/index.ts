@@ -26,6 +26,7 @@ export * from './admin-audit'
 export * from './admin-dam'
 export * from './admin-mail'
 export * from './admin-virtual-folder'
+export * from './admin-workflow-editor'
 export * from './admin-template'
 export * from './admin-dashboard'
 
