@@ -84,7 +84,6 @@ export const useAppStore = defineStore('app', () => {
         const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
         
         licenseFeatures.value = data
-        console.log(licenseFeatures.value);
     }
     function getLicenseFeatures() {
         return licenseFeatures.value
