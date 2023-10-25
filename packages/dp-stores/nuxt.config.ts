@@ -16,6 +16,17 @@ export default defineNuxtConfig({
           ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
         ],
     },
+    vite: {
+        server: {
+            proxy: {
+                '/dashboard':{
+                    target: dashboardProxy,
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/dashboard/, '')
+                }
+            }
+        }
+    },
     nitro:{
         devProxy:{
             '/api':{
