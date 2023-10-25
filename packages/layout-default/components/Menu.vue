@@ -37,7 +37,6 @@ function toTree (data) {
     const result = []
     if (!Array.isArray(data)) return result // 判断不是数组  直接返回
     data = data.filter((item) => !item.feature || item.feature === 'CORE' || appStore.licenseFeatures[item.feature]) 
-    console.log(data)
     data.forEach(item => {
         delete item.children
     }) // 清空children

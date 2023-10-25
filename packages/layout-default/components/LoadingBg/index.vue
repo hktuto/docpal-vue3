@@ -27,7 +27,7 @@ function createGradient() {
     gradient.initGradient('#gradient-canvas');
 }
 onMounted(()=>{
-    console.log('canvasInit', canvasInit.value)
+   
     useEventListener(window, 'miniGLRender', canvasRender);
     createGradient()
 })
