@@ -55,7 +55,12 @@ async function handleSubmit () {
 function handleOpen(setting?) {
     state.visible = true
     state.edit = false
-    if(!setting) return
+    if(!setting) {
+        setTimeout(async () => {
+            FromRendererRef.value.vFormRenderRef.resetForm()
+        })
+        return
+    }
     setTimeout(async () => {
         const _setting = deepCopy(setting)
         state.edit = _setting.edit = true
