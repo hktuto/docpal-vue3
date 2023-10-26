@@ -112,7 +112,7 @@ function handleDblclick(row) {
 }
 const DashboardDialogRef = ref()
 function handleAdd (setting) {
-    DashboardDialogRef.value.handleOpen(deepCopy(setting))
+    DashboardDialogRef.value.handleOpen(setting)
 }
 // #region module: ResponsiveFilterRef
     function handleFilterFormChange(formModel) {

@@ -35,7 +35,6 @@ async function handleSubmit () {
         access: data.access.join(',')
     }
     try {
-        console.log('errror', state.edit,data);
         if(state.edit) {
             const res = await UpdateDashboardApi({
                 ...state.setting,
@@ -56,6 +55,7 @@ async function handleSubmit () {
 function handleOpen(setting?) {
     state.visible = true
     if(!setting) return
+    state.edit = false
     setTimeout(async () => {
         state.edit = setting.edit = true
         state.setting = setting

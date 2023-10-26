@@ -2,6 +2,8 @@
 // @ts-ignore
 const ExcutingAnOrder = process.env.npm_lifecycle_script.split(' ')
 const env = ExcutingAnOrder[ExcutingAnOrder.length - 1];
+require('events').EventEmitter.defaultMaxListeners = 0; // 解除监听器数量限制
+
 export default defineNuxtConfig({
     modules:[
         // 'dp/nuxt-session'
