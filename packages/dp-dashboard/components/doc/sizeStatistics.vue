@@ -235,7 +235,7 @@ let options = {}
     function initStyle () {
         const pHeight = cardRef.value.$el.offsetHeight -30
         const pWidth = cardRef.value.$el.offsetWidth - 40
-        state.width = pWidth
+        state.width = Math.min(pWidth, pHeight)  
         // 需要扣除 .el-card 的 padding
         chartRef.value.style = `height: ${pHeight }px; width: ${pWidth}px`
     }
