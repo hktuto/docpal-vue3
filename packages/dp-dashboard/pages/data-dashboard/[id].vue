@@ -1,5 +1,5 @@
 <template>
-<NuxtLayout class="fit-height withPadding" backPath="/ddashboardDesigner" :pageTitle="`${$t('admin_dashboard')}/${$t('common_preview')}`">
+<NuxtLayout class="fit-height withPadding" backPath="/data-dashboard" :pageTitle="`${$t('admin_dashboard')}/${$t('common_preview')}`">
     <div class="template-container">
         <div class="flex-x-between">
             <div class="flex-x-between">
