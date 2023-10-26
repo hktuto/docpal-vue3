@@ -3,7 +3,7 @@
         <!-- <el-button @click="handleDelete"></el-button> -->
         <div ref="cardRef" class="dashboard-item-progress" :style="`--icon-size: ${state.iconSize}`">
             <el-progress type="circle" :percentage="state.percentage" :stroke-width="state.width / 8" :width="state.width" :color="setting.color">
-                <SvgIcon :src="setting.icon" @click="openSetting"/>
+                <SvgIcon :content="`${state.percentage}%`" :src="setting.icon" @dblclick="openSetting"/>
             </el-progress>
             <div class="dashboard-item-progress-count">{{state.data[setting.documentType]}}</div>
             <div class="dashboard-item-progress-title"
@@ -73,7 +73,7 @@ function initStyle () {
                 return prev
             }, {})
             state.data.others = others
-            state.percentage = Math.round(state.data[documentType] / state.data.others * 100) 
+            state.percentage = (state.data[documentType] / state.data.others * 100).toFixed(2) 
         } catch (error) {
         }
     }
