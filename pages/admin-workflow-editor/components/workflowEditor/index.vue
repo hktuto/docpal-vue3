@@ -2,8 +2,6 @@
 <script lang="ts" setup>
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 import { Graph, Node } from '@antv/x6'
-import {useGraph} from '../../composables/userGraph';
-import { bpmnToX6 } from '../../utils/graphHelper';
 
 ///#region setup
     const props = defineProps({
