@@ -14,7 +14,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, CreateDashboardApi, UpdateDashboardApi } from 'dp-api'
+import { getJsonApi, CreateDashboardApi, UpdateDashboardApi, deepCopy } from 'dp-api'
 const emits = defineEmits([
     'refresh', 'delete'
 ])
@@ -54,15 +54,16 @@ async function handleSubmit () {
 }
 function handleOpen(setting?) {
     state.visible = true
-    if(!setting) return
     state.edit = false
+    if(!setting) return
     setTimeout(async () => {
-        state.edit = setting.edit = true
-        state.setting = setting
-        if(setting.access) setting.access = setting.access.split(',')
-        else setting.access = []
+        const _setting = deepCopy(setting)
+        state.edit = _setting.edit = true
+        state.setting = _setting
+        if(_setting.access) _setting.access = _setting.access.split(',')
+        else _setting.access = []
         await FromRendererRef.value.vFormRenderRef.setFormData({
-            ...setting
+            ..._setting
         })
         state.loading = false
     })
