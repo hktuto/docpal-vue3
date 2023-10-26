@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {GetEmailTemplatePageApi} from "dp-api";
+import {GetAllEmailTemplatePageApi} from "dp-api";
 
 const props = defineProps<{
   data: any,
@@ -10,12 +10,7 @@ const emit = defineEmits(['close', 'submit'])
 const allEmailTemplates = ref([]);
 
 async function getEmailTemplates() {
-  const{entryList
-  } = await GetEmailTemplatePageApi({pageNum: 0,
-    pageSize: 999,
-    orderBy: 'createdDate',
-    isDesc: true
-  })
+  const entryList = await GetAllEmailTemplatePageApi()
   allEmailTemplates.value = entryList;
 }
 
