@@ -73,7 +73,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             if (result?.access_token) {
                 config.headers = {
                     ...config.headers,
-                    authorization: `Bearer ${result?.access_token}`,
+                    Authorization: `Bearer ${result?.access_token}`,
                 };
             }
             setTimeout(() => {
