@@ -18,6 +18,7 @@ export const useSetting = () => {
       docpal : "app4.wclsolution.com",
       office  : "office.app4.wclsolution.com", 
       upload : "upload.app4.wclsolution.com",
+      dashboard : "https://app4.wclsolution.com/public-api/report/v1/api",
   }));
   async function init () {
     ocrSetting.value = await GetOCRSetting()

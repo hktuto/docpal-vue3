@@ -5,7 +5,7 @@
                     :disabled="disabled"
                     @handleReply="handleReply"
                     @handleReplyDelete="handleReplyDelete"></CommentViewBox>
-    <CommentInputBox v-if="!disabled" v-model="state.commentInfo.text" @handleAdd="handleAddComment"></CommentInputBox>
+    <CommentInputBox id="commentRootInput" v-if="!disabled" v-model="state.commentInfo.text" @handleAdd="handleAddComment"></CommentInputBox>
   </div>
 </template>
 

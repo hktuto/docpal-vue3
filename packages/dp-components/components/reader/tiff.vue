@@ -22,7 +22,7 @@ function blobToArrayBuffer(blob) {
         const reader = new FileReader();
         reader.onerror = reject;
         reader.onload = () => {
-        resolve(reader.result);
+            resolve(reader.result);
         };
         reader.readAsArrayBuffer(blob);
     });

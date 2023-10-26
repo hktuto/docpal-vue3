@@ -65,6 +65,7 @@ const state = reactive<State>({
             nameKey: 'id',
             data: taskDetail.formProperties ? taskDetail.formProperties : state.workflowDetail.userTasks[0].formProperties
         }
+        console.log(state.fieldListApi.data)
     }
     async function handleGetJson (taskId) {
         state.loading = true

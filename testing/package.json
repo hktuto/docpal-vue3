@@ -1,0 +1,21 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test --reporter=html,playwright-teamcity-reporter --workers=1",
+    "test:ui": "playwright test --ui --workers=1",
+    "report": "playwright show-report",
+    "record": "playwright codegen ",
+    "postinstall": "pnpm exec playwright install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.36.1",
+    "playwright-teamcity-reporter": "^0.2.0",
+    "dp-api":"workspace:*"
+  }
+}

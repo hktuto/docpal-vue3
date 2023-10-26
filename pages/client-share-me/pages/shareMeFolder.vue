@@ -45,13 +45,13 @@ function goRoute (path, disabled: boolean = false) {
     if(disabled) return
     router.push(`${props.routePath}?path=${path}`)
 }
-watch(route, async(newRoute, oldRoute) => {
-    if (!newRoute.query.path) {
+watch(() => route.query.path, async(nPath) => {
+    if (!nPath) {
         if (state.rootPath) goRoute(state.rootPath)
         else if (state.rootId) goRoute(state.rootId)
         return
     }
-    const breadcrumbList = await GetBreadcrumb(newRoute.query.path)
+    const breadcrumbList = await GetBreadcrumb(nPath)
     if(!state.rootPath && state.rootId) {
         const rootItem = breadcrumbList.find(item => item.id === state.rootId)
         state.rootPath = rootItem.path

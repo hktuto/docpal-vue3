@@ -14,15 +14,24 @@ export default defineNuxtConfig({
           'defineStore', // import { defineStore } from 'pinia'
           ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
         ],
-      },
+    },
     nitro:{
         devProxy:{
             '/api':{
                 target: process.env.PROXY,
                 changeOrigin: true,
-                prependPath: true,
+                prependPath: true
             },
-            
+            '/dashboard':{
+                target: process.env.DASHBOARD_PROXY,
+                changeOrigin: true,
+                prependPath: true
+            }
         }
+        // routeRules: {
+        //     '/dashboard/**': { 
+        //         proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**'
+        //     }
+        // }
     }
 })

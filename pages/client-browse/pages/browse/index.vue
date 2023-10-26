@@ -7,7 +7,9 @@
         <div v-if="listData" class="browsePageContainer">
             <div v-if="selectList.length === 0 && listData.doc.path !== '/'"
                  class="browseHeader">
-                <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
+                 <slot name="breadcrumb">
+                    <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
+                </slot>                    
                 <div id="browseHeaderRight" class="folderAction">
                     <CollapseMenu>
                         <template #default="{collapse}">
@@ -29,7 +31,7 @@
             </div>
             <div v-else-if="selectList.length !== 0" class="browseHeader--multi selectedAction">
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
-                <CollapseMenu>
+                <CollapseMenu>{{allowFeature('SHARE_EXTERNAL')}}
                     <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
                     <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission: listData.permission })"
                         :doc="listData.doc" :selectedList="selectList"/>

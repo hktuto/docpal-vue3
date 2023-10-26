@@ -117,7 +117,7 @@ function handleAdd () {
     async function getFilter() {
         const layouts = await GetEmailLayoutAllApi()
         const filters = [
-            { key: "createdBy", label: "emailTemplate.layout", type: "string", 
+            { key: "emailLayoutId", label: "emailTemplate.layout", type: "string", 
                 options: layouts.map(item => ({
                     value: item.id,
                     label: item.name
