@@ -42,7 +42,10 @@ async function getXMLFileTemplate() {
     const multipleFilePath = "/bpmn/multiple.xml";
     const templatePath = template === 'Single' ? singleFilePath : multipleFilePath
     const response = await fetch(templatePath);
-    bpmnFile.value = await response.text()
+    const text = await response.text();
+    const timestamp = new Date().getTime();
+    templatePath === 'Single' ? text.replaceAll('singleApprovalDemo', `singleApprovalDemo_${timestamp}`) : text.replaceAll('multipleApprovalDemo', `multipleApprovalDemo_${timestamp}`)
+    bpmnFile.value = text
 }
 async function handleSave(isDraft: boolean = true) {
     // const formData1 = new FormData();
