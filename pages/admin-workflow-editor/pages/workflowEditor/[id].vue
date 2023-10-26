@@ -1,5 +1,5 @@
 <template>
-<NuxtLayout class="fit-height" backPath="/workflowEditor" :pageTitle="$t('workflowEditor.custom')">
+<NuxtLayout class="fit-height" backPath="/workflowEditor" :pageTitle="id === 'new' ? $t('workflowEditor.custom') : state.detail?.name">
     <div class="pageContainer">
         <WorkflowEditor v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile">
             <template #actions>
