@@ -5,8 +5,8 @@ export default defineAppConfig({
         {
             // feature:'dashboard',
             name:"admin_dashboard",
-            routeName:"ddashboardDesigner",
-            url:"/ddashboardDesigner",
+            routeName:"data-dashboard",
+            url:"/data-dashboard",
             icon: "/icons/menu/dashboard.svg",
             order: 10001,
             parentId: "admin_dashboardManagement"

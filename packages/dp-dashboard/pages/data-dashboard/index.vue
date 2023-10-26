@@ -108,7 +108,7 @@ async function handleDelete(id: string) {
     handlePaginationChange(pageParams.pageNum + 1)
 }
 function handleDblclick(row) {
-    router.push(`/ddashboardDesigner/${row.id}`)
+    router.push(`/data-dashboard/${row.id}`)
 }
 const DashboardDialogRef = ref()
 function handleAdd (setting) {

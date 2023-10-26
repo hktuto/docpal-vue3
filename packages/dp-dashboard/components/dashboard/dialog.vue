@@ -45,7 +45,7 @@ async function handleSubmit () {
         }
         else {
             const res = await CreateDashboardApi(_data)
-            router.push(`/ddashboardDesigner/${res.id}`)
+            router.push(`/data-dashboard/${res.id}`)
         }
         state.visible = false
     } catch (error) {
