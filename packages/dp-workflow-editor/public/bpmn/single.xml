@@ -58,7 +58,28 @@
         <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
-    <serviceTask id="createDocumentServiceTask" name="Create Document Based On User Input Service Task" flowable:delegateExpression="${approvedDelegate}"></serviceTask>
+    <serviceTask id="createDocumentServiceTask" name="Create Document Based On User Input Service Task" flowable:delegateExpression="${generateDocumentDelegate}">
+      <extensionElements>
+        <flowable:field name="parentPath">
+          <flowable:expression><![CDATA[${variables:get(parentPath)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="documentName">
+          <flowable:expression><![CDATA[${variables:get(documentName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="documentType">
+          <flowable:expression><![CDATA[${variables:get(documentType)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="documentProperties">
+          <flowable:expression><![CDATA[${variables:get(documentProperties)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="variables">
+          <flowable:expression><![CDATA[${variables:get(variables)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="templateId">
+          <flowable:expression><![CDATA[${variables:get(templateId)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
     <serviceTask id="submitFormNotification" name="Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
       <extensionElements>
         <flowable:field name="notificationType">

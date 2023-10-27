@@ -119,7 +119,7 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
           ...task
         }
       });
-    } else if (task['attr_flowable:delegateExpression'] === "${approvedDelegate}") {
+    } else if (task['attr_flowable:delegateExpression'] === "${generateDocumentDelegate}") {
       data.nodes?.push({
         id: task['attr_id'],
         shape: 'document-node',
