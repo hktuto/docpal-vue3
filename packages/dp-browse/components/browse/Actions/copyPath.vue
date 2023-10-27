@@ -6,8 +6,8 @@
             </el-icon>
         </el-tooltip>
     </div> -->
-    <BrowseActionsButton id="copyPathActionButton" label="copy" @click="copyPath">
-      <SvgIcon src="/icons/file/copy.svg" round content="copy"
+    <BrowseActionsButton id="copyPathActionButton" :label="$t('button.copyPath')" @click="copyPath">
+      <SvgIcon src="/icons/file/copy.svg" round :content="$t('button.copyPath')"
                   ></SvgIcon>
     </BrowseActionsButton>
 </template>

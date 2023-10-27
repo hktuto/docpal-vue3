@@ -31,7 +31,7 @@
             </div>
             <div v-else-if="selectList.length !== 0" class="browseHeader--multi selectedAction">
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
-                <CollapseMenu>{{allowFeature('SHARE_EXTERNAL')}}
+                <CollapseMenu>
                     <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
                     <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission: listData.permission })"
                         :doc="listData.doc" :selectedList="selectList"/>
