@@ -27,6 +27,10 @@ export const GetTemplatePageApi = async(params: pageParams):Promise<paginationDa
     return api.post<Response<paginationData>>('/docpal/template/document/page', params ).then(res => res.data.data);
 }
 
+export const GetAllTemplatePageApi = async():Promise<paginationData> => {
+    return api.get<Response<paginationData>>('/docpal/template/document/all' ).then(res => res.data.data);
+}
+
 export const GenerateFileApi = async(params, cb?) => {
     const res = await api.post('/docpal/template/document/generate/file', params, {
         timeout:0,

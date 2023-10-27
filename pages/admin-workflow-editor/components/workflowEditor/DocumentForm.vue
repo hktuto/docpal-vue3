@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {GetAllEmailTemplatePageApi, GetTemplatePageApi, GetTemplateVariablesApi} from "dp-api";
+import {GetAllEmailTemplatePageApi, GetAllTemplatePageApi, GetTemplatePageApi, GetTemplateVariablesApi} from "dp-api";
 
 const props = defineProps<{
   data: any,
@@ -10,12 +10,7 @@ const emit = defineEmits(['close', 'submit'])
 const allDocumentTemplates = ref([]);
 
 async function getDocumentTemplates() {
-  const {entryList} = await GetTemplatePageApi({
-    pageNum: 0,
-    pageSize: 999,
-    orderBy: 'createdDate',
-    isDesc: true
-  })
+  const entryList = await GetAllTemplatePageApi();
   allDocumentTemplates.value = entryList.map((item: any) => {
     return {
       id: '${variables:get(' + item.id + ')}',
