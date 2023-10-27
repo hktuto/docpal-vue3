@@ -23,7 +23,10 @@ async function getData() {
     }
     loading.value = false;
 }
-
+function refresh() {
+    getData()
+}
+defineExpose({ refresh })
 watch(doc, () => {
     getData();
 },{

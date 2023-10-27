@@ -15,7 +15,7 @@
                       <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
                       <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
-                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefresh"/>
+                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefreshPreview"/>
                       <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
                       <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
                       <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
@@ -42,10 +42,10 @@
             </div>
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
-                    <LazyHtmlViewer v-if="readerType === 'html'" :doc="doc" />
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
-                    <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
-                    <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
+                    <LazyHtmlViewer v-if="readerType === 'html'" ref="PreviewRef" :doc="doc" />
+                    <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
+                    <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
+                    <LazyOtherPlayer v-else-if="readerType === 'other'" ref="PreviewRef" :doc="doc"></LazyOtherPlayer>
                 </div>
                 <h2 v-else class="noSupportContainer" >
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
@@ -106,19 +106,25 @@ const readerType = computed(() => {
     return ''
   }
 });
-
+function handleRefresh() {
+  getData(doc.value.path)
+}
+const PreviewRef = ref()
+function handleRefreshPreview() {
+  PreviewRef.value.refresh()
+}
 async function openPreview({detail}:any) {
   cancelAxios()
   show.value = false
   options.value = detail.options
-  // const response = await getDocumentDetail(detail.pathOrId, userId)
-  const response = await getDocumentDetailSync(detail.pathOrId, userId);
-
-  doc.value = response.doc
-  permission.value = response.permission
+  getData(detail.pathOrId)
   show.value = true
 }
-
+async function getData (docId) {
+  const response = await getDocumentDetailSync(docId, userId);
+  doc.value = response.doc
+  permission.value = response.permission
+}
 function mobileActionsOpenedChanged(bool:boolean) {
   mobileActionOpened.value = bool
 }
