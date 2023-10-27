@@ -3,7 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
-      feature:'SHARE_MANAGE',
+      feature:'SHARE_EXTERNAL',
       name:"admin_share",
       routeName:"shareList",
       url:"/shareList",

@@ -22,7 +22,6 @@
                       <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                       <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
-                      {{allowFeature('SHARE_EXTERNAL')}}
                       <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
       
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
