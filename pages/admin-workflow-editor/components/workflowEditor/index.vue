@@ -48,13 +48,13 @@ const {generateMap} = useGraph('editorContainer');
 /// #endregion antV6
 
 function bpmnToJs() {
-    const tempD = parser.parse(props.bpmn);
+    const tempD = parser.parse(props.bpmn, );
 
     if(tempD['?xml']){
         delete tempD['?xml'];
     }
     data.value = tempD;
-    const graphData = bpmnToX6(data.value);
+    const graphData = bpmnToX6(data.value,{hideEnd:false});
     initForm();
     graph.value = generateMap(graphData);
     graph.value.on('node:dblclick',({node}) => {

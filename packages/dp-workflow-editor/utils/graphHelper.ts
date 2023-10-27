@@ -94,6 +94,7 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
     }
     
   });
+  
 
   // step 4 : add userTask
   userTask.forEach((task: any) => {
@@ -170,11 +171,13 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
     // step 8: add endEvent
     data.nodes?.push({
       id: endEvent['attr_id'],
-      shape: 'step-node',
+      shape: 'exclusive-node',
       label: truncateString(endEvent['attr_name']),
     });
     
   }
+  
+  
 
   // add edge 
   sequenceFlow.forEach((flow: any) => {
