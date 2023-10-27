@@ -1996,7 +1996,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.PUBLIC_LANGUAGE_SET]: {
         columns: [
-            { id: '1', label: 'key', prop: 'key', defaultColumn: true },
+            { id: '1', label: 'key', prop: 'key', defaultColumn: true, copy: true },
             { id: '2', label: 'en-US', prop: 'en-US', slot: 'enUS' },
             { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zhCN' },
             { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zhHK' },

@@ -9,7 +9,7 @@
         <div class="row-item">
             <div class="row-item-top">
                 <span class="color__danger">*</span>
-                    {{$t('documentType')}}
+                    {{$t('dpDocument_fileType')}}
             </div>
             <el-select v-model="state.doc.documentType" filterable default-first-option
                 @change="handleDocTypeChange(state.doc)">
