@@ -25,7 +25,7 @@
 </template>
 
 
-<script lang="ts" setup>
+<script lang="ts" setup></script>
 import {
     GetCabinetConditionsApi,
     GetCabinetPageApi,
