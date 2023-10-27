@@ -41,7 +41,9 @@ const emit = defineEmits(['go-parent'])
 const { data, refresh, pending } = useAsyncData(() => GetBreadcrumb(props.path));
 
 const displayBread = computed(() => data.value?.filter(d => d.isFolder)|| []);
-
+function handleRefresh () {
+    refresh()
+}
 watch(props, () => {
     refresh()
 })
@@ -87,7 +89,7 @@ function handleRightClick (item, event) {
 
 
 defineExpose({
-    goParent
+    goParent, handleRefresh
 })
 </script>
 

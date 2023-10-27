@@ -101,8 +101,6 @@ const infoOpened = ref(false);
 
 
 async function getDocDetail() {
-    console.log(selectList.value.length);
-    
     // const response = await getDocumentDetail(routePath.value, userId)
     const response = await getDocumentDetailSync(routePath.value, userId)
     
@@ -136,6 +134,7 @@ function itemDeleted(){
 async function handleRefresh () {
     forceRefresh.value = true
     await getDocDetail()
+    if(listData?.value?.doc?.isFolder) breadCrumb.value.handleRefresh();
 }
 
 function handleSelectionChange (rows:any) {
