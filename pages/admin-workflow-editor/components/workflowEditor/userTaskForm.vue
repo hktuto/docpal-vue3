@@ -10,7 +10,14 @@
                 <ElFormItem label="Name" prop="attr_name">
                     <ElInput v-model="data.attr_name" placeholder="Name" />
                 </ElFormItem>
+              
               <div v-if="canAutoAssignee" class="el-form-item">
+                <ElFormItem label="Candidate Group">
+                  <ElSelect v-model="candidateGroup" placeholder="Select Group" v-if="haveCandidateGroup">
+                    <ElOption v-for="item in allUserGroup" :key="item.id" :label="item.name" :value="item.id" />
+                  </ElSelect>
+                </ElFormItem>
+                
                 <ElFormItem  label="Auto Assign" >
                   <ElSwitch v-model="autoApproval" @change="autoApprovalChanged"/>
                 </ElFormItem>
@@ -64,6 +71,8 @@
 
 
 <script lang="ts" setup>
+import {GetGroupListApi} from "dp-api";
+
 const props = defineProps<{
   data: any,
   allField: any,
@@ -124,6 +133,46 @@ function createAutoAssignee (autoAssignField:string) {
 const canAutoAssignee = computed(() => !(props.data.attr_id === 'start'))
 
 
+const haveCandidateGroup = computed(() => {
+  return props.data.extensionElements['modeler:activiti-idm-candidate-group'] && props.data.extensionElements['modeler:activiti-idm-candidate-group']["__cdata"] === 'true'
+})
+
+const allUserGroup = ref([]);
+
+async function getAllUserGroup(){
+  allUserGroup.value = await GetGroupListApi(true)
+}
+
+const candidateGroup = computed({
+  get() {
+    const extensionElements = props.data.extensionElements;
+    // check any item name contain modeler:group-info-name-
+    const currentGroup = Object.keys(extensionElements).find((key) => {
+      return key.includes('modeler:group-info-name-')
+    });
+    return currentGroup ? extensionElements[currentGroup]["__cdata"] : ""
+  },
+  async set(value){
+    // remove old modeler:group-info-name-*
+    const extensionElements = props.data.extensionElements;
+    const currentGroup = Object.keys(extensionElements).find((key) => {
+      return key.includes('modeler:group-info-name-')
+    });
+    if(currentGroup) {
+      delete extensionElements[currentGroup]
+    }
+    const group = allUserGroup.value.find((item) => item.id === value)
+    if(group) {
+      props.data.extensionElements['modeler:group-info-name-' + group.id] = {
+        ['attr_xmlns:modeler'] : "http://flowable.org/modeler",
+        "__cdata": group.name
+      }
+    }
+    console.log('set', props.data)
+    emit('submit', props.data)
+  }
+})
+
 function addFormItem() {
   if(!addFormItem) return
   const form = props.data.extensionElements['flowable:formProperty'].push(props.allField[selectedNewField.value])
@@ -140,10 +189,14 @@ function removeFormItem(key){
 }
 
 watch(props.data, () => {
-  console.log('change')
+  console.log('change', props.data)
   autoApproval.value = props.data.extensionElements['flowable:taskListener'] && props.data.extensionElements['flowable:taskListener']['attr_event'] === 'create'
 },{
   immediate: true
+})
+
+onMounted(async() => {
+  await getAllUserGroup()
 })
 
 </script>
