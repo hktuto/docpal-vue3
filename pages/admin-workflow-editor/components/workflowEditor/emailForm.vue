@@ -77,7 +77,6 @@ onMounted(async() => {
     <div class="header">
     </div>
     <div class="formContainer">
-     
       <ElForm :model="data" label-position="top">
         <ElFormItem label="Email template">
           <ElSelect v-model="selectedEmailTemplate" placeholder="Select email template" class="fullwidth">

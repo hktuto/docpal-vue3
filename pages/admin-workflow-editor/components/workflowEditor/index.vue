@@ -2,8 +2,6 @@
 <script lang="ts" setup>
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 import { Graph, Node } from '@antv/x6'
-import {useGraph} from '../../composables/userGraph';
-import { bpmnToX6 } from '../../utils/graphHelper';
 
 ///#region setup
     const props = defineProps({
@@ -282,6 +280,7 @@ defineExpose({
                 <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="workflowForm" @close="closeSidePanel" @submit="saveForm" />
                 <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveUserStep" />
                 <WorkflowEditorEmailForm v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
+                <WorkflowEditorDocumentForm v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
             </template>
         </div>
         
