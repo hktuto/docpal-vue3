@@ -34,7 +34,10 @@ async function getData() {
     }
     state.loading = false;
 }
-
+function refresh() {
+    getData()
+}
+defineExpose({ refresh })
 watch(doc, () => {
     getData();
 },{
