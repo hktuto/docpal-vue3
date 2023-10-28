@@ -46,9 +46,9 @@ export const useGraph = (elementId:string) => {
             mousewheel: {
                 enabled: true,
                 modifiers: 'ctrl',
-                factor: 1.1,
+                factor: 0.5,
                 maxScale: 1.5,
-                minScale: 0.5,
+                minScale: 0.2,
             },
             highlighting: {
                 magnetAdsorbed: {
@@ -92,7 +92,7 @@ export const useGraph = (elementId:string) => {
         const dagreLayout = new DagreLayout({
           type: 'dagre',
           rankdir: 'LR',
-          ranksep: 60,
+          ranksep: 40,
           nodesep: 60,
         })
         const model = dagreLayout.layout(data)

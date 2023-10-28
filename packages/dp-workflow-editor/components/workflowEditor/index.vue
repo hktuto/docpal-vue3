@@ -111,7 +111,7 @@ function showTooltip(e:MouseEvent, node:Node) {
     if(data && data.attr_name === undefined){
         return;
     }
-    tooltip.value = data.attr_name || "";
+    tooltip.value = data ? data.attr_name : ""
     const {clientX, clientY} = e;
     const toolTipsContainer = document.querySelector('.toolTipsContainer') as HTMLElement;
     toolTipsContainer.style.left = `${clientX - 60}px`;
@@ -127,14 +127,12 @@ function hideTooltip() {
 
 function dblClickHandler(node:Node) {
     const data = node.getData();
-    console.log(node, data);
     if(data.type === 'userTask'){
         // open dialog
         sidePanelOpened.value = true;
         selectedData.value = data;
     }
     if(data.type === 'serviceTask'){
-      console.log('selectedData', data)
         // open dialog
         sidePanelOpened.value = true;
         selectedData.value = data;
@@ -162,7 +160,6 @@ function saveForm(updatedData:any) {
 }
 
 function saveUserStep(stepData) {
-  console.log(stepData, 'stepData')
     const newData = {...stepData};
     // find step in data
     delete newData.type;
