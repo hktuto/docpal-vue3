@@ -52,16 +52,39 @@ export const useGraph = (elementId:string) => {
             },
             highlighting: {
                 magnetAdsorbed: {
-                  name: 'stroke',
-                  args: {
-                    attrs: {
-                      fill: '#fff',
-                      stroke: '#31d0c6',
-                      strokeWidth: 4,
+                    name: 'stroke',
+                    args: {
+                        attrs: {
+                            fill: '#fff',
+                            stroke: '#31d0c6',
+                            strokeWidth: 4,
+                        },
                     },
-                  },
                 },
             },
+            connecting: {
+                snap: true,
+                allowBlank: false,
+                allowLoop: false,
+                highlight: true,
+                connectionPoint: 'anchor',
+                anchor: 'center',
+                validateMagnet({ magnet }) {
+                    return magnet.getAttribute('port-group') !== 'top'
+                },
+                createEdge() {
+                    return graph.createEdge({
+                        shape: 'normal-edge',
+                        attrs: {
+                            line: {
+                                strokeDasharray: '5 5',
+                            },
+                        },
+                        zIndex: -1,
+                    })
+                },
+            },
+            
         }
     )
         
@@ -69,8 +92,8 @@ export const useGraph = (elementId:string) => {
         const dagreLayout = new DagreLayout({
           type: 'dagre',
           rankdir: 'LR',
-          ranksep: 50,
-          nodesep: 50,
+          ranksep: 60,
+          nodesep: 60,
         })
         const model = dagreLayout.layout(data)
         graph.fromJSON(model)

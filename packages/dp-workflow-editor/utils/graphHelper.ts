@@ -13,6 +13,7 @@ const graphOptions = {
             background: {
               color: '#F2F7FA',
             },
+    
             panning: {
                 enabled: true,
                 eventTypes: ['leftMouseDown', 'mouseWheel'],
@@ -38,17 +39,78 @@ const graphOptions = {
             },
             
         selecting: {
-        enabled: true,
-        multiple: true,
-        rubberEdge: true,
-        rubberNode: true,
-        modifiers: 'shift',
-        rubberband: true,
-    },
+            enabled: true,
+            multiple: false,
+            rubberEdge: true,
+            rubberNode: true,
+            modifiers: 'shift',
+        },
 }
+const ports = {
+        groups: {
+            top: {
+                position: 'top',
+                attrs: {
+                    circle: {
+                        r: 4,
+                        magnet: true,
+                        stroke: '#C2C8D5',
+                        strokeWidth: 1,
+                        fill: '#fff',
+                    },
+                },
+            },
+            left: {
+                position: 'left',
+                attrs: {
+                    circle: {
+                        r: 4,
+                        magnet: true,
+                        stroke: '#C2C8D5',
+                        strokeWidth: 1,
+                        fill: '#fff',
+                    },
+                },
+            },
+            right: {
+                position: 'right',
+                attrs: {
+                    circle: {
+                        r: 4,
+                        magnet: true,
+                        stroke: '#C2C8D5',
+                        strokeWidth: 1,
+                        fill: '#fff',
+                    },
+                },
+            },
+        },
+    };
+Graph.registerConnector(
+    'algo-connector',
+    (s, e) => {
+        const offset = 4
+        const deltaY = Math.abs(e.y - s.y)
+        const control = Math.floor((deltaY / 3) * 2)
 
+        const v1 = { x: s.x, y: s.y + offset + control }
+        const v2 = { x: e.x, y: e.y - offset - control }
 
-const FormNode = Graph.registerNode(
+        return Path.normalize(
+            `M ${s.x} ${s.y}
+           L ${s.x} ${s.y + offset}
+           C ${v1.x} ${v1.y} ${v2.x} ${v2.y} ${e.x} ${e.y - offset}
+           L ${e.x} ${e.y}
+      `,
+        )
+    },
+    true,
+)
+Graph.registerConnector({
+    
+    })
+// Form node
+Graph.registerNode(
     'form-node',
     {
         inherit: 'rect',
@@ -92,10 +154,14 @@ const FormNode = Graph.registerNode(
                 selector: 'label',
             },
         ],
+        ports,
+        
     },
     true,
 )
-const DocumentNode = Graph.registerNode(
+
+// Document Node
+Graph.registerNode(
     'document-node',
     {
         inherit: 'rect',
@@ -139,11 +205,13 @@ const DocumentNode = Graph.registerNode(
                 selector: 'label',
             },
         ],
+        ports
     },
     true,
 )
 
-const EmailNode = Graph.registerNode(
+/** Email Node */
+Graph.registerNode(
     'email-node',
     {
         inherit: 'rect',
@@ -187,10 +255,13 @@ const EmailNode = Graph.registerNode(
                 selector: 'label',
             },
         ],
+        ports
     },
     true,
 )
-const userNode = Graph.registerNode(
+
+/** User Node */
+Graph.registerNode(
     'user-node',
     {
         inherit: 'rect',
@@ -222,11 +293,13 @@ const userNode = Graph.registerNode(
                 selector: 'label',
             },
         ],
+        ports
     },
     true
 );
 
-const ServiceNode = Graph.registerNode(
+/** Service Node */
+Graph.registerNode(
     'service-node',
     {
         inherit: 'rect',
@@ -247,11 +320,13 @@ const ServiceNode = Graph.registerNode(
                 text: 'node',
             },
         },
+        ports
     },
     true,
 );
 
-const ExclusiveNode = Graph.registerNode(
+/** Exclusive Node */
+Graph.registerNode(
     'exclusive-node',
     {
         inherit: 'circle',
@@ -269,7 +344,8 @@ const ExclusiveNode = Graph.registerNode(
                 textAnchor: 'middle',
                 textVerticalAnchor: 'top',
             },
-        }
+        },
+        ports
     },
     true
 )
@@ -305,6 +381,7 @@ const boundaryEdge = Graph.registerEdge('boundaryEdge',{
             stroke: '#000',
             strokeWidth: 1,
             targetMarker: null,
+            strokeDasharray: 5,
             sourceMarker: {
                 name: 'image',
                 imageUrl: '/bpmn/icons/clock.svg',
@@ -329,7 +406,8 @@ const normalEdge = Graph.registerEdge('normal-edge',{
     attrs: {
         line: {
             stroke: '#000',
-            strokeWidth: 1,
+            strokeWidth: 2,
+            
         },
     },
     
@@ -344,7 +422,7 @@ function truncateString(str, n=20) {
   }
 }
 
-export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONData => {
+export const bpmnToX6 = (bpmn: any, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
   // step 1 : get bpmn data
   const process = bpmn['definitions']['process'];
   const nodes = [];
@@ -375,7 +453,9 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
     data: {
       type: 'userTask',
       ...startEvent
-    }
+    },
+      ports:[
+      ]
     
   });
 
@@ -397,7 +477,9 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
             type: 'userTask',
             ...task,
             boundary
-        }
+        },
+        ports:[
+        ]
     }
     data.nodes?.push(node);
   });
@@ -412,7 +494,9 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
         data:{
           type: 'serviceTask',
           ...task
-        }
+        },
+          ports:[
+          ]
       });
     } else if (task['attr_flowable:delegateExpression'] === "${generateDocumentDelegate}") {
       data.nodes?.push({
@@ -422,7 +506,9 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
         data: {
           type: 'serviceTask',
           ...task
-        }
+        },
+          ports:[
+          ]
       });
     }else{
       data.nodes?.push({
@@ -432,7 +518,9 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
         data: {
           type: 'serviceTask',
           ...task
-        }
+        },
+          ports:[
+          ]
       });
     }
   });
@@ -448,6 +536,8 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
         type: 'exclusiveGateway',
         ...gateway
       },
+        ports:[
+        ]
     });
 
       data.nodes?.push({
@@ -464,6 +554,8 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
               type: 'exclusiveGateway',
               ...gateway
           },
+          ports:[
+          ]
       });
   });
 
@@ -478,17 +570,21 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
   // });
 
   if(!options.hideEnd) {
-
-    // step 8: add endEvent
-    data.nodes?.push({
-      id: endEvent['attr_id'],
-      shape: 'user-node',
-      label: truncateString(endEvent['attr_name']),
+    // check how many point linked to endEvent
+    const count = sequenceFlow.filter((flow: any) => flow['attr_targetRef'] === endEvent['attr_id']).length;
+    const endNote = {
+        id: endEvent['attr_id'],
+        shape: 'user-node',
+        label: truncateString(endEvent['attr_name']),
         data: {
             type: 'endEvent',
             ...endEvent
-        }
-    });
+        },
+        ports:[
+        ]
+    };
+    // step 8: add endEvent
+    data.nodes?.push(endNote);
     
   }
 
@@ -497,50 +593,150 @@ export const bpmnToX6 = (bpmn: any, options = {hideEnd: true}): Model.FromJSONDa
     if( (flow['attr_targetRef'] === endEvent['attr_id'] || flow['attr_sourceRef'] === endEvent['attr_id']) && options.hideEnd ) {
       return;
     }
+      // create port for source node
+      
     // check source is boundaryEvent or not
       // if yes then change source to boundaryEvent[attachedToRef]
     if( boundaryEvent.find((event: any) => event['attr_id'] === flow['attr_sourceRef']) ) {
         const boundary = boundaryEvent.find((event: any) => event['attr_id'] === flow['attr_sourceRef']);
+        const sourceNode = data.nodes?.find((node) => node.id === boundary['attr_attachedToRef']);
+        
+        // if(!sourceNode) return;
+        const outLength = sourceNode.ports.length
+        sourceNode.ports?.push({
+            id: sourceNode['id'] + '-out' + '-' + outLength,
+            group: 'top',
+        })
+        // // create port for target node
+        const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
+        if(!targetNode) return;
+        const inLength = targetNode.ports.length
+        targetNode.ports?.push({
+            id: targetNode['id'] + '-in' + '-' + inLength,
+            group: 'left',
+        })
+        console.log(sourceNode);
+        console.log(targetNode);
         data.edges?.push({
-            source: boundary['attr_attachedToRef'],
-            target: flow['attr_targetRef'],
+            source: {
+                cell: sourceNode['id'],
+                port: sourceNode['id'] + '-out' + '-' + outLength
+            },
+            target: {
+                cell: targetNode['id'],
+                port: targetNode['id'] + '-in' + '-' + inLength
+            },
             shape: 'boundaryEdge',
         });
         return;
     }  
     // check if source is exclusiveGateway
       if( exclusiveGateway.find((gateway: any) => gateway['attr_id'] === flow['attr_sourceRef']) ) {
-          const gateway = exclusiveGateway.find((gateway: any) => gateway['attr_id'] === flow['attr_sourceRef']);
-          // get taget node
-            const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
-            console.log(targetNode, flow)
+          const approve = flow.conditionExpression.__cdata.includes('!');
+          const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef'] + (approve ? '-reject' : '-approve'));
+          if(!sourceNode) return;
+          const outLength = sourceNode.ports.length
+          sourceNode.ports?.push({
+              id: sourceNode['id'] + '-out' + '-' + outLength,
+              group: 'right',
+          })
+          // // create port for target node
+          const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
+          if(!targetNode) return;
+          const inLength = targetNode.ports.length
+          targetNode.ports?.push({
+              id: flow['attr_targetRef'] + '-in' + '-' + inLength,
+              group: 'left',
+          })
           data.edges?.push({
-              source: flow['attr_sourceRef'] + (flow.conditionExpression.__cdata.includes('!') ? '-reject' : '-approve' ),
-              target: flow['attr_targetRef'],
+              source: {
+                  cell: flow['attr_sourceRef'] + (approve ? '-reject' : '-approve'),
+                    port: flow['attr_sourceRef'] + (approve ? '-reject' : '-approve') + '-out' + '-' + outLength
+              },
+              target: {
+                  cell: flow['attr_targetRef'],
+                    port: flow['attr_targetRef'] + '-in' + '-' + inLength
+              },
               shape: 'normal-edge',
           });
-            console.log(targetNode.data);
           return
       }
       // check if target is exclusiveGateway
       if( exclusiveGateway.find((gateway: any) => gateway['attr_id'] === flow['attr_targetRef']) ) {
+          const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef']);
+          if(!sourceNode) return;
+          const outLength = sourceNode.ports.length
+          sourceNode.ports?.push({
+              id: flow['attr_sourceRef'] + '-out' + '-' + outLength,
+              group: 'right',
+          })
+          // create port for target node
+          const stargetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef'] + '-approve' );
+          const rTargetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef'] + '-reject' );
+          if(!stargetNode || !rTargetNode) return;
+          const sInLength = stargetNode.ports.length
+          const rInLength = rTargetNode.ports.length;
+          stargetNode.ports?.push({
+              id: flow['attr_targetRef'] + '-approve' + '-in' + '-' + sInLength,
+              group: 'left',
+          })
+          rTargetNode.ports?.push({
+              id: flow['attr_targetRef'] + '-reject' + '-in' + '-' + rInLength,
+              group: 'left',
+          })
+
           data.edges?.push({
-              source: flow['attr_sourceRef'],
-              target: flow['attr_targetRef'] + '-approve',
+              source: {
+                  cell: flow['attr_sourceRef'],
+                    port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+              },
+              target: {
+                  cell: flow['attr_targetRef'] + '-approve',
+                    port: flow['attr_targetRef'] + '-approve' + '-in' + '-' + sInLength
+              },
               shape: 'normal-edge',
           });
           data.edges?.push({
-              source: flow['attr_sourceRef'],
-              target: flow['attr_targetRef'] + '-reject',
+              source: {
+                  cell:flow['attr_sourceRef'],
+                    port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+              },
+              target: {
+                  cell: flow['attr_targetRef'] + '-reject',
+                    port: flow['attr_targetRef'] + '-reject' + '-in' + '-' + rInLength
+              },
               shape: 'normal-edge',
           });
           return
       }
-    data.edges?.push({
-      source: flow['attr_sourceRef'],
-      target: flow['attr_targetRef'],
-      shape: 'normal-edge',
-    });
+
+      const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef']);
+      if(!sourceNode) return;
+      const outLength = sourceNode.ports.length
+      sourceNode.ports?.push({
+          id: flow['attr_sourceRef'] + '-out' + '-' + outLength,
+          group: 'right',
+      })
+      // create port for target node
+      const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
+      if(!targetNode) return;
+      const inLength = targetNode.ports.length
+      targetNode.ports?.push({
+          id: flow['attr_targetRef'] + '-in' + '-' + inLength,
+          group: 'left',
+      })
+      
+      data.edges?.push({
+          source: {
+              cell:flow['attr_sourceRef'],
+                port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+          },
+          target: {
+              cell:flow['attr_targetRef'],
+                port: flow['attr_targetRef'] + '-in'  + '-' + inLength
+          },
+          shape: 'normal-edge',
+        });
   });
 
 
