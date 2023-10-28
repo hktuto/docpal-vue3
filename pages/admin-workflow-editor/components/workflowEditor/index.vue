@@ -54,7 +54,7 @@ function bpmnToJs() {
         delete tempD['?xml'];
     }
     data.value = tempD;
-    const graphData = bpmnToX6(data.value);
+    const graphData = bpmnToX6(data.value, {hideEnd:false});
     initForm();
     graph.value = generateMap(graphData);
     graph.value.on('node:dblclick',({node}) => {
