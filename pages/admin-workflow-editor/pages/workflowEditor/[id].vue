@@ -1,7 +1,7 @@
 <template>
 <NuxtLayout class="fit-height" backPath="/workflowEditor" :pageTitle="id === 'new' ? $t('workflowEditor.custom') : state.detail?.name">
     <div class="pageContainer">
-        <GraphEditor v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile">
+        <WorkflowEditor v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile">
             <template #actions>
                 <template v-if="state.newStatus">
                     <el-button :loading="state.loading" type="primary" @click="handelCreate">{{$t('workflowEditor.add')}}</el-button>
@@ -11,7 +11,7 @@
                     <el-button :loading="state.loading" :disabled="state.detail.status === 'A'" type="primary" @click="handleSave(false)">{{$t('button.publish')}}</el-button>
                 </template>
             </template>
-        </GraphEditor>
+        </WorkflowEditor>
     </div>
 </NuxtLayout>
 </template>
