@@ -46,23 +46,7 @@ function initForm() {
   };
 }
 
-function showTooltip(e:MouseEvent, node:Node) {
-  const data = node.getData();
-  if(data && data.attr_name === undefined){
-    return;
-  }
-  tooltip.value = data ? data.attr_name : ""
-  const {clientX, clientY} = e;
-  const toolTipsContainer = document.querySelector('.toolTipsContainer') as HTMLElement;
-  toolTipsContainer.style.left = `${clientX - 60}px`;
-  toolTipsContainer.style.top = `${clientY - 40}px`;
-  toolTipsContainer.style.display = 'block';
-}
 
-function hideTooltip() {
-  const toolTipsContainer = document.querySelector('.toolTipsContainer') as HTMLElement;
-  toolTipsContainer.style.display = 'none';
-}
 function getForm(item):any[] {
   if(item.extensionElements){
     const form = item.extensionElements['flowable:formProperty'];
@@ -72,7 +56,7 @@ function getForm(item):any[] {
   }
   return [];
 }
-function dblClickHandler(node:Node) {
+function dblClickHandler({node}:Node) {
   const data = node.getData();
   if(data.type === 'userTask'){
     // open dialog
@@ -210,8 +194,6 @@ watch(() => props.bpmn, (newVal, oldVal) => {
         ref="graphEl" 
         :graphJson="graphJson" 
         @node:dblclick="dblClickHandler"
-        @node:mouseenter="showTooltip"
-        @node:mouseleave="hideTooltip"
     ></GraphViewer>
     
     <div v-if="data" class="footer">

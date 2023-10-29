@@ -1,50 +1,12 @@
 import { Graph, Node, Model, Path } from '@antv/x6'
 import {Attr} from "@antv/x6/es/registry";
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
-
+import { register } from '../components/Graph';
+import GraphWorkflowForm from '~/components/graph/element/workflow/form.vue';
 interface ImageMarkerArgs extends Attr.SimpleAttrs {
     imageUrl: string
     imageWidth?: number
     imageHeight?: number
-}
-const graphOptions = {
-            grid:true,
-            autoResize:true,
-            background: {
-              color: '#F2F7FA',
-            },
-    
-            panning: {
-                enabled: true,
-                eventTypes: ['leftMouseDown', 'mouseWheel'],
-            },
-            mousewheel: {
-                enabled: true,
-                modifiers: 'ctrl',
-                factor: 1.1,
-                maxScale: 1.5,
-                minScale: 0.5,
-            },
-            highlighting: {
-                magnetAdsorbed: {
-                  name: 'stroke',
-                  args: {
-                    attrs: {
-                      fill: '#fff',
-                      stroke: '#31d0c6',
-                      strokeWidth: 4,
-                    },
-                  },
-                },
-            },
-            
-        selecting: {
-            enabled: true,
-            multiple: false,
-            rubberEdge: true,
-            rubberNode: true,
-            modifiers: 'shift',
-        },
 }
 const ports = {
         groups: {
@@ -86,79 +48,64 @@ const ports = {
             },
         },
     };
-Graph.registerConnector(
-    'algo-connector',
-    (s, e) => {
-        const offset = 4
-        const deltaY = Math.abs(e.y - s.y)
-        const control = Math.floor((deltaY / 3) * 2)
 
-        const v1 = { x: s.x, y: s.y + offset + control }
-        const v2 = { x: e.x, y: e.y - offset - control }
-
-        return Path.normalize(
-            `M ${s.x} ${s.y}
-           L ${s.x} ${s.y + offset}
-           C ${v1.x} ${v1.y} ${v2.x} ${v2.y} ${e.x} ${e.y - offset}
-           L ${e.x} ${e.y}
-      `,
-        )
-    },
-    true,
-)
-Graph.registerConnector({
-    
-    })
+register({
+    shape: 'form-node',
+    width: 80,
+    height: 100,
+    component: GraphWorkflowForm,
+    ports
+})
 // Form node
-Graph.registerNode(
-    'form-node',
-    {
-        inherit: 'rect',
-        width: 80,
-        height: 80,
-        attrs: {
-            body: {
-                rx: 20,
-                ry: 20,
-                fill: '#0099ff',
-                strokeWidth:0,
-            },
-            image:{
-                'xlink:href':'/bpmn/icons/form.svg',
-                width: 60,
-                height: 60,
-                refX: 10,
-                refY: 10,
-            },
-            text:{
-                refX: 0.5,
-                refY: '120%',
-                refY2: 5,
-                "textAnchor": "middle",
-                "textVerticalAnchor": "middle",
-                "fontFamily": "Arial, helvetica, sans-serif",
-                "text": "node"
-            }
-        },
-        markup: [
-            {
-                tagName: 'rect',
-                selector: 'body',
-            },
-            {
-                tagName: 'image',
-                selector: 'img',
-            },
-            {
-                tagName: 'text',
-                selector: 'label',
-            },
-        ],
-        ports,
-        
-    },
-    true,
-)
+// Graph.registerNode(
+//     'form-node',
+//     {
+//         inherit: 'rect',
+//         width: 80,
+//         height: 80,
+//         attrs: {
+//             body: {
+//                 rx: 20,
+//                 ry: 20,
+//                 fill: '#0099ff',
+//                 strokeWidth:0,
+//             },
+//             image:{
+//                 'xlink:href':'/bpmn/icons/form.svg',
+//                 width: 60,
+//                 height: 60,
+//                 refX: 10,
+//                 refY: 10,
+//             },
+//             text:{
+//                 refX: 0.5,
+//                 refY: '120%',
+//                 refY2: 5,
+//                 "textAnchor": "middle",
+//                 "textVerticalAnchor": "middle",
+//                 "fontFamily": "Arial, helvetica, sans-serif",
+//                 "text": "node"
+//             }
+//         },
+//         markup: [
+//             {
+//                 tagName: 'rect',
+//                 selector: 'body',
+//             },
+//             {
+//                 tagName: 'image',
+//                 selector: 'img',
+//             },
+//             {
+//                 tagName: 'text',
+//                 selector: 'label',
+//             },
+//         ],
+//         ports,
+//        
+//     },
+//     true,
+// )
 
 // Document Node
 Graph.registerNode(

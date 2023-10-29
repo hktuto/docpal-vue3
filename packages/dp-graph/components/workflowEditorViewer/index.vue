@@ -23,6 +23,16 @@ function setupGraph() {
   graphJson.value = bpmnToX6(props.bpmn, {hideEnd:false});
 }
 
+watch(()=> props.bpmn, async(newBpmn) => {
+  if (newBpmn) {
+    setupGraph();
+  }
+});
+
+onMounted(() => {
+  setupGraph();
+})
+
 </script>
 
 <template>
