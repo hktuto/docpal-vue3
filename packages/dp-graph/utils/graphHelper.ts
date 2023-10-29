@@ -436,7 +436,7 @@ export const bpmnToX6 = (bpmnText: any, options = {hideEnd: true, direction:'top
   // step 4 : add userTask
   userTask.forEach((task: any) => {
       // search for boundaryEvent
-    const boundary = boundaryEvent.filter((event: any) => event['attr_attachedToRef'] === task['attr_id']);
+    const boundary = boundaryEvent.filter((event: any) => event && event['attr_attachedToRef'] && event['attr_attachedToRef'] === task['attr_id']);
     const node = {
         id: task['attr_id'],
         shape: 'form-node',
@@ -571,7 +571,7 @@ export const bpmnToX6 = (bpmnText: any, options = {hideEnd: true, direction:'top
       
     // check source is boundaryEvent or not
       // if yes then change source to boundaryEvent[attachedToRef]
-    if( boundaryEvent.find((event: any) => event['attr_id'] === flow['attr_sourceRef']) ) {
+    if( boundaryEvent.find((event: any) => event && event['attr_id'] === flow['attr_sourceRef']) ) {
         const boundary = boundaryEvent.find((event: any) => event['attr_id'] === flow['attr_sourceRef']);
         const sourceNode = data.nodes?.find((node) => node.id === boundary['attr_attachedToRef']);
         
@@ -606,7 +606,7 @@ export const bpmnToX6 = (bpmnText: any, options = {hideEnd: true, direction:'top
     }  
     // check if source is exclusiveGateway
       if( exclusiveGateway.find((gateway: any) => gateway['attr_id'] === flow['attr_sourceRef']) ) {
-          const approve = flow.conditionExpression.__cdata.includes('!');
+          const approve = !flow.conditionExpression || flow.conditionExpression.__cdata.includes('!');
           const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef'] + (approve ? '-reject' : '-approve'));
           if(!sourceNode) return;
           const outLength = sourceNode.ports.length

@@ -1,15 +1,7 @@
 <script lang="ts" setup>
-import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
-import { Graph, Node } from '@antv/x6'
-import { register } from '../Graph'
-import DefaultNode from '../Graph/node/index.vue'
+
 import {bpmnToX6} from "../../utils/graphHelper";
-register({
-  shape: 'custom-vue-node',
-  width: 100,
-  height: 100,
-  component: DefaultNode,
-})
+
 
 const props = defineProps({
   bpmn: {

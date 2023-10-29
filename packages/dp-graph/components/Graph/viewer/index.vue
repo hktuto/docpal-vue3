@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<{
     mousewheel: {
       enabled: true,
       modifiers: 'ctrl',
-      factor: 0.5,
+      factor: 0.2,
       maxScale: 1.5,
       minScale: 0.2,
     },
@@ -83,7 +83,7 @@ function setupGraph() {
   console.log(props.graphJson)
   const model = props.layout.layout(props.graphJson);
   graph.value.fromJSON(model);
-  graph.value.centerContent()
+  
   
   graph.value?.on('node:dblclick', ({ev, node}) => {
     emits('node:dblclick', {ev, node})
@@ -100,6 +100,10 @@ function setupGraph() {
   graph.value?.on('node:mouseleave', ({ev, node}) => {
     emits('node:mouseleave', {ev, node})
   })
+  setTimeout(() => {
+    graph.value.zoomToFit({padding: 20});
+    graph.value.centerContent()
+  }, 100)
   
 }
 
@@ -131,6 +135,7 @@ defineExpose({
 .viewerContainer{
   width:100%;
   height: 100%;
+  min-height: 200px;
   position: relative;
   overflow: hidden;
   > .graph{
