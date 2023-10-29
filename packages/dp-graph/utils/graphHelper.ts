@@ -1,6 +1,6 @@
 import { Graph, Node, Model, Path } from '@antv/x6'
 import {Attr} from "@antv/x6/es/registry";
-
+import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 
 interface ImageMarkerArgs extends Attr.SimpleAttrs {
     imageUrl: string
@@ -413,6 +413,7 @@ const normalEdge = Graph.registerEdge('normal-edge',{
     
 })
 
+
 function truncateString(str, n=20) {
   if(!str) return str;
   if (str.length > n) {
@@ -422,16 +423,42 @@ function truncateString(str, n=20) {
   }
 }
 
-export const bpmnToX6 = (bpmn: any, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
+export const bpmnToJson = (bpmnText:string) :JSON => {
+    const parser = new XMLParser( {
+        ignoreAttributes: false,
+        attributeNamePrefix : "attr_",
+        cdataPropName:     "__cdata",
+        allowBooleanAttributes: true,
+        parseAttributeValue: true
+    });
+    return parser.parse(bpmnText);
+}
+
+function jsonToBpmn(json:JSON):string {
+    const builder = new XMLBuilder(
+        {
+            ignoreAttributes: false,
+            attributeNamePrefix : "attr_",
+            cdataPropName:     "__cdata",
+            allowBooleanAttributes: true,
+            suppressBooleanAttributes: false
+        }
+    );
+    return builder.build(json);
+}
+
+export const bpmnToX6 = (bpmnText: any, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
   // step 1 : get bpmn data
-  const process = bpmn['definitions']['process'];
-  const nodes = [];
+    
+    const bpmn = bpmnToJson(bpmnText);
+    const process = bpmn['definitions']['process'];
+    
   const startEvent = process['startEvent'];
   const endEvent = process['endEvent'];
   const sequenceFlow = process['sequenceFlow'];
   // check userTask is array or not
   const userTask =  Array.isArray(process['userTask']) ? process['userTask'] : [process['userTask']];;
-  const exclusiveGateway = Array.isArray(process['exclusiveGateway']) ? process['exclusiveGateway'] : [process['exclusiveGateway']];;
+  const exclusiveGateway = Array.isArray(process['exclusiveGateway']) ? process['exclusiveGateway'] : [process['exclusiveGateway']];
   const serviceTask = Array.isArray(process['serviceTask']) ? process['serviceTask'] : [process['serviceTask']];
   const boundaryEvent = Array.isArray(process['boundaryEvent']) ? process['boundaryEvent'] : [process['boundaryEvent']];
   // step 2 define x6 graph json data

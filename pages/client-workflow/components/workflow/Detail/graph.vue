@@ -1,7 +1,7 @@
 <template>
 <div class="bpmnContainer">
-    <WorkflowEditor v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile">
-    </WorkflowEditor>
+    <WorkflowEditorViewer v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile">
+    </WorkflowEditorViewer>
 </div>
 </template>
 <script lang="ts" setup>
