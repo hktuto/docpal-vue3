@@ -16,7 +16,6 @@ const data = ref();
 function setupGraph() {
   graphJson.value = bpmnToX6(props.bpmn, {hideEnd:false});
   data.value = bpmnToJson(props.bpmn);
-  console.log("setupGraph", graphJson.value)
   initForm();
 }
 
@@ -181,12 +180,15 @@ function saveEmailStep(stepData) {
   }
 }
 
+onMounted(() => {
+  setupGraph();
+})
 
 watch(() => props.bpmn, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     setupGraph();
   }
-}, {immediate: true})
+})
 
 </script>
 
@@ -203,7 +205,6 @@ watch(() => props.bpmn, (newVal, oldVal) => {
         <WorkflowEditorDocumentForm v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
       </template>
     </div>
-    {{graphJson}}
     <GraphViewer 
         v-if="graphJson"
         ref="graphEl" 

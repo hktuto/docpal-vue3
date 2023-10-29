@@ -9,7 +9,7 @@ const TeleportContainer = getTeleport();
 const props = withDefaults(defineProps<{
   id:string,
   graphJson?: string,
-  graphOption: Partial<GraphOptions.Manual>,
+  graphOption: any
   layout: any,
 }>(), {
   id: 'graphViewer_' + Date.now().toString(),
@@ -70,6 +70,9 @@ function getData() {
   return graph.value?.toJSON();
 }
 function setupGraph() {
+  if(!document.getElementById(props.id) || !props.graphJson) {
+    return;
+  }
   if(graph.value) {
     graph.value?.dispose();
   }
@@ -100,11 +103,14 @@ function setupGraph() {
   
 }
 
+onMounted(() => {
+  setupGraph();
+})
 watch(() => props.graphJson, (newVal, oldVal) => {
-  if (newVal !== oldVal) {
+  if (newVal !== oldVal && newVal) {
     setupGraph();
   }
-}, {immediate: true})
+})
 
 defineExpose({
   getData,

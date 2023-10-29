@@ -23,9 +23,6 @@ function setupGraph() {
   graphJson.value = bpmnToX6(props.bpmn, {hideEnd:false});
 }
 
-onMounted(() => {
-  setupGraph();
-})
 </script>
 
 <template>
