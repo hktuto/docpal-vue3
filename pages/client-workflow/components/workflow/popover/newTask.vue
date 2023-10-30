@@ -15,8 +15,8 @@
     :close-on-click-modal="false"
     class="scroll-dialog"
     >
-    <WorkflowDetailGraph :process-key="state.selectedWorkflow.key" step="start"/>
-    <WorkflowDetailFormRender ref="vFormRef" />
+  <WorkflowDetailGraph :process-key="state.selectedWorkflow.key" step="start"/>
+  <WorkflowDetailFormRender ref="vFormRef" />
     <template #footer>
         <el-button :loading="state.loading" @click="checkAndSubmit">{{$t('workflow_startWorkflow')}}</el-button>
     </template>
@@ -27,9 +27,9 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
-import { 
-    getAvailableWorkflowApi, 
-    getFormPropsApi, 
+import {
+    getAvailableWorkflowApi,
+    getFormPropsApi,
     taskFormJsonGetApi,
     workflowProcessStartApi } from 'dp-api'
 const emits = defineEmits(['created']);
@@ -39,6 +39,11 @@ const state = reactive({
     selectedWorkflow: {},
     loading: false
 })
+
+const modelProps = ref('form')
+function tabChange(tab: any, event: Event) {
+    modelProps.value = tab.paneName
+}
 async function getAvailableWorkflow () {
     state.availableWorkflow = await getAvailableWorkflowApi()
 }
@@ -75,7 +80,7 @@ async function workflowClickHandler (item: Workflow) {
                 ElMessage.success('Workflow created')
                 emits('created')
             } catch (error) {
-                
+
             }
         }
         state.loading = false

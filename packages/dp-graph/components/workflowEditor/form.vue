@@ -9,10 +9,9 @@
                 <ElFormItem label="Name" >
                     <ElInput v-model="data.attr_name" placeholder="Name" />
                 </ElFormItem>
-                <ElFormItem v-if="data['attr_flowable:candidateStarterGroups']" label="Candidate Group">
-                    <!-- TODO : change to user group filter -->
-                    <ElInput v-model="data['attr_flowable:candidateStarterGroups']" placeholder="candidate groups" />
-                </ElFormItem>
+<!--                <ElFormItem v-if="data['attr_flowable:candidateStarterGroups']" label="Candidate Group">-->
+<!--                    <ElInput v-model="data['attr_flowable:candidateStarterGroups']" placeholder="candidate groups" />-->
+<!--                </ElFormItem>-->
             </div>
             <div class="fields">
                 <div class="title">
@@ -20,11 +19,17 @@
                 </div>
                 <table>
                     <tr>
+                      <th>Id</th>
                         <th>Name</th>
                         <th>Type</th>
                         <th></th>
                     </tr>
                     <tr v-for="(value,key) in data.form" :key="value.attr_id" >
+                      <td>
+                        <ElFormItem :prop="'form.' + key + '.attr_id'" :rules="nameRules">
+                          <ElInput v-model="value.attr_id" placeholder="Name" disabled  />
+                        </ElFormItem>
+                      </td>
                         <td>
                           <ElFormItem :prop="'form.' + key + '.attr_name'" :rules="nameRules">
                             <ElInput v-model="value.attr_name" placeholder="Name" @change="(newVal) => nameChanged(newVal, key)"  />
