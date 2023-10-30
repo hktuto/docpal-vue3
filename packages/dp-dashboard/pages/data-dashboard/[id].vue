@@ -15,9 +15,9 @@
                     </el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item command="size">{{$t('dashboard.docTypeSizeChart')}}</el-dropdown-item>
-                            <el-dropdown-item command="count">{{$t('dashboard.docTypeCountChart')}}</el-dropdown-item>
-                            <el-dropdown-item command="trend">{{$t('dashboard.docTypeChart')}}</el-dropdown-item>
+                            <el-dropdown-item command="DocSizeStatistics">{{$t('dashboard.docTypeSizeChart')}}</el-dropdown-item>
+                            <el-dropdown-item command="DocTypeCount">{{$t('dashboard.docTypeCountChart')}}</el-dropdown-item>
+                            <el-dropdown-item command="DocTypeCoCount">{{$t('dashboard.docTypeChart')}}</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -46,12 +46,13 @@
 <script lang="ts" setup> 
 import { ElNotification } from 'element-plus'
 import { GetDashboardApi, UpdateDashboardApi, QueryDocumentTypeSizeApi, QueryDocumentTypeCountApi, deepCopy } from 'dp-api'
+import {DashboardWidgetSetting, dashboardWidgetSetting, getWidgetSetting} from "~/utils/dashboardWidgetHelper";
 const route = useRoute()
 const state = reactive({
     info: {
         name: ''
     },
-    layout: [],
+    layout: [] as DashboardWidgetSetting[],
     loading: false,
     saveLoading: false
 })
@@ -69,57 +70,56 @@ function handleAdd(command) {
     let setting = {} 
     let w = 3
     let h = 6
-    switch (command) {
-        case 'size':
-            w = 3
-            h = 6
-            component = 'DocSizeStatistics'
-            setting = {
-                style: 'pie',
-                displayList: [
-                    { documentType: 'File' },
-                    { documentType: 'Photo' }
-                ]
-            }
-            break;
-        case 'count':
-            w = 3
-            h = 6
-            component = 'DocTypeCount'
-            setting = {
-                documentType: 'File',
-                color: 'red',
-                icon: '/icons/file/info.svg'
-            }
-            break;
-        case 'trend':
-            w = 6
-            h = 12
-            component = 'DocTypeCoCount'
-            setting = {
-                documentType: 'File',
-                color: '#fff',
-                showCount: true,
-                showSize: true,
-                displayList: [
-                    { meta: 'dc:creator' }
-                ]
-            }
-            break;
-        default:
-            break;
-    }
+    const item = getWidgetSetting(command)
+    // switch (command) {
+    //     case 'DocSizeStatistics':
+    //         w = 2
+    //         h = 2
+    //         component = 'DocSizeStatistics'
+    //         setting = {
+    //             style: 'pie',
+    //             displayList: [
+    //                 { documentType: 'File' },
+    //                 { documentType: 'Photo' }
+    //             ]
+    //         }
+    //         break;
+    //     case 'DocTypeCount':
+    //         w = 1
+    //         h = 2
+    //         component = 'DocTypeCount'
+    //         setting = {
+    //             documentType: 'File',
+    //             color: 'red',
+    //             icon: '/icons/file/info.svg'
+    //         }
+    //         break;
+    //     case 'DocTypeCoCount':
+    //         w = 4
+    //         h = 2
+    //         component = 'DocTypeCoCount'
+    //         setting = {
+    //             documentType: 'File',
+    //             color: '#fff',
+    //             showCount: true,
+    //             showSize: true,
+    //             displayList: [
+    //                 { meta: 'dc:creator' }
+    //             ]
+    //         }
+    //         break;
+    //     default:
+    //         break;
+    // }
+  console.log(item)
     state.layout.push({
-        x: (state.layout.length * 2) % 24,
-        y: state.layout.length +  12, // puts it at the bottom
-        w,
-        h,
-        i: new Date().valueOf(),
-        component,
-        setting
+        x: (state.layout.length * 2) % 4,
+        y: state.layout.length +  4, // puts it at the bottom
+        i: new Date().valueOf().toString(),
+        ...item
     })
 }
-function handleDelete(i) {
+function handleDelete(i:string) {
     const index = state.layout.findIndex((item) =>  item.i === i)
     state.layout.splice(index, 1)
 }

@@ -1,17 +1,15 @@
 <template>
     <GridLayout :layout.sync="layout" 
-        :col-num="24"
-        :row-height="30"
+        :col-num="4"
+        :row-height="150" 
+                :margin="[10, 10]"
         :is-draggable="draggable"
-        :is-resizable="resizable">
+        :is-resizable="resizable"
+    
+    >
         <GridItem v-for="(item, index) in layout"
                     class="dashboard-item"
-                    :static="item.static"
-                    :x="item.x"
-                    :y="item.y"
-                    :w="item.w"
-                    :h="item.h"
-                    :i="item.i"
+                    v-bind="item"
                     @resized="chartResize(item)"
             >
             <component :is="DocMap[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
