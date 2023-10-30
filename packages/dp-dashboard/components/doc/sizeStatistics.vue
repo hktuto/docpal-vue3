@@ -329,7 +329,7 @@ function resize() {
                 await getData(displayList)
                 options.series = getSeries(state.data, chartType, displayList)
                 options.title[0].text = state.totalStorage + 'MB'
-                options.title[0].textStyle.fontSize = state.width / 32 
+                options.title[0].textStyle.fontSize = Math.max(state.width / 32 , 14)
                 options.title[0].subtextStyle.fontSize =Math.max(state.width / 42 , 10)
                 options.title[0].subtext = $t('dashboard.totalStorage')
                 options.title[1].text = $t('dashboard.documentSize')
