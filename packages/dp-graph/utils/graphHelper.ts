@@ -2,7 +2,7 @@ import { Graph, Node, Model, Path } from '@antv/x6'
 import {Attr} from "@antv/x6/es/registry";
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 import { register } from '../components/Graph';
-import GraphWorkflowForm from '~/components/graph/element/workflow/form.vue';
+import GraphWorkflowForm from '../components/Graph/element/workflow/form.vue';
 interface ImageMarkerArgs extends Attr.SimpleAttrs {
     imageUrl: string
     imageWidth?: number
