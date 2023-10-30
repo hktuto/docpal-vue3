@@ -1,6 +1,7 @@
 <template>
 <div class="bpmnContainer">
-    <div ref="bpmnEl" id="modeler-container" ></div>
+    <WorkflowEditorViewer v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile">
+    </WorkflowEditorViewer>
 </div>
 </template>
 <script lang="ts" setup>
@@ -19,54 +20,23 @@ const props = defineProps<{
     steps: Array,
     step: string
 }>()
-const state = reactive({
-    bpmn: '',
-    options: {
-        bpmnRenderer: {
-            defaultFillColor: 'var(--color-grey-000)',
-            defaultStrokeColor: 'var(--color-grey-900)',
-        }
-    }
-})
-const bpmnEl = ref()
-const viewer = ref<typeof BpmnViewer>(null);
-const modeler = ref<typeof BpmnModeler>(null);
 
-function init () {
-  const options = {
-    container: bpmnEl.value,
-    height: "100%",
-    width: "100%",
-    bpmnRenderer: {
-        defaultFillColor: 'var(--color-grey-000)',
-        defaultStrokeColor: 'var(--color-grey-900)',
-    }
-  }
-  modeler.value = new BpmnJS(options);
-  modeler.value.on('import.done', (event) => {
-        var error = event.error;
-        var warnings = event.warnings;
-        
-        modeler.value.get('canvas').zoom('fit-viewport');
-        handleShown()
-  })
-}
+const bpmnFile = ref()
+const WorkflowEditorRef = ref();
+
 
 const handleShown = () => {
-    dpLog("handleShown")
     const steps = props.steps && props.steps.length > 0 ? props.steps : props.step ? [props.step] : []
     if (modeler.value && steps) {
     const canvas = modeler.value.get('canvas')
     for(const step of steps) {
-        dpLog('step', step)
         canvas.addMarker(step, 'bpmn-highlight')
     }
-    
+
     }
 }
 
-const getBpmn = async (processDefinitionId: string, processKey: string) => {
-    dpLog('getBpmn', processDefinitionId, processKey);
+const getBpmn = async (processDefinitionId: string, processKey: string) => {;
     if (!processDefinitionId && !processKey) return
     const data = processKey
     ? {
@@ -75,9 +45,8 @@ const getBpmn = async (processDefinitionId: string, processKey: string) => {
     : { processDefinitionId }
     const blob = await getBpmnApi(data)
     const text = await blob.text()
+    bpmnFile.value = text
 
-    if(!modeler.value ) init();
-    modeler.value.importXML(text)
 }
 
 watch(()=> [props.processKey, props.processDefinitionId], async([newKey, newId]) => {
@@ -97,8 +66,3 @@ watch(()=> [props.processKey, props.processDefinitionId], async([newKey, newId])
 }
 </style>
 
-<style >
-.bpmn-highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
-  fill: rgb(49, 170, 49) !important; /* color elements as green */
-}
-</style>

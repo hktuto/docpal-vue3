@@ -51,7 +51,7 @@ defineExpose({ handleOpen })
 <style lang="scss" scoped>
 :deep(.el-radio-group) {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     flex-wrap: wrap;
     font-size: 0;
     flex-direction: column;
