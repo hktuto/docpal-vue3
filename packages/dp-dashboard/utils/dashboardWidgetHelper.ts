@@ -1,5 +1,9 @@
 export type DashboardWidget = "DocTypeCoCount" | "DocTypeCount" | "DocSizeStatistics" 
+import DocTypeCoCount from  '../components/doc/coCount/index.vue'
+import DocTypeCount from  '../components/doc/count.vue'
+import DocSizeStatistics from  '../components/doc/sizeStatistics.vue'
 
+import  '../assets/dashboard.scss'
 
 export type DashboardWidgetSetting = {
     x?: number
@@ -11,7 +15,7 @@ export type DashboardWidgetSetting = {
     maxH: number;
     w: number;
     h: number;
-    component: string,
+    component: any,
     setting: any;
 }
 
@@ -38,7 +42,7 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
         maxW: 2,
         maxH: 4,
         w: 1,
-        h: 2,
+        h: 1,
         component : 'DocTypeCount',
         setting : {
             documentType: 'File',
@@ -68,4 +72,10 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
 
 export const  getWidgetSetting = (widget: DashboardWidget) => {
     return dashboardWidgetSetting[widget]
+}
+
+export const widgetComponent = {
+    'DocTypeCoCount': DocTypeCoCount,
+    'DocTypeCount': DocTypeCount,
+    'DocSizeStatistics': DocSizeStatistics,
 }

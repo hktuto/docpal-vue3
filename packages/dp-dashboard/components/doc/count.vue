@@ -1,7 +1,7 @@
 <template>
     <!-- <el-card ref="cardRef" class="dashboard-item-main"> -->
         <!-- <el-button @click="handleDelete"></el-button> -->
-        <div ref="cardRef" class="dashboard-item-progress" :style="`--icon-size: ${state.iconSize}`">
+        <div ref="cardRef" class="dashboard-item dashboard-item-progress" :style="`--icon-size: ${state.iconSize}`">
             <el-progress type="circle" :percentage="state.percentage" :stroke-width="state.width / 8" :width="state.width" :color="setting.color">
                 <SvgIcon :content="`${state.percentage}%`" :src="setting.icon" @dblclick="openSetting"/>
             </el-progress>
