@@ -26,6 +26,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-message-queue');
     packages.push('../../packages/dp-dashboard');
     packages.push('../../pages/admin-workflow-editor');
+    // packages.push('../../pages/admin-master-table');
     // core
     packages.push('../../pages/admin-retention');
     packages.push('../../pages/admin-acl');
@@ -33,6 +34,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');
     packages.push('../../pages/admin-hold-policies');
+
     packages.push('../../packages/dp-browse');
     packages.push('../../packages/dp-search');
     packages.push("../../packages/dp-stores")
