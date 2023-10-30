@@ -39,7 +39,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ElTooltip :content="label">
+  <ElTooltip :content="label" placement="bottom">
     <div :class="{graphWorkflowElement:true, shape}" :style="`--radius: ${displayType.radius};--color:${displayType.color}`">
       <SvgIcon v-if="displayType.icon" :src="displayType.icon" />
     </div>

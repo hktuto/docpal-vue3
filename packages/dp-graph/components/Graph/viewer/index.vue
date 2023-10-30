@@ -100,7 +100,7 @@ function setupGraph() {
     emits('node:mouseleave', {ev, node})
   })
   graph.value.on('view:mounted', ({ view }) => {
-    graph.value.zoomToFit({padding: 60});
+    graph.value.zoomToFit({padding: 100});
     graph.value.centerContent()
   })
   

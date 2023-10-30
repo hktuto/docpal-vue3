@@ -52,7 +52,7 @@ const ports = {
 register({
     shape: 'form-node',
     width: 80,
-    height: 100,
+    height: 80,
     component: GraphWorkflowForm,
     ports
 })
@@ -60,7 +60,7 @@ register({
 register({
     shape: 'document-node',
     width: 80,
-    height: 100,
+    height: 80,
     component: GraphWorkflowForm,
     ports
 })
@@ -68,7 +68,7 @@ register({
 register({
     shape: 'email-node',
     width: 80,
-    height: 100,
+    height: 80,
     component: GraphWorkflowForm,
     ports
 })
@@ -202,12 +202,13 @@ export const bpmnToJson = (bpmnText:string) :JSON => {
     return parser.parse(bpmnText);
 }
 
-function jsonToBpmn(json:JSON):string {
+export const jsonToBpmn =  (json:JSON):string => {
     const builder = new XMLBuilder(
         {
             ignoreAttributes: false,
             attributeNamePrefix : "attr_",
             cdataPropName:     "__cdata",
+            // @ts-ignore
             allowBooleanAttributes: true,
             suppressBooleanAttributes: false
         }

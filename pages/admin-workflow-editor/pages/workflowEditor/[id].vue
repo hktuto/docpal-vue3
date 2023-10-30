@@ -52,6 +52,7 @@ async function handleSave(isDraft: boolean = true) {
     // formData1.append('file', WorkflowEditorRef.value.getBlob(), 'workflow.bpmn.xml')
     // await ValidateWorkflowXMLApi(formData1)
     if(!state.detail.draftId) return
+    console.log("handleSave")
     state.loading = true
     try {
         const { blob, name, key } = WorkflowEditorRef.value.getWorkflowData()
@@ -63,6 +64,7 @@ async function handleSave(isDraft: boolean = true) {
         formData.append('isDraft', isDraft)
         state.detail = await UploadWorkflowApi(formData)
     } catch (error) {
+      console.log(error)
     }
     setTimeout(() => {
         state.loading = false
@@ -72,6 +74,7 @@ async function handelCreate() {
     state.loading = true
     try {
         const { blob, name, key } = WorkflowEditorRef.value.getWorkflowData()
+
         const formData = new FormData();
         formData.append('name', name)
         formData.append('key', key)
@@ -83,6 +86,7 @@ async function handelCreate() {
         router.push(`/workflowEditor/${state.detail.draftId}`)
         // router.go(0)
     } catch (error) {
+      console.log(error)
     }
     setTimeout(() => {
         state.loading = false
