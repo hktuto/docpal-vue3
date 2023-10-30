@@ -73,7 +73,7 @@ function initStyle () {
                 return prev
             }, {})
             state.data.others = others
-            state.percentage = (state.data[documentType] / state.data.others * 100).toFixed(2) 
+            state.percentage = (state.data[documentType] / (state.data.others+state.data[documentType]) * 100).toFixed(2) 
         } catch (error) {
         }
     }
