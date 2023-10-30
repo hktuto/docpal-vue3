@@ -2,7 +2,7 @@ import { Graph, Node, Model, Path } from '@antv/x6'
 import {Attr} from "@antv/x6/es/registry";
 import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 import { register } from '../components/Graph';
-import GraphWorkflowForm from '~/components/graph/element/workflow/form.vue';
+import GraphWorkflowForm from '../components/Graph/element/workflow/form.vue';
 interface ImageMarkerArgs extends Attr.SimpleAttrs {
     imageUrl: string
     imageWidth?: number
@@ -56,194 +56,39 @@ register({
     component: GraphWorkflowForm,
     ports
 })
-// Form node
-// Graph.registerNode(
-//     'form-node',
-//     {
-//         inherit: 'rect',
-//         width: 80,
-//         height: 80,
-//         attrs: {
-//             body: {
-//                 rx: 20,
-//                 ry: 20,
-//                 fill: '#0099ff',
-//                 strokeWidth:0,
-//             },
-//             image:{
-//                 'xlink:href':'/bpmn/icons/form.svg',
-//                 width: 60,
-//                 height: 60,
-//                 refX: 10,
-//                 refY: 10,
-//             },
-//             text:{
-//                 refX: 0.5,
-//                 refY: '120%',
-//                 refY2: 5,
-//                 "textAnchor": "middle",
-//                 "textVerticalAnchor": "middle",
-//                 "fontFamily": "Arial, helvetica, sans-serif",
-//                 "text": "node"
-//             }
-//         },
-//         markup: [
-//             {
-//                 tagName: 'rect',
-//                 selector: 'body',
-//             },
-//             {
-//                 tagName: 'image',
-//                 selector: 'img',
-//             },
-//             {
-//                 tagName: 'text',
-//                 selector: 'label',
-//             },
-//         ],
-//         ports,
-//        
-//     },
-//     true,
-// )
 
-// Document Node
-Graph.registerNode(
-    'document-node',
-    {
-        inherit: 'rect',
-        width: 80,
-        height: 80,
-        attrs: {
-            body: {
-                rx: 20,
-                ry: 20,
-                fill: '#7B61FF',
-                strokeWidth:0,
-            },
-            image:{
-                'xlink:href':'/bpmn/icons/document.svg',
-                width: 60,
-                height: 60,
-                refX: 10,
-                refY: 10,
-            },
-            text:{
-                refX: 0.5,
-                refY: '120%',
-                refY2: 5,
-                "textAnchor": "middle",
-                "textVerticalAnchor": "middle",
-                "fontFamily": "Arial, helvetica, sans-serif",
-                "text": "node"
-            }
-        },
-        markup: [
-            {
-                tagName: 'rect',
-                selector: 'body',
-            },
-            {
-                tagName: 'image',
-                selector: 'img',
-            },
-            {
-                tagName: 'text',
-                selector: 'label',
-            },
-        ],
-        ports
-    },
-    true,
-)
+register({
+    shape: 'document-node',
+    width: 80,
+    height: 100,
+    component: GraphWorkflowForm,
+    ports
+})
 
-/** Email Node */
-Graph.registerNode(
-    'email-node',
-    {
-        inherit: 'rect',
-        width: 80,
-        height: 80,
-        attrs: {
-            body: {
-                rx: 20,
-                ry: 20,
-                fill: '#29CC6A',
-                strokeWidth:0,
-            },
-            image:{
-                'xlink:href':'/bpmn/icons/email.svg',
-                width: 60,
-                height: 60,
-                refX: 10,
-                refY: 10,
-            },
-            text:{
-                refX: 0.5,
-                refY: '120%',
-                refY2: 5,
-                "textAnchor": "middle",
-                "textVerticalAnchor": "middle",
-                "fontFamily": "Arial, helvetica, sans-serif",
-                "text": "node"
-            }
-        },
-        markup: [
-            {
-                tagName: 'rect',
-                selector: 'body',
-            },
-            {
-                tagName: 'image',
-                selector: 'img',
-            },
-            {
-                tagName: 'text',
-                selector: 'label',
-            },
-        ],
-        ports
-    },
-    true,
-)
+register({
+    shape: 'email-node',
+    width: 80,
+    height: 100,
+    component: GraphWorkflowForm,
+    ports
+})
 
-/** User Node */
-Graph.registerNode(
-    'user-node',
-    {
-        inherit: 'rect',
-        width: 80,
-        height: 80,
-        attrs: {
-            body: {
-                rx: 20,
-                ry: 20,
-            },
+register({
+    shape: 'user-node',
+    width: 60,
+    height: 60,
+    component: GraphWorkflowForm,
+    ports
+})
 
-            text:{
-                refX: 0.5,
-                refY: '120%',
-                refY2: 5,
-                "textAnchor": "middle",
-                "textVerticalAnchor": "middle",
-                "fontFamily": "Arial, helvetica, sans-serif",
-                "text": "node"
-            }
-        },
-        markup: [
-            {
-                tagName: 'rect',
-                selector: 'body',
-            },
-            {
-                tagName: 'text',
-                selector: 'label',
-            },
-        ],
-        ports
-    },
-    true
-);
+register({
+    shape: 'exclusive-node',
+    width: 60,
+    height: 60,
+    component: GraphWorkflowForm,
+    ports
+})
+
 
 /** Service Node */
 Graph.registerNode(
@@ -272,30 +117,6 @@ Graph.registerNode(
     true,
 );
 
-/** Exclusive Node */
-Graph.registerNode(
-    'exclusive-node',
-    {
-        inherit: 'circle',
-        width:60,
-        height:60,
-        attrs:{
-            body: {
-                fill: '#26C7D6',
-                strokeWidth: 0,
-            },
-            label: {
-                refX: 0.5,
-                refY: '100%',
-                refY2: 4,
-                textAnchor: 'middle',
-                textVerticalAnchor: 'top',
-            },
-        },
-        ports
-    },
-    true
-)
 Graph.registerMarker('image', (args: ImageMarkerArgs) => {
     const {imageUrl, imageWidth, imageHeight, ...attrs} = args
     return {
@@ -589,8 +410,7 @@ export const bpmnToX6 = (bpmnText: any, options = {hideEnd: true, direction:'top
             id: targetNode['id'] + '-in' + '-' + inLength,
             group: 'left',
         })
-        console.log(sourceNode);
-        console.log(targetNode);
+
         data.edges?.push({
             source: {
                 cell: sourceNode['id'],
