@@ -96,6 +96,9 @@ const newFieldForm = ref({
   attr_type: 'String',
 })
 const { formTypeOptions } = useGraph();
+
+const formDialogOpened = ref(false);
+
 function add() {
   // validate newFieldForm
   newFieldFormEl.value.validate((valid: any) => {
@@ -180,7 +183,6 @@ function idChanged(rule: any, value: any, callback: any) {
     return callback(new Error('Id is duplicated'))
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
