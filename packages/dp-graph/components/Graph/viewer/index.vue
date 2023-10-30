@@ -80,7 +80,6 @@ function setupGraph() {
     container: document.getElementById(props.id) as HTMLElement,
     ...props.graphOption,
   });
-  console.log(props.graphJson)
   const model = props.layout.layout(props.graphJson);
   graph.value.fromJSON(model);
   
@@ -100,10 +99,10 @@ function setupGraph() {
   graph.value?.on('node:mouseleave', ({ev, node}) => {
     emits('node:mouseleave', {ev, node})
   })
-  setTimeout(() => {
-    graph.value.zoomToFit({padding: 20});
+  graph.value.on('view:mounted', ({ view }) => {
+    graph.value.zoomToFit({padding: 60});
     graph.value.centerContent()
-  }, 100)
+  })
   
 }
 
