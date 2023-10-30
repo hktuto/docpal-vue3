@@ -38,14 +38,14 @@
               <table>
                 <tr>
                   <th>Name</th>
-<!--                  <th>Hide</th>-->
+                  <th>Hide</th>
                   <th></th>
                 </tr>
                 <tr v-for="(value, index) in data.extensionElements['flowable:formProperty']">
                   <td>{{value.attr_name}}</td>
-<!--                  <td>-->
-<!--                    <ElSwitch v-model="value.attr_readable" />-->
-<!--                  </td>-->
+                  <td>
+                    <ElSwitch v-model="value.attr_readable" />
+                  </td>
                   <td>
                     <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
                   </td>
