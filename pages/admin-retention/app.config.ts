@@ -3,7 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
-      feature: 'CORE',
+      feature: 'RETENTION_POLICIES',
       name:"admin_retention",
       routeName:"retentionManage",
       url:"/retentionManage",

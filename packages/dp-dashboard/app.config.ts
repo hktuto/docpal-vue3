@@ -3,7 +3,7 @@
 export default defineAppConfig({
     menu:[
         {
-            // feature:'dashboard',
+            feature:'DASHBOARD',
             name:"admin_dashboard",
             routeName:"data-dashboard",
             url:"/data-dashboard",

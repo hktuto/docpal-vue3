@@ -77,7 +77,7 @@ async function getInfo() {
             templateVariable.forEach((item, index) => {
                 state.variables.push({
                     name: item,
-                    type: 'input',
+                    type: 'string',
                     required: true
                 })
             });

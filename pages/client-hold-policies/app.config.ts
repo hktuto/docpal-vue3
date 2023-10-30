@@ -3,7 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
-      feature:'CORE',
+      feature:'HOLD_POLICIES',
       name:"client_holdPolicies",
       routeName:"holdPolicies",
       url:"/holdPolicies",

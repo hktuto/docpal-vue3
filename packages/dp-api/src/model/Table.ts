@@ -2309,7 +2309,8 @@ export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
     const _columnItem: TableColumnItem = {
         label: columnItem.label,
         prop: columnItem.prop,
-        id: columnItem.id
+        id: columnItem.id,
+        showOverflowTooltip: true
     }
     if (columnItem.type === 'date') {
         _columnItem.formatList = [

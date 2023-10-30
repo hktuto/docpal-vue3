@@ -44,13 +44,17 @@ function createJson(variables: variableItem[]) {
         const _item = {
             key: date + index,
             id: date + index + 100,
-            type: item.type,
+            type: item.type === 'date' ? 'date' : 'input',
             formItemFlag: true,
             options: {
                 name: item.name,
                 label: item.name,
                 required: item.required ? true : false
             }
+        }
+        if(item.type === 'date') {
+            _item.options.format = 'YYYY-MM-DD HH:mm',  //日期显示格式
+            _item.options.valueFormat = 'YYYY-MM-DD HH:mm'
         }
         formJson.value.widgetList.push(_item)
     })
