@@ -6,7 +6,7 @@
         <div
             v-infinite-scroll="getNotiPage"
             class="infinite-list"
-            :infinite-scroll-disabled="state.scrollDisabled"
+            :infinite-scroll-disabled="state.scrollNoMore || state.loading"
             :infinite-scroll-immediate="false">
             <el-checkbox-group v-model="state.checkedNotis" @change="handleCheckedNotisChange">
                 <div v-for="(item, index) in state.notiList" :key="item.id" class="infinite-list-item cursorPointer" @click.native="handleRead(item)">
@@ -125,7 +125,7 @@
         <p v-show="state.loading" class="loading" style="text-align: center;">
           <i class="el-icon-loading"></i>
         </p>
-        <p v-if="scrollNoMore && !state.loading" style="font-size: 13px; color: #ccc; text-align: center;">
+        <p v-if="state.scrollNoMore && !state.loading" style="font-size: 13px; color: #ccc; text-align: center;">
           {{$t('noMore')}}
         </p>
     </div>
@@ -169,16 +169,17 @@ const state = reactive({
     notiPageParam: {
         pageNum: 0,
         pageSize: 20
-    }
+    },
+    scrollNoMore: false,
 })
 const router = useRouter()
 const userId:string = useUser().getUserId()
-const scrollNoMore = computed(() => {
-    return state.notiList.length >= state.notiTotal
-})
-const scrollDisabled = computed(() => {
-    return scrollNoMore.value || state.loading
-})
+// const scrollNoMore = computed(() => {
+//     return state.notiList.length >= state.notiTotal
+// })
+// const scrollDisabled = computed(() => {
+//     return scrollNoMore.value || state.loading
+// })
 
 const {displayTime} = useTime()
 async function getNotiPage () {
@@ -188,6 +189,7 @@ async function getNotiPage () {
     if(res && res.content) {
         state.notiList.push(...res.content)
         state.notiTotal = res.totalElements
+        state.scrollNoMore = state.notiList.length >= state.notiTotal
         state.notiPageParam.pageNum++
         state.loading = false
         state.isIndeterminate = state.checkedNotis.length > 0 && state.checkedNotis.length < state.notiList.length
