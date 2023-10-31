@@ -35,7 +35,11 @@
                     color: 'red',
                     icon: '/icons/eye.svg'}"></DocCount>
             </div> -->
-            <DashboardDetail ref="DashboardDetailRef" :layout="state.layout"
+            <DashboardDetail 
+                ref="DashboardDetailRef" 
+                :layout="state.layout"
+                :resizable="true"
+                :draggable="true"
                 @delete="handleDelete"
                 @refreshSetting="handleRefresh"></DashboardDetail>
         </div>
@@ -50,22 +54,28 @@ import { GetDashboardApi, UpdateDashboardApi, QueryDocumentTypeSizeApi, QueryDoc
 import {
   DashboardWidget,
   DashboardWidgetSetting,
-  dashboardWidgetSetting,
+  dashboardWidgetSetting, getNormalizeSetting,
   getWidgetSetting
 } from "~/utils/dashboardWidgetHelper";
 const route = useRoute()
 const state = reactive({
     info: {
         name: ''
-    },
+    } as any,
     layout: [] as DashboardWidgetSetting[],
     loading: false,
     saveLoading: false
 })
 
 async function getInfo() {
-    state.info = await GetDashboardApi(route.params.id)
-    if(state.info && state.info.styleJson) state.layout = JSON.parse(state.info.styleJson)
+    state.info = await GetDashboardApi(route.params.id as string)
+    if(!state.info || !state.info.styleJson) return
+    const temLayout = JSON.parse(state.info.styleJson);
+    if(Array.isArray(temLayout)){
+      state.layout = temLayout.map( item => {
+        return Object.assign(item, getNormalizeSetting(item.component))
+      })
+    }
 }
 const DashboardDialogRef = ref()
 function handleEdit() {
@@ -97,7 +107,7 @@ async function handleSave() {
     }
     state.saveLoading = false
 }
-function handleRefresh (layoutSetting) {
+function handleRefresh (layoutSetting:any) {
     const index = state.layout.findIndex((item) =>  item.i === layoutSetting.i)
     state.layout[index] = deepCopy(layoutSetting)
 }
@@ -117,7 +127,7 @@ onMounted(async () => {
 .template-main-container {
     overflow: auto;
   > div{
-    min-width: 1024px;
+    min-width: 1280px;
   }
 }
 .template-interact-drawer {

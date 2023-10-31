@@ -74,6 +74,16 @@ export const  getWidgetSetting = (widget: DashboardWidget) => {
     return dashboardWidgetSetting[widget]
 }
 
+export const getNormalizeSetting= (setting: DashboardWidget) => {
+    const item = getWidgetSetting(setting)
+    return {
+        minW: item.minW || 1,
+        minH: item.minH || 1,
+        maxW: item.maxW || 4,
+        maxH: item.maxH || 4,
+    }
+}
+
 export const widgetComponent = {
     'DocTypeCoCount': DocTypeCoCount,
     'DocTypeCount': DocTypeCount,
