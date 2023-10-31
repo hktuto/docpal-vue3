@@ -41,16 +41,16 @@ const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
 
-const sheetRefs = ref({})
+const sheetRefs = ref<any>({})
 
-function handleDelete (row) {
+function handleDelete (row:any) {
     emits('delete', row.i)
 }
-function handleRefreshSetting (setting, row) {
+function handleRefreshSetting (setting:any, row:any) {
     row.setting = setting
     emits('refreshSetting', row)
 }
-function chartResize(row) {
+function chartResize(row:any) {
     sheetRefs.value[row.i].resize()
 }
 </script>
