@@ -28,6 +28,7 @@
             </div>
         </div>
         <div class="template-main-container">
+            {{ displayLayout }}
             <!-- <div style="height: 200px; width: 300px;background-color: red;">
 
                 <DocCount :setting="{
@@ -37,7 +38,7 @@
             </div> -->
             <DashboardDetail 
                 ref="DashboardDetailRef" 
-                :layout="state.layout"
+                v-model:layout="state.layout"
                 :resizable="true"
                 :draggable="true"
                 @delete="handleDelete"
@@ -67,6 +68,16 @@ const state = reactive({
     saveLoading: false
 })
 
+const displayLayout = computed(() => {
+    return state.layout.map(item => {
+        return {
+            x :item.x,
+            y : item.y,
+            w : item.w,
+            h : item.h,
+        }
+    })
+})
 async function getInfo() {
     state.info = await GetDashboardApi(route.params.id as string)
     if(!state.info || !state.info.styleJson) return
@@ -127,7 +138,7 @@ onMounted(async () => {
 .template-main-container {
     overflow: auto;
   > div{
-    min-width: 1280px;
+    //min-width: 1280px;
   }
 }
 .template-interact-drawer {
