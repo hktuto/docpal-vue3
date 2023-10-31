@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {bpmnToX6} from "~/utils/graphHelper";
 import {Node} from "@antv/x6";
+import {jsonToBpmn} from "../../utils/graphHelper";
 
 const props = defineProps<{
   bpmn: String
@@ -172,6 +173,23 @@ watch(() => props.bpmn, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     setupGraph();
   }
+})
+
+function getWorkflowData() {
+  
+  const xml = jsonToBpmn(data.value)
+  // create blob file
+  const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
+  const name = data.value.definitions.process.attr_name
+  const key = data.value.definitions.process.attr_id
+  console.log(key, name)
+  return {
+    blob, name, key
+  }
+}
+
+defineExpose({
+  getWorkflowData
 })
 
 </script>

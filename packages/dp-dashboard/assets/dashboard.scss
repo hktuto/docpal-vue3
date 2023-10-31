@@ -1,0 +1,16 @@
+.dashboard-item{
+  --el-card-border-radius: .8rem;
+  --el-box-shadow-light: none;
+  
+  .vue-resizable-handle{
+    //border-top-right-radius: var(--el-card-border-radius);
+    border-bottom-right-radius: var(--el-card-border-radius);
+    background:none;
+    border-width: 0px 2px 2px 0px;
+    border-color: var(--color-grey-010);
+    border-style: solid;
+  }
+  &:hover{
+    --el-box-shadow-light: 0 0 5px 2px var(--color-grey-010);
+  }
+}

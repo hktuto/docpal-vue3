@@ -1,5 +1,5 @@
 <template>
-    <el-card ref="cardRef" class="dashboard-item-main">
+    <el-card ref="cardRef" class="dashboard-item dashboard-item-main">
         <div id="myEcharts" ref="chartRef" class="echart"></div>
         <DocSizeStatisticsSetting ref="settingRef" 
             @delete="handleDelete"

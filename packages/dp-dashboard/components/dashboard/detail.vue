@@ -1,10 +1,14 @@
 <template>
     <GridLayout :layout.sync="layout" 
         :col-num="4"
-        :row-height="150" 
-                :margin="[10, 10]"
+        :margin="[20,20]"
+        :row-height="150"
         :is-draggable="draggable"
         :is-resizable="resizable"
+        :responsive="false"
+        :verticalCompact="true"
+        :preventCollision="false"
+        :use-css-transforms="true"
     
     >
         <GridItem v-for="(item, index) in layout"
@@ -12,7 +16,7 @@
                     v-bind="item"
                     @resized="chartResize(item)"
             >
-            <component :is="DocMap[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
+            <component :is="widgetComponent[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
                 :setting="item.setting"
                 @delete="handleDelete(item)"
                 @refreshSetting="(setting) => handleRefreshSetting(setting, item)"></component>
@@ -22,13 +26,12 @@
 
 <script lang="ts" setup>
 import { GridLayout, GridItem } from "vue3-grid-layout-next"
-import DocTypeCoCount from '../doc/coCount/index.vue'
-import DocTypeCount from '../doc/count.vue'
-import DocSizeStatistics from '../doc/sizeStatistics.vue'
+import {DashboardWidgetSetting, widgetComponent} from "~/utils/dashboardWidgetHelper";
+
 const props = withDefaults( defineProps<{
-    layout: any[];
-    resizable?: boolean;
-    draggable?: boolean
+    layout: DashboardWidgetSetting[],
+    resizable?: boolean,
+    draggable?: boolean,
 }>() , {
     layout: [],
     resizable: true,
@@ -37,11 +40,7 @@ const props = withDefaults( defineProps<{
 const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
-const DocMap = {
-    'DocTypeCoCount': DocTypeCoCount,
-    'DocTypeCount': DocTypeCount,
-    'DocSizeStatistics': DocSizeStatistics,
-}
+
 const sheetRefs = ref({})
 
 function handleDelete (row) {

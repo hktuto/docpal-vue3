@@ -37,14 +37,22 @@
               </div>
               <table>
                 <tr>
+                  <td>Order</td>
                   <th>Name</th>
-                  <th>Hide</th>
+                  <th>Readable</th>
+                  <th>Field Type</th>
                   <th></th>
                 </tr>
                 <tr v-for="(value, index) in data.extensionElements['flowable:formProperty']">
+                  <td></td>
                   <td>{{value.attr_name}}</td>
                   <td>
                     <ElSwitch v-model="value.attr_readable" />
+                  </td>
+                  <td>
+                    <ElSelect v-model="value.attr_fieldType" placeholder="Select Field">
+                      <ElOption v-for="item in allFieldType" :key="item" :label="item" :value="item" />
+                    </ElSelect>
                   </td>
                   <td>
                     <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
@@ -98,6 +106,7 @@ const autoApprovalOptions = computed(() => {
       }
   )
 })
+const allFieldType = ref(["single line input","multi line input","date","file" ])
 const autoAssignField = computed({
   get() {
     const f = props.data.extensionElements['flowable:taskListener']['flowable:field']['flowable:expression']['__cdata'];
@@ -189,7 +198,6 @@ function removeFormItem(key){
 }
 
 watch(props.data, () => {
-  console.log('change', props.data)
   autoApproval.value = props.data.extensionElements['flowable:taskListener'] && props.data.extensionElements['flowable:taskListener']['attr_event'] === 'create'
 },{
   immediate: true

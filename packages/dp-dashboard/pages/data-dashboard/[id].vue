@@ -21,6 +21,7 @@
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
+              
                 <el-button class="el-icon--right" type="primary" 
                     :loading="state.saveLoading"
                     @click="handleSave">{{$t('common_save')}}</el-button>
@@ -46,7 +47,12 @@
 <script lang="ts" setup> 
 import { ElNotification } from 'element-plus'
 import { GetDashboardApi, UpdateDashboardApi, QueryDocumentTypeSizeApi, QueryDocumentTypeCountApi, deepCopy } from 'dp-api'
-import {DashboardWidgetSetting, dashboardWidgetSetting, getWidgetSetting} from "~/utils/dashboardWidgetHelper";
+import {
+  DashboardWidget,
+  DashboardWidgetSetting,
+  dashboardWidgetSetting,
+  getWidgetSetting
+} from "~/utils/dashboardWidgetHelper";
 const route = useRoute()
 const state = reactive({
     info: {
@@ -65,53 +71,10 @@ const DashboardDialogRef = ref()
 function handleEdit() {
     DashboardDialogRef.value.handleOpen(state.info)
 }
-function handleAdd(command) {
-    let component = ''
-    let setting = {} 
-    let w = 3
-    let h = 6
+function handleAdd(command:DashboardWidget) {
+    
     const item = getWidgetSetting(command)
-    // switch (command) {
-    //     case 'DocSizeStatistics':
-    //         w = 2
-    //         h = 2
-    //         component = 'DocSizeStatistics'
-    //         setting = {
-    //             style: 'pie',
-    //             displayList: [
-    //                 { documentType: 'File' },
-    //                 { documentType: 'Photo' }
-    //             ]
-    //         }
-    //         break;
-    //     case 'DocTypeCount':
-    //         w = 1
-    //         h = 2
-    //         component = 'DocTypeCount'
-    //         setting = {
-    //             documentType: 'File',
-    //             color: 'red',
-    //             icon: '/icons/file/info.svg'
-    //         }
-    //         break;
-    //     case 'DocTypeCoCount':
-    //         w = 4
-    //         h = 2
-    //         component = 'DocTypeCoCount'
-    //         setting = {
-    //             documentType: 'File',
-    //             color: '#fff',
-    //             showCount: true,
-    //             showSize: true,
-    //             displayList: [
-    //                 { meta: 'dc:creator' }
-    //             ]
-    //         }
-    //         break;
-    //     default:
-    //         break;
-    // }
-  console.log(item)
+    
     state.layout.push({
         x: (state.layout.length * 2) % 4,
         y: state.layout.length +  4, // puts it at the bottom
@@ -153,6 +116,9 @@ onMounted(async () => {
 }
 .template-main-container {
     overflow: auto;
+  > div{
+    min-width: 1024px;
+  }
 }
 .template-interact-drawer {
     height: 100%;

@@ -12,7 +12,7 @@
   --header-height: 60px;
   --tag-border-radius: 4px;
 
-  
+
 
   --primary-gradient: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   --second-background-color: linear-gradient(180deg, #F2F8FA 0%, #E6EDF7 100%);
@@ -30,6 +30,8 @@
   --color-grey-150: #{$color-grey-150};
   --color-grey-100: #{$color-grey-100};
   --color-grey-050: #{$color-grey-050};
+  --color-grey-030: #{$color-grey-030};
+  --color-grey-010: #{$color-grey-010};
   --color-grey-000: #{$color-grey-000};
   --color-grey-0000: #{$color-grey-0000};
   --card-bg: #fff;
@@ -47,7 +49,7 @@
   --color-b2 : #5F676F;
   --color-b3 : #8796A4;
   --color-b4 : #fff;
-  
+
   // Size
   --app-padding: 0.75rem;
   --app-input-padding: 0.25rem;
@@ -67,10 +69,10 @@
   --outline-color: rgba(255,255,255,0.5);
   --el-table-tr-bg-color: var(--color-grey-050);
 
-  
-  
 
-  // app color 
+
+
+  // app color
   @for $i from 1 through 9 {
     --primary-color-0#{$i} : #{rgba($--color-primary,  $i * 10%)};
   }
@@ -84,11 +86,11 @@
 }
 
 html.dark{
-  
+
   --background-color: rgb(30, 31, 32);
   --second-background-color: linear-gradient(180deg, #3F484F 0%, #2B3138 100%);
 
-  
+
   #gradient-canvas{
     --gradient-color-1: #1088c9;
     --gradient-color-2: #4963bb;
@@ -98,6 +100,8 @@ html.dark{
   // font-color
   --color-grey-0000: #000;
   --color-grey-000: #{$color-grey-950};
+  --color-grey-010: #{$color-grey-950};
+  --color-grey-030: #{$color-grey-950};
   --color-grey-050: #{$color-grey-900};
   --color-grey-100: #{$color-grey-800};
   --color-grey-150: #{$color-grey-700};
@@ -122,7 +126,7 @@ html.dark{
   --menu-selected-color: var(--primary-color);
   --menu-selected-bg: #191919;
   --left-bg: #191919;
-  
+
   --color-glass: rgba(0,0,0,0.8);
   --color-glass-border: rgba(92, 92, 92, 0.6);
 }
