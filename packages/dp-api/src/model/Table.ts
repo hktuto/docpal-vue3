@@ -124,6 +124,7 @@ export enum TABLE {
     ADMIN_EMAIL_LAYOUT = 'adminEmailLayout',
     ADMIN_DOC_TEMPLATE = 'adminDocTemplate',
     ADMIN_DASHBOARD = 'adminDashboard',
+    ADMIN_SMART_FOLDER = 'adminSmartFolder',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -2301,7 +2302,61 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
         ],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_SMART_FOLDER]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_access', prop: 'userGroups', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "userGroups",
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
     }
+    
     
 }
 

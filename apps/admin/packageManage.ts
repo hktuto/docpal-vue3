@@ -4,7 +4,7 @@ export function customLayer():string[] {
     const packages:string[] = [];
 
     // page
-    packages.push('../../pages/admin-pre-search-config');
+    packages.push('../../pages/admin-smart-folder');
     packages.push('../../pages/admin-workflow-form');
     packages.push('../../pages/admin-workflow-manage');
     packages.push('../../pages/admin-folder-cabinet');

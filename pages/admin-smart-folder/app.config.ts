@@ -5,8 +5,8 @@ export default defineAppConfig({
     {
       feature:'SMART_FOLDER',
       name:"admin_smartFolder",
-      routeName:"preSearchConfig",
-      url:"/preSearchConfig",
+      routeName:"smartFolder",
+      url:"/smartFolder",
       icon: "/icons/menu/preSearchConfig.svg",
       order:1,
       parentId: "admin_browse"
