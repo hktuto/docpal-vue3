@@ -1,15 +1,15 @@
 <template>
-    <GridLayout :layout.sync="layout" 
-        :col-num="4"
+    <GridLayout 
+        v-model:layout="layout" 
+        :col-num="12"
         :margin="[20,20]"
-        :row-height="150"
+        :row-height="130"
         :is-draggable="draggable"
         :is-resizable="resizable"
-        :responsive="false"
+        :responsive="true"
         :verticalCompact="true"
         :preventCollision="false"
         :use-css-transforms="true"
-    
     >
         <GridItem v-for="(item, index) in layout"
                     class="dashboard-item"
@@ -37,21 +37,26 @@ const props = withDefaults( defineProps<{
     resizable: true,
     draggable: true,
 })
+const { layout} = toRefs(props)
 const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
 
-const sheetRefs = ref({})
+const sheetRefs = ref<any>({})
 
-function handleDelete (row) {
+function handleDelete (row:any) {
     emits('delete', row.i)
 }
-function handleRefreshSetting (setting, row) {
+function handleRefreshSetting (setting:any, row:any) {
     row.setting = setting
     emits('refreshSetting', row)
 }
-function chartResize(row) {
+function chartResize(row:any) {
     sheetRefs.value[row.i].resize()
+}
+
+function layoutUpdatedEvent(newLayout:any){
+  console.log(newLayout)
 }
 </script>
 

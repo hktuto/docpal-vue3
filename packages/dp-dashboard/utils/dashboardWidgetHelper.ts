@@ -9,10 +9,10 @@ export type DashboardWidgetSetting = {
     x?: number
     y ?: number
     i?: string;
-    minW: number;
-    minH: number;
-    maxW: number;
-    maxH: number;
+    minW?: number;
+    minH?: number;
+    maxW?: number;
+    maxH?: number;
     w: number;
     h: number;
     component: any,
@@ -21,8 +21,8 @@ export type DashboardWidgetSetting = {
 
 export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidgetSetting } = {
     DocSizeStatistics:{
-        minW: 1,
-        minH: 1,
+        minW: 2,
+        minH: 2,
         maxW: 4,
         maxH: 4,
         w: 2,
@@ -53,9 +53,9 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
     DocTypeCoCount:{
         minW: 2,
         minH: 2,
-        maxW: 4,
-        maxH: 6,
-        w: 4,
+        maxW: 12,
+        maxH: undefined,
+        w: 6,
         h: 2,
         component : 'DocTypeCoCount',
         setting : {
@@ -72,6 +72,16 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
 
 export const  getWidgetSetting = (widget: DashboardWidget) => {
     return dashboardWidgetSetting[widget]
+}
+
+export const getNormalizeSetting= (setting: DashboardWidget) => {
+    const item = getWidgetSetting(setting)
+    return {
+        minW: item.minW,
+        minH: item.minH,
+        maxW: item.maxW,
+        maxH: item.maxH,
+    }
 }
 
 export const widgetComponent = {

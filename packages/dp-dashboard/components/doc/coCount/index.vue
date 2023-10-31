@@ -138,16 +138,25 @@ defineExpose({
 }
 .trendContainer {
     display: flex;
-    div {
-        flex: 1;
-    }
+    flex-flow : row wrap;
+    container-type: inline-size;
+    
 }
 .metaContainer {
     display: flex;
-    flex-wrap: wrap;
-    div {
-        flex: 0 0 33%;
-    }
+    flex-flow: row wrap;
+    container-type: inline-size;
+    
+}
+@container (min-width: 640px){
+  .co-count{
+    flex: 1 0 50%;
+    max-width: 50% ;
+  }
+  .co-count-meta{
+    flex: 1 0 25%;
+    max-width: 25% ;
+  }
 }
 :deep(.co-count-chart) {
     width: 100%;
