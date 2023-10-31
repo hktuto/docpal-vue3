@@ -138,8 +138,9 @@ defineExpose({
 }
 .trendContainer {
     display: flex;
+    flex-flow : row wrap;
     div {
-        flex: 1;
+        flex: 1 0 50%;
     }
 }
 .metaContainer {
