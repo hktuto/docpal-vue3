@@ -1,5 +1,6 @@
 <template>
-    <GridLayout v-model:layout="layout" 
+    <GridLayout 
+        v-model:layout="layout" 
         :col-num="12"
         :margin="[20,20]"
         :row-height="130"
@@ -9,7 +10,6 @@
         :verticalCompact="true"
         :preventCollision="false"
         :use-css-transforms="true"
-        @layout-updated="layoutUpdatedEvent"
     >
         <GridItem v-for="(item, index) in layout"
                     class="dashboard-item"

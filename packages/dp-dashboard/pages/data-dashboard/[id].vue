@@ -28,7 +28,6 @@
             </div>
         </div>
         <div class="template-main-container">
-            {{ displayLayout }}
             <!-- <div style="height: 200px; width: 300px;background-color: red;">
 
                 <DocCount :setting="{
@@ -138,7 +137,7 @@ onMounted(async () => {
 .template-main-container {
     overflow: auto;
   > div{
-    //min-width: 1280px;
+    min-width: 1280px;
   }
 }
 .template-interact-drawer {
