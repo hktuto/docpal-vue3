@@ -14,6 +14,7 @@
         <GridItem v-for="(item, index) in layout"
                     class="dashboard-item"
                     v-bind="item"
+                    @resize="chartResize(item)"
             >
             <component :is="widgetComponent[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
                 :setting="item.setting"
@@ -62,7 +63,11 @@ function handleRefreshSetting (setting:any, row:any) {
     emits('refreshSetting', row)
 }
 function chartResize(row:any) {
-    if(sheetRefs.value[row.i]) sheetRefs.value[row.i].resize()
+    if(sheetRefs.value[row.i]){
+        setTimeout(() => {
+            sheetRefs.value[row.i].resize()
+        }) 
+    } 
 }
 
 function layoutUpdatedEvent(newLayout:any){

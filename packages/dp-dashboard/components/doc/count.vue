@@ -49,7 +49,7 @@ function resize() {
     initStyle()
 }
 function initStyle () {
-    const pHeight = cardRef.value.offsetHeight - 80
+    const pHeight = cardRef.value.offsetHeight - 70
     const pWidth = cardRef.value.offsetWidth - 15
     state.width = Math.min(pWidth, pHeight)
     state.iconSize = state.width / 3 + 'px'
@@ -108,7 +108,9 @@ defineExpose({
 .dashboard-item-progress {
     height: 100%;
     width: 100%;
+    overflow: hidden;
     display: grid;
+    grid-template-rows: 1fr min-content min-content;
     div {
         justify-self: center;
         align-self: center;
