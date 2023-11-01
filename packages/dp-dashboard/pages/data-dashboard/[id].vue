@@ -92,9 +92,9 @@ function handleEdit() {
     DashboardDialogRef.value.handleOpen(state.info)
 }
 function handleAdd(command:DashboardWidget) {
-    
+    console.log(command)
     const item = getWidgetSetting(command)
-    
+    console.log("Item", item)
     state.layout.push({
         x: (state.layout.length * 2) % 4,
         y: state.layout.length +  4, // puts it at the bottom
