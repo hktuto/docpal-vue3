@@ -249,7 +249,7 @@ defineExpose({
   bottom: 0px;
   left: 0px;
   z-index: 2;
-  background: #fff;
+  background: var(--color-grey-0000);
   padding: var(--app-padding);
   display: flex;
   flex-flow: row nowrap;
@@ -284,7 +284,7 @@ defineExpose({
   top: 0;
 
   height: 100%;
-  background-color: #fff;
+  background-color: var(--color-grey-0000);
   border-left: 1px solid #ccc;
   box-shadow: 0 0 5px #ccc;
   z-index: 3;

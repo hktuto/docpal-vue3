@@ -1,4 +1,4 @@
-export const  fieldType = ["single line input" , "multi line input","date","file"]
+export const  fieldType = ["single line input" , "Multi line input","Date","File", "multiple files"]
 export type FormObject = {
     attr_id: string,
     attr_name:string,
@@ -7,6 +7,7 @@ export type FormObject = {
     attr_fieldType: typeof fieldType[number],
     attr_required?:boolean,
     attr_validate?:string,
+    attr_field_valid: boolean
     attr_default_value?: any,
 }
 export const bpmnStepToForm = (step:FormObject[] ) => {

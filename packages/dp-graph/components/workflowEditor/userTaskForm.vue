@@ -36,31 +36,21 @@
                 Form Field
               </div>
               <table>
-                <thead>
-                
-                <tr>
-                  <td></td>
-                  <th>Name</th>
-                  <th>Readable</th>
-                  <th>Field Type</th>
-                  <th></th>
-                </tr>
-                </thead>
                 <draggable v-model="data.extensionElements['flowable:formProperty']" tag="tbody" item-key="name">
                   <template #item="{ element, index }">
                     <tr >
                       <td scope="row"> <SvgIcon src="/icons/move-handle.svg" /></td>
-                      <td>{{element.attr_name}}</td>
                       <td>
-                        <ElSwitch v-model="element.attr_readable" />
+                        <div :class="{fieldName:true, required:element.attr_required }">
+                        {{element.attr_name}}
+                        </div>
                       </td>
                       <td>
-                        <ElSelect v-model="element.attr_fieldType" placeholder="Select Field">
-                          <ElOption v-for="item in allFieldType" :key="item" :label="item" :value="item" />
-                        </ElSelect>
-                      </td>
-                      <td>
+                        <div class="actions">
+                          
+                        <WorkflowEditorFormFieldOptions :field="element" />
                         <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
+                        </div>
                       </td>
                     </tr>
                   </template>
@@ -103,7 +93,7 @@
 import {GetGroupListApi} from "dp-api";
 import {ElMessage} from 'element-plus'
 import draggable from "vuedraggable";
-import {bpmnStepToForm, FormObject} from "../../utils/formEditorHelper";
+import {bpmnStepToForm, fieldType, FormObject} from "../../utils/formEditorHelper";
 const props = defineProps<{
   data: any,
   allField: any,
@@ -131,7 +121,7 @@ const autoApprovalOptions = computed(() => {
       }
   )
 })
-const allFieldType = ref(["single line input","multi line input","date","file" ])
+
 const autoAssignField = computed({
   get() {
     const f = props.data.extensionElements['flowable:taskListener']['flowable:field']['flowable:expression']['__cdata'];
@@ -164,24 +154,7 @@ function createAutoAssignee (autoAssignField:string) {
   }
 }
 
-function fieldValidation(form:FormObject, index){
-  if(!form.attr_id) {
-    ElMessage.error('Id is required')
-    return false;
-  }
-  if(!form.attr_name) {
-    ElMessage.error('Name is required')
-    return false;
-  }
-  if(!form.attr_type) {
-    ElMessage.error('Type is required')
-    return false;
-  }
-  if(!form.attr_readable && !form.attr_fieldType) {
-    ElMessage.error('All field must be readable or have field type')
-    return false;
-  }
-}
+
 function previewForm(){
   const form = bpmnStepToForm(props.data.extensionElements['flowable:formProperty'])
   console.log(form)
@@ -272,5 +245,19 @@ onMounted(async() => {
     .formContainer{
        overflow: auto;
     }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--app-padding);
+  tbody > tr {
+    padding: var(--app-padding);
+  }
+}
+.actions{
+  display: flex;
+  gap: .6rem;
+  --icon-color: var(--color-grey-500);
+  --icon-size: 1rem;
 }
 </style>

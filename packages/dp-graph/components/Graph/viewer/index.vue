@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<{
     grid:true,
     autoResize:true,
     background: {
-      color: '#F2F7FA',
+      color: 'var(--color-grey-0000)',
     },
     panning: {
       enabled: true,

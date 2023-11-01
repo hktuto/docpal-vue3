@@ -16,7 +16,7 @@ const ports = {
                     circle: {
                         r: 4,
                         magnet: true,
-                        stroke: '#C2C8D5',
+                        stroke: 'var(--color-grey-900)',
                         strokeWidth: 1,
                         fill: '#fff',
                     },
@@ -28,7 +28,7 @@ const ports = {
                     circle: {
                         r: 4,
                         magnet: true,
-                        stroke: '#C2C8D5',
+                        stroke: 'var(--color-grey-900)',
                         strokeWidth: 1,
                         fill: '#fff',
                     },
@@ -40,7 +40,7 @@ const ports = {
                     circle: {
                         r: 4,
                         magnet: true,
-                        stroke: '#C2C8D5',
+                        stroke: 'var(--color-grey-900)',
                         strokeWidth: 1,
                         fill: '#fff',
                     },
@@ -146,7 +146,7 @@ const boundaryEdge = Graph.registerEdge('boundaryEdge',{
     ...edgeConfig,
     attrs: {
         line: {
-            stroke: '#000',
+            stroke: 'var(--color-grey-900)',
             strokeWidth: 1,
             targetMarker: null,
             strokeDasharray: 5,
@@ -173,7 +173,7 @@ const normalEdge = Graph.registerEdge('normal-edge',{
     ...edgeConfig,
     attrs: {
         line: {
-            stroke: '#000',
+            stroke: 'var(--color-grey-900)',
             strokeWidth: 2,
             
         },
