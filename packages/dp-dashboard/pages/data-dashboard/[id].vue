@@ -18,7 +18,7 @@
                             <el-dropdown-item command="DocSizeStatistics">{{$t('dashboard.docTypeSizeChart')}}</el-dropdown-item>
                             <el-dropdown-item command="DocTypeCount">{{$t('dashboard.docTypeCountChart')}}</el-dropdown-item>
                             <el-dropdown-item command="DocTypeCoCount">{{$t('dashboard.docTypeChart')}}</el-dropdown-item>
-                            <el-dropdown-item command="WorkflowCoCount">{{$t('dashboard.workflowCoCount')}}</el-dropdown-item>
+                            <!-- <el-dropdown-item command="WorkflowCoCount">{{$t('dashboard.workflowCoCount')}}</el-dropdown-item> -->
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
