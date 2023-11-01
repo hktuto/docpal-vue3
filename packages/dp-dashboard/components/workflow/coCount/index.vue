@@ -101,4 +101,8 @@ defineExpose({
         font-family: Arial;
     }
 }
+:deep(.co-count-chart) {
+    width: 100%;
+    height: 100%;
+}
 </style>

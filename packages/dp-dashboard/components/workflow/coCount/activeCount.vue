@@ -1,102 +1,142 @@
 <template>
-    <!-- <el-card ref="cardRef" class="dashboard-item-main"> -->
-        <!-- <el-button @click="handleDelete"></el-button> -->
-        <div ref="cardRef" class="dashboard-co-item dashboard-item-progress" :style="`--icon-size: ${state.iconSize}`">
-            <el-progress type="circle" :percentage="state.percentage" :stroke-width="state.width / 8" :width="state.width" :color="setting.color">
-                <SvgIcon :content="`${state.percentage}%`" :src="setting.icon" @dblclick="openSetting"/>
-            </el-progress>
-            <div class="dashboard-item-progress-count">{{state.data[setting.documentType]}}</div>
-            <div class="dashboard-item-progress-title"
-                >{{setting.documentType}}</div>
-            <DocCountSetting ref="settingRef" 
-                @delete="handleDelete"
-                @refresh="handleRefresh"/>
-        </div>
-    <!-- </el-card> -->
+    <div ref="cardRef" class="co-count co-count-chart">
+        <div id="myEcharts" ref="chartRef" class="echart"></div>
+    </div>
 </template>
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { GetDocTypeCountApi } from 'dp-api'
+import { GetCoCountSizeApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
-    setting?: any;
+    documentType?: string,
+    user?: string
 }>() , {
-    setting: {}
+    documentType: '',
+    user: ''
 })
-
+type EChartsOption = echarts.EChartsOption;
+const chartRef = ref()
 const cardRef = ref()
+let echartInstance
 const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
-const state = reactive({
-    initData: [],
-    data: {
-    },
-    percentage: 0,
-    width: 126,
-    iconSize: '30px'
-})
-const picStore = {
+const setting = {
+    defaultSetting: {
+        options: {
+            xAxis: {
+                type: 'value',
+                boundaryGap: false,
+            },
+            title: {
+                text: $t('dashboard.timeSpendPerTask'),
+                left: "left",
+            },
+            yAxis: {
+                data: [],
+                type: 'category',
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                bottom: '5%',
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
+            }
+        },
+        series: {
+            type: 'pie',
+        }
+    }
 }
+const state = reactive({
+    data: [],
+    xAxis: []
+})
 let options = {}
 
 // #region module: set
-    
+    function initStyle () {
+        const pHeight = cardRef.value.offsetHeight
+        const pWidth = cardRef.value.offsetWidth
+        console.log(pHeight,pWidth)
+        // 需要扣除 .el-card 的 padding
+        chartRef.value.style = `height: ${pHeight}px; width: ${pWidth - 20}px`
+    }
 // #endregion
-
-function resize() {
+async function initChart() {
     initStyle()
+    if (echartInstance) echartInstance.clear()
+    echartInstance = echarts.init(chartRef.value);
+    echartInstance.setOption(options);
 }
-function initStyle () {
-    const pHeight = cardRef.value.offsetHeight - 80
-    const pWidth = cardRef.value.offsetWidth - 15
-    state.width = Math.min(pWidth, pHeight)
-    state.iconSize = state.width / 3 + 'px'
+function resize() {
+    setTimeout(async() => {
+        initStyle()
+        if(!!echartInstance) echartInstance.resize()
+    },10)
 }
 // #region module: setting
     const settingRef = ref()
     function openSetting() {
         settingRef.value.handleOpen(props.setting)
     }
+    async function getIconStyle(iconSrc) {
+        const style = {
+            image: await parseSvg(iconSrc),
+            width: chartRef.value.clientWidth / 10,
+        }
+        return style
+    }
+    async function handleInitChart(documentType) {
+        options = { 
+            ...setting.defaultSetting.options
+        }
+        // data
+        await getData(documentType)
+        options.xAxis.data = state.xAxis
+        options.series = {
+            ...setting.defaultSetting.series,
+            data: state.data
+        }
+        initChart()
+    }
     async function getData(documentType: string) {
         try {
-            if(!state.initData || state.initData.length === 0) {
-                const res = await GetDocTypeCountApi()
-                state.initData = res
-            }
-            let others = 0
-            state.data = state.initData.reduce((prev,item) => {
-                if(item.key === documentType) {
-                    prev[item.key] = item.count
-                } else others += item.count
+            const res = await GetCoCountSizeApi(documentType, props.user)
+            state.xAxis = []
+            const initData = res.group_document_type.buckets[0].group_by_time.buckets
+            state.data = initData.reduce((prev,item) => {
+                prev.push(item.cumulative_sum_mb.value)
+                state.xAxis.push(item.key_as_string)
                 return prev
-            }, {})
-            state.data.others = others
-            state.percentage = (state.data[documentType] / (state.data.others+state.data[documentType]) * 100).toFixed(2) 
+            }, [])
+            console.log(state.data)
         } catch (error) {
         }
-    }
-    function handleDelete() {
-        emits('delete')
-    }
-    function handleRefresh(chartSetting) {
-        emits('refreshSetting', chartSetting)
     }
 // #endregion
 // #region module: 
 // #endregion
 onMounted(async() => {
-    nextTick(() => {
+    nextTick(async() => {
         initStyle()
+        // 随着屏幕大小调节图表
+        useEventListener(window, 'resize', resize)
+        handleInitChart('File')
     })
 })
 onUnmounted(() => {
+    echartInstance.dispose()
 })
-watch(() => props.setting, (newSetting) => {
-    getData(props.setting.documentType)
+watch(() => props, (newValue) => {
+    
 }, {
-    immediate: true
+    immediate: true,
+    deep: true
 })
 defineExpose({
     resize
@@ -104,19 +144,4 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.dashboard-item-progress {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    div {
-        justify-self: center;
-        align-self: center;
-    }
-    &-count {
-        font-size: 24px;
-    }
-    &-title {
-        color: #373D43;
-    }
-}
 </style>

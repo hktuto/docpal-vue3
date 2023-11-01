@@ -66,7 +66,7 @@ function chartResize(row:any) {
     if(sheetRefs.value[row.i]){
         setTimeout(() => {
             sheetRefs.value[row.i].resize()
-        }) 
+        }, 10) 
     } 
 }
 
