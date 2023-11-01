@@ -35,7 +35,6 @@
                     color: 'red',
                     icon: '/icons/eye.svg'}"></DocCount>
             </div> -->
-          {{state.layout}}
             <DashboardDetail 
                 ref="DashboardDetailRef" 
                 v-model:layout="state.layout"
@@ -93,7 +92,6 @@ function handleEdit() {
     DashboardDialogRef.value.handleOpen(state.info)
 }
 function handleAdd(command:DashboardWidget) {
-    console.log(command)
     const item = getWidgetSetting(command)
     state.layout.push({
         x: (state.layout.length * 2) % 4,

@@ -71,7 +71,6 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
 }
 
 export const  getWidgetSetting = (widget: DashboardWidget) => {
-    console.log(dashboardWidgetSetting, widget)
     return dashboardWidgetSetting[widget]
 }
 
