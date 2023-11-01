@@ -26,7 +26,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-message-queue');
     packages.push('../../packages/dp-dashboard');
     packages.push('../../pages/admin-workflow-editor');
-    // packages.push('../../pages/admin-master-table');
+    packages.push('../../pages/admin-master-table');
     // core
     packages.push('../../pages/admin-retention');
     packages.push('../../pages/admin-acl');

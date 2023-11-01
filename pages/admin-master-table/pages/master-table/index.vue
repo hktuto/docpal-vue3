@@ -10,7 +10,6 @@
             </template>  
             <template #suffixSortButton>
                 <el-button type="primary" @click="handleAdd()">{{$t('button.add')}}</el-button>
-                <el-button type="primary" @click="handleAddRow()">{{$t('button.add')}}</el-button>
             </template>
         </Table>
         <MasterTableDialog ref="MasterTableDialogRef" @refresh="handlePaginationChange(1)"/>
@@ -21,8 +20,9 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-    GetDashboardPageApi,
-    DeleteDashboardApi,
+    GetMasterTablesPageApi,
+    DeleteMasterTablesApi,
+    GetMasterTablesPageConditionApi,
     defaultTableSetting, TABLE, deepCopy
 } from 'dp-api'
 
@@ -35,7 +35,7 @@ import {
         orderBy: 'createdDate',
         isDesc: true
     }
-    const tableKey = TABLE.ADMIN_DASHBOARD
+    const tableKey = TABLE.ADMIN_MASTER_TABLE
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
@@ -58,7 +58,7 @@ import {
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetDashboardPageApi({ ...param, ...state.extraParams })
+            const res = await GetMasterTablesPageApi({ ...param, ...state.extraParams })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -97,7 +97,7 @@ function handleAction (command, row: any, index: number) {
             handleDelete(row.id)
             break
         case 'edit':
-            handleAdd(row)
+            handleDblclick(row)
             break
         default:
             break
@@ -106,31 +106,29 @@ function handleAction (command, row: any, index: number) {
 async function handleDelete(id: string) {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
-    await DeleteDashboardApi(id)
+    await DeleteMasterTablesApi(id)
     handlePaginationChange(pageParams.pageNum + 1)
 }
 function handleDblclick(row) {
-    router.push(`/data-dashboard/${row.id}`)
+    router.push(`/master-table/${row.id}`)
 }
 const MasterTableDialogRef = ref()
 function handleAdd () {
     MasterTableDialogRef.value.handleOpen()
 }
-const MasterTableNewRowDialogRef = ref()
-function handleAddRow () {
-    MasterTableNewRowDialogRef.value.handleOpen()
-}
 // #region module: ResponsiveFilterRef
+    const ResponsiveFilterRef = ref()
+    async function getFilter() {
+        const filters = await GetMasterTablesPageConditionApi()
+        ResponsiveFilterRef.value.init(filters)
+    }
     function handleFilterFormChange(formModel) {
         state.extraParams = formModel
         handlePaginationChange(1)
     }
 // #endregion
-function handleEditEmailLayout () {
-    router.push('/layoutTemplate')
-}
-
 onMounted(() => {
+    getFilter()
 })
 </script>
 

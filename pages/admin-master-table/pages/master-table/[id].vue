@@ -1,173 +1,138 @@
 <template>
-<NuxtLayout class="fit-height withPadding" backPath="/data-dashboard" :pageTitle="`${$t('admin_dashboard')}/${$t('common_preview')}`">
-    <div class="template-container">
-        <div class="flex-x-between">
-            <div class="flex-x-between">
-                <span class="template-title"> {{ state.info.name }} </span>
-                <SvgIcon src="/icons/file/edit.svg" class="el-icon--right"
-                    round :content="$t('tip.editTemplateInfo')"
-                    @click="handleEdit"></SvgIcon> 
-            </div>
-            <div>
-                <el-dropdown @command="handleAdd">
-                    <el-button type="primary">
-                        {{$t('common_add')}}
-                    </el-button>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item command="size">{{$t('dashboard.docTypeSizeChart')}}</el-dropdown-item>
-                            <el-dropdown-item command="count">{{$t('dashboard.docTypeCountChart')}}</el-dropdown-item>
-                            <el-dropdown-item command="trend">{{$t('dashboard.docTypeChart')}}</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-                <el-button class="el-icon--right" type="primary" 
-                    :loading="state.saveLoading"
-                    @click="handleSave">{{$t('common_save')}}</el-button>
-            </div>
-        </div>
-        <div class="template-main-container">
-            <!-- <div style="height: 200px; width: 300px;background-color: red;">
-
-                <DocCount :setting="{
-                    documentType: 'File',
-                    color: 'red',
-                    icon: '/icons/eye.svg'}"></DocCount>
-            </div> -->
-        </div>
-    </div>
-</NuxtLayout>
+    <NuxtLayout class="fit-height withPadding" backPath="/master-table" :pageTitle="`${$t('admin_master-table')}/${$t('common_preview')}`">
+        <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
+            @command="handleAction"
+            @row-dblclick="handleDblclick"
+            @pagination-change="handlePaginationChange">
+            <template #preSortButton>
+                <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
+                    inputKey="name"/>
+            </template>  
+            <template #suffixSortButton>
+                <el-button type="primary" @click="handleAddRow()">{{$t('button.add')}}</el-button>
+            </template>
+        </Table>
+        <MasterTableNewRowDialog ref="MasterTableNewRowDialogRef" @refresh="handlePaginationChange(1)"/>
+    </NuxtLayout>
 </template>
 
-<script lang="ts" setup> 
-import { ElNotification } from 'element-plus'
-import { GetDashboardApi, UpdateDashboardApi, QueryDocumentTypeSizeApi, QueryDocumentTypeCountApi, deepCopy } from 'dp-api'
-const route = useRoute()
-const state = reactive({
-    info: {
-        name: ''
-    },
-    layout: [],
-    loading: false,
-    saveLoading: false
-})
+<script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+    GetMasterTablesPageApi,
+    DeleteMasterTablesApi,
+    defaultTableSetting, TABLE, deepCopy
+} from 'dp-api'
 
-async function getInfo() {
-    state.info = await GetDashboardApi(route.params.id)
-    if(state.info && state.info.styleJson) state.layout = JSON.parse(state.info.styleJson)
-}
-const DashboardDialogRef = ref()
-function handleEdit() {
-    DashboardDialogRef.value.handleOpen(state.info)
-}
-function handleAdd(command) {
-    let component = ''
-    let setting = {} 
-    let w = 3
-    let h = 6
-    switch (command) {
-        case 'size':
-            w = 3
-            h = 6
-            component = 'DocSizeStatistics'
-            setting = {
-                style: 'pie',
-                displayList: [
-                    { documentType: 'File' },
-                    { documentType: 'Photo' }
-                ]
-            }
-            break;
-        case 'count':
-            w = 3
-            h = 6
-            component = 'DocTypeCount'
-            setting = {
-                documentType: 'File',
-                color: 'red',
-                icon: '/icons/file/info.svg'
-            }
-            break;
-        case 'trend':
-            w = 6
-            h = 12
-            component = 'DocTypeCoCount'
-            setting = {
-                documentType: 'File',
-                color: '#fff',
-                showCount: true,
-                showSize: true,
-                displayList: [
-                    { meta: 'dc:creator' }
-                ]
-            }
-            break;
-        default:
-            break;
+// #region module: page
+    const route = useRoute()
+    const router = useRouter()
+    const pageParams = {
+        pageNum: 0,
+        pageSize: 20,
+        orderBy: 'createdDate',
+        isDesc: true
     }
-    state.layout.push({
-        x: (state.layout.length * 2) % 24,
-        y: state.layout.length +  12, // puts it at the bottom
-        w,
-        h,
-        i: new Date().valueOf(),
-        component,
-        setting
+    const tableKey = TABLE.ADMIN_MASTER_TABLE
+    const tableSetting = defaultTableSetting[tableKey]
+    const state = reactive<State>({
+        loading: false,
+        tableData: [],
+        options: {
+            multiSelect: true,
+            showPagination: true,
+            paginationConfig: {
+                total: 0,
+                currentPage: 1,
+                pageSize: pageParams.pageSize
+            },
+            rowKey: 'id',
+            sortKey: tableKey
+        },
+        extraParams: {}
     })
-}
-function handleDelete(i) {
-    const index = state.layout.findIndex((item) =>  item.i === i)
-    state.layout.splice(index, 1)
-}
-async function handleSave() {
-    state.saveLoading = true
-    try {
-        await UpdateDashboardApi({
-            ...state.info,
-            styleJson: JSON.stringify(state.layout)
-        })
-    } catch (error) {
-    }
-    state.saveLoading = false
-}
-function handleRefresh (layoutSetting) {
-    const index = state.layout.findIndex((item) =>  item.i === layoutSetting.i)
-    state.layout[index] = deepCopy(layoutSetting)
-}
 
-onMounted(async () => {
-    getInfo()
+
+    async function getList (param) {
+        state.loading = true
+        try {
+            const res = await GetMasterTablesPageApi({ ...param, ...state.extraParams })
+            state.tableData = res.entryList
+            state.options.paginationConfig.total = res.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.pageNum + 1
+        } catch (error) {
+
+        }
+        state.loading = false
+    }
+    function handlePaginationChange (page: number, pageSize: number) {
+        if(!page) page = pageParams.pageNum + 1
+        if(!pageSize) pageSize = pageParams.pageSize
+        const time = new Date().valueOf().toString()
+        // scroll top
+        router.push({
+            query: { page, pageSize, time }
+        })
+    }
+    watch(
+        () => route.query,
+        async (newval) => {
+            const { page, pageSize } = newval
+            nextTick(() => {
+
+              pageParams.pageNum = (Number(page) - 1) || 0
+              pageParams.pageSize = Number(pageSize) || pageParams.pageSize
+              getList(pageParams)
+            })
+        },
+        { immediate: true }
+    )
+// #endregion
+function handleAction (command, row: any, index: number) {
+    switch (command) {
+        case 'delete':
+            handleDelete(row.id)
+            break
+        case 'edit':
+            handleAdd(row)
+            break
+        default:
+            break
+    }
+}
+async function handleDelete(id: string) {
+    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
+    if(action !== 'confirm') return
+    await DeleteMasterTablesApi(id)
+    handlePaginationChange(pageParams.pageNum + 1)
+}
+function handleDblclick(row) {
+    handleAddRow(row)
+}
+const MasterTableNewRowDialogRef = ref()
+function handleAddRow (row) {
+    MasterTableNewRowDialogRef.value.handleOpen(row)
+}
+// #region module: ResponsiveFilterRef
+    function handleFilterFormChange(formModel) {
+        state.extraParams = formModel
+        handlePaginationChange(1)
+    }
+// #endregion
+
+onMounted(() => {
 })
 </script>
 
 <style lang="scss" scoped>
-.template-container {
-    display: grid;
-    grid-template-rows: min-content 1fr;
-    gap: var(--app-padding);
-    overflow: hidden;
-}
-.template-main-container {
-    overflow: auto;
-}
-.template-interact-drawer {
-    height: 100%;
-    overflow: hidden;
-    box-shadow: unset;
-    border-left: 1px solid #ddd;
-    display: grid;
-    grid-template-rows: min-content 1fr min-content;
-    gap: var(--app-padding);
-    padding-bottom: 0;
-    .formContainer {
-        overflow: auto;
+:deep(.tableHeader) {
+    margin-bottom: 10px;
+    & > .el-button {
+        margin: unset;
     }
 }
-.template-title {
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 22px;
-    letter-spacing: 0px;
-    color: #606266;
+.emailActionButton {
+    padding: unset;
 }
 </style>

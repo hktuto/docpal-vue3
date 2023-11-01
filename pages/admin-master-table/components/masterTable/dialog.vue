@@ -14,7 +14,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, CreateDashboardApi, UpdateDashboardApi, deepCopy } from 'dp-api'
+import { getJsonApi, SaveMasterTablesApi, deepCopy } from 'dp-api'
 const emits = defineEmits([
     'refresh', 'delete'
 ])
@@ -22,13 +22,13 @@ const state = reactive({
     loading: false,
     visible: false,
     setting: {
-        extraParams: [
-            { type: "date", label: "Created_At" },
-            { type: "string", label: "id" },
-            { type: "date", label: "Last_Update" },
-            { type: "string", label: "Modify_By" }
-        ]
     },
+    extraFields: [
+        { dataType: "LOCALDATETIME", fieldName: "created_date", nullable: false, unique: false },
+        { dataType: "VARCHAR:255", fieldName: "id", primaryKey: true, nullable: false, unique: true },
+        { dataType: "LOCALDATETIME", fieldName: "modified_date", nullable: false, unique: false },
+        { dataType: "VARCHAR:255", fieldName: "modified_by", nullable: false, unique: false }
+    ],
     edit: false
 })
 const FromRendererRef = ref()
@@ -38,13 +38,14 @@ async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     const _data = {
-        name: data.name,
-        access: data.access.join(',')
+        ...state.setting,
+        name: data.table,
+        fields: [ ...data.fields, ...data.extraFields ]
     }
     try {
-        const res = await CreateDashboardApi(_data)
-        router.push(`/data-dashboard/${res.id}`)
+        const res = await SaveMasterTablesApi(_data)
         state.visible = false
+        emits('refresh')
     } catch (error) {
         state.loading = false
     }
@@ -53,7 +54,7 @@ async function handleSubmit () {
 function handleOpen() {
     state.visible = true
     setTimeout(async () => {
-        await FromRendererRef.value.vFormRenderRef.setFormData(state.setting)
+        await FromRendererRef.value.vFormRenderRef.setFormData({ extraFields: state.extraFields })
         state.loading = false
     })
 }
