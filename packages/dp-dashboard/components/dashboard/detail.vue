@@ -37,9 +37,16 @@ const props = withDefaults( defineProps<{
     resizable: true,
     draggable: true,
 })
-const { layout} = toRefs(props)
+const layout = computed({
+  get() {
+        return props.layout
+    },
+    set(val) {
+        emits('update:layout', val)
+    }
+})
 const emits = defineEmits([
-    'refreshSetting', 'delete'
+    'refreshSetting', 'delete', 'update:layout'
 ])
 
 const sheetRefs = ref<any>({})
