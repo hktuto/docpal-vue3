@@ -2165,7 +2165,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_EMAIL_TEMPLATE]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'subject' },
+            {id: "0", label:"tableHeader_name", prop:"label"},
+            { id: '1', label: 'tableHeader_subject', prop: 'subject' },
             { id: '2', label: 'ID', prop: 'id', copy: true },
             { id: '3', label: 'emailTemplate.layout', prop: 'emailLayoutName' },
             { id: '4', label: 'role.creator', prop: 'createdBy', width: 100 },

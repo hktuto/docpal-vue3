@@ -7,6 +7,9 @@ const props = defineProps<{
 <template>
   <div class="infoFormContainer">
     <ElForm class="form" label-position="top">
+      <ElFormItem label="Label">
+        <ElInput v-model="data.label"></ElInput>
+      </ElFormItem>
       <ElFormItem label="Subject">
         <ElInput v-model="data.subject"></ElInput>
       </ElFormItem>

@@ -250,6 +250,7 @@
     </sequenceFlow>
     <serviceTask id="createDocumentServiceTask" name="Create Document Based On User Input Service Task" flowable:delegateExpression="${generateDocumentDelegate}">
       <extensionElements>
+
         <flowable:field name="parentPath">
           <flowable:expression><![CDATA[${variables:get(parentPath)}]]></flowable:expression>
         </flowable:field>

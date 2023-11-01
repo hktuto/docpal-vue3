@@ -10,14 +10,14 @@ const props = withDefaults(defineProps<{
   id:string,
   graphJson?: string,
   graphOption: any
-  layout: any,
+  layout?: any,
 }>(), {
   id: 'graphViewer_' + Date.now().toString(),
   graphOption: {
     grid:true,
     autoResize:true,
     background: {
-      color: '#F2F7FA',
+      color: 'var(--color-grey-0000)',
     },
     panning: {
       enabled: true,
@@ -103,7 +103,6 @@ function setupGraph() {
     graph.value.zoomToFit({padding: 100});
     graph.value.centerContent()
   })
-  
 }
 
 onMounted(() => {

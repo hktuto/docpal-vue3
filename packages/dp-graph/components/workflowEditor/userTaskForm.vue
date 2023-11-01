@@ -36,33 +36,36 @@
                 Form Field
               </div>
               <table>
-                <tr>
-                  <td>Order</td>
-                  <th>Name</th>
-                  <th>Readable</th>
-                  <th>Field Type</th>
-                  <th></th>
-                </tr>
-                <tr v-for="(value, index) in data.extensionElements['flowable:formProperty']">
-                  <td></td>
-                  <td>{{value.attr_name}}</td>
-                  <td>
-                    <ElSwitch v-model="value.attr_readable" />
-                  </td>
-                  <td>
-                    <ElSelect v-model="value.attr_fieldType" placeholder="Select Field">
-                      <ElOption v-for="item in allFieldType" :key="item" :label="item" :value="item" />
-                    </ElSelect>
-                  </td>
-                  <td>
-                    <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
-                  </td>
-                </tr>
+                <draggable v-model="data.extensionElements['flowable:formProperty']" tag="tbody" item-key="name">
+                  <template #item="{ element, index }">
+                    <tr >
+                      <td scope="row"> <SvgIcon src="/icons/move-handle.svg" /></td>
+                      <td>
+                        <div :class="{fieldName:true, required:element.attr_required }">
+                        {{element.attr_name}}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="actions">
+                          
+                        <WorkflowEditorFormFieldOptions :field="element" />
+                        <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
+                        </div>
+                      </td>
+                    </tr>
+                  </template>
+                </draggable>
               </table>
             </div>
+          <div class="actions">
+            
             <div v-if="newFieldOptions.length > 0" class="action">
               <ElButton type="primary" @click="addFromOpened = true">Add Field</ElButton>
             </div>
+            <div class="action">
+              <ElButton type="primary" @click="previewForm">Preview Form</ElButton>
+            </div>
+          </div>
         </div>
         <div class="footer">
             <ElButton @click="$emit('close')">Close</ElButton>
@@ -74,13 +77,23 @@
         </ElSelect>
         <ElButton type="primary" @click="addFormItem">Add</ElButton>
       </ElDialog>
+      
+      <ElDialog v-model="previewFormOpened" append-to-body>
+        
+      </ElDialog>
+      
+      <ElDialog v-model="editFormFieldDialog" append-to-body>
+        
+      </ElDialog>
     </div>
 </template>
 
 
 <script lang="ts" setup>
 import {GetGroupListApi} from "dp-api";
-
+import {ElMessage} from 'element-plus'
+import draggable from "vuedraggable";
+import {bpmnStepToForm, fieldType, FormObject} from "../../utils/formEditorHelper";
 const props = defineProps<{
   data: any,
   allField: any,
@@ -89,6 +102,8 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'submit'])
 const addFromOpened = ref(false)
 const selectedNewField = ref('')
+const previewFormOpened = ref(false)
+const editFormFieldDialog = ref(false)
 const newFieldOptions = computed(() => {
   return Object.keys(props.allField).filter((key) => {
     return !props.data.extensionElements['flowable:formProperty'].some((item) => item.attr_id === key)
@@ -106,7 +121,7 @@ const autoApprovalOptions = computed(() => {
       }
   )
 })
-const allFieldType = ref(["single line input","multi line input","date","file" ])
+
 const autoAssignField = computed({
   get() {
     const f = props.data.extensionElements['flowable:taskListener']['flowable:field']['flowable:expression']['__cdata'];
@@ -139,6 +154,12 @@ function createAutoAssignee (autoAssignField:string) {
   }
 }
 
+
+function previewForm(){
+  const form = bpmnStepToForm(props.data.extensionElements['flowable:formProperty'])
+  console.log(form)
+}
+
 const canAutoAssignee = computed(() => !(props.data.attr_id === 'start'))
 
 
@@ -147,6 +168,7 @@ const haveCandidateGroup = computed(() => {
 })
 
 const allUserGroup = ref([]);
+
 
 async function getAllUserGroup(){
   allUserGroup.value = await GetGroupListApi(true)
@@ -223,5 +245,19 @@ onMounted(async() => {
     .formContainer{
        overflow: auto;
     }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--app-padding);
+  tbody > tr {
+    padding: var(--app-padding);
+  }
+}
+.actions{
+  display: flex;
+  gap: .6rem;
+  --icon-color: var(--color-grey-500);
+  --icon-size: 1rem;
 }
 </style>
