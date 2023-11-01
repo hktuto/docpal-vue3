@@ -35,30 +35,24 @@
               <div class="title">
                 Form Field
               </div>
-              <table>
-                <draggable v-model="data.extensionElements['flowable:formProperty']" tag="tbody" item-key="name">
-                  <template #item="{ element, index }">
-                    <tr >
-                      <td scope="row"> <SvgIcon src="/icons/move-handle.svg" /></td>
-                      <td>
-                        <div :class="{fieldName:true, required:element.attr_required }">
-                        {{element.attr_name}}
-                        </div>
-                      </td>
-                      <td>
-                        <div class="actions">
-                          
-                        <WorkflowEditorFormFieldOptions :field="element" />
-                        <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
-                        </div>
-                      </td>
-                    </tr>
-                  </template>
-                </draggable>
-              </table>
+              <draggable v-model="data.extensionElements['flowable:formProperty']" class="formFieldList" tag="ul" item-key="name">
+                <template #item="{ element, index }">
+                  <li :class="{formFieldItem:true, noValid: !element.attr_field_valid}">
+                    <div scope="row" class="mover">
+                      <SvgIcon src="/icons/move-handle.svg" />
+                    </div>
+                    <div :class="{ fieldName:true, required:element.attr_required }">
+                      {{element.attr_name}}
+                    </div>
+                    <div class="actions">
+                      <WorkflowEditorFormFieldOptionButton :field="element" @submit="(val) => updateFormField(val, index)"/>
+                      <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
+                    </div>
+                  </li>
+                </template>
+              </draggable>
             </div>
           <div class="actions">
-            
             <div v-if="newFieldOptions.length > 0" class="action">
               <ElButton type="primary" @click="addFromOpened = true">Add Field</ElButton>
             </div>
@@ -93,7 +87,7 @@
 import {GetGroupListApi} from "dp-api";
 import {ElMessage} from 'element-plus'
 import draggable from "vuedraggable";
-import {bpmnStepToForm, fieldType, FormObject} from "../../utils/formEditorHelper";
+import {bpmnStepToForm, fieldType, FormObject} from "../../../utils/formEditorHelper";
 const props = defineProps<{
   data: any,
   allField: any,
@@ -219,6 +213,12 @@ function removeFormItem(key){
   emit('submit', props.data);
 }
 
+function updateFormField(newVal, index) {
+  props.data.extensionElements['flowable:formProperty'][index] = newVal;
+  console.log('updateFormField', props.data)
+  emit('submit', props.data);
+}
+
 watch(props.data, () => {
   autoApproval.value = props.data.extensionElements['flowable:taskListener'] && props.data.extensionElements['flowable:taskListener']['attr_event'] === 'create'
 },{
@@ -246,18 +246,32 @@ onMounted(async() => {
        overflow: auto;
     }
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: var(--app-padding);
-  tbody > tr {
-    padding: var(--app-padding);
-  }
-}
+
 .actions{
   display: flex;
   gap: .6rem;
   --icon-color: var(--color-grey-500);
   --icon-size: 1rem;
+}
+.formFieldList{
+  padding: 0;
+  margin: var(--app-padding) 0;
+}
+.formFieldItem{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding-block: calc(var(--app-padding) / 2 );
+  gap: calc(var(--app-padding) / 2 );
+  .fieldName{
+    flex: 1 0 auto;
+  }
+  &.noValid {
+    color: red;
+  }
+}
+.formFieldItem + .formFieldItem {
+  border-top: 1px solid var(--color-grey-100);
 }
 </style>

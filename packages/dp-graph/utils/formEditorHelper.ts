@@ -1,35 +1,45 @@
-export const  fieldType = ["single line input" , "Multi line input","Date","File", "multiple files"]
+export const  fieldType = [
+    "Single line input" , 
+    "Multi line input",
+    "Date",
+    "User Dropdown",
+    "User Group Dropdown",
+    "Custom Dropdown",
+    "File", 
+    "Multiple files"
+]
 export type FormObject = {
     attr_id: string,
     attr_name:string,
     attr_type: string,
     attr_readable?:boolean,
-    attr_fieldType: typeof fieldType[number],
-    attr_required?:boolean,
-    attr_validate?:string,
-    attr_field_valid: boolean
-    attr_default_value?: any,
+    attr_field_label:string,
+    attr_field_writable?:boolean,
+    attr_field_type: typeof fieldType[number],
+    attr_field_required?:boolean,
+    attr_field_validate?:string,
+    attr_field_valid: boolean,
+    attr_field_default_value?: any,
 }
 export const bpmnStepToForm = (step:FormObject[] ) => {
     const baseForm = {
         cols:[]
     };
-    console.log(step);
     step.forEach((formObject:FormObject) => {
         switch(formObject.attr_fieldType){
-            case "single line input":
+            case "Single line input":
                 baseForm.cols.push(createSingleLineInput(formObject));
                 break;
-            case "multi line input":
+            case "Multi line input":
                 baseForm.cols.push(createMultiLineInput(formObject));
                 break;
-            case "date":
+            case "Date":
                 baseForm.cols.push(createDateInput(formObject));
                 break;
-            case "file":
+            case "File":
                 baseForm.cols.push(createFileInput(formObject));
                 break;
-            case "dropdown":
+            case "Dropdown":
                 baseForm.cols.push(createDropdownInput(formObject));
                 break;
         }

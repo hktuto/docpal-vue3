@@ -182,7 +182,6 @@ function getWorkflowData() {
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
   const name = data.value.definitions.process.attr_name
   const key = data.value.definitions.process.attr_id
-  console.log(key, name)
   return {
     blob, name, key
   }
@@ -202,9 +201,9 @@ defineExpose({
     <div :class="{sidePanelContainer:true , sidePanelOpened}">
       <template v-if="selectedData">
         <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="workflowForm" @close="closeSidePanel" @submit="saveForm" />
-        <WorkflowEditorUserTaskForm v-else-if="selectedData.type === 'userTask'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveUserStep" />
-        <WorkflowEditorEmailForm v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
-        <WorkflowEditorDocumentForm v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveUserStep" />
+        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
       </template>
     </div>
     <GraphViewer

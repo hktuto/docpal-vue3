@@ -220,6 +220,10 @@ export const bpmnToX6 = (bpmnText: any, options = {hideEnd: true, direction:'top
   // step 1 : get bpmn data
     
     const bpmn = bpmnToJson(bpmnText);
+    //  remove bpmn object in xml file
+    if(bpmn['bpmndi:BPMNDiagram']) {
+        delete bpmn['bpmndi:BPMNDiagram']
+    }
     const process = bpmn['definitions']['process'];
     
   const startEvent = process['startEvent'];
