@@ -83,7 +83,7 @@ onMounted(async() => {
     </div>
     <div class="formContainer">
       <ElForm :model="data" label-position="top">
-        <ElFormItem label="Email template">
+        <ElFormItem label="Document template">
           <ElSelect v-model="selectedDocumentTemplate" placeholder="Select email template" class="fullwidth">
             <ElOption v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id"></ElOption>
           </ElSelect>

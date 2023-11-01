@@ -36,33 +36,46 @@
                 Form Field
               </div>
               <table>
+                <thead>
+                
                 <tr>
-                  <td>Order</td>
+                  <td></td>
                   <th>Name</th>
                   <th>Readable</th>
                   <th>Field Type</th>
                   <th></th>
                 </tr>
-                <tr v-for="(value, index) in data.extensionElements['flowable:formProperty']">
-                  <td></td>
-                  <td>{{value.attr_name}}</td>
-                  <td>
-                    <ElSwitch v-model="value.attr_readable" />
-                  </td>
-                  <td>
-                    <ElSelect v-model="value.attr_fieldType" placeholder="Select Field">
-                      <ElOption v-for="item in allFieldType" :key="item" :label="item" :value="item" />
-                    </ElSelect>
-                  </td>
-                  <td>
-                    <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
-                  </td>
-                </tr>
+                </thead>
+                <draggable v-model="data.extensionElements['flowable:formProperty']" tag="tbody" item-key="name">
+                  <template #item="{ element, index }">
+                    <tr >
+                      <td scope="row"> <SvgIcon src="/icons/move-handle.svg" /></td>
+                      <td>{{element.attr_name}}</td>
+                      <td>
+                        <ElSwitch v-model="element.attr_readable" />
+                      </td>
+                      <td>
+                        <ElSelect v-model="element.attr_fieldType" placeholder="Select Field">
+                          <ElOption v-for="item in allFieldType" :key="item" :label="item" :value="item" />
+                        </ElSelect>
+                      </td>
+                      <td>
+                        <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
+                      </td>
+                    </tr>
+                  </template>
+                </draggable>
               </table>
             </div>
+          <div class="actions">
+            
             <div v-if="newFieldOptions.length > 0" class="action">
               <ElButton type="primary" @click="addFromOpened = true">Add Field</ElButton>
             </div>
+            <div class="action">
+              <ElButton type="primary" @click="previewForm">Preview Form</ElButton>
+            </div>
+          </div>
         </div>
         <div class="footer">
             <ElButton @click="$emit('close')">Close</ElButton>
@@ -74,13 +87,23 @@
         </ElSelect>
         <ElButton type="primary" @click="addFormItem">Add</ElButton>
       </ElDialog>
+      
+      <ElDialog v-model="previewFormOpened" append-to-body>
+        
+      </ElDialog>
+      
+      <ElDialog v-model="editFormFieldDialog" append-to-body>
+        
+      </ElDialog>
     </div>
 </template>
 
 
 <script lang="ts" setup>
 import {GetGroupListApi} from "dp-api";
-
+import {ElMessage} from 'element-plus'
+import draggable from "vuedraggable";
+import {bpmnStepToForm, FormObject} from "../../utils/formEditorHelper";
 const props = defineProps<{
   data: any,
   allField: any,
@@ -89,6 +112,8 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'submit'])
 const addFromOpened = ref(false)
 const selectedNewField = ref('')
+const previewFormOpened = ref(false)
+const editFormFieldDialog = ref(false)
 const newFieldOptions = computed(() => {
   return Object.keys(props.allField).filter((key) => {
     return !props.data.extensionElements['flowable:formProperty'].some((item) => item.attr_id === key)
@@ -139,6 +164,29 @@ function createAutoAssignee (autoAssignField:string) {
   }
 }
 
+function fieldValidation(form:FormObject, index){
+  if(!form.attr_id) {
+    ElMessage.error('Id is required')
+    return false;
+  }
+  if(!form.attr_name) {
+    ElMessage.error('Name is required')
+    return false;
+  }
+  if(!form.attr_type) {
+    ElMessage.error('Type is required')
+    return false;
+  }
+  if(!form.attr_readable && !form.attr_fieldType) {
+    ElMessage.error('All field must be readable or have field type')
+    return false;
+  }
+}
+function previewForm(){
+  const form = bpmnStepToForm(props.data.extensionElements['flowable:formProperty'])
+  console.log(form)
+}
+
 const canAutoAssignee = computed(() => !(props.data.attr_id === 'start'))
 
 
@@ -147,6 +195,7 @@ const haveCandidateGroup = computed(() => {
 })
 
 const allUserGroup = ref([]);
+
 
 async function getAllUserGroup(){
   allUserGroup.value = await GetGroupListApi(true)
