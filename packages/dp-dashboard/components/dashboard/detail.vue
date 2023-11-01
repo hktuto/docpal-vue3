@@ -1,9 +1,9 @@
 <template>
     <GridLayout 
         v-model:layout="layout" 
-        :col-num="12"
+        :col-num="colNum"
         :margin="[20,20]"
-        :row-height="130"
+        :row-height="rowHeight"
         :is-draggable="draggable"
         :is-resizable="resizable"
         :responsive="true"
@@ -14,7 +14,6 @@
         <GridItem v-for="(item, index) in layout"
                     class="dashboard-item"
                     v-bind="item"
-                    @resized="chartResize(item)"
             >
             <component :is="widgetComponent[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
                 :setting="item.setting"
@@ -32,10 +31,14 @@ const props = withDefaults( defineProps<{
     layout: DashboardWidgetSetting[],
     resizable?: boolean,
     draggable?: boolean,
+    colNum?: number,
+    rowHeight?: number,
 }>() , {
     layout: [],
     resizable: true,
     draggable: true,
+    colNum: 12,
+    rowHeight: 130
 })
 const { layout} = toRefs(props)
 const emits = defineEmits([
@@ -52,7 +55,7 @@ function handleRefreshSetting (setting:any, row:any) {
     emits('refreshSetting', row)
 }
 function chartResize(row:any) {
-    sheetRefs.value[row.i].resize()
+    if(sheetRefs.value[row.i]) sheetRefs.value[row.i].resize()
 }
 
 function layoutUpdatedEvent(newLayout:any){

@@ -18,6 +18,7 @@
                             <el-dropdown-item command="DocSizeStatistics">{{$t('dashboard.docTypeSizeChart')}}</el-dropdown-item>
                             <el-dropdown-item command="DocTypeCount">{{$t('dashboard.docTypeCountChart')}}</el-dropdown-item>
                             <el-dropdown-item command="DocTypeCoCount">{{$t('dashboard.docTypeChart')}}</el-dropdown-item>
+                            <el-dropdown-item command="WorkflowCoCount">{{$t('dashboard.workflowCoCount')}}</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -52,10 +53,10 @@
 import { ElNotification } from 'element-plus'
 import { GetDashboardApi, UpdateDashboardApi, QueryDocumentTypeSizeApi, QueryDocumentTypeCountApi, deepCopy } from 'dp-api'
 import {
-  DashboardWidget,
-  DashboardWidgetSetting,
-  dashboardWidgetSetting, getNormalizeSetting,
-  getWidgetSetting
+    DashboardWidget,
+    DashboardWidgetSetting,
+    getNormalizeSetting,
+    getWidgetSetting
 } from "~/utils/dashboardWidgetHelper";
 const route = useRoute()
 const state = reactive({
@@ -67,24 +68,14 @@ const state = reactive({
     saveLoading: false
 })
 
-const displayLayout = computed(() => {
-    return state.layout.map(item => {
-        return {
-            x :item.x,
-            y : item.y,
-            w : item.w,
-            h : item.h,
-        }
-    })
-})
 async function getInfo() {
     state.info = await GetDashboardApi(route.params.id as string)
     if(!state.info || !state.info.styleJson) return
     const temLayout = JSON.parse(state.info.styleJson);
     if(Array.isArray(temLayout)){
-      state.layout = temLayout.map( item => {
-        return Object.assign(item, getNormalizeSetting(item.component))
-      })
+        state.layout = temLayout.map( item => {
+            return Object.assign(item, getNormalizeSetting(item.component))
+        })
     }
 }
 const DashboardDialogRef = ref()
@@ -92,9 +83,7 @@ function handleEdit() {
     DashboardDialogRef.value.handleOpen(state.info)
 }
 function handleAdd(command:DashboardWidget) {
-    
     const item = getWidgetSetting(command)
-    
     state.layout.push({
         x: (state.layout.length * 2) % 4,
         y: state.layout.length +  4, // puts it at the bottom
@@ -119,6 +108,7 @@ async function handleSave() {
 }
 function handleRefresh (layoutSetting:any) {
     const index = state.layout.findIndex((item) =>  item.i === layoutSetting.i)
+    console.log({index}, layoutSetting)
     state.layout[index] = deepCopy(layoutSetting)
 }
 

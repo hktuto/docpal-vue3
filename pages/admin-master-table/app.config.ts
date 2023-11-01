@@ -3,7 +3,7 @@
 export default defineAppConfig({
     menu:[
         {
-            // feature:'',
+            feature:'MASTER_TABLE',
             name:"admin_master-table",
             routeName:"master-table",
             url:"/master-table",
