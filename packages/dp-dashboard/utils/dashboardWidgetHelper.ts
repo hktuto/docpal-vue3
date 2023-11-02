@@ -83,17 +83,16 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
         maxW: 12,
         maxH: undefined,
         w: 6,
-        h: 2,
+        h: 6,
         component : 'WorkflowCoCount',
-        layout: [],
         setting: {
-            workflow: 'costModel',
+            workflow: 'contractApproval',
             displayList: [
-                'WorkflowActiveCount',
-                'WorkflowApproveRate',
                 'WorkflowNewCount',
                 'WorkflowTimeSpendPerTask',
                 'WorkflowTimeSpendPerWorkflow',
+                'WorkflowActiveCount',
+                // 'WorkflowApproveRate',
             ]
         }
     }

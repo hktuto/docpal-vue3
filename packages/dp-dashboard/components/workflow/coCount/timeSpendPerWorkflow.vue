@@ -6,13 +6,13 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { GetCoCountSizeApi } from 'dp-api'
+import { GetWorkflowSpendTimeApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
-    documentType?: string,
+    workflow?: string,
     user?: string
 }>() , {
-    documentType: '',
+    workflow: '',
     user: ''
 })
 type EChartsOption = echarts.EChartsOption;
@@ -25,17 +25,9 @@ const emits = defineEmits([
 const setting = {
     defaultSetting: {
         options: {
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: []
-            },
             title: {
-                text: $t('dashboard.timeSpendPerWorkflow'),
+                text: $t('dashboard.WorkflowTimeSpendPerWorkflow'),
                 left: "left",
-            },
-            yAxis: {
-                type: 'value'
             },
             tooltip: {
                 trigger: 'item'
@@ -48,14 +40,19 @@ const setting = {
             }
         },
         series: {
-            type: 'line',
-            smooth: true
+            type: 'pie',
+            label: {
+                normal: {
+                    position: 'inside', // 在内部显示，outseide 是在外部显示
+                    show: true,
+                    formatter: '{d}%'
+                }
+            }
         }
     }
 }
 const state = reactive({
     data: [],
-    xAxis: []
 })
 let options = {}
 
@@ -92,30 +89,29 @@ function resize() {
         }
         return style
     }
-    async function handleInitChart(documentType) {
+    async function handleInitChart(workflow) {
         options = { 
             ...setting.defaultSetting.options
         }
         // data
-        await getData(documentType)
-        options.xAxis.data = state.xAxis
+        await getData(workflow)
         options.series = {
             ...setting.defaultSetting.series,
             data: state.data
         }
+
         initChart()
     }
-    async function getData(documentType: string) {
+    async function getData(workflow: string) {
         try {
-            const res = await GetCoCountSizeApi(documentType, props.user)
-            state.xAxis = []
-            const initData = res.group_document_type.buckets[0].group_by_time.buckets
-            state.data = initData.reduce((prev,item) => {
-                prev.push(item.cumulative_sum_mb.value)
-                state.xAxis.push(item.key_as_string)
+            const initData  = await GetWorkflowSpendTimeApi({ workflowId: workflow, timeGroup: [3,7,14], userId: props.user })
+            state.data = Object.keys(initData).reduce((prev,key) => {
+                prev.push({ 
+                    name: key,
+                    value: initData[key]
+                })
                 return prev
             }, [])
-            console.log(state.data)
         } catch (error) {
         }
     }
@@ -127,14 +123,13 @@ onMounted(async() => {
         initStyle()
         // 随着屏幕大小调节图表
         useEventListener(window, 'resize', resize)
-        handleInitChart('File')
     })
 })
 onUnmounted(() => {
     echartInstance.dispose()
 })
 watch(() => props, (newValue) => {
-    
+    handleInitChart(props.workflow)
 }, {
     immediate: true,
     deep: true

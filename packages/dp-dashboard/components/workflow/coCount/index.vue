@@ -1,98 +1,74 @@
 <template>
-    <el-card class="dashboard-item-co-main">
-        <DashboardDetail 
-            ref="DashboardDetailRef" 
-            v-model:layout="state.layout"
-            :resizable="true"
-            :draggable="true"
-            :colNum="4"
-            :rowHeight="80"
-            @refreshSetting="handleRefresh"></DashboardDetail>
+    <el-card class="dashboard-item dashboard-item-main" :style="`--setting-color:${setting.color}`">
+        <template #header="{ close, titleId, titleClass }">
+            <h4>{{setting.workflow}}</h4>
+            <SvgIcon src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
+                @click="openSetting"/>
+        </template>
+        <div class="chartContainer">
+            <component v-for="(item, index) in setting.displayList" 
+                class="chartContainer-item"
+                :is="widgetComponent[item]" :ref="el =>{ displayListRef[item] = el }" 
+                :workflow="setting.workflow"
+                :user="setting.user"></component>
+        </div>
+        <WorkflowCoCountDialog ref="settingRef" 
+            @delete="handleDelete"
+            @refresh="handleRefresh"/>
     </el-card>
 </template>
 
-<script lang="ts" setup> 
-import { GridLayout, GridItem } from "vue3-grid-layout-next"
-import { ElNotification } from 'element-plus'
-import { GetDashboardApi, UpdateDashboardApi, QueryDocumentTypeSizeApi, QueryDocumentTypeCountApi, deepCopy } from 'dp-api'
-import {
-} from "~/utils/dashboardWidgetHelper";
+<script lang="ts" setup>
+import { } from 'dp-api'
 const props = withDefaults( defineProps<{
     setting?: any;
 }>() , {
     setting: {}
 })
-const route = useRoute()
+const emits = defineEmits([
+    'refreshSetting', 'delete'
+])
 const state = reactive({
-    info: {
-        name: ''
-    } as any,
-    layout: [] as DashboardWidgetSetting[],
-    loading: false,
-    saveLoading: false
 })
-
-function handleDelete(i:string) {
-    const index = state.layout.findIndex((item) =>  item.i === i)
-    state.layout.splice(index, 1)
-}
-function handleRefresh (layoutSetting:any) {
-    const index = state.layout.findIndex((item) =>  item.i === layoutSetting.i)
-    state.layout[index] = deepCopy(layoutSetting)
-}
+const displayListRef = ref({})
 function resize() {
+    Object.keys(displayListRef.value).forEach(key => {
+        const item = displayListRef.value[key]
+        if(item) item.resize()
+    })
 }
-function getLayout(s) {
-    if(!s.layout) s.layout = []
-    state.layout = s.displayList.reduce((prev,item, index) => {
-        let layoutItem =  s.layout.find(lItem => lItem.component === item)
-        if(!layoutItem) {
-            layoutItem = {
-                minW: 2,
-                minH: 2,
-                maxW: 4,
-                maxH: 4,
-                w: 2,
-                h: 2,
-                x: ((s.layout.length + index + 1) * 2) % 4,
-                y: s.layout.length +  4 + index + 1, // puts it at the bottom
-                i: new Date().valueOf() + index + 1,
-                component: item,
-                setting: s
-            }
-        } else {
-            layoutItem.setting = { ...layoutItem.setting, ...s }
-        }
-        prev.push(layoutItem)
-        return prev
-    }, [])
+const settingRef = ref()
+function openSetting() {
+    settingRef.value.handleOpen(props.setting)
 }
-watch(() => props.setting, (newSetting) => {
-    console.log(deepCopy(newSetting))
-    if(newSetting && newSetting.displayList) getLayout(deepCopy(newSetting))
-}, {
-    immediate: true
-})
+function handleDelete() {
+    emits('delete')
+}
+function handleRefresh(chartSetting) {
+    emits('refreshSetting', chartSetting)
+}
 defineExpose({
     resize
 })
 </script>
 
 <style lang="scss" scoped>
-.dashboard-item-co-main {
-    height: 100%;
+.dashboard-item-main {
+    display: grid;
+    grid-template-rows: min-content 1fr;
     overflow: hidden;
+    background-color: var(--setting-color, #fff);
 }
-.dashboard-item-co-main :deep(.el-card__body) {
+.dashboard-item-main :deep(.el-card__body) {
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
 }
-.dashboard-item-co-main :deep(.el-card__header) {
+.dashboard-item-main :deep(.el-card__header) {
     display: flex;
     justify-content: space-between;
     border-bottom: unset;
-    padding: var(--app-padding) var(--app-padding) 0;
+    padding: var(--app-padding);
     h4 {
         padding: unset;
         margin: unset;
@@ -101,8 +77,21 @@ defineExpose({
         font-family: Arial;
     }
 }
-:deep(.co-count-chart) {
-    width: 100%;
+.chartContainer {
     height: 100%;
+    max-width: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-flow: row wrap;
+    container-type: inline-size;
+    &-item {
+        min-height: 300px;
+    }
+}
+@container (min-width: 640px){
+  .co-count{
+    flex: 1 0 50%;
+    max-width: 50% ;
+  }
 }
 </style>

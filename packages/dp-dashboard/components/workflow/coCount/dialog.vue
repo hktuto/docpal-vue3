@@ -33,7 +33,7 @@ const state = reactive({
     icon: ''
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('dashboard/coCountSetting.json')
+const formJson = getJsonApi('dashboard/workflowCoCountSetting.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true

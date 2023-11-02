@@ -6,14 +6,14 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { GetCoCountSizeApi } from 'dp-api'
+import { GetWorkflowNewCountTrendApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
-    documentType?: string,
+    workflow?: string,
     user?: string
 }>() , {
-    documentType: '',
-    user: ''
+    user: '',
+    workflow: ''
 })
 type EChartsOption = echarts.EChartsOption;
 const chartRef = ref()
@@ -31,7 +31,7 @@ const setting = {
                 data: []
             },
             title: {
-                text: $t('dashboard.newCount'),
+                text: $t('dashboard.WorkflowNewCount'),
                 left: "left",
             },
             yAxis: {
@@ -92,12 +92,12 @@ function resize() {
         }
         return style
     }
-    async function handleInitChart(documentType) {
+    async function handleInitChart(workflow) {
         options = { 
             ...setting.defaultSetting.options
         }
         // data
-        await getData(documentType)
+        await getData(workflow)
         options.xAxis.data = state.xAxis
         options.series = {
             ...setting.defaultSetting.series,
@@ -105,17 +105,15 @@ function resize() {
         }
         initChart()
     }
-    async function getData(documentType: string) {
+    async function getData(workflow: string) {
         try {
-            const res = await GetCoCountSizeApi(documentType, props.user)
+            const initData = await GetWorkflowNewCountTrendApi({ workflowId: workflow, userId: props.user  })
             state.xAxis = []
-            const initData = res.group_document_type.buckets[0].group_by_time.buckets
             state.data = initData.reduce((prev,item) => {
-                prev.push(item.cumulative_sum_mb.value)
-                state.xAxis.push(item.key_as_string)
+                prev.push(item.count)
+                state.xAxis.push(item.key)
                 return prev
             }, [])
-            console.log(state.data)
         } catch (error) {
         }
     }
@@ -127,14 +125,13 @@ onMounted(async() => {
         initStyle()
         // 随着屏幕大小调节图表
         useEventListener(window, 'resize', resize)
-        handleInitChart('File')
     })
 })
 onUnmounted(() => {
     echartInstance.dispose()
 })
 watch(() => props, (newValue) => {
-    
+    handleInitChart(props.workflow)
 }, {
     immediate: true,
     deep: true

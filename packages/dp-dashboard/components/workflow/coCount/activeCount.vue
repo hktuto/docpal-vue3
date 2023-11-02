@@ -6,13 +6,13 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { GetCoCountSizeApi } from 'dp-api'
+import { GetWorkflowActivateTaskTrendApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
-    documentType?: string,
+    workflow?: string,
     user?: string
 }>() , {
-    documentType: '',
+    workflow: '',
     user: ''
 })
 type EChartsOption = echarts.EChartsOption;
@@ -26,16 +26,16 @@ const setting = {
     defaultSetting: {
         options: {
             xAxis: {
-                type: 'value',
                 boundaryGap: false,
+                type: 'category',
             },
             title: {
-                text: $t('dashboard.timeSpendPerTask'),
+                text: $t('dashboard.WorkflowActiveCount'),
                 left: "left",
             },
             yAxis: {
+                type: 'value',
                 data: [],
-                type: 'category',
             },
             tooltip: {
                 trigger: 'item'
@@ -48,7 +48,7 @@ const setting = {
             }
         },
         series: {
-            type: 'pie',
+            type: 'line',
         }
     }
 }
@@ -91,12 +91,12 @@ function resize() {
         }
         return style
     }
-    async function handleInitChart(documentType) {
+    async function handleInitChart(workflow) {
         options = { 
             ...setting.defaultSetting.options
         }
         // data
-        await getData(documentType)
+        await getData(workflow)
         options.xAxis.data = state.xAxis
         options.series = {
             ...setting.defaultSetting.series,
@@ -104,14 +104,13 @@ function resize() {
         }
         initChart()
     }
-    async function getData(documentType: string) {
+    async function getData(workflow: string) {
         try {
-            const res = await GetCoCountSizeApi(documentType, props.user)
+            const initData = await GetWorkflowActivateTaskTrendApi({ workflowId: workflow, userId: props.user  })
             state.xAxis = []
-            const initData = res.group_document_type.buckets[0].group_by_time.buckets
             state.data = initData.reduce((prev,item) => {
-                prev.push(item.cumulative_sum_mb.value)
-                state.xAxis.push(item.key_as_string)
+                prev.push(item.count)
+                state.xAxis.push(item.key)
                 return prev
             }, [])
             console.log(state.data)
@@ -126,14 +125,13 @@ onMounted(async() => {
         initStyle()
         // 随着屏幕大小调节图表
         useEventListener(window, 'resize', resize)
-        handleInitChart('File')
     })
 })
 onUnmounted(() => {
     echartInstance.dispose()
 })
 watch(() => props, (newValue) => {
-    
+    handleInitChart(props.workflow)
 }, {
     immediate: true,
     deep: true

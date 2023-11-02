@@ -338,6 +338,7 @@ function resize() {
                 await getData(displayList)
                 options.series = getTrendSeries(state.data, chartType, displayList)
                 options.title.text = $t('dashboard.documentSize')
+                console.log({options})
                 break
             case 'brick':
                 await getData(displayList)
