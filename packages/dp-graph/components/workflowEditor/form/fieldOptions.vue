@@ -2,7 +2,6 @@
 <script lang="ts" setup>
   import {FormObject} from "../../../utils/formEditorHelper";
 
-  const formFieldEditorOpened = ref(false);
   const props = defineProps<{
     field: FormObject
   }>();
@@ -27,8 +26,8 @@
     console.log(props.field)
     formEl.value.validate((valid) => {
       if(!valid) return;
-      console.log("valid")
       emit('submit', formField.value)
+      emit('close')
     })
   }
   

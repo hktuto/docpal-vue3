@@ -178,6 +178,7 @@ watch(() => props.bpmn, (newVal, oldVal) => {
 function getWorkflowData() {
   
   const xml = jsonToBpmn(data.value)
+  console.log(xml)
   // create blob file
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
   const name = data.value.definitions.process.attr_name

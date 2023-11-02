@@ -33,7 +33,6 @@ const allFieldOptions = computed(() => {
 
 const selectedEmailTemplate = computed({
   get() {
-    console.log(props.data.extensionElements)
     const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType");
     // props.data.extensionElements['flowable:field']['flowable:string']['__cdata'];
     return props.data.extensionElements['flowable:field'][index]['flowable:string']['__cdata'];
@@ -80,7 +79,7 @@ onMounted(async() => {
       <ElForm :model="data" label-position="top">
         <ElFormItem label="Email template">
           <ElSelect v-model="selectedEmailTemplate" placeholder="Select email template" class="fullwidth">
-            <ElOption v-for="item in allEmailTemplates" :key="item.id" :label="item.name" :value="item.id"></ElOption>
+            <ElOption v-for="item in allEmailTemplates" :key="item.id" :label="item.label" :value="item.id"></ElOption>
           </ElSelect>
         </ElFormItem>
       </ElForm>
