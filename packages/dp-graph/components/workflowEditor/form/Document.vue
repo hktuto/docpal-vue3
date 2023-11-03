@@ -13,7 +13,7 @@ async function getDocumentTemplates() {
   const entryList = await GetAllTemplatePageApi();
   allDocumentTemplates.value = entryList.map((item: any) => {
     return {
-      id: '${variables:get(' + item.id + ')}',
+      id: item.id,
       name: item.name,
     }
   });

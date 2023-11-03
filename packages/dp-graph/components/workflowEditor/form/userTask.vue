@@ -37,15 +37,12 @@
               </div>
               <draggable v-model="data.extensionElements['flowable:formProperty']" class="formFieldList" tag="ul" item-key="name">
                 <template #item="{ element, index }">
-                  <li :class="{formFieldItem:true, noValid: !element.attr_field_valid}">
+                  <li class="formFieldItem">
                     <div scope="row" class="mover">
                       <SvgIcon src="/icons/move-handle.svg" />
                     </div>
-                    <div :class="{ fieldName:true, required:element.attr_required }">
-                      {{element.attr_name}}
-                    </div>
+                    <WorkflowEditorFormField :field="element" @submit="(val) => updateFormField(val, index)"/>
                     <div class="actions">
-                      <WorkflowEditorFormFieldOptionButton :field="element" @submit="(val) => updateFormField(val, index)"/>
                       <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
                     </div>
                   </li>
@@ -266,9 +263,6 @@ onMounted(async() => {
   gap: calc(var(--app-padding) / 2 );
   .fieldName{
     flex: 1 0 auto;
-  }
-  &.noValid {
-    color: red;
   }
 }
 .formFieldItem + .formFieldItem {
