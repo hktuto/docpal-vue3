@@ -66,7 +66,7 @@
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue'
 import draggable from 'vuedraggable'
-import { UserSettingSaveApi } from 'dp-api'
+import { UserSettingSaveApi, defaultTableSetting } from 'dp-api'
 const { userPreference } = toRefs(useUser())
 const { getUserSetting } = useUser()
 const { tableColumnSetting } = toRefs(useSetting())
@@ -133,8 +133,12 @@ async function handleSubmit () {
 
 function initColumn () {
   // check store default column setting
-  if(props.sortKey && tableColumnSetting.value) {
-    originalColumns.value = tableColumnSetting.value[props.sortKey].columns || props.columns;
+  if(props.sortKey) {
+    try {
+      originalColumns.value = tableColumnSetting.value[props.sortKey].columns;
+    } catch (error) {
+      originalColumns.value = props.columns
+    }
     // normalize user preference
 
     // set displayList and hideList

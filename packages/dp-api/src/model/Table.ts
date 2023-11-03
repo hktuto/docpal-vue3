@@ -66,6 +66,7 @@ export enum TABLE {
     ADHOC_Completed_TASK = 'adhocCompletedTask',
     ACTIVE_TASK = 'activeTask',
     CLIENT_TRASH = 'clientTrash',
+    CLIENT_SMART_FOLDER_LIST = 'clientSmartFolderList',
     CLIENT_SMART_FOLDER = 'clientSmartFolder',
     CLIENT_COLLECTION = 'clientCollection',
     CLIENT_SHARE_LIST = 'clientShareList',
@@ -110,6 +111,7 @@ export enum TABLE {
     ADMIN_VOCABULARY_CHILD_FORM = 'adminVocabularyChildForm',
     ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
     ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
+    ADMIN_WORKFLOW_EDITOR_MANAGE = 'adminWorkflowEditorManage',
     ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
     ADMIN_AUDIT = 'adminAudit',
     ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
@@ -120,7 +122,8 @@ export enum TABLE {
     ADMIN_RETENTION_MANAGE = 'adminRetentionManage',
     ADMIN_EMAIL_TEMPLATE = 'adminEmailTemplate',
     ADMIN_EMAIL_LAYOUT = 'adminEmailLayout',
-
+    ADMIN_DOC_TEMPLATE = 'adminDocTemplate',
+    ADMIN_DASHBOARD = 'adminDashboard',
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -280,6 +283,38 @@ export const defaultTableSetting: TableColumnSetting = {
             { slot: 'assignee', label: 'workflow_assignee', property: 'assignee', },
             { label: 'workflow_createDate', property: 'createDate', sortable: true },
             { label: 'workflow_dueDate', property: 'dueDate', sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SMART_FOLDER_LIST] : {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'dpDocument_fileType', slot: 'fileType' },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
         ],
         events: [],
         options: { pageSize: 20 }
@@ -819,7 +854,7 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_FILE_REQUEST] : {
         columns: [
             { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true, defaultColumn: true },
-            { id: '2', label: 'dpTable_location', prop: 'documentId', showOverflowTooltip: true },
+            { id: '2', label: 'dpTable_location', prop: 'logicalPath', showOverflowTooltip: true },
             { id: '3', label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
             { id: '4', label: 'dpTable_status', prop: 'status',
                 formatList: [
@@ -1790,6 +1825,53 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.ADMIN_WORKFLOW_EDITOR_MANAGE]: {
+        columns: [
+            { id: '2', label: 'table_name', prop: 'name', defaultColumn: true },
+            { id: '6', label: 'workflow_createDate', prop: 'createdDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            {   
+                id: '8',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'reallocate'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.ADMIN_MESSAGE_QUEUE]: {
         columns: [
             { id: '2', label: 'table_fileName', prop: 'fileName', defaultColumn: true },
@@ -1914,7 +1996,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.PUBLIC_LANGUAGE_SET]: {
         columns: [
-            { id: '1', label: 'key', prop: 'key', defaultColumn: true },
+            { id: '1', label: 'key', prop: 'key', defaultColumn: true, copy: true },
             { id: '2', label: 'en-US', prop: 'en-US', slot: 'enUS' },
             { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zhCN' },
             { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zhHK' },
@@ -1998,6 +2080,31 @@ export const defaultTableSetting: TableColumnSetting = {
                 "prefixIcon": "",
                 "suffixIcon": "",
             }
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DOC_TEMPLATE]: {
+        columns: [
+            { id: '10', label: '', slot: 'iconName', defaultColumn: true, width: 60 },
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'info_type', prop: 'fileType' },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'dpTable_actions', slot: 'templateAction', prop: 'status', width: 100 },
         ],
         events: ['delete'],
         slots: [],
@@ -2138,8 +2245,63 @@ export const defaultTableSetting: TableColumnSetting = {
             { label: 'user_active', slot: 'active', prop: 'status', width: 100 },
         ],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DASHBOARD]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_access', prop: 'access' },
+            // { id: '3', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                width: 150,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
     }
-
     
 }
 

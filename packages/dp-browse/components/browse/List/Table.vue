@@ -127,6 +127,7 @@ function handleDblclick (row:any) {
     if(row.isFolder) {
       router.push({
           query: {
+                ...route.query,
               path: row.path,
               isFolder: row.isFolder
           }

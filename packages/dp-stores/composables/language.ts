@@ -174,7 +174,6 @@ export const useLanguage = defineStore('Language', () => {
         if (locale.includes('zh') && locale !== 'zh-HK') locale = 'zh-CN'
         if (!i18n.availableLocales.includes(locale)) {
             const jsonKeys = {}
-            console.log(i18n);
             
             // @ts-ignore
             for await ( const languageKey of localeSectionKeys) {

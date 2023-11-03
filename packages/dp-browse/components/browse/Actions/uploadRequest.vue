@@ -50,7 +50,7 @@ function uploadDialog(){
     try {
       const data = await FromRendererRef.value.getFormData(true, false)
       if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
-      data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
+      if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
       data.idOrPath = props.path
       const res = await saveFileRequestListApi(data)
       state.loading = false
@@ -59,7 +59,7 @@ function uploadDialog(){
       ElMessage.success($i18n.t('publicUpload_success'))
       emits('success')
     } catch (error) {
-      // ElMessage.error(error.message)
+      ElMessage.error(error.message)
     }
     state.loading = false
   }

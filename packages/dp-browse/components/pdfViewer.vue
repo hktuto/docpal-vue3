@@ -66,7 +66,9 @@ async function sendPdfAndAnnotation() {
     }
     loading.value = false;
 }
-
+function refresh() {
+    sendPdfAndAnnotation()
+}
 function gotMessageFromIframe(message:MessageEvent) {
     const { data:{ data, type} } = message;
     if(!data && !type ) return;
@@ -120,7 +122,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
 useEventListener(window, 'message', gotMessageFromIframe)
 useEventListener(window, 'downloadPdfAndAnnotation', downloadPdfAndAnnotation)
 useEventListener(document, 'downloadPdf', downloadPdf)
-
+defineExpose({ refresh })
 </script>
 
 <style lang="scss" scoped>

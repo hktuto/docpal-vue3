@@ -80,7 +80,7 @@ function handleRefresh(){
                                 <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                                 <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                                 
-                                <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
+                                <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
                             </div>
                         </template>
                     </BrowseInfo>

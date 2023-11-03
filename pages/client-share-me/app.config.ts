@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'SHARE_INTERNAL',
       name:"file_share_me",
       routeName:"shareMe",
       url:"/shareMe",

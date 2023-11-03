@@ -17,7 +17,7 @@
                     <el-button type="info" @click="handleReset">{{$t('reset')}}</el-button>
                 </el-col>
                 <el-col :span="16">
-                    <el-button type="primary" @click="handleSubmit">{{$t('search')}}</el-button>
+                    <el-button type="primary" :loading="loading" @click="handleSubmit">{{$t('search')}}</el-button>
                 </el-col>
             </el-row>
             <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" @click="handleDownload">{{$t('export')}}</el-button>
@@ -33,7 +33,8 @@ import { deepCopy, getJsonApi, getSearchParamsArray } from 'dp-api'
 import {ArrowDown} from "@element-plus/icons-vue";
 const props = defineProps<{
     searchParams: any,
-    ready: boolean
+    ready: boolean,
+    loading: boolean,
 }>()
 const { isMobile, allowFeature } = useLayout()
 const route = useRoute()

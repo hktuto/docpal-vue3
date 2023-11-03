@@ -3,12 +3,12 @@
         <div class="left">
           <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" />
             <el-tabs v-model="modelProps" @tab-click="tabChange">
-            <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100">
-                <browse-list-table v-if="modelProps === 'table'" :list="children" :loading="pending" 
+            <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100" >
+                <browse-list-table v-if="modelProps === 'table'" id="browseTable" :list="children" :loading="pending" 
                     @select-change="handleSelectionChange" />
             </el-tab-pane>
-            <el-tab-pane :label="$t('browse_list_preview')" name="preview" class="h100">
-                <browse-list-preview v-if="modelProps === 'preview'" :list="children"  :permission="permission" />
+            <el-tab-pane :label="$t('browse_list_preview')" name="preview" class="h100" >
+                <browse-list-preview v-if="modelProps === 'preview'" id="browsePreview" :list="children"  :permission="permission" />
             </el-tab-pane>
             </el-tabs>
         </div>

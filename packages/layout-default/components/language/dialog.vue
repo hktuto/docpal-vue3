@@ -45,7 +45,7 @@ const filter = ref('');
 const filterTable = computed(() => {
     if(!filter.value) return state.tableData
     return state.tableData.filter(item => {
-        return item['en-US'].includes(filter.value) || item['zh-CN'].includes(filter.value) || item['zh-HK'].includes(filter.value)
+        return item['en-US'].includes(filter.value) || item['zh-CN'].includes(filter.value) || item['zh-HK'].includes(filter.value) || item.key.includes(filter.value)
     })
 })
 const tableKey = TABLE.PUBLIC_LANGUAGE_SET

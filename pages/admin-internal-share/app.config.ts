@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'SHARE_INTERNAL',
       name:"admin_shareInternal",
       routeName:"shareInternal",
       url:"/shareInternal",

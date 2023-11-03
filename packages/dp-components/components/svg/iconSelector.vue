@@ -6,14 +6,18 @@
             {{$t('selectSvg')}}
         </el-button>
     </div>
-    <el-dialog v-model="dialogVisible" :title="$t('selectSvg')" custom-class="svg-selector__dialog">
+    <el-dialog v-model="dialogVisible" :title="$t('selectSvg')" 
+        class="scroll-dialog svg-selector__dialog"
+        append-to-body>
         
         <SvgIconList ref="svgIconListRef" v-model:selectedSrc="_src"></SvgIconList>
         <template #footer>
-            <div class="">{{$t('selectedSvg')}}:<SvgIcon :src="_src" /></div>
-            <div>
-                <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
-                <el-button type="primary" @click="handleConfirm">{{$t('confirm')}}</el-button>
+            <div class="flex-x-between">
+                <div class="flex-x-start">{{$t('selectedSvg')}}:<SvgIcon class="el-icon--right" :src="_src" /></div>
+                <div>
+                    <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
+                    <el-button type="primary" @click="handleConfirm">{{$t('confirm')}}</el-button>
+                </div>
             </div>
         </template>
     </el-dialog>
@@ -24,7 +28,7 @@ const props = defineProps<{
     src: string
 }>()
 const dialogVisible = ref(false)
-const _src = ref(props.src)
+const _src = ref()
 const svgIconListRef = ref()
 const emit = defineEmits(['update:src'])
 function handleConfirm () {
@@ -32,6 +36,11 @@ function handleConfirm () {
     dialogVisible.value = false
     emit('update:src', _src.value)
 }
+watch(()=> props.src, (newValue) => {
+    _src.value = newValue
+}, {
+    immediate: true
+})
 </script>
 
 <style lang="scss" scoped>
@@ -40,7 +49,7 @@ function handleConfirm () {
     align-items: center;
     justify-content: space-between;
 }
-:deep(.svg-selector__dialog) {
+.svg-selector__dialog {
     .el-dialog__body {
         max-height: 60vh;
         overflow: auto;

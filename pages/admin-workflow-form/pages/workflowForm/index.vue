@@ -25,10 +25,11 @@ import { GetProcessDefinitionListApi } from 'dp-api'
         state.loading = true
         try {
             const res = await GetProcessDefinitionListApi()
+            console.log(res)
             state.list = res
             state._list = deepCopy(state.list)
         } catch (error) {
-
+            console.log(error)
         }
         state.loading = false
     }

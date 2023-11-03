@@ -88,6 +88,7 @@ const route = useRoute()
 const router = useRouter()
 // #region module: Data
   async function loadNode (node: Node, resolve: any) {
+    setTimeout(async() => {
       if (node.level === 0) {
         if (props.rootDataGetApi) {
           const res = await props.rootDataGetApi();//获取顶级节点数据
@@ -108,6 +109,7 @@ const router = useRouter()
         }
         resolve(res)
       }
+    })
   }
   async function getLoadMoreData (data) {
     // TODO 初始路径分页内容加载
@@ -170,7 +172,6 @@ const router = useRouter()
   // #endregion
 // #endregion
 function handleNodeClick (data, node?, nodeComponent?) {
-  console.log({data});
   
   if (node.data.isGetMore) {
     getMore(node)
@@ -182,7 +183,9 @@ function handleNodeClick (data, node?, nodeComponent?) {
     }
   })
   treeRef.value.setCurrentKey(data[_options.value.nodeKey])
-  emits('handleNodeClick', data, node, nodeComponent)
+  setTimeout(() => {
+    emits('handleNodeClick', data, node, nodeComponent)
+  })
 }
 defineExpose({ treeRef })
 </script>

@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div class="search-page">
-            <SearchFilterLeft ref="SearchFilterLeftRef" :ready="state.firstReady"></SearchFilterLeft>
+            <SearchFilterLeft ref="SearchFilterLeftRef" :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
             <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                     @pagination-change="handlePaginationChange"
                     @row-dblclick="handleDblclick">
@@ -104,6 +104,7 @@ const previewFile = reactive({
         noDownload: true,
         print: false,
         loadAnnotations: false,
+        readOnly: true
     }
 })
 async function handleDblclick (row) {

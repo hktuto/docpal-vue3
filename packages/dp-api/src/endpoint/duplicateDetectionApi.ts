@@ -80,7 +80,10 @@ export const GetDocumentPreview = async(idOrPath:string) => {
         idOrPath
     },{
         responseType: 'blob',
-        timeout: 0
+        timeout: 0,
+        headers: {
+            key: 'preview'
+        }
     }).then(res => res.data)
 }
 
@@ -102,8 +105,13 @@ export const GetTemplateParamsApi = async(param) => {
 export const DownloadTemplateApi = async(param) => {
     return api.post('/nuxeo/template/summitAndDownloadFile', param, {responseType: 'blob', timeout: 0}).then(res => res.data)
 }
-export const DownloadDocApi = async(idOrPath:string) => {
-    return api.post('/nuxeo/document/download', {idOrPath}, {responseType: 'blob', timeout: 0}).then(res => res.data)
+export const DownloadDocApi = async(idOrPath:string, cb?) => {
+    return api.post('/nuxeo/document/download', {idOrPath}, {
+        responseType: 'blob', timeout: 0,
+        onDownloadProgress: function (progressEvent) {
+            if(cb) cb(progressEvent)
+        }
+    }).then(res => res.data)
 }
 export const downloadDocRecord = async(params) => {
     return api.post('/nuxeo/document/download', params, {responseType: 'blob', timeout: 0}).then(res => res.data)
@@ -113,8 +121,13 @@ export const downloadDocRecord = async(params) => {
     export const CreateFoldersApi = async(param) => {
         return api.post('/nuxeo/document/createFolders', param).then(res => res.data.data)
     }
-    export const CreateDocumentApi = async(param) => {
-        return api.post('/nuxeo/document/createDocument', param, {timeout:0}).then(res => res.data.data)
+    export const CreateDocumentApi = async(param, cb?) => {
+        return api.post('/nuxeo/document/createDocument', param, {
+            timeout:0,
+            onUploadProgress: function (progressEvent) {
+                if(cb) cb(progressEvent)
+            }
+        }).then(res => res.data.data)
     }
     export const patchDocumentApi = async(param) => {
         return api.patch('/nuxeo/document', param).then(res => res.data.data)

@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'VOCABULARY',
       name:"admin_vocabulary",
       routeName:"vocabulary",
       url:"/vocabulary",

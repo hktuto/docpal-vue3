@@ -18,8 +18,8 @@ import {IconCurlyBrackets, IconCross} from '@codexteam/icons'
  */
 
 const DICTIONARY = {
-  pasteOrSearch: 'Paste or search',
-  pasteALink: 'Paste a link',
+  pasteOrSearch: 'Search or add new',
+  pasteALink: 'Search or add new',
   searchRequestError: 'Cannot process search request because of',
   invalidServerData: 'Server responded with invalid data',
   invalidUrl: 'Link URL is invalid',

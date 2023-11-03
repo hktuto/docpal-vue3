@@ -1,6 +1,7 @@
 export default defineAppConfig({
     menu:[
         {
+          feature:'SEARCH',
           name:"file_search",
           routeName:'search',
           url:"/search",

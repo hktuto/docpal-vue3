@@ -4,6 +4,7 @@
 
 
 <script lang="ts" setup>
+import { Loading } from '@element-plus/icons-vue';
 import { exportFolderStructureApi } from 'dp-api';
 import {ElNotification} from 'element-plus'
     const props = defineProps<{
@@ -15,6 +16,7 @@ import {ElNotification} from 'element-plus'
     const noti = ElNotification({
         title: '',
         dangerouslyUseHTMLString: true,
+        icon: Loading,
         message: `downloading ~ ${props.exportName}`,
         showClose: false,
         customClass: 'loading-notification',

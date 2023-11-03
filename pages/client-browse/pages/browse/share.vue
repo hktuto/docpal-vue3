@@ -60,6 +60,7 @@ const previewFile = reactive({
         noDownload: true,
         print: false,
         loadAnnotations: false,
+        readOnly: true
     }
 })
 async function handleDblclick (row) {
@@ -126,7 +127,7 @@ function handleDeleteRow (row) {
     updateShareList(state.minTypeShareList)
 }
 async function handleDiscard () {
-    const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${$t('tip.confirmWhetherToDiscardShareQueue')}`)
     if(action !== 'confirm') return
     if(!!state.interval) clearInterval(state.interval)
     updateShareList([])

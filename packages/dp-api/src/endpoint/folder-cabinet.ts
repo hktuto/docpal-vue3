@@ -68,6 +68,13 @@ export const GetCabinetHeaderApi = async(templateId) => {
 }
 export const GetCabinetConditionsApi = async(templateId) => {
     const res = await api.get(`/docpal/cabinet/${templateId}/page/conditions`).then(res => res.data.data)
+    res.forEach(item => {
+        if(item.key === 'state') {
+            item.options.forEach(op => {
+                op.label = 'fc.' + op.label
+            })
+        }
+    });
     return res
 }
 export const ExportCabinetApi = async(params) => {

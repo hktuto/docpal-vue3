@@ -15,14 +15,14 @@
                       <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
                       <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
-                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefresh"/>
+                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefreshPreview"/>
                       <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
                       <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
                       <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                       <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                       <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
-                      <BrowseActionsShare  v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
+                      <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
       
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
@@ -42,10 +42,10 @@
             </div>
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
-                    <LazyHtmlViewer v-if="readerType === 'html'" :doc="doc" />
-                    <LazyPdfViewer v-if="readerType === 'pdf'" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
-                    <LazyVideoPlayer v-else-if="readerType === 'video'" :doc="doc" />
-                    <LazyOtherPlayer v-else-if="readerType === 'other'" :doc="doc"></LazyOtherPlayer>
+                    <LazyHtmlViewer v-if="readerType === 'html'" ref="PreviewRef" :doc="doc" />
+                    <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
+                    <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
+                    <LazyOtherPlayer v-else-if="readerType === 'other'" ref="PreviewRef" :doc="doc"></LazyOtherPlayer>
                 </div>
                 <h2 v-else class="noSupportContainer" >
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
@@ -81,6 +81,7 @@ const emit = defineEmits(['close'])
 const { public:{feature} } = useRuntimeConfig();
 const { allowFeature } = useLayout()
 const readerType = computed(() => {
+  try {
     if(!doc.value) return "";
     const properties = doc.value.properties as any
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
@@ -88,8 +89,10 @@ const readerType = computed(() => {
     if(mineType.includes('text/html')) {
       return 'html';
     }
+    if(mineType.includes('image/tiff')) {
+      return 'other';
+    }
     if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text') || mineType.includes('photoshop') || mineType.includes('psd') || mineType.includes('illustrator')  ) {
-      
       return 'pdf';
     }
     if(mineType.includes('video')) {
@@ -98,27 +101,36 @@ const readerType = computed(() => {
     if (mineType.includes('audio')) {
         return 'other';
     }
-    
-    
     return '';
+  } catch (error) {
+    return ''
+  }
 });
-
+function handleRefresh() {
+  getData(doc.value.path)
+}
+const PreviewRef = ref()
+function handleRefreshPreview() {
+  PreviewRef.value.refresh()
+}
 async function openPreview({detail}:any) {
+  cancelAxios()
   show.value = false
   options.value = detail.options
-  // const response = await getDocumentDetail(detail.pathOrId, userId)
-  const response = await getDocumentDetailSync(detail.pathOrId, userId);
-
-  doc.value = response.doc
-  permission.value = response.permission
+  getData(detail.pathOrId)
   show.value = true
 }
-
+async function getData (docId) {
+  const response = await getDocumentDetailSync(docId, userId);
+  doc.value = response.doc
+  permission.value = response.permission
+}
 function mobileActionsOpenedChanged(bool:boolean) {
   mobileActionOpened.value = bool
 }
 
 function closePreview(){
+  cancelAxios()
   show.value = false;
   doc.value = null
   permission.value = null;
@@ -255,6 +267,7 @@ watch(show, (isShow) => {
   }
 }
 .preview{
+  overflow: hidden;
   &.mobileActionOpened{
     pointer-events: none;
   }

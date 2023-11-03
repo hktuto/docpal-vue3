@@ -15,10 +15,14 @@
 
 <script lang="ts" setup>
 const props = withDefaults(defineProps<{
+    defaultOpen: boolean,
+    showClose: boolean,
     defaultW: number,
     minWidth: number,
     maxWidth: number,
 }>(),{
+    defaultOpen: false,
+    showClose: true,
     defaultW: 400,
     minWidth: 120,
     maxWidth: 600
@@ -47,12 +51,15 @@ function handleSwitch(width: number = props.defaultW) {
 }
 function handleOpen(width: number = props.defaultW) {
     interact.w = width 
-    interact.closeShow = true
+    interact.closeShow = props.showClose
 }
 function resizeMove(event:any) {
     const min = Math.max(event.rect.width, props.minWidth)
     interact.w = props.maxWidth ? Math.min(min, props.maxWidth) : min;
 }
+onMounted(() => {
+     if(props.defaultOpen) handleOpen()
+})
 defineExpose({
     handleOpen, handleSwitch
 })

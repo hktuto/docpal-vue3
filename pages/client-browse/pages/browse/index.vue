@@ -7,7 +7,9 @@
         <div v-if="listData" class="browsePageContainer">
             <div v-if="selectList.length === 0 && listData.doc.path !== '/'"
                  class="browseHeader">
-                <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
+                 <slot name="breadcrumb">
+                    <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
+                </slot>                    
                 <div id="browseHeaderRight" class="folderAction">
                     <CollapseMenu>
                         <template #default="{collapse}">
@@ -31,7 +33,7 @@
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
                 <CollapseMenu>
                     <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
-                    <BrowseActionsShare v-if="feature.SHARE_EXTERNAL && AllowTo({feature:'ReadWrite', permission: listData.permission })"
+                    <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission: listData.permission })"
                         :doc="listData.doc" :selectedList="selectList"/>
                     <BrowseActionsCollection :selectedList="selectList" @clearSelected="handleClearSelected"></BrowseActionsCollection>
                     <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :selected="selectList" @success="handleRefresh"
@@ -99,8 +101,6 @@ const infoOpened = ref(false);
 
 
 async function getDocDetail() {
-    console.log(selectList.value.length);
-    
     // const response = await getDocumentDetail(routePath.value, userId)
     const response = await getDocumentDetailSync(routePath.value, userId)
     
@@ -134,6 +134,7 @@ function itemDeleted(){
 async function handleRefresh () {
     forceRefresh.value = true
     await getDocDetail()
+    if(listData?.value?.doc?.isFolder) breadCrumb.value.handleRefresh();
 }
 
 function handleSelectionChange (rows:any) {

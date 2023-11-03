@@ -3,6 +3,7 @@
 export default defineAppConfig({
   menu:[
     {
+      feature:'BULK_IMPORT',
       name:"admin_bulkImportConfig",
       routeName:"bulkImport",
       url:"/bulkImport",

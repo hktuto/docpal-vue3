@@ -14,6 +14,8 @@ export default defineNuxtPlugin(({$i18n,_route}) => {
         // @ts-ignore
         window.$router = router
         // @ts-ignore
+        window.$formatDate = formatDate
+        // @ts-ignore
         window.$i18n = $i18n
         // @ts-ignore
         window.$t = (key: string) => {

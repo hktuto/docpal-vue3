@@ -31,7 +31,7 @@ watch( item, () => {
                   clearable filterable popper-class="pc-el-cascader"></el-cascader>
   </template>
   <template v-else>
-    <el-input  v-model="form.value" type="text"
+    <el-input  v-model="form.value" type="text" :id="`meta_${item.metaData}`"
                :maxlength="item.length" show-word-limit @change="(val) => changeHandler(item.metaData, val)"/>
   </template>
 

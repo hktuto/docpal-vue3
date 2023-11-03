@@ -56,7 +56,9 @@ const state = reactive({
 async function handleTabClick (row) {
     router.push({query: { id: row.id }})
     try {
-        getVocabularyDetail(row)
+        setTimeout(() => {
+            getVocabularyDetail(row)
+        })
     } catch (error) {
         state.curVocabulary = row
     }
