@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dashboard.setting')"
+<el-dialog v-model="state.visible" :title="$t('masterTable.newTable')"
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
@@ -24,10 +24,10 @@ const state = reactive({
     setting: {
     },
     extraFields: [
-        { dataType: "LOCALDATETIME", fieldName: "created_date", nullable: false, unique: false },
-        { dataType: "VARCHAR:255", fieldName: "id", primaryKey: true, nullable: false, unique: true },
-        { dataType: "LOCALDATETIME", fieldName: "modified_date", nullable: false, unique: false },
-        { dataType: "VARCHAR:255", fieldName: "modified_by", nullable: false, unique: false }
+        { dataType: "timestamp", fieldName: "created_date", required: true, unique: false },
+        { dataType: "varchar:255", fieldName: "id", primaryKey: true, required: true, unique: true },
+        { dataType: "timestamp", fieldName: "modified_date", required: true, unique: false },
+        { dataType: "varchar:255", fieldName: "modified_by", required: true, unique: false }
     ],
     edit: false
 })
@@ -40,7 +40,7 @@ async function handleSubmit () {
     const _data = {
         ...state.setting,
         name: data.table,
-        fields: [ ...data.fields, ...data.extraFields ]
+        fields: [ ...data.extraFields, ...data.fields  ]
     }
     try {
         const res = await SaveMasterTablesApi(_data)
@@ -54,6 +54,7 @@ async function handleSubmit () {
 function handleOpen() {
     state.visible = true
     setTimeout(async () => {
+        FromRendererRef.value.vFormRenderRef.resetForm()
         await FromRendererRef.value.vFormRenderRef.setFormData({ extraFields: state.extraFields })
         state.loading = false
     })

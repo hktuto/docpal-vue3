@@ -14,6 +14,7 @@ export const useNotification = (token:string, username:string, messageChangeCB) 
         if(!data.value) return
         const message = data.value as any
         const { messageJson } = JSON.parse(data.value)
+        // 有messageJson且messageJson的heartbeat不为true才会更新数据
         if (!messageJson || !messageJson.heartbeat) {
             messageChangeCB()
         }

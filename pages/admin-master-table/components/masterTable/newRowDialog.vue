@@ -14,40 +14,86 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, CreateDashboardApi, UpdateDashboardApi, deepCopy } from 'dp-api'
+import { getJsonApi, CreateMasterTablesRecordApi, UpdateMasterTablesRecordApi, deepCopy } from 'dp-api'
+const props = withDefaults(defineProps<{
+    ignoreList: string[],
+}>(), {
+  ignoreList: []
+})
 const emits = defineEmits([
     'refresh', 'delete'
 ])
 const state = reactive({
     loading: false,
     visible: false,
-    setting: [
-        { type: "date", name: "Created_At" },
-        { type: "string", name: "id" },
-        { type: "date", name: "Last_Update" },
-        { type: "string", name: "Modify_By" }
-    ],
+    setting: {},
+    fields: [],
     edit: false
 })
+const route = useRoute()
 const router = useRouter()
 async function handleSubmit () {
     state.loading = true
     const data = await FromVariablesRendererRef.value.getData()
-    console.log(data)
     try {
-        // const res = await CreateDashboardApi(_data)
-        // router.push(`/data-dashboard/${res.id}`)
+        if(state.edit) {
+            await UpdateMasterTablesRecordApi({
+                id: route.params.id,
+                data: [data],
+                where: {
+                    id: state.setting.id
+                }
+            })
+        }
+        else {
+            await CreateMasterTablesRecordApi({
+                id: route.params.id,
+                data: [data]
+            })
+        }
         state.visible = false
+        emits('refresh')
     } catch (error) {
         state.loading = false
     }
     state.loading = false
 }
+function turnFields(fields) {
+    const typeMap = {
+        'varchar': 'input',
+        'VARCHAR:255': 'textarea',
+        'clob': 'textarea',
+        'bigint': 'number',
+        'timestamp': 'date',
+        'bit': 'switch'
+    }
+    return fields.reduce((prev, item) => {
+        if(!props.ignoreList.includes(item.columnName) && typeMap[item.dataType]) {
+            prev.push({
+                name: item.columnName,
+                label: `mt.${item.columnName}`,
+                type: typeMap[item.dataType],
+                required: item.required
+            })
+        } 
+        return prev
+    }, [])
+}
 const FromVariablesRendererRef = ref()
-function handleOpen() {
+function handleOpen(fields, row?) {
     state.visible = true
+    state.fields = turnFields(fields, row)
     setTimeout(async () => {
-        FromVariablesRendererRef.value.createJson(state.setting)
+        FromVariablesRendererRef.value.createJson(state.fields)
+        if(row) {
+            state.edit = true
+            state.setting = row
+            FromVariablesRendererRef.value.setData(row)
+        }
+        else {
+            state.edit = false
+            FromVariablesRendererRef.value.setData({})
+        }
     })
 }
 defineExpose({ handleOpen })

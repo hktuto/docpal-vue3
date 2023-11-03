@@ -1,27 +1,32 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" backPath="/master-table" :pageTitle="`${$t('admin_master-table')}/${$t('common_preview')}`">
-        <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
+    <NuxtLayout class="fit-height withPadding" backPath="/master-table" :pageTitle="`${$t('admin_master-table')}/${masterTable.name}`">
+        <Table ref="tableRef" v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
             @command="handleAction"
             @row-dblclick="handleDblclick"
             @pagination-change="handlePaginationChange">
             <template #preSortButton>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                    inputKey="name"/>
+                    inputKey="q"
+                    inputPlaceHolder="tip.fuzzySearch"/>
             </template>  
             <template #suffixSortButton>
+                <el-button type="info" @click="handleAddRow()">{{$t('button.import')}}</el-button>
+                <el-button type="info" @click="handleAddRow()">{{$t('button.export')}}</el-button>
                 <el-button type="primary" @click="handleAddRow()">{{$t('button.add')}}</el-button>
             </template>
         </Table>
-        <MasterTableNewRowDialog ref="MasterTableNewRowDialogRef" @refresh="handlePaginationChange(1)"/>
+        <MasterTableNewRowDialog ref="MasterTableNewRowDialogRef" :ignoreList="ignoreList" @refresh="handlePaginationChange(1)"/>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-    GetMasterTablesPageApi,
-    DeleteMasterTablesApi,
-    defaultTableSetting, TABLE, deepCopy
+    DeleteMasterTablesRecordApi,
+    GetMasterTablesRecordPageApi,
+    GetMasterTablesDetailApi,
+    defaultTableSetting, TABLE, TableAddColumns,
+    
 } from 'dp-api'
 
 // #region module: page
@@ -30,11 +35,76 @@ import {
     const pageParams = {
         pageNum: 0,
         pageSize: 20,
-        orderBy: 'createdDate',
-        isDesc: true
+        // orderBy: 'createdDate',
+        // isDesc: true
     }
-    const tableKey = TABLE.ADMIN_MASTER_TABLE
-    const tableSetting = defaultTableSetting[tableKey]
+    const tableSetting = ref({
+        columns: [
+            { id: '1', label: 'docType_id', prop: 'id', defaultColumn: true },
+            { id: '2', label: 'workflow_createDate', prop: 'created_date', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "created_date",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '3', label: 'tableHeader_modifiedDate', prop: 'modified_date', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modified_date",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '4', label: 'modified_by', prop: 'modified_by', width: 100 },
+            {   
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    })
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -47,16 +117,22 @@ import {
                 pageSize: pageParams.pageSize
             },
             rowKey: 'id',
-            sortKey: tableKey
+            sortKey: `mt_${route.params.id}`
         },
         extraParams: {}
+    })
+    const masterTable = reactive({
+        name: '',
+        fields: [],
+        columns: [],
+
     })
 
 
     async function getList (param) {
         state.loading = true
         try {
-            const res = await GetMasterTablesPageApi({ ...param, ...state.extraParams })
+            const res = await GetMasterTablesRecordPageApi({ ...param, ...state.extraParams, id: route.params.id })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -95,7 +171,7 @@ function handleAction (command, row: any, index: number) {
             handleDelete(row.id)
             break
         case 'edit':
-            handleAdd(row)
+            handleAddRow(row)
             break
         default:
             break
@@ -104,7 +180,7 @@ function handleAction (command, row: any, index: number) {
 async function handleDelete(id: string) {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
-    await DeleteMasterTablesApi(id)
+    await DeleteMasterTablesRecordApi(route.params.id, id)
     handlePaginationChange(pageParams.pageNum + 1)
 }
 function handleDblclick(row) {
@@ -112,7 +188,7 @@ function handleDblclick(row) {
 }
 const MasterTableNewRowDialogRef = ref()
 function handleAddRow (row) {
-    MasterTableNewRowDialogRef.value.handleOpen(row)
+    MasterTableNewRowDialogRef.value.handleOpen(masterTable.fields, row)
 }
 // #region module: ResponsiveFilterRef
     function handleFilterFormChange(formModel) {
@@ -120,8 +196,27 @@ function handleAddRow (row) {
         handlePaginationChange(1)
     }
 // #endregion
+const tableRef = ref()
+const ignoreList = ['id', 'created_date','modified_date', 'modified_by']
+async function initTableColumns() {
+    const res = await GetMasterTablesDetailApi(route.params.id)
+    masterTable.name = res.name
+    masterTable.fields = res.fields
 
+    masterTable.fields.forEach((item, index) => {
+        if(ignoreList.includes(item.columnName)) return
+        const _item = {
+            id: item.columnName,
+            label: `mt.${item.columnName}`,
+            prop: item.columnName
+        }
+        if(item.dataType === 'timestamp') _item.type = 'date'
+        TableAddColumns(_item, tableSetting.value.columns, index)
+    })
+    tableRef.value.reorderColumn(tableSetting.value.columns)
+}
 onMounted(() => {
+    initTableColumns()
 })
 </script>
 

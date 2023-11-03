@@ -125,7 +125,7 @@ export enum TABLE {
     ADMIN_DOC_TEMPLATE = 'adminDocTemplate',
     ADMIN_DASHBOARD = 'adminDashboard',
     ADMIN_SMART_FOLDER = 'adminSmartFolder',
-    ADMIN_MASTER_TABLE = 'adminMasterTable',
+    ADMIN_MASTER_TABLE = 'adminMasterTable'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -2329,13 +2329,13 @@ export const defaultTableSetting: TableColumnSetting = {
                         "suffixIcon": "/icons/edit.svg",
                         "index": 0
                     },
-                    {
-                        "name": "",
-                        "type": "text",
-                        "command": "delete",
-                        "suffixIcon": "/icons/menu/trash.svg",
-                        "index": 0
-                    }
+                    // {
+                    //     "name": "",
+                    //     "type": "text",
+                    //     "command": "delete",
+                    //     "suffixIcon": "/icons/menu/trash.svg",
+                    //     "index": 0
+                    // }
                 ],
                 "prefixIcon": "",
                 "suffixIcon": "",
@@ -2403,7 +2403,7 @@ export const defaultTableSetting: TableColumnSetting = {
     
 }
 
-export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
+export function TableAddColumns (columnItem: TableColumnItem, columnList: any, position: number = 1) {
     const _columnItem: TableColumnItem = {
         label: columnItem.label,
         prop: columnItem.prop,
@@ -2435,7 +2435,7 @@ export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
             }
         ]
     }
-    columnList.push({
+    columnList.splice(position, 0, {
         ..._columnItem
     })
 } 

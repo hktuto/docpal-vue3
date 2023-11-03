@@ -1,29 +1,17 @@
 import {api} from '..';
-
+// table
 export const SaveMasterTablesApi = async(params) => {
     const res = await api.post('/docpal/master/tables', params).then(res => res.data.data)
     return res
 }
-export const SaveMasterTablesRecordApi = async() => {
-    const res = await api.post('/docpal/master/tables/record').then(res => res.data.data)
-    return res
-}
-
-// export const DeleteMasterTablesRecordApi = async() => {
-//     const res = await api.('/docpal/master/tables/record/delete').then(res => res.data.data)
-//     return res
-// }
-
 export const GetMasterTablesPageApi = async(params) => {
     const res = await api.post('/docpal/master/tables/page', params).then(res => res.data.data)
     return res
 }
-
 export const GetMasterTablesDetailApi = async(id: string) => {
     const res = await api.get(`/docpal/master/tables/${id}`).then(res => res.data.data)
     return res
 }
-
 export const GetMasterTablesPageConditionApi = async() => {
     const res = await api.get('/docpal/master/tables/page/conditions').then(res => res.data.data)
     return res
@@ -34,8 +22,23 @@ export const DeleteMasterTablesApi = async(masterTableId: string) => {
     return res
 }
 
+// Record
+export const GetMasterTablesRecordPageApi = async(params) => {
+    const res = await api.post('/docpal/master/tables/record/page', params).then(res => res.data.data)
+    return res
+}
+
+export const CreateMasterTablesRecordApi = async(params) => {
+    const res = await api.post('/docpal/master/tables/record', params).then(res => res.data.data)
+    return res
+}
+export const UpdateMasterTablesRecordApi = async(params) => {
+    const res = await api.put(`/docpal/master/tables/${params.id}/record`, params).then(res => res.data.data)
+    return res
+}
+
 export const DeleteMasterTablesRecordApi = async(tableId: string, recordId: string) => {
-    const res = await api.delete(`/api/docpal/master/tables/record/${tableId}/${recordId}`).then(res => res.data.data)
+    const res = await api.delete(`/docpal/master/tables/${tableId}/record?recordId=${recordId}`).then(res => res.data.data)
     return res
 }
 

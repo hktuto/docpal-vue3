@@ -74,7 +74,7 @@ async function templateParamGet (templatePath: string) {
         })
         form.paramList = [...new Set(res.paramsList)].map(item => ({ 
             name: item,
-            type: 'string',
+            type: 'input',
             required: true
          }))
         FromVariablesRendererRef.value.createJson(form.paramList)
