@@ -71,7 +71,7 @@ function turnFields(fields) {
         if(!props.ignoreList.includes(item.columnName) && typeMap[item.dataType]) {
             prev.push({
                 name: item.columnName,
-                label: `mt.${item.columnName}`,
+                label: item.columnName,
                 type: typeMap[item.dataType],
                 required: item.required
             })

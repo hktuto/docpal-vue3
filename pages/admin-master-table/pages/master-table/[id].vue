@@ -10,11 +10,12 @@
                     inputPlaceHolder="tip.fuzzySearch"/>
             </template>  
             <template #suffixSortButton>
-                <el-button type="info" @click="handleAddRow()">{{$t('button.import')}}</el-button>
-                <el-button type="info" @click="handleAddRow()">{{$t('button.export')}}</el-button>
+                <el-button :loading="state.importLoading" type="info" @click="handleImport()">{{$t('button.import')}}</el-button>
+                <el-button :loading="state.exportLoading" type="info" @click="handleExport()">{{$t('button.export')}}</el-button>
                 <el-button type="primary" @click="handleAddRow()">{{$t('button.add')}}</el-button>
             </template>
         </Table>
+        <input v-show="false"  ref="inputRef" type="file" accept=".csv" @change="handleFile"/>
         <MasterTableNewRowDialog ref="MasterTableNewRowDialogRef" :ignoreList="ignoreList" @refresh="handlePaginationChange(1)"/>
     </NuxtLayout>
 </template>
@@ -25,6 +26,8 @@ import {
     DeleteMasterTablesRecordApi,
     GetMasterTablesRecordPageApi,
     GetMasterTablesDetailApi,
+    ExportMasterTablesRecordApi,
+    ImportMasterTablesRecordApi,
     defaultTableSetting, TABLE, TableAddColumns,
     
 } from 'dp-api'
@@ -119,7 +122,9 @@ import {
             rowKey: 'id',
             sortKey: `mt_${route.params.id}`
         },
-        extraParams: {}
+        extraParams: {},
+        importLoading: false,
+        exportLoading: false
     })
     const masterTable = reactive({
         name: '',
@@ -207,7 +212,7 @@ async function initTableColumns() {
         if(ignoreList.includes(item.columnName)) return
         const _item = {
             id: item.columnName,
-            label: `mt.${item.columnName}`,
+            label: item.columnName,
             prop: item.columnName
         }
         if(item.dataType === 'timestamp') _item.type = 'date'
@@ -215,6 +220,27 @@ async function initTableColumns() {
     })
     tableRef.value.reorderColumn(tableSetting.value.columns)
 }
+// #region module: export import
+    async function handleExport() {
+        state.exportLoading = true
+        const res = await ExportMasterTablesRecordApi(route.params.id)
+        downloadBlob(res, masterTable.name)
+        state.exportLoading = false
+    }
+    const inputRef = ref()
+    function handleImport() {
+        inputRef.value.click()
+    }
+    async function handleFile(event) {
+        state.importLoading = true
+        const formData = new FormData()
+        formData.append('files', event.target.files[0])
+        formData.append('id', route.params.id)
+        event.target.value = ''
+        await ImportMasterTablesRecordApi(formData)
+        state.importLoading = false
+    }
+// #endregion
 onMounted(() => {
     initTableColumns()
 })

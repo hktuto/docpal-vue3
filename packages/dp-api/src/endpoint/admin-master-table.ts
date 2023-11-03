@@ -42,3 +42,16 @@ export const DeleteMasterTablesRecordApi = async(tableId: string, recordId: stri
     return res
 }
 
+// export or import
+
+export const ImportMasterTablesRecordApi = async(params) => {
+    const res = await api.post('/docpal/master/tables/record/import', params).then(res => res.data.data)
+    return res
+}
+export const ExportMasterTablesRecordApi = async(tableId: string) => {
+    const res = await api.post(`/docpal/master/tables/${tableId}/record/export`, {}, { 
+        responseType: 'blob', 
+        timeout: 0 
+    }).then(res => res.data)
+    return res
+}
