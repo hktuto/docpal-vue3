@@ -1,5 +1,5 @@
 <template>
-    <div id="pageContainer" :class="{isMobile}" >
+    <div id="pageContainer" :class="{isMobile ,tauri:feature.tauri}" >
         <div id="fullPage"></div>
         <div ref="sidebarEl" id="sidebarContainer" :class="{'opened': !collapse}">
             <Logo class="logo" :mode="logo"/>
@@ -17,7 +17,7 @@
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
         </div>
-        <div id="topBarContainer">
+        <div data-tauri-drag-region id="topBarContainer">
         <div class="headerLeft">
           <SvgIcon v-if="isMobile" src="/icons/menu.svg" @click="toggleOpen" />
           <PageTitle :title="pageTitle"  :backPath="backPath"/>
@@ -31,7 +31,7 @@
         <div v-if="isLogin"  class="actions">
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Notification v-if="feature.notification" />
-
+          <TauriHeader v-if="feature.tauri" />
         </div>
       </div>
         <main id="mainContainer">
@@ -75,7 +75,7 @@ const state = reactive({
 function toggleOpen() {
   collapse.value = !collapse.value
   console.log(collapse.value);
-  
+
 }
 
 // #region module:
@@ -84,6 +84,8 @@ function toggleOpen() {
     InteractDrawerRef.value.handleSwitch()
   }
 // #endregion
+
+
 </script>
 
 <style lang="scss" scoped>
