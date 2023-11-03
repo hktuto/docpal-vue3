@@ -4,7 +4,7 @@
 <script lang="ts" setup>
 export type variableItem = {
     name: string,
-    type: string,
+    type: 'date' | 'input' | 'switch' | 'textarea' | 'number',
     disabled: Boolean,
     hidden: Boolean,
     required: Boolean
@@ -44,12 +44,13 @@ function createJson(variables: variableItem[]) {
         const _item = {
             key: date + index,
             id: date + index + 100,
-            type: item.type === 'date' ? 'date' : 'input',
+            type: item.type,
             formItemFlag: true,
             options: {
                 name: item.name,
-                label: item.name,
-                required: item.required ? true : false
+                label: item.label ? item.label : item.name,
+                required: item.required ? true : false,
+                onValidate: ""
             }
         }
         if(item.type === 'date') {

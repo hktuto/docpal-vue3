@@ -276,6 +276,7 @@ function handleOpen(searchParams) {
 }
 function initData () {
     state.notiList = []
+    state.notiPageParam.pageNum = 0
     getNotiPage()
 }
 onMounted(() => {
