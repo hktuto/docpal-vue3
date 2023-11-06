@@ -113,6 +113,9 @@ async function handleSetStatus (status, row) {
 }
 watch(() =>props.user, () => {
     if(props.user && props.user.properties) state.clearanceLevel = props.user.properties.clearanceLevel
+}, {
+    deep: true,
+    immediate: true
 })
 </script>
 
