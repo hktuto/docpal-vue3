@@ -1,5 +1,5 @@
 // @ts-ignore
-import {onMounted, useState} from '#import';
+
 import { useEventSource } from '@vueuse/core'
 import { watch } from 'vue'
 export const useNotification = (token:string, username:string, messageChangeCB) => {
