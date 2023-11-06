@@ -23,7 +23,7 @@ function checkFieldValid(field: FormObject):boolean {
 <template>
   <div class="optionContainer" @click="formFieldEditorOpened = true">
     <div :class="{ fieldName:true, required:field.attr_field_required, valid: field.attr_field_valid}" >
-      {{field.attr_name}}
+      {{field.attr_field_label ||field.attr_name}}
     </div>
   <SvgIcon src="/icons/setting.svg" />
     <ElDialog v-model="formFieldEditorOpened"  append-to-body  destroy-on-close>

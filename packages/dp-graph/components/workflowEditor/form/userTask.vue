@@ -50,7 +50,7 @@
               </draggable>
             </div>
           <div class="actions">
-            <div v-if="newFieldOptions.length > 0" class="action">
+            <div  class="action">
               <ElButton type="primary" @click="addFromOpened = true">Add Field</ElButton>
             </div>
             <div class="action">
@@ -62,15 +62,12 @@
             <ElButton @click="$emit('close')">Close</ElButton>
             <ElButton type="primary" @click="$emit('submit', data)">Save</ElButton>
         </div>
-      <ElDialog v-model="addFromOpened" append-to-body>
-        <ElSelect v-model="selectedNewField" placeholder="Select Field">
-          <ElOption v-for="item in newFieldOptions" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-        </ElSelect>
-        <ElButton type="primary" @click="addFormItem">Add</ElButton>
+      <ElDialog v-model="addFromOpened" append-to-body destroy-on-close>
+        <WorkflowEditorFormNewField :currentForm="data" @submit="addFieldHandler"/>
       </ElDialog>
       
       <ElDialog v-model="previewFormOpened" append-to-body>
-        
+        <FromRenderer class="vformReadonly" ref="vFormRef"  />
       </ElDialog>
       
       <ElDialog v-model="editFormFieldDialog" append-to-body>
@@ -85,28 +82,22 @@ import {GetGroupListApi} from "dp-api";
 import {ElMessage} from 'element-plus'
 import draggable from "vuedraggable";
 import {bpmnStepToForm, fieldType, FormObject} from "../../../utils/formEditorHelper";
+import {useWorkflowGraph} from "../../../composables/useWorkflowGraph";
 const props = defineProps<{
   data: any,
-  allField: any,
 }>()
-
+const {allFormField} = useWorkflowGraph()
 const emit = defineEmits(['close', 'submit'])
 const addFromOpened = ref(false)
 const selectedNewField = ref('')
-const previewFormOpened = ref(false)
+const vFormRef = ref()
 const editFormFieldDialog = ref(false)
-const newFieldOptions = computed(() => {
-  return Object.keys(props.allField).filter((key) => {
-    return !props.data.extensionElements['flowable:formProperty'].some((item) => item.attr_id === key)
-  }).map((key) => {
-    return props.allField[key]
-  })
-})
+const previewFormOpened = ref();
 const autoApproval = ref(false);
 const autoApprovalOptions = computed(() => {
-  return Object.keys(props.allField).map( (key) => {
+  return Object.keys(allFormField.value.form).map( (key) => {
         return {
-          label: props.allField[key].attr_name,
+          label: allFormField.value.form[key].attr_name,
           value: key
         }
       }
@@ -145,10 +136,30 @@ function createAutoAssignee (autoAssignField:string) {
   }
 }
 
+function addFieldHandler(newField) {
+  props.data.extensionElements['flowable:formProperty'].push(newField)
+  emit('submit', props.data)
+  addFromOpened.value = false
+}
+
 
 function previewForm(){
-  const form = bpmnStepToForm(props.data.extensionElements['flowable:formProperty'])
-  console.log(form)
+  // step1 check all field are valid
+  const valid = props.data.extensionElements['flowable:formProperty'].reduce((acc, cur) => {
+    if(!cur.attr_field_valid) acc = false;
+    return acc;
+  }, true)
+  if(!valid) {
+    ElMessage.error('Please fix all field error before preview')
+    return;
+  }
+  const formJson = bpmnStepToForm(props.data.extensionElements['flowable:formProperty'], props.data)
+  
+  previewFormOpened.value = true
+  nextTick(() => {
+    vFormRef.value.setFormJson(formJson)
+  })
+
 }
 
 const canAutoAssignee = computed(() => !(props.data.attr_id === 'start'))
@@ -195,13 +206,7 @@ const candidateGroup = computed({
   }
 })
 
-function addFormItem() {
-  if(!addFormItem) return
-  const form = props.data.extensionElements['flowable:formProperty'].push(props.allField[selectedNewField.value])
-  emit('submit', form);
-  selectedNewField.value = ""
-  addFromOpened.value = false;
-}
+
 
 
 function removeFormItem(key){
@@ -212,7 +217,6 @@ function removeFormItem(key){
 
 function updateFormField(newVal, index) {
   props.data.extensionElements['flowable:formProperty'][index] = newVal;
-  console.log('updateFormField', props.data)
   emit('submit', props.data);
 }
 
