@@ -76,7 +76,7 @@ function createJson(variables: variableItem[]) {
             _item.options.type = 'text'
         } else if(item.type === 'number') {
             _item.options.controlsPosition = 'right'
-        }else if(item.type === 'switch') {
+        } else if(item.type === 'switch') {
             _item.options.defaultValue = false
             _item.options.labelIconPosition = 'rear'
         }

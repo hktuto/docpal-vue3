@@ -9,7 +9,7 @@
                     inputKey="name"/>
             </template>  
             <template #suffixSortButton>
-                <el-button type="primary" @click="handleAdd()">{{$t('button.add')}}</el-button>
+                <el-button v-if="isSuperAdmin" type="primary" @click="handleAdd()">{{$t('button.add')}}</el-button>
             </template>
         </Table>
         <MasterTableDialog ref="MasterTableDialogRef" @refresh="handlePaginationChange(1)"/>
@@ -25,7 +25,7 @@ import {
     GetMasterTablesPageConditionApi,
     defaultTableSetting, TABLE, deepCopy
 } from 'dp-api'
-
+const isSuperAdmin = useUser().getUserRolePermission('ROLE_SUPER')
 // #region module: page
     const route = useRoute()
     const router = useRouter()

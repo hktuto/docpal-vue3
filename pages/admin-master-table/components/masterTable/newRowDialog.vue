@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dashboard.setting')"
+<el-dialog v-model="state.visible" :title="state.title"
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
@@ -28,7 +28,8 @@ const state = reactive({
     visible: false,
     setting: {},
     fields: [],
-    edit: false
+    edit: false,
+    title: $t('masterTable.newRow')
 })
 const route = useRoute()
 const router = useRouter()
@@ -82,6 +83,7 @@ function turnFields(fields) {
 const FromVariablesRendererRef = ref()
 function handleOpen(fields, row?) {
     state.visible = true
+    state.loading = false
     state.fields = turnFields(fields, row)
     setTimeout(async () => {
         FromVariablesRendererRef.value.createJson(state.fields)
@@ -89,9 +91,11 @@ function handleOpen(fields, row?) {
             state.edit = true
             state.setting = row
             FromVariablesRendererRef.value.setData(row)
+            state.title = $t('masterTable.editRow')
         }
         else {
             state.edit = false
+            state.title = $t('masterTable.newRow')
             FromVariablesRendererRef.value.setData({})
         }
     })

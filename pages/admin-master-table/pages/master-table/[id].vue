@@ -223,8 +223,11 @@ async function initTableColumns() {
 // #region module: export import
     async function handleExport() {
         state.exportLoading = true
-        const res = await ExportMasterTablesRecordApi(route.params.id)
-        downloadBlob(res, masterTable.name)
+        try {
+            const res = await ExportMasterTablesRecordApi(route.params.id)
+            downloadBlob(res, masterTable.name)
+        } catch (error) {
+        }
         state.exportLoading = false
     }
     const inputRef = ref()
@@ -233,11 +236,15 @@ async function initTableColumns() {
     }
     async function handleFile(event) {
         state.importLoading = true
-        const formData = new FormData()
-        formData.append('files', event.target.files[0])
-        formData.append('id', route.params.id)
-        event.target.value = ''
-        await ImportMasterTablesRecordApi(formData)
+        try {
+            const formData = new FormData()
+            formData.append('file', event.target.files[0])
+            formData.append('id', route.params.id)
+            event.target.value = ''
+            await ImportMasterTablesRecordApi(formData)
+            handlePaginationChange(1)
+        } catch (error) {
+        }
         state.importLoading = false
     }
 // #endregion

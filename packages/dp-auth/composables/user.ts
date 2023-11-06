@@ -1,4 +1,5 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
+import jwt_decode from "jwt-decode";
 import { ElMessage } from 'element-plus'
 import { useSetting } from './../../dp-stores/composables/setting';
 import { useLanguage } from './../../dp-stores/composables/language'
@@ -294,6 +295,10 @@ export const useUser = () => {
     function getIsLdapMode () {
         return isLdapMode.value
     }
+    function getUserRolePermission(role: 'ROLE_USER' | 'ROLE_ADMIN' | 'ROLE_SUPER') {
+        const userDetail: any = jwt_decode(token.value)
+        return userDetail.roles.includes(role)
+    }
     return {
         // data
         token,
@@ -315,6 +320,7 @@ export const useUser = () => {
         getIsLdapMode,
         getDefaultLanguage,
         userList,
-        beforeLogin
+        beforeLogin,
+        getUserRolePermission
     }
 }
