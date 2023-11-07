@@ -1,62 +1,28 @@
 <script lang="ts" setup>
-import {bpmnToX6} from "~/utils/graphHelper";
+import {bpmnToX6, bpmnToJson} from "~/utils/graphHelper";
 import {Node} from "@antv/x6";
 import {jsonToBpmn} from "../../utils/graphHelper";
+import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
 
 const props = defineProps<{
   bpmn: String
 }>()
 
-const graphJson = ref();
 const sidePanelOpened = ref(false);
 const tooltip = ref('')
 const selectedData = ref();
 const workflowForm = ref();
 const graphEl = ref();
-const data = ref();
+
+const { graphJson, bpmnJson, allFormField } = useWorkflowGraph();
 function setupGraph() {
   graphJson.value = bpmnToX6(props.bpmn, {hideEnd:false});
-  data.value = bpmnToJson(props.bpmn);
-  initForm();
-}
-
-function initForm() {
-  const process = data.value?.definitions?.process;
-  const form:any = {};
-  // startEvent form
-  const startEvent = process?.startEvent;
-  if(startEvent){
-    const formItem = getForm(startEvent);
-    formItem.forEach(item => {
-      form[item.attr_id] = item;
-    })
-  }
-  // userTask form
-  const userTask = Array.isArray(process?.userTask) ? process?.userTask : [process?.userTask];
-  userTask.forEach(item => {
-    const formItem = getForm(item);
-    formItem.forEach(item => {
-      form[item.attr_id] = item;
-    })
-  })
-  workflowForm.value = {
-    attr_name: process?.attr_name,
-    attr_id: process?.attr_id,
-    ['attr_flowable:candidateStarterGroups']: process?.['attr_flowable:candidateStarterGroups'],
-    form
-  };
+  bpmnJson.value = bpmnToJson(props.bpmn);
 }
 
 
-function getForm(item):any[] {
-  if(item.extensionElements){
-    const form = item.extensionElements['flowable:formProperty'];
-    if(form){
-      return form;
-    }
-  }
-  return [];
-}
+
+
 function dblClickHandler({node}:Node) {
   const data = node.getData();
   if(data.type === 'userTask'){
@@ -83,10 +49,10 @@ function closeSidePanel() {
 }
 
 function saveForm(updatedData:any) {
-  data.value.definitions.process.attr_name = updatedData.attr_name;
-  data.value.definitions.process.attr_id = updatedData.attr_name.trim().replaceAll(' ', '');
+  bpmnJson.value.definitions.process.attr_name = updatedData.attr_name;
+  bpmnJson.value.definitions.process.attr_id = updatedData.attr_name.trim().replaceAll(' ', '');
   if(updatedData['attr_flowable:candidateStarterGroups']) {
-    data.value.definitions.process['attr_flowable:candidateStarterGroups'] = updatedData['attr_flowable:candidateStarterGroups'];
+    bpmnJson.value.definitions.process['attr_flowable:candidateStarterGroups'] = updatedData['attr_flowable:candidateStarterGroups'];
   }
   workflowForm.value = updatedData;
 }
@@ -106,6 +72,9 @@ function saveUserStep(stepData) {
       }
     })
     node.setData(newData);
+    // IMPORTANT: update selectedData to update form otherwise , form will not update
+    const dd = node.getData();
+    selectedData.value = dd;
   }
 
 }
@@ -114,34 +83,36 @@ function saveUserStep(stepData) {
 function setStepData(stepId, newData) {
 
   // if startEvent id === stepId
-  if(data.value?.definitions?.process?.startEvent?.attr_id === stepId){
-    data.value.definitions.process.startEvent = {
-      ...data.value?.definitions?.process?.startEvent,
+  if(bpmnJson.value?.definitions?.process?.startEvent?.attr_id === stepId){
+    bpmnJson.value.definitions.process.startEvent = {
+      ...bpmnJson.value?.definitions?.process?.startEvent,
       ...newData
     }
     return;
   }
-  if(Array.isArray(data.value?.definitions?.process.userTask)) {
-    const index = data.value?.definitions?.process.userTask.findIndex(item => item.attr_id === stepId);
+  if(Array.isArray(bpmnJson.value?.definitions?.process.userTask)) {
+    const index = bpmnJson.value?.definitions?.process.userTask.findIndex(item => item.attr_id === stepId);
     if(index > -1){
-      data.value.definitions.process.userTask[index] = newData
+      bpmnJson.value.definitions.process.userTask[index] = newData
+      
       return;
     }
   }else{
-    if(data.value?.definitions?.process.userTask?.attr_id === stepId){
-      data.value.definitions.process.userTask = newData
+    if(bpmnJson.value?.definitions?.process.userTask?.attr_id === stepId){
+      bpmnJson.value.definitions.process.userTask = newData
+      console.log('setStepData', bpmnJson.value.definitions.process.userTask)
       return;
     }
   }
-  if(Array.isArray(data.value?.definitions?.process.serviceTask)) {
-    const index = data.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === stepId);
+  if(Array.isArray(bpmnJson.value?.definitions?.process.serviceTask)) {
+    const index = bpmnJson.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === stepId);
     if(index > -1){
-      data.value.definitions.process.serviceTask[index] = newData
+      bpmnJson.value.definitions.process.serviceTask[index] = newData
       return;
     }
   }else{
-    if(data.value?.definitions?.process.serviceTask?.attr_id === stepId){
-      data.value.definitions.process.serviceTask = newData
+    if(bpmnJson.value?.definitions?.process.serviceTask?.attr_id === stepId){
+      bpmnJson.value.definitions.process.serviceTask = newData
       return;
     }
   }
@@ -177,12 +148,11 @@ watch(() => props.bpmn, (newVal, oldVal) => {
 
 function getWorkflowData() {
   
-  const xml = jsonToBpmn(data.value)
-  console.log(xml)
+  const xml = jsonToBpmn(bpmnJson.value)
   // create blob file
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-  const name = data.value.definitions.process.attr_name
-  const key = data.value.definitions.process.attr_id
+  const name = bpmnJson.value.definitions.process.attr_name
+  const key = bpmnJson.value.definitions.process.attr_id
   return {
     blob, name, key
   }
@@ -201,10 +171,10 @@ defineExpose({
     </div>
     <div :class="{sidePanelContainer:true , sidePanelOpened}">
       <template v-if="selectedData">
-        <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'" :data="workflowForm" @close="closeSidePanel" @submit="saveForm" />
-        <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveUserStep" />
-        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
-        <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="workflowForm.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'"  @close="closeSidePanel" @submit="saveForm" />
+        <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData"  @close="closeSidePanel" @submit="saveUserStep" />
+        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
       </template>
     </div>
     <GraphViewer
@@ -214,9 +184,9 @@ defineExpose({
         @node:dblclick="dblClickHandler"
     ></GraphViewer>
 
-    <div v-if="data" class="footer">
+    <div v-if="bpmnJson" class="footer">
       <div class="name">
-        {{ data.definitions.process.attr_name }}
+        {{ bpmnJson.definitions.process.attr_name }}
         <ElButton type="primary" @click="editInfo">edit info</ElButton>
       </div>
       <div class="actions">

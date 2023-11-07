@@ -11,6 +11,8 @@
     attr_field_type: props.field.attr_field_type,
     attr_field_required: props.field.attr_field_required,
     attr_field_writable: props.field.attr_field_writable,
+    attr_field_hidden: props.field.attr_field_hidden || false,
+    attr_field_disabled: props.field.attr_field_disabled || false,
     ...props.field
   })
   const emit = defineEmits(['close', 'submit'])
@@ -23,7 +25,6 @@
     ],
   };
   function saveField(){
-    console.log(props.field)
     formEl.value.validate((valid) => {
       if(!valid) return;
       emit('submit', formField.value)
@@ -46,6 +47,12 @@
           </ElFormItem>
           <ElFormItem label="Writable" prop="attr_field_writable">
             <ElSwitch v-model="formField.attr_field_writable" />
+          </ElFormItem>
+          <ElFormItem label="Hidden" prop="attr_field_hidden">
+            <ElSwitch v-model="formField.attr_field_hidden" />
+          </ElFormItem>
+          <ElFormItem label="Disabled" prop="attr_field_disabled">
+            <ElSwitch v-model="formField.attr_field_disabled" />
           </ElFormItem>
         </div>
         <ElFormItem label="Input Type" prop="attr_field_type">
