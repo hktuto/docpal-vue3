@@ -32,17 +32,17 @@ function messageChange() {
 onMounted(() => {
     getUnreadCount();
 })
-watch( () => isLogin.value, (newValue) => {
-    Cookies.value = token.value || ''
-    if(newValue) {
-        console.log(newValue, isLogin.value);
+// watch( () => isLogin.value, (newValue) => {
+//     Cookies.value = token.value || ''
+//     if(newValue) {
+//         console.log(newValue, isLogin.value);
         
-        notificationStore.value = useNotification(userId, messageChange)
-        notificationStore.value.start()
-    }
-}, {
-    immediate:true 
-})
+//         notificationStore.value = useNotification(userId, messageChange)
+//         notificationStore.value.start()
+//     }
+// }, {
+//     immediate:true 
+// })
 </script>
 
 <style lang="scss" scoped>
