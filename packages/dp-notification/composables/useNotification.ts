@@ -40,8 +40,8 @@ export const useNotification = (username:string, messageChangeCB) => {
         messageChangeCB()
     })
     watch( () => isLogin.value, (newValue) => {
+        console.log('isStart', newValue, isStart);
         if(newValue && !isStart) {
-            console.log('isStart', isStart);
             start()
         }
     }, {
