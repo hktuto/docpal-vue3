@@ -7,7 +7,7 @@ import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
 const props = defineProps<{
   bpmn: String
 }>()
-
+const emit = defineEmits(['resetTemplate'])
 const sidePanelOpened = ref(false);
 const tooltip = ref('')
 const selectedData = ref();
@@ -53,6 +53,10 @@ function editInfo() {
 function closeSidePanel() {
 
   sidePanelOpened.value = false;
+}
+
+function resetTemplate() {
+  emit('resetTemplate', bpmnJson.value.definitions.process)
 }
 
 function saveForm(updatedData:any) {
@@ -196,8 +200,9 @@ defineExpose({
 
     <div v-if="bpmnJson" class="footer">
       <div class="name">
-        {{ bpmnJson.definitions.process.attr_name }}
+        {{ bpmnJson.definitions.process.attr_name }} : {{ bpmnJson.definitions.process.attr_template }}
         <ElButton type="primary" @click="editInfo">edit info</ElButton>
+        <ElButton type="primary" @click="resetTemplate">reset template</ElButton>
       </div>
       <div class="actions">
         <slot name="actions"></slot>

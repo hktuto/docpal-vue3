@@ -1,6 +1,6 @@
 
 <script lang="ts" setup>
-  import {FormObject} from "../../../utils/formEditorHelper";
+import {fieldOptions, FormObject} from "../../../utils/formEditorHelper";
 
   const props = defineProps<{
     field: FormObject
@@ -57,7 +57,7 @@
         </div>
         <ElFormItem label="Input Type" prop="attr_field_type">
           <ElSelect v-model="formField.attr_field_type" placeholder="Select input type">
-            <ElOption v-for="item in fieldType" :key="item" :label="item" :value="item" />
+            <ElOption v-for="(value, key) in fieldOptions" :key="key" :label="value.label" :value="key" />
           </ElSelect>
         </ElFormItem>
         <ElDivider />

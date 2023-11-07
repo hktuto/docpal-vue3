@@ -7,6 +7,8 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(['close', 'submit'])
 
+const formVariable = ref();
+
 const allDocumentTemplates = ref([]);
 
 async function getDocumentTemplates() {
@@ -56,17 +58,11 @@ const selectedDocumentTemplate = computed({
       ]
       return;
     }
-    props.data.extensionElements['flowable:field'] = [
-      item,
-      ...varList.map((item: any) => {
-        return {
-          "attr_name": item,
-          "flowable:expression": {
-            "__cdata": ''
-          }
-        }
-      })
-    ]
+    formVariable.value = varList.map((item) => ({
+      key:item,
+      value:""
+    }));
+    
     emit('submit', props.data)
   }
 })

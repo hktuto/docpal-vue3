@@ -1,6 +1,6 @@
 
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
-  <process id="singleApprovalDemo" name="Single Approval Demo" isExecutable="true" flowable:candidateStarterGroups="Demo Approval Group">
+  <process id="workflowId" name="workflowName" isExecutable="true" flowable:candidateStarterGroups="Demo Approval Group" template="Single" >
     <extensionElements>
       <flowable:executionListener event="start" delegateExpression="${notificationListener}">
         <flowable:field name="functionPoint">
@@ -13,41 +13,28 @@
     </extensionElements>
     <startEvent id="start" name="Start" flowable:formFieldValidation="true">
       <extensionElements>
-        <flowable:formProperty id="user_creator_id" name="Creator ID" type="string"></flowable:formProperty>
-        <flowable:formProperty id="user_creator_name" name="Creator Name" type="string" readable="false"></flowable:formProperty>
-        <flowable:formProperty id="user_creator_email" name="Creator Email" type="string" readable="false"></flowable:formProperty>
+        <flowable:formProperty id="businessKey" name="Business Key" type="string" fixed="true"></flowable:formProperty>
+        <flowable:formProperty id="user_creator_id" name="Creator ID" type="string" fixed="true"></flowable:formProperty>
         <flowable:formProperty id="user_approver_id" name="Approver ID" type="string"></flowable:formProperty>
-        <flowable:formProperty id="user_approver_name" name="Approver" type="string"></flowable:formProperty>
-        <flowable:formProperty id="user_approver_email" name="Approver Email" type="string"></flowable:formProperty>
         <flowable:formProperty id="user_copy_personnel_id" name="Copy Personnel ID" type="string"></flowable:formProperty>
-        <flowable:formProperty id="prospectName" name="Prospect Name" type="string"></flowable:formProperty>
-        <flowable:formProperty id="prospectId" name="Prospect Id" type="string"></flowable:formProperty>
         <flowable:formProperty id="description" name="Description" type="string"></flowable:formProperty>
-        <flowable:formProperty id="submittedDate" name="Submit Date" type="date" datePattern="yyyy-MM-dd HH:mm:ss" readable="false"></flowable:formProperty>
-        <flowable:formProperty id="businessKey" name="Business Key" type="string"></flowable:formProperty>
       </extensionElements>
     </startEvent>
     <userTask id="approvalForm" name="Start Approval Form" flowable:candidateGroups="Contract_Approval_Approvers" flowable:formFieldValidation="true">
       <extensionElements>
         <flowable:formProperty id="user_approver_id" name="Approver ID" type="string"></flowable:formProperty>
-        <flowable:formProperty id="user_approver_name" name="Approver" type="string"></flowable:formProperty>
-        <flowable:formProperty id="user_approver_email" name="Approver Email" type="string"></flowable:formProperty>
+        
         <flowable:formProperty id="approved" name="Approve" type="boolean"></flowable:formProperty>
         <flowable:formProperty id="rejectReason" name="Reject Reason" type="string"></flowable:formProperty>
-        <flowable:formProperty id="token" name="Authentication Token" type="string"></flowable:formProperty>
-        <flowable:formProperty id="approveDate" name="Approve Date" type="date" datePattern="yyyy-MM-dd hh:mm"></flowable:formProperty>
-        <flowable:formProperty id="user_copy_personnel_id" name="Copy Personnel ID" type="string"></flowable:formProperty>
+        
         <flowable:formProperty id="user_creator_id" name="Creator ID" type="string"></flowable:formProperty>
-        <flowable:formProperty id="user_creator_name" name="Creator Name" type="string"></flowable:formProperty>
-        <flowable:formProperty id="user_creator_email" name="Creator Email" type="string"></flowable:formProperty>
-        <flowable:formProperty id="prospectName" name="Prospect Name" type="string"></flowable:formProperty>
-        <flowable:formProperty id="prospectId" name="Prospect Id" type="string"></flowable:formProperty>
+        
+        
         <flowable:formProperty id="description" name="Description" type="string"></flowable:formProperty>
-        <flowable:formProperty id="submittedDate" name="Submit Date" type="date" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
-        <flowable:formProperty id="customerName" name="Customer Name" type="string"></flowable:formProperty>
+        
+        
         <flowable:formProperty id="businessKey" name="Business Key" type="string"></flowable:formProperty>
-        <flowable:formProperty id="processInstanceId" name="Process Instance Id" type="string"></flowable:formProperty>
-        <flowable:formProperty id="approvedBy" name="Approved By" type="string"></flowable:formProperty>
+       
         <flowable:taskListener event="create" delegateExpression="${autoAssignTaskListener}">
           <flowable:field name="assignee">
             <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
@@ -70,10 +57,10 @@
           <flowable:expression><![CDATA[${variables:get(documentType)}]]></flowable:expression>
         </flowable:field>
         <flowable:field name="documentProperties">
-          <flowable:expression><![CDATA[${variables:get(documentProperties)}]]></flowable:expression>
+          <flowable:expression><![CDATA[]]></flowable:expression>
         </flowable:field>
         <flowable:field name="variables">
-          <flowable:expression><![CDATA[${variables:get(variables)}]]></flowable:expression>
+          <flowable:expression><![CDATA[{"name": "${variables:get(variables)}","zip": "${variables:get(zip)}"}]]></flowable:expression>
         </flowable:field>
         <flowable:field name="templateId">
           <flowable:expression><![CDATA[${variables:get(templateId)}]]></flowable:expression>
