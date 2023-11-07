@@ -8,10 +8,10 @@ export const useNotification = (token:string, username:string, messageChangeCB) 
     const notiStatus = useState<any>('notiStatus')
     const notiClose = useState<any>('notiClose')
     function heartbeat() {
-        console.log("heartbeat")
-        useEventSource('/notification/api/v1/keepalive/_private/docpal/' + username, [], {
-            withCredentials: true
-        });
+        console.log("no heartbeat")
+        // useEventSource('/notification/api/v1/keepalive/_private/docpal/' + username, [], {
+        //     withCredentials: true
+        // });
 
         const { status, data, error, close } = useEventSource('/notification/api/v1/receive/messages?username='+username, [], {
             withCredentials:true
@@ -32,12 +32,12 @@ export const useNotification = (token:string, username:string, messageChangeCB) 
 
     watch(notiData, () => {
         if(!notiData.value) return
-        const message = notiData.value as any
-        const { messageJson } = JSON.parse(notiData.value)
+        const data = JSON.parse(notiData.value)
+        console.log(data)
         // 有messageJson且messageJson的heartbeat不为true才会更新数据
-        if (!messageJson || !messageJson.heartbeat) {
-            messageChangeCB()
-        }
+        // if (!messageJson || !messageJson.heartbeat) {
+        //     messageChangeCB()
+        // }
     })
 
     return {
