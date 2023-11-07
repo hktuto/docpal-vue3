@@ -8,7 +8,6 @@ export const useNotification = (username:string, messageChangeCB) => {
     const notiStatus = useState<any>('notiStatus')
     const notiClose = useState<any>('notiClose')
     function heartbeat() {
-        console.log("no heartbeat ping")
         // useEventSource('/notification/api/v1/keepalive/_private/docpal/' + username, [], {
         //     withCredentials: true
         // });
@@ -28,12 +27,13 @@ export const useNotification = (username:string, messageChangeCB) => {
         }
         heartbeat()
     }
-
+    watch(notiError, () => {
+        console.log(notiError, 'notiError')
+        notiClose.value()
+        heartbeat()
+    })
     watch(notiData, () => {
         if(!notiData.value) return
-        const data = JSON.parse(notiData.value)
-        console.log(data, 'notiData')
-        if(data.event === 'ping') return
         messageChangeCB()
     })
 
