@@ -56,11 +56,12 @@ const props = withDefaults(defineProps<{
 
 
 const emits = defineEmits<{
-  (e: 'node:dblclick', {ev: Event, node: Node}): void,
-  (e: 'node:click', {ev: Event, node: Node}): void,
-  (e: 'node:contextmenu', {ev: Event, node: Node}): void,
-  (e: 'node:mouseenter', {ev: Event, node: Node}): void,
-  (e: 'node:mouseleave', {ev: Event, node: Node}): void,
+  (e: 'node:dblclick', {e: Event, node: Node}): void,
+  (e: 'node:click', {e: Event, node: Node}): void,
+  (e: 'node:contextmenu', {e: Event, node: Node}): void,
+  (e: 'node:mouseenter', {e: Event, node: Node}): void,
+  (e: 'node:mouseleave', {e: Event, node: Node}): void,
+  (e :'edge:dblclick', {e: Event, edge: Node}): void
 }>()
 
 const graph = ref<Graph>();
@@ -84,20 +85,23 @@ function setupGraph() {
   graph.value.fromJSON(model);
   
   
-  graph.value?.on('node:dblclick', ({ev, node}) => {
-    emits('node:dblclick', {ev, node})
+  graph.value?.on('node:dblclick', ({e, node}) => {
+    emits('node:dblclick', {e, node})
   })
-  graph.value?.on('node:click', ({ev, node}) => {
-    emits('node:click', {ev, node})
+  graph.value?.on('node:click', ({e, node}) => {
+    emits('node:click', {e, node})
   })
-  graph.value?.on('node:contextmenu', ({ev, node}) => {
-    emits('node:contextmenu', {ev, node})
+  graph.value?.on('node:contextmenu', ({e, node}) => {
+    emits('node:contextmenu', {e, node})
   })
-  graph.value?.on('node:mouseenter', ({ev, node}) => {
-    emits('node:mouseenter', {ev, node})
+  graph.value?.on('node:mouseenter', ({e, node}) => {
+    emits('node:mouseenter', {e, node})
   })
-  graph.value?.on('node:mouseleave', ({ev, node}) => {
-    emits('node:mouseleave', {ev, node})
+  graph.value?.on('node:mouseleave', ({e, node}) => {
+    emits('node:mouseleave', {e, node})
+  })
+  graph.value?.on('edge:dblclick', ({e, edge}) => {
+    emits('edge:dblclick', {e, edge})
   })
   graph.value.on('view:mounted', ({ view }) => {
     graph.value.zoomToFit({padding: 100});

@@ -1,3 +1,4 @@
+import {useWorkflowGraph} from "../composables/useWorkflowGraph";
 
 
 export const  fieldType = [
@@ -53,6 +54,41 @@ const defaultForm = {
         "onFormValidate": "",
         "dataSources": []
     }
+}
+
+type FormJsonRequestBody = {
+    jsonValue: string,
+    processKey: string,
+    userTaskId: string,
+}
+export const allFormToJson =():FormJsonRequestBody[] => {
+    const {bpmnJson} = useWorkflowGraph()
+    
+    const process = bpmnJson.value.definitions.process;
+    const processKey = process.attr_id;
+    const userTasks = Array.isArray(process['userTask']) ? process['userTask'] : [process['userTask']];
+    // loop userTasks and convert to formJSON
+    const formJsonList:FormJsonRequestBody[] = [];
+    userTasks.forEach((userTask:any) => {
+        const userTaskId = userTask.attr_id;
+        const formJson = bpmnStepToForm(userTask.extensionElements['flowable:formProperty'], userTask);
+        formJsonList.push({
+            jsonValue: JSON.stringify(formJson),
+            processKey,
+            userTaskId
+        })
+    })
+    if(process['startEvent'] && process['startEvent'].extensionElements && process['startEvent'].extensionElements['flowable:formProperty']){
+        const startEvent = process['startEvent'];
+        const userTaskId = startEvent.attr_id;
+        const formJson = bpmnStepToForm(startEvent.extensionElements['flowable:formProperty'], startEvent);
+        formJsonList.push({
+            jsonValue: JSON.stringify(formJson),
+            processKey,
+            userTaskId
+        })
+    }
+    return formJsonList;
 }
 export const bpmnStepToForm = (step:FormObject[], form:any ) => {
     const baseForm = {...defaultForm};
@@ -287,7 +323,9 @@ const createFileInput = (fromObject: FormObject) => {
      return{}
 }
 
-const createUserDropdownInput = (formObject: FormObject, step:any) => {
+const createUserDropdownInput = (formObject: FormObject, step:any, workflow) => {
+        const { bpmnJson } = useWorkflowGraph()
+    console.log(step)
      return {
          "key": Date.now(),
          "type": "select",
@@ -323,9 +361,9 @@ const createUserDropdownInput = (formObject: FormObject, step:any) => {
              "labelIconPosition": "rear",
              "labelTooltip": null,
              "onCreated": "",
-             "onMounted": "this.loadOptions([])\n$api.post('/docpal/workflow/task/candidatesByTaskDefinitionKey?taskDefinitionKey=approvalForm&processKey=costModelApproval', {}).then(res => {\n   res = res.data.data\n  const reponse = res.map(item => ({\n    value: item.userId,\n    label: `${item.username}<${item.email}>`\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
+             "onMounted": "this.loadOptions([])\n$api.post('/docpal/workflow/task/candidatesByTaskDefinitionKey?taskDefinitionKey="+bpmnJson.value.definitions.process.attr_id+"&processKey=" + step.attr_id  + "', {}, { baseURL: '/client'}).then(res => {\n   res = res.data.data\n  const reponse = res.map(item => ({\n    value: item.userId,\n    label: `${item.username}<${item.email}>`\n  }))\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
              "onRemoteQuery": "",
-             "onChange": "// const prospectNameRef = this.getWidgetRef('prospectName')\n// prospectNameRef.setValue(value)",
+             "onChange": "",
              "onFocus": "",
              "onBlur": "",
              "onValidate": ""

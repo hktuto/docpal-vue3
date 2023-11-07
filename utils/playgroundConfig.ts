@@ -13,6 +13,7 @@ const defaultConfig = {
         LOCAL_KEY: process.env.LOCAL_KEY || 'client,meta',
         PROXY: process.env.PROXY || 'https://app4.wclsolution.com/api',
         DASHBOARD_PROXY: process.env.DASHBOARD_PROXY || 'https://app4.wclsolution.com/public-api/report/v1/api',
+        CLIENT_PROXY: process.env.CLIENT_PROXY || 'https://app4.wclsolution.com/api',
         endPoint: process.env.endPoint || 'client',
         DEFAULT_PATH: process.env.endPoint === 'admin' ? '/acl' : '/browse',
       }

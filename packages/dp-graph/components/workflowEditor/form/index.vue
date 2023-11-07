@@ -7,11 +7,8 @@
                     Info
                 </div>
                 <ElFormItem label="Name" >
-                    <ElInput v-model="allFormField.attr_name" placeholder="Name" />
+                    <ElInput v-model="bpmnJson.definitions.process.attr_name" placeholder="Name" />
                 </ElFormItem>
-<!--                <ElFormItem v-if="data['attr_flowable:candidateStarterGroups']" label="Candidate Group">-->
-<!--                    <ElInput v-model="data['attr_flowable:candidateStarterGroups']" placeholder="candidate groups" />-->
-<!--                </ElFormItem>-->
             </div>
             <div class="fields">
                 <div class="title">
@@ -60,7 +57,7 @@ import {useWorkflowGraph} from '../../../composables/useWorkflowGraph'
 
 const emit = defineEmits(['submit', 'close'])
 
-const {  nameChanged, formTypeOptions, allFormField } = useWorkflowGraph();
+const {  nameChanged, formTypeOptions, allFormField, bpmnJson } = useWorkflowGraph();
 
 
 const nameRules = [

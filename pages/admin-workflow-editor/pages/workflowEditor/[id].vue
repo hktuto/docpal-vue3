@@ -17,7 +17,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ValidateWorkflowXMLApi, UploadWorkflowApi, GetWorkflowDraftXMLApi, GetWorkflowDraftDetailApi } from 'dp-api'
+import {
+  ValidateWorkflowXMLApi,
+  UploadWorkflowApi,
+  GetWorkflowDraftXMLApi,
+  GetWorkflowDraftDetailApi,
+  SaveTaskFormJsonApi
+} from 'dp-api'
+
 import { reactive } from 'vue';
 const router = useRouter()
 const bpmnFile = ref();
@@ -63,12 +70,19 @@ async function handleSave(isDraft: boolean = true) {
         formData.append('file', blob, 'workflow.bpmn.xml')
         formData.append('isDraft', isDraft)
         state.detail = await UploadWorkflowApi(formData)
+        if(!isDraft){
+          
+          const request = allFormToJson()
+          await Promise.all(request.map((param) => {
+            return SaveTaskFormJsonApi(param)
+          }))
+        }
+        // if not draft, then send all userTask form json to server
+      
     } catch (error) {
       console.log(error)
     }
-    setTimeout(() => {
-        state.loading = false
-    }, 200)
+    state.loading = false
 }
 async function handelCreate() {
     state.loading = true

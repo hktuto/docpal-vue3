@@ -28,10 +28,15 @@ export default defineNuxtConfig({
                 target: process.env.DASHBOARD_PROXY,
                 changeOrigin: true,
                 prependPath: true
+            },
+            '/client':{
+              target: process.env.CLIENT_PROXY,
+              changeOrigin: true,
+              prependPath: true
             }
         }
         // routeRules: {
-        //     '/dashboard/**': { 
+        //     '/dashboard/**': {
         //         proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**'
         //     }
         // }
