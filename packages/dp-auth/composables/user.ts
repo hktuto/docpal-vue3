@@ -296,8 +296,12 @@ export const useUser = () => {
         return isLdapMode.value
     }
     function getUserRolePermission(role: 'ROLE_USER' | 'ROLE_ADMIN' | 'ROLE_SUPER') {
-        const userDetail: any = jwt_decode(token.value)
-        return userDetail.roles.includes(role)
+        try {
+            const userDetail: any = jwt_decode(token.value)
+            return userDetail.roles.includes(role)
+        } catch (error) {
+            return false            
+        }
     }
     return {
         // data

@@ -57,7 +57,7 @@ import {
     DashboardWidgetSetting,
     getNormalizeSetting,
     getWidgetSetting
-} from "~/utils/dashboardWidgetHelper";
+} from "../../../../packages/dp-dashboard/utils/dashboardWidgetHelper";
 const route = useRoute()
 const state = reactive({
     info: {

@@ -339,7 +339,7 @@
             "size": "",
             "labelWidth": null,
             "labelHidden": false,
-            "disabled": false,
+            "disabled": true,
             "hidden": false,
             "clearable": true,
             "filterable": false,
@@ -350,27 +350,27 @@
             "multipleLimit": 0,
             "optionItems": [
               {
-                "value": "VARCHAR:64",
+                "value": "varchar:4000",
                 "label": "String    "
               },
               {
-                "value": "VARCHAR:255",
+                "value": "varchar:255",
                 "label": "Short Text "
               },
               {
-                "value": "VARCHAR:4000",
+                "value": "clob",
                 "label": "Long Text  "
               },
               {
-                "value": "INTEGER",
+                "value": "bigint",
                 "label": "Number     "
               },
               {
-                "value": "LOCALDATETIME",
+                "value": "timestamp",
                 "label": "Date       "
               },
               {
-                "value": "Boolean",
+                "value": "boolean",
                 "label": "Boolean "
               }
             ],

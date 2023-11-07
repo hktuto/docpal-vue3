@@ -23,8 +23,10 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-doc-type-manage');
     packages.push('../../pages/admin-mail-config');
     packages.push('../../packages/dp-editorjs');
+
     packages.push('../../pages/admin-message-queue');
     packages.push('../../packages/dp-dashboard');
+    packages.push('../../pages/admin-dashboard');
     packages.push('../../pages/admin-workflow-editor');
     packages.push('../../pages/admin-master-table');
     // core

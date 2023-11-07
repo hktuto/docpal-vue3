@@ -773,6 +773,22 @@ importers:
       nuxt: 3.7.0_cgvy6hrg3pjeapqw5wnuqcmdo4
       typescript: 4.9.5
 
+  pages/admin-dashboard:
+    specifiers:
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.7.3
+      typescript: ^4.9.3
+      vue: ^3.3.4
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript': 12.1.0_cgvy6hrg3pjeapqw5wnuqcmdo4
+      dp-api: link:../../packages/dp-api
+      eslint: 8.48.0
+      nuxt: 3.8.0_cgvy6hrg3pjeapqw5wnuqcmdo4
+      typescript: 4.9.5
+      vue: 3.3.7_typescript@4.9.5
+
   pages/admin-directus:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
@@ -4023,7 +4039,7 @@ packages:
       '@intlify/bundle-utils': 4.0.0_vue-i18n@9.3.0-beta.16
       '@intlify/shared': 9.4.1
       '@rollup/pluginutils': 4.2.1
-      '@vue/compiler-sfc': 3.3.4
+      '@vue/compiler-sfc': 3.3.7
       debug: 4.3.4
       fast-glob: 3.3.1
       js-yaml: 4.1.0
@@ -6441,7 +6457,7 @@ packages:
     dependencies:
       '@babel/types': 7.22.11
       '@rollup/pluginutils': 5.0.4
-      '@vue/compiler-sfc': 3.3.4
+      '@vue/compiler-sfc': 3.3.7
       ast-kit: 0.10.0
       local-pkg: 0.4.3
       magic-string-ast: 0.3.0
@@ -7507,7 +7523,7 @@ packages:
     resolution: {integrity: sha512-8y01XClpURgvxTJmM4AY2oHa1B/6iysALB9yJM1j4ak3Z2ZsnU0ewjDZzqOHdbNdit6hC0DGZNrBqNuCrv51fQ==}
     engines: {node: '>=16.14.0'}
     dependencies:
-      '@babel/parser': 7.22.14
+      '@babel/parser': 7.23.0
       '@rollup/pluginutils': 5.0.4
       pathe: 1.1.1
     transitivePeerDependencies:
@@ -19141,7 +19157,7 @@ packages:
       '@babel/plugin-syntax-import-meta': 7.10.4_@babel+core@7.23.2
       '@babel/plugin-transform-typescript': 7.22.15_@babel+core@7.23.2
       '@vue/babel-plugin-jsx': 1.1.5_@babel+core@7.23.2
-      '@vue/compiler-dom': 3.3.4
+      '@vue/compiler-dom': 3.3.7
       esno: 0.16.3
       kolorist: 1.8.0
       magic-string: 0.30.5
