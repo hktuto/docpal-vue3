@@ -1247,6 +1247,22 @@ importers:
       nuxt: 3.7.0_cgvy6hrg3pjeapqw5wnuqcmdo4
       typescript: 4.9.5
 
+  pages/client-dashboard:
+    specifiers:
+      '@nuxtjs/eslint-config-typescript': ^12.0.0
+      dp-api: workspace:*
+      eslint: ^8.28.0
+      nuxt: ^3.7.3
+      typescript: ^4.9.3
+      vue: ^3.3.4
+    devDependencies:
+      '@nuxtjs/eslint-config-typescript': 12.1.0_cgvy6hrg3pjeapqw5wnuqcmdo4
+      dp-api: link:../../packages/dp-api
+      eslint: 8.48.0
+      nuxt: 3.8.0_cgvy6hrg3pjeapqw5wnuqcmdo4
+      typescript: 4.9.5
+      vue: 3.3.7_typescript@4.9.5
+
   pages/client-file-request:
     specifiers:
       '@nuxtjs/eslint-config-typescript': ^12.0.0
@@ -1782,7 +1798,7 @@ packages:
     resolution: {integrity: sha512-aBiH1NKMG0H2cGZqspNvsaBe6wNGjbJjuLy29aU+eDZjSbbN53BaxlpB02xm9v34pLTZ1nIQPFYn2qMZoa5BQQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.22.11
+      '@babel/types': 7.23.0
     dev: true
 
   /@babel/helper-module-imports/7.22.15:
@@ -1919,7 +1935,7 @@ packages:
     dependencies:
       '@babel/helper-function-name': 7.22.5
       '@babel/template': 7.22.5
-      '@babel/types': 7.22.11
+      '@babel/types': 7.23.0
     dev: true
 
   /@babel/helpers/7.22.11:
@@ -12634,7 +12650,7 @@ packages:
       clipboardy: 3.0.0
       consola: 3.2.3
       defu: 6.1.3
-      get-port-please: 3.0.2
+      get-port-please: 3.1.1
       h3: 1.8.2
       http-shutdown: 1.2.2
       jiti: 1.20.0

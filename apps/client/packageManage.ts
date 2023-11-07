@@ -15,6 +15,7 @@ export function customLayer():string[] {
     packages.push('../../pages/client-share-other');
     packages.push('../../pages/client-collection');
     packages.push('../../pages/client-trash');
+    packages.push('../../pages/client-dashboard');
     // core
     packages.push('../../packages/dp-related-folder');
     packages.push('../../packages/dp-browse');

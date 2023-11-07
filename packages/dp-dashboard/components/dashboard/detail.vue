@@ -18,6 +18,7 @@
             >
             <component :is="widgetComponent[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
                 :setting="item.setting"
+                :hideSetting="hideSetting"
                 @delete="handleDelete(item)"
                 @refreshSetting="(setting) => handleRefreshSetting(setting, item)"></component>
         </GridItem>    
@@ -32,12 +33,14 @@ const props = withDefaults( defineProps<{
     layout: DashboardWidgetSetting[],
     resizable?: boolean,
     draggable?: boolean,
+    hideSetting?: boolean,
     colNum?: number,
     rowHeight?: number,
 }>() , {
     layout: [],
     resizable: true,
     draggable: true,
+    hideSetting: false,
     colNum: 12,
     rowHeight: 130
 })

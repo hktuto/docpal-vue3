@@ -21,8 +21,10 @@ import { GetDocTypeCountApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
+    hideSetting?: boolean,
 }>() , {
-    setting: {}
+    setting: {},
+    hideSetting: false
 })
 
 const cardRef = ref()
@@ -57,6 +59,7 @@ function initStyle () {
 // #region module: setting
     const settingRef = ref()
     function openSetting() {
+        if (props.hideSetting) return
         settingRef.value.handleOpen(props.setting)
     }
     async function getData(documentType: string) {

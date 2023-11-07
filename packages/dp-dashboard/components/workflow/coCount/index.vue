@@ -1,8 +1,12 @@
 <template>
     <el-card class="dashboard-item dashboard-item-main" :style="`--setting-color:${setting.color}`">
         <template #header="{ close, titleId, titleClass }">
-            <h4>{{setting.workflow}}<i>({{setting.user || $t('dashboard.allUser')}})</i></h4>
-            <SvgIcon src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
+            <h4>{{setting.workflow}}
+                <DashboardUserFilter class="el-icon--right" :user="state.filterUser"
+                    :show="setting.showUserFilter"
+                    @refreshSetting="handleFilterUser"></DashboardUserFilter>
+            </h4>
+            <SvgIcon v-if="!hideSetting" src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
                 @click="openSetting"/>
         </template>
         <div class="chartContainer">
@@ -10,7 +14,7 @@
                 class="chartContainer-item"
                 :is="widgetComponent[item]" :ref="el =>{ displayListRef[item] = el }" 
                 :workflow="setting.workflow"
-                :user="setting.user"></component>
+                :user="state.filterUser"></component>
         </div>
         <WorkflowCoCountDialog ref="settingRef" 
             @delete="handleDelete"
@@ -22,13 +26,16 @@
 import { } from 'dp-api'
 const props = withDefaults( defineProps<{
     setting?: any;
+    hideSetting?: boolean,
 }>() , {
-    setting: {}
+    setting: {},
+    hideSetting: false
 })
 const emits = defineEmits([
     'refreshSetting', 'delete'
 ])
 const state = reactive({
+    filterUser: ''
 })
 const displayListRef = ref({})
 function resize() {
@@ -47,6 +54,15 @@ function handleDelete() {
 function handleRefresh(chartSetting) {
     emits('refreshSetting', chartSetting)
 }
+function handleFilterUser (user) {
+    state.filterUser = user
+}
+watch(() => props.setting, (newValue) => {
+    state.filterUser = newValue.user
+}, {
+    immediate: true,
+    deep: true
+})
 defineExpose({
     resize
 })

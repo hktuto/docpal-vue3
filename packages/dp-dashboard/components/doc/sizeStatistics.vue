@@ -13,8 +13,10 @@ import { deepCopy, GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
+    hideSetting?: boolean,
 }>() , {
-    setting: {}
+    setting: {},
+    hideSetting: false
 })
 type EChartsOption = echarts.EChartsOption;
 const chartRef = ref()
@@ -196,20 +198,21 @@ const setting = {
                 text: $t('dashboard.documentSize'),
                 left: "left",
             },
-            toolbox: {
-                show: true,
-                showTitle: true, 
-                itemSize: 15, 
-                feature: {
-                    mySetting: {
-                        show: true,
-                        title: $t('dashboard.setting'),
-                        icon: '',
-                        onclick: ()=> openSetting()
-                    }
-                }
-            }
+            
         },
+    },
+    toolbox: {
+        show: true,
+        showTitle: true, 
+        itemSize: 15, 
+        feature: {
+            mySetting: {
+                show: true,
+                title: $t('dashboard.setting'),
+                icon: '',
+                onclick: ()=> openSetting()
+            }
+        }
     }
 }
 const state = reactive({
@@ -322,8 +325,11 @@ function resize() {
             ...setting.defaultSetting.options, 
             ...setting[`${chartType}Setting`].options 
         }
-        if(!picStore.setting) picStore.setting = 'image://' + await parseSvg('/icons/setting.svg')
-        options.toolbox.feature.mySetting.icon = picStore.setting
+        if(!props.hideSetting) {
+            if(!picStore.setting) picStore.setting = 'image://' + await parseSvg('/icons/setting.svg')
+            setting.toolbox.feature.mySetting.icon = picStore.setting
+            options.toolbox = setting.toolbox
+        }
         switch(chartType) {
             case 'pie':
                 await getData(displayList)

@@ -1,17 +1,21 @@
 <template>
     <el-card class="dashboard-item dashboard-item-main" :style="`--setting-color:${setting.color}`">
         <template #header="{ close, titleId, titleClass }">
-            <h4>{{setting.documentType}}<i>({{setting.user || $t('dashboard.allUser')}})</i></h4>
-            <SvgIcon src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
+            <h4>{{setting.documentType}}
+                <DashboardUserFilter class="el-icon--right" :user="state.filterUser"
+                    :show="setting.showUserFilter"
+                    @refreshSetting="handleFilterUser"></DashboardUserFilter>
+            </h4>
+            <SvgIcon v-if="!hideSetting"  src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
                 @click="openSetting"/>
         </template>
         <div class="trendContainer">
             <DocCoCountFileCount v-if="setting.showCount" ref="DocCoCountCountRef" 
                 :documentType="setting.documentType" 
-                :user="setting.user"/>
+                :user="state.filterUser"/>
             <DocCoCountSize v-if="setting.showSize" ref="DocCoCountSizeRef" 
                 :documentType="setting.documentType" 
-                :user="setting.user"/>
+                :user="state.filterUser"/>
         </div>
         <el-button v-if="state.drillDownFlag" :loading="state.drillDownBackLoading" @click="handleDrillDownBack" text>{{$t('dpButtom_back')}}</el-button>
         <div class="metaContainer" style="--trend-columns: 1fr 1fr 1fr 1fr">
@@ -34,8 +38,10 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import { GetCoCountMetaApi, GetCoCountMetaFilterApi } from 'dp-api'
 const props = withDefaults( defineProps<{
     setting?: any;
+    hideSetting?: boolean,
 }>() , {
-    setting: {}
+    setting: {},
+    hideSetting: false
 })
 const emits = defineEmits([
     'refreshSetting', 'delete'
@@ -44,7 +50,8 @@ const metaData = ref({})
 const state = reactive({
     drillDownBackLoading: false,
     drillDownFlag: false,
-    drillDownParams: {}
+    drillDownParams: {},
+    filterUser: ''
 })
 
 const DocCoCountCountRef = ref()
@@ -62,11 +69,15 @@ const settingRef = ref()
 function openSetting() {
     settingRef.value.handleOpen(props.setting)
 }
+function handleFilterUser (user) {
+    state.filterUser = user
+    getMetaData()
+}
 async function getMetaData () {
     const params = {
         groupByMetadatas: props.setting.displayList.map(item => (item.meta)),
         primaryType: props.setting.documentType,
-        creator: props.setting.user
+        creator: state.filterUser
     }
     metaData.value = await GetCoCountMetaApi(params)
 }
@@ -86,7 +97,7 @@ async function handleDrillDown (metaParams) {
     try {
         metaData.value = await GetCoCountMetaFilterApi({
             filterByMetaDatas: state.drillDownParams,
-            creator: props.setting.user,
+            creator: state.filterUser,
             primaryType: props.setting.documentType,
             groupByMetadatas: props.setting.displayList.map(item => (item.meta))
         })
@@ -102,6 +113,7 @@ function handleRefresh(chartSetting) {
 }
 watch(() => props.setting, (newValue) => {
     getMetaData()
+    state.filterUser = newValue.user
 }, {
     immediate: true,
     deep: true

@@ -89,6 +89,7 @@ export enum TABLE {
     CLIENT_HOLD_POLICIES = "clientHoldPolicies",
     CLIENT_RETENTION_DONE = "clientRetentionDone",
     CLIENT_RETENTION_PENDING= "clientRetentionPending",
+    CLIENT_DASHBOARD = 'clientDashboard',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -1273,6 +1274,31 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_DASHBOARD]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            // { id: '3', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                width: 150,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.PUBLIC_SHARE]: {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'title', defaultColumn: true },

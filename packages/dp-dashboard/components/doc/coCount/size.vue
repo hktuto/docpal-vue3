@@ -114,6 +114,7 @@ function resize() {
                 return prev
             }, [])
         } catch (error) {
+            state.data = []
         }
     }
 // #endregion

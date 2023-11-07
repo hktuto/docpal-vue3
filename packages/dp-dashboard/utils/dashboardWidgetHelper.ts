@@ -74,7 +74,8 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
             showSize: true,
             displayList: [
                 { meta: 'dc:creator' }
-            ]
+            ],
+            showUserFilter: true
         }
     },
     WorkflowCoCount:{
@@ -93,7 +94,8 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
                 'WorkflowTimeSpendPerWorkflow',
                 'WorkflowActiveCount',
                 // 'WorkflowApproveRate',
-            ]
+            ],
+            showUserFilter: true
         }
     }
 }
