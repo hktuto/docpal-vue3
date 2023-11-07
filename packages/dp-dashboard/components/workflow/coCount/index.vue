@@ -1,7 +1,7 @@
 <template>
     <el-card class="dashboard-item dashboard-item-main" :style="`--setting-color:${setting.color}`">
         <template #header="{ close, titleId, titleClass }">
-            <h4>{{setting.workflow}}</h4>
+            <h4>{{setting.workflow}}<i>({{setting.user || $t('dashboard.allUser')}})</i></h4>
             <SvgIcon src="/icons/setting.svg" style="--icon-size: 16px; --icon-color: #8796A4"
                 @click="openSetting"/>
         </template>
