@@ -35,6 +35,8 @@ onMounted(() => {
 watch( () => isLogin.value, (newValue) => {
     Cookies.value = token.value || ''
     if(newValue) {
+        console.log(newValue, isLogin.value);
+        
         notificationStore.value = useNotification(userId, messageChange)
         notificationStore.value.start()
     }
