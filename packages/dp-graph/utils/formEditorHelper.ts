@@ -1,7 +1,13 @@
 import {useWorkflowGraph} from "../composables/useWorkflowGraph";
 import { DefaultForm,  } from "./defaultFormObject";
-import {createBooleanInput, createDateInput, createMultiLineInput, createSingleLineInput} from "./fieldConverter";
-type FieldType = "single_line_input" | "multi_line_input" | "date" | "boolean" | "current_user" | "user_dropdown" | "user_group_dropdown" | "custom_dropdown" | "file" | "multiple_files"
+import {
+    createApproveUserDropDown,
+    createBooleanInput, createCurrentUserInput,
+    createDateInput,
+    createMultiLineInput,
+    createSingleLineInput, createUserDropdownInput, createFileInput
+} from "./fieldConverter";
+type FieldType = "single_line_input" | "multi_line_input" | "date" | "boolean" | "current_user" | "user_dropdown" | "approve_user_dropdown"  | "file" 
 
 export type FormObject = {
     attr_id: string,
@@ -17,6 +23,8 @@ export type FormObject = {
     attr_field_validate?:string,
     attr_field_valid: boolean,
     attr_field_default_value?: any,
+    attr_target_step?: string,
+    attr_file_limit?: number,
 }
 
 
@@ -105,37 +113,29 @@ export const fieldOptions:FieldOptions = {
         label: "Current User",
         value: "current_user",
         options:{},
-        convertFunction: createSingleLineInput
+        convertFunction: createCurrentUserInput
     },
     user_dropdown: {
         label: "User Dropdown",
         value: "user_dropdown",
         options:{},
-        convertFunction: createSingleLineInput
+        convertFunction: createUserDropdownInput
     },
-    user_group_dropdown: {
-        label: "User Group Dropdown",
-        value: "user_group_dropdown",
-        options:{},
-        convertFunction: createSingleLineInput
-    },
-    custom_dropdown: {
-        label: "Custom Dropdown",
-        value: "custom_dropdown",
-        options:{},
-        convertFunction: createSingleLineInput
+    approve_user_dropdown: {
+        label: "Approve User Dropdown",
+        value: "approve_user_dropdown",
+        options:{
+            attr_target_step: "string"
+        },
+        convertFunction: createApproveUserDropDown
     },
     file: {
         label: "File",
         value: "file",
-        options:{},
-        convertFunction: createSingleLineInput
+        options:{
+            attr_file_limit: "number"
+        },
+        convertFunction: createFileInput
     },
-    multiple_files: {
-        label: "Multiple files",
-        value: "multiple_files",
-        options:{},
-        convertFunction: createSingleLineInput
-    }
     
 }
