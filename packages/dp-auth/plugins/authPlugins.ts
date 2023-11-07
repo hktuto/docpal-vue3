@@ -102,8 +102,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     });
 })
 function getBaseUrl(baseURL) {
-    const { public:{ DASHBOARD_PROXY } } = useRuntimeConfig();
+    const { public:{ DASHBOARD_PROXY, CLIENT_PROXY } } = useRuntimeConfig();
     if(baseURL === '/dashboard') return DASHBOARD_PROXY
+    if(baseURL === '/client') return process.env.CLIENT_PROXY
     return baseURL
 }
 function routeMatcher (path, routeList) {

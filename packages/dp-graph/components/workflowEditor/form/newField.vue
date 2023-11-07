@@ -56,6 +56,7 @@ function resetNewFieldForm() {
 
 function add() {
   // validate newFieldForm
+  if(!selectedNewField.value) return
   if(isNewField.value){
     emit('submit', newFieldForm.value)
     return

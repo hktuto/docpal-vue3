@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {bpmnToX6, bpmnToJson} from "~/utils/graphHelper";
+import {bpmnToX6, bpmnToJson} from "../../utils/graphHelper";
 import {Node} from "@antv/x6";
 import {jsonToBpmn} from "../../utils/graphHelper";
 import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
@@ -16,14 +16,21 @@ const graphEl = ref();
 
 const { graphJson, bpmnJson, allFormField } = useWorkflowGraph();
 function setupGraph() {
-  graphJson.value = bpmnToX6(props.bpmn, {hideEnd:false});
+  graphJson.value = bpmnToX6(props.bpmn, { hideEnd:false });
   bpmnJson.value = bpmnToJson(props.bpmn);
 }
 
 
-
+function edgeDblClickHandler({edge, e}:any) {
+  console.log("edge click", edge)
+  const data = edge.getData();
+  if(data.type === 'boundaryEvent'){
+    console.log(e)
+  }
+}
 
 function dblClickHandler({node}:Node) {
+  console.log("node click", node)
   const data = node.getData();
   if(data.type === 'userTask'){
     // open dialog
@@ -78,6 +85,7 @@ function saveUserStep(stepData) {
   }
 
 }
+
 
 
 function setStepData(stepId, newData) {
@@ -158,8 +166,9 @@ function getWorkflowData() {
   }
 }
 
+
 defineExpose({
-  getWorkflowData
+  getWorkflowData,
 })
 
 </script>
@@ -182,6 +191,7 @@ defineExpose({
         ref="graphEl"
         :graphJson="graphJson"
         @node:dblclick="dblClickHandler"
+        @edge:dblclick="edgeDblClickHandler"
     ></GraphViewer>
 
     <div v-if="bpmnJson" class="footer">
