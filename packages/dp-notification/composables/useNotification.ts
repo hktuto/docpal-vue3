@@ -2,13 +2,13 @@
 
 import { useEventSource } from '@vueuse/core'
 import { watch } from 'vue'
-export const useNotification = (token:string, username:string, messageChangeCB) => {
+export const useNotification = (username:string, messageChangeCB) => {
     const notiData = useState<any>('notiData');
     const notiError = useState<any>('notiError');
     const notiStatus = useState<any>('notiStatus')
     const notiClose = useState<any>('notiClose')
     function heartbeat() {
-        console.log("no heartbeat")
+        console.log("no heartbeat ping")
         // useEventSource('/notification/api/v1/keepalive/_private/docpal/' + username, [], {
         //     withCredentials: true
         // });
@@ -22,25 +22,22 @@ export const useNotification = (token:string, username:string, messageChangeCB) 
         notiError.value = error
     }
     
-
-    onMounted(() => {
-        if(close.value){
-            close.value()
+    function start() {
+        if(notiClose.value){
+            notiClose.value()
         }
         heartbeat()
-    })
+    }
 
     watch(notiData, () => {
         if(!notiData.value) return
         const data = JSON.parse(notiData.value)
-        console.log(data)
-        // 有messageJson且messageJson的heartbeat不为true才会更新数据
-        // if (!messageJson || !messageJson.heartbeat) {
-        //     messageChangeCB()
-        // }
+        console.log(data, 'notiData')
+        if(data.event === 'ping') return
+        messageChangeCB()
     })
 
     return {
-
+        start
     }
 }
