@@ -71,6 +71,7 @@ function getData() {
   return graph.value?.toJSON();
 }
 function setupGraph() {
+  console.log("setupGraph")
   if(!document.getElementById(props.id) || !props.graphJson) {
     return;
   }
