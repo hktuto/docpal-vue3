@@ -27,8 +27,24 @@ function edgeDblClickHandler({edge, e}:any) {
   console.log("edge click", edge)
   const data = edge.getData();
   if(data.type === 'boundaryEvent'){
-    console.log(e)
+    const data = edge.getData();
+    selectedData.value = data;
+    sidePanelOpened.value = true;
   }
+}
+
+function saveBoundaryStep(date){
+  
+  
+  if(Array.isArray(bpmnJson.value.definitions.process.boundaryEvent)){
+    const item = bpmnJson.value.definitions.process.boundaryEvent.find(item => item.attr_id === date.attr_id);
+    if(item){
+      item.timerEventDefinition.timeDuration = date.timerEventDefinition.timeDuration;
+    }
+  }else{
+    bpmnJson.value.definitions.process.boundaryEvent.timerEventDefinition.timeDuration = date.timerEventDefinition.timeDuration;
+  }
+  console.log(bpmnJson.value.definitions.process.boundaryEvent)
 }
 
 function dblClickHandler({node}:Node) {
@@ -192,7 +208,6 @@ const displayTemplate = computed(() => {
 
 
 function itemDeleteHandler(node:Node) {
-  console.log('delete', node)
   
   // step 1 show confirm dialog
   // show alert
@@ -278,6 +293,7 @@ defineExpose({
         <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData"  @close="closeSidePanel" @submit="saveUserStep" />
         <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
         <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorFormBoundaryEvent v-else-if="selectedData.type === 'boundaryEvent'" :data="selectedData" @close="closeSidePanel" @submit="saveBoundaryStep" />
       </template>
     </div>
     <GraphViewer

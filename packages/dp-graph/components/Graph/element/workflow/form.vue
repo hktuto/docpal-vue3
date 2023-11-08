@@ -74,7 +74,7 @@ onMounted(() => {
       title="Actions"
       virtual-triggering
       persistent
-      :disabled="type === 'endEvent' || type === 'exclusiveGateway' || dataId === 'start'"
+      :disabled="type === 'endEvent' || type === 'exclusiveGateway' || dataId === 'start' || dataId === 'userTask'"
   >
     <div class="actions">
 <!--      <SvgIcon src="/icons/add.svg" @click="emitAddEvent"></SvgIcon >-->
