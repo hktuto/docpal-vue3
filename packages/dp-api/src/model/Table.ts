@@ -1160,8 +1160,22 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_SEARCH] : {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
-            { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', showOverflowTooltip: true },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
+            { id: '6', label: 'search_authors', prop: 'createdBy' },
+            { id: '7', label: 'search_contributors', prop: 'properties.dc:contributors',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": 'properties.dc:contributors',
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180',
                 formatList: [
                     {
@@ -1176,6 +1190,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 ]  
             },
             { id: '5', slot: 'tags', label: 'dpTable_tags', prop: 'tags' },
+
         ],
         events: [],
         slots: [
@@ -2464,4 +2479,59 @@ export function TableAddColumns (columnItem: TableColumnItem, columnList: any, p
     columnList.splice(position, 0, {
         ..._columnItem
     })
+    return columnList
+} 
+
+export function TableAddMultiColumns (columnItems: TableColumnItem[], columnList: any, position: number = 1) {
+    const resultList = structuredClone(columnList)
+    const columns = columnItems.reduce((prev: any, item:TableColumnItem) => {
+        const _columnItem: TableColumnItem = {
+            label: item.label,
+            prop: item.prop,
+            id: item.id,
+            formatList: item.formatList ? item.formatList : [],
+            showOverflowTooltip: true
+        }
+        if (item.type === 'date') {
+            _columnItem.formatList = [
+                {
+                    joiner: "",
+                    prop: item.prop,
+                    formatFun: "dateFormat",
+                    params: {
+                        "format": ""
+                    },
+                    index: 0
+                }
+            ]
+        } else if (item.type === 'complex') {
+            _columnItem.formatList = [
+                {
+                    joiner: "",
+                    prop: item.prop,
+                    formatFun: "concat",
+                    params: {
+                        "format": ""
+                    },
+                    index: 0
+                }
+            ]
+        } else if (item.type === 'size') {
+            _columnItem.formatList = [
+                {
+                    "joiner": "",
+                    "prop": item.prop,
+                    "formatFun": "fileSize",
+                    "params": {
+                        "joiner": ""
+                    },
+                    "index": 0
+                }
+            ]
+        }
+        prev.push(_columnItem)
+        return prev
+    }, [])
+    resultList.splice(position, 0, ...columns)
+    return resultList
 } 

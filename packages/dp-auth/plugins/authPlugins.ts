@@ -33,6 +33,7 @@ const cancelAxiosWhiteList = [
     '/nuxeo/search/textSearchTypes',
     '/nuxeo/identity/users',
     '/nuxeo/search/getSearchExtends',
+    '/nuxeo/collection',
     // workflow
     '/docpal/workflow/process/list',
     '/docpal/workflow/process/model',
