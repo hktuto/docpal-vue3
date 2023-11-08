@@ -7,8 +7,7 @@ export const useNotification = (username:string, messageChangeCB) => {
     const notiError = useState<any>('notiError');
     const notiStatus = useState<any>('notiStatus')
     const notiClose = useState<any>('notiClose')
-    const { isLogin, token } = useUser();
-    let isStart = false
+    let interval: any = null
     function heartbeat() {
         // useEventSource('/notification/api/v1/keepalive/_private/docpal/' + username, [], {
         //     withCredentials: true
@@ -26,26 +25,23 @@ export const useNotification = (username:string, messageChangeCB) => {
     function start() {
         if(notiClose.value){
             notiClose.value()
-            isStart = false
         }
-        if(!isStart) heartbeat()
-        isStart = true
+        heartbeat()
     }
-    watch(notiError, () => {
+    watch(() => notiError.value, () => {
         if(!notiError.value) return
-        start()
+        if(interval) clearInterval(interval)
+        interval = setInterval(() => {
+            console.log('notiError：', notiError.value)
+            // start()
+        }, 100000)
     })
     watch(notiData, () => {
         if(!notiData.value) return
         messageChangeCB()
     })
-    watch( () => isLogin.value, (newValue) => {
-        console.log('isStart', newValue, isStart);
-        if(newValue && !isStart) {
-            start()
-        }
-    }, {
-        immediate:true 
+    onMounted(() => {
+        start()
     })
     return {
         start
