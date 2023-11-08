@@ -61,7 +61,6 @@ export const useWorkflowGraph = () => {
     }
 
     function nameChanged(rule: any, value: any, callback: any) {
-        console.log('nameChanged', value)
         if (!value) {
             return callback(new Error('Please input Name'))
         }

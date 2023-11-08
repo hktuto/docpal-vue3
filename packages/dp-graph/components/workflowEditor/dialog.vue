@@ -5,9 +5,12 @@
     <el-form ref="formRef" :model="state.form" label-position="top"
         class="demo-ruleForm" status-icon
     >
+        <el-form-item :label="$t('workflowEditor.name')" prop="name">
+            <el-input v-model="state.form.name" :placeholder="$t('workflowEditor.name')" />
+        </el-form-item>
         <el-form-item :label="$t('workflowEditor.template')" prop="template">
             <el-radio-group v-model="state.form.template">
-                <el-radio v-for="item in state.templateList" :key="item.id" :label="item.id">
+                <el-radio v-for="item in workflowTemplateList" :key="item.id" :label="item.id">
                     <div class="workflow-template-step">
                         <SvgIcon class="workflow-template-step-icon" :src="item.icon" @click="toggleColor" />
                         <h3 class="workflow-template-step-label">{{item.name}}</h3>
@@ -24,20 +27,21 @@
 </template>
 <script lang="ts" setup>
 import { Select, CloseBold } from '@element-plus/icons-vue'
+import {workflowTemplateList} from '../../utils/workflowTemplate'
 const router = useRouter()
+
 const state = reactive({
     visible: false,
     form: {
-        template: 'Single'
-    },
-    templateList: [
-        { id: 'Single', name: 'Single Step', icon: '/icons/workflow/singleStepIcon.svg', tip: 'singleStepTip'},
-        { id: 'Multiple', name: 'Multiple Step', icon: '/icons/workflow/multipleStepIcon.svg', tip: 'multipleStepTip'}
-    ]
+        template: 'Single',
+        name:''
+    }
 })
 const formRef = ref()
 async function handleSubmit () {
-    router.push(`/workflowEditor/new?template=${state.form.template}`)
+  // TODO : validate form
+    if(!state.form.name) return;
+    router.push(`/workflowEditor/new?template=${state.form.template}&name=${state.form.name}`)
 }
 
 function handleOpen(setting) {

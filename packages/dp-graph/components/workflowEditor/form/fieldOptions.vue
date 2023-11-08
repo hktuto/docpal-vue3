@@ -1,7 +1,7 @@
 
 <script lang="ts" setup>
-  import {FormObject} from "../../../utils/formEditorHelper";
-
+import {fieldOptions, FormObject} from "../../../utils/formEditorHelper";
+  const {bpmnJson} = useWorkflowGraph();
   const props = defineProps<{
     field: FormObject
   }>();
@@ -23,13 +23,57 @@
     attr_field_type: [
       { required: true, message: 'Please select required', trigger: 'blur' },
     ],
+    attr_target_step: [
+      {
+        required: false,
+        validator: approveTypeCheck,
+        trigger: 'blur'
+      }
+    ]
   };
+  
+  const approvableTarget = computed(() => {
+    console.log(bpmnJson.value.definitions)
+    // check userTask is Array
+    if(!Array.isArray(bpmnJson.value.definitions.process.userTask)) {
+      if( bpmnJson.value.definitions.process.userTask['attr_flowable:candidateGroups']) {
+        return [bpmnJson.value.definitions.process.userTask]
+      }
+      return []
+    }
+    return bpmnJson.value.definitions.process.userTask.find((el) => el['attr_flowable:candidateGroups'])
+  })
+
+function approveTypeCheck(rule:any, value:any, callback:any) {
+    if(formField.attr_field_type !== "approve_user_dropdown" && !value) {
+      callback(new Error('Please select approve target'))
+      return
+    }
+    callback()
+}
+function typeChange(newVal) {
+    // 如果type改變了，清理特殊欄目的資料
+    if(newVal !== "approve_user_dropdown"){
+      formField.value.attr_target_step = null;
+    }
+    if(newVal !== 'file') {
+      formField.value.attr_file_limit = null;
+    }
+}
   function saveField(){
+    try{
+      
     formEl.value.validate((valid) => {
-      if(!valid) return;
+      console.log(valid, formField.value)
+      if(!valid) {
+        return;
+      }
       emit('submit', formField.value)
       emit('close')
     })
+    } catch (e) {
+      console.log(e)
+    }
   }
   
 </script>
@@ -56,9 +100,17 @@
           </ElFormItem>
         </div>
         <ElFormItem label="Input Type" prop="attr_field_type">
-          <ElSelect v-model="formField.attr_field_type" placeholder="Select input type">
-            <ElOption v-for="item in fieldType" :key="item" :label="item" :value="item" />
+          <ElSelect v-model="formField.attr_field_type" placeholder="Select input type" @change="typeChange">
+            <ElOption v-for="(value, key) in fieldOptions" :key="key" :label="value.label" :value="key" />
           </ElSelect>
+        </ElFormItem>
+        <ElFormItem v-if="formField.attr_field_type === 'approve_user_dropdown'" label="Approve Target" prop="attr_target_step">
+          <ElSelect v-model="formField.attr_target_step" clearable filterable>
+            <ElOption v-for="(value, key) in approvableTarget" :key="key" :label="value.attr_name" :value="value.attr_id" />
+          </ElSelect>
+        </ElFormItem>
+        <ElFormItem v-if="formField.attr_field_type === 'file'" label="File Limit" prop="attr_file_limit">
+          <ElInput v-model="formField.attr_file_limit" placeholder="File Limit" step="1" />
         </ElFormItem>
         <ElDivider />
       </ElForm>

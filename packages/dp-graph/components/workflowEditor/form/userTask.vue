@@ -42,7 +42,7 @@
                       <SvgIcon src="/icons/move-handle.svg" />
                     </div>
                     <WorkflowEditorFormField :field="element" @submit="(val) => updateFormField(val, index)"/>
-                    <div class="actions">
+                    <div v-if="!element.attr_fixed" class="actions">
                       <SvgIcon @click="removeFormItem(index)" :src="'/icons/delete.svg'" />
                     </div>
                   </li>
