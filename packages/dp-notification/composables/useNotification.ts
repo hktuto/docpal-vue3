@@ -31,10 +31,11 @@ export const useNotification = (username:string, messageChangeCB) => {
     watch(() => notiError.value, () => {
         if(!notiError.value) return
         if(interval) clearInterval(interval)
+        console.log('notiError：', notiError.value)
         interval = setInterval(() => {
-            console.log('notiError：', notiError.value)
+            console.log('notiError：setInterval,', notiError.value)
             // start()
-        }, 100000)
+        }, 10000)
     })
     watch(notiData, () => {
         if(!notiData.value) return
