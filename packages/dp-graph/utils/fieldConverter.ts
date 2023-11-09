@@ -3,7 +3,8 @@ import {
     DateInputField, GetApproveUserList,
     MultiLineInputField,
     SelectInputField, SingleFileInputField,
-    SingleInputField
+    SingleInputField,
+    BooleanField
 } from "./defaultFormObject";
 import {useWorkflowGraph} from "../composables/useWorkflowGraph";
 import {FormObject} from "./formEditorHelper";
@@ -71,6 +72,15 @@ export const createFileInput = (formObject: FormObject) => {
 }
 
 export const createBooleanInput = (formObject: FormObject) => {
+    const field = BooleanField()
+    return createFieldOptions(field, {
+        name: formObject.attr_id,
+        label: formObject.attr_field_label,
+        readonly: formObject.attr_field_writable,
+        disabled: formObject.attr_field_disabled,
+        hidden: formObject.attr_field_hidden,
+        required: formObject.attr_field_required,
+    });
 }
 export const createApproveUserDropDown = (formObject: FormObject) => {
     const { bpmnJson } = useWorkflowGraph()
