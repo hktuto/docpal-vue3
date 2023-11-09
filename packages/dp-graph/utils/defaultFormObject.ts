@@ -182,7 +182,37 @@ export const MultiLineInputField = () => {
     field.icon = 'textarea-field'
     return field
 }
-
+export const BooleanField =() => ({
+    "key": 63295,
+    "type": "switch",
+    "icon": "switch-field",
+    "formItemFlag": true,
+    "options": {
+        "name": "switch22448",
+        "label": "switch",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+    },
+    "id": "switch22448"
+})
 export const DateInputField = () => {
     return {
         "key": 42505,
