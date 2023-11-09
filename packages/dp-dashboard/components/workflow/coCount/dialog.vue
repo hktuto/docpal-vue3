@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dashboard.setting') + ' - ' + state.setting.documentType"
+<el-dialog v-model="state.visible" :title="$t('dashboard.setting') + ' - ' + state.setting.workflow"
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
