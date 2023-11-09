@@ -136,7 +136,7 @@ export const useTableHelper = () => {
             fun(value:any){
                 if(!value) return '-'
                 const a = 1024;
-                const sizeList = ['bit', 'KB', 'MB', 'GB', 'TB', 'PB'];
+                const sizeList = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
                 if (value < a) return `${value}${sizeList[0]}`;
                 let getLoga = (a: any, n: any) => {
                     // a的x次方=n x=n的对数（x以a为底数 N的对数）
