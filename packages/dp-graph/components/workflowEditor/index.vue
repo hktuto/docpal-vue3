@@ -3,7 +3,9 @@ import {bpmnToX6, bpmnToJson} from "../../utils/graphHelper";
 import {Node} from "@antv/x6";
 import {jsonToBpmn} from "../../utils/graphHelper";
 import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
-
+import {workflowTemplateList} from "../../utils/workflowTemplate";
+import {useEventListener} from '@vueuse/core';
+import {removeAllConnection, removeAndJoinNextNode} from "../../utils/graphNodeHelper";
 const props = defineProps<{
   bpmn: String
 }>()
@@ -25,8 +27,24 @@ function edgeDblClickHandler({edge, e}:any) {
   console.log("edge click", edge)
   const data = edge.getData();
   if(data.type === 'boundaryEvent'){
-    console.log(e)
+    const data = edge.getData();
+    selectedData.value = data;
+    sidePanelOpened.value = true;
   }
+}
+
+function saveBoundaryStep(date){
+  
+  
+  if(Array.isArray(bpmnJson.value.definitions.process.boundaryEvent)){
+    const item = bpmnJson.value.definitions.process.boundaryEvent.find(item => item.attr_id === date.attr_id);
+    if(item){
+      item.timerEventDefinition.timeDuration = date.timerEventDefinition.timeDuration;
+    }
+  }else{
+    bpmnJson.value.definitions.process.boundaryEvent.timerEventDefinition.timeDuration = date.timerEventDefinition.timeDuration;
+  }
+  console.log(bpmnJson.value.definitions.process.boundaryEvent)
 }
 
 function dblClickHandler({node}:Node) {
@@ -161,6 +179,7 @@ watch(() => props.bpmn, (newVal, oldVal) => {
 function getWorkflowData() {
   
   const xml = jsonToBpmn(bpmnJson.value)
+  console.log(xml);
   // create blob file
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
   const name = bpmnJson.value.definitions.process.attr_name
@@ -170,11 +189,97 @@ function getWorkflowData() {
   }
 }
 
+function nodeRightClickHandler({e, node}:any) {
+  e.preventDefault();
+  const data = node.getData();
+  console.log('right click', node)
+  // 如果 node 是 userTask, 
+}
 
+const displayTemplate = computed(() => {
+  if(bpmnJson.value?.definitions?.attr_workflowTemplate){
+    
+    return workflowTemplateList.find(item => item.id === bpmnJson.value?.definitions?.attr_workflowTemplate)?.name
+  }
+  return workflowTemplateList[0].name
+
+})
+
+
+
+function itemDeleteHandler(node:Node) {
+  
+  // step 1 show confirm dialog
+  // show alert
+  const confirmDelete = confirm("Are you sure you want to delete this step?");
+  if(!confirmDelete) return;
+
+  const data = node.getData();
+  const itemToDelete = [];
+  if(data.type === 'userTask'){
+    return;
+    // find step in data
+    if(Array.isArray(bpmnJson.value?.definitions?.process.userTask)) {
+      const index = bpmnJson.value?.definitions?.process.userTask.findIndex(item => item.attr_id === data.attr_id);
+      if(index > -1){
+        bpmnJson.value.definitions.process.userTask.splice(index, 1);
+      }
+    }else{
+      if(bpmnJson.value?.definitions?.process.userTask?.attr_id === data.attr_id){
+        bpmnJson.value.definitions.process.userTask = undefined;
+      }
+    }
+    // get connected node
+    removeAllConnection(node, graphEl.value?.graph);
+    // remove all edge related to this step
+    const items = bpmnJson.value.definitions.process.sequenceFlow.filter(item => item.attr_sourceRef === data.attr_id || item.attr_targetRef === data.attr_id);
+    
+  }
+  
+  if(data.type === 'serviceTask') {
+    // find step in data
+    if(Array.isArray(bpmnJson.value?.definitions?.process.serviceTask)) {
+      const index = bpmnJson.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === data.attr_id);
+      if(index > -1){
+        itemToDelete.push(bpmnJson.value.definitions.process.serviceTask[index])
+        bpmnJson.value.definitions.process.serviceTask.splice(index, 1);
+      }
+    }else{
+      if(bpmnJson.value?.definitions?.process.serviceTask?.attr_id === data.attr_id){
+        itemToDelete.push(bpmnJson.value.definitions.process.serviceTask)
+        bpmnJson.value.definitions.process.serviceTask = undefined;
+      }
+    }
+    const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_targetRef === data.attr_id);
+    const nodeToOther = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === data.attr_id);
+    console.log(otherToNode, nodeToOther)
+    // link other node attr_sourceRef to nodeToOther.attr_targetRef
+    if(otherToNode && nodeToOther){
+      otherToNode.attr_targetRef = nodeToOther.attr_targetRef ;
+    }
+    // remove nodeToOther
+    if(nodeToOther){
+      const index = bpmnJson.value.definitions.process.sequenceFlow.findIndex(item => item.attr_id === nodeToOther.attr_id);
+      if(index > -1){
+        bpmnJson.value.definitions.process.sequenceFlow.splice(index, 1);
+      }
+    }
+    // removeAndJoinNextNode(node, graphEl.value?.graph);
+    graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+  }
+
+ 
+}
+
+
+function itemAddHandler(node:Node) {
+  console.log('add', node)
+}
+useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => itemDeleteHandler(node))
+useEventListener(document, 'add-workflow-graph-item', ({detail:{node}}) =>itemAddHandler(node))
 defineExpose({
   getWorkflowData,
 })
-
 </script>
 
 <template>
@@ -188,6 +293,7 @@ defineExpose({
         <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData"  @close="closeSidePanel" @submit="saveUserStep" />
         <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
         <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorFormBoundaryEvent v-else-if="selectedData.type === 'boundaryEvent'" :data="selectedData" @close="closeSidePanel" @submit="saveBoundaryStep" />
       </template>
     </div>
     <GraphViewer
@@ -196,11 +302,12 @@ defineExpose({
         :graphJson="graphJson"
         @node:dblclick="dblClickHandler"
         @edge:dblclick="edgeDblClickHandler"
+        @node:contextmenu="nodeRightClickHandler"
     ></GraphViewer>
 
     <div v-if="bpmnJson" class="footer">
       <div class="name">
-        {{ bpmnJson.definitions.process.attr_name }} : {{ bpmnJson.definitions.process.attr_template }}
+        {{ bpmnJson.definitions.process.attr_name }} : {{ displayTemplate }}
         <ElButton type="primary" @click="editInfo">edit info</ElButton>
         <ElButton type="primary" @click="resetTemplate">reset template</ElButton>
       </div>

@@ -216,10 +216,13 @@ export const jsonToBpmn =  (json:JSON):string => {
     return builder.build(json);
 }
 
-export const bpmnToX6 = (bpmnText: any, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
+export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
   // step 1 : get bpmn data
-    
-    const bpmn = bpmnToJson(bpmnText);
+    // if bpmnText is Json then skip this step
+    let bpmn = bpmnText;
+    if(typeof bpmnText !== 'object'){
+        bpmn = bpmnToJson(bpmnText);
+    }
     //  remove bpmn object in xml file
     if(bpmn['bpmndi:BPMNDiagram']) {
         delete bpmn['bpmndi:BPMNDiagram']
