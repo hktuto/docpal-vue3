@@ -29,7 +29,10 @@ const hidden = computed(() => {
            route.path !== '/browse/share'
 })  
 function handleShare () {
-    router.push(`/browse/share?backPath=${route.fullPath}`)
+  // close detail
+  const ev = new CustomEvent('closeFilePreview');
+  document.dispatchEvent(ev);
+  router.push(`/browse/share?backPath=${route.fullPath}`)
 }
 onMounted(async() => {
 })
