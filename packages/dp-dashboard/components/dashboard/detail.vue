@@ -1,21 +1,24 @@
 <template>
-    <GridLayout :layout.sync="layout" 
-        :col-num="24"
-        :row-height="30"
+    <GridLayout 
+        v-model:layout="layout" 
+        :col-num="colNum"
+        :margin="[20,20]"
+        :row-height="rowHeight"
         :is-draggable="draggable"
-        :is-resizable="resizable">
+        :is-resizable="resizable"
+        :responsive="true"
+        :verticalCompact="true"
+        :preventCollision="false"
+        :use-css-transforms="true"
+    >
         <GridItem v-for="(item, index) in layout"
                     class="dashboard-item"
-                    :static="item.static"
-                    :x="item.x"
-                    :y="item.y"
-                    :w="item.w"
-                    :h="item.h"
-                    :i="item.i"
-                    @resized="chartResize(item)"
+                    v-bind="item"
+                    @resize="chartResize(item)"
             >
-            <component :is="DocMap[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
+            <component :is="widgetComponent[item.component]" :ref="el =>{sheetRefs[item.i] = el}" 
                 :setting="item.setting"
+                :hideSetting="hideSetting"
                 @delete="handleDelete(item)"
                 @refreshSetting="(setting) => handleRefreshSetting(setting, item)"></component>
         </GridItem>    
@@ -24,37 +27,54 @@
 
 <script lang="ts" setup>
 import { GridLayout, GridItem } from "vue3-grid-layout-next"
-import DocTypeCoCount from '../doc/coCount/index.vue'
-import DocTypeCount from '../doc/count.vue'
-import DocSizeStatistics from '../doc/sizeStatistics.vue'
+import {DashboardWidgetSetting, widgetComponent} from "~/utils/dashboardWidgetHelper";
+
 const props = withDefaults( defineProps<{
-    layout: any[];
-    resizable?: boolean;
-    draggable?: boolean
+    layout: DashboardWidgetSetting[],
+    resizable?: boolean,
+    draggable?: boolean,
+    hideSetting?: boolean,
+    colNum?: number,
+    rowHeight?: number,
 }>() , {
     layout: [],
     resizable: true,
     draggable: true,
+    hideSetting: false,
+    colNum: 12,
+    rowHeight: 130
+})
+const layout = computed({
+  get() {
+        return props.layout
+    },
+    set(val) {
+        emits('update:layout', val)
+    }
 })
 const emits = defineEmits([
-    'refreshSetting', 'delete'
+    'refreshSetting', 'delete', 'update:layout'
 ])
-const DocMap = {
-    'DocTypeCoCount': DocTypeCoCount,
-    'DocTypeCount': DocTypeCount,
-    'DocSizeStatistics': DocSizeStatistics,
-}
-const sheetRefs = ref({})
 
-function handleDelete (row) {
+const sheetRefs = ref<any>({})
+
+function handleDelete (row:any) {
     emits('delete', row.i)
 }
-function handleRefreshSetting (setting, row) {
+function handleRefreshSetting (setting:any, row:any) {
     row.setting = setting
     emits('refreshSetting', row)
 }
-function chartResize(row) {
-    sheetRefs.value[row.i].resize()
+function chartResize(row:any) {
+    if(sheetRefs.value[row.i]){
+        setTimeout(() => {
+            sheetRefs.value[row.i].resize()
+        }, 10) 
+    } 
+}
+
+function layoutUpdatedEvent(newLayout:any){
+  console.log(newLayout)
 }
 </script>
 

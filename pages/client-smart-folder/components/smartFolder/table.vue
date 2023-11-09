@@ -1,7 +1,7 @@
 <template>
     <div class="smartFolder-container">
         <SmartFolderBreadCrumb :breadcrumbs="breadcrumbs"></SmartFolderBreadCrumb>
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+        <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
                 @pagination-change="handlePaginationChange"
                 @row-dblclick="handleDblclick">
                 <template #tags="{ row, index }">
@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { watchDebounced } from '@vueuse/core'
-import { nestedSearchApi, TABLE, defaultTableSetting } from 'dp-api'
+import { nestedSearchApi, TableAddMultiColumns, TABLE, defaultTableSetting } from 'dp-api'
 const props = withDefaults(defineProps<{
     breadcrumbs: any,
     searchParams: any
@@ -31,7 +31,8 @@ const props = withDefaults(defineProps<{
         currentPageIndex: 0,
         pageSize: 20
     }
-
+    const tableKey = TABLE.CLIENT_SEARCH
+    const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         loading: false,
         tableData: [],
@@ -42,11 +43,11 @@ const props = withDefaults(defineProps<{
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
-            sortKey: 'clientSearch'
-        }
+            sortKey: 'clientSearch',
+            sortAll: true
+        },
+        columns: tableSetting.columns
     })
-    const tableKey = TABLE.CLIENT_SEARCH
-    const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
         state.loading = true
@@ -78,10 +79,11 @@ const props = withDefaults(defineProps<{
             pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
             await getList(pageParams)
+            initTable(props.searchParams)
         },
         { debounce: 200, maxWait: 500, immediate: true }
     )
-    const { tableData, options, loading } = toRefs(state)
+    const { tableData, loading } = toRefs(state)
 // #endregion
 async function handleDblclick (row) {
     if(row.isFolder) {
@@ -106,7 +108,63 @@ async function handleDblclick (row) {
       })
     }
 }
-
+const tableRef = ref()
+function initTable(searchParams) {
+    const dynamicColumns = {
+        size: { id: 'search_size', label: 'search_size', prop: 'properties.file:content.length', type: 'size' },
+        hight: { id: 'search_hight', label: 'search_hight', prop: 'properties.picture:info.height' },
+        width: { id: 'search_width', label: 'search_width', prop: 'properties.picture:info.width' },
+        duration: { id: 'search_duration', label: 'search_duration', prop: 'properties.vid:info.duration',
+                    formatList: [
+                        {
+                            "joiner": "",
+                            "prop": "properties.vid:info.duration",
+                            "formatFun": "unit",
+                            "params": {
+                                "unit": "s"
+                            },
+                            "index": 0
+                        }
+                    ]
+            },
+    }
+    switch (searchParams.assetType) {
+        case 'Picture':
+            const pic = [
+                dynamicColumns.hight,
+                dynamicColumns.width,
+                dynamicColumns.size
+            ]
+            const picData = TableAddMultiColumns(pic, tableSetting.columns, tableSetting.columns.length)
+            state.columns = picData
+            break;
+        case 'Video':
+            const vid = [
+                dynamicColumns.hight,
+                dynamicColumns.width,
+                dynamicColumns.size,
+                dynamicColumns.duration
+            ]
+            const vidData = TableAddMultiColumns(vid, tableSetting.columns, tableSetting.columns.length)
+            state.columns = vidData
+            break
+        case 'Audio':
+            const aud = [
+                dynamicColumns.size
+            ]
+            const audData = TableAddMultiColumns(aud, tableSetting.columns, tableSetting.columns.length)
+            state.columns = audData
+            break
+        default:
+            const def = [
+                dynamicColumns.size
+            ]
+            const defData = TableAddMultiColumns(def, tableSetting.columns, tableSetting.columns.length)
+            state.columns = defData
+            break;
+    }
+    tableRef.value.reorderColumn(state.columns)
+}
 </script>
 
 <style lang="scss" scoped>

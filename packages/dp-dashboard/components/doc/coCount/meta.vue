@@ -1,5 +1,5 @@
 <template>
-    <div ref="cardRef" class="co-count-meta">
+    <div ref="cardRef" class="co-count co-count-meta">
         <div id="myEcharts" ref="chartRef" class="echart"></div>
     </div>
 </template>

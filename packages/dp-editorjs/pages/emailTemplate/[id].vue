@@ -3,7 +3,7 @@
     <div v-if="ready" class="pageContent">
         <div class="actions">
             <div v-if="data" class="name">
-                <span class="span">{{ data.subject }}</span>
+                <span class="span">{{ data.label }}</span>
                 <div class="editButton">
                   <SvgIcon :src="'/icons/edit.svg'" @click="editInfoOpened = true" />
                 </div>

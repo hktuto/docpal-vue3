@@ -128,7 +128,35 @@ export const useTableHelper = () => {
                 if(!value || !date) return ''
                 return dayjs(value).diff(date, 'day') + t('common_days')
             }
-        }
+        },
+        fileSize: {
+            supportedType: ['string','number'],
+            params: {
+            },
+            fun(value:any){
+                if(!value) return '-'
+                const a = 1024;
+                const sizeList = ['bit', 'KB', 'MB', 'GB', 'TB', 'PB'];
+                if (value < a) return `${value}${sizeList[0]}`;
+                let getLoga = (a: any, n: any) => {
+                    // a的x次方=n x=n的对数（x以a为底数 N的对数）
+                    // 下面的函数返回以 a 为底 n 的对数（即 loga n）
+                    return Math.floor(Math.log(n) / Math.log(a));
+                }
+
+                let logaN = getLoga(a, value);
+                let size = (value / Math.pow(a, logaN)).toFixed(2);
+                return `${size}${sizeList[logaN]}`;
+            }
+        },
+        unit: {
+            params: {
+                unit: 'string',
+            },
+            fun(value:any, params: any){
+                return value + params.unit
+            }
+        },
     }
     function getFilters () {
         return Object.keys(tableFilters).reduce((prev:any,key:any) => {

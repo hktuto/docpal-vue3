@@ -87,6 +87,7 @@ const state = reactive({
     async function handleFile(event) {
         state.loading = true
         const res = await xlsxToJson(event.target.files[0])
+        event.target.value = ''
         const json = {
             'en-US': {},
             'zh-CN': {},

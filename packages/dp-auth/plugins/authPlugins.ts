@@ -4,7 +4,7 @@ import { api } from 'dp-api'
 import jwt_decode from "jwt-decode";
 import {refreshTokenFn} from "~/utils/refreshToken";
 import { ElMessage } from 'element-plus'
-const noRouteErrorPages = ['/FormEditor/', '/workflowForm/']
+const noRouteErrorPages = ['/FormEditor/', '/workflowForm/', '/workflowEditor/']
 const cancelAxiosWhiteList = [
     // admin-acl
     // '/nuxeo/document/children/thumbnail',
@@ -20,19 +20,20 @@ const cancelAxiosWhiteList = [
     // setting
     '/auth/nuxeo/token',
     '/nuxeo/admin/setting/tableColumn',
-    '/nuxeo/admin/setting/language', 
+    '/nuxeo/admin/setting/language',
     // export
     '/docpal/cabinet/export',
     '/nuxeo/search/exportCsv',
     '/docpal/workflow/tasks/exportTasksUser',
     '/docpal/workflow/history/exportProcessHistory',
     // search
-    '/nuxeo/collection/all', 
-    '/nuxeo/tags/getAllTags', 
+    '/nuxeo/collection/all',
+    '/nuxeo/tags/getAllTags',
     '/nuxeo/types',
     '/nuxeo/search/textSearchTypes',
     '/nuxeo/identity/users',
-    '/nuxeo/search/getSearchExtends', 
+    '/nuxeo/search/getSearchExtends',
+    '/nuxeo/collection',
     // workflow
     '/docpal/workflow/process/list',
     '/docpal/workflow/process/model',
@@ -54,9 +55,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         config.headers = {
             'Accept-Language': locale.value,
             ...config.headers,
-        }  
+        }
         const token = localStorage.getItem('token');
-        config.headers.Authorization = `Bearer ${token}` 
+        config.headers.Authorization = `Bearer ${token}`
         if(!config.headers.white && cancelAxiosWhiteList.every(item => !config.url.includes(item))) {
             if(!window.canCancelAxios) window.canCancelAxios = []
             config.cancelToken = new axios.CancelToken(function (c: any) { window.canCancelAxios.push({ key: config.headers.key || "", cancel: c }) });
@@ -87,7 +88,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 router.push(`/error/${error.response.status}`)
                 return
             } else if (messageErrorCode.includes(error?.response?.status)) {
-               
+
                 if(error?.response?.status === 403 ) {
                     messageError(error, { router, route })
                     config.sent = false;
@@ -96,14 +97,15 @@ export default defineNuxtPlugin((nuxtApp) => {
                 }
                 messageError(error, { router, route })
             }
-        
-            
+
+
         return Promise.reject(error);
     });
 })
 function getBaseUrl(baseURL) {
-    const { public:{ DASHBOARD_PROXY } } = useRuntimeConfig();
+    const { public:{ DASHBOARD_PROXY, CLIENT_PROXY } } = useRuntimeConfig();
     if(baseURL === '/dashboard') return DASHBOARD_PROXY
+    if(baseURL === '/client') return CLIENT_PROXY
     return baseURL
 }
 function routeMatcher (path, routeList) {

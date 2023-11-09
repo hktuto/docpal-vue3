@@ -5,6 +5,8 @@ $main-hue: 209deg;
 $text-saturation: 5%;
 
 $color-grey-1000: hsl($main-hue, $text-saturation, 0%);
+$color-grey-990: hsl($main-hue, $text-saturation, 2%);
+$color-grey-970: hsl($main-hue, $text-saturation, 3%);
 $color-grey-950: hsl($main-hue, $text-saturation, 5%);
 $color-grey-900: hsl($main-hue, $text-saturation, 10%);
 $color-grey-850: hsl($main-hue, $text-saturation, 15%);
@@ -18,6 +20,8 @@ $color-grey-200: hsl($main-hue, $text-saturation, 80%);
 $color-grey-150: hsl($main-hue, $text-saturation, 85%);
 $color-grey-100: hsl($main-hue, $text-saturation, 90%);
 $color-grey-050: hsl($main-hue, $text-saturation, 92%);
+$color-grey-030: hsl($main-hue, $text-saturation, 96%);
+$color-grey-010: hsl($main-hue, $text-saturation, 94%);
 $color-grey-000: hsl($main-hue, $text-saturation, 96%);
 $color-grey-0000: #fff;
 

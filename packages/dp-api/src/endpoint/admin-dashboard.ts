@@ -122,3 +122,29 @@ export const GeCoCountMetaFilterSingleUserApi = async(params: any) => {
     }).then(res => res.data.data)
     return res
 }
+
+// co-workflow
+export const GetWorkflowNewCountTrendApi = async(params: any) => {
+    const res = await api.post('/docpal/dashboard/NewWorkflowCountTrend', params, {
+        baseURL: '/dashboard'
+    }).then(res => res.data.data)
+    return res
+}
+export const GetWorkflowSpendTimeApi = async(params: any) => {
+    const res = await api.post('/docpal/dashboard/WorkflowSpendTime', params, {
+        baseURL: '/dashboard'
+    }).then(res => res.data.data)
+    return res
+}
+export const GetWorkflowActivateTaskTrendApi = async(params: any) => {
+    const res = await api.post('/docpal/dashboard/WorkflowActivateTaskTrend', params, {
+        baseURL: '/dashboard'
+    }).then(res => res.data.data)
+    return res
+}
+export const GetWorkflowActivateTaskSpendTimeApi = async(params: any) => {
+    const res = await api.post('/docpal/dashboard/WorkflowActivateTaskSpendTime', params, {
+        baseURL: '/dashboard'
+    }).then(res => res.data.data)
+    return res
+}

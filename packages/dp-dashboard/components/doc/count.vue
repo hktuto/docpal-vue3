@@ -1,7 +1,7 @@
 <template>
     <!-- <el-card ref="cardRef" class="dashboard-item-main"> -->
         <!-- <el-button @click="handleDelete"></el-button> -->
-        <div ref="cardRef" class="dashboard-item-progress" :style="`--icon-size: ${state.iconSize}`">
+        <div ref="cardRef" class="dashboard-item dashboard-item-progress" :style="`--icon-size: ${state.iconSize}`">
             <el-progress type="circle" :percentage="state.percentage" :stroke-width="state.width / 8" :width="state.width" :color="setting.color">
                 <SvgIcon :content="`${state.percentage}%`" :src="setting.icon" @dblclick="openSetting"/>
             </el-progress>
@@ -21,8 +21,10 @@ import { GetDocTypeCountApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
+    hideSetting?: boolean,
 }>() , {
-    setting: {}
+    setting: {},
+    hideSetting: false
 })
 
 const cardRef = ref()
@@ -49,7 +51,7 @@ function resize() {
     initStyle()
 }
 function initStyle () {
-    const pHeight = cardRef.value.offsetHeight - 80
+    const pHeight = cardRef.value.offsetHeight - 70
     const pWidth = cardRef.value.offsetWidth - 15
     state.width = Math.min(pWidth, pHeight)
     state.iconSize = state.width / 3 + 'px'
@@ -57,6 +59,7 @@ function initStyle () {
 // #region module: setting
     const settingRef = ref()
     function openSetting() {
+        if (props.hideSetting) return
         settingRef.value.handleOpen(props.setting)
     }
     async function getData(documentType: string) {
@@ -94,6 +97,7 @@ onMounted(async() => {
 onUnmounted(() => {
 })
 watch(() => props.setting, (newSetting) => {
+    console.log(newSetting, 'newSetting')
     getData(props.setting.documentType)
 }, {
     immediate: true
@@ -107,7 +111,9 @@ defineExpose({
 .dashboard-item-progress {
     height: 100%;
     width: 100%;
+    overflow: hidden;
     display: grid;
+    grid-template-rows: 1fr min-content min-content;
     div {
         justify-self: center;
         align-self: center;

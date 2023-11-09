@@ -77,7 +77,8 @@ export type SortParams<T> = {
 }
 interface TableProps {
     columns: Table.Column[] // 每列的配置项
-    sortKey: string
+    sortKey: string,
+    sortAll: boolean
 }
 const props = defineProps<TableProps>()
 const emit = defineEmits([
@@ -110,6 +111,10 @@ function handleRevert () {
 }
 // 保存偏好设置
 async function handleSubmit () {
+  if(props.sortAll) {
+    emit('reorderColumn', showList.value, false)
+    return
+  }
   loading.value = true
   try {
     const param = { ...userPreference.value }
@@ -146,12 +151,18 @@ function initColumn () {
     if (userPreference.value.tableSettings[props.sortKey]) {
       userColumns = userPreference.value.tableSettings[props.sortKey]
     }
-
-    displayList.value = props.columns.map( (item,index) => {
-      item.rowIndex = index;
-      item.show = userColumns.includes(index)
-      return item
-    })
+    if(props.sortAll) {
+      displayList.value = props.columns.map( (item,index) => {
+        item.show = true
+        return item
+      })
+    } else {
+      displayList.value = props.columns.map( (item,index) => {
+        item.rowIndex = index;
+        item.show = userColumns.includes(index)
+        return item
+      })
+    }
     // const hideList = []
     // displayList.value = []
     // originalColumns.value.forEach( (item,index) => {

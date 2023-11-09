@@ -35,20 +35,9 @@ onMounted(() => {
 watch( () => isLogin.value, (newValue) => {
     Cookies.value = token.value || ''
     if(newValue) {
-        if(notificationStore && notificationStore.value){
-            console.log("close last notification")
-            
-            
-            notificationStore.value.close();
-            notificationStore.value = useNotification(token.value, userId, messageChange)
-            return;
-        }
-        notificationStore.value = useNotification(token.value, userId, messageChange)
-    } else if(notificationStore  && notificationStore.value){
-        console.log("user logout, close last notification")
-        notificationStore.value.close();
-            notificationStore.value = null;
-        }
+        notificationStore.value = useNotification(userId, messageChange)
+        // notificationStore.value.start()
+    }
 }, {
     immediate:true 
 })
