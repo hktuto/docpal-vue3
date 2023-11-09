@@ -108,4 +108,7 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
 .el-select-group__wrap:not(:last-of-type)::after {
     bottom: 0px;
 }
+.el-time-panel {
+    width: 150px;
+}
 </style>

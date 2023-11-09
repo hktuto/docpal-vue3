@@ -1,7 +1,7 @@
 <template>
     <div class="infoSection vertical-top">
       <div class="infoTitle">
-        {{ $t('workflow_workflow') }}
+        {{ $t('workflow.adHocApproval') }}
       </div>
       <div class="infoContetn">
         <div class="block">

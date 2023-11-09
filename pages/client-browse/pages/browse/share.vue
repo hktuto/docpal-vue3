@@ -10,7 +10,7 @@
                     </div>
                 </template>
                 <template v-else>
-                    <div class="no-file-preview"> {{$t('please select a file')}}</div>
+                    <div class="no-file-preview"> {{$t('tip.pleaseSelectFile')}}</div>
                 </template>
             </div>
             <ShareTableSet v-model:tableData="state.minTypeShareList" class="div3"

@@ -7,8 +7,9 @@
           filterable
           allow-create
           default-first-option
+          clearable
           :reserve-keyword="false"
-          :placeholder="$t('choose')"
+          :placeholder="$t('tip.selectHere')"
           class="collectionSelect"
       >
           <el-option
