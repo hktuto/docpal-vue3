@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { deepCopy, GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
+import { GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
@@ -87,7 +87,10 @@ const setting = {
                 data: [$t('dashboard.documentSize')]
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.seriesName}: ${fileSize(item.value)}`
+                }
             },
             legend: {
                 bottom: '5%',
@@ -103,7 +106,9 @@ const setting = {
                 normal: {
                     position: 'inside', // 在内部显示，outseide 是在外部显示
                     show: true,
-                    formatter: '{c}'
+                    formatter:  function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(item.value)
+                    }
                 }
             },
             itemStyle: {
@@ -121,7 +126,10 @@ const setting = {
                 type: 'category',
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.seriesName}: ${fileSize(item.value)}`
+                }
             },
             legend: {
                 bottom: '5%',
@@ -136,7 +144,9 @@ const setting = {
                 normal: {
                     position: 'inside', // 在内部显示，outseide 是在外部显示
                     show: true,
-                    formatter: '{c}'
+                    formatter:  function (item, params) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(item.value)
+                    }
                 }
             }
         }
@@ -144,7 +154,10 @@ const setting = {
     pieSetting: {
         options: {
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.name}: ${fileSize(item.value)}`
+                }
             },
             legend: {
                 itemWidth: 10,
@@ -334,11 +347,12 @@ function resize() {
             case 'pie':
                 await getData(displayList)
                 options.series = getSeries(state.data, chartType, displayList)
-                options.title[0].text = state.totalStorage + 'MB'
+                options.title[0].text = fileSize(state.totalStorage)
                 options.title[0].textStyle.fontSize = Math.max(state.width / 32 , 14)
                 options.title[0].subtextStyle.fontSize =Math.max(state.width / 42 , 10)
                 options.title[0].subtext = $t('dashboard.totalStorage')
                 options.title[1].text = $t('dashboard.documentSize')
+                
                 break
             case 'bar':
                 await getData(displayList)
