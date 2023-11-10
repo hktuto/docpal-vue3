@@ -30,11 +30,11 @@ export async function parseSvg(src: string, cb: any) {
     })
 }
 
-export function fileSize(value: number) {
+export function fileSize(value: number, sizeList: string[] = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']) {
     if(!value) return '-'
     const a = 1024;
-    const sizeList = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
-    if (value < a) return `${value}${sizeList[0]}`;
+    value = Number(value)
+    if (value < a) return `${value.toFixed(2)}${sizeList[0]}`;
     let getLoga = (a: any, n: any) => {
         // a的x次方=n x=n的对数（x以a为底数 N的对数）
         // 下面的函数返回以 a 为底 n 的对数（即 loga n）

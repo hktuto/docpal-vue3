@@ -37,7 +37,10 @@ const setting = {
                 type: 'value'
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.seriesName}: ${fileSize(item.value, ['MB', 'GB', 'TB', 'PB'])}`
+                }
             },
             legend: {
                 bottom: '5%',
