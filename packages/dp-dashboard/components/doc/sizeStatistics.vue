@@ -34,7 +34,13 @@ const setting = {
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    formatter:function (value) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(value, ['MB', 'GB', 'TB', 'PB'])
+                    }
+                }
             },
             tooltip: {
                 trigger: 'item',
