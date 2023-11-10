@@ -71,7 +71,10 @@ const setting = {
                 type: 'value'
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.name} <br/>${item.seriesName}  ${item.value.toFixed(2)}`
+                }
             },
             legend: {
                 bottom: '5%',
