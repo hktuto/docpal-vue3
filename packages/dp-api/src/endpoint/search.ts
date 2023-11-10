@@ -13,9 +13,7 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
     })
     delete _params.time
     delete _params.searchBackPath
-    const res = await api.post('/nuxeo/search/nestedSearch', _params, {
-        baseURL: '/client'
-    }).then(res => res.data.data)
+    const res = await api.post('/nuxeo/search/nestedSearch', _params).then(res => res.data.data)
     
     return { entryList: res.entryList || [], totalSize: res.totalSize }
 }
