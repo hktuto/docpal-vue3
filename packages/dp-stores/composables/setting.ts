@@ -13,22 +13,23 @@ export const useSetting = () => {
   const tableColumnSetting = useState<TableColumnSetting>('tableColumnSetting');
   const ocrSetting = useState<OCR_SETTING>('ocrSetting');
   const availableLanguage = useState('availableLanguage');
+  const { pubic } = useRuntimeConfig()
   const externalEndpoint = useState('externalEndpoint', () => ({
-      admin : "admin.app4.wclsolution.com",
-      docpal : "app4.wclsolution.com",
-      office  : "office.app4.wclsolution.com", 
-      upload : "upload.app4.wclsolution.com",
-      dashboard : "https://app4.wclsolution.com/public-api/report/v1/api",
+      admin : pubic.OFFICE_END_POINT.ADMIN_END_POINT,
+      docpal : pubic.OFFICE_END_POINT.DOCPAL_END_POINT,
+      office  : pubic.OFFICE_END_POINT.OFFICE_END_POINT,
+      upload : pubic.OFFICE_END_POINT.UPLOAD_END_POINT,
+      dashboard : pubic.OFFICE_END_POINT.DASHBOARD_PROXY,
   }));
   async function init () {
     ocrSetting.value = await GetOCRSetting()
     tableColumnSetting.value = await GetTableColumnSetting()
     availableLanguage.value = await GetAvailableLanguage()
-    externalEndpoint.value = await GetExternalEndpoint()
+    // externalEndpoint.value = await GetExternalEndpoint()
   }
-  function canOCR(extension: string): boolean { 
+  function canOCR(extension: string): boolean {
     return ocrSetting.value.supportedInputFormats.includes(extension);
-  } 
+  }
   return {
     isLdapMode,
     tableColumnSetting,

@@ -24,7 +24,7 @@
                     @click="handleDelete"></SvgIcon>
             </div>
             <GroupUserTable class="group" :group="state.curGroup"></GroupUserTable>
-            <UserVirtualFolder v-if="state.curGroup" class="virtualFolder" :userOrGroup="state.curGroup" mode="groupAllowList">virtualFolder</UserVirtualFolder>
+<!--            <UserVirtualFolder v-if="state.curGroup" class="virtualFolder" :userOrGroup="state.curGroup" mode="groupAllowList">virtualFolder</UserVirtualFolder>-->
         </div>
         <GroupDialog ref="GroupDialogRef" @refresh="getGroup(true)"></GroupDialog>
         <GroupEditDialog ref="GroupEditDialogRef" :group="state.curGroup" @refresh="handleEditRefresh"></GroupEditDialog>
@@ -98,7 +98,7 @@ onMounted(async() => {
 
 .userDetailSection{
   display : grid;
-  grid-template-columns: minmax(min-content, 220px) 1fr minmax(min-content, 350px);
+  grid-template-columns: minmax(min-content, 220px) 1fr ;
   grid-template-rows: min-content 1fr;
   gap: var(--app-padding);
   grid-template-areas:
