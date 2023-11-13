@@ -15,11 +15,11 @@ export const useSetting = () => {
   const availableLanguage = useState('availableLanguage');
   const { pubic } = useRuntimeConfig()
   const externalEndpoint = useState('externalEndpoint', () => ({
-      admin : pubic.OFFICE_END_POINT.ADMIN_END_POINT,
-      docpal : pubic.OFFICE_END_POINT.DOCPAL_END_POINT,
-      office  : pubic.OFFICE_END_POINT.OFFICE_END_POINT,
-      upload : pubic.OFFICE_END_POINT.UPLOAD_END_POINT,
-      dashboard : pubic.OFFICE_END_POINT.DASHBOARD_PROXY,
+      admin : pubic.ADMIN_END_POINT,
+      docpal : pubic.DOCPAL_END_POINT,
+      office  : pubic.OFFICE_END_POINT,
+      upload : pubic.UPLOAD_END_POINT,
+      dashboard : pubic.DASHBOARD_PROXY,
   }));
   async function init () {
     ocrSetting.value = await GetOCRSetting()
