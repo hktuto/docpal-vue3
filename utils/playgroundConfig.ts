@@ -16,6 +16,10 @@ const defaultConfig = {
         CLIENT_PROXY: process.env.CLIENT_PROXY || 'https://app4.wclsolution.com/api',
         endPoint: process.env.endPoint || 'client',
         DEFAULT_PATH: process.env.endPoint === 'admin' ? '/acl' : '/browse',
+        OFFICE_END_POINT : process.env.OFFICE_END_POINT || "office.app4.wclsolution.com",
+        UPLOAD_END_POINT : process.env.UPLOAD_END_POINT || "upload.app4.wclsolution.com",
+        DOCPAL_END_POINT : process.env.DOCPAL_END_POINT || "app4.wclsolution.com",
+        ADMIN_END_POINT : process.env.ADMIN_END_POINT || "admin.app4.wclsolution.com",
       }
   },
   vite:{
