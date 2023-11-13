@@ -13,7 +13,7 @@
                         {{$t('tableHeader_labelRule')}}
                         <span class="color__primary__hover cursorPointer" @click="goMetaEdit">({{$t('tip.clickToEditDisplayMeta')}})</span>
                     </template>
-                    <DragSelect :dragList="state.dragList" :dropList="form.labelRule"/>
+                    <DragSelect :dragList="state.dragList" :dropList="form.labelRule" @change="handleValidate"/>
                 </el-form-item>
             </el-form>
         </template>
@@ -64,6 +64,9 @@ function handleDocTypeChange (data) {
         state.dragList = state.dragList.filter((allItem:any) => 
               !form.labelRule.some((exitItem:any) => exitItem.metaData === allItem.metaData))
     }
+}
+async function handleValidate() {
+    await FormRef.value.validate()
 }
 async function handleSubmit() {
     const valid = await FormRef.value.validate()

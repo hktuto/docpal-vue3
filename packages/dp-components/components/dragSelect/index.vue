@@ -20,6 +20,7 @@
         :list="dropList"
         group="people"
         :itemKey="itemKey"
+        @change="emit('change')"
     >
         <template #item="{ element, index }">
             <span class="list-drop-item">
@@ -40,17 +41,15 @@ const props = withDefaults(defineProps<{
     dragList: any,
     joiner: string,
     itemKey: string,
-    nullTip: string
+    nullTip: string,
 }>(), {
     joiner: '-',
     itemKey: 'metaData',
     nullTip: 'tip.pleaseGoToConfigDisplayMetaOrSelectDocumentType'
 })
 const FromRendererRef = ref()
-
+const emit = defineEmits(['change'])
 function handleClose(element) {
-    console.log(props.dropList, element);
-    
     let addItem
     const index = props.dropList.findIndex(item => {
         if(item[props.itemKey] === element[props.itemKey]) {
@@ -61,6 +60,7 @@ function handleClose(element) {
     })
     props.dropList.splice(index, 1)
     props.dragList.push(addItem)
+    emit('change')
 }
 function handleChange (evt) {
     const dropLen = props.dropList.length
@@ -80,7 +80,7 @@ function handleChange (evt) {
             if(lastEl.suffixSymbol === '-') lastEl.suffixSymbol = ''
         }
     }
-    // emit('update:modelValue', JSON.stringify(props.dropList))
+    emit('change')
 }
 onMounted(() => {
 })
