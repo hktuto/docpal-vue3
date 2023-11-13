@@ -19,7 +19,7 @@ const route = useRoute()
 // await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
 // #region module: actions
     function handleAddChild(data) {
-        FolderCabinetAddChildDialogRef.value.handleOpen(data)
+        FolderCabinetAddChildDialogRef.value.handleOpen(data, data.children)
     }
     function handleDeleteChild(setting){
         ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
@@ -46,13 +46,13 @@ const route = useRoute()
         })
     }
     const FolderCabinetAddDialogRef = ref()
-    function handleEdit (setting:any, isRoot: boolean = false) {
+    function handleEdit (setting:any, isRoot: boolean = false, parentSettingChildren) {
         const _setting = deepCopy(setting)
         _setting.isEdit = true
         if(!!isRoot) {
             FolderCabinetAddDialogRef.value.handleOpen(_setting)
         } else {
-            FolderCabinetAddChildDialogRef.value.handleOpen(deepCopy(_setting))
+            FolderCabinetAddChildDialogRef.value.handleOpen(deepCopy(_setting), parentSettingChildren)
         }
     }
     provide('handleEdit', handleEdit)

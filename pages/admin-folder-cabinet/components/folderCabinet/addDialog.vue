@@ -66,7 +66,7 @@ function handleDocTypeChange (data) {
     }
 }
 async function handleSubmit() {
-    const valid = FormRef.value.validate()
+    const valid = await FormRef.value.validate()
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     if(!valid || !data) return
     const params = {

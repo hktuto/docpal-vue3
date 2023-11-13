@@ -9,7 +9,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, CreateCabinetTemplateApi, PatchCabinetTemplateApi } from 'dp-api'
+import { getJsonApi, CreateCabinetTemplateApi, PatchCabinetTemplateApi, PatchGroupApi } from 'dp-api'
 const emits = defineEmits([
     'update'
 ])
@@ -44,10 +44,24 @@ async function handleSubmit() {
     }
     state.loading = false
 }
-function handleOpen(setting) {
+function handleOpen(setting, children) {
     state.visible = true
     state.setting = setting
     setTimeout(async () => {
+        if(children) {
+            const interval = setInterval(() => {
+                const documentTypeRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('documentType')
+                const options = documentTypeRef.getOptionItems()   
+                if(options.length !== 0) {
+                    clearInterval(interval)
+                    options.forEach(oItem => { 
+                        const index = children.findIndex(cItem => cItem.documentType === oItem.value)
+                        oItem.disabled = index !== -1
+                    });
+                    documentTypeRef.loadOptions(options)
+                }
+            }, 1000)
+        }
         if(setting.isEdit) {
             await FromRendererRef.value.vFormRenderRef.resetForm()
             await FromRendererRef.value.vFormRenderRef.setFormData(setting)
