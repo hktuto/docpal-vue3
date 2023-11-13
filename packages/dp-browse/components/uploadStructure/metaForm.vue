@@ -20,7 +20,7 @@
             <template v-if="item.display">
                 <div class="row-item-top">
                     <span class="color__danger" v-if="item.isRequire">*</span>
-                    {{item.metaData}}
+                    {{$t(item.metaData)}}
                 </div>
                 <template v-if="item.dataType === 'date'">
                     <el-date-picker v-model="item.value"
