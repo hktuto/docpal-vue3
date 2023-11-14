@@ -42,7 +42,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
                         variables: variables.value
                     }
                 },
-
+                
             },
             i18n:{
                 messages:{
@@ -144,6 +144,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         const data = await editor.value?.save();
         let html = '<html><body>'
         for( const block of data.blocks) {
+            console.log(block.type)
             switch(block.type){
                 case 'header':
                     html += `<h${block.data.level}>${htmlToString(block.data.text)}</h${block.data.level}>`;
@@ -152,7 +153,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
                     html += `<p>${htmlToString(block.data.text)}</p>`;
                     break;
                 case 'list':
-                    html += `<ul>${ block.data.items.map( (item:string) => `<li>${htmlToString(item)}</li>`) }</ul>`;
+                    html += `<ul>${ block.data.items.map( (item:any) => `<li>${htmlToString(item.content)}</li>`) }</ul>`;
                     break;
                 case 'table':
                     html += `<table>${blockToTable(block.data.content)}</table>`;
@@ -188,14 +189,20 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         // replace all var tag with span
         varText.forEach((variable) => {
             
-            variable.replaceWith('<span th:text="${' + variable.textContent + '}"></span>');
+            variable.replaceWith('<div style="white-space: pre;" th:utext="${' + variable.textContent + '}"></div>');
         });
         const varLink = t.content.querySelectorAll('a.ce-link-item');
 
         varLink.forEach((variable) => {
             // variable.setAttribute('href', '${' + variable.getAttribute('data-url') + '}');
             // change href to th:href
-            variable.replaceWith(`<a th:href="${  variable.getAttribute('data-url')  }">${variable.textContent} </a>`);
+            // chceck if data start with  http or https
+            const dataURL = variable.getAttribute('data-url');
+            if(dataURL?.startsWith('http') || dataURL?.startsWith('https')) {
+                variable.replaceWith(`<a href="${variable.getAttribute('data-url')}">${variable.textContent} </a>`);
+            } else {
+                variable.replaceWith(`<a th:href="${variable.getAttribute('data-url')}">${variable.textContent} </a>`);
+            }
         })
         var txt = document.createElement("textarea");
         txt.innerHTML = t.innerHTML;
