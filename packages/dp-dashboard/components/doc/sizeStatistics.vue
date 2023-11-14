@@ -35,11 +35,14 @@ const setting = {
             },
             yAxis: {
                 type: 'value',
+                // interval: 1024 ,
                 axisLabel: {
-                    show: true,
-                    formatter:function (value) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    formatter:function (value, index) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
                         return fileSize(value, ['MB', 'GB', 'TB', 'PB'])
                     }
+                },
+                splitLine: {
+                    show: true
                 }
             },
             tooltip: {
@@ -131,7 +134,12 @@ const setting = {
     barSetting: {
         options: {
             xAxis: {
-                type: 'value'
+                type: 'value',
+                axisLabel: {
+                    formatter:function (value, index) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(value)
+                    }
+                }
             },
             yAxis: {
                 data: [],
