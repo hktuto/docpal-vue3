@@ -45,7 +45,9 @@ import {
             rowKey: 'id',
             sortKey: tableKey
         },
-        extraParams: {}
+        extraParams: {
+            userId: useUser().getUserId()
+        }
     })
 
 
