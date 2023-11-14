@@ -146,7 +146,8 @@ $--scroll-dialog-height: fit-content;
         padding: 0 20px 30px;
     }
     .el-form-item__error{
-        display: none
+        z-index: 3;
+        background-color: rgba(255, 255, 255, 0.9);
     }
   @media(max-width: 640px){
     --el-dialog-width : 80% !important;

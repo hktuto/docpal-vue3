@@ -10,11 +10,12 @@
                 @dblclick="handleDblclick(item)" 
                 @contextmenu.stop="(event) => handleRightClick(item, event)">
                 <template v-if="item.blobUrl">
-                    <img :src="item.blobUrl" class="thumbnail" @error="imgError"/>
+                    <img :src="item.blobUrl" class="thumbnail" @error="imgError" @dblclick="handleDblclick(item)"/>
                 </template>
                 <template v-else>
-                    <BrowseItemIcon class="folderIcon" :type="item.isFolder ? 'folder' : 'file'" status="general"/>
+                    <BrowseItemIcon class="folderIcon" :type="item.isFolder ? 'folder' : 'file'" status="general" :mimeType="item.mimeType" />
                     <DropzoneContainer v-if="item.isFolder" :doc="item" class="folderDropzone backgroundDrop"></DropzoneContainer>
+                    <div v-else class="clickActor backgroundDrop"></div>
                 </template>
                 <div class="name">{{item.name}}</div>
             </div>
@@ -168,6 +169,7 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
 }
 .folderIcon{
     --icon-size: 100%;
+  z-index: 2;
 }
 .backgroundDrop{
   position: absolute;

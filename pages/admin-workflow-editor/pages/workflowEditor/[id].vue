@@ -1,7 +1,7 @@
 <template>
 <NuxtLayout class="fit-height" backPath="/workflowEditor" :pageTitle="id === 'new' ? $t('workflowEditor.custom') : state.detail?.name">
     <div class="pageContainer">
-        <WorkflowEditor v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile">
+        <WorkflowEditor v-if="bpmnFile" ref="WorkflowEditorRef" :bpmn="bpmnFile" @resetTemplate="resetTemplate">
             <template #actions>
                 <template v-if="state.newStatus">
                     <el-button :loading="state.loading" type="primary" @click="handelCreate">{{$t('workflowEditor.add')}}</el-button>
@@ -17,10 +17,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ValidateWorkflowXMLApi, UploadWorkflowApi, GetWorkflowDraftXMLApi, GetWorkflowDraftDetailApi } from 'dp-api'
+import {
+  ValidateWorkflowXMLApi,
+  UploadWorkflowApi,
+  GetWorkflowDraftXMLApi,
+  GetWorkflowDraftDetailApi,
+  SaveTaskFormJsonApi
+} from 'dp-api'
+
 import { reactive } from 'vue';
 const router = useRouter()
-const bpmnFile = ref();
+const bpmnFile = ref("");
 const WorkflowEditorRef = ref()
 const state = reactive({
     detail: {},
@@ -36,22 +43,27 @@ async function getXML(id: string) {
     const file = await blob.text()
     bpmnFile.value = file
 }
-async function getXMLFileTemplate() {
-    const template = route.query.template
-    const singleFilePath = "/bpmn/single.xml";
-    const multipleFilePath = "/bpmn/multiple.xml";
-    const templatePath = template === 'Single' ? singleFilePath : multipleFilePath
+async function getXMLFileTemplate(template:string = 'Single') {
+    const item = workflowTemplateList.find((item) => item.id === template)
+    const templatePath = item.url
     const response = await fetch(templatePath);
-    const text = await response.text();
-    const timestamp = new Date().getTime();
-    templatePath === 'Single' ? text.replaceAll('singleApprovalDemo', `singleApprovalDemo_${timestamp}`) : text.replaceAll('multipleApprovalDemo', `multipleApprovalDemo_${timestamp}`)
-    bpmnFile.value = text
+    return await response.text() as string;
+    
+}
+
+async function createNewWorkflow () {
+  const {template, name} = route.query as any
+  const text = await getXMLFileTemplate(template)
+  const timestamp = new Date().getTime();
+  const nameToId = name.toLowerCase().replaceAll(' ', '_') + '_' + timestamp;
+  bpmnFile.value = text.replaceAll('workflowId', nameToId).replaceAll('workflowName', name)
 }
 async function handleSave(isDraft: boolean = true) {
     // const formData1 = new FormData();
     // formData1.append('file', WorkflowEditorRef.value.getBlob(), 'workflow.bpmn.xml')
     // await ValidateWorkflowXMLApi(formData1)
     if(!state.detail.draftId) return
+    console.log("handleSave")
     state.loading = true
     try {
         const { blob, name, key } = WorkflowEditorRef.value.getWorkflowData()
@@ -62,16 +74,25 @@ async function handleSave(isDraft: boolean = true) {
         formData.append('file', blob, 'workflow.bpmn.xml')
         formData.append('isDraft', isDraft)
         state.detail = await UploadWorkflowApi(formData)
+        if(!isDraft){
+          
+          const request = allFormToJson()
+          await Promise.all(request.map((param) => {
+            return SaveTaskFormJsonApi(param)
+          }))
+        }
+        // if not draft, then send all userTask form json to server
+      
     } catch (error) {
+      console.log(error)
     }
-    setTimeout(() => {
-        state.loading = false
-    }, 200)
+    state.loading = false
 }
 async function handelCreate() {
     state.loading = true
     try {
         const { blob, name, key } = WorkflowEditorRef.value.getWorkflowData()
+
         const formData = new FormData();
         formData.append('name', name)
         formData.append('key', key)
@@ -83,18 +104,22 @@ async function handelCreate() {
         router.push(`/workflowEditor/${state.detail.draftId}`)
         // router.go(0)
     } catch (error) {
+      console.log(error)
     }
     setTimeout(() => {
         state.loading = false
     }, 200)
 }
-
+async function resetTemplate(template) {
+  const text = await getXMLFileTemplate(template.attr_template || 'Single' );
+  bpmnFile.value = text.replaceAll('workflowId', template.attr_id).replaceAll('workflowName', template.attr_name)
+}
 
 onMounted(() => {
     const id = route.params.id
     if(id === 'new') {
         state.newStatus = true
-        getXMLFileTemplate()
+        createNewWorkflow()
     } else {
         getDetail(id)
         getXML(id)

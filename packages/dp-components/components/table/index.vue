@@ -4,7 +4,6 @@
             <div class="headerLeftExpand">
                 <slot name="preSortButton"></slot>
             </div>
-
             <slot name="suffixSortButton">
 
             </slot>
@@ -60,7 +59,7 @@
                 </template>
                 <el-table-column v-if="_options.sortKey" :width="40">
                   <template #header="{ column, $index }">
-                    <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+                    <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
                   </template>
                 </el-table-column>
             </el-table>
@@ -154,7 +153,8 @@ const _options = computed<Table.Options>(() => {
         showHeader: true,
         showPagination: false,
         height: '100%',
-        scrollbarAlwaysOn: true
+        scrollbarAlwaysOn: true,
+        sortAll: false
     }
     return Object.assign(option, props?.options)
 })

@@ -7,8 +7,9 @@
           filterable
           allow-create
           default-first-option
+          clearable
           :reserve-keyword="false"
-          :placeholder="$t('choose')"
+          :placeholder="$t('tip.selectHere')"
           class="collectionSelect"
       >
           <el-option
@@ -20,7 +21,7 @@
           </el-option>
       </el-select>
       <div class="footer">
-        <el-button type="primary" @click="handleConfirm">{{ $t('confirm') }}</el-button>
+        <el-button type="primary" @click="handleConfirm" :disabled="!selected">{{selected ? !selected.path ? $t('collections_new') : $t('confirm')  : $t('designer.widgetLabel.select')}}</el-button>
       </div>
   </div>
 </template>
@@ -58,6 +59,8 @@ const myCollection = computed(() => {
         emit('handleAdd', props.doc.id)
       })
     }
+    
+
     const handleAddCollection = async () => {
       let flag = 0
       const index = myCollection.value.findIndex(

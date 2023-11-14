@@ -2,15 +2,17 @@
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div class="search-page">
             <SearchFilterLeft ref="SearchFilterLeftRef" :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
-            <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-                    @pagination-change="handlePaginationChange"
-                    @row-dblclick="handleDblclick">
-                    <template #tags="{ row, index }">
-                        <div v-if="row.properties && row.properties['nxtag:tags']">
-                            <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
-                        </div>
-                    </template>
-            </Table>
+            <div style="flex: 1">
+                <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
+                        @pagination-change="handlePaginationChange"
+                        @row-dblclick="handleDblclick">
+                        <template #tags="{ row, index }">
+                            <div v-if="row.properties && row.properties['nxtag:tags']">
+                                <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+                            </div>
+                        </template>
+                </Table>
+            </div>
         </div>
         <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
             <template #header>
@@ -23,7 +25,9 @@
 
 <script lang="ts" setup>
 import { watchDebounced } from '@vueuse/core'
-import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaultTableSetting } from 'dp-api'
+import { 
+    nestedSearchApi,getSearchParamsArray, GetDocumentPreview, 
+    TABLE, defaultTableSetting, TableAddMultiColumns } from 'dp-api'
 
 // #region module: page
     const route = useRoute()
@@ -33,6 +37,8 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
         currentPageIndex: 0,
         pageSize: 20
     }
+    const tableKey = TABLE.CLIENT_SEARCH
+    const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
         firstReady: false,
         loading: false,
@@ -44,12 +50,12 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
-            sortKey: 'clientSearch'
+            sortKey: 'clientSearch',
+            sortAll: true
         },
-        searchParams: {}
+        searchParams: {},
+        columns: tableSetting.columns
     })
-    const tableKey = TABLE.CLIENT_SEARCH
-    const tableSetting = defaultTableSetting[tableKey]
 
     async function getList (param) {
         state.loading = true
@@ -87,11 +93,12 @@ import { nestedSearchApi,getSearchParamsArray, GetDocumentPreview, TABLE, defaul
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
 
             await getList(pageParams)
+            initTable(pageParams)
             state.firstReady = true
         },
         { debounce: 200, maxWait: 500, immediate: true }
     )
-    const { tableData, options, loading } = toRefs(state)
+    const { tableData, loading } = toRefs(state)
 // #endregion
 const ReaderRef = ref()
 const previewFile = reactive({
@@ -117,17 +124,6 @@ async function handleDblclick (row) {
         showInfo:true,
         showHeaderAction:true
       })
-        // ReaderRef.value.handleOpen()
-        // previewFile.loading = true
-        // try {
-        //     previewFile.id = row.id
-        //     previewFile.path = row.path
-        //     previewFile.name = row.name
-        //     previewFile.blob = await GetDocumentPreview(row.id)
-        // } catch (error) {
-        //
-        // }
-        // previewFile.loading = false
     }
 }
 function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
@@ -138,6 +134,69 @@ function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
         },
     })
 }
+const tableRef = ref()
+function initTable(searchParams) {
+    const dynamicColumns = {
+        size: { id: 'search_size', label: 'search_size', prop: 'properties.file:content.length', type: 'size' },
+        hight: { id: 'search_hight', label: 'search_hight', prop: 'properties.picture:info.height' },
+        width: { id: 'search_width', label: 'search_width', prop: 'properties.picture:info.width' },
+        duration: { id: 'search_duration', label: 'search_duration', prop: 'properties.vid:info.duration',
+                    formatList: [
+                        {
+                            "joiner": "",
+                            "prop": "properties.vid:info.duration",
+                            "formatFun": "unit",
+                            "params": {
+                                "unit": "s"
+                            },
+                            "index": 0
+                        }
+                    ]
+            },
+    }
+    switch (searchParams.assetType) {
+        case 'Picture':
+            const pic = [
+                dynamicColumns.hight,
+                dynamicColumns.width,
+                dynamicColumns.size
+            ]
+            const picData = TableAddMultiColumns(pic, tableSetting.columns, tableSetting.columns.length)
+            state.columns = picData
+            break;
+        case 'Video':
+            const vid = [
+                dynamicColumns.hight,
+                dynamicColumns.width,
+                dynamicColumns.size,
+                dynamicColumns.duration
+            ]
+            const vidData = TableAddMultiColumns(vid, tableSetting.columns, tableSetting.columns.length)
+            state.columns = vidData
+            break
+        case 'Audio':
+            const aud = [
+                dynamicColumns.size
+            ]
+            const audData = TableAddMultiColumns(aud, tableSetting.columns, tableSetting.columns.length)
+            state.columns = audData
+            break
+        default:
+            const def = [
+                dynamicColumns.size
+            ]
+            const defData = TableAddMultiColumns(def, tableSetting.columns, tableSetting.columns.length)
+            state.columns = defData
+            break;
+    }
+    tableRef.value.reorderColumn(state.columns)
+
+}
+onMounted(() => {
+    setTimeout(() => {
+        if(!route.query || Object.keys(route.query).length === 0) state.firstReady = true
+    },1000)
+})
 </script>
 
 <style lang="scss" scoped>

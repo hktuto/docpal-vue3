@@ -1,5 +1,5 @@
 <template>
-    <el-card ref="cardRef" class="dashboard-item-main">
+    <el-card ref="cardRef" class="dashboard-item dashboard-item-main">
         <div id="myEcharts" ref="chartRef" class="echart"></div>
         <DocSizeStatisticsSetting ref="settingRef" 
             @delete="handleDelete"
@@ -9,12 +9,14 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
-import { deepCopy, GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
+import { GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
 import { useEventListener } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
+    hideSetting?: boolean,
 }>() , {
-    setting: {}
+    setting: {},
+    hideSetting: false
 })
 type EChartsOption = echarts.EChartsOption;
 const chartRef = ref()
@@ -32,10 +34,19 @@ const setting = {
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                axisLabel: {
+                    show: true,
+                    formatter:function (value) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(value, ['MB', 'GB', 'TB', 'PB'])
+                    }
+                }
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.seriesName}: ${fileSize(item.value, ['MB', 'GB', 'TB', 'PB'])}`
+                }
             },
             legend: {
                 bottom: '5%',
@@ -60,7 +71,10 @@ const setting = {
                 type: 'value'
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.name} <br/>${item.seriesName}  ${item.value.toFixed(2)}`
+                }
             },
             legend: {
                 bottom: '5%',
@@ -85,7 +99,10 @@ const setting = {
                 data: [$t('dashboard.documentSize')]
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.seriesName}: ${fileSize(item.value)}`
+                }
             },
             legend: {
                 bottom: '5%',
@@ -101,7 +118,9 @@ const setting = {
                 normal: {
                     position: 'inside', // 在内部显示，outseide 是在外部显示
                     show: true,
-                    formatter: '{c}'
+                    formatter:  function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(item.value)
+                    }
                 }
             },
             itemStyle: {
@@ -119,7 +138,10 @@ const setting = {
                 type: 'category',
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.seriesName}: ${fileSize(item.value)}`
+                }
             },
             legend: {
                 bottom: '5%',
@@ -134,7 +156,9 @@ const setting = {
                 normal: {
                     position: 'inside', // 在内部显示，outseide 是在外部显示
                     show: true,
-                    formatter: '{c}'
+                    formatter:  function (item, params) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(item.value)
+                    }
                 }
             }
         }
@@ -142,7 +166,10 @@ const setting = {
     pieSetting: {
         options: {
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    return `${item.name}: ${fileSize(item.value)}`
+                }
             },
             legend: {
                 itemWidth: 10,
@@ -196,20 +223,21 @@ const setting = {
                 text: $t('dashboard.documentSize'),
                 left: "left",
             },
-            toolbox: {
-                show: true,
-                showTitle: true, 
-                itemSize: 15, 
-                feature: {
-                    mySetting: {
-                        show: true,
-                        title: $t('dashboard.setting'),
-                        icon: '',
-                        onclick: ()=> openSetting()
-                    }
-                }
-            }
+            
         },
+    },
+    toolbox: {
+        show: true,
+        showTitle: true, 
+        itemSize: 15, 
+        feature: {
+            mySetting: {
+                show: true,
+                title: $t('dashboard.setting'),
+                icon: '',
+                onclick: ()=> openSetting()
+            }
+        }
     }
 }
 const state = reactive({
@@ -322,22 +350,27 @@ function resize() {
             ...setting.defaultSetting.options, 
             ...setting[`${chartType}Setting`].options 
         }
-        if(!picStore.setting) picStore.setting = 'image://' + await parseSvg('/icons/setting.svg')
-        options.toolbox.feature.mySetting.icon = picStore.setting
+        if(!props.hideSetting) {
+            if(!picStore.setting) picStore.setting = 'image://' + await parseSvg('/icons/setting.svg')
+            setting.toolbox.feature.mySetting.icon = picStore.setting
+            options.toolbox = setting.toolbox
+        }
         switch(chartType) {
             case 'pie':
                 await getData(displayList)
                 options.series = getSeries(state.data, chartType, displayList)
-                options.title[0].text = state.totalStorage + 'MB'
-                options.title[0].textStyle.fontSize = state.width / 32 
+                options.title[0].text = fileSize(state.totalStorage)
+                options.title[0].textStyle.fontSize = Math.max(state.width / 32 , 14)
                 options.title[0].subtextStyle.fontSize =Math.max(state.width / 42 , 10)
                 options.title[0].subtext = $t('dashboard.totalStorage')
                 options.title[1].text = $t('dashboard.documentSize')
+                
                 break
             case 'bar':
                 await getData(displayList)
                 options.series = getTrendSeries(state.data, chartType, displayList)
                 options.title.text = $t('dashboard.documentSize')
+                console.log({options})
                 break
             case 'brick':
                 await getData(displayList)

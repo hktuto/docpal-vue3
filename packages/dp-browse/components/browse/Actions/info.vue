@@ -8,7 +8,7 @@
     </div>   -->
     
     <SvgIcon id="infoActionButton" src="/icons/file/info.svg"  
-                content="info"
+                :content="$t('rightDetail_info')"
                 round
                 @click="itemClicked"></SvgIcon>
 </template>

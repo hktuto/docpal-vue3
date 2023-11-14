@@ -60,7 +60,6 @@ async function pasteItem(doc){
     emits('success', doc, state.action)
 }
 onMounted(() => {
-    console.log("mounted")
     useEventListener(document, 'docActionCopy', (event:any) => copyItem(event.detail))  
     useEventListener(document, 'docActionCut', (event:any) => cutItem(event.detail))  
     useEventListener(document, 'docActionPaste', (event:any) => pasteItem(event.detail))  

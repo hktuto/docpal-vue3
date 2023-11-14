@@ -1,0 +1,222 @@
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
+  <process id="workflowId" name="workflowName" isExecutable="true" flowable:candidateStarterGroups="Demo Approval Group" template="Single" >
+    <extensionElements>
+      <flowable:executionListener event="start" delegateExpression="${notificationListener}">
+        <flowable:field name="functionPoint">
+          <flowable:string><![CDATA[APPLY]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="notificationUserFromVariables">
+          <flowable:string><![CDATA[user_approver_id,copy_approver_id]]></flowable:string>
+        </flowable:field>
+      </flowable:executionListener>
+    </extensionElements>
+    <startEvent id="start" name="Start" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="businessKey" name="Business Key" type="string" fixed="true"></flowable:formProperty>
+        <flowable:formProperty id="user_creator_id" name="Creator ID" type="string" fixed="true"></flowable:formProperty>
+        <flowable:formProperty id="user_approver_id" name="Approver ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="user_copy_personnel_id" name="Copy Personnel ID" type="string"></flowable:formProperty>
+        <flowable:formProperty id="description" name="Description" type="string"></flowable:formProperty>
+      </extensionElements>
+    </startEvent>
+    <userTask id="approvalForm" name="Start Approval Form" flowable:candidateGroups="Contract_Approval_Approvers" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="user_approver_id" name="Approver ID" type="string"></flowable:formProperty>
+        
+        <flowable:formProperty id="approved" name="Approve" type="boolean"></flowable:formProperty>
+        <flowable:formProperty id="rejectReason" name="Reject Reason" type="string"></flowable:formProperty>
+        
+        <flowable:formProperty id="user_creator_id" name="Creator ID" type="string"></flowable:formProperty>
+        
+        
+        <flowable:formProperty id="description" name="Description" type="string"></flowable:formProperty>
+        
+        
+        <flowable:formProperty id="businessKey" name="Business Key" type="string"></flowable:formProperty>
+       
+        <flowable:taskListener event="create" delegateExpression="${autoAssignTaskListener}">
+          <flowable:field name="assignee">
+            <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+          </flowable:field>
+        </flowable:taskListener>
+        <modeler:group-info-name-Contract_Approval_Approvers xmlns:modeler="http://flowable.org/modeler"><![CDATA[Contract Approval Approvers]]></modeler:group-info-name-Contract_Approval_Approvers>
+        <modeler:activiti-idm-candidate-group xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-group>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="createDocumentServiceTask" name="Create Document Based On User Input Service Task" flowable:delegateExpression="${generateDocumentDelegate}">
+      <extensionElements>
+        <flowable:field name="parentPath">
+          <flowable:expression><![CDATA[${variables:get(parentPath)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="documentName">
+          <flowable:expression><![CDATA[${variables:get(documentName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="documentType">
+          <flowable:expression><![CDATA[${variables:get(documentType)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="documentProperties">
+          <flowable:expression><![CDATA[]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="variables">
+          <flowable:expression><![CDATA[{"name": "${variables:get(variables)}","zip": "${variables:get(zip)}"}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="templateId">
+          <flowable:expression><![CDATA[${variables:get(templateId)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="submitFormNotification" name="Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.submitted]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="end" name="End"></endEvent>
+    <exclusiveGateway id="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F"></exclusiveGateway>
+    <serviceTask id="completedApprovedNotification" name="Completed Approved Notification to Creator, Copy and Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.approved]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="renewOrCr">
+          <flowable:expression><![CDATA[${variables:get(renewalOrCr)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="creatorId">
+          <flowable:expression><![CDATA[${variables:get(user_creator_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="country">
+          <flowable:expression><![CDATA[${variables:get(country)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="caseId">
+          <flowable:expression><![CDATA[${variables:get(caseId)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="customerCode">
+          <flowable:expression><![CDATA[${variables:get(customerCode)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="customerName">
+          <flowable:expression><![CDATA[${variables:get(customerName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="contractId">
+          <flowable:expression><![CDATA[${variables:get(contractId)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="crId">
+          <flowable:expression><![CDATA[${variables:get(crId)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="rejectApprovedNotification" name="Reject Approved Notification to creator， copy creator" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.reject]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="creatorId">
+          <flowable:expression><![CDATA[${variables:get(user_creator_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="taskDueNotification" name="Task Due Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+      <extensionElements>
+        <flowable:field name="notificationType">
+          <flowable:string><![CDATA[notification.contractApproval.taskdue]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="businessKey">
+          <flowable:expression><![CDATA[${variables:get(businessKey)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="creatorId">
+          <flowable:expression><![CDATA[${variables:get(user_creator_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="prospectName">
+          <flowable:expression><![CDATA[${variables:get(prospectName)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="approverId">
+          <flowable:expression><![CDATA[${variables:get(user_approver_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="copyPersonnelId">
+          <flowable:expression><![CDATA[${variables:get(user_copy_personnel_id)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="submittedDate">
+          <flowable:expression><![CDATA[${variables:get(submittedDate)}]]></flowable:expression>
+        </flowable:field>
+        <flowable:field name="description">
+          <flowable:expression><![CDATA[${variables:get(description)}]]></flowable:expression>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <boundaryEvent id="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" attachedToRef="approvalForm" cancelActivity="false">
+      <timerEventDefinition>
+        <timeDuration>P3D</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <sequenceFlow id="sid-4997F99D-0C86-4C63-8974-A52EBC38C4F3" sourceRef="start" targetRef="submitFormNotification"></sequenceFlow>
+    <sequenceFlow id="sid-12A74733-1783-454C-80B9-A66E0ACDF034" sourceRef="submitFormNotification" targetRef="approvalForm"></sequenceFlow>
+    <sequenceFlow id="sid-A641DB66-3A1C-45A4-A03C-3FF308F8BC44" sourceRef="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" targetRef="taskDueNotification"></sequenceFlow>
+    <sequenceFlow id="sid-E6B2EE69-B671-4564-BFF5-0A7BEE7FC110" sourceRef="approvalForm" targetRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F"></sequenceFlow>
+    <sequenceFlow id="sid-65BE74D6-A548-4E70-8B5F-6D919EDDC1BF" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="rejectApprovedNotification">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approved}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-C909A9BF-4EBD-49F6-97B4-B7B823900C32" sourceRef="rejectApprovedNotification" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="sid-2060190D-232A-4C95-8D17-CFCE24A7395B" sourceRef="completedApprovedNotification" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="sid-FE76A11C-6B59-429C-9228-DF4D7EF675C8" sourceRef="createDocumentServiceTask" targetRef="completedApprovedNotification"></sequenceFlow>
+    <sequenceFlow id="sid-D04FB86E-F550-433E-A8A9-D2E0E7668D9B" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="createDocumentServiceTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  
+</definitions>

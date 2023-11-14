@@ -31,7 +31,7 @@ const state = reactive({
 })
 const form = ref<any>({
     fileList: [],
-    languages: []
+    languages: ['eng']
 })
 const formRef = ref()
 const availableLanguage = ref()

@@ -3,6 +3,8 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
     "build": "nuxt build --dotenv ../../.env.deploy.dev ",
     "dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",

@@ -5,6 +5,7 @@
         <el-icon ref="handle" class="cursor-move"><Rank /></el-icon>
         <el-badge class="el-icon--right" :value="shareState.shareList.length" :max="99" type="success">{{$t('share.shareQueue')}}</el-badge>
         <el-button class="ml-30" type="primary" text @click="handleShare">{{$t('share.share')}}</el-button>
+        <SvgIcon src="/icons/close.svg" @click="shareState.shareList = []" />
     </div>
   <!-- Drag me! I am at {{x}}, {{y}} -->
 </Draggable>
@@ -29,7 +30,10 @@ const hidden = computed(() => {
            route.path !== '/browse/share'
 })  
 function handleShare () {
-    router.push(`/browse/share?backPath=${route.fullPath}`)
+  // close detail
+  const ev = new CustomEvent('closeFilePreview');
+  document.dispatchEvent(ev);
+  router.push(`/browse/share?backPath=${route.fullPath}`)
 }
 onMounted(async() => {
 })

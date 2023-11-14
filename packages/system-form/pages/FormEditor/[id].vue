@@ -23,8 +23,9 @@ function filterPath(path) {
 }
 watch(() => route.params.id, (newJsonName) => {
     setTimeout(() => {
+        console.log(fromDesignerRef)
         fromDesignerRef.value.setFormJson(getJsonApi(newJsonName))
-    })
+    }, 1000)
 }, { immediate: true })
 onMounted(() => {
     loadLanguage('en')

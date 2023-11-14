@@ -89,6 +89,7 @@ export enum TABLE {
     CLIENT_HOLD_POLICIES = "clientHoldPolicies",
     CLIENT_RETENTION_DONE = "clientRetentionDone",
     CLIENT_RETENTION_PENDING= "clientRetentionPending",
+    CLIENT_DASHBOARD = 'clientDashboard',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -124,6 +125,8 @@ export enum TABLE {
     ADMIN_EMAIL_LAYOUT = 'adminEmailLayout',
     ADMIN_DOC_TEMPLATE = 'adminDocTemplate',
     ADMIN_DASHBOARD = 'adminDashboard',
+    ADMIN_SMART_FOLDER = 'adminSmartFolder',
+    ADMIN_MASTER_TABLE = 'adminMasterTable'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -559,8 +562,8 @@ export const defaultTableSetting: TableColumnSetting = {
             // { id: '1', type: 'selection' },
             // { id: '4', type: 'selection' },
             { id: '2', label: 'table_name', prop: 'name', defaultColumn: true },
-            { id: 'watermark', slot: 'watermark', label: 'watermark' },
-            { id: '5', slot: 'readOnly', label: 'readOnly' },
+            { id: 'watermark', slot: 'watermark', label: 'watermark.watermark' },
+            { id: '5', slot: 'readOnly', label: 'button.readOnly' },
             { id: '4', label: 'table_modifiedDate', prop: 'modifiedDate', 
                 formatList: [
                     {
@@ -1157,8 +1160,22 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_SEARCH] : {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
-            { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', showOverflowTooltip: true },
             { id: '3', label: 'tableHeader_type', prop: 'type' },
+            { id: '6', label: 'search_authors', prop: 'createdBy' },
+            { id: '7', label: 'search_contributors', prop: 'properties.dc:contributors',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": 'properties.dc:contributors',
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180',
                 formatList: [
                     {
@@ -1173,6 +1190,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 ]  
             },
             { id: '5', slot: 'tags', label: 'dpTable_tags', prop: 'tags' },
+
         ],
         events: [],
         slots: [
@@ -1271,6 +1289,31 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_DASHBOARD]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            // { id: '3', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                width: 150,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.PUBLIC_SHARE]: {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'title', defaultColumn: true },
@@ -2164,7 +2207,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_EMAIL_TEMPLATE]: {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'subject' },
+            {id: "0", label:"tableHeader_name", prop:"label"},
+            { id: '1', label: 'tableHeader_subject', prop: 'subject' },
             { id: '2', label: 'ID', prop: 'id', copy: true },
             { id: '3', label: 'emailTemplate.layout', prop: 'emailLayoutName' },
             { id: '4', label: 'role.creator', prop: 'createdBy', width: 100 },
@@ -2301,15 +2345,111 @@ export const defaultTableSetting: TableColumnSetting = {
         slots: [
         ],
         options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_MASTER_TABLE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '3', label: 'role.creator', prop: 'createdBy'},
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    },
+                    // {
+                    //     "name": "",
+                    //     "type": "text",
+                    //     "command": "delete",
+                    //     "suffixIcon": "/icons/menu/trash.svg",
+                    //     "index": 0
+                    // }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'edit', 'preview'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_SMART_FOLDER]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_access', prop: 'userGroups', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "userGroups",
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
     }
+    
     
 }
 
-export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
+export function TableAddColumns (columnItem: TableColumnItem, columnList: any, position: number = 1) {
     const _columnItem: TableColumnItem = {
         label: columnItem.label,
         prop: columnItem.prop,
-        id: columnItem.id
+        id: columnItem.id,
+        showOverflowTooltip: true
     }
     if (columnItem.type === 'date') {
         _columnItem.formatList = [
@@ -2336,7 +2476,62 @@ export function TableAddColumns (columnItem: TableColumnItem, columnList: any) {
             }
         ]
     }
-    columnList.push({
+    columnList.splice(position, 0, {
         ..._columnItem
     })
+    return columnList
+} 
+
+export function TableAddMultiColumns (columnItems: TableColumnItem[], columnList: any, position: number = 1) {
+    const resultList = structuredClone(columnList)
+    const columns = columnItems.reduce((prev: any, item:TableColumnItem) => {
+        const _columnItem: TableColumnItem = {
+            label: item.label,
+            prop: item.prop,
+            id: item.id,
+            formatList: item.formatList ? item.formatList : [],
+            showOverflowTooltip: true
+        }
+        if (item.type === 'date') {
+            _columnItem.formatList = [
+                {
+                    joiner: "",
+                    prop: item.prop,
+                    formatFun: "dateFormat",
+                    params: {
+                        "format": ""
+                    },
+                    index: 0
+                }
+            ]
+        } else if (item.type === 'complex') {
+            _columnItem.formatList = [
+                {
+                    joiner: "",
+                    prop: item.prop,
+                    formatFun: "concat",
+                    params: {
+                        "format": ""
+                    },
+                    index: 0
+                }
+            ]
+        } else if (item.type === 'size') {
+            _columnItem.formatList = [
+                {
+                    "joiner": "",
+                    "prop": item.prop,
+                    "formatFun": "fileSize",
+                    "params": {
+                        "joiner": ""
+                    },
+                    "index": 0
+                }
+            ]
+        }
+        prev.push(_columnItem)
+        return prev
+    }, [])
+    resultList.splice(position, 0, ...columns)
+    return resultList
 } 
