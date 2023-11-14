@@ -15,6 +15,10 @@ async function getEmailTemplates() {
 }
 
 const templateVariables = computed(() => {
+  console.log(props.data)
+  if(!Array.isArray(props.data?.extensionElements['flowable:field'] )) {
+    props.data.extensionElements['flowable:field'] = [props.data.extensionElements['flowable:field'] ]
+  }
   const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType"));
   return item;
 })
@@ -78,7 +82,7 @@ onMounted(async() => {
     <div class="formContainer">
       <ElForm :model="data" label-position="top">
         <ElFormItem label="Email template">
-          <ElSelect v-model="selectedEmailTemplate" placeholder="Select email template" class="fullwidth">
+          <ElSelect v-model="selectedEmailTemplate" placeholder="Select email template" class="fullwidth" filterable>
             <ElOption v-for="item in allEmailTemplates" :key="item.id" :label="item.label" :value="item.id"></ElOption>
           </ElSelect>
         </ElFormItem>
