@@ -13,6 +13,7 @@ const props = defineProps({
 const graphJson = ref();
 function setupGraph() {
   graphJson.value = bpmnToX6(props.bpmn, {hideEnd:false});
+  
 }
 
 function fitIn(padding:number = 100){
