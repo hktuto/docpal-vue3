@@ -56,6 +56,13 @@ register({
     component: GraphWorkflowForm,
     ports
 })
+register({
+    shape: 'script-node',
+    width: 80,
+    height: 80,
+    component: GraphWorkflowForm,
+    ports
+})
 
 register({
     shape: 'document-node',
@@ -220,9 +227,11 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
   // step 1 : get bpmn data
     // if bpmnText is Json then skip this step
     let bpmn = bpmnText;
+    
     if(typeof bpmnText !== 'object'){
         bpmn = bpmnToJson(bpmnText);
     }
+    console.log(bpmn)
     //  remove bpmn object in xml file
     if(bpmn['bpmndi:BPMNDiagram']) {
         delete bpmn['bpmndi:BPMNDiagram']
@@ -237,6 +246,7 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
   const exclusiveGateway = Array.isArray(process['exclusiveGateway']) ? process['exclusiveGateway'] : [process['exclusiveGateway']];
   const serviceTask = Array.isArray(process['serviceTask']) ? process['serviceTask'] : [process['serviceTask']];
   const boundaryEvent = Array.isArray(process['boundaryEvent']) ? process['boundaryEvent'] : [process['boundaryEvent']];
+  const scriptTask = Array.isArray(process['scriptTask']) ? process['scriptTask'] : [process['scriptTask']];
   // step 2 define x6 graph json data
   const data: Model.FromJSONData = {
     nodes: [],
@@ -262,6 +272,28 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
     
   });
 
+    scriptTask.forEach((task: any) => {
+        const boundary = boundaryEvent.filter((event: any) => event && event['attr_attachedToRef'] && event['attr_attachedToRef'] === task['attr_id']);
+        const node = {
+            id: task['attr_id'],
+            shape: 'script-node',
+            label: truncateString(task['attr_name']),
+            attrs:{
+                title:{
+                    text: task['attr_name']
+                },
+            },
+
+            data: {
+                type: 'scriptTask',
+                ...task,
+                boundary
+            },
+            ports:[
+            ]
+        }
+        data.nodes?.push(node);
+    })
   // step 4 : add userTask
   userTask.forEach((task: any) => {
       // search for boundaryEvent
