@@ -14,6 +14,7 @@ const typeOption = {
   "email-node": {icon:"/bpmn/icons/email.svg", color: "#29CC6A", radius: "1rem"},
   "user-node": {icon: undefined, color: "#b7b7b7", radius: "50%"},
   "exclusive-node": {icon:undefined, color: "#b7b7b7", radius: "50%"},
+  "script-node":{icon:"/bpmn/icons/script.svg", color: "#7B61FF", radius: "1rem"}
 }
 
 const displayType = computed(() => {
