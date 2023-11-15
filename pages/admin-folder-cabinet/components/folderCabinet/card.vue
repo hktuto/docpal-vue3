@@ -7,7 +7,7 @@
             <span class="el-icon--left">{{setting.documentType}}</span>
             <slot name="actions">
                 <SvgIcon class="el-icon--left" round src="/icons/edit.svg" 
-                    @click="handleEdit(setting, isRoot)"/>
+                    @click="handleEdit(setting, isRoot, parentSetting?.children)"/>
                 <SvgIcon v-if="!isRoot"  class="el-icon--left" round src="/icons/menu/trash.svg" 
                     @click="handleDelete(setting)"/>
                 <SvgIcon v-if="setting.folder" class="el-icon--left" round src="/icons/add.svg" 
@@ -17,7 +17,7 @@
             </slot>
         </div>
     </div>
-    <FolderCabinetCard v-for="item in setting.children" :setting="item"></FolderCabinetCard>
+    <FolderCabinetCard v-for="item in setting.children" :setting="item" :parentSetting="setting"></FolderCabinetCard>
      
 </div>
 </template>
@@ -26,6 +26,7 @@
 import { ArrowDownBold } from '@element-plus/icons-vue'
 import { tpFolderCabinetSetting, CreateCabinetTemplateApi } from 'dp-api'
 const props = defineProps<{
+    parentSetting: tpFolderCabinetSetting,
     setting: tpFolderCabinetSetting,
     isRoot: boolean
 }>()

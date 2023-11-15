@@ -31,6 +31,7 @@ export async function parseSvg(src: string, cb: any) {
 }
 
 export function fileSize(value: number, sizeList: string[] = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']) {
+    if(value === 0) return `${value}${sizeList[0]}`
     if(!value) return '-'
     const a = 1024;
     value = Number(value)
