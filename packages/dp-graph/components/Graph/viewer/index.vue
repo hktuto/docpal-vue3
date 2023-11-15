@@ -71,7 +71,7 @@ function getData() {
   return graph.value?.toJSON();
 }
 function setupGraph() {
-  console.log("setupGraph")
+  
   if(!document.getElementById(props.id) || !props.graphJson) {
     return;
   }
@@ -82,8 +82,7 @@ function setupGraph() {
     container: document.getElementById(props.id) as HTMLElement,
     ...props.graphOption,
   });
-  const model = props.layout.layout(props.graphJson);
-  graph.value.fromJSON(model);
+  
   
   
   graph.value?.on('node:dblclick', ({e, node}) => {
@@ -108,6 +107,9 @@ function setupGraph() {
     graph.value.zoomToFit({padding: 100});
     graph.value.centerContent()
   })
+
+  const model = props.layout.layout(props.graphJson);
+  graph.value.fromJSON(model);
 }
 
 function fitIn(padding:number = 100){
