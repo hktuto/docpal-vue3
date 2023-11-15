@@ -15,10 +15,18 @@
     :close-on-click-modal="false"
     class="scroll-dialog"
     >
-  <WorkflowDetailGraph :process-key="state.selectedWorkflow.key" step="start"/>
-  <WorkflowDetailFormRender ref="vFormRef" />
+  <ElTabs v-if="!state.loading" v-model="activeName">
+    <ElTabPane :label="$t('workflow_form')" name="Form">
+      <WorkflowDetailFormRender ref="vFormRef" />
+    </ElTabPane>
+    <ElTabPane :label="$t('workflow_graph')"  name="Graph">
+      <WorkflowDetailGraph v-if="activeName === 'Graph'"  ref="graph" :process-key="state.selectedWorkflow.key" step="start"/>
+    </ElTabPane>
+  </ElTabs>
+
+
     <template #footer>
-        <el-button :loading="state.loading" @click="checkAndSubmit">{{$t('workflow_startWorkflow')}}</el-button>
+        <el-button v-if="activeName === 'Form'" :loading="state.loading" @click="checkAndSubmit">{{$t('workflow_startWorkflow')}}</el-button>
     </template>
 </el-dialog>
 
@@ -33,6 +41,7 @@ import {
     taskFormJsonGetApi,
     workflowProcessStartApi } from 'dp-api'
 const emits = defineEmits(['created']);
+const activeName = ref('Form')
 const state = reactive({
     availableWorkflow: [],
     formDialogVisible: false,

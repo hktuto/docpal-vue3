@@ -110,6 +110,11 @@ function setupGraph() {
   })
 }
 
+function fitIn(padding:number = 100){
+  graph.value.zoomToFit({padding});
+  graph.value.centerContent()
+}
+
 onMounted(() => {
   setupGraph();
 })
@@ -122,7 +127,8 @@ watch(() => props.graphJson, (newVal, oldVal) => {
 defineExpose({
   getData,
   setupGraph,
-  graph
+  graph,
+  fitIn
 })
 
 </script>
@@ -138,7 +144,7 @@ defineExpose({
 .viewerContainer{
   width:100%;
   height: 100%;
-  min-height: 200px;
+  min-height: 400px;
   position: relative;
   overflow: hidden;
   > .graph{
