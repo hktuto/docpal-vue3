@@ -46,7 +46,9 @@ const getBpmn = async (processDefinitionId: string, processKey: string) => {;
     const blob = await getBpmnApi(data)
     const text = await blob.text()
     bpmnFile.value = text
-
+    setTimeout(()=>{
+      WorkflowEditorRef.value.fitIn(10);
+    }, 1000)
 }
 
 watch(()=> [props.processKey, props.processDefinitionId], async([newKey, newId]) => {
@@ -58,11 +60,13 @@ watch(()=> [props.processKey, props.processDefinitionId], async([newKey, newId])
 <style lang="scss" scoped>
 .bpmnContainer {
     height: 100%;
+  min-height:400px;
     overflow: auto;
 }
 #modeler-container{
     height: 100%;
     width: 100%;
 }
+
 </style>
 
