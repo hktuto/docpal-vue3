@@ -56,6 +56,7 @@ function handleOpen () {
     state.visible = true
     state.languageKeys = getLanguageKeys()
     state.tableData = getLanguageList(state.languageKeys)
+    console.log(state.tableData)
 }
 async function handleSubmit (row) {
     row.loading = true

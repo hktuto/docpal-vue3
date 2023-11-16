@@ -188,10 +188,14 @@ export const useLanguage = defineStore('Language', () => {
         }
         i18n.setLocale(locale)
     }
+    function getAvailableLocales() {
+        return availableLocales
+    }
     watch(() => route.path, () => {
         languageKeys.clear()
     })
     return {
+        getAvailableLocales,
         languageKeys,
         languageKeysStores,
         addLanguageKeys,

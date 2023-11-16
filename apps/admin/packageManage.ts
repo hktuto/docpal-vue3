@@ -28,10 +28,12 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-dashboard');
     packages.push('../../pages/admin-workflow-editor');
     packages.push('../../pages/admin-master-table');
+
     // core
     packages.push('../../pages/admin-retention');
     packages.push('../../pages/admin-acl');
     packages.push('../../pages/admin-meta-manage');
+    packages.push('../../pages/admin-meta-validation');
     packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');
     packages.push('../../pages/admin-hold-policies');

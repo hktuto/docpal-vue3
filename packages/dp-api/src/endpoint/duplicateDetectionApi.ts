@@ -253,6 +253,14 @@ export const downloadDocRecord = async(params) => {
         docTypesStore = [...response.sort((a,b)=> (a.name.localeCompare(b.name) ))]
         return docTypesStore
     }
+    export const getDocTypeDetailApi = async(docType: string):Promise<DocType> => {
+        try {
+            if (docTypesStore.length === 0) await getDocTypeListApi()
+            return docTypesStore.find(item => item.name === docType)
+        }
+        catch (error) {
+        }
+    }
     const metaStore = {}
     export const metaValidationRuleGetApi = async (documentType: string, refresh: boolean = false):Promise<Meta[]> => {
         if(documentType && metaStore[documentType] && !refresh) return structuredClone(metaStore[documentType])
