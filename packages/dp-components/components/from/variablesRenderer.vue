@@ -7,7 +7,11 @@ export type variableItem = {
     type: 'date' | 'input' | 'switch' | 'textarea' | 'number',
     disabled: Boolean,
     hidden: Boolean,
-    required: Boolean
+    required: Boolean,
+    format?: string,
+    options?: any[],
+    length?: number,
+    onValidate?: string
 }
 const props = defineProps<{
     variables: variableItem[],
@@ -38,6 +42,8 @@ const formJson = ref({
     }
 })
 function createJson(variables: variableItem[]) {
+    console.log(variables);
+    
     const date = new Date().valueOf()
     formJson.value.widgetList = []
     variables.forEach((item, index) => {
@@ -70,18 +76,27 @@ function createJson(variables: variableItem[]) {
             }
         }
         if(item.type === 'date') {
-            _item.options.format = 'YYYY-MM-DD HH:mm',  //日期显示格式
-            _item.options.valueFormat = 'YYYY-MM-DD HH:mm'
+            _item.options.format = item.format || 'YYYY-MM-DD HH:mm',  //日期显示格式
+            _item.options.valueFormat = 'YYYY-MM-DD HH:mm:ss'
         } else if(item.type === 'input') {
             _item.options.type = 'text'
-        } else if(item.type === 'number') {
+            if (item.length) _item.options.length = item.length
+        } else if(item.type === 'textarea') {
+            if (item.length) _item.options.length = item.length
+        }else if(item.type === 'number') {
+            _item.options.defaultValue = 0
             _item.options.controlsPosition = 'right'
         } else if(item.type === 'switch') {
             _item.options.defaultValue = false
             _item.options.labelIconPosition = 'rear'
+        } else if(item.type === 'select') {
+            if(item.options) _item.options.optionItems = item.options
         }
+        if(item.onValidate) _item.options.onValidate = item.onValidate
         formJson.value.widgetList.push(_item)
     })
+    console.log(formJson.value);
+    
     FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
 }
 async function getData () {
