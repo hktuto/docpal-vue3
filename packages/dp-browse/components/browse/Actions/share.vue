@@ -36,12 +36,7 @@ function iconClickHandler(){
     else {
         addToShareList(props.selectedList)
     }
-    // router.push({
-    //     path: '/browse/share',
-    //     query: {
-    //         backPath: route.fullPath
-    //     }
-    // })
+
     if(props.hideAfterClick) {
         const ev = new CustomEvent('closeFilePreview')
         document.dispatchEvent(ev);
