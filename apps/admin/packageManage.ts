@@ -32,7 +32,7 @@ export function customLayer():string[] {
     // core
     packages.push('../../pages/admin-retention');
     packages.push('../../pages/admin-acl');
-    packages.push('../../pages/admin-meta-manage');
+    // packages.push('../../pages/admin-meta-manage');
     packages.push('../../pages/admin-meta-validation');
     packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');

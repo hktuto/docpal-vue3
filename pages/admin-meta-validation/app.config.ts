@@ -4,7 +4,7 @@ export default defineAppConfig({
   menu:[
     {
       feature: 'CORE',
-      name:"admin_meta-validation",
+      name:"admin_meta",
       routeName:"meta-validation",
       url:"/meta-validation",
       icon: "/icons/menu/meta.svg",

@@ -1525,7 +1525,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_META_DISPLAY]: {
         columns: [
-            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true, sortable: true },
+            { id: '1', label: 'rightDetail_meta', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true, sortable: true },
             // { id: '2', label: 'form_vocabulary', prop: 'vocabulary', showOverflowTooltip: true },
             // { id: '3', label: 'form_length', prop: 'length'},
             { id: '3', label: 'metadata.dataType', prop: 'dataType', slot: 'dataType', width: 150, sortable: true},
