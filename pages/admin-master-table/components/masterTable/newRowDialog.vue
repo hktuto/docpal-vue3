@@ -36,6 +36,8 @@ const router = useRouter()
 async function handleSubmit () {
     state.loading = true
     const data = await FromVariablesRendererRef.value.getData()
+    console.log({data});
+    
     try {
         if(state.edit) {
             await UpdateMasterTablesRecordApi({
@@ -63,6 +65,7 @@ function turnFields(fields) {
     const typeMap = {
         'varchar': 'input',
         'VARCHAR:255': 'textarea',
+        'varchar:4000': 'textarea',
         'clob': 'textarea',
         'bigint': 'number',
         'timestamp': 'date',
@@ -70,12 +73,15 @@ function turnFields(fields) {
     }
     return fields.reduce((prev, item) => {
         if(!props.ignoreList.includes(item.columnName) && typeMap[item.dataType]) {
-            prev.push({
+            const _item = {
                 name: item.columnName,
                 label: item.columnName,
                 type: typeMap[item.dataType],
                 required: item.required
-            })
+            }
+            if(item.dataType === 'varchar') _item.maxLength = 255
+            else if(item.dataType === 'varchar:4000') _item.maxLength = 4000
+            prev.push(_item)
         } 
         return prev
     }, [])

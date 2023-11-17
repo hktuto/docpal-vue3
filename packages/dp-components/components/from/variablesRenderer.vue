@@ -10,7 +10,7 @@ export type variableItem = {
     required: Boolean,
     format?: string,
     options?: any[],
-    length?: number,
+    maxLength?: number,
     onValidate?: string
 }
 const props = defineProps<{
@@ -42,8 +42,6 @@ const formJson = ref({
     }
 })
 function createJson(variables: variableItem[]) {
-    console.log(variables);
-    
     const date = new Date().valueOf()
     formJson.value.widgetList = []
     variables.forEach((item, index) => {
@@ -80,11 +78,11 @@ function createJson(variables: variableItem[]) {
             _item.options.valueFormat = 'YYYY-MM-DD HH:mm:ss'
         } else if(item.type === 'input') {
             _item.options.type = 'text'
-            if (item.length) _item.options.length = item.length
         } else if(item.type === 'textarea') {
-            if (item.length) _item.options.length = item.length
         }else if(item.type === 'number') {
             _item.options.defaultValue = 0
+            _item.options.min = -999999999999999
+            _item.options.max = 999999999999999
             _item.options.controlsPosition = 'right'
         } else if(item.type === 'switch') {
             _item.options.defaultValue = false
@@ -93,6 +91,7 @@ function createJson(variables: variableItem[]) {
             if(item.options) _item.options.optionItems = item.options
         }
         if(item.onValidate) _item.options.onValidate = item.onValidate
+        if (item.maxLength) _item.options.maxLength = item.maxLength
         formJson.value.widgetList.push(_item)
     })
     console.log(formJson.value);
