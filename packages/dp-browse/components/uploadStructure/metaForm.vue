@@ -16,35 +16,7 @@
                 <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
             </el-select>
         </div>
-        <div v-for="(item, index) in state.doc.metaList" :key="item.metaData+index" class="row-item">
-            <template v-if="item.display">
-                <div class="row-item-top">
-                    <span class="color__danger" v-if="item.isRequire">*</span>
-                    {{$t(item.metaData)}}
-                </div>
-                <template v-if="item.dataType === 'date'">
-                    <el-date-picker v-model="item.value"
-                            type="datetime"
-                            :placeholder="$t('dpTip_datePicker')"
-                            :default-time="defaultTime"
-                            value-format="YYYY-MM-DDTHH:mm:ss.000Z"
-                            class="row-item-bottom-left"
-                            style="width: 100%"></el-date-picker>
-                </template>
-                <template v-else-if="!!item.directoryEntries">
-                    <el-cascader v-model="item.value"
-                            :options="item.directoryEntries"
-                            :props="{ checkStrictly: item.hasChild, value: 'id', label: 'id' }"
-                            clearable filterable popper-class="pc-cascader"
-                            class="row-item-bottom-left"
-                            style="width: 100%"></el-cascader>
-                </template>
-                <template v-else>
-                    <el-input  class="row-item-bottom-left" type="text" v-model="item.value"
-                        :maxlength="item.length" show-word-limit/>
-                </template>
-            </template>
-        </div>
+        <MetaRenderForm ref="MetaFormRef" @formChange="handleMetaChange"></MetaRenderForm>
     </main>
 </div>
 <div v-else class="flex-center">
@@ -55,7 +27,7 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
-import { metaValidationRuleGetApi, getDocTypeListApi } from 'dp-api'
+import { metaValidationRuleGetApi, getDocTypeListApi, deepCopy } from 'dp-api'
 const props = withDefaults(defineProps<{
     checkList: any,
 }>(), {
@@ -63,74 +35,44 @@ const props = withDefaults(defineProps<{
 })
 const state = reactive({
     doc: {
-        metaList: []
     },
+    ready: false,
     fileTypes: []
 })
 const emit = defineEmits(['apply-to-selected'])
-function handleApplyToSelected() {
+const MetaFormRef = ref()
+async function handleApplyToSelected() {
     emit('apply-to-selected', {
         documentType: state.doc.documentType,
-        metaList: deepCopy(state.doc.metaList),
+        properties: deepCopy(state.doc.properties),
         isFolder: state.doc.isFolder
     })
 }
 async function handleDocTypeChange (doc) {
-    const metaList =  await metaListGet(doc.documentType)
-    doc.metaList = deepCopy(metaList)
+    getMetaAndSetMeta()
 }
-
 // #region module: 初始化
     async function init(doc: any) {
         state.doc = doc
-        if(!state.doc.metaList) {
-            const metaList =  await metaListGet(doc.documentType)
-            state.doc.metaList = structuredClone(metaList)
-        }
         getDocType(state.doc.isFolder)
-    }
-    async function metaListGet(documentType: string) {
-        const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
-        const res = await metaValidationRuleGetApi(documentType)
-        if(!res) return []
-        return res.reduce((prev, item) => {
-            if (ignoreList.includes(item.metaData)) {
-                return prev
-            }
-            else if (item.directoryEntries) {
-                item.directoryEntries = handleChildOptions(item.directoryEntries)
-                item.value = []
-            }
-            else item.value = ''
-            prev.push(item)
-            return prev
-        }, [])
-        function handleChildOptions (list = []) {
-            const result = []
-            const keyNodes = {}
-
-            const nodeList = list.map(node => {
-                const clone = { ...node }
-                keyNodes[clone.id] = clone;
-                return clone;
-            })
-            nodeList.forEach(node => {
-                const parentItem = keyNodes[node.properties.parent];
-                if (parentItem) {
-                parentItem.hasChild = true
-                if (!parentItem.children) parentItem.children = []
-                parentItem.children.push(node)
-                }
-                else result.push(node)
-            })
-            return result
-        }
+        getMetaAndSetMeta()
     }
     async function getDocType(isFolder) {
         const res = await getDocTypeListApi()
         state.fileTypes = res.filter((item) => item.isFolder === isFolder)
     }
+    function getMetaAndSetMeta() {
+        state.ready = false
+        nextTick(async() => {
+            await MetaFormRef.value.init(state.doc.documentType)
+            MetaFormRef.value.setData(state.doc.properties)
+            setTimeout(()=> { state.ready = true }, 1000)
+        })
+    }
 // #endregion
+function handleMetaChange(data) {
+    if(state.ready) state.doc.properties = deepCopy(data.formModel)
+}
 defineExpose({
     init
 })

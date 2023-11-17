@@ -12,7 +12,7 @@
             <FolderCabinetTable ref="tableRef" @row-click="handleRowClick">
                 <template #suffixSortButton>
                     <el-button @click="handleNewItem()">{{$t('folderCabinet.newItem')}}</el-button>
-                    <!-- <el-button class="suffixSortButton" @click="handleNextItem()">{{$t('handleNextItem.newItem')}}</el-button> -->
+                    <el-button class="suffixSortButton" @click="handleNextItem()">{{$t('handleNextItem.newItem')}}</el-button>
                     <el-button type="info" @click="handleDownload()">{{$t('export')}}</el-button>
                     <el-button :loading="state.uploading" text></el-button>
                 </template>
@@ -57,59 +57,96 @@ function handleNewItem () {
 const NextDialogRef = ref()
 function handleNextItem() {
     const cc = {
-        allow: false,
-        children: [
+        "id": "513b6ee1-f84c-458b-900f-bbab07162120",
+        "rootId": "3d064eb2-2e92-49ac-ba9a-88c885dec562",
+        "parentId": "5ef1639f-b2e4-4114-a2a6-148631fe5802",
+        "label": "testMeta",
+        "documentType": "Folder",
+        "folder": true,
+        "allow": true,
+        "multiple": false,
+        "createdBy": "Administrator",
+        "modifiedBy": "Administrator",
+        "createdDate": "2023-11-17T08:03:30Z",
+        "modifiedDate": "2023-11-17T08:03:30Z",
+        "binds": [
             {
-                "id": "561a6372-904b-4e8e-9dcd-14626b8a1ce5",
-                "parentId": "61b3a1a8-a8ce-4a8a-abde-84f5c037ae9e",
-                "label": "invoices",
-                "documentType": "Invoices",
-                "folder": true,
-                "allow": true,
-                "multiple": false,
-                "complete": false,
-                "children": [
-                    {
-                        "id": "07db3c1a-cfa4-4c1a-938f-38f31639ecb3",
-                        "parentId": "561a6372-904b-4e8e-9dcd-14626b8a1ce5",
-                        "label": "InvoiceFiles",
-                        "documentType": "Invoice",
-                        "folder": false,
-                        "allow": false,
-                        "multiple": true,
-                        "complete": false
-                    }
-                ],
-                "isLack": false,
-                "properties": {}
+            "id": 244023,
+            "folderCabinetId": "513b6ee1-f84c-458b-900f-bbab07162120",
+            "bindId": "administrators",
+            "type": "group"
             },
             {
-                "id": "90369d36-0104-492e-b5f4-85c9a7284ef6",
-                "parentId": "61b3a1a8-a8ce-4a8a-abde-84f5c037ae9e",
-                "label": "contractFile",
-                "documentType": "ContractFile",
+            "id": 244024,
+            "folderCabinetId": "513b6ee1-f84c-458b-900f-bbab07162120",
+            "bindId": "members",
+            "type": "group"
+            },
+            {
+            "id": 244025,
+            "folderCabinetId": "513b6ee1-f84c-458b-900f-bbab07162120",
+            "bindId": "Administrator",
+            "type": "user"
+            }
+        ],
+        "metadata": [],
+        "labelRule": "[{\"dataType\": \"string\", \"metaData\": \"fc:label\"}, {\"dataType\": \"date\", \"metaData\": \"fc:createDate\"}]",
+        "notificationReminder": 10,
+        "reportDay": 10,
+        "emailReminder": 10,
+        "tos": [
+            "createBy"
+        ],
+        "ccs": [
+            "frank.yangs@wclsolution.com"
+        ],
+        "children": [
+            {
+            "id": "8cbc8ca6-4b09-47a5-93e1-2a3a5cab2620",
+            "parentId": "513b6ee1-f84c-458b-900f-bbab07162120",
+            "label": "invoice",
+            "documentType": "Invoices",
+            "folder": true,
+            "allow": true,
+            "multiple": false,
+            "complete": false,
+            "children": [
+                {
+                "id": "a60aed35-3d0c-4895-88e4-34864ffb0308",
+                "parentId": "8cbc8ca6-4b09-47a5-93e1-2a3a5cab2620",
+                "label": "invoiceFile",
+                "documentType": "Invoice",
                 "folder": false,
                 "allow": false,
                 "multiple": true,
-                "complete": false,
-                "isLack": false,
-                "children": []
+                "complete": false
+                }
+            ]
+            },
+            {
+            "id": "9376d775-74f7-4dab-b374-cd7f352e7a68",
+            "parentId": "513b6ee1-f84c-458b-900f-bbab07162120",
+            "label": "folder",
+            "documentType": "Folder",
+            "folder": true,
+            "allow": true,
+            "multiple": false,
+            "complete": false,
+            "children": [
+                {
+                "id": "c9c5c614-7ba7-4191-b4df-1456c2df0a74",
+                "parentId": "9376d775-74f7-4dab-b374-cd7f352e7a68",
+                "label": "file",
+                "documentType": "File",
+                "folder": false,
+                "allow": false,
+                "multiple": true,
+                "complete": false
+                }
+            ]
             }
-        ],
-        createdBy: "Administrator",
-        createdDate: "2023-07-04T17:32:24Z",
-        documentType: "Contracts",
-        folder: true,
-        id: "61b3a1a8-a8ce-4a8a-abde-84f5c037ae9e",
-        label: "contractFolderAndFile",
-        modifiedBy: "Administrator",
-        modifiedDate: "2023-07-04T17:32:24Z",
-        multiple: false,
-        parentId: "5ef1639f-b2e4-4114-a2a6-148631fe5802",
-        rootId: "9efad5ec-edcc-4753-bb74-ef7794e75092",
-        rootName: "0628",
-        rootPath: "/default-domain/new Folder1687936303610"
-    }
+        ]
+        }
     NextDialogRef.value.handleOpen(cc, '/default-domain/new Folder1687936303610/staff1355')
 }
 const MatchingResultRef = ref()

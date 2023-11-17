@@ -1,10 +1,10 @@
 <template>
-<FromRenderer ref="FromRendererRef" :form-json="formJson" />    
+<FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"/>    
 </template>
 <script lang="ts" setup>
 export type variableItem = {
     name: string,
-    type: 'date' | 'input' | 'switch' | 'textarea' | 'number',
+    type: 'date' | 'input' | 'switch' | 'textarea' | 'number' | 'select',
     disabled: Boolean,
     hidden: Boolean,
     required: Boolean,
@@ -16,6 +16,7 @@ export type variableItem = {
 const props = defineProps<{
     variables: variableItem[],
 }>()
+const emits = defineEmits(['apply-to-formChange'])
 const FromRendererRef = ref()
 const formJson = ref({
     "widgetList": [],
@@ -42,6 +43,8 @@ const formJson = ref({
     }
 })
 function createJson(variables: variableItem[]) {
+    console.log({variables});
+    
     const date = new Date().valueOf()
     formJson.value.widgetList = []
     variables.forEach((item, index) => {
@@ -73,6 +76,7 @@ function createJson(variables: variableItem[]) {
                 onEnter: "",
             }
         }
+        if(!['date','input','switch','textarea','number','select'].includes(item.type)) _item.type = 'input'
         if(item.type === 'date') {
             _item.options.format = item.format || 'YYYY-MM-DD HH:mm',  //日期显示格式
             _item.options.valueFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -94,8 +98,6 @@ function createJson(variables: variableItem[]) {
         if (item.maxLength) _item.options.maxLength = item.maxLength
         formJson.value.widgetList.push(_item)
     })
-    console.log(formJson.value);
-    
     FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
 }
 async function getData () {
@@ -104,6 +106,9 @@ async function getData () {
 }
 async function setData (data) {
     await FromRendererRef.value.vFormRenderRef.setFormData(data)
+}
+function formChange(fieldName, newValue, oldValue, formModel) {
+    emits('formChange', {fieldName,newValue,oldValue,formModel})
 }
 defineExpose({ createJson, getData, setData })
 </script>

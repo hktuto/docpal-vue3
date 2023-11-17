@@ -6,7 +6,7 @@
     >
     <FromRenderer ref="FromRendererRef" :form-json="formJson" v-loading="state.initLoading">
         <template v-slot:metaForm>
-            <MetaEditForm ref="MetaFormRef"></MetaEditForm>
+            <MetaRenderForm ref="MetaFormRef"></MetaRenderForm>
         </template>
     </FromRenderer>
     <template #footer>
@@ -144,7 +144,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
             state.visible = false
         }
         setTimeout(()=> {
-            MetaFormRef.value.initMeta(setting.documentType)
+            MetaFormRef.value.init(setting.documentType)
             // userId
             if (!state.cabinetTemplate.tos) state.cabinetTemplate.tos = []
             if (!state.cabinetTemplate.ccs) state.cabinetTemplate.ccs = []

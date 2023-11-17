@@ -25,13 +25,14 @@
     <div>
         <template v-if="state.selectedRow && state.selectedRow.folder !== false ">
             {{state.selectedRow.label}}
-            <MetaEditForm ref="MetaFormRef" showNoData @meta-change="handleMetaChange"></MetaEditForm>
+            <MetaRenderForm ref="MetaFormRef" @formChange="handleMetaChange"></MetaRenderForm>
+            <!-- <MetaEditForm ref="MetaFormRef" showNoData ></MetaEditForm> -->
         </template>
         <template v-else>
             {{$t('tip.clickFolderOrFileToSetMeta')}}
         </template>
     </div>
-    <MetaEditForm v-show="false" ref="MetaFormRef2"></MetaEditForm>
+    <MetaRenderForm ref="MetaFormRef2" @formChange="handleMetaChange"></MetaRenderForm>
     <input  v-show="false" ref="fileUploaderRef"
                 multiple
                 type="file"
@@ -58,40 +59,54 @@ const state = reactive({
 const treeRef = ref()
 const MetaFormRef = ref()
 const MetaFormRef2 = ref()
-function getData (isValidate: boolean = false) {
+async function getData (isValidate: boolean = false) {
     state.isCheck = true
-    let msg = ''
-    const nodeMap = Object.values(treeRef.value.store.nodesMap).reduce((prev, item) => {
-        prev[item.data.id] = {
-            ...item.data,
-        }
-        if (prev[item.data.id] && prev[item.data.id].metaList) {
-            const _msg = MetaFormRef2.value.getValidateMsg(deepCopy(prev[item.data.id].metaList) , deepCopy(prev[item.data.id].properties) )
-            if (_msg) msg += `<h4 class="msg-h4">${prev[item.data.id].label}:</h4>${_msg}`
-        }
-        delete prev[item.data.id].children
-        return prev
-    }, {})
-    if (msg.length > 0 && isValidate) {
-        ElMessageBox.confirm(msg, $i18n.t('dpTip_warning'), {
-            dangerouslyUseHTMLString: true,
-            confirmButtonText: $i18n.t('dpButtom_confirm'),
-        })
-        return false
-    }
-    const result = []
-    Object.values(nodeMap).forEach((item) => {
-        if(item.folder !== false) {
-            const parent = nodeMap[item.parentId]
-            if(!!parent) {
-                if(!parent.children) parent.children = []
-                parent.children.push(item)
-            } else {
-                result.push(item)
+    try {
+        const pList = []
+        const nodeMap = Object.values(treeRef.value.store.nodesMap).reduce((prev, item) => {
+            if (item.data.folder || 
+                (!item.data.folder && item.data.raw)) {
+                prev[item.data.id] = {
+                    ...item.data,
+                }
+                const pItem = getErrorMessage(prev[item.data.id])
+                pList.push(pItem)
+                delete prev[item.data.id].children
             }
+            return prev
+        }, {})
+        if (isValidate) {
+            let errorMessage = await Promise.all(pList)
+            errorMessage = errorMessage.filter(item => !!item)
+            if(errorMessage.length > 0) {
+                ElMessageBox.confirm(errorMessage.join('<br>'), $t('dpTip_warning'), {
+                    dangerouslyUseHTMLString: true,
+                    confirmButtonText: $t('dpButtom_confirm'),
+                })
+                throw new Error("error");
+            } 
         }
-    })
-    return result
+        const result = []
+        Object.values(nodeMap).forEach((item) => {
+            if(item.folder !== false) {
+                const parent = nodeMap[item.parentId]
+                if(!!parent) {
+                    if(!parent.children) parent.children = []
+                    parent.children.push(item)
+                } else {
+                    result.push(item)
+                }
+            }
+        })
+        return result
+    } catch (error) {
+        
+    }
+    async function getErrorMessage (doc) {
+        const _msg = await MetaFormRef2.value.getValidateMsg(doc.documentType , deepCopy(doc.properties) )
+        if (_msg) return `<h4 class="msg-h4">${doc.label}:</h4>${_msg}`
+        return ''
+    }
 }
 function handleNodeClick (row) {
     state.selectedRow = row
@@ -99,11 +114,13 @@ function handleNodeClick (row) {
     if (!state.selectedRow.properties) state.selectedRow.properties = {}
     // 用了 v-if，如果不用 nextTick 会报错
     nextTick(async() => {
-        MetaFormRef.value.initMeta(state.selectedRow.documentType, state.selectedRow.properties)
+        await MetaFormRef.value.init(state.selectedRow.documentType)
+        MetaFormRef.value.setData(state.selectedRow.properties)
     })
 }
-function handleMetaChange (properties: any) {
-    state.selectedRow.properties = properties
+function handleMetaChange(data) {
+    // if(state.ready) state.selectedRow.properties = deepCopy(data.formModel)
+    state.selectedRow.properties = deepCopy(data.formModel)
 }
 // #region module: style
     function getCss(data) {
@@ -152,7 +169,6 @@ function handleMetaChange (properties: any) {
                 parentId: state.treeItem.parentId,
                 documentType: state.treeItem.documentType,
                 properties: {},
-                metaList: await MetaFormRef2.value.metaListGet(state.treeItem.documentType, {})
             }
             treeRef.value.append(param, state.treeItem)
         }
