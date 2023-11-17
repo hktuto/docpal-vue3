@@ -6,6 +6,8 @@ import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
 import {workflowTemplateList} from "../../utils/workflowTemplate";
 import {useEventListener} from '@vueuse/core';
 import {removeAllConnection, removeAndJoinNextNode} from "../../utils/graphNodeHelper";
+import {ElMessage} from 'element-plus'
+import {bpmnStepToForm} from "../../utils/formEditorHelper";
 const props = defineProps<{
   bpmn: String
 }>()
@@ -179,7 +181,6 @@ watch(() => props.bpmn, (newVal, oldVal) => {
 function getWorkflowData() {
   
   const xml = jsonToBpmn(bpmnJson.value)
-  console.log(xml);
   // create blob file
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
   const name = bpmnJson.value.definitions.process.attr_name
@@ -272,6 +273,49 @@ function itemDeleteHandler(node:Node) {
 }
 
 
+async function validateForm():Promise<any[]>{
+  const userTask = bpmnJson.value.definitions.process.userTask;
+  const startEvent = bpmnJson.value.definitions.process.startEvent;
+  const allStep = [];
+  if(userTask){
+    if(Array.isArray(userTask)){
+      allStep.push(...userTask)
+    }else{
+      allStep.push(userTask)
+    }
+  }
+  if(startEvent){
+    allStep.push(startEvent)
+  }
+  // Loop allStep and check all field in extensionElements['flowable:formProperty'] is valid
+
+  const params:any[] = [];
+  for(const step of allStep) {
+    const valid = step.extensionElements['flowable:formProperty'].reduce((acc, cur) => {
+      if(!cur.attr_field_valid) acc = false;
+      return acc;
+    }, true)
+    if(!valid) {
+      ElMessage.error('Please fix all field error before preview')
+      throw new Error();
+    }
+    const formJson = bpmnStepToForm(step.extensionElements['flowable:formProperty'], step)
+    const param = {
+      processKey: bpmnJson.value.definitions.process.attr_id,
+      userTaskId: step.attr_id,
+      jsonValue: JSON.stringify(formJson)
+    }
+    params.push(param);
+    // TODO : upload formJson to server and get response
+  }
+  return params;
+  
+}
+
+
+
+
+
 function itemAddHandler(node:Node) {
   console.log('add', node)
 }
@@ -279,6 +323,7 @@ useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => it
 useEventListener(document, 'add-workflow-graph-item', ({detail:{node}}) =>itemAddHandler(node))
 defineExpose({
   getWorkflowData,
+  validateForm,
 })
 </script>
 
