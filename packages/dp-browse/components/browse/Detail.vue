@@ -140,7 +140,7 @@ onKeyStroke("Escape", (e) => {
 })
 
 useEventListener(document, 'openFilePreview', openPreview )
-useEventListener(document, 'refreshDocument', closePreview)
+useEventListener(document, 'refreshDocument', openPreview)
 useEventListener(document, 'closeFilePreview', closePreview)
 useEventListener(document, 'checkIsPdf', () => {
   if(readerType.value === 'pdf') {
