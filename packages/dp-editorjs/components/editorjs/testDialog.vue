@@ -18,7 +18,6 @@
   })
   
   async function send() {
-    console.log(testForm.value)
     const res = await api.post('/docpal/template/email/send', testForm.value);
   }
   
@@ -37,7 +36,7 @@
             <ElInput v-model="testForm.to"></ElInput>
           </ElFormItem>
           <ElFormItem v-for="item in variables" :label="item" :key="item">
-            <ElInput v-model="testForm.variables[item]"></ElInput>
+            <ElInput type="textarea" v-model="testForm.variables[item]"></ElInput>
           </ElFormItem>
         </ElForm>
     </div>
