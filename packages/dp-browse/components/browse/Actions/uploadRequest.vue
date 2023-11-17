@@ -51,6 +51,7 @@ function uploadDialog(){
       const data = await FromRendererRef.value.getFormData(true, false)
       if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
       if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
+      data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
       data.idOrPath = props.path
       const res = await saveFileRequestListApi(data)
       state.loading = false
