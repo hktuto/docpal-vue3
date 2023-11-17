@@ -189,7 +189,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         // replace all var tag with span
         varText.forEach((variable) => {
             
-            variable.replaceWith('<div style="white-space: pre;" th:utext="${' + variable.textContent + '}"></div>');
+            variable.replaceWith('<span  th:utext="${' + variable.textContent + '}"></span>');
         });
         const varLink = t.content.querySelectorAll('a.ce-link-item');
 

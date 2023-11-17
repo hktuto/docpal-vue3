@@ -18,7 +18,14 @@
   })
   
   async function send() {
-    const res = await api.post('/docpal/template/email/send', testForm.value);
+    const body = testForm.value;
+    // loop variables in body , and replace /n with <br>
+    Object.keys( body.variables).forEach((key) => {
+      // remove line break to <br/>
+      body.variables[key] = body.variables[key].replace(/(?:\r\n|\r|\n)/g, '<br/>');
+    })
+    console.log(body)
+    const res = await api.post('/docpal/template/email/send', body);
   }
   
   defineExpose({
