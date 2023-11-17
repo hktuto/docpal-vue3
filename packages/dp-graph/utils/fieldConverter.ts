@@ -4,7 +4,8 @@ import {
     MultiLineInputField,
     SelectInputField, SingleFileInputField,
     SingleInputField,
-    BooleanField
+    BooleanField,
+    UserSelectField
 } from "./defaultFormObject";
 import {useWorkflowGraph} from "../composables/useWorkflowGraph";
 import {FormObject} from "./formEditorHelper";
@@ -60,7 +61,7 @@ export const createCurrentUserInput = (formObject: FormObject) => {
 
 export const createFileInput = (formObject: FormObject) => {
     const field = SingleFileInputField();
-    field.options.limit = formObject.attr_file_limit || undefined;
+    field.options.limit = formObject.attr_file_limit || 0;
     return createFieldOptions(field, {
         name: formObject.attr_id,
         label: formObject.attr_field_label,
@@ -97,7 +98,7 @@ export const createApproveUserDropDown = (formObject: FormObject) => {
 }
 
 export const createUserDropdownInput = (formObject: FormObject) => {
-    const field= CurrentUserInputField();
+    const field= UserSelectField();
     return createFieldOptions(field, {
         name: formObject.attr_id,
         label: formObject.attr_field_label,

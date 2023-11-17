@@ -76,6 +76,59 @@ export const SingleInputField = () => ({
     "id": 'form_'
 })
 
+export const UserSelectField = () => ({
+    "key": Date.now(),
+    "type": "select",
+    "icon": "select-field",
+    "formItemFlag": true,
+    "options": {
+        "name": "name",
+        "label": "label",
+        "labelAlign": "",
+        "defaultValue": [],
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": true,
+        "multipleLimit": 0,
+        "optionItems": [],
+        "readonly": false,
+        "disabled": false,
+        "hidden": false,
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": `$api.post('/nuxeo/identity/getKeyCloakAllUsers', {}).then(
+            res => {
+                res = res.data.data
+                const result = res.map(item => ({value: item.userId || item.username,label: item.username}))
+                result.sort((a, b) => a.label.localeCompare(b.label))
+                this.loadOptions(result)
+             }).catch(err => {
+                console.log(err)
+             })`,
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+    },
+    "id": "select26617"
+})
+
 
 export const CurrentUserInputField = () => {
     return {
