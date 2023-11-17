@@ -43,6 +43,8 @@ const officeUrl = (docId:string, token:string) =>{
 }
 function handleClose() {
     state.dialogOpened = false
+    const ev = new CustomEvent('refreshDocument');
+    document.dispatchEvent(ev);
     emits('refresh')
 }
 </script>
