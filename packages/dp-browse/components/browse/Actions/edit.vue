@@ -1,12 +1,12 @@
 <template>
    <div>
-     <BrowseActionsButton id="editActionButton" :label="$t('tip.rename')" @click="openDialog(doc)">
-        <el-tooltip :content="$t('tip.rename')">
-            <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.rename')"
+     <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog(doc)">
+        <el-tooltip :content="$t('tip.editDocDetail')">
+            <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.editDocDetail')"
                 ></SvgIcon> 
         </el-tooltip>
      </BrowseActionsButton>
-        <el-dialog v-model="dialogOpened" append-to-body :title="$t('filePopover_rename')" class="scroll-dialog">
+        <el-dialog v-model="dialogOpened" append-to-body :title="$t('tip.editDocDetail')" class="scroll-dialog">
             <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
                 <el-form-item :label="$t('name')" prop="name"
                     :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">
