@@ -43,7 +43,7 @@ export const bpmnStepToForm = (step:FormObject[], form:any ) => {
 export const bpmnOptionToFormCreatorOption = (step:FormObject, form:any ):FieldConverterOption => {
     return {
         id: step.attr_id,
-        name: step.attr_name,
+        name: step.attr_id,
         label: step.attr_field_label,
         required: step.attr_field_required,
         hidden: step.attr_field_hidden,

@@ -13,7 +13,7 @@
               
               <div v-if="canAutoAssignee" class="el-form-item">
                 <ElFormItem label="Candidate Group">
-                  <ElSelect v-model="candidateGroup" placeholder="Select Group" v-if="haveCandidateGroup">
+                  <ElSelect v-model="candidateGroup" placeholder="Select Group" v-if="haveCandidateGroup" filterable>
                     <ElOption v-for="item in allUserGroup" :key="item.id" :label="item.name" :value="item.id" />
                   </ElSelect>
                 </ElFormItem>
@@ -204,6 +204,7 @@ const candidateGroup = computed({
         ['attr_xmlns:modeler'] : "http://flowable.org/modeler",
         "__cdata": group.name
       }
+      props.data['attr_flowable:candidateGroups'] = group.id
     }
     console.log('set', props.data)
     emit('submit', props.data)
