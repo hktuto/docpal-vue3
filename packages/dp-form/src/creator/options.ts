@@ -111,7 +111,7 @@ export const fields: {[key:string] : FieldOption} = {
         options: {},
         convertFunction: (fieldOption: FieldConverterOption) => {
             const field = FileInputField();
-            field.limit = fieldOption.fileLimit || 0;
+            field.options.limit = Number(fieldOption.fileLimit) || 0;
             return createFieldOptions(field, fieldOption)
         }
     }

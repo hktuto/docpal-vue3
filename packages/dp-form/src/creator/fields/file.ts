@@ -34,7 +34,7 @@ export const FileInputField = () => ({
         "onUploadError": "const tips = localStorage.getItem(\"v_form_locale\") === 'zh-CN' ? \"上传失败\" : \"Upload Failed\"\nconst message = JSON.parse(error.message).message\nthis.$message({\n  message: `${ tips }：${ message }`,\n  duration: 3000,\n  type: 'error'\n})",
         "onFileRemove": "const id = file.id || file.response[0].contentId\nif (!id) return\n$api.delete(`/docpal/workflow/task/attachment?attachmentId=${id}`,{baseURL: '/client'}).then(res => {\n  this.getFormRef().$emit('handleSave')\n}).catch(err => {\n})",
         "onValidate": "",
-        limit: 1
+            limit: 1
     },
     "id": "fileupload63075"
 })
