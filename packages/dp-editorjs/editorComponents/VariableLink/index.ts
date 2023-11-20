@@ -626,7 +626,15 @@ export default class VariableLink implements InlineTool {
     // if yes wrap with ${}
     if( this.config.variables.find((item:any) => item === href) ) {
         href = '${' + href + '}';
+    }else {
+      //  if new variable, and not start with http or https, then add ${}
+        if(!href.startsWith('http') && !href.startsWith('https')) {
+            href = '${' + href + '}';
+        }
     }
+    
+    
+    
     /**
      * Restore origin selection
      */
@@ -652,6 +660,7 @@ export default class VariableLink implements InlineTool {
     const newLink = this.selection.findParentTag(this.tagName);
     // if newLink exists, then add class
     if(newLink) {
+      console.log(href)
       newLink.classList.add(VariableLink.CSS.linkItem);
       newLink.dataset.url = href;
     }
