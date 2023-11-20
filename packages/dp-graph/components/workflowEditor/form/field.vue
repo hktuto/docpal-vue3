@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {FormObject} from "../../../utils/formEditorHelper";
+import type {FormObject} from "../../../utils/formEditorHelper";
 const formFieldEditorOpened = ref(false);
 const props = defineProps<{
   field: FormObject

@@ -299,7 +299,7 @@ async function validateForm():Promise<any[]>{
       ElMessage.error('Please fix all field error before preview')
       throw new Error();
     }
-    const formJson = bpmnStepToForm(step.extensionElements['flowable:formProperty'], step)
+    const formJson = bpmnStepToForm(step.extensionElements['flowable:formProperty'], bpmnJson.value.definitions.process)
     const param = {
       processKey: bpmnJson.value.definitions.process.attr_id,
       userTaskId: step.attr_id,

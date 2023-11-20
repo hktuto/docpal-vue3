@@ -1,6 +1,7 @@
 
 <script lang="ts" setup>
-import {fieldOptions, FormObject} from "../../../utils/formEditorHelper";
+import { fieldGroup } from 'dp-form'
+import {FormObject} from "../../../utils/formEditorHelper";
   const {bpmnJson} = useWorkflowGraph();
   const props = defineProps<{
     field: FormObject
@@ -101,7 +102,10 @@ function typeChange(newVal) {
         </div>
         <ElFormItem label="Input Type" prop="attr_field_type">
           <ElSelect v-model="formField.attr_field_type" placeholder="Select input type" @change="typeChange">
-            <ElOption v-for="(value, key) in fieldOptions" :key="key" :label="value.label" :value="key" />
+            <ElOptionGroup v-for="group in fieldGroup" :key="group.label" :label="group.label">
+              <ElOption v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
+            </ElOptionGroup>
+<!--            <ElOption v-for="(value, key) in fieldOptions" :key="key" :label="value.label" :value="key" />-->
           </ElSelect>
         </ElFormItem>
         <ElFormItem v-if="formField.attr_field_type === 'approve_user_dropdown'" label="Approve Target" prop="attr_target_step">

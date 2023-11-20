@@ -79,7 +79,7 @@ onMounted(() => {
   >
     <div class="actions">
 <!--      <SvgIcon src="/icons/add.svg" @click="emitAddEvent"></SvgIcon >-->
-      <SvgIcon src="/icons/delete.svg" @click="emitDeleteEvent"></SvgIcon>
+      <SvgIcon src="/icons/delem te.svg" @click="emitDeleteEvent"></SvgIcon>
     </div>
   </el-popover>
 </template>
