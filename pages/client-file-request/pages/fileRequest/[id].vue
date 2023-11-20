@@ -5,7 +5,7 @@
                 <el-select v-model="documentType" filterable default-first-option >
                     <el-option v-for="item in fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
                 </el-select>
-                <el-button @click="applyToSelect('documentType', documentType)">{{$t('dpButtom_apply')}}</el-button>
+                <el-button class="el-icon--right" @click="applyToSelect('documentType', documentType)">{{$t('dpButtom_apply')}}</el-button>
             </div>
             <div class="left-top-right">
                 <el-button @click="handleSubmit">{{$t('submit')}}</el-button>
@@ -392,6 +392,7 @@ onMounted(async () => {
 .pageContainer {
     position: relative;
     height: 100%;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 1fr min-content 1fr;
     grid-template-rows: min-content 1fr;

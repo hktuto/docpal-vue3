@@ -4,8 +4,11 @@
 
 <script lang="ts" setup> 
 import { GetMetaValidationRuleApi } from 'dp-api'
-const props = defineProps<{
-}>()
+const props = withDefaults(defineProps<{
+    showApply: boolean,
+}>(), {
+  showApply: true
+})
 const emits = defineEmits(['apply-to-formChange'])
 const route = useRoute()
 const state = reactive({
@@ -17,7 +20,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
 // #region module: Variables
     const FromVariablesRendererRef = ref()
     async function getVariables() {
-        try {
+        // try {
             const date = new Date().valueOf()
             state.variables = []
             state.data.forEach((item, index) => {
@@ -48,12 +51,20 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     state.variables.push(_item)
                 }
             });
-            nextTick(() => {
-                FromVariablesRendererRef.value.createJson(state.variables)
+            nextTick(async () => {
+                const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
+                if (props.showApply) {
+                    getApplyFormJson(formJson)
+                }
             })
-        } catch (error) {
-        }
+        // } catch (error) {
+        // }
     } 
+    function getApplyFormJson (formJson) {
+        const gridItem = getMetaApplyFormGridItem()
+        gridItem.cols[0].widgetList.push(...formJson.widgetList)
+        console.log('gridItem', gridItem);
+    }
     function getValidate(rule = '^[a-zA-Z_][a-zA-Z0-9_]*$') {
         return `if(!/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
     }
@@ -100,7 +111,12 @@ async function getValidateMsg (documentType, properties?) {
         })
         return msg
     }
+
 defineExpose({ getData, setData, init, getValidateMsg })
+onMounted(() => {
+    
+    
+})
 </script>
 
 <style lang="scss" scoped>

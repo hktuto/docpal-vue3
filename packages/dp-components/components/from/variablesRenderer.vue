@@ -99,10 +99,15 @@ function createJson(variables: variableItem[]) {
         formJson.value.widgetList.push(_item)
     })
     FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
+    return formJson.value
 }
+
 async function getData () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     return data
+}
+async function setFormJson (formJson) {
+    await FromRendererRef.value.vFormRenderRef.setFormJson(formJson)
 }
 async function setData (data) {
     await FromRendererRef.value.vFormRenderRef.setFormData(data)
@@ -110,7 +115,7 @@ async function setData (data) {
 function formChange(fieldName, newValue, oldValue, formModel) {
     emits('formChange', {fieldName,newValue,oldValue,formModel})
 }
-defineExpose({ createJson, getData, setData })
+defineExpose({ createJson, getData, setData, setFormJson })
 </script>
 <style lang="scss" scoped>
 
