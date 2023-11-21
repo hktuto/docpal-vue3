@@ -141,9 +141,13 @@ async function save() {
         const {html, json, variable} = await editor.getData();
         // if id is new , create new
         // check form valid
-        const valid = await infoFormEl.value.validate();
-        if(!valid) return;
+        
         if(id === 'new'){
+          if(infoFormEl.value) {
+            
+          const valid = await infoFormEl.value.validate();
+          if(!valid) return;
+          }
           const result = await CreateEmailTemplateApi({
             ...data.value,
             // TODO : send html to body
