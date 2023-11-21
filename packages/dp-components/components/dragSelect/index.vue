@@ -60,7 +60,7 @@ function handleClose(element) {
     })
     props.dropList.splice(index, 1)
     props.dragList.push(addItem)
-    emit('change')
+    emit('change', {dropList:props.dropList, dragList: props.dragList})
 }
 function handleChange (evt) {
     const dropLen = props.dropList.length
