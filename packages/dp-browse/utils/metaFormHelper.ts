@@ -15,7 +15,7 @@ export function getMetaApplyFormGridItem () {
                 "options": {
                     "name": "gridCol10000000001",
                     "hidden": false,
-                    "span": 22,
+                    "span": 20,
                     "offset": 0,
                     "push": 0,
                     "pull": 0,
@@ -36,7 +36,7 @@ export function getMetaApplyFormGridItem () {
                 "options": {
                     "name": "gridCol10000000002",
                     "hidden": false,
-                    "span": 2,
+                    "span": 4,
                     "offset": 0,
                     "push": 0,
                     "pull": 0,
@@ -44,7 +44,7 @@ export function getMetaApplyFormGridItem () {
                     "md": 12,
                     "sm": 12,
                     "xs": 12,
-                    "customClass": ""
+                    "customClass": ["meta-button-flex-end"]
                 },
                 "id": "grid-col-10000000002"
           }
@@ -69,7 +69,7 @@ export function getMetaApplyFormGridItem () {
     });
     return gridItem
 }
-export function getMetaApplyButton () {
+export function getMetaApplyButton (widgetName: string) {
     const buttonObject = {
         "key": 92926,
         "type": "button",
@@ -78,7 +78,8 @@ export function getMetaApplyButton () {
         "id": "button33665",
         "options": {
             "name": "button33665",
-            "label": "button",
+            // @ts-ignore
+            "label": $t('dpButtom_apply'),
             "columnWidth": "200px",
             "size": "",
             "displayStyle": "block",
@@ -92,7 +93,7 @@ export function getMetaApplyButton () {
             "customClass": "",
             "onCreated": "",
             "onMounted": "",
-            "onClick": ""
+            "onClick": `const name = '${widgetName}'\nconst value = this.getWidgetRef(name).getValue()\nconst vform = this.getFormRef()\nvform.$emit('emit', 'handleApply', {\n  name,\n  value\n})`
         }
     }
     const buttonId = new Date().valueOf() + vformIndex++
