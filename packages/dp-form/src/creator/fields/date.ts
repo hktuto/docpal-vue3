@@ -76,7 +76,7 @@ export const DateTodayField = () => {
             "labelIconPosition": "rear",
             "labelTooltip": null,
             "onCreated": "",
-            "onMounted": "",
+            "onMounted": "this.setValue(new Date().toISOString())",
             "onChange": "",
             "onFocus": "",
             "onBlur": "",
