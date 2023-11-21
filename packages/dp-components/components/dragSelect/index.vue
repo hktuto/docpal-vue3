@@ -20,7 +20,7 @@
         :list="dropList"
         group="people"
         :itemKey="itemKey"
-        @change="emit('change')"
+        @change="() => emit('change', {dropList, dragList})"
     >
         <template #item="{ element, index }">
             <span class="list-drop-item">
