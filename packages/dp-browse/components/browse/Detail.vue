@@ -108,6 +108,7 @@ function handleRefresh() {
 const PreviewRef = ref()
 function handleRefreshPreview() {
   PreviewRef.value.refresh()
+  handleRefresh()
 }
 async function openPreview({detail}:any) {
   cancelAxios()

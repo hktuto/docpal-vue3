@@ -1,5 +1,6 @@
 <template>
-<FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"/>    
+<FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"
+    @emit="handleEmit"/>    
 </template>
 <script lang="ts" setup>
 export type variableItem = {
@@ -16,7 +17,7 @@ export type variableItem = {
 const props = defineProps<{
     variables: variableItem[],
 }>()
-const emits = defineEmits(['apply-to-formChange'])
+const emits = defineEmits(['formChange'])
 const FromRendererRef = ref()
 const formJson = ref({
     "widgetList": [],
@@ -101,12 +102,16 @@ function createJson(variables: variableItem[]) {
     FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
     return formJson.value
 }
-
+function handleEmit (funName, newValue, oldValue) {
+    emits(funName, newValue, oldValue)
+}
 async function getData () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     return data
 }
 async function setFormJson (formJson) {
+    console.log('',formJson);
+    
     await FromRendererRef.value.vFormRenderRef.setFormJson(formJson)
 }
 async function setData (data) {

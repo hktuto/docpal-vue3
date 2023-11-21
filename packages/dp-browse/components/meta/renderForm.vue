@@ -1,15 +1,17 @@
 <template>
-    <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"/>
+    <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"
+        @handleApply="handleApply"/>
 </template>
 
 <script lang="ts" setup> 
+import { ElMessageBox } from 'element-plus'
 import { GetMetaValidationRuleApi } from 'dp-api'
 const props = withDefaults(defineProps<{
     showApply: boolean,
 }>(), {
-  showApply: true
+  showApply: false
 })
-const emits = defineEmits(['apply-to-formChange'])
+const emits = defineEmits(['formChange', 'handleApply'])
 const route = useRoute()
 const state = reactive({
     data: [],
@@ -54,16 +56,23 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             nextTick(async () => {
                 const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
                 if (props.showApply) {
-                    getApplyFormJson(formJson)
+                    const newFormJson = getApplyFormJson(formJson)
+                    FromVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
         // } catch (error) {
         // }
     } 
     function getApplyFormJson (formJson) {
-        const gridItem = getMetaApplyFormGridItem()
-        gridItem.cols[0].widgetList.push(...formJson.widgetList)
-        console.log('gridItem', gridItem);
+        const widgetList = []
+        formJson.widgetList.forEach(item => {
+            const gridItem = getMetaApplyFormGridItem()
+            const buttonItem = getMetaApplyButton(item.options.name)
+            gridItem.cols[0].widgetList.push(item)
+            gridItem.cols[1].widgetList.push(buttonItem)
+            widgetList.push(gridItem)
+        })
+        return { formConfig: formJson.formConfig, widgetList }
     }
     function getValidate(rule = '^[a-zA-Z_][a-zA-Z0-9_]*$') {
         return `if(!/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
@@ -95,7 +104,12 @@ async function getData() {
 function formChange(fieldName, newValue, oldValue, formModel) {
     emits('formChange', {fieldName,newValue,oldValue,formModel})
 }
-async function getValidateMsg (documentType, properties?) {
+function handleApply(formModel) {
+    console.log(formModel);
+    emits('handleApply', formModel)
+}
+// #region module: Validate
+    async function getValidateMsg (documentType, properties?) {
         let msg = ''
         const metaList = await GetMetaValidationRuleApi({ documentType })
         if (!metaList) return msg
@@ -111,13 +125,40 @@ async function getValidateMsg (documentType, properties?) {
         })
         return msg
     }
-
-defineExpose({ getData, setData, init, getValidateMsg })
-onMounted(() => {
-    
-    
-})
+    async function getErrorMessage (doc, docKey) {
+        const _msg = await getValidateMsg(doc.documentType , deepCopy(doc.properties) )
+        if (_msg) return `<h4 class="msg-h4">${doc[docKey]}:</h4>${_msg}`
+        return ''
+    }
+    async function checkMetaValidate(docList: any[], docKey: string = 'name') {
+        const pList = []
+        docList.forEach(item => {
+            if(!item.properties) item.properties = {}
+            const pItem = getErrorMessage(item, docKey)
+            pList.push(pItem)
+        })
+        let errorMessage = await Promise.all(pList)
+        errorMessage = errorMessage.filter(item => !!item)
+        if(errorMessage.length > 0) {
+            ElMessageBox.confirm(errorMessage.join('<br>'), $t('dpTip_warning'), {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: $t('dpButtom_confirm'),
+            })
+            throw new Error("error");
+        } 
+        return errorMessage.length === 0
+        
+    }
+// #endregion
+defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.meta-button-flex-end {
+  display: flex!important;
+  align-items: end;
+}
+.meta-button-flex-end button{
+   margin-bottom: 18px;
+}
 </style>

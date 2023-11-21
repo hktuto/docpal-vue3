@@ -1,73 +1,64 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" backPath="/fileRequest">
-        <div class="pageContainer">
-            <div class="left-top-left">
-                <el-select v-model="documentType" filterable default-first-option >
-                    <el-option v-for="item in fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
-                </el-select>
-                <el-button class="el-icon--right" @click="applyToSelect('documentType', documentType)">{{$t('dpButtom_apply')}}</el-button>
-            </div>
-            <div class="left-top-right">
-                <el-button @click="handleSubmit">{{$t('submit')}}</el-button>
+    <NuxtLayout class="fit-height withPadding" backPath="/fileRequest" >
+        <div class="pageContainer" v-loading="state.submitLoading || state.loading">
+            <div class="left-top">
+                <div class="flex-x-between">
+                    <el-select v-model="state.applyDocumentType" filterable default-first-option >
+                        <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
+                    </el-select>
+                    <el-button class="el-icon--right" @click="applyToSelect('documentType', state.applyDocumentType)">{{$t('dpButtom_apply')}}</el-button>
+                </div>
             </div>
             <div class="left-bottom">
-                <Table :columns="tableSetting.columns"
-                        :table-data="tableData"
-                        :options="options"
-                        v-loading="loading"
-                        @row-dblclick="handleDblclick"
-                        @expand-change="handleExpand"
-                        @selection-change="handleSelectionChange">
-                    <template #expand="{ row }">
-                        <div class="row-expand">
-                            <div class="row-expand-top">
-                                <span class="color__danger">*</span>
-                                {{$t('dpDocument_fileName')}}
+                <el-checkbox v-model="state.checkAll" @change="handleCheckAll">{{$t('button.selectAll')}}</el-checkbox>
+                <el-tree
+                    ref="treeRef"
+                    :data="state.tableData"
+                    show-checkbox
+                    node-key="id"
+                    default-expand-all
+                    highlight-current	
+                    :expand-on-click-node="false"
+                    :props="{ class: customNodeClass }"
+                    @node-click="handleDblclick"
+                    @check-change="handleCheckChange"
+                    >
+                    <template #default="{ node, data }">
+                        <div class="flex-x-between tree-item">
+                            <div class="tree-item--title ellipsis" :title="data.name">
+                                {{data.name}}
                             </div>
-                            <el-input class="row-expand-bottom-left" type="text" v-model="row.name" />
-                            <div class="row-expand-bottom-right"></div>
-                        </div>
-                        <div v-for="(item, index) in row.metaList" :key="item.metaData+index" class="row-expand">
-                            <template v-if="item.display">
-                                <div class="row-expand-top">
-                                    <span class="color__danger" v-if="item.isRequire">*</span>
-                                    {{item.metaData}}
-                                </div>
-                                <template v-if="item.dataType === 'date'">
-                                    <el-date-picker v-model="item.value"
-                                            type="datetime"
-                                            :placeholder="$t('dpTip_datePicker')"
-                                            :default-time="defaultTime"
-                                            value-format="YYYY-MM-DDTHH:mm:ss.000Z"
-                                            class="row-expand-bottom-left"
-                                            style="width: 100%"></el-date-picker>
-                                </template>
-                                <template v-else-if="!!item.directoryEntries">
-                                    <el-cascader v-model="item.value"
-                                            :options="item.directoryEntries"
-                                            :props="{ checkStrictly: item.hasChild, value: 'id', label: 'id' }"
-                                            clearable filterable popper-class="pc-cascader"
-                                            class="row-expand-bottom-left"
-                                            style="width: 100%"></el-cascader>
-                                </template>
-                                <template v-else>
-                                    <el-input  class="row-expand-bottom-left" type="text" v-model="item.value"
-                                        :maxlength="item.length" show-word-limit/>
-                                </template>
-                                <el-button class="row-expand-bottom-right" @click="applyToSelect(item.metaData,item.value, item.documentType)">{{$t('dpButtom_apply')}}</el-button>
-                            </template>
+                            <div class="tree-item--right">
+                                <div class="tree-item--documentType ellipsis" :title="data.documentType">{{data.documentType}}</div>
+                                <el-icon v-if="data.approved" color="#529b2e"><CircleCheckFilled /></el-icon>
+                                <el-icon v-else color="#c45656"><WarnTriangleFilled /></el-icon>
+                            </div>
                         </div>
                     </template>
-                    <template #documentType="{ row }">
-                        <el-select v-model="row.documentType" filterable default-first-option
-                            @change="handleDocTypeChange(row)">
+                </el-tree>
+            </div>
+            <div class="middle-top flex-x-between">
+                <el-button :loading="state.submitLoading" @click="handleSubmit">{{$t('submit')}}</el-button>
+            </div>
+            <div class="middle-bottom">
+                <el-form ref="formRef" :model="state.selectedRow" label-position="top">
+                    <el-form-item :label="$t('dpDocument_fileName')" prop="name"
+                        :rules="[{ required: true, message: $t('form_common_requird')}]">
+                        <el-input v-model="state.selectedRow.name" />
+                    </el-form-item>
+                    <el-form-item :label="$t('dpTool_approve')" prop="approved">
+                        <el-switch v-model="state.selectedRow.approved" />
+                    </el-form-item>
+                    <el-form-item :label="$t('dpDocument_fileType')" prop="documentType">
+                        <el-select v-model="state.selectedRow.documentType" filterable default-first-option
+                            @change="handleDocTypeChange(state.selectedRow)">
                             <el-option v-for="item in fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
                         </el-select>
-                    </template>
-                    <template #approve="{ row }">
-                        <el-checkbox v-model="row.approved"></el-checkbox>
-                    </template>
-                </Table>
+                    </el-form-item>
+                </el-form>
+                <MetaRenderForm ref="MetaFormRef" :showApply="true" 
+                    @formChange="handleMetaChange"
+                    @handleApply="handleApply"></MetaRenderForm>
             </div>
             <el-card class="right">
                 <div class="flex-x-between">
@@ -79,58 +70,46 @@
         </div>
     </NuxtLayout>
 </template>
-
-
 <script lang="ts" setup>
-import { useI18n } from "vue-i18n";
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { RefreshLeft, Delete } from '@element-plus/icons-vue'
+import { CircleCheckFilled, WarnTriangleFilled } from '@element-plus/icons-vue'
 import {
     WorkflowAttachmentDownloadApi,
     getFormPropsApi,
     workflowAttachmentInfoGetApi,
     getDocTypeListApi,
-    metaValidationRuleGetApi,
     workflowFormSubmitApi,
     WorkflowAttachmentPreviewApi,
-    TABLE, defaultTableSetting } from 'dp-api'
-const { t } = useI18n();
+} from 'dp-api'
 const route = useRoute()
 const router = useRouter()
 const state = reactive({
-    curReaderType: '',
-    documentType: '',
+    applyDocumentType: '',
     fileTypes: [],
     errorFileNum: 0,
     loading: false,
-    defaultTime: new Date(2000, 1, 1, 23, 59, 59),
-    options: {
-        expandedRowKeys: [],
-        rowKey: 'id'
-    },
-    selectedRow: [],
+    submitLoading: false,
+    selectedRow: {},
+    selectedRows: [],
     detail: {
         email: '',
         documentId: '',
         submittedDate: ''
-    }
+    },
+    checkAll: false,
+    tableData: [],
 })
-// #region module: table
-    const tableKey = TABLE.CLIENT_FILE_REQUEST_AUDIT
-    const tableSetting = defaultTableSetting[tableKey]
-    const tableData = ref([])
+const MetaFormRef = ref({})
+// #region module: 1. table and init
     async function getData () {
-        let result = []
         state.loading = true
         try {
             const response = await getFormPropsApi({ taskId: route.params.id })
             const index = response.findIndex(item => item.id === 'files')
-            if (index !== -1) tableData.value = await revertUploadFile( response[index].value)
-            if(tableData.value.length > 0) handleDblclick(tableData.value[0])
+            if (index !== -1) state.tableData = await revertUploadFile( response[index].value)
+            if(state.tableData.length > 0) handleDblclick(state.tableData[0])
+            // 从properties获取email,documentId,submittedDate
             getRQDetail(['email','documentId', 'submittedDate'], response)
-        } catch (error) {
-
-        }
+        } catch (error) {}
         state.loading = false
     }
     function getRQDetail (keys: any[], propsArr: any[]) {
@@ -145,101 +124,55 @@ const state = reactive({
         if(!fileIds) return result
         const ids:string[] = fileIds.split(',')
         for (const item of ids) {
-          const pItem = workflowAttachmentInfoGetApi(item)
-          pList.push(pItem)
+            const pItem = workflowAttachmentInfoGetApi(item)
+            pList.push(pItem)
         }
         const response = await Promise.all(pList)
-        const fileMetaList = await metaListGet('File')
         state.errorFileNum = 0
         response.forEach((item) => {
-          if(!!item) {
-            result.push({
-              id: item.contentId,
-              name: item.name,
-              initName: item.name,
-              approved: true,
-              documentType: 'File' ,
-              metaList: deepCopy(fileMetaList),
-            })
-          }
-          else state.errorFileNum++
+            if(!!item) {
+                result.push({
+                    id: item.contentId,
+                    name: item.name,
+                    initName: item.name,
+                    approved: true,
+                    documentType: 'File' ,
+                })
+            }
+            else state.errorFileNum++
         })
         return result
     }
-    function refreshTable () {
-      tableData.value = tableData.value.reduce((prev, doc) => {
-        prev.push({...doc, metaList: deepCopy(doc.metaList)})
-        return prev
-      }, [])
-    }
-    async function metaListGet(documentType: string) {
-        const res = await metaValidationRuleGetApi(documentType)
-        if(!res) return []
-        res.forEach(item => {
-            if (item.directoryEntries) {
-                item.directoryEntries = handleChildOptions(item.directoryEntries)
-                item.value = []
-            }
-            else item.value = ''
-        })
-        return res
-    }
-    function handleChildOptions (list = []) {
-        const result = []
-        const keyNodes = {}
-
-        const nodeList = list.map(node => {
-            const clone = { ...node }
-            keyNodes[clone.id] = clone;
-            return clone;
-        })
-        nodeList.forEach(node => {
-            const parentItem = keyNodes[node.properties.parent];
-            if (parentItem) {
-                parentItem.hasChild = true
-                if (!parentItem.children) parentItem.children = []
-                parentItem.children.push(node)
-            }
-            else result.push(node)
-        })
-        return result
-    }
+// #endregion
+// #region module: 4. handleSubmit
+    const formRef = ref()
     async function handleSubmit () {
-        if(!validateForm()) return
-        // if (await checkDuplicate()) return
-        handleSubmitData(getParams())
-    }
-    async function handleSubmitData (propertiesJson) {
-        loading.value = true
+        const valid =  await formRef.value.validate()
+        const metaValid = await MetaFormRef.value.checkMetaValidate(state.tableData)
+        if (!valid || !metaValid) return
+        state.submitLoading = true
         try {
             const param = {
                 taskId: route.params.id,
                 properties: {
-                    approved: propertiesJson
+                    approved: getParams()
                 }
             }
             const res = await workflowFormSubmitApi(param)
-            console.log(res);
-
             if (!!res) router.push('/fileRequest')
-        } catch (error) {
-
-        }
-        loading.value = false
+        } catch (error) { }
+        state.submitLoading = false
     }
     function getParams () {
         const result = {}
-        tableData.value.forEach(item => {
+        state.tableData.forEach(item => {
             if (!item.approved) return
-            const metas = item.metaList.reduce((prev,metaItem) => {
-                if(metaItem.value) prev[metaItem.metaData] = metaItem.value
-                return prev
-            }, {})
             result[item.id] = {
                 approved: item.approved,
                 documentType: item.documentType,
-                properties: { ...metas, 'dc:title': getFileName(item.name) }
+                properties: { ...item.properties, 'dc:title': getFileName(item.name) }
             }
+            console.log('getParams', '???');
         })
         return JSON.stringify(result)
 
@@ -248,176 +181,114 @@ const state = reactive({
         const result = '[' + formatDate(state.detail.submittedDate, 'YYYYMMDD-HHmm')+ ' ' + state.detail.email + ']' + name
         return result
     }
-    function validateForm () {
-        let msg = ''
-        for (const item of tableData.value) {
-            if (!item.name) msg += `${item.initName}: ${t('common_canNotEmpty')}<br/>`
-            if(!item.metaList || item.metaList.length === 0) return msg.length === 0
-            item.metaList.forEach(metaItem => {
-                if (!metaItem.display) return
-                if (metaItem.isRequire && !metaItem.value) msg += `${item.initName}[${metaItem.metaData}]: ${t('common_canNotEmpty')}<br/>`
-            })
-        }
-        if (msg.length > 0) {
-            ElMessageBox.alert(msg, t('dpTip_warning'), {
-                dangerouslyUseHTMLString: true,
-                confirmButtonText: t('dpButtom_confirm'),
-            })
-        }
-
-        return msg.length === 0
-      }
-// #endregion
-// #region module: table 辅助,数据改变后,table会重新渲染导致关闭展开行
-    function handleExpand (row: any, expandRows: any) {
-        const result = expandRows.reduce((prev, item) => {
-            prev.push(item.id)
-            return prev
-        }, [])
-        state.options.expandedRowKeys = result
-    }
 // #endregion
 
-// #region module: applyToSelect
-    function handleSelectionChange (rows) {
-        state.selectedRow = rows
-    }
+// #region module: 3.1 applyToSelect change
     async function handleDocTypeChange (row) {
-        const metaList =  await metaListGet(row.documentType)
-        row.metaList = deepCopy(metaList)
+        if(MetaFormRef) await MetaFormRef.value.init(row.documentType)
     }
+    function handleMetaChange(data) {
+        if(!state.loading) state.selectedRow.properties = deepCopy(data.formModel)
+    }
+    const treeRef = ref()
     function applyToSelect (key:string, value:string, docType?:string) {
+        state.selectedRows = treeRef.value.getCheckedNodes()
         state.loading = true
-        try {
-            if (key === 'documentType') {
-                state.selectedRow.forEach(async(item) => {
-                    const metaList =  await metaListGet(value)
-                    item.documentType = value
-                    item.metaList = deepCopy(metaList)
-                })
-            } else {
-                tableData.value.forEach((item) => {
-                    if (item.documentType === docType) {
-                        const index = item.metaList.findIndex(metaItem => metaItem.metaData === key)
-                        if (index !== -1) item.metaList[index].value = value
-                    }
-                })
-            }
-        } catch (error) {
-
+        if (key === 'documentType') {
+            state.selectedRows.forEach(async(item) => {
+                item.documentType = value
+                item.properties = { }
+                console.log('applyToSelect', '???');
+                
+            })
         }
+        handleDocTypeChange(state.selectedRow)
         setTimeout(() => {state.loading = false}, 500)
     }
-// #endregion
-// #region module: checkDuplicate
-    async function checkDuplicate () {
-        const data = tableData.value.reduce((p, item) => {
-          p.push({ id: item.id, name: getFileName(item.name) })
-          return p
-        }, [])
-        const { list, isDuplicate } = await duplicateNameFilter(state.detail.documentId, data)
-        if (isDuplicate) handleDuplicate(list)
-        return isDuplicate
-    }
-    async function handleDuplicate (list) {
-        const action = await ElMessageBox.confirm(`${$i18n.t('dpTip_duplicateFileName')}`,{
-            confirmButtonText: `${$i18n.t('dpButtom_keepFile')}`,
-            cancelButtonText: `${$i18n.t('dpButtom_cancel')}`
-        }).catch((action) => { return action })
-        if (action === 'confirm') {
-            const result = {}
-            list.forEach(async(file) => {
-                if (!file.approved) return
-                if(file.isDuplicate) file.name = await getUniqueName(file)
-                result[file.id] = {
-                    approved: file.approved,
-                    documentType: file.documentType,
-                    properties: {
-                        ...getMeta(file.meta),
-                        'dc:title': file.name
-                    }
-                }
-            })
-            handleSubmitData(JSON.stringify(result))
-        }
-        function getMeta(obj) {
-            return  Object.entries(obj).reduce((p:any,[key,c]:any)=> {
-                        if(c.value){
-                            p[c.metaData] = c.value;
-                        }
-                        return p;
-                    },{})
-        }
+    function handleApply(formModel) {
+        state.tableData.forEach(item => {
+            if(item.documentType === state.selectedRow.documentType) {
+                if(!item.properties) item.properties = {}
+                item.properties[formModel.name] = formModel.value
+                 console.log('handleApply', '???');
+            }
+        })
+        console.log(state.tableData);
+        
     }
 // #endregion
-const previewFile = reactive({
-    blob: null,
-    name: '',
-    id: '',
-    loading: false,
-    downloadLoading: false,
-    options: {
-        readOnly: true
+// #region module: 2. previewFile
+    const previewFile = reactive({
+        blob: null,
+        name: '',
+        id: '',
+        loading: false,
+        downloadLoading: false,
+        options: {
+            readOnly: true
+        }
+    })
+    async function handleDblclick (row) {
+        state.loading = true
+        state.selectedRow = row
+        await handleDocTypeChange(row)
+        if(state.selectedRow.properties) await MetaFormRef.value.setData(state.selectedRow.properties)
+        setTimeout(() => { state.loading = false }, 1000)
+        previewFile.loading = true
+        try {
+            previewFile.blob = await WorkflowAttachmentPreviewApi(row.id)
+        } catch (error) { }
+        previewFile.loading = false
+        previewFile.id = row.id
+        previewFile.name = row.initName
     }
-})
-async function handleDblclick (row) {
-    previewFile.loading = true
-    try {
-        previewFile.blob = await WorkflowAttachmentPreviewApi(row.id)
-    } catch (error) {
-
-    }
-    previewFile.loading = false
-    previewFile.id = row.id
-    previewFile.name = row.initName
-}
-async function handleDownload (file) {
-    file.downloadLoading = true
-    const blob = await WorkflowAttachmentDownloadApi(file.id)
-    setTimeout(() => {
+    async function handleDownload (file) {
+        file.downloadLoading = true
+        const blob = await WorkflowAttachmentDownloadApi(file.id)
         file.downloadLoading = false
         downloadBlob(blob, file.name || file.title, blob.type)
-    }, 500)
-}
-const { documentType, fileTypes, loading, defaultTime, options } = toRefs(state)
+    }
+// #endregion
+// #region module: 3.2 handleCheckChange
+    function handleCheckAll (value: boolean) {
+        if(value) treeRef.value.setCheckedKeys(state.tableData.map(item => item.id))
+        else treeRef.value.setCheckedKeys([])
+    }
+    function handleCheckChange() {
+        state.selectedRows = treeRef.value.getCheckedNodes()
+        if(state.selectedRows.length === state.tableData.length) state.checkAll = true
+        else state.checkAll = false
+    }
+// #endregion
 onMounted(async () => {
     getData()
     const res = await getDocTypeListApi()
     state.fileTypes = res.filter((item) => !item.isFolder)
-
 })
 </script>
-
 <style lang="scss" scoped>
 .pageContainer {
-    position: relative;
     height: 100%;
     overflow: hidden;
     display: grid;
-    grid-template-columns: 1fr min-content 1fr;
+    grid-template-columns: 300px 1fr 1fr;
     grid-template-rows: min-content 1fr;
-    grid-column-gap: var(--app-padding);
-    grid-row-gap: var(--app-padding);
-    .left-top-left { grid-area: 1 / 1 / 2 / 2; display: flex; align-items: center; }
-    .left-top-right { grid-area: 1 / 2 / 2 / 3; }
-    .left-bottom { grid-area: 2 / 1 / 3 / 3;     overflow: hidden; }
+    gap: var(--app-padding);
+    .left-top { grid-area: 1 / 1 / 2 / 2; }
+    .left-bottom {  grid-area: 2 / 1 / 3 / 2;  overflow: auto; }
+    .middle-top {  grid-area: 1 / 2 / 2 / 3; padding: 0 12px; }
+    .middle-bottom { grid-area: 2 / 2 / 3 / 3; overflow: auto; }
     .right { grid-area: 1 / 3 / 3 / 4; }
 }
-.row-expand {
-    padding: 0 var(--app-padding) 0 calc(var(--app-padding) * 5);
-    display: grid;
-    grid-template-columns: 1fr min-content;
-    grid-template-rows: min-content min-content;
-    grid-column-gap: var(--app-padding);
-    &-top {
-        padding: var(--app-padding) 0;
-        grid-area: 1 / 1 / 2 / 3;
+.tree-item {
+    width: 100%;
+    &--title {  max-width: 120px; }
+    &--right {
+        display: flex;
+        align-items: center;
+        gap: var(--app-input-padding);
     }
-    &-bottom-left { grid-area: 2 / 1 / 3 / 2; }
-    &-bottom-right {
-        grid-area: 2 / 2 / 3 / 3;
-        min-width: 1px;
-    }
+    &--documentType { max-width: 100px; }
 }
 .right :deep(.el-card__body){
     display: grid;
@@ -425,4 +296,6 @@ onMounted(async () => {
     gap: var(--app-padding);
     height: 100%;
 }
+:deep(.el-row) { margin: unset !important; }
+.el-form { padding: 0 12px; }
 </style>
