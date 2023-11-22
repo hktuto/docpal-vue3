@@ -21,7 +21,7 @@ const state = reactive({
     sessionKeys: getAvailableLocales()
 })
 function handleInit () {
-    state.form = getLanguageList([props.lKey])[0]
+    state.form = getLanguageList([props.lKey], 'meta')[0]
 }
 async function handleSubmit () {
     try {

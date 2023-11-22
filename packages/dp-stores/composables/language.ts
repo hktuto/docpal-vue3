@@ -26,12 +26,12 @@ export const useLanguage = defineStore('Language', () => {
         return list.filter(key => !ignoreList.includes(key) && key)
     }
     // 步骤3：获取key的翻译列表
-    function getLanguageList (keys: string[]) {
+    function getLanguageList (keys: string[], localeSectionKey: string = localeSectionKeys[0]) {
         return keys.reduce((prev: any[], key: string) => {
             if (!languageKeysStores.has(key)) {
                 const data: any = {
                     key,
-                    section: localeSectionKeys[0]
+                    section: localeSectionKey
                 }
                 availableLocales.forEach(item => {
                     data[item] = key
