@@ -43,6 +43,8 @@ export const useLanguage = defineStore('Language', () => {
         }, [])
     }
 
+    // availableLocales = [ 'en-US', 'zh-CN', 'zh-HK']
+    // localeSectionKeys = ['admin', 'mete', 'client']
     async function getLanguageListStore (locales: string[] = availableLocales, sections: string[] = localeSectionKeys) {
         let pList: any = []
         locales.forEach((code: string) => {
