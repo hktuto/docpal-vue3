@@ -623,7 +623,22 @@ export default class VariableOptions implements InlineTool {
     /**
      * Get link's href
      */
-    const href = element.dataset['href'];
+    let href = element.dataset['href'];
+
+    if( this.config.variables.find((item:any) => item === href) ) {
+      href = '${' + href + '}';
+    }else {
+
+      //  if new variable, and not start with http or https, or start with @{}  then add ${}
+      if( !(href.startsWith('@{') && href.endsWith('}')) &&
+          !(href.startsWith('#{') && href.endsWith('}')) &&
+          !href.startsWith('http') && !href.startsWith('https')
+      ) {
+        href = '${' + href + '}';
+      }
+
+
+    }
 
     /**
      * Restore origin selection
@@ -640,7 +655,8 @@ export default class VariableOptions implements InlineTool {
     // newTag.dataset['href'] = href;
     // newTag.href = href;
     // this.selection.currentRange.insertNode(newTag);
-    document.execCommand('insertHtml', false, `<a href='${href}' class="${VariableOptions.CSS.linkItem}">${href}</a>` )
+    document.execCommand('createLink', false, href )
+    // document.execCommand('insertHtml', false, `<a href='${href}' class="${VariableOptions.CSS.linkItem}">${href}</a>` )
     // this.selection.savedSelectionRange.insertNode(newTag);
     // this.api.selection.expandToTag(newTag);
     /**
@@ -649,6 +665,8 @@ export default class VariableOptions implements InlineTool {
     const newLink = this.selection.findParentTag(this.tagName);
     // if newLink exists, then add class
     if(newLink) {
+      newLink.classList.add(VariableOptions.CSS.linkItem);
+      newLink.dataset.url = href;
     }
     /**
      * Fill up link element's dataset
@@ -710,13 +728,13 @@ export default class VariableOptions implements InlineTool {
        * Expand selection
        */
       this.selection.expandToTag(parentAnchor);
-      const text = range.extractContents();
-      range.insertNode(text);
-      parentAnchor?.remove();
+      // const text = range.extractContents();
+      // range.insertNode(text);
+      // parentAnchor?.remove();
       /**
        * Remove the link
        */
-      // document.execCommand('unlink');
+      document.execCommand('unlink');
 
       /**
        * Remove fake selection and close toolbar

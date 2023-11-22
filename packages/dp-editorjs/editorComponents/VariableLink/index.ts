@@ -668,7 +668,6 @@ export default class VariableLink implements InlineTool {
     const newLink = this.selection.findParentTag(this.tagName);
     // if newLink exists, then add class
     if(newLink) {
-      console.log(href)
       newLink.classList.add(VariableLink.CSS.linkItem);
       newLink.dataset.url = href;
     }

@@ -110,7 +110,27 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         if(matches) {
             matches.forEach((variable:any) => {
                 //check if variable contain ()
-                newVariable.push(variable.replace('${', '').replace('}', ''));
+                // check variable container ()
+                if(variable.includes('(') && variable.includes(')')) {
+                    const regex = /\((.*?)\)/g;
+                    const matches = variable.match(regex);
+                    if(matches) {
+                        
+                        matches.forEach((variable:any) => {
+                            // remove () in variable
+                            const nv = variable.replace('(', '').replace(')', '');
+                            // split by , and push to first item to newVariable
+                            const splitVariable = nv.split(',');
+                            if(splitVariable.length > 0) {
+                                newVariable.push(splitVariable[0]);
+                            }
+                            // newVariable.push(splitVariable[0]);
+                        })
+                    }
+                }else{
+                    
+                    newVariable.push(variable.replace('${', '').replace('}', ''));
+                }
             })
         }
         return newVariable;
@@ -123,7 +143,6 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
     }
 
     function calculateVariable(blockData:any) {
-        console.log(data);
         const newVariable:string[] = [];
         for( const block of blockData.blocks) {
             
@@ -132,7 +151,8 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
             // found by tag name "var"
             const newsVars = t.content.querySelectorAll('a.ce-text-item');
             newsVars.forEach((variable) => {
-                newVariable.push(variable.textContent as string);
+                const dataURL = variable.getAttribute('data-url') as string;
+                newVariable.push(...getAllVariablesFromString(dataURL));
             });
             const varLink = t.content.querySelectorAll('a.ce-link-item');
             // push data-url to variable
@@ -148,9 +168,9 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         newVariable.push(...getAllVariablesFromString(data.value.subject));
         //sprint data.To, data.CC, data.BCC by , and check if it is email, if not push to variable
         
-        const to = data.value.to.split(',');
-        const cc = data.value.cc.split(',');
-        const bcc = data.value.bcc.split(',');
+        const to = data.value.to ? data.value.to.split(',') : [];
+        const cc = data.value.cc ? data.value.cc.split(',') : [];
+        const bcc = data.value.bcc ? data.value.bcc.split(',') : [];
         const allEmail = [...to, ...cc, ...bcc];
         allEmail.forEach((email) => {
             if(!email.includes('@')) {
@@ -212,8 +232,8 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         const varText = t.content.querySelectorAll('a.ce-text-item');
         // replace all var tag with span
         varText.forEach((variable) => {
-            
-            variable.replaceWith('<span  th:utext="${' + variable.textContent + '}"></span>');
+            const dataURL = variable.getAttribute('data-url');
+            variable.replaceWith(`<span  th:utext="${variable.getAttribute('data-url')}"></span>`);
         });
         const varLink = t.content.querySelectorAll('a.ce-link-item');
 
