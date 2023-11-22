@@ -67,10 +67,12 @@ const documentName = computed({
     item.attr_path = value ? JSON.stringify(value) : "[]";
     const allLabel = value.map((item:any) => {
       //check item type
-      if(item.attr_type = 'date') {
+      if(item.attr_type === 'date') {
+        return "${dateUtil.convert2String(variables:get(" + item.attr_id + "), 'yyyy-MM-dd HH:mm:ss')}"
+      }else{
         
+        return '${' + item.attr_id + '}'
       }
-      return '${' + item.attr_id + '}'
     }) ;
 
     item['flowable:expression']['__cdata'] = allLabel.join('-');

@@ -70,6 +70,7 @@ async function handleSave(isDraft: boolean = true) {
     try {
         const { blob, name, key } = WorkflowEditorRef.value.getWorkflowData()
         const formData = new FormData();
+        
         formData.append('name', name)
         formData.append('key', key)
         formData.append('draftId', state.detail.draftId)
