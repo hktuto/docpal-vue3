@@ -22,11 +22,9 @@ export function customLayer():string[] {
     packages.push('../../pages/client-hold-policies');
     packages.push('../../pages/client-retention');
     // all stores
-    packages.push("../../packages/dp-browse")
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")
     packages.push(`../../packages/office`) 
-    packages.push(`../../packages/dp-related-folder`) 
     packages.push(`../../packages/layout-default`) // 有其它 extends 的要最後加入，不然會被改了
 
 
