@@ -27,7 +27,8 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getDocTypeDetailApi, getLanguageListStore } from 'dp-api'
+import { getDocTypeDetailApi } from 'dp-api'
+const { getLanguageListStore } = useLanguage()
 const route = useRoute()
 const state = reactive({
     docType: {},
