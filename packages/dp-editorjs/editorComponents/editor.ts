@@ -148,6 +148,8 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         const allEmail = [...to, ...cc, ...bcc];
         allEmail.forEach((email) => {
             if(!email.includes('@')) {
+                // remove all space
+                email = email.replace(/\s/g, '');
                 newVariable.push(email);
             }
         })
