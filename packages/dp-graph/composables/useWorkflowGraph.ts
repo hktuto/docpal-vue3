@@ -38,6 +38,10 @@ export const useWorkflowGraph = () => {
         }
     })
 
+    const allFormFieldArray = computed(() => {
+        return Object.keys(allFormField.value.form).map((key) => allFormField.value.form[key]);
+    })
+
     function getForm(item):any[] {
         if(item.extensionElements){
             const form = item.extensionElements['flowable:formProperty'];
@@ -89,6 +93,7 @@ export const useWorkflowGraph = () => {
         graphJson,
         bpmnJson,
         allFormField,
+        allFormFieldArray,
         // static
         formTypeOptions,
         // methods

@@ -8,6 +8,7 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'submit'])
 
 const allEmailTemplates = ref([]);
+const defaultWorkflowVariable =ref(['HostUrl',"ProcessInstanceId"])
 
 async function getEmailTemplates() {
   const entryList = await GetAllEmailTemplatePageApi()
@@ -27,12 +28,19 @@ function fieldMappingUpdate(index, newVal) {
   emit('submit', props.data)
 }
 const allFieldOptions = computed(() => {
-  return Object.keys(props.allField).map((key) => {
+  const all = Object.keys(props.allField).map((key) => {
     return {
       label: props.allField[key].attr_name,
       value: '${variables:get(' + props.allField[key].attr_id + ')}'
     }
   })
+  all.push(...defaultWorkflowVariable.value.map((item) => {
+    return {
+      label: item,
+      value: '${variables:get(' + item + ')}'
+    }
+  }))
+  return all;
 })
 
 const selectedEmailTemplate = computed({
