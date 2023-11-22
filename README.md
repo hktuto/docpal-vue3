@@ -3,6 +3,7 @@
 在对应專案(例如：apps/admin)
 ```bash
 pnpm i --shamefully-hoist
+/ pnpm --filter client dev
 ```
 1. 開始開發
 ```bash
