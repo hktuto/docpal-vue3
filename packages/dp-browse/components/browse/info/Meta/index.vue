@@ -5,6 +5,7 @@
             <span v-if="item.dataType === 'date'">{{ formatDate(item.value, item.options.formatDate) }}</span>
             <BrowseInfoMetaDocumentType v-else-if="item.dataType === 'select' && item.options.dropdownType === 'documentType'"
                 :data="item.value" />
+            <span v-else-if="item.metaDataType ==='array' && item.value">{{ item.value.join(',') || '-'}}</span>
             <span v-else>{{ item.value || '-'}}</span>
         </div>
     </div>
