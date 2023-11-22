@@ -16,7 +16,7 @@
     >
         <template #default>
             <template v-if="selectData.options && selectData.options.length > 0">
-                <el-checkbox-group 
+                <el-checkbox-group
                     :max="selectData.isMultiple ? 100 : 1 "
                     v-model="selectData.value"
                     @change="handleChange(selectData)">
@@ -48,8 +48,7 @@ const emits = defineEmits(['change'])
 const buttonRef = ref()
 const popoverRef = ref()
 const onClickOutside = () => {
-    console.log(popoverRef);
-    
+
 //   unref(popoverRef).popperRef?.delayHide?.()
 }
 function handleChange (data: ResSelectData) {
