@@ -161,8 +161,10 @@ async function save() {
           // TODO : add notification
           return;
         }
+        // update new variable
         // test save json to backend
-        const result = await UpdateEmailTemplateApi({
+        await editor.updateVariable()
+        await UpdateEmailTemplateApi({
              ...data.value,
           // TODO : send html to body
           // url encode html

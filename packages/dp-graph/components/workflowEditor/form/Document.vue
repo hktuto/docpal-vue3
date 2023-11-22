@@ -64,9 +64,14 @@ const documentName = computed({
       })
     }
     item = props.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentName");
-    console.log(item, value)
     item.attr_path = value ? JSON.stringify(value) : "[]";
-    const allLabel = value.map((item:any) => '${' +item.attr_id + '}') ;
+    const allLabel = value.map((item:any) => {
+      //check item type
+      if(item.attr_type = 'date') {
+        
+      }
+      return '${' + item.attr_id + '}'
+    }) ;
 
     item['flowable:expression']['__cdata'] = allLabel.join('-');
     console.log(value, item)

@@ -611,6 +611,8 @@ export default class VariableLink implements InlineTool {
    * @returns {void}
    */
   searchItemPressed(element:any) {
+    console.log("searchItemPressed", element);
+    //@{__${hostUrl}__/workflow/link(processInstanceId=${processInstanceId})}
     /**
      * If no useful dataset info was given then do nothing
      */
@@ -627,10 +629,16 @@ export default class VariableLink implements InlineTool {
     if( this.config.variables.find((item:any) => item === href) ) {
         href = '${' + href + '}';
     }else {
-      //  if new variable, and not start with http or https, then add ${}
-        if(!href.startsWith('http') && !href.startsWith('https')) {
-            href = '${' + href + '}';
-        }
+
+      //  if new variable, and not start with http or https, or start with @{}  then add ${}
+      if( !(href.startsWith('@{') && href.endsWith('}')) &&
+          !(href.startsWith('#{') && href.endsWith('}')) &&
+          !href.startsWith('http') && !href.startsWith('https')
+        ) {
+        href = '${' + href + '}';
+      }
+      
+        
     }
     
     

@@ -76,7 +76,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
             },
             onChange: (api, event) => {
                 
-                const data = api.saver.save().then((outputData) => {
+                api.saver.save().then((outputData) => {
                     calculateVariable(outputData);
                 });
             },
@@ -114,6 +114,12 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
             })
         }
         return newVariable;
+    }
+    
+    async function updateVariable() {
+        const data = await editor.value?.save();
+
+        calculateVariable(data);
     }
 
     function calculateVariable(blockData:any) {
@@ -237,7 +243,8 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         dispose,
         setData,
         variables,
-        getData
+        getData,
+        updateVariable,
     }
 
     

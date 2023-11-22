@@ -13,6 +13,31 @@ const defaultWorkflowVariable =ref(['HostUrl',"ProcessInstanceId"])
 async function getEmailTemplates() {
   const entryList = await GetAllEmailTemplatePageApi()
   allEmailTemplates.value = entryList;
+
+  const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType");
+  const item = props.data.extensionElements['flowable:field'][index];
+  if(!item) return;
+  const varList = allEmailTemplates.value.find((ii: any) => ii.id === item['flowable:string']['__cdata']).emailTemplateVariable;
+  if(!varList || !JSON.parse(varList)) {
+    props.data.extensionElements['flowable:field'] = [
+      item
+    ]
+    return;
+  }
+  props.data.extensionElements['flowable:field'] = [
+    item,
+    ...JSON.parse(varList).map((item: any) => {
+      // check if item already exist
+      const exist = props.data.extensionElements['flowable:field'].find((field: any) => field.attr_name === item);
+      if(exist) return exist;
+      return {
+        "attr_name": item,
+        "flowable:expression": {
+          "__cdata": ''
+        }
+      }
+    })
+  ]
 }
 
 const templateVariables = computed(() => {
@@ -47,6 +72,7 @@ const selectedEmailTemplate = computed({
   get() {
     const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType");
     // props.data.extensionElements['flowable:field']['flowable:string']['__cdata'];
+    
     return props.data.extensionElements['flowable:field'][index]['flowable:string']['__cdata'];
   },
   set(value) {
@@ -55,7 +81,6 @@ const selectedEmailTemplate = computed({
     item['flowable:string']['__cdata'] = value;
     
     const varList = allEmailTemplates.value.find((item: any) => item.id === value).emailTemplateVariable;
-    console.log(varList, allEmailTemplates.value.find((item: any) => item.id === value))
     if(!varList || !JSON.parse(varList)) {
       props.data.extensionElements['flowable:field'] = [
         item
