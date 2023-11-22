@@ -98,16 +98,20 @@ function handleOpen(exitList, data) {
         if (!!data) {
             const pData = data.options ? data.options : {}
             FromRendererRef.value.vFormRenderRef.setFormData({...data,  ...pData})
-            setTimeout(() => {
-                FromRendererRef.value.vFormRenderRef.getWidgetRef('ready').setValue(true)
-            }, 1000)
             state.isEdit = true
             state.setting = data
         } else {
             state.isEdit = false
             state.setting = {}
         }
+        setReady()
     })
+    function setReady() {
+        setTimeout(() => {
+            const readyRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('ready')
+            readyRef.setValue(true)
+        }, 1000)
+    }
 }
 async function handleOptions (exitList) {
     const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('metaData')
@@ -116,9 +120,11 @@ async function handleOptions (exitList) {
     function listFilter() {
         return props.docType.keywords.reduce((prev, item) => {
             const index = exitList.findIndex(exitItem => exitItem.metaData === item.name)
-            if (index === -1 && item.type !== 'complex') {
+            if (item.type !== 'complex') {
                 item.value = item.name
                 item.label = item.name
+                if(index === -1) item.disabled = false
+                else item.disabled = true
                 prev.push(item)
             }
             return prev
