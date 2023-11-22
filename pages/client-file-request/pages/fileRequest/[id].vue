@@ -18,6 +18,7 @@
                     node-key="id"
                     default-expand-all
                     highlight-current	
+                    :current-node-key="state.selectedRow.id"
                     :expand-on-click-node="false"
                     :props="{ class: customNodeClass }"
                     @node-click="handleDblclick"
@@ -229,18 +230,22 @@ const MetaFormRef = ref({})
         }
     })
     async function handleDblclick (row) {
+        getPreview()
         state.loading = true
         state.selectedRow = row
         await handleDocTypeChange(row)
         if(state.selectedRow.properties) await MetaFormRef.value.setData(state.selectedRow.properties)
         setTimeout(() => { state.loading = false }, 1000)
-        previewFile.loading = true
-        try {
-            previewFile.blob = await WorkflowAttachmentPreviewApi(row.id)
-        } catch (error) { }
-        previewFile.loading = false
-        previewFile.id = row.id
-        previewFile.name = row.initName
+        
+        async function getPreview() {
+            previewFile.loading = true
+            try {
+                previewFile.name = row.initName
+                previewFile.blob = await WorkflowAttachmentPreviewApi(row.id)
+            } catch (error) { }
+            previewFile.loading = false
+            previewFile.id = row.id
+        }
     }
     async function handleDownload (file) {
         file.downloadLoading = true

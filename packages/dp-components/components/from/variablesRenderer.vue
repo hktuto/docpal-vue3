@@ -9,10 +9,10 @@ export type variableItem = {
     disabled: Boolean,
     hidden: Boolean,
     required: Boolean,
-    format?: string,
+    // format?: string,
     options?: any[],
-    maxLength?: number,
-    onValidate?: string
+    // maxLength?: number,
+    // onValidate?: string
 }
 const props = defineProps<{
     variables: variableItem[],
@@ -44,8 +44,6 @@ const formJson = ref({
     }
 })
 function createJson(variables: variableItem[]) {
-    console.log({variables});
-    
     const date = new Date().valueOf()
     formJson.value.widgetList = []
     variables.forEach((item, index) => {
@@ -79,7 +77,7 @@ function createJson(variables: variableItem[]) {
         }
         if(!['date','input','switch','textarea','number','select'].includes(item.type)) _item.type = 'input'
         if(item.type === 'date') {
-            _item.options.format = item.format || 'YYYY-MM-DD HH:mm',  //日期显示格式
+            _item.options.format = 'YYYY-MM-DD HH:mm',  //日期显示格式
             _item.options.valueFormat = 'YYYY-MM-DD HH:mm:ss'
         } else if(item.type === 'input') {
             _item.options.type = 'text'
@@ -93,10 +91,8 @@ function createJson(variables: variableItem[]) {
             _item.options.defaultValue = false
             _item.options.labelIconPosition = 'rear'
         } else if(item.type === 'select') {
-            if(item.options) _item.options.optionItems = item.options
         }
-        if (item.onValidate) _item.options.onValidate = item.onValidate
-        if (item.maxLength) _item.options.maxLength = item.maxLength
+        if (item.options) _item.options = { ..._item.options, ...item.options }
         formJson.value.widgetList.push(_item)
     })
     FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)

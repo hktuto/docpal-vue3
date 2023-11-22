@@ -31,24 +31,28 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                         name: item.metaData,
                         label: $t(item.metaData),
                         type: item.dataType || 'input',
-                        required: item.isRequire || false
+                        required: item.isRequire || false,
+                        options: {}
                     }
                     
                     switch (item.dataType) {
                         case 'input':
                         case 'textarea':
-                            if(item.options.length) _item.length = item.options.length
-                            if(item.options.regex) _item.onValidate = getValidate(item.options.regex)
+                            if(item.options.length) _item.options.maxLength = item.options.length
+                            if(item.options.regex) _item.options.onValidate = getValidate(item.options.regex)
                             // _item.onValidate = getValidate('^[a-zA-Z_][a-zA-Z0-9_]*$')
                             break;
                         case 'date':
-                            if(item.options.formatDate) _item.format = item.options.formatDate
+                            if(item.options.formatDate) _item.options.format = item.options.formatDate
                             break;
                         case 'select':
-                            if(item.values) _item.options = item.values
+                            if(item.values) _item.options.optionItems = item.values
                             break
                         default:
                             break;
+                    }
+                    if(item.metaDataType === 'array') {
+                        _item.options = { ..._item.options, multiple: true }
                     }
                     state.variables.push(_item)
                 }
