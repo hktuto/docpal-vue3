@@ -28,6 +28,7 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDocTypeDetailApi } from 'dp-api'
+const { getLanguageListStore } = useLanguage()
 const route = useRoute()
 const state = reactive({
     docType: {},
@@ -42,6 +43,7 @@ async function handleSave () {
 }
 onMounted(async() => {
     state.docType = await getDocTypeDetailApi(route.params.id)
+    await getLanguageListStore()
 })
 </script>
 

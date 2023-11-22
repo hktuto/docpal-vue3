@@ -43,6 +43,11 @@ export const useLanguage = defineStore('Language', () => {
         }, [])
     }
 
+    /**
+     * 异步函数，根据availableLocales和 section 获取语言信息
+     * @param availableLocales - [ 'en-US', 'zh-CN', 'zh-HK']
+     * @param localeSectionKeys - ['admin', 'mete', 'client']
+     */
     async function getLanguageListStore (locales: string[] = availableLocales, sections: string[] = localeSectionKeys) {
         let pList: any = []
         locales.forEach((code: string) => {

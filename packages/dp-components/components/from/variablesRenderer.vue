@@ -95,7 +95,7 @@ function createJson(variables: variableItem[]) {
         } else if(item.type === 'select') {
             if(item.options) _item.options.optionItems = item.options
         }
-        if(item.onValidate) _item.options.onValidate = item.onValidate
+        if (item.onValidate) _item.options.onValidate = item.onValidate
         if (item.maxLength) _item.options.maxLength = item.maxLength
         formJson.value.widgetList.push(_item)
     })

@@ -36,6 +36,7 @@
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import { GetCoCountMetaApi, GetCoCountMetaFilterApi } from 'dp-api'
+import { watchDebounced } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
     hideSetting?: boolean,
@@ -111,13 +112,10 @@ function handleDelete() {
 function handleRefresh(chartSetting) {
     emits('refreshSetting', chartSetting)
 }
-watch(() => props.setting, (newValue) => {
+watchDebounced(props.setting, (newValue) => {
     getMetaData()
     state.filterUser = newValue.user
-}, {
-    immediate: true,
-    deep: true
-})
+},{ debounce: 200, maxWait: 500, immediate: true })
 defineExpose({
     resize
 })
