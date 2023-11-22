@@ -1529,8 +1529,8 @@ export const defaultTableSetting: TableColumnSetting = {
             // { id: '2', label: 'form_vocabulary', prop: 'vocabulary', showOverflowTooltip: true },
             // { id: '3', label: 'form_length', prop: 'length'},
             { id: '3', label: 'metadata.dataType', prop: 'dataType', slot: 'dataType', width: 150, sortable: true},
-            { id: '4', slot: 'isRequire', label:'form_isRequire', width: 100, sortable: true },
-            { id: '5', slot: 'display',label:'form_display', prop: 'display',width: 100, sortable: true },
+            { id: '4', slot: 'isRequire', label:'form_isRequire', width: 120, sortable: true },
+            { id: '5', slot: 'display',label:'form_display', prop: 'display',width: 110, sortable: true },
             {   
                 id: '6',
                 "type": "",
