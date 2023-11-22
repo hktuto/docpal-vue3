@@ -78,6 +78,7 @@ onMounted(async() => {
 .el-tabs {
     display: grid;
     grid-template-rows: min-content 1fr;
+    overflow: hidden;
     .el-tab-pane {
         height: 100%;
     }
