@@ -36,6 +36,8 @@ const formJson = getJsonApi('admin/masterTable.json')
 const router = useRouter()
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    console.log({data});
+    
     state.loading = true
     const _data = {
         ...state.setting,

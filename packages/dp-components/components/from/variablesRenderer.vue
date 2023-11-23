@@ -1,21 +1,23 @@
 <template>
-<FromRenderer ref="FromRendererRef" :form-json="formJson" />    
+<FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"
+    @emit="handleEmit"/>    
 </template>
 <script lang="ts" setup>
 export type variableItem = {
     name: string,
-    type: 'date' | 'input' | 'switch' | 'textarea' | 'number',
+    type: 'date' | 'input' | 'switch' | 'textarea' | 'number' | 'select',
     disabled: Boolean,
     hidden: Boolean,
     required: Boolean,
-    format?: string,
+    // format?: string,
     options?: any[],
-    maxLength?: number,
-    onValidate?: string
+    // maxLength?: number,
+    // onValidate?: string
 }
 const props = defineProps<{
     variables: variableItem[],
 }>()
+const emits = defineEmits(['formChange'])
 const FromRendererRef = ref()
 const formJson = ref({
     "widgetList": [],
@@ -73,8 +75,9 @@ function createJson(variables: variableItem[]) {
                 onEnter: "",
             }
         }
+        if(!['date','input','switch','textarea','number','select'].includes(item.type)) _item.type = 'input'
         if(item.type === 'date') {
-            _item.options.format = item.format || 'YYYY-MM-DD HH:mm',  //日期显示格式
+            _item.options.format = 'YYYY-MM-DD HH:mm',  //日期显示格式
             _item.options.valueFormat = 'YYYY-MM-DD HH:mm:ss'
         } else if(item.type === 'input') {
             _item.options.type = 'text'
@@ -88,24 +91,32 @@ function createJson(variables: variableItem[]) {
             _item.options.defaultValue = false
             _item.options.labelIconPosition = 'rear'
         } else if(item.type === 'select') {
-            if(item.options) _item.options.optionItems = item.options
         }
-        if(item.onValidate) _item.options.onValidate = item.onValidate
-        if (item.maxLength) _item.options.maxLength = item.maxLength
+        if (item.options) _item.options = { ..._item.options, ...item.options }
         formJson.value.widgetList.push(_item)
     })
-    console.log(formJson.value);
-    
     FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
+    return formJson.value
+}
+function handleEmit (funName, newValue, oldValue) {
+    emits(funName, newValue, oldValue)
 }
 async function getData () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     return data
 }
+async function setFormJson (formJson) {
+    console.log('',formJson);
+    
+    await FromRendererRef.value.vFormRenderRef.setFormJson(formJson)
+}
 async function setData (data) {
     await FromRendererRef.value.vFormRenderRef.setFormData(data)
 }
-defineExpose({ createJson, getData, setData })
+function formChange(fieldName, newValue, oldValue, formModel) {
+    emits('formChange', {fieldName,newValue,oldValue,formModel})
+}
+defineExpose({ createJson, getData, setData, setFormJson })
 </script>
 <style lang="scss" scoped>
 

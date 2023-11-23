@@ -126,7 +126,8 @@ export enum TABLE {
     ADMIN_DOC_TEMPLATE = 'adminDocTemplate',
     ADMIN_DASHBOARD = 'adminDashboard',
     ADMIN_SMART_FOLDER = 'adminSmartFolder',
-    ADMIN_MASTER_TABLE = 'adminMasterTable'
+    ADMIN_MASTER_TABLE = 'adminMasterTable',
+    ADMIN_META_VALIDATION = 'adminMetaValidation'
 }
 
 export const defaultTableSetting: TableColumnSetting = {
@@ -1486,13 +1487,50 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         options: { pageSize: 20 }
     },
+    [TABLE.ADMIN_META_VALIDATION]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'name', showOverflowTooltip: true, defaultColumn: true, sortable: true },
+            { id: '3', label: 'doc.isFolder', prop: 'isFolder', width: 200, sortable: true },
+            {   
+                id: '4',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            },
+        ],
+        events: [],
+        slots: [
+            { slot: 'icon', width: 50 },
+        ],
+        options: { pageSize: 20 }
+    },
     [TABLE.ADMIN_META_DISPLAY]: {
         columns: [
-            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true },
-            { id: '2', label: 'form_vocabulary', prop: 'vocabulary', showOverflowTooltip: true },
-            { id: '3', label: 'form_length', prop: 'length'},
-            { id: '4', slot: 'isRequire', label:'form_isRequire', width: 70 },
-            { id: '5', slot: 'display',label:'form_display', width: 70 },
+            { id: '1', label: 'rightDetail_meta', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true, sortable: true },
+            // { id: '2', label: 'form_vocabulary', prop: 'vocabulary', showOverflowTooltip: true },
+            // { id: '3', label: 'form_length', prop: 'length'},
+            { id: '3', label: 'metadata.dataType', prop: 'dataType', slot: 'dataType', width: 150, sortable: true},
+            { id: '4', slot: 'isRequire', label:'form_isRequire', width: 120, sortable: true },
+            { id: '5', slot: 'display',label:'form_display', prop: 'display',width: 110, sortable: true },
             {   
                 id: '6',
                 "type": "",
@@ -1520,6 +1558,7 @@ export const defaultTableSetting: TableColumnSetting = {
         ],
         events: ['delete'],
         slots: [
+            { label: 'dataType', prop: 'dataType', slot: 'dataType'},
             { slot: 'isRequire', label:'form_isRequire', width: 50 },
             { slot: 'display', label:'form_display', width: 50 },
         ],
@@ -1527,8 +1566,8 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_META_RELATED]: {
         columns: [
-            { id: '1', label: 'dpTable_documentType', prop: 'type', defaultColumn: true},
-            { id: '2', label: 'rightDetail_meta', prop: 'meta' },
+            { id: '1', label: 'dpTable_documentType', prop: 'documentType', defaultColumn: true, sortable: true },
+            { id: '2', label: 'rightDetail_meta', prop: 'metaData', sortable: true },
             {   
                 id: '3',
                 "type": "",

@@ -26,23 +26,38 @@ export const useLanguage = defineStore('Language', () => {
         return list.filter(key => !ignoreList.includes(key) && key)
     }
     // 步骤3：获取key的翻译列表
-    function getLanguageList (keys: string[]) {
-        return keys.reduce((prev: any[], key: string) => {
-            if (!languageKeysStores.has(key)) {
-                const data: any = {
-                    key,
-                    section: localeSectionKeys[0]
+    async function getLanguageList (keys: string[], localeSectionKey: string = localeSectionKeys[0]) {
+        return new Promise((resolve, reject) => {
+            const interval = setInterval(() => {
+                if (languageKeysStores.size !== 0) {
+                    clearInterval(interval)
+                    resolve(getResult())
                 }
-                availableLocales.forEach(item => {
-                    data[item] = key
-                })
-                languageKeysStores.set(key, data)
-            } 
-            prev.push(languageKeysStores.get(key))
-            return prev
-        }, [])
+            }, 1000)
+        })
+        function getResult() {
+            return keys.reduce((prev: any[], key: string) => {
+                if (!languageKeysStores.has(key)) {
+                    const data: any = {
+                        key,
+                        section: localeSectionKey
+                    }
+                    availableLocales.forEach(item => {
+                        data[item] = key
+                    })
+                    languageKeysStores.set(key, data)
+                } 
+                prev.push(languageKeysStores.get(key))
+                return prev
+            }, [])
+        }
     }
 
+    /**
+     * 异步函数，根据availableLocales和 section 获取语言信息
+     * @param availableLocales - [ 'en-US', 'zh-CN', 'zh-HK']
+     * @param localeSectionKeys - ['admin', 'mete', 'client']
+     */
     async function getLanguageListStore (locales: string[] = availableLocales, sections: string[] = localeSectionKeys) {
         let pList: any = []
         locales.forEach((code: string) => {
@@ -188,10 +203,14 @@ export const useLanguage = defineStore('Language', () => {
         }
         i18n.setLocale(locale)
     }
+    function getAvailableLocales() {
+        return availableLocales
+    }
     watch(() => route.path, () => {
         languageKeys.clear()
     })
     return {
+        getAvailableLocales,
         languageKeys,
         languageKeysStores,
         addLanguageKeys,

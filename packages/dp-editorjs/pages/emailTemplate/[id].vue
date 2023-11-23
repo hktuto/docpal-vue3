@@ -26,10 +26,10 @@
             </div>
         </div>
     </div>
-  <ElDialog ref="editInfoDialog" v-model="editInfoOpened" append-to-body destroy-on-close>
-    <EditorjsInfoForm v-if="data" :data="data" />
+  <ElDialog ref="editInfoDialog" v-model="editInfoOpened" append-to-body destroy-on-close :close-on-press-escape="false" :close-on-click-modal="false" :show-close="false">
+    <EditorjsInfoForm v-if="data" ref="infoFormEl" :data="data" />
     <template #footer>
-      <ElButton type="primary" @click="() => {save(); editInfoOpened = false}">{{ $t('common_save') }}</ElButton>
+      <ElButton type="primary" @click="() => {save()}">{{ $t('common_save') }}</ElButton>
     </template>
   </ElDialog>
   <ElDialog  v-model="testEmailOpened" append-to-body destroy-on-close>
@@ -43,6 +43,7 @@
 
 <script lang="ts" setup>
 import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi, CreateEmailTemplateApi} from 'dp-api';
+import { ElMessage } from 'element-plus';
   import { useEditor } from '~/editorComponents/editor';
   const editInfoOpened = ref(false);
   const testEmailOpened = ref(false);
@@ -55,7 +56,9 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi, CreateEmailTemplateA
   const selectedLayout = ref<any>(null);
   const mode = ref<'desktop' | 'mobile'>('desktop');
   const router = useRouter()
+  const infoFormEl = ref()
   
+  const {t} = useI18n();
 
 
     /**
@@ -137,7 +140,14 @@ import {api, GetEmailLayoutPageApi, UpdateEmailTemplateApi, CreateEmailTemplateA
 async function save() {
         const {html, json, variable} = await editor.getData();
         // if id is new , create new
+        // check form valid
+        
         if(id === 'new'){
+          if(infoFormEl.value) {
+            
+          const valid = await infoFormEl.value.validate();
+          if(!valid) return;
+          }
           const result = await CreateEmailTemplateApi({
             ...data.value,
             // TODO : send html to body
@@ -151,8 +161,10 @@ async function save() {
           // TODO : add notification
           return;
         }
+        // update new variable
         // test save json to backend
-        const result = await UpdateEmailTemplateApi({
+        await editor.updateVariable()
+        await UpdateEmailTemplateApi({
              ...data.value,
           // TODO : send html to body
           // url encode html
@@ -161,6 +173,7 @@ async function save() {
             emailTemplateJson: JSON.stringify(json),
             emailTemplateVariable: JSON.stringify(variable)
         })
+        editInfoOpened.value = false;
   // console.log(html);
         // TODO : add notification
     }

@@ -67,6 +67,7 @@ async function getDetail() {
         switch(state.backState) {
             case state.processState.completeTask:
                 state.taskDetail = await historyProcessDetailGetApi({ processInstanceId, completed: true })
+                
                 break
             default:
                 state.taskDetail = await getTaskApi(processInstanceId)
@@ -99,11 +100,13 @@ const isAssigneeUser = computed(() => {
             case state.processState.completeTask:
                 formData = state.taskDetail.processVariables
                 formJson = await formJsonGet('complete',state.taskDetail.processDefinitionKey)
+            
                 vFormRef.value.setForm(formJson, formData)
                 break
             default:
                 const properties = await getFormPropsApi({ taskId: route.params.id })
                 formData = formDataGetFromProps(properties)
+                console.log('formData', formData)
                 formJson = await formJsonGet(state.taskDetail.taskDefinitionKey,
                                 state.taskDetail.taskInstance.processDefinitionKey)
                 vFormRef.value.setForm(formJson, formData)
@@ -119,6 +122,10 @@ const isAssigneeUser = computed(() => {
     }
     function formDataGetFromProps (list) {
         return list.reduce((prev, item) => {
+                    // if item type is boolean, convert string to boolean
+                    if (item.type === 'boolean') {
+                        item.value = item.value === 'true'
+                    }
                     prev[item.id] = item.value
                     return prev
                 }, {})
@@ -154,6 +161,12 @@ const isAssigneeUser = computed(() => {
         try {
             const data = await vFormRef.value.getFormData(true, false)
             if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
+            // convert all item in data which is boolean to string
+            Object.keys(data).forEach(key => {
+                if (typeof data[key] === 'boolean') {
+                    data[key] = String(data[key])
+                }
+            })
             const param = {
                 taskId: route.params.id,
                 properties: { ...data },

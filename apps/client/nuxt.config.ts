@@ -30,7 +30,7 @@ export default defineNuxtConfig({
     extends: [
         ...customLayer()
     ],
-    ... playgroundConfig({}),
+    ...playgroundConfig({}),
     //  for local preview dev only
     // nitro:{
     //     routeRules:{

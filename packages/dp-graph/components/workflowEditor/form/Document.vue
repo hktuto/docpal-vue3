@@ -7,10 +7,13 @@ const props = defineProps<{
   allField: any,
 }>();
 const emit = defineEmits(['close', 'submit'])
-
+const { allFormFieldArray} = useWorkflowGraph();
 const formVariable = ref([]);
 
 const allDocumentTemplates = ref([]);
+
+
+
 
 async function getDocumentTemplates() {
   const entryList = await GetAllTemplatePageApi();
@@ -38,6 +41,53 @@ const allFieldOptions = computed(() => {
   })
 })
 
+const documentName = computed({
+  get(){
+    const item = props.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentName");
+    if(!item) return [];
+    console.log('get', item.attr_path)
+    return item.attr_path ? JSON.parse(item.attr_path) : [];
+  },
+  set(value) {
+    let item = props.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentName");
+    if(!item){
+      // push documentName to extensionElements
+      props.data.extensionElements['flowable:field'].push({
+        attr_name: "documentName",
+        attr_type: "string",
+        attr_value: "",
+        attr_required: "false",
+        attr_path: value ? JSON.stringify(value) : "[]",
+        "flowable:expression": {
+          __cdata: value ? value[value.length - 1] : ""
+        }
+      })
+    }
+    item = props.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentName");
+    item.attr_path = value ? JSON.stringify(value) : "[]";
+    const allLabel = value.map((item:any) => {
+      //check item type
+      if(item.attr_type === 'date') {
+        return "${dateUtil.convert2String(variables:get(" + item.attr_id + "), 'yyyy-MM-dd HH:mm:ss')}"
+      }else{
+        
+        return '${' + item.attr_id + '}'
+      }
+    }) ;
+
+    item['flowable:expression']['__cdata'] = allLabel.join('-');
+    console.log(value, item)
+    save();
+  }
+})
+
+function handleDocNameChange({dropList, dragList}) {
+  documentName.value = dropList;
+  
+}
+
+
+
 const selectedDocumentTemplate = computed({
   get() {
     const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "templateId");
@@ -45,7 +95,6 @@ const selectedDocumentTemplate = computed({
     return props.data.extensionElements['flowable:field'][index]['flowable:expression']['__cdata'];
   },
   async set(value) {
-    console.log('selectedDocumentTemplate', value)
     const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "templateId");
     const item = props.data.extensionElements['flowable:field'][index];
     // if item['flowable:expression']['__cdata']  == value, do nothing
@@ -148,7 +197,11 @@ onMounted(async() => {
     <div class="formContainer">
       <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="valueChange">
         <template v-slot:tableForm>
-          <h3>Email Variable</h3>
+          <!-- {{ allFormFieldArray }} -->
+          <ElFormItem label="Document Name">
+            <DragSelect :dragList="allFormFieldArray" :dropList="documentName" itemKey="attr_field_label" nullTip="No Field in workflow" @change="handleDocNameChange"/>
+          </ElFormItem>
+          <h3>Document Variable</h3>
           <ElFormItem v-for="item in formVariable" :key="item.key" :label="item.key">
             <ElSelect v-model="item.value" @change="(val) => emailVariableChange(val, item.key)">
               <ElOption v-for="option in allFieldOptions" :key="option.value" :label="option.label" :value="option.value"></ElOption>

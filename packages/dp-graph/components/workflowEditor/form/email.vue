@@ -8,10 +8,36 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'submit'])
 
 const allEmailTemplates = ref([]);
+const defaultWorkflowVariable =ref(['HostUrl',"ProcessInstanceId"])
 
 async function getEmailTemplates() {
   const entryList = await GetAllEmailTemplatePageApi()
   allEmailTemplates.value = entryList;
+
+  const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType");
+  const item = props.data.extensionElements['flowable:field'][index];
+  if(!item) return;
+  const varList = allEmailTemplates.value.find((ii: any) => ii.id === item['flowable:string']['__cdata']).emailTemplateVariable;
+  if(!varList || !JSON.parse(varList)) {
+    props.data.extensionElements['flowable:field'] = [
+      item
+    ]
+    return;
+  }
+  props.data.extensionElements['flowable:field'] = [
+    item,
+    ...JSON.parse(varList).map((item: any) => {
+      // check if item already exist
+      const exist = props.data.extensionElements['flowable:field'].find((field: any) => field.attr_name === item);
+      if(exist) return exist;
+      return {
+        "attr_name": item,
+        "flowable:expression": {
+          "__cdata": ''
+        }
+      }
+    })
+  ]
 }
 
 const templateVariables = computed(() => {
@@ -19,7 +45,7 @@ const templateVariables = computed(() => {
   if(!Array.isArray(props.data?.extensionElements['flowable:field'] )) {
     props.data.extensionElements['flowable:field'] = [props.data.extensionElements['flowable:field'] ]
   }
-  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType"));
+  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType") && !(item.attr_name === "hostUrl") && !(item.attr_name === "processInstanceId"));
   return item;
 })
 function fieldMappingUpdate(index, newVal) {
@@ -27,18 +53,20 @@ function fieldMappingUpdate(index, newVal) {
   emit('submit', props.data)
 }
 const allFieldOptions = computed(() => {
-  return Object.keys(props.allField).map((key) => {
+  const all = Object.keys(props.allField).map((key) => {
     return {
       label: props.allField[key].attr_name,
       value: '${variables:get(' + props.allField[key].attr_id + ')}'
     }
   })
+  return all;
 })
 
 const selectedEmailTemplate = computed({
   get() {
     const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType");
     // props.data.extensionElements['flowable:field']['flowable:string']['__cdata'];
+    
     return props.data.extensionElements['flowable:field'][index]['flowable:string']['__cdata'];
   },
   set(value) {
@@ -47,7 +75,6 @@ const selectedEmailTemplate = computed({
     item['flowable:string']['__cdata'] = value;
     
     const varList = allEmailTemplates.value.find((item: any) => item.id === value).emailTemplateVariable;
-    console.log(varList, allEmailTemplates.value.find((item: any) => item.id === value))
     if(!varList || !JSON.parse(varList)) {
       props.data.extensionElements['flowable:field'] = [
         item

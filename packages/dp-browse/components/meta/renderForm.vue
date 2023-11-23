@@ -1,0 +1,168 @@
+<template>
+    <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"
+        @handleApply="handleApply"/>
+</template>
+
+<script lang="ts" setup> 
+import { ElMessageBox } from 'element-plus'
+import { GetMetaValidationRuleApi } from 'dp-api'
+const props = withDefaults(defineProps<{
+    showApply: boolean,
+}>(), {
+  showApply: false
+})
+const emits = defineEmits(['formChange', 'handleApply'])
+const route = useRoute()
+const state = reactive({
+    data: [],
+    variables: [],
+    documentTypeSelected: ''
+})
+const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
+// #region module: Variables
+    const FromVariablesRendererRef = ref()
+    async function getVariables() {
+        // try {
+            const date = new Date().valueOf()
+            state.variables = []
+            state.data.forEach((item, index) => {
+                if(item.display && ignoreList.indexOf(item.metaData) === -1) {
+                    const _item = {
+                        name: item.metaData,
+                        label: $t(item.metaData),
+                        type: item.dataType || 'input',
+                        required: item.isRequire || false,
+                        options: {}
+                    }
+                    
+                    switch (item.dataType) {
+                        case 'input':
+                        case 'textarea':
+                            if(item.options.length) _item.options.maxLength = item.options.length
+                            if(item.options.regex) _item.options.onValidate = getValidate(item.options.regex)
+                            // _item.onValidate = getValidate('^[a-zA-Z_][a-zA-Z0-9_]*$')
+                            break;
+                        case 'date':
+                            if(item.options.formatDate) _item.options.format = item.options.formatDate
+                            break;
+                        case 'select':
+                            if(item.values) _item.options.optionItems = item.values
+                            break
+                        default:
+                            break;
+                    }
+                    if(item.metaDataType === 'array') {
+                        _item.options = { ..._item.options, multiple: true }
+                    }
+                    state.variables.push(_item)
+                }
+            });
+            nextTick(async () => {
+                const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
+                if (props.showApply) {
+                    const newFormJson = getApplyFormJson(formJson)
+                    FromVariablesRendererRef.value.setFormJson(newFormJson)
+                }
+            })
+        // } catch (error) {
+        // }
+    } 
+    function getApplyFormJson (formJson) {
+        const widgetList = []
+        formJson.widgetList.forEach(item => {
+            const gridItem = getMetaApplyFormGridItem()
+            const buttonItem = getMetaApplyButton(item.options.name)
+            gridItem.cols[0].widgetList.push(item)
+            gridItem.cols[1].widgetList.push(buttonItem)
+            widgetList.push(gridItem)
+        })
+        return { formConfig: formJson.formConfig, widgetList }
+    }
+    function getValidate(rule = '^[a-zA-Z_][a-zA-Z0-9_]*$') {
+        return `if(!/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
+    }
+    function clear() {
+        state.variables = []
+        FromVariablesRendererRef.value.createJson(state.variables )
+    }
+    async function init(documentType) {
+        if (!documentType) {
+            clear()
+            return
+        }
+        try {
+            state.data = []
+            state.variables = []
+            state.data = await GetMetaValidationRuleApi({ documentType })
+        } catch (error) {
+        }
+        getVariables()
+    }
+// #endregion
+async function setData(properties) {
+    return await FromVariablesRendererRef.value.setData(properties)
+}
+async function getData() {
+    return await FromVariablesRendererRef.value.getData()
+}
+function formChange(fieldName, newValue, oldValue, formModel) {
+    emits('formChange', {fieldName,newValue,oldValue,formModel})
+}
+function handleApply(formModel) {
+    console.log(formModel);
+    emits('handleApply', formModel)
+}
+// #region module: Validate
+    async function getValidateMsg (documentType, properties?) {
+        let msg = ''
+        const metaList = await GetMetaValidationRuleApi({ documentType })
+        if (!metaList) return msg
+        metaList.forEach(metaItem => {
+            if (!metaItem.display || ignoreList.includes(metaItem.metaData)) return
+            if (metaItem.isRequire){
+                if(!properties 
+                    || !properties[metaItem.metaData]
+                    || (properties[metaItem.metaData] instanceof Array && properties[metaItem.metaData].length === 0)) {
+                        msg += `[${metaItem.metaData}]: ${$t('common_canNotEmpty')}<br/>`
+                    }
+            } 
+        })
+        return msg
+    }
+    async function getErrorMessage (doc, docKey) {
+        const _msg = await getValidateMsg(doc.documentType , deepCopy(doc.properties) )
+        if (_msg) return `<h4 class="msg-h4">${doc[docKey]}:</h4>${_msg}`
+        return ''
+    }
+    async function checkMetaValidate(docList: any[], docKey: string = 'name') {
+        const pList = []
+        docList.forEach(item => {
+            if(!item.properties) item.properties = {}
+            const pItem = getErrorMessage(item, docKey)
+            pList.push(pItem)
+        })
+        let errorMessage = await Promise.all(pList)
+        errorMessage = errorMessage.filter(item => !!item)
+        if(errorMessage.length > 0) {
+            ElMessageBox.confirm(errorMessage.join('<br>'), $t('dpTip_warning'), {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: $t('dpButtom_confirm'),
+            })
+            throw new Error("error");
+        } 
+        return errorMessage.length === 0
+        
+    }
+// #endregion
+defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
+</script>
+
+<style lang="scss">
+.meta-button-flex-end {
+  display: flex!important;
+  align-items: end;
+}
+.meta-button-flex-end button{
+   margin-bottom: 18px;
+}
+</style>

@@ -143,6 +143,7 @@ function init(list: ResSelectData[]) {
         return prev
     }, [])
     nextTick(() => {
+        if(!responsiveRef.value) return
         onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
     })
 }
@@ -169,8 +170,9 @@ function handleChange (filedData: {fieldName: string, value: any}) {
         if(props.inputKey) formModel[props.inputKey] = state.inputValue
         
         emits('form-change', deepCopy(formModel), filedData)
-        onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
         clearInterval(state.interval)
+        if(responsiveRef.value) return
+        onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
     }, 200)
 }
 function handleFilter () {

@@ -76,7 +76,7 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
             },
             onChange: (api, event) => {
                 
-                const data = api.saver.save().then((outputData) => {
+                api.saver.save().then((outputData) => {
                     calculateVariable(outputData);
                 });
             },
@@ -100,10 +100,33 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
     function setData(data:any):void{
         editor.value?.render(data);
     }
-
-    function calculateVariable(data:any) {
+    
+    function getAllVariablesFromString(str:string):string[] {
+        if(!str) return [];
+        // get all string between ${} in str
+        const regex = /\${(.*?)}/g;
+        const matches = str.match(regex);
         const newVariable:string[] = [];
-        for( const block of data.blocks) {
+        if(matches) {
+            matches.forEach((variable:any) => {
+                //check if variable contain ()
+                newVariable.push(variable.replace('${', '').replace('}', ''));
+            })
+        }
+        return newVariable;
+    }
+    
+    async function updateVariable() {
+        const data = await editor.value?.save();
+
+        calculateVariable(data);
+    }
+
+    function calculateVariable(blockData:any) {
+        console.log(data);
+        const newVariable:string[] = [];
+        for( const block of blockData.blocks) {
+            
             var t = document.createElement('template');
             t.innerHTML = block.data.text;
             // found by tag name "var"
@@ -114,26 +137,28 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
             const varLink = t.content.querySelectorAll('a.ce-link-item');
             // push data-url to variable
             varLink.forEach((variable) => {
-                const dataURL = variable.getAttribute('data-url');
-                const regex = /\${(.*?)}/g;
-                const matches = dataURL?.match(regex);
-                if(matches) {
-                    matches.forEach((variable:any) => {
-                        newVariable.push(variable.replace('${', '').replace('}', ''));
-                    })
-                }
+                const dataURL = variable.getAttribute('data-url') as string;
+                newVariable.push(...getAllVariablesFromString(dataURL));
+                
             })
             // remove t from memory
             t.remove();
         }
         // get string if ${} in data.subject
-        const regex = /\${(.*?)}/g;
-        const matches = data.subject?.match(regex);
-        if(matches) {
-            matches.forEach((variable:any) => {
-                newVariable.push(variable.replace('${', '').replace('}', ''));
-            })
-        }
+        newVariable.push(...getAllVariablesFromString(data.value.subject));
+        //sprint data.To, data.CC, data.BCC by , and check if it is email, if not push to variable
+        
+        const to = data.value.to.split(',');
+        const cc = data.value.cc.split(',');
+        const bcc = data.value.bcc.split(',');
+        const allEmail = [...to, ...cc, ...bcc];
+        allEmail.forEach((email) => {
+            if(!email.includes('@')) {
+                // remove all space
+                email = email.replace(/\s/g, '');
+                newVariable.push(email);
+            }
+        })
         // variables.value = newVariable;
         // remove duplicate
         
@@ -144,7 +169,6 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         const data = await editor.value?.save();
         let html = '<html><body>'
         for( const block of data.blocks) {
-            console.log(block.type)
             switch(block.type){
                 case 'header':
                     html += `<h${block.data.level}>${htmlToString(block.data.text)}</h${block.data.level}>`;
@@ -219,7 +243,8 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
         dispose,
         setData,
         variables,
-        getData
+        getData,
+        updateVariable,
     }
 
     

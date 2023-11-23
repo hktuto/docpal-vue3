@@ -13,7 +13,7 @@
               
               <div v-if="canAutoAssignee" class="el-form-item">
                 <ElFormItem label="Candidate Group">
-                  <ElSelect v-model="candidateGroup" placeholder="Select Group" v-if="haveCandidateGroup">
+                  <ElSelect v-model="candidateGroup" placeholder="Select Group" v-if="haveCandidateGroup" filterable>
                     <ElOption v-for="item in allUserGroup" :key="item.id" :label="item.name" :value="item.id" />
                   </ElSelect>
                 </ElFormItem>
@@ -78,11 +78,13 @@
 
 
 <script lang="ts" setup>
+import {defineProps, defineEmits, ref, computed, watch, onMounted, nextTick} from "vue";
 import {GetGroupListApi} from "dp-api";
 import {ElMessage} from 'element-plus'
 import draggable from "vuedraggable";
-import {bpmnStepToForm, fieldType, FormObject} from "../../../utils/formEditorHelper";
+import {bpmnStepToForm} from "../../../utils/formEditorHelper";
 import {useWorkflowGraph} from "../../../composables/useWorkflowGraph";
+
 const props = defineProps<{
   data: any,
 }>()
@@ -115,6 +117,8 @@ const autoAssignField = computed({
     console.log('autoAssignField set', props.data )
   }
 })
+
+const {bpmnJson} = useWorkflowGraph()
 function autoApprovalChanged(newVal: boolean) {
   if(newVal) {
     props.data.extensionElements['flowable:taskListener'] = createAutoAssignee(autoAssignField.value || "")
@@ -153,7 +157,7 @@ function previewForm(){
     ElMessage.error('Please fix all field error before preview')
     return;
   }
-  const formJson = bpmnStepToForm(props.data.extensionElements['flowable:formProperty'], props.data)
+  const formJson = bpmnStepToForm(props.data.extensionElements['flowable:formProperty'], bpmnJson.value.definitions.process)
   
   previewFormOpened.value = true
   nextTick(() => {
@@ -200,6 +204,7 @@ const candidateGroup = computed({
         ['attr_xmlns:modeler'] : "http://flowable.org/modeler",
         "__cdata": group.name
       }
+      props.data['attr_flowable:candidateGroups'] = group.id
     }
     console.log('set', props.data)
     emit('submit', props.data)

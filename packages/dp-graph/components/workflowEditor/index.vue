@@ -181,6 +181,7 @@ watch(() => props.bpmn, (newVal, oldVal) => {
 function getWorkflowData() {
   
   const xml = jsonToBpmn(bpmnJson.value)
+  console.log(bpmnJson.value)
   // create blob file
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
   const name = bpmnJson.value.definitions.process.attr_name
@@ -299,7 +300,7 @@ async function validateForm():Promise<any[]>{
       ElMessage.error('Please fix all field error before preview')
       throw new Error();
     }
-    const formJson = bpmnStepToForm(step.extensionElements['flowable:formProperty'], step)
+    const formJson = bpmnStepToForm(step.extensionElements['flowable:formProperty'], bpmnJson.value.definitions.process)
     const param = {
       processKey: bpmnJson.value.definitions.process.attr_id,
       userTaskId: step.attr_id,

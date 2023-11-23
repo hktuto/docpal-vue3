@@ -1,23 +1,19 @@
 <template>
    <div>
-     <BrowseActionsButton id="editActionButton" :label="$t('tip.rename')" @click="openDialog(doc)">
-        <el-tooltip :content="$t('tip.rename')">
-            <!-- <div class="actionIconContainer" @click="openDialog(doc)"> -->
-                <!-- <el-icon >
-                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ea893728=""><path fill="currentColor" d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640V512z"></path><path fill="currentColor" d="m469.952 554.24 52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"></path></svg>
-                </el-icon> -->
-            <!-- </div> -->
-            <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.rename')"
+     <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog(doc)">
+        <el-tooltip :content="$t('tip.editDocDetail')">
+            <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.editDocDetail')"
                 ></SvgIcon> 
         </el-tooltip>
      </BrowseActionsButton>
-        <el-dialog v-model="dialogOpened" append-to-body :title="$t('filePopover_rename')" class="scroll-dialog">
+        <el-dialog v-model="dialogOpened" append-to-body :title="$t('tip.editDocDetail')" class="scroll-dialog">
             <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
                 <el-form-item :label="$t('name')" prop="name"
                     :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">
                     <el-input v-model="form.name" clearable />
                 </el-form-item>
             </el-form>
+            <MetaRenderForm ref="MetaFormRef"></MetaRenderForm>
             <template #footer>
                 <el-button :loading="state.loading"  @click="handleSave"
                     @keyup.enter="handleSave">{{$t('common_save')}}</el-button>
@@ -46,23 +42,29 @@ const state = reactive({
   doc: {},
   loading: false
 })
-const { t} = useI18n() 
+const MetaFormRef = ref()
 function openDialog(doc){
     state.doc = doc
     form.value.name = doc.name
     form.value.id = doc.id
     form.value.path = doc.path
     dialogOpened.value = true
+    nextTick(async() => {
+        await MetaFormRef.value.init(doc.type)
+        MetaFormRef.value.setData(doc.properties)
+    })
 }
 async function handleSave(){
     state.loading = true
     try {
+        const metaFormData = await MetaFormRef.value.getData()
+        if(!metaFormData) return
         // check if the name is exist in the folder
         const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
 
         if(isDuplicate && form.value.name !== props.doc.name){
             ElMessage({
-                message: t('dpTip_duplicateFileName') as string,
+                message: $t('dpTip_duplicateFileName') as string,
                 type: 'error'
             })
             state.loading = false
@@ -71,7 +73,7 @@ async function handleSave(){
         await patchDocumentApi({
             idOrPath: form.value.id,
             name: form.value.name,
-            properties: {},
+            properties: metaFormData,
         })
         dialogOpened.value = false
         emits('success', state.doc)

@@ -20,7 +20,7 @@
         :list="dropList"
         group="people"
         :itemKey="itemKey"
-        @change="emit('change')"
+        @change="() => emit('change', {dropList, dragList})"
     >
         <template #item="{ element, index }">
             <span class="list-drop-item">
@@ -60,7 +60,7 @@ function handleClose(element) {
     })
     props.dropList.splice(index, 1)
     props.dragList.push(addItem)
-    emit('change')
+    emit('change', {dropList:props.dropList, dragList: props.dragList})
 }
 function handleChange (evt) {
     const dropLen = props.dropList.length

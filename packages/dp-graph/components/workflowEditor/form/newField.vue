@@ -30,7 +30,7 @@ const newFieldFormEl = ref();
 const newFieldForm = ref<FormObject>({
   attr_id: '',
   attr_name: '',
-  attr_type: 'String',
+  attr_type: 'string',
 })
 
 const newFieldRules= {

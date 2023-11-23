@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import * as echarts from "echarts";
 import { GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, watchDebounced } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
     hideSetting?: boolean,
@@ -496,11 +496,9 @@ onMounted(async() => {
 onUnmounted(() => {
     echartInstance.dispose()
 })
-watch(() => props.setting, (newSetting) => {
+watchDebounced(props.setting, (newSetting) => {
     handleInitChart(newSetting)
-}, {
-    immediate: true
-})
+},{ debounce: 200, maxWait: 500, immediate: true })
 defineExpose({
     resize
 })
