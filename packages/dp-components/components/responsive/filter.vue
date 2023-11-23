@@ -3,7 +3,7 @@
    class="responsive-container" v-element-size="onResize">
      <div class="flex-x-start">
         <el-input v-if="inputKey" v-model="state.inputValue" :placeholder="$t(inputPlaceHolder)"
-            @input="handleChange"></el-input>
+            clearable @input="handleChange"></el-input>
         <div v-for="item in state.list" :key="item.label" :ref="el => { boxRefs[item.label] = el }">
             <ResponsiveSelect  :selectData="item" @change="handleChange"/>
         </div>

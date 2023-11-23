@@ -74,7 +74,8 @@ function handleKeywordFilter(data) {
     function handleFilterFormChange(formModel) {
         const isFolder = formModel.isFolder === 'folder'
         state._tableData = state.tableData.filter(item => {
-            return item.name.toLowerCase().includes(formModel.name.toLowerCase()) 
+            return (formModel.name === undefined || 
+                    item.name.toLowerCase().includes(formModel.name.toLowerCase())) 
                 && (formModel.isFolder === undefined || 
                     item.isFolder === isFolder)
         })
