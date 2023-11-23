@@ -45,7 +45,7 @@ const templateVariables = computed(() => {
   if(!Array.isArray(props.data?.extensionElements['flowable:field'] )) {
     props.data.extensionElements['flowable:field'] = [props.data.extensionElements['flowable:field'] ]
   }
-  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType"));
+  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType") && !(item.attr_name === "hostUrl") && !(item.attr_name === "processInstanceId"));
   return item;
 })
 function fieldMappingUpdate(index, newVal) {
@@ -59,12 +59,6 @@ const allFieldOptions = computed(() => {
       value: '${variables:get(' + props.allField[key].attr_id + ')}'
     }
   })
-  all.push(...defaultWorkflowVariable.value.map((item) => {
-    return {
-      label: item,
-      value: '${variables:get(' + item + ')}'
-    }
-  }))
   return all;
 })
 
