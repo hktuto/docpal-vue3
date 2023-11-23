@@ -43,11 +43,6 @@ const officeUrl = (docId:string, token:string) =>{
 }
 function handleClose() {
     state.dialogOpened = false
-    const { public:{ endPoint } } = useRuntimeConfig();
-    if (endPoint === 'client') {
-        const ev = new CustomEvent('refreshDocument', {detail:props.doc});
-        document.dispatchEvent(ev);
-    }
     emits('refresh')
 }
 </script>

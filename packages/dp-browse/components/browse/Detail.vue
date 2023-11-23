@@ -20,7 +20,7 @@
                       <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
                       <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                       <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
-                      <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
+                      <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @refresh="handleRefreshPreview" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
                       <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
       
