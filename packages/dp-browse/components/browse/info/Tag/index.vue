@@ -1,4 +1,5 @@
 <template>
+  <el-divider content-position="left">{{$t('info.tag&collection')}}</el-divider>
    <div class="infoSection" v-show="tags.length > 0 || canWrite" >
      <div class="infoTitle">{{ $t('rightDetail_tags') }}</div>
     <div class="infoContent">

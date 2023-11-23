@@ -10,7 +10,7 @@
         <el-form-item :label="$t('filePopover_OCRLanguages')" prop="targetFile">
             <el-select v-model="form.languages" :multiple-limit="2" multiple placeholder="N/A">
                 <el-option  v-for="l in availableLanguage"
-                        :key="l" :value="l" :label="l"></el-option>
+                        :key="l" :value="l" :label="$t(`languages.${l}`)"></el-option>
             </el-select>
         </el-form-item>
     </el-form>

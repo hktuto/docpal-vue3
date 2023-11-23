@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <el-divider />
+        
         <BrowseInfoMeta v-bind="$props" :permission="permission" @update="$emit('update', true)"/>
         <BrowseInfoTag :doc="doc" :permission="permission" @update="$emit('update', true)"/>
         <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" :permission="permission" @update="$emit('update', true)" />

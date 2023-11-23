@@ -52,10 +52,10 @@ const tableKey = TABLE.PUBLIC_LANGUAGE_SET
 const tableSetting = defaultTableSetting[tableKey]
 function handleAction () {}
 function handleDblclick () {}
-function handleOpen () {
+async function handleOpen () {
     state.visible = true
     state.languageKeys = getLanguageKeys()
-    state.tableData = getLanguageList(state.languageKeys)
+    state.tableData = await getLanguageList(state.languageKeys)
     console.log(state.tableData)
 }
 async function handleSubmit (row) {
