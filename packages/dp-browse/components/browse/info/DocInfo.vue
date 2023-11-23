@@ -3,7 +3,7 @@
     <el-card>
         <div class="infoSection">
             <div class="infoTitle">{{$t('info_type')}}</div>
-            <div class="infoContent">{{ info.type }}</div>
+            <div class="infoContent">{{ $t(info.type) }}</div>
         </div>
         <div v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')" class="infoSection">
             <div class="infoTitle">{{ $t('info_version') }}</div>

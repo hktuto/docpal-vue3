@@ -522,7 +522,18 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ] 
             },
-            { id: '3', label: 'info_type', prop: 'documentType', sortable: true },
+            { id: '3', label: 'info_type', prop: 'documentType', sortable: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ],
+            },
             { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
             { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
             {
@@ -640,7 +651,18 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { id: '4', label: 'tableHeader_type', prop: 'documentType' },
+            { id: '4', label: 'tableHeader_type', prop: 'documentType',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             {
                 "id": '5',
                 "type": "",
@@ -928,7 +950,18 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '1', type: 'selection' },
             { id: '2', type: 'expand', slot: 'expand' },
             { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true, defaultColumn: true },
-            { id: '4', label: 'dpDocument_fileType', prop: 'documentType', slot: 'documentType', sortable: true },
+            { id: '4', label: 'dpDocument_fileType', prop: 'documentType', slot: 'documentType', sortable: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             { id: '5', label: 'dpTool_approve', prop: 'approve', slot: 'approve', sortable: true, align: 'center' },
         ],
         events: [],
@@ -1475,7 +1508,18 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_META_MANAGE]: {
         columns: [
             { id: '1', slot: 'icon', label: '', width: 50 },
-            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             { id: '3', slot: 'displayMeta', label: 'docType_displayMeta' },
             { id: '4', slot: 'relatedDocument', label: 'docType_relatedDocument' },
         ],
@@ -1566,7 +1610,18 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_META_RELATED]: {
         columns: [
-            { id: '1', label: 'dpTable_documentType', prop: 'documentType', defaultColumn: true, sortable: true },
+            { id: '1', label: 'dpTable_documentType', prop: 'documentType', defaultColumn: true, sortable: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             { id: '2', label: 'rightDetail_meta', prop: 'metaData', sortable: true },
             {   
                 id: '3',
@@ -1599,7 +1654,18 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_BULK_IMPORT]: {
         columns: [
             { id: '1', slot: 'icon', label: '', width: 50 },
-            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             { id: '3', slot: 'metaMapping', label: 'docType_metaMapping' },
             { id: '4', slot: 'bulkImportConfig', label: 'docType_captureProfile' },
         ],
@@ -2090,7 +2156,18 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_FOLDER_CABINET]: {
         columns: [
             { id: '1', label: 'docType_label', prop: 'label', defaultColumn: true },
-            { id: '2', label: 'docType_documentType', prop: 'documentType' },
+            { id: '2', label: 'docType_documentType', prop: 'documentType',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             {   
                 id: '3',
                 "type": "",
