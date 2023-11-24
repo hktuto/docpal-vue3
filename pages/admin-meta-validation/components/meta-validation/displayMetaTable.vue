@@ -8,8 +8,9 @@
         </template>   
         <template #preSortButton>
             <div class="mg-b">
-                <KeywordFilter :list="state.list" attr="metaData"
-                    @filter="handleKeywordFilter"></KeywordFilter>
+                <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="metaData" @form-change="handleFilterFormChange"/>
+                <!-- <KeywordFilter :list="state.list" attr="metaData"
+                    @filter="handleKeywordFilter"></KeywordFilter> -->
                 <el-button class="el-icon--right" type="primary"
                     @click="handleDialogShow()">{{$t('common_add')}}</el-button>
             </div>
@@ -78,6 +79,12 @@ async function getTable(addMore: boolean = false) {
 function handleKeywordFilter(data) {
     state._list = data
 }
+function handleFilterFormChange(formModel) {
+    state._list = state.list.filter(item => {
+        return (formModel.metaData === undefined || 
+                item.metaData.toLowerCase().includes(formModel.metaData.toLowerCase())) 
+    })
+}
 async function handleDisplayChange(row) {
     try {
         row.loading = true
@@ -102,5 +109,6 @@ onMounted(async() => {
 <style lang="scss" scoped>
 .mg-b {
     margin-bottom: var(--app-padding);
+    display: flex;
 }
 </style>
