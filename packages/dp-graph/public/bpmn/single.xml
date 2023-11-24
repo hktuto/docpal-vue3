@@ -28,16 +28,16 @@
         <flowable:formProperty field_label="Description" field_type="multi_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="description" name="Description" type="string" field_valid="true"></flowable:formProperty>
         <flowable:formProperty field_label="Approver ID" field_type="approve_user_dropdown" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="user_approver_id" name="Approver ID" type="string" field_valid="true" target_step="approvalForm"></flowable:formProperty>
         <flowable:formProperty field_label="Copy Personnel ID" field_type="user_dropdown" field_hidden="false" field_disabled="false" id="user_copy_personnel_id" name="Copy Personnel ID" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true"></flowable:formProperty>
+        <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
       </extensionElements>
     </startEvent>
     <userTask id="approvalForm" name="Start Approval Form" flowable:candidateGroups="administrators" flowable:formFieldValidation="true">
       <extensionElements>
-        <flowable:formProperty field_label="label" field_type="single_line_input" field_hidden="false" field_disabled="true" id="businessKey" name="Business Key" type="date" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Creator ID" field_type="user_dropdown" field_hidden="false" field_disabled="true" id="user_creator_id" name="Creator ID" type="date" field_valid="true"></flowable:formProperty>
+        <flowable:formProperty field_label="label" field_type="single_line_input" field_hidden="false" field_disabled="true" id="businessKey" name="Business Key" type="string" field_valid="true"></flowable:formProperty>
+        <flowable:formProperty field_label="Creator ID" field_type="user_dropdown" field_hidden="false" field_disabled="true" id="user_creator_id" name="Creator ID" type="string" field_valid="true"></flowable:formProperty>
         <flowable:formProperty field_label="Description" field_type="multi_line_input" field_hidden="false" field_disabled="true" id="description" name="Description" type="string" field_valid="true"></flowable:formProperty>
         <flowable:formProperty field_label="Approve" field_type="boolean" field_required="true" field_hidden="false" field_disabled="false" id="approved" name="Approve" type="boolean" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true"></flowable:formProperty>
+        <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
         <flowable:formProperty field_label="Reject Reason" field_type="multi_line_input" field_hidden="false" field_disabled="false" id="rejectReason" name="Reject Reason" type="string" field_valid="true"></flowable:formProperty>
         <flowable:taskListener delegateExpression="${autoAssignTaskListener}" event="create">
           <flowable:field name="assignee">
