@@ -1,4 +1,5 @@
 <template>
+<el-divider content-position="left">{{$t('info.displayMeta')}}</el-divider>
     <div v-for="(item, index) in displayMeta" :key="item.metaData"  class="infoSection">
         <div class="infoTitle">{{ $t(item.metaData) }}</div>
         <div class="infoContent">

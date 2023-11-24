@@ -134,7 +134,7 @@ function handleEdit() {
 function handleRefresh (state) {
     if(!state || state.info) getInfo()
     if(!state || state.variables) getVariables()
-    if(!state || state.preview)getPreviewFile()
+    if(!state || state.preview) getPreviewFile()
 }
 onMounted(async () => {
     getVariables()

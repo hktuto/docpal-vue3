@@ -5,11 +5,7 @@
                 @row-dblclick="handleDblclick"
                 @command="handleAction">
             <template #preSortButton>
-                <div class="filter-container ">
-                    <KeywordFilter :list="state.tableData" attr="name"
-                        @filter="handleKeywordFilter"></KeywordFilter>
-                    <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"/>
-                </div>
+                <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange"/>
             </template>
             <template #icon="{ row }">
                 <BrowseItemIcon class="el-icon--left" :type="row.isFolder ? 'folder' : 'file'"/>
@@ -27,7 +23,7 @@ import { getDocTypeListApi, TABLE, defaultTableSetting, deepCopy } from 'dp-api'
         tableData: [],
         _tableData: [],
         options: {
-            rowKey: 'documentType',
+            rowKey: 'name',
         }
     })
     const tableKey = TABLE.ADMIN_META_VALIDATION
@@ -67,8 +63,8 @@ function handleKeywordFilter(data) {
         const filters = [
             { key: "isFolder", label: $t('doc.isFolder'), type: "string", isMultiple: false,
                 options: [
-                    { value: "file", label: $t('tip.false') },
-                    { value: "folder", label: $t('tip.true') },
+                    { value: 'file', label: $t('tip.false') },
+                    { value: 'folder', label: $t('tip.true') },
                     // { value: "both", label: $t('tip.both') },
                 ]
             },
@@ -76,14 +72,13 @@ function handleKeywordFilter(data) {
         ResponsiveFilterRef.value.init(filters)
     }
     function handleFilterFormChange(formModel) {
-        if(!formModel.isFolder ||  formModel.isFolder === 'both')  state._tableData = state.tableData
-        else {
-            state._tableData = state.tableData.filter(item => {
-                const b = formModel.isFolder === 'folder'
-                return item.isFolder === b
-            })
-        }
-        
+        const isFolder = formModel.isFolder === 'folder'
+        state._tableData = state.tableData.filter(item => {
+            return (formModel.name === undefined || 
+                    item.name.toLowerCase().includes(formModel.name.toLowerCase())) 
+                && (formModel.isFolder === undefined || 
+                    item.isFolder === isFolder)
+        })
     }
 // #endregion
 onMounted(async() => {
@@ -95,8 +90,11 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.headerLeftExpand) {
-    width: 100%;
+:deep(.tableHeader) {
+    margin-bottom: 10px;
+    & > .el-button {
+        margin: unset;
+    }
 }
 .button-add {
     margin: 0 0 var(--app-padding) 0;
