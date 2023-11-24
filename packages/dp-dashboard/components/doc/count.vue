@@ -7,7 +7,7 @@
             </el-progress>
             <div class="dashboard-item-progress-count">{{state.data[setting.documentType]}}</div>
             <div class="dashboard-item-progress-title"
-                >{{setting.documentType}}</div>
+                >{{$t(setting.documentType)}}</div>
             <DocCountSetting ref="settingRef" 
                 @delete="handleDelete"
                 @refresh="handleRefresh"/>

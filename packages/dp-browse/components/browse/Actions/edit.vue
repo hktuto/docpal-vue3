@@ -58,7 +58,10 @@ async function handleSave(){
     state.loading = true
     try {
         const metaFormData = await MetaFormRef.value.getData()
-        if(!metaFormData) return
+        if(!metaFormData) {
+            state.loading = false
+            return
+        }
         // check if the name is exist in the folder
         const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
 

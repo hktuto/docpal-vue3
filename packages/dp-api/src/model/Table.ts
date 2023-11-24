@@ -1679,7 +1679,18 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_BULK_IMPORT_META]: {
         columns: [
-            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true },
+            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "metaData",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
             { id: '2', label: 'table_label', prop: 'label', showOverflowTooltip: true },
             {   
                 id: '3',

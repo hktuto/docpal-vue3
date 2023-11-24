@@ -132,11 +132,11 @@ function resize() {
         // data
         await getData(data)
         options.series = {
-            name: `Metadata/${props.meta}`,
+            name: `${$t('rightDetail_meta')}/${$t(props.meta)}`,
             ...setting.defaultSetting.series,
             data: deepCopy(state.data)
         }
-        options.title.text = `Metadata/${props.meta}`
+        options.title.text = `${$t('rightDetail_meta')}/${$t(props.meta)}`
         initChart()
         echartInstance.on('click', (event) => drillDown(event.data))
     }

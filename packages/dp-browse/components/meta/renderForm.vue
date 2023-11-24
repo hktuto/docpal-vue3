@@ -22,7 +22,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
 // #region module: Variables
     const FromVariablesRendererRef = ref()
     async function getVariables() {
-        // try {
+        try {
             const date = new Date().valueOf()
             state.variables = []
             state.data.forEach((item, index) => {
@@ -44,6 +44,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                             break;
                         case 'date':
                             if(item.options.formatDate) _item.options.format = item.options.formatDate
+                            if(item.options.formatDate.includes('HH') || item.options.formatDate.includes('hh')) _item.options.type = 'datetime'
                             break;
                         case 'select':
                             if(item.values) _item.options.optionItems = item.values
@@ -64,8 +65,8 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     FromVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
-        // } catch (error) {
-        // }
+        } catch (error) {
+        }
     } 
     function getApplyFormJson (formJson) {
         const widgetList = []
@@ -100,10 +101,33 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
     }
 // #endregion
 async function setData(properties) {
+    state.variables.forEach(item => {
+        switch (item.type) {
+            case 'textarea':
+                if (properties[item.name]) properties[item.name] = properties[item.name].replaceAll('<br/>','\n')
+                break;
+            default:
+                break;
+        }
+    })
     return await FromVariablesRendererRef.value.setData(properties)
 }
 async function getData() {
-    return await FromVariablesRendererRef.value.getData()
+    const data = await FromVariablesRendererRef.value.getData()
+    state.variables.forEach(item => {
+        switch (item.type) {
+            case 'textarea':
+                if (data[item.name]) data[item.name] = data[item.name].replaceAll('\n','<br/>')
+                break;
+            case 'date':
+                console.log(data[item.name]);
+                console.log(formatDate(data[item.name], 'YYYY-MM-DD HH:mm:ss'));
+                // if (data[item.name]) data[item.name] = formatDate(data[item.name], 'YYYY-MM-DD HH:mm:ss')
+            default:
+                break;
+        }
+    })
+    return data
 }
 function formChange(fieldName, newValue, oldValue, formModel) {
     emits('formChange', {fieldName,newValue,oldValue,formModel})

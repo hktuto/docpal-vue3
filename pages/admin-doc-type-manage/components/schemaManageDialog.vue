@@ -30,7 +30,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { CreateSchemasApi, UpdateSchemasApi, GetSchemaApi, getDocTypeListApi, fieldTypeRelatedList,
+import { CreateSchemasApi, UpdateSchemasApi, GetSchemaApi, fieldTypeRelatedList,
     TABLE, defaultTableSetting, deepCopy } from 'dp-api'
 const props = defineProps<{
     docType: any

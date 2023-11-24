@@ -146,7 +146,7 @@ function handleOpen(setting) {
     }
 }
 function goMetaEdit () {
-    let r = '/meta'
+    let r = '/meta-validation'
     if (state.curDocType) r += `/${state.curDocType}`
     const url = router.resolve(r)
     window.open(url.href, '_blank');
