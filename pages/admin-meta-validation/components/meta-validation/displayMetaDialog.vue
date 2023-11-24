@@ -113,6 +113,7 @@ function handleOpen(exitList, data) {
         }, 1000)
     }
 }
+const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
 async function handleOptions (exitList) {
     const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('metaData')
     const options = listFilter()
@@ -120,7 +121,7 @@ async function handleOptions (exitList) {
     function listFilter() {
         return props.docType.keywords.reduce((prev, item) => {
             const index = exitList.findIndex(exitItem => exitItem.metaData === item.name)
-            if (item.type !== 'complex') {
+            if (item.type !== 'complex' && !ignoreList.includes(item.name)) {
                 item.value = item.name
                 item.label = item.name
                 if(index === -1) item.disabled = false

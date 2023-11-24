@@ -13,7 +13,7 @@
             </div>
             <el-select v-model="state.doc.documentType" filterable default-first-option
                 @change="handleDocTypeChange(state.doc)">
-                <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
+                <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="$t(item.name)"></el-option>
             </el-select>
         </div>
         <MetaRenderForm ref="MetaFormRef" @formChange="handleMetaChange"></MetaRenderForm>

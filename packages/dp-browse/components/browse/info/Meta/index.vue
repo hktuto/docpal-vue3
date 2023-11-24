@@ -1,5 +1,5 @@
 <template>
-<el-divider content-position="left">{{$t('info.displayMeta')}}</el-divider>
+    <el-divider v-if="displayMeta.length > 0" content-position="left">{{$t('info.displayMeta')}}</el-divider>
     <div v-for="(item, index) in displayMeta" :key="item.metaData"  class="infoSection">
         <div class="infoTitle">{{ $t(item.metaData) }}</div>
         <div class="infoContent">
@@ -7,6 +7,7 @@
             <BrowseInfoMetaDocumentType v-else-if="item.dataType === 'select' && item.options.dropdownType === 'documentType'"
                 :data="item.value" />
             <span v-else-if="item.metaDataType ==='array' && item.value">{{ item.value.join(',') || '-'}}</span>
+            <span v-else-if="item.value" v-html="item.value"></span>
             <span v-else>{{ item.value || '-'}}</span>
         </div>
     </div>

@@ -65,7 +65,7 @@ async function handleOptions (exitList) {
             const index = exitList.findIndex(exitItem => exitItem.documentType === item.name)
             if (index === -1) {
                 item.value = item.name
-                item.label = item.name
+                item.label = $t(item.name)
                 prev.push(item)
             }
             return prev

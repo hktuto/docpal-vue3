@@ -5,8 +5,9 @@
         @command="handleAction">  
         <template #preSortButton>
             <div class="mg-b">
-                <KeywordFilter :list="state.list" attr="metaData"
-                    @filter="handleKeywordFilter"></KeywordFilter>
+                <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange"/>
+                <!-- <KeywordFilter :list="state.list" attr="metaData"
+                    @filter="handleKeywordFilter"></KeywordFilter> -->
                 <el-button class="el-icon--right" type="primary"
                     @click="handleDialogShow()">{{$t('common_add')}}</el-button>
             </div>
@@ -63,7 +64,12 @@ const MetaDisplayMetaDialogRef = ref()
 function handleDialogShow(data) {
     MetaDisplayMetaDialogRef.value.handleOpen(state.list, data)
 }
-
+function handleFilterFormChange(formModel) {
+    state._list = state.list.filter(item => {
+        return (formModel.name === undefined || 
+                item.documentType.toLowerCase().includes(formModel.name.toLowerCase())) 
+    })
+}
 async function getTable() {
     state.list = await GetMetadataRelatedApi(route.params.id)
     state._list = state.list
@@ -76,5 +82,6 @@ onMounted(async() => {
 <style lang="scss" scoped>
 .mg-b {
     margin-bottom: var(--app-padding);
+    display: flex;
 }
 </style>

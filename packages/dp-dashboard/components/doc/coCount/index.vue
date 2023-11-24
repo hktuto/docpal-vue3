@@ -1,7 +1,7 @@
 <template>
     <el-card class="dashboard-item dashboard-item-main" :style="`--setting-color:${setting.color}`">
         <template #header="{ close, titleId, titleClass }">
-            <h4>{{setting.documentType}}
+            <h4>{{$t(setting.documentType)}}
                 <DashboardUserFilter class="el-icon--right" :user="state.filterUser"
                     :show="setting.showUserFilter"
                     @refreshSetting="handleFilterUser"></DashboardUserFilter>

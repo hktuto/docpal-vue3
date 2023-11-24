@@ -290,7 +290,7 @@ let options = {}
             const value = chartData[key]
             const _sItem = {
                 value,
-                name: key
+                name: $t(key)
             }
             const dItem = displayList.find(item => item.documentType === key)
             if(!!dItem && !!dItem.color) {
@@ -313,7 +313,7 @@ let options = {}
             const values = chartData[key]
             const _sItem = {
                 ...setting[`${type}Setting`].series,
-                name: key,
+                name: $t(key),
                 data: values instanceof Array ? values : [values]
             }
             if(!displayList) displayList = []

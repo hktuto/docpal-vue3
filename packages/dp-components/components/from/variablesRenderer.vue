@@ -78,10 +78,11 @@ function createJson(variables: variableItem[]) {
         if(!['date','input','switch','textarea','number','select'].includes(item.type)) _item.type = 'input'
         if(item.type === 'date') {
             _item.options.format = 'YYYY-MM-DD HH:mm',  //日期显示格式
-            _item.options.valueFormat = 'YYYY-MM-DD HH:mm:ss'
+            _item.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'
         } else if(item.type === 'input') {
             _item.options.type = 'text'
         } else if(item.type === 'textarea') {
+            _item.options.rows = 5
         }else if(item.type === 'number') {
             _item.options.defaultValue = 0
             _item.options.min = -999999999999999
@@ -106,8 +107,6 @@ async function getData () {
     return data
 }
 async function setFormJson (formJson) {
-    console.log('',formJson);
-    
     await FromRendererRef.value.vFormRenderRef.setFormJson(formJson)
 }
 async function setData (data) {

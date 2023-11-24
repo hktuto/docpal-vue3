@@ -23,7 +23,7 @@
                                  <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
                                 {{data.name}}
                             </span>
-                    <div>{{data.documentType}}</div>
+                    <div>{{$t(data.documentType)}}</div>
                   </div>
                 </template>
               </el-tree>

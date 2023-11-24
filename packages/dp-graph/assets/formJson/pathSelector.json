@@ -119,7 +119,7 @@
         "labelIconPosition": "rear",
         "labelTooltip": null,
         "onCreated": "",
-        "onMounted": "$api.get('/nuxeo/types',{baseUrl:'/client'}).then( (res) => {\n  const response = res.data.data;\n  docTypesStore = response.filter(item => !item.isFolder).sort((a,b)=> (a.name.localeCompare(b.name) )).map( item => ({label: item.name, value:item.name})); \n  this.loadOptions(docTypesStore)\n})",
+        "onMounted": "$api.get('/nuxeo/types',{baseUrl:'/client'}).then( (res) => {\n  const response = res.data.data;\n  docTypesStore = response.filter(item => !item.isFolder).sort((a,b)=> (a.name.localeCompare(b.name) )).map( item => ({label: $t(item.name), value:item.name})); \n  this.loadOptions(docTypesStore)\n})",
         "onRemoteQuery": "",
         "onChange": "",
         "onFocus": "",

@@ -21,6 +21,7 @@ async function getDocumentTemplates() {
     return {
       id: item.id,
       name: item.name,
+      value: item
     }
   });
 }
@@ -175,7 +176,30 @@ function emailVariableChange(newVal, key) {
 }
 
 function save() {
-  console.log('save', props.data)
+  // add prefix to documnentName base on template type
+  const documentNameField = props.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentName");
+  const templateIdField = props.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "templateId");
+  const templateType = allDocumentTemplates.value.find((item) => item.id === templateIdField['flowable:expression']['__cdata']);
+ 
+  if(templateType) {
+    let surfix = templateType.value.fileType;
+    switch (surfix) {
+      case 'Word':
+        surfix = '.docx';
+        break;
+      case 'Excel':
+        surfix = '.xlsx';
+        break;
+      case 'xlsx':
+        surfix = 'xlsx_';
+        break;
+      default:
+        surfix = '';
+        break;
+    }
+    console.log('templateType', templateType, surfix)
+    documentNameField.attr_name = "documentName" + surfix;
+  }
   emit('submit', props.data)
 }
 
