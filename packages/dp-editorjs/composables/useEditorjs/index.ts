@@ -5,12 +5,32 @@ import NestedList from '@editorjs/nested-list';
 import  Paragraph from '@editorjs/paragraph';
 import VariableOptions from './VariableOptions';
 import LinkInlineTool from './VariableLink';
-export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) => {
+import VariableTable from './VariableTable'
+export const useEditor = () => {
 
     const editor = ref();
-    function createEditor():void{
+    const data = useState<any>('editorData', () => ({}));
+    const variables = useState<string[]>('editorVariable', () => ([]));
+    const containerId = useState('editorContainerId', () => ('emailContent'));
+    
+    function createEditor(id:string, formData:any):void{
+        // throw error if no containerId or formData
+        if(!id || !formData) {
+            throw new Error('containerId or formData is required');
+        }
+        // dispose if editor is exist
+        if(editor.value) {
+            dispose();
+        }
+        // set containerId
+        containerId.value = id;
+        // set data 
+        data.value = formData;
+        // clean variable
+        variables.value = [];
+        // set up editor
         editor.value = new EditorJS({
-            holderId: editorId,
+            holderId: containerId.value ,
             autofocus: true,
             data:data.value,
             tools:{
@@ -35,6 +55,13 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
                 paragraph: {
                     class: Paragraph,
                     inlineToolbar: true,
+                },
+                VariableTable: {
+                    class: VariableTable,
+                    config:{
+                        withHeadings: true,
+                        variables: variables.value
+                    }
                 },
                 VariableOptions: {
                     class: VariableOptions,
@@ -80,12 +107,15 @@ export const useEditor = (editorId:string, data:any, variables:Ref<string[]> ) =
                     calculateVariable(outputData);
                 });
             },
-            onReady:() => {
+            onReady:async() => {
                 if(data.value.emailTemplateJson) {
                     const json = JSON.parse(data.value.emailTemplateJson);
                     // 不要渲染空的json
                     if(json.blocks.length > 0) {
                         setData(json);
+                        // set variable after ready
+                        const d = await editor.value?.save();
+                        calculateVariable(d);
                     }
                 }
             }
