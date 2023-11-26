@@ -83,6 +83,7 @@ export default class TableBlock {
    * @returns {HTMLDivElement}
    */
   render() {
+   
     /** creating table */
     this.table = new Table(this.readOnly, this.api, this.data, this.config);
 
@@ -91,8 +92,25 @@ export default class TableBlock {
     this.container.appendChild(this.table.getWrapper());
 
     this.table.setHeadingsSetting(this.data.withHeadings);
-
+   
+    setTimeout(()=> this.checkVariable(), 500);
     return this.container;
+    
+  }
+  
+  checkVariable(){
+    const variable = window.prompt("Please input Variable Name");
+    
+    if(!variable) {
+      console.log("destroy");
+      this.destroy();
+    }
+    // check variable contains only letters
+    if(!variable.match(/^[a-zA-Z]+$/)) {
+      window.alert("Please input only letters");
+      this.checkVariable();
+    }
+    
   }
 
   /**
@@ -148,6 +166,9 @@ export default class TableBlock {
    */
   destroy() {
     this.table.destroy();
+    if(this.container) {
+      this.container.remove();
+    }
   }
 
   /**

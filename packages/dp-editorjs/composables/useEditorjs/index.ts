@@ -45,6 +45,7 @@ export const useEditor = () => {
                 table:{
                     class: Table,
                     inlineToolbar: true,
+                    
                 },
                 link:{
                     class: LinkInlineTool,
@@ -55,6 +56,9 @@ export const useEditor = () => {
                 paragraph: {
                     class: Paragraph,
                     inlineToolbar: true,
+                    config:{
+                        preserveBlanks: true
+                    }
                 },
                 VariableTable: {
                     class: VariableTable,
@@ -123,8 +127,10 @@ export const useEditor = () => {
     }
 
     function dispose():void{
-        editor.value?.destroy();
-        editor.value = null;
+        if(editor.value && editor.value.destroy) {
+            editor.value?.destroy();
+            editor.value = null;
+        }
     }
 
     function setData(data:any):void{
@@ -175,7 +181,8 @@ export const useEditor = () => {
     function calculateVariable(blockData:any) {
         const newVariable:string[] = [];
         for( const block of blockData.blocks) {
-            
+            console.log(block)
+            // table
             var t = document.createElement('template');
             t.innerHTML = block.data.text;
             // found by tag name "var"
@@ -230,6 +237,9 @@ export const useEditor = () => {
                     html += `<ul>${ block.data.items.map( (item:any) => `<li>${htmlToString(item.content)}</li>`) }</ul>`;
                     break;
                 case 'table':
+                    html += `<table>${blockToTable(block.data.content)}</table>`;
+                    break;
+                case "VariableTable":
                     html += `<table>${blockToTable(block.data.content)}</table>`;
                     break;
             }

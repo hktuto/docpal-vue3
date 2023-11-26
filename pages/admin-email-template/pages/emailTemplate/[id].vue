@@ -49,7 +49,6 @@ import { ElMessage } from 'element-plus';
   const infoFormEl = ref()
 
   const layoutHtml = computed(() => {
-    console.log(selectedLayout.value, layouts.value)
     if(!selectedLayout.value || !layouts.value) return null;
     return layouts.value.find(item => item.id === selectedLayout.value).layoutContent
   })

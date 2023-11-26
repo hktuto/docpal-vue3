@@ -44,7 +44,6 @@ const { layout, data } = toRefs(props)
 //#endregion
 
 function layoutOrDataChange() {
-  console.log('layoutOrDataChange', layout.value, data.value)
   if(!layout.value) return;
   contentHtml.value = layout.value.replaceAll('[[emailContent]]', '<div id="emailContent"></div>');
   nextTick(() => {

@@ -127,6 +127,8 @@ export default class Table {
       this.bindEvents();
     }
   }
+  
+
 
   /**
    * Returns the rendered table wrapper
@@ -216,22 +218,22 @@ export default class Table {
       api: this.api,
       cssModifier: 'row',
       items: [
-        {
-          label: this.api.i18n.t('Add row above'),
-          icon: IconDirectionUpRight,
-          onClick: () => {
-            this.addRow(this.selectedRow, true);
-            this.hideToolboxes();
-          }
-        },
-        {
-          label: this.api.i18n.t('Add row below'),
-          icon: IconDirectionDownRight,
-          onClick: () => {
-            this.addRow(this.selectedRow + 1, true);
-            this.hideToolboxes();
-          }
-        },
+        // {
+        //   label: this.api.i18n.t('Add row above'),
+        //   icon: IconDirectionUpRight,
+        //   onClick: () => {
+        //     this.addRow(this.selectedRow, true);
+        //     this.hideToolboxes();
+        //   }
+        // },
+        // {
+        //   label: this.api.i18n.t('Add row below'),
+        //   icon: IconDirectionDownRight,
+        //   onClick: () => {
+        //     this.addRow(this.selectedRow + 1, true);
+        //     this.hideToolboxes();
+        //   }
+        // },
         {
           label: this.api.i18n.t('Delete row'),
           icon: IconCross,
@@ -264,10 +266,10 @@ export default class Table {
       this.focusedCell.row += 1;
       this.focusCell(this.focusedCell);
     } else {
-      this.addRow();
-      this.focusedCell.row += 1;
-      this.focusCell(this.focusedCell);
-      this.updateToolboxesPosition(0, 0);
+      // this.addRow();
+      // this.focusedCell.row += 1;
+      // this.focusCell(this.focusedCell);
+      // this.updateToolboxesPosition(0, 0);
     }
   }
 
@@ -465,7 +467,7 @@ export default class Table {
       });
 
       this.wrapper.appendChild(addColumnButton);
-      this.wrapper.appendChild(addRowButton);
+      // this.wrapper.appendChild(addRowButton);
     }
   }
 
