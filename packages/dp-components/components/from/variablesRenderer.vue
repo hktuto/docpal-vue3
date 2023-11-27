@@ -112,8 +112,8 @@ async function setFormJson (formJson) {
 async function setData (data) {
     await FromRendererRef.value.vFormRenderRef.setFormData(data)
 }
-function formChange(fieldName, newValue, oldValue, formModel) {
-    emits('formChange', {fieldName,newValue,oldValue,formModel})
+function formChange(formData) {
+    emits('formChange', formData)
 }
 defineExpose({ createJson, getData, setData, setFormJson })
 </script>

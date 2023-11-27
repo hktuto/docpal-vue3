@@ -71,10 +71,17 @@ async function handleDocTypeChange (doc) {
     }
 // #endregion
 function handleMetaChange(data) {
-    if(state.ready) state.doc.properties = deepCopy(data.formModel)
+    if(state.ready) {
+        state.doc.properties = deepCopy(data.formModel)
+    }
+}
+async function validate(nodeMapData) {
+    const tableData = Object.values(nodeMapData)
+    const result = await MetaFormRef.value.checkMetaValidate(tableData)
+    return result
 }
 defineExpose({
-    init
+    init, validate
 })
 </script>
 
