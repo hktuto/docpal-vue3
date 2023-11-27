@@ -184,7 +184,7 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
 <style lang="scss">
 .meta-button-flex-end {
   display: flex!important;
-  align-items: end;
+  align-items: flex-end;
 }
 .meta-button-flex-end button{
    margin-bottom: 18px;

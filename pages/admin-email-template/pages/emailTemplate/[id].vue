@@ -1,31 +1,21 @@
 <template>
 <NuxtLayout class="fit-height withPadding" backPath="/emailTemplate" :pageTitle="$t('admin_emailTemplate')">
-    <div v-if="ready" class="pageContent">
-        <div class="actions">
-            <div v-if="data" class="name">
-                <span class="span">{{ data.label }}</span>
-                <div class="editButton">
-                  <SvgIcon :src="'/icons/edit.svg'" @click="editInfoOpened = true" />
-                </div>
-            </div>
-            <div class="action">
-                <ElSelect type="primary" v-model="selectedLayout" >
-                    <ElOption v-for="item in layouts" :key="item.id" :label="item.name" :value="item.id"></ElOption>
-                </ElSelect>
-                <ElButton type="primary" size="small" @click="testEmailOpened = true">{{ $t('email_send_test') }}</ElButton>
-                <ElButton type="primary" size="small" @click="save">{{$t('common_save')}}</ElButton>
-            </div>
-        </div>
-        <div :class="`email_content ${mode}`">
-            <div class="responsiveSizeEditorContainer">
-              <SvgIcon :class="{desktop:true, active:mode === 'desktop'}" :src="'/icons/desktop.svg'" @click="mode = 'desktop'" />
-              <SvgIcon :class="{mobile:true, active:mode === 'mobile'}" :src="'/icons/smartphone.svg'" @click="mode = 'mobile'" />
-            </div>
-            <div :class="`emailTemplateContainer ${mode}`" v-html="selectedLayoutHtml">
-              
-            </div>
-        </div>
-    </div>
+
+  <Editorjs v-if="data" ref="editorEl" :data="data" :layout="layoutHtml"  >
+    <template #name>
+      <div class="editButton">
+        <SvgIcon :src="'/icons/edit.svg'" @click="editInfoOpened = true" />
+      </div>
+    </template>
+    <template #action>
+      <ElSelect type="primary" v-model="selectedLayout" >
+        <ElOption v-for="item in layouts" :key="item.id" :label="item.name" :value="item.id"></ElOption>
+      </ElSelect>
+      <ElButton type="primary" size="small" @click="testEmailOpened = true">{{ $t('email_send_test') }}</ElButton>
+      <ElButton type="primary" size="small" @click="save">{{$t('common_save')}}</ElButton>
+    </template>
+  </Editorjs>
+   
   <ElDialog ref="editInfoDialog" v-model="editInfoOpened" append-to-body destroy-on-close :close-on-press-escape="false" :close-on-click-modal="false" :show-close="false">
     <EditorjsInfoForm v-if="data" ref="infoFormEl" :data="data" />
     <template #footer>
@@ -53,12 +43,15 @@ import { ElMessage } from 'element-plus';
   const variables = ref<any[]>([]);
   const ready = ref(false)
   const layouts = ref<any[]>([]);
-  const selectedLayout = ref<any>(null);
-  const mode = ref<'desktop' | 'mobile'>('desktop');
+  const editorEl = ref();
+  const selectedLayout = ref<any>("");
   const router = useRouter()
   const infoFormEl = ref()
-  
-  const {t} = useI18n();
+
+  const layoutHtml = computed(() => {
+    if(!selectedLayout.value || !layouts.value) return null;
+    return layouts.value.find(item => item.id === selectedLayout.value).layoutContent
+  })
 
 
     /**
@@ -68,7 +61,6 @@ import { ElMessage } from 'element-plus';
         // TODO : if id is new , create new dummy data
       if(!id ||id === 'new') {
         ready.value = true;
-        await getVariableFromBody("");
         await getTemplateLayout("");
         editInfoOpened.value = true;
         return {
@@ -82,33 +74,11 @@ import { ElMessage } from 'element-plus';
         const { data } = await api.get(`/docpal/template/email/template/${id}`);
         // loop template body and get all variables
         const body = data.data.body;
-        await getVariableFromBody(body);
         await getTemplateLayout(data.data.emailLayoutId);
         
         ready.value = true;
         return data.data;
     });
-
-  const editor = useEditor('emailContent', data, variables);
-
-    /**
-     * Step 2 : 從 body 中取得所有的變數
-     * @param body 
-     */
-    async function getVariableFromBody(body: string) {
-        // get all text within ${}
-        const regex = /\${(.*?)}/g;
-        let match;
-        while ((match = regex.exec(body)) !== null) {
-            // This is necessary to avoid infinite loops with zero-width matches
-            if (match.index === regex.lastIndex) {
-                regex.lastIndex++;
-            }
-            variables.value.push(match[1]);
-        }
-        // remove duplicates
-        variables.value = [...new Set(variables.value)];
-    }
 
     /**
      * Step 3: 從後端取得所有的 layout
@@ -118,20 +88,9 @@ import { ElMessage } from 'element-plus';
         const { entryList } = await GetEmailLayoutPageApi({pageNum:0,pageSize:1000});
         layouts.value = entryList;
         selectedLayout.value = templateId || entryList[0].id;
+        // selectedLayout.value = templateId || entryList[0].id;
     }
 
-    /**
-     * Step 4: 根據選擇的 layout 產生 html
-     */
-    const selectedLayoutHtml = computed(() => {
-        if(!selectedLayout.value) return '';
-        const {layoutContent} = layouts.value.find((item:any) => item.id === selectedLayout.value);
-        nextTick(() => {
-                editor.dispose();
-                editor.createEditor();
-            })
-        return layoutContent.replaceAll('[[emailContent]]', '<div id="emailContent"></div>');
-    })
 
 
 /**
