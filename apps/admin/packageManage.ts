@@ -22,7 +22,7 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-log-manage');
     packages.push('../../pages/admin-doc-type-manage');
     packages.push('../../pages/admin-mail-config');
-    packages.push('../../packages/dp-editorjs');
+    packages.push('../../pages/admin-email-template');
 
     packages.push('../../pages/admin-message-queue');
     packages.push('../../pages/admin-dashboard');

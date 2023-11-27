@@ -21,6 +21,7 @@ async function getDocumentTemplates() {
     return {
       id: item.id,
       name: item.name,
+      value: item
     }
   });
 }
@@ -175,8 +176,8 @@ function emailVariableChange(newVal, key) {
 }
 
 function save() {
-  console.log('save', props.data)
-  emit('submit', props.data)
+  
+  emit('submit', props.data);
 }
 
 onMounted(async() => {
