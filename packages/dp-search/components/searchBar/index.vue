@@ -164,12 +164,22 @@ function init(sp) {
         if(state.dynamicTags.length > 0) emits('updateForm')
     })
 }
-watchDebounced( ()=> props.searchParams,(newValue, oldValue) => {
-    if(newValue) delete newValue.time
-    if(oldValue) delete oldValue.time
-    const isEqual = JSON.stringify(newValue) === JSON.stringify(oldValue)
+watch( ()=> props.searchParams,(newValue, oldValue) => {
+    const nSP = deepCopy(newValue)
+    const oSP = deepCopy(oldValue)
+    if(nSP) {
+        delete nSP.time
+        delete nSP.currentPageIndex
+        delete nSP.pageSize
+    }
+    if(oSP) {
+        delete oSP.time
+        delete oSP.currentPageIndex
+        delete oSP.pageSize
+    }
+    const isEqual = JSON.stringify(nSP) === JSON.stringify(oSP)
     if(!isEqual && props.searchParams) init(props.searchParams)
-}, { debounce: 200, maxWait: 500, deep: true, immediate: true })
+}, { deep: true, immediate: true })
 defineExpose({ init })
 </script>
 
