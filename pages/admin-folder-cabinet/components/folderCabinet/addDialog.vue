@@ -58,7 +58,8 @@ function handleDocTypeChange (data) {
     state.dragList.push(
         { metaData: 'fc:label', dataType: 'string' },
         { metaData: 'fc:createDate', dataType: 'date' },
-        { metaData: 'fc:creator', dataType: 'string ' }
+        { metaData: 'fc:creator', dataType: 'string' },
+        { metaData: 'fc:docTitle', dataType: 'string' }
     )
     if (form.labelRule.length > 0) {
         state.dragList = state.dragList.filter((allItem:any) => 
@@ -94,17 +95,17 @@ async function handleSubmit() {
         })
         return prev
     }, [])
-    
-    params.tos = data.tos.reduce((prev, item) => {
-        const _to = item.split('&&&&')
-        prev.push(_to[0])
-        return prev
-    }, [])
-    params.ccs = data.ccs.reduce((prev, item) => {
-        const _to = item.split('&&&&')
-        prev.push(_to[0])
-        return prev
-    }, [])
+    const arr = ['notificationReminder', 'emailReminder', 'emailReport']
+    arr.forEach(key => {
+        params[key] = {}
+        params[key].intervalTime = params[`${key}.intervalTime`]
+        
+        if(params[`${key}.tos`]) params[key].tos = params[`${key}.tos`]
+        if(params[`${key}.ccs`]) params[key].ccs = params[`${key}.ccs`]
+        delete params[`${key}.intervalTime`]
+        delete params[`${key}.tos`]
+        delete params[`${key}.ccs`]
+    })
     try {
         state.loading = true
         if (params.isEdit) {
@@ -134,7 +135,8 @@ function handleOpen(setting) {
                 metadata: revertMetadata(setting.metadata),
                 isEdit: true,
                 binds: revertUserGroup(setting.binds),
-                rootId: await getRootIds(setting.rootId)
+                rootId: await getRootIds(setting.rootId),
+                ...getReminder(setting, ['notificationReminder', 'emailReminder', 'emailReport'])
             }
             await FromRendererRef.value.vFormRenderRef.setFormData(data)
             state.loading = false
@@ -144,6 +146,14 @@ function handleOpen(setting) {
         state.editReady = true
         setTimeout(() => { FromRendererRef.value.vFormRenderRef.resetForm() })
     }
+}
+function getReminder(data, revertList) {
+    return revertList.reduce((prev, item) => {
+        prev[`${item}.intervalTime`] = data[item].intervalTime
+        prev[`${item}.tos`] = data[item].tos
+        prev[`${item}.ccs`] = data[item].ccs
+        return prev
+    }, {})
 }
 function goMetaEdit () {
     let r = '/meta-validation'

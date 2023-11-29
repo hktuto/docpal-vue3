@@ -12,7 +12,7 @@
         :itemKey="itemKey"
     >
         <template #item="{ element, index }">
-            <el-tag class="list-drag-item">{{ element[itemKey] }}</el-tag>
+            <el-tag class="list-drag-item">{{ $t(element[itemKey]) }}</el-tag>
         </template>
     </draggable>
     <draggable
@@ -27,7 +27,7 @@
                 <!-- <span v-if="element.prefixSymbol" class="list-drop-item--divider" >{{element.prefixSymbol}}</span> -->
                 <!-- <DragSelectTag :element="element" @close="handleClose"/> -->
                 <!-- <span v-if="element.suffixSymbol" class="list-drop-item--divider">{{element.suffixSymbol}}</span> -->
-                <el-tag ref="tagRef" closable @close="handleClose(element)">{{ element[itemKey] }}</el-tag>
+                <el-tag ref="tagRef" closable @close="handleClose(element)">{{ $t(element[itemKey]) }}</el-tag>
                 <span class="list-drop-item--divider">{{joiner}}</span>
             </span>
         </template>
