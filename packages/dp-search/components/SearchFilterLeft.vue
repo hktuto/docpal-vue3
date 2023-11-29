@@ -1,7 +1,6 @@
 <template>
     <div ref="filterContainerRef" class="filterContainer">
       <div class="formShrink" @click="opened = true">
-        Filter
         <div class="iconContainer">
           <arrow-down />
         </div>
@@ -10,6 +9,7 @@
         <div v-if="isMobile" class="dialogCloseBtn" @click="opened = false">
           <SvgIcon src="/icons/close.svg" />
         </div>
+
         <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
         <div class="filterContainer-footer">
             <el-row :gutter="10">
@@ -39,7 +39,6 @@ const props = defineProps<{
 const { isMobile, allowFeature } = useLayout()
 const route = useRoute()
 const router = useRouter()
-const emits = defineEmits(['submit'])
 const filterJson = getJsonApi('search.json')
 const FromRendererRef = ref()
 const filterContainerRef = ref()
@@ -81,7 +80,9 @@ function initForm (searchParams) {
   nextTick(async() => {
         let key = searchParams.paramsInTextSearch
         if(!!key) searchParams.keyword = key
-        searchParams.includeFolder = searchParams.includeFolder ? '1' : '0'
+        searchParams.includeFolder = (searchParams.includeFolder === '1' || searchParams.includeFolder === 1 || searchParams.includeFolder === true|| searchParams.includeFolder === 'true') ? '1' : '0'
+        console.log({searchParams});
+        
         if(searchParams.hight) {
             searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
         }

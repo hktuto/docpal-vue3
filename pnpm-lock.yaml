@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -45,7 +49,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/dp-api
       nuxt:
-        specifier: ^3.4.3
+        specifier: 3.7.0
         version: 3.7.0(@types/node@18.17.14)(sass@1.66.1)
       sass:
         specifier: ^1.58.0
@@ -152,7 +156,7 @@ importers:
         version: 7.1.0
       eslint-plugin-import:
         specifier: ^2.27.5
-        version: 2.28.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.40.0)
+        version: 2.28.1(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.48.0)
       eslint-plugin-json:
         specifier: ^3.1.0
         version: 3.1.0
@@ -297,7 +301,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -335,7 +339,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -354,10 +358,10 @@ importers:
         version: 12.1.0(eslint@8.48.0)(typescript@4.9.5)
       '@vueuse/components':
         specifier: ^9.13.0
-        version: 9.13.0(vue@3.3.4)
+        version: 9.13.0(vue@3.3.8)
       '@vueuse/core':
         specifier: ^10.2.1
-        version: 10.4.1(vue@3.3.4)
+        version: 10.4.1(vue@3.3.8)
       dp-api:
         specifier: workspace:*
         version: link:../dp-api
@@ -366,7 +370,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -433,7 +437,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -464,7 +468,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -516,7 +520,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -534,7 +538,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -598,10 +602,10 @@ importers:
         version: 12.1.0(eslint@8.48.0)(typescript@4.9.5)
       '@vueuse/components':
         specifier: ^9.13.0
-        version: 9.13.0(vue@3.3.4)
+        version: 9.13.0(vue@3.3.8)
       '@vueuse/core':
         specifier: ^10.2.1
-        version: 10.4.1(vue@3.3.4)
+        version: 10.4.1(vue@3.3.8)
       dp-api:
         specifier: workspace:*
         version: link:../dp-api
@@ -610,7 +614,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -629,7 +633,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -647,7 +651,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -666,10 +670,10 @@ importers:
         version: 12.1.0(eslint@8.48.0)(typescript@4.9.5)
       '@vueuse/components':
         specifier: ^9.13.0
-        version: 9.13.0(vue@3.3.4)
+        version: 9.13.0(vue@3.3.8)
       '@vueuse/core':
         specifier: ^10.2.1
-        version: 10.4.1(vue@3.3.4)
+        version: 10.4.1(vue@3.3.8)
       dp-api:
         specifier: workspace:*
         version: link:../dp-api
@@ -678,7 +682,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -696,7 +700,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -727,7 +731,7 @@ importers:
         version: link:../i18n
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -755,7 +759,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -777,7 +781,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -828,7 +832,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -914,7 +918,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -938,7 +942,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -957,7 +961,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -981,7 +985,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1005,7 +1009,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1029,7 +1033,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1053,7 +1057,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1098,7 +1102,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1122,7 +1126,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1146,7 +1150,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.0.0
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1170,7 +1174,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1215,7 +1219,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1239,7 +1243,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1263,7 +1267,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1287,7 +1291,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1311,7 +1315,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1366,7 +1370,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1390,7 +1394,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1438,7 +1442,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1462,7 +1466,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1513,7 +1517,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1540,7 +1544,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1564,7 +1568,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1588,7 +1592,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.0.0
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1612,7 +1616,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.0.0
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1657,7 +1661,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1681,7 +1685,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1709,7 +1713,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1737,7 +1741,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1782,7 +1786,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1813,7 +1817,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1837,7 +1841,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1861,7 +1865,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1885,7 +1889,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1909,7 +1913,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1933,7 +1937,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1957,7 +1961,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -1981,7 +1985,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -2005,7 +2009,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -2036,7 +2040,7 @@ importers:
         version: 8.48.0
       nuxt:
         specifier: ^3.4.3
-        version: 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)
+        version: 3.7.0(eslint@8.48.0)(typescript@4.9.5)
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
@@ -5433,13 +5437,13 @@ packages:
       vue: ^3.3.4
     dependencies:
       '@nuxt/kit': 3.7.0
-      '@rollup/plugin-replace': 5.0.2(rollup@3.28.1)
-      '@vitejs/plugin-vue': 4.3.4(vite@4.4.9)(vue@3.3.8)
-      '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.4.9)(vue@3.3.8)
-      autoprefixer: 10.4.15(postcss@8.4.29)
+      '@rollup/plugin-replace': 5.0.4
+      '@vitejs/plugin-vue': 4.4.0(vite@4.5.0)(vue@3.3.8)
+      '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.5.0)(vue@3.3.8)
+      autoprefixer: 10.4.16(postcss@8.4.31)
       clear: 0.1.0
       consola: 3.2.3
-      cssnano: 6.0.1(postcss@8.4.29)
+      cssnano: 6.0.1(postcss@8.4.31)
       defu: 6.1.3
       esbuild: 0.19.5
       escape-string-regexp: 5.0.0
@@ -5455,15 +5459,15 @@ packages:
       pathe: 1.1.1
       perfect-debounce: 1.0.0
       pkg-types: 1.0.3
-      postcss: 8.4.29
-      postcss-import: 15.1.0(postcss@8.4.29)
-      postcss-url: 10.1.3(postcss@8.4.29)
+      postcss: 8.4.31
+      postcss-import: 15.1.0(postcss@8.4.31)
+      postcss-url: 10.1.3(postcss@8.4.31)
       rollup-plugin-visualizer: 5.9.2(rollup@3.28.1)
       std-env: 3.4.3
       strip-literal: 1.3.0
-      ufo: 1.3.1
+      ufo: 1.3.2
       unplugin: 1.5.0
-      vite: 4.4.9(@types/node@18.17.14)(sass@1.66.1)
+      vite: 4.5.0(@types/node@18.17.14)(sass@1.66.1)
       vite-node: 0.33.0(@types/node@18.17.14)(sass@1.66.1)
       vite-plugin-checker: 0.6.2(eslint@8.40.0)(typescript@4.9.5)(vite@4.5.0)
       vue: 3.3.8(typescript@4.9.5)
@@ -5495,13 +5499,13 @@ packages:
       vue: ^3.3.4
     dependencies:
       '@nuxt/kit': 3.7.0
-      '@rollup/plugin-replace': 5.0.2(rollup@3.28.1)
-      '@vitejs/plugin-vue': 4.3.4(vite@4.4.9)(vue@3.3.8)
-      '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.4.9)(vue@3.3.8)
-      autoprefixer: 10.4.15(postcss@8.4.29)
+      '@rollup/plugin-replace': 5.0.4
+      '@vitejs/plugin-vue': 4.4.0(vite@4.5.0)(vue@3.3.8)
+      '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.5.0)(vue@3.3.8)
+      autoprefixer: 10.4.16(postcss@8.4.31)
       clear: 0.1.0
       consola: 3.2.3
-      cssnano: 6.0.1(postcss@8.4.29)
+      cssnano: 6.0.1(postcss@8.4.31)
       defu: 6.1.3
       esbuild: 0.19.5
       escape-string-regexp: 5.0.0
@@ -5517,15 +5521,15 @@ packages:
       pathe: 1.1.1
       perfect-debounce: 1.0.0
       pkg-types: 1.0.3
-      postcss: 8.4.29
-      postcss-import: 15.1.0(postcss@8.4.29)
-      postcss-url: 10.1.3(postcss@8.4.29)
+      postcss: 8.4.31
+      postcss-import: 15.1.0(postcss@8.4.31)
+      postcss-url: 10.1.3(postcss@8.4.31)
       rollup-plugin-visualizer: 5.9.2(rollup@3.28.1)
       std-env: 3.4.3
       strip-literal: 1.3.0
-      ufo: 1.3.1
+      ufo: 1.3.2
       unplugin: 1.5.0
-      vite: 4.4.9(@types/node@18.17.14)(sass@1.66.1)
+      vite: 4.5.0(@types/node@18.17.14)(sass@1.66.1)
       vite-node: 0.33.0(@types/node@18.17.14)(sass@1.66.1)
       vite-plugin-checker: 0.6.2(eslint@8.40.0)(typescript@4.9.5)(vite@4.5.0)
       vue: 3.3.8(typescript@4.9.5)
@@ -5551,6 +5555,68 @@ packages:
     dev: true
 
   /@nuxt/vite-builder@3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)(vue@3.3.8):
+    resolution: {integrity: sha512-bRJy3KarHrFm/xLGHoHeZyqI/h6c4UFRCF5ngRZ/R9uebJEHuL4UhAioxDLTFu7D0vEeK7XaDgx6+NPLhBg51g==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+    peerDependencies:
+      vue: ^3.3.4
+    dependencies:
+      '@nuxt/kit': 3.7.0
+      '@rollup/plugin-replace': 5.0.4
+      '@vitejs/plugin-vue': 4.4.0(vite@4.5.0)(vue@3.3.8)
+      '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.5.0)(vue@3.3.8)
+      autoprefixer: 10.4.16(postcss@8.4.31)
+      clear: 0.1.0
+      consola: 3.2.3
+      cssnano: 6.0.1(postcss@8.4.31)
+      defu: 6.1.3
+      esbuild: 0.19.5
+      escape-string-regexp: 5.0.0
+      estree-walker: 3.0.3
+      externality: 1.0.2
+      fs-extra: 11.1.1
+      get-port-please: 3.1.1
+      h3: 1.9.0
+      knitwork: 1.0.0
+      magic-string: 0.30.5
+      mlly: 1.4.2
+      ohash: 1.1.3
+      pathe: 1.1.1
+      perfect-debounce: 1.0.0
+      pkg-types: 1.0.3
+      postcss: 8.4.31
+      postcss-import: 15.1.0(postcss@8.4.31)
+      postcss-url: 10.1.3(postcss@8.4.31)
+      rollup-plugin-visualizer: 5.9.2(rollup@3.28.1)
+      std-env: 3.4.3
+      strip-literal: 1.3.0
+      ufo: 1.3.2
+      unplugin: 1.5.0
+      vite: 4.5.0(@types/node@18.17.14)(sass@1.66.1)
+      vite-node: 0.33.0(@types/node@18.17.14)(sass@1.66.1)
+      vite-plugin-checker: 0.6.2(eslint@8.48.0)(typescript@4.9.5)(vite@4.5.0)
+      vue: 3.3.8(typescript@4.9.5)
+      vue-bundle-renderer: 2.0.0
+    transitivePeerDependencies:
+      - '@types/node'
+      - eslint
+      - less
+      - lightningcss
+      - meow
+      - optionator
+      - rollup
+      - sass
+      - stylelint
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - typescript
+      - vls
+      - vti
+      - vue-tsc
+    dev: true
+
+  /@nuxt/vite-builder@3.7.0(eslint@8.48.0)(typescript@4.9.5)(vue@3.3.8):
     resolution: {integrity: sha512-bRJy3KarHrFm/xLGHoHeZyqI/h6c4UFRCF5ngRZ/R9uebJEHuL4UhAioxDLTFu7D0vEeK7XaDgx6+NPLhBg51g==}
     engines: {node: ^14.18.0 || >=16.10.0}
     peerDependencies:
@@ -5619,7 +5685,7 @@ packages:
       vue: ^3.3.4
     dependencies:
       '@nuxt/kit': 3.8.0
-      '@rollup/plugin-replace': 5.0.4(rollup@3.29.4)
+      '@rollup/plugin-replace': 5.0.4
       '@vitejs/plugin-vue': 4.4.0(vite@4.5.0)(vue@3.3.8)
       '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.5.0)(vue@3.3.8)
       autoprefixer: 10.4.16(postcss@8.4.31)
@@ -5681,7 +5747,7 @@ packages:
       vue: ^3.3.4
     dependencies:
       '@nuxt/kit': 3.8.0
-      '@rollup/plugin-replace': 5.0.4(rollup@3.29.4)
+      '@rollup/plugin-replace': 5.0.4
       '@vitejs/plugin-vue': 4.4.0(vite@4.5.0)(vue@3.3.8)
       '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.5.0)(vue@3.3.8)
       autoprefixer: 10.4.16(postcss@8.4.31)
@@ -5743,7 +5809,7 @@ packages:
       vue: ^3.3.4
     dependencies:
       '@nuxt/kit': 3.8.0
-      '@rollup/plugin-replace': 5.0.4(rollup@3.29.4)
+      '@rollup/plugin-replace': 5.0.4
       '@vitejs/plugin-vue': 4.4.0(vite@4.5.0)(vue@3.3.8)
       '@vitejs/plugin-vue-jsx': 3.0.2(vite@4.5.0)(vue@3.3.8)
       autoprefixer: 10.4.16(postcss@8.4.31)
@@ -5848,7 +5914,7 @@ packages:
       '@typescript-eslint/parser': 6.5.0(eslint@8.48.0)(typescript@4.9.5)
       eslint: 8.48.0
       eslint-import-resolver-typescript: 3.6.0(@typescript-eslint/parser@6.5.0)(eslint-plugin-import@2.28.1)(eslint@8.48.0)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.40.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.48.0)
       eslint-plugin-vue: 9.17.0(eslint@8.48.0)
     transitivePeerDependencies:
       - eslint-import-resolver-node
@@ -6306,6 +6372,19 @@ packages:
       '@rollup/pluginutils': 5.0.5(rollup@3.28.1)
       magic-string: 0.27.0
       rollup: 3.28.1
+    dev: true
+
+  /@rollup/plugin-replace@5.0.4:
+    resolution: {integrity: sha512-E2hmRnlh09K8HGT0rOnnri9OTh+BILGr7NVJGB30S4E3cLRn3J0xjdiyOZ74adPs4NiAMgrjUMGAZNJDBgsdmQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.0.5(rollup@3.28.1)
+      magic-string: 0.30.5
     dev: true
 
   /@rollup/plugin-replace@5.0.4(rollup@3.29.4):
@@ -7572,35 +7651,12 @@ packages:
   /@vue/shared@3.3.8:
     resolution: {integrity: sha512-8PGwybFwM4x8pcfgqEQFy70NaQxASvOC5DJwLQfpArw1UDfUXrJkdxD3BhVTMS+0Lef/TU7YO0Jvr0jJY8T+mw==}
 
-  /@vueuse/components@9.13.0(vue@3.3.4):
-    resolution: {integrity: sha512-UJ8PjQ4SGb2rsVIy9vhEc6aCu+3+2cc+xEfGNX8/M1NKIuL2Vo6c2Kc2fYFaRzWZkP8HWXu+IcwvnAzL44IEFA==}
-    dependencies:
-      '@vueuse/core': 9.13.0(vue@3.3.4)
-      '@vueuse/shared': 9.13.0(vue@3.3.4)
-      vue-demi: 0.14.6(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: true
-
   /@vueuse/components@9.13.0(vue@3.3.8):
     resolution: {integrity: sha512-UJ8PjQ4SGb2rsVIy9vhEc6aCu+3+2cc+xEfGNX8/M1NKIuL2Vo6c2Kc2fYFaRzWZkP8HWXu+IcwvnAzL44IEFA==}
     dependencies:
       '@vueuse/core': 9.13.0(vue@3.3.8)
       '@vueuse/shared': 9.13.0(vue@3.3.8)
       vue-demi: 0.14.6(vue@3.3.8)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: true
-
-  /@vueuse/core@10.4.1(vue@3.3.4):
-    resolution: {integrity: sha512-DkHIfMIoSIBjMgRRvdIvxsyboRZQmImofLyOHADqiVbQVilP8VVHDhBX2ZqoItOgu7dWa8oXiNnScOdPLhdEXg==}
-    dependencies:
-      '@types/web-bluetooth': 0.0.17
-      '@vueuse/metadata': 10.4.1
-      '@vueuse/shared': 10.4.1(vue@3.3.4)
-      vue-demi: 0.14.6(vue@3.3.4)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -7616,18 +7672,6 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
-
-  /@vueuse/core@9.13.0(vue@3.3.4):
-    resolution: {integrity: sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==}
-    dependencies:
-      '@types/web-bluetooth': 0.0.16
-      '@vueuse/metadata': 9.13.0
-      '@vueuse/shared': 9.13.0(vue@3.3.4)
-      vue-demi: 0.14.6(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: true
 
   /@vueuse/core@9.13.0(vue@3.3.8):
     resolution: {integrity: sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==}
@@ -7646,15 +7690,6 @@ packages:
   /@vueuse/metadata@9.13.0:
     resolution: {integrity: sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ==}
 
-  /@vueuse/shared@10.4.1(vue@3.3.4):
-    resolution: {integrity: sha512-vz5hbAM4qA0lDKmcr2y3pPdU+2EVw/yzfRsBdu+6+USGa4PxqSQRYIUC9/NcT06y+ZgaTsyURw2I9qOFaaXHAg==}
-    dependencies:
-      vue-demi: 0.14.6(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: true
-
   /@vueuse/shared@10.4.1(vue@3.3.8):
     resolution: {integrity: sha512-vz5hbAM4qA0lDKmcr2y3pPdU+2EVw/yzfRsBdu+6+USGa4PxqSQRYIUC9/NcT06y+ZgaTsyURw2I9qOFaaXHAg==}
     dependencies:
@@ -7662,15 +7697,6 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
-
-  /@vueuse/shared@9.13.0(vue@3.3.4):
-    resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
-    dependencies:
-      vue-demi: 0.14.6(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: true
 
   /@vueuse/shared@9.13.0(vue@3.3.8):
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
@@ -10732,8 +10758,8 @@ packages:
       debug: 4.3.4
       enhanced-resolve: 5.15.0
       eslint: 8.48.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.0)(eslint@8.40.0)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.40.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.0)(eslint@8.48.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.48.0)
       fast-glob: 3.3.1
       get-tsconfig: 4.7.0
       is-core-module: 2.13.0
@@ -14932,7 +14958,7 @@ packages:
       fs-extra: 11.1.1
       globby: 13.2.2
       gzip-size: 7.0.0
-      h3: 1.8.2
+      h3: 1.9.0
       hookable: 5.5.3
       httpxy: 0.1.5
       is-primitive: 3.0.1
@@ -14955,12 +14981,12 @@ packages:
       radix3: 1.1.0
       rollup: 3.29.4
       rollup-plugin-visualizer: 5.9.2(rollup@3.29.4)
-      scule: 1.0.0
+      scule: 1.1.0
       semver: 7.5.4
       serve-placeholder: 2.0.1
       serve-static: 1.15.0
       std-env: 3.4.3
-      ufo: 1.3.1
+      ufo: 1.3.2
       uncrypto: 0.1.3
       unctx: 2.3.1
       unenv: 1.7.4
@@ -15451,58 +15477,58 @@ packages:
       '@nuxt/devalue': 2.0.2
       '@nuxt/kit': 3.7.0
       '@nuxt/schema': 3.7.0
-      '@nuxt/telemetry': 2.4.1
+      '@nuxt/telemetry': 2.5.2
       '@nuxt/ui-templates': 1.3.1
       '@nuxt/vite-builder': 3.7.0(@types/node@18.17.14)(vue@3.3.8)
       '@types/node': 18.17.14
-      '@unhead/dom': 1.5.0
-      '@unhead/ssr': 1.5.0
-      '@unhead/vue': 1.5.0(vue@3.3.8)
-      '@vue/shared': 3.3.4
+      '@unhead/dom': 1.7.4
+      '@unhead/ssr': 1.7.4
+      '@unhead/vue': 1.7.4(vue@3.3.8)
+      '@vue/shared': 3.3.8
       acorn: 8.10.0
-      c12: 1.4.2
+      c12: 1.5.1
       chokidar: 3.5.3
       cookie-es: 1.0.0
-      defu: 6.1.2
-      destr: 2.0.1
+      defu: 6.1.3
+      destr: 2.0.2
       devalue: 4.3.2
-      esbuild: 0.19.2
+      esbuild: 0.19.5
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
       fs-extra: 11.1.1
       globby: 13.2.2
-      h3: 1.8.1
+      h3: 1.9.0
       hookable: 5.5.3
-      jiti: 1.19.3
+      jiti: 1.21.0
       klona: 2.0.6
       knitwork: 1.0.0
-      magic-string: 0.30.3
-      mlly: 1.4.1
-      nitropack: 2.6.2
-      nuxi: 3.7.3
-      nypm: 0.3.2
+      magic-string: 0.30.5
+      mlly: 1.4.2
+      nitropack: 2.7.2
+      nuxi: 3.9.1
+      nypm: 0.3.3
       ofetch: 1.3.3
       ohash: 1.1.3
       pathe: 1.1.1
       perfect-debounce: 1.0.0
       pkg-types: 1.0.3
       prompts: 2.4.2
-      scule: 1.0.0
+      scule: 1.1.0
       std-env: 3.4.3
       strip-literal: 1.3.0
-      ufo: 1.3.0
-      ultrahtml: 1.4.0
+      ufo: 1.3.2
+      ultrahtml: 1.5.2
       uncrypto: 0.1.3
       unctx: 2.3.1
       unenv: 1.7.4
-      unimport: 3.2.0
-      unplugin: 1.4.0
-      unplugin-vue-router: 0.6.4(vue-router@4.2.4)(vue@3.3.8)
+      unimport: 3.5.0(rollup@3.28.1)
+      unplugin: 1.5.0
+      unplugin-vue-router: 0.6.4(vue-router@4.2.5)(vue@3.3.8)
       untyped: 1.4.0
       vue: 3.3.8(typescript@4.9.5)
       vue-bundle-renderer: 2.0.0
       vue-devtools-stub: 0.1.0
-      vue-router: 4.2.4(vue@3.3.8)
+      vue-router: 4.2.5(vue@3.3.8)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -15532,6 +15558,7 @@ packages:
       - vls
       - vti
       - vue-tsc
+      - xml2js
     dev: true
 
   /nuxt@3.7.0(@types/node@18.17.14)(sass@1.66.1):
@@ -15550,58 +15577,58 @@ packages:
       '@nuxt/devalue': 2.0.2
       '@nuxt/kit': 3.7.0
       '@nuxt/schema': 3.7.0
-      '@nuxt/telemetry': 2.4.1
+      '@nuxt/telemetry': 2.5.2
       '@nuxt/ui-templates': 1.3.1
       '@nuxt/vite-builder': 3.7.0(@types/node@18.17.14)(sass@1.66.1)(vue@3.3.8)
       '@types/node': 18.17.14
-      '@unhead/dom': 1.5.0
-      '@unhead/ssr': 1.5.0
-      '@unhead/vue': 1.5.0(vue@3.3.8)
-      '@vue/shared': 3.3.4
+      '@unhead/dom': 1.7.4
+      '@unhead/ssr': 1.7.4
+      '@unhead/vue': 1.7.4(vue@3.3.8)
+      '@vue/shared': 3.3.8
       acorn: 8.10.0
-      c12: 1.4.2
+      c12: 1.5.1
       chokidar: 3.5.3
       cookie-es: 1.0.0
-      defu: 6.1.2
-      destr: 2.0.1
+      defu: 6.1.3
+      destr: 2.0.2
       devalue: 4.3.2
-      esbuild: 0.19.2
+      esbuild: 0.19.5
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
       fs-extra: 11.1.1
       globby: 13.2.2
-      h3: 1.8.1
+      h3: 1.9.0
       hookable: 5.5.3
-      jiti: 1.19.3
+      jiti: 1.21.0
       klona: 2.0.6
       knitwork: 1.0.0
-      magic-string: 0.30.3
-      mlly: 1.4.1
-      nitropack: 2.6.2
-      nuxi: 3.7.3
-      nypm: 0.3.2
+      magic-string: 0.30.5
+      mlly: 1.4.2
+      nitropack: 2.7.2
+      nuxi: 3.9.1
+      nypm: 0.3.3
       ofetch: 1.3.3
       ohash: 1.1.3
       pathe: 1.1.1
       perfect-debounce: 1.0.0
       pkg-types: 1.0.3
       prompts: 2.4.2
-      scule: 1.0.0
+      scule: 1.1.0
       std-env: 3.4.3
       strip-literal: 1.3.0
-      ufo: 1.3.0
-      ultrahtml: 1.4.0
+      ufo: 1.3.2
+      ultrahtml: 1.5.2
       uncrypto: 0.1.3
       unctx: 2.3.1
       unenv: 1.7.4
-      unimport: 3.2.0
-      unplugin: 1.4.0
-      unplugin-vue-router: 0.6.4(vue-router@4.2.4)(vue@3.3.8)
+      unimport: 3.5.0(rollup@3.28.1)
+      unplugin: 1.5.0
+      unplugin-vue-router: 0.6.4(vue-router@4.2.5)(vue@3.3.8)
       untyped: 1.4.0
       vue: 3.3.8(typescript@4.9.5)
       vue-bundle-renderer: 2.0.0
       vue-devtools-stub: 0.1.0
-      vue-router: 4.2.4(vue@3.3.8)
+      vue-router: 4.2.5(vue@3.3.8)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -15631,6 +15658,7 @@ packages:
       - vls
       - vti
       - vue-tsc
+      - xml2js
     dev: true
 
   /nuxt@3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5):
@@ -15649,9 +15677,108 @@ packages:
       '@nuxt/devalue': 2.0.2
       '@nuxt/kit': 3.7.0
       '@nuxt/schema': 3.7.0
-      '@nuxt/telemetry': 2.4.1
+      '@nuxt/telemetry': 2.5.2
       '@nuxt/ui-templates': 1.3.1
       '@nuxt/vite-builder': 3.7.0(eslint@8.48.0)(sass@1.66.1)(typescript@4.9.5)(vue@3.3.8)
+      '@unhead/dom': 1.7.4
+      '@unhead/ssr': 1.7.4
+      '@unhead/vue': 1.7.4(vue@3.3.8)
+      '@vue/shared': 3.3.8
+      acorn: 8.10.0
+      c12: 1.5.1
+      chokidar: 3.5.3
+      cookie-es: 1.0.0
+      defu: 6.1.3
+      destr: 2.0.2
+      devalue: 4.3.2
+      esbuild: 0.19.5
+      escape-string-regexp: 5.0.0
+      estree-walker: 3.0.3
+      fs-extra: 11.1.1
+      globby: 13.2.2
+      h3: 1.9.0
+      hookable: 5.5.3
+      jiti: 1.21.0
+      klona: 2.0.6
+      knitwork: 1.0.0
+      magic-string: 0.30.5
+      mlly: 1.4.2
+      nitropack: 2.7.2
+      nuxi: 3.9.1
+      nypm: 0.3.3
+      ofetch: 1.3.3
+      ohash: 1.1.3
+      pathe: 1.1.1
+      perfect-debounce: 1.0.0
+      pkg-types: 1.0.3
+      prompts: 2.4.2
+      scule: 1.1.0
+      std-env: 3.4.3
+      strip-literal: 1.3.0
+      ufo: 1.3.2
+      ultrahtml: 1.5.2
+      uncrypto: 0.1.3
+      unctx: 2.3.1
+      unenv: 1.7.4
+      unimport: 3.5.0(rollup@3.28.1)
+      unplugin: 1.5.0
+      unplugin-vue-router: 0.6.4(vue-router@4.2.5)(vue@3.3.8)
+      untyped: 1.4.0
+      vue: 3.3.8(typescript@4.9.5)
+      vue-bundle-renderer: 2.0.0
+      vue-devtools-stub: 0.1.0
+      vue-router: 4.2.5(vue@3.3.8)
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@planetscale/database'
+      - '@upstash/redis'
+      - '@vercel/kv'
+      - encoding
+      - eslint
+      - idb-keyval
+      - less
+      - lightningcss
+      - meow
+      - optionator
+      - rollup
+      - sass
+      - stylelint
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - typescript
+      - vls
+      - vti
+      - vue-tsc
+      - xml2js
+    dev: true
+
+  /nuxt@3.7.0(eslint@8.48.0)(typescript@4.9.5):
+    resolution: {integrity: sha512-y0/xHYqwuJt20r26xezjpr74FLWR144dMpwSxZ/O2XXUrQUnyO7vHm3fEY4vi+miKbf343YMH5B78GXAELO/Vw==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+    hasBin: true
+    peerDependencies:
+      '@parcel/watcher': ^2.1.0
+      '@types/node': ^14.18.0 || >=16.10.0
+    peerDependenciesMeta:
+      '@parcel/watcher':
+        optional: true
+      '@types/node':
+        optional: true
+    dependencies:
+      '@nuxt/devalue': 2.0.2
+      '@nuxt/kit': 3.7.0
+      '@nuxt/schema': 3.7.0
+      '@nuxt/telemetry': 2.4.1
+      '@nuxt/ui-templates': 1.3.1
+      '@nuxt/vite-builder': 3.7.0(eslint@8.48.0)(typescript@4.9.5)(vue@3.3.8)
       '@unhead/dom': 1.5.0
       '@unhead/ssr': 1.5.0
       '@unhead/vue': 1.5.0(vue@3.3.8)
@@ -15963,7 +16090,7 @@ packages:
       '@unhead/dom': 1.7.4
       '@unhead/ssr': 1.7.4
       '@unhead/vue': 1.7.4(vue@3.3.8)
-      '@vue/shared': 3.3.7
+      '@vue/shared': 3.3.8
       acorn: 8.10.0
       c12: 1.5.1
       chokidar: 3.5.3
@@ -15978,12 +16105,12 @@ packages:
       globby: 13.2.2
       h3: 1.8.2
       hookable: 5.5.3
-      jiti: 1.20.0
+      jiti: 1.21.0
       klona: 2.0.6
       knitwork: 1.0.0
       magic-string: 0.30.5
       mlly: 1.4.2
-      nitropack: 2.7.1
+      nitropack: 2.7.2
       nuxi: 3.9.1
       nypm: 0.3.3
       ofetch: 1.3.3
@@ -16000,7 +16127,7 @@ packages:
       uncrypto: 0.1.3
       unctx: 2.3.1
       unenv: 1.7.4
-      unimport: 3.4.0
+      unimport: 3.5.0(rollup@3.28.1)
       unplugin: 1.5.0
       unplugin-vue-router: 0.7.0(vue-router@4.2.5)(vue@3.3.8)
       untyped: 1.4.0
@@ -19854,6 +19981,33 @@ packages:
       - vue
     dev: true
 
+  /unplugin-vue-router@0.6.4(vue-router@4.2.5)(vue@3.3.8):
+    resolution: {integrity: sha512-9THVhhtbVFxbsIibjK59oPwMI1UCxRWRPX7azSkTUABsxovlOXJys5SJx0kd/0oKIqNJuYgkRfAgPuO77SqCOg==}
+    peerDependencies:
+      vue-router: ^4.1.0
+    peerDependenciesMeta:
+      vue-router:
+        optional: true
+    dependencies:
+      '@babel/types': 7.23.3
+      '@rollup/pluginutils': 5.0.5(rollup@3.28.1)
+      '@vue-macros/common': 1.8.0(vue@3.3.8)
+      ast-walker-scope: 0.4.2
+      chokidar: 3.5.3
+      fast-glob: 3.3.2
+      json5: 2.2.3
+      local-pkg: 0.4.3
+      mlly: 1.4.2
+      pathe: 1.1.1
+      scule: 1.1.0
+      unplugin: 1.5.0
+      vue-router: 4.2.5(vue@3.3.8)
+      yaml: 2.3.2
+    transitivePeerDependencies:
+      - rollup
+      - vue
+    dev: true
+
   /unplugin-vue-router@0.7.0(vue-router@4.2.5)(vue@3.3.8):
     resolution: {integrity: sha512-ddRreGq0t5vlSB7OMy4e4cfU1w2AwBQCwmvW3oP/0IHQiokzbx4hd3TpwBu3eIAFVuhX2cwNQwp1U32UybTVCw==}
     peerDependencies:
@@ -21367,7 +21521,3 @@ packages:
       - '@vue/composition-api'
       - debug
       - typescript
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

@@ -1,17 +1,27 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
-        <div class="search-page">
-            <SearchFilterLeft ref="SearchFilterLeftRef" :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
-            <div style="flex: 1">
-                <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
-                        @pagination-change="handlePaginationChange"
-                        @row-dblclick="handleDblclick">
-                        <template #tags="{ row, index }">
-                            <div v-if="row.properties && row.properties['nxtag:tags']">
-                                <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
-                            </div>
-                        </template>
-                </Table>
+        <div :class="['search-page',state.expanded ? 'search-page-expanded':'search-page-narrow']">
+            <SearchFilterLeft ref="SearchFilterLeftRef"
+                :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
+            <div class="search-page-divider">
+                <el-button :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
+                    @click="state.expanded = !state.expanded"/>
+            </div>
+            <div class="table-container">
+                <SearchBar ref="SearchBarRef" :searchParams="state.searchParams"
+                    @updateForm="handleUpdateForm"></SearchBar>
+                <div style="overflow: hidden">
+                    <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
+                            @pagination-change="handlePaginationChange"
+                            @row-dblclick="handleDblclick">
+                            <template #tags="{ row, index }">
+                                <div v-if="row.properties && row.properties['nxtag:tags']">
+                                    <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+                                </div>
+                            </template>
+                    </Table>
+                </div>
+                
             </div>
         </div>
         <ReaderDialog ref="ReaderRef" v-bind="previewFile" >
@@ -24,6 +34,7 @@
 
 
 <script lang="ts" setup>
+import { ArrowLeftBold } from '@element-plus/icons-vue';
 import { watchDebounced } from '@vueuse/core'
 import { 
     nestedSearchApi,getSearchParamsArray, GetDocumentPreview, 
@@ -40,6 +51,7 @@ import {
     const tableKey = TABLE.CLIENT_SEARCH
     const tableSetting = defaultTableSetting[tableKey]
     const state = reactive<State>({
+        expanded: true,
         firstReady: false,
         loading: false,
         tableData: [],
@@ -77,7 +89,6 @@ import {
             query: { ...route.query, ...pageParams, currentPageIndex:page, pageSize, time }
         })
     }
-
     watchDebounced(
         () => route.query,
         async (newVal) => {
@@ -86,15 +97,16 @@ import {
             pageParams = getSearchParamsArray({...newVal})
 
             state.searchParams = pageParams
-            if(!state.firstReady) SearchFilterLeftRef.value.initForm(state.searchParams)
 
             // pageParams = {...newVal}
             pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = Number(pageSize) || pageParams.pageSize
 
             await getList(pageParams)
-            initTable(pageParams)
-            state.firstReady = true
+            setTimeout(() => {
+                initTable(pageParams)
+                state.firstReady = true
+            }, 100)
         },
         { debounce: 200, maxWait: 500, immediate: true }
     )
@@ -192,6 +204,13 @@ function initTable(searchParams) {
     tableRef.value.reorderColumn(state.columns)
 
 }
+// #region module: search form
+    function handleUpdateForm() {
+        nextTick(() => {
+            SearchFilterLeftRef.value.initForm(deepCopy(pageParams))
+        })
+    }
+// #endregion
 onMounted(() => {
     setTimeout(() => {
         if(!route.query || Object.keys(route.query).length === 0) state.firstReady = true
@@ -205,9 +224,9 @@ onMounted(() => {
 }
 .search-page {
     height: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    gap: var(--app-padding);
+    display: grid;
+    grid-template-columns: 20% min-content 1fr;
+    transition: all 0.5s;
     overflow: hidden;
     position: relative;
     @media(max-width : 1024px) {
@@ -215,8 +234,43 @@ onMounted(() => {
       //grid-template-columns: 1fr;
       //grid-template-rows: min-content 1fr ;
     }
-  .dp-table-container{
-    flex: 1 0 80%;
-  }
+}
+.search-page-narrow {
+    grid-template-columns: 0 min-content 1fr;
+    transition: all 0.5s;
+    .filterContainer {
+        opacity: 0;
+    }
+}
+.table-container {
+    // padding-left: 10px;
+    // margin-left: 10px;
+    // border-left: 1px solid #ddd;
+    position: relative;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    gap: var(--app-padding);
+    overflow-y: hidden;
+    
+    
+}
+.search-page-divider {
+    position: relative;
+    margin: 0 15px;
+    border-left: 1px solid #ddd;
+    .zoom-button {
+        position: absolute;
+        top: 1px;
+        left: -10px;
+        width: 15px;
+        height: 15px;
+    }
+    .button-narrow {
+        transform: rotate(180deg);
+        transition: all 0.5s;
+    }
+    .button-expanded {
+        transition: all 0.5s;
+    }
 }
 </style>
