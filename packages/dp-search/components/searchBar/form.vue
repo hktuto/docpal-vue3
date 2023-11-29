@@ -101,8 +101,8 @@ async function handleGetOptions(tag: string) {
                 break; 
             case 'includeFolder':
                 state.options = [
-                    { label: 'Yes', value: true },
-                    { label: 'No', value: false },
+                    { label: $t('searchType_includeFolder_1'), value: true },
+                    { label: $t('searchType_includeFolder_0'), value: false },
                 ]
                 break; 
             case 'modified':

@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { deepCopy, getJsonApi, getSearchParamsArray } from 'dp-api'
+import { deepCopy, getJsonApi, getSearchParamsArray, GetSCollectionsApi } from 'dp-api'
 import { Plus } from "@element-plus/icons-vue";
 const props = defineProps<{
     searchParams: any,
@@ -95,14 +95,17 @@ function getSearchTag(tag: string) {
     const value = props.searchParams[tag] instanceof Array ? props.searchParams[tag] : [props.searchParams[tag]]
     return value.reduce((prev, item, index) => {
         switch (tag) {
+            case 'assetType':
             case 'textSearchType':
             case 'modified':
             case 'size':
                 item = $t('searchType_'+item)
                 break;
             case 'includeFolder':
-                item = String(item) === '0' ? 'No' : 'Yes'
+                item = String(item) === '0' || String(item) === 'false' ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1')
                 break
+            case 'collection':
+                // await GetSCollectionsApi()
             default:
                 break;
         }
