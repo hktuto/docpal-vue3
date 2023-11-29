@@ -42,6 +42,7 @@
 <script lang="ts" setup>
 import { deepCopy, getJsonApi, getSearchParamsArray, GetSCollectionsApi } from 'dp-api'
 import { Plus } from "@element-plus/icons-vue";
+import { watchDebounced } from '@vueuse/core'
 const props = defineProps<{
     searchParams: any,
     ready: boolean,
@@ -91,7 +92,7 @@ function getSearchI18n(tag: string) {
     return tag
 }
 function getSearchTag(tag: string) {
-    if(!props.searchParams || !props.searchParams[tag]) return ''
+    if(!props.searchParams || !props.searchParams[tag] && tag !== 'includeFolder') return ''
     const value = props.searchParams[tag] instanceof Array ? props.searchParams[tag] : [props.searchParams[tag]]
     return value.reduce((prev, item, index) => {
         switch (tag) {
@@ -102,7 +103,7 @@ function getSearchTag(tag: string) {
                 item = $t('searchType_'+item)
                 break;
             case 'includeFolder':
-                item = String(item) === '0' || String(item) === 'false' ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1')
+                item = item === '0' || item === 'false' || item === false ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1')
                 break
             case 'collection':
                 // await GetSCollectionsApi()
@@ -152,25 +153,23 @@ function goRoute(sp) {
 function init(sp) {
     state.dynamicTags.splice(0, state.dynamicTags.length)
     Object.keys(sp).forEach(key => {
-        if (!sp[key]) return
+        if (!sp[key] && key !== 'includeFolder') return
         else if (sp[key] instanceof Array ) {
             if (sp[key].length > 0) state.dynamicTags.push(key)
         } else if(state.i18nMap[key]){
             state.dynamicTags.push(key)
         }
     })
-    console.log(state.dynamicTags);
-    
     setTimeout(() => {
         if(state.dynamicTags.length > 0) emits('updateForm')
     })
 }
-watch( ()=> props.searchParams,(newValue, oldValue) => {
+watchDebounced( ()=> props.searchParams,(newValue, oldValue) => {
     if(newValue) delete newValue.time
     if(oldValue) delete oldValue.time
     const isEqual = JSON.stringify(newValue) === JSON.stringify(oldValue)
     if(!isEqual && props.searchParams) init(props.searchParams)
-}, { deep: true, immediate: true })
+}, { debounce: 200, maxWait: 500, deep: true, immediate: true })
 defineExpose({ init })
 </script>
 
