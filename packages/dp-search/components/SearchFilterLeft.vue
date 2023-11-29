@@ -81,8 +81,6 @@ function initForm (searchParams) {
         let key = searchParams.paramsInTextSearch
         if(!!key) searchParams.keyword = key
         searchParams.includeFolder = (searchParams.includeFolder === '1' || searchParams.includeFolder === 1 || searchParams.includeFolder === true|| searchParams.includeFolder === 'true') ? '1' : '0'
-        console.log({searchParams});
-        
         if(searchParams.hight) {
             searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
         }
