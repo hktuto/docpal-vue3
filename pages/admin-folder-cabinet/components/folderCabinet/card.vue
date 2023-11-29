@@ -4,7 +4,7 @@
         <div :class="setting.folder ? 'folder-title' : 'file-title'">{{setting.label}}</div>
         <div class="flex-x-end" style="--icon-size: 14px; --icon-bg-size: 24px">
             <span v-if="setting.multiple" class="el-icon--left file-title">{{$t('multiple')}}</span>
-            <span class="el-icon--left">{{setting.documentType}}</span>
+            <span class="el-icon--left">{{$t(setting.documentType)}}</span>
             <slot name="actions">
                 <SvgIcon class="el-icon--left" src="/icons/edit.svg" 
                     @click="handleEdit(setting, isRoot, parentSetting?.children)"/>
