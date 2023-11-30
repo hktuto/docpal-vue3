@@ -15,10 +15,8 @@
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { useEventListener } from '@vueuse/core'
 import { CreateDocumentApi } from 'dp-api'
-const props = defineProps<{
-}>()
+
 const emits = defineEmits(['success'])
 const state = reactive({
     loading: false,
