@@ -165,7 +165,7 @@ const formJson = getJsonApi('client/folderCabinetNew.json')
         }
         setTimeout(async()=> {
             MetaFormRef.value.init(setting.documentType)
-            const ddd = getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])
+            await FromRendererRef.value.vFormRenderRef.resetForm()
             FromRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
             state.previewName = await getMetaName()
         })

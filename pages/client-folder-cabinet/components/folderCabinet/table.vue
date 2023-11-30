@@ -124,8 +124,9 @@ const userId:string = useUser().getUserId()
 // #endregion
 // #region module: filter
     function handleFilterFormChange(formModel, filedData) {
-        if (!formModel.sortOrder) formModel.sortOrder = 'desc'
-        if (!formModel.sortBy) formModel.sortBy = 'label'
+        if (!formModel.isDesc) formModel.isDesc = true
+        if (!formModel.orderBy) formModel.orderBy = 'modified_date_'
+        if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === 'false' ? false : true
         state.extraParamsFilter = formModel
         handlePaginationChange(1)
     }
@@ -150,7 +151,7 @@ async function getFilter(tab) {
     state.curTab = tab
     const data = await GetCabinetConditionsApi(tab)
     data.unshift(
-        { key: "sortBy", label: "tableHeader.sortBy", type: "string", isMultiple: false,
+        { key: "orderBy", label: "tableHeader.sortBy", type: "string", isMultiple: false,
             options: [
                 { label: 'tableHeader_status', value: 'state' },
                 { label: 'tableHeader_name', value: 'label' },
@@ -160,15 +161,15 @@ async function getFilter(tab) {
                 { label: 'tableHeader.deadline', value: 'deadline' }
             ]
         },
-        { key: "sortOrder", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
+        { key: "isDesc", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
             options: [
-                { label: 'tableHeader.desc', value: 'desc' },
-                { label: 'tableHeader.asc', value: 'asc' }
+                { label: 'tableHeader.desc', value: true },
+                { label: 'tableHeader.asc', value: false }
             ]
         }
     )
     ResponsiveFilterRef.value.init(data)
-    const ignoreList = ['createdBy', 'complete','sortOrder', 'sortBy']
+    const ignoreList = ['createdBy', 'complete','isDesc', 'orderBy']
     tableSetting.value = deepCopy(defaultTableSetting[tableKey])
     data.forEach(item => {
         if(!ignoreList.includes(item.key)) {
@@ -176,7 +177,7 @@ async function getFilter(tab) {
                 id: item.key,
                 label: item.key,
                 prop: item.key
-            }, tableSetting.value.columns)
+            }, tableSetting.value.columns, tableSetting.value.columns.length)
         }
     })
     tableRef.value.reorderColumn(tableSetting.value.columns)
