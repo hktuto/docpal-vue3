@@ -24,10 +24,10 @@ RUN mkdir -p /usr/share/nginx/html/admin \
              /usr/share/nginx/html/client \
              /usr/share/nginx/html/public \
              /usr/share/nginx/html/resources/pdfjs
-RUN tar xzfv /tmp/admin.tar.gz -C /usr/share/nginx/html/admin
-RUN tar xzfv /tmp/client.tar.gz -C /usr/share/nginx/html/client
-RUN tar xzfv /tmp/public.tar.gz -C /usr/share/nginx/html/public
-RUN tar xzfv /tmp/pdfjs.tar.gz -C /usr/share/nginx/html/resources/pdfjs
+RUN tar xzfv /tmp/admin.tar.gz --strip-components=1 -C /usr/share/nginx/html/admin
+RUN tar xzfv /tmp/client.tar.gz --strip-components=1 -C /usr/share/nginx/html/client
+RUN tar xzfv /tmp/public.tar.gz --strip-components=1 -C /usr/share/nginx/html/public
+RUN tar xzfv /tmp/pdfjs.tar.gz --strip-components=1 -C /usr/share/nginx/html/resources/pdfjs
 
 RUN rm /tmp/admin.tar.gz \
        /tmp/client.tar.gz \
