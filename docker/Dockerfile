@@ -34,4 +34,10 @@ RUN rm /tmp/admin.tar.gz \
        /tmp/public.tar.gz \
        /tmp/pdfjs.tar.gz
  
-ENTRYPOINT [ "nginx", "-g", "daemon off" ]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+EXPOSE 80
+
+STOPSIGNAL SIGQUIT
+
+CMD ["nginx", "-g", "daemon off;"]
