@@ -6,7 +6,7 @@
                 v-for="(item,index) in state.dynamicTags"
                 :key="index"
                 class="mx-1"
-                closable
+                :closable="!['textSearchType', 'includeFolder'].includes(item)"
                 :disable-transitions="false"
                 @close="handleClose(item)"
             >
@@ -80,7 +80,7 @@ const state = reactive({
         'tags': 'search_tags',
     },
     selectedMenuItem: '',
-   
+    collectionMap: {}
 })
 const arrParams = ['paramsInTextSearch' ,'or', 'type', 'authors', 'collections', 'tags', 'creator']
 
@@ -105,8 +105,8 @@ function getSearchTag(tag: string) {
             case 'includeFolder':
                 item = item === '0' || item === 'false' || item === false ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1')
                 break
-            case 'collection':
-                // await GetSCollectionsApi()
+            case 'collections':
+                item = state.collectionMap[item] ? state.collectionMap[item] : item
             default:
                 break;
         }
@@ -164,6 +164,13 @@ function init(sp) {
         if(state.dynamicTags.length > 0) emits('updateForm')
     })
 }
+onMounted(async() => {
+    const collections = await GetSCollectionsApi()
+    state.collectionMap = collections.reduce((prev, item) => {
+        prev[item.value] = item.label
+        return prev
+    }, {})
+})
 watch( ()=> props.searchParams,(newValue, oldValue) => {
     const nSP = deepCopy(newValue)
     const oSP = deepCopy(oldValue)
