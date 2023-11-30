@@ -9,9 +9,8 @@
             @row-dblclick="handleClick"
       >
             <template #preSortButton>
-                <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                    @clear-filter="handleClearFilter"/>
+                   inputKey="label" @clear-filter="handleClearFilter"/>
             </template>
             <template #status="{ row, index }">
                 <SvgIcon :src="`/icons/file/status-${row.state}.svg`"></SvgIcon>
@@ -58,8 +57,8 @@ const userId:string = useUser().getUserId()
             highlightCurrentRow: true,
             rowKey: 'id'
         },
-        extraParams: {},
-        extraParamsFilter: {},
+        extraParamsFilter: {
+        },
         curTab: ''
     })
     function handleAction (command, row: any, index: number) {
@@ -81,7 +80,7 @@ const userId:string = useUser().getUserId()
         state.loading = true
         try {
             state.tableData = []
-            const res = await GetCabinetPageApi({...param, ...state.extraParams, ...state.extraParamsFilter})
+            const res = await GetCabinetPageApi({...param, ...state.extraParamsFilter})
 
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
@@ -123,20 +122,10 @@ const userId:string = useUser().getUserId()
     const FromRendererRef = ref()
 
 // #endregion
-// #region module: search json
-    const formJson = getJsonApi('folderCabinetSearch.json')
-    function handleFormChange (data) {
-        const extraParams = Object.keys(data.formModel).reduce((prev,key) => {
-            if(typeof data.formModel[key] === 'boolean') prev[key] = data.formModel[key]
-            else if(data.formModel[key] && data.formModel[key].length > 0) prev[key] = data.formModel[key]
-            return prev
-        }, {})
-        state.extraParams = extraParams
-        handlePaginationChange(1)
-    }
-// #endregion
 // #region module: filter
     function handleFilterFormChange(formModel, filedData) {
+        if (!formModel.sortOrder) formModel.sortOrder = 'desc'
+        if (!formModel.sortBy) formModel.sortBy = 'label'
         state.extraParamsFilter = formModel
         handlePaginationChange(1)
     }
@@ -150,7 +139,6 @@ function handleClick (row) {
 }
 function getSearchParams () {
     return {
-        ...state.extraParams,
         ...pageParams,
         templateId: route.query.tab
     }
@@ -158,12 +146,29 @@ function getSearchParams () {
 const ResponsiveFilterRef = ref()
 async function getFilter(tab) {
     if (state.curTab === tab) return
-    state.extraParams = {}
     state.extraParamsFilter = {}
     state.curTab = tab
     const data = await GetCabinetConditionsApi(tab)
+    data.unshift(
+        { key: "sortBy", label: "tableHeader.sortBy", type: "string", isMultiple: false,
+            options: [
+                { label: 'tableHeader_status', value: 'state' },
+                { label: 'tableHeader_name', value: 'label' },
+                { label: 'tableHeader_modifiedDate', value: 'modified_date_' },
+                { label: 'role.creator', value: 'created_by_' },
+                { label: 'info_contributors', value: 'modified_by_' },
+                { label: 'tableHeader.deadline', value: 'deadline' }
+            ]
+        },
+        { key: "sortOrder", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
+            options: [
+                { label: 'tableHeader.desc', value: 'desc' },
+                { label: 'tableHeader.asc', value: 'asc' }
+            ]
+        }
+    )
     ResponsiveFilterRef.value.init(data)
-    const ignoreList = ['createdBy', 'complete']
+    const ignoreList = ['createdBy', 'complete','sortOrder', 'sortBy']
     tableSetting.value = deepCopy(defaultTableSetting[tableKey])
     data.forEach(item => {
         if(!ignoreList.includes(item.key)) {
@@ -182,5 +187,10 @@ defineExpose({ getSearchParams })
 <style lang="scss" scoped>
 :deep(.el-form-item--default) {
     margin-bottom: unset;
+}
+:deep(.headerLeftExpand) {
+    .el-input {
+        width: 200px;
+    }
 }
 </style>

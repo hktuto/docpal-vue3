@@ -11,7 +11,7 @@
                     :rules="[{ required: true, message: $t('form_common_requird')}]">
                     <template #label>
                         {{$t('tableHeader_labelRule')}}
-                        <span class="color__primary__hover cursorPointer" @click="goMetaEdit">({{$t('tip.clickToEditDisplayMeta')}})</span>
+                        <span v-if="state.curDocType" class="color__primary__hover cursorPointer" @click="goMetaEdit">({{$t('tip.clickToEditDisplayMeta')}})</span>
                     </template>
                     <DragSelect :dragList="state.dragList" :dropList="form.labelRule" @change="handleValidate"/>
                 </el-form-item>
@@ -38,7 +38,9 @@ const state = reactive({
 })
 const router = useRouter()
 const form = reactive({
-    labelRule: []
+    labelRule: [
+        { metaData: 'fc:docTitle', dataType: 'string', noDelete: true }
+    ]
 })
 const FormRef = ref()
 const FromRendererRef = ref()
@@ -127,6 +129,8 @@ function handleOpen(setting) {
     if(setting && setting.isEdit) {
         state.setting = setting
         form.labelRule = setting.labelRule ? JSON.parse(setting.labelRule) : []
+        const titleItem = form.labelRule.find(item => item.metaData === 'fc:docTitle')
+        titleItem.noDelete = true
         setTimeout(async () => {
             await FromRendererRef.value.vFormRenderRef.resetForm()
             state.loading = true
