@@ -42,6 +42,12 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     console.log({result}, 2);
     return result
 }
+export const isSearchParamsEqual = (newVal, oldVal) => {
+    if(!newVal || !oldVal) return false
+    delete newVal.time
+    delete oldVal.time
+    return JSON.stringify(newVal) === JSON.stringify(oldVal)
+}
 
 export const searchByMeta = (properties:any) => {
     return api.post('/nuxeo/document/searchByProperties', {properties})
@@ -54,7 +60,6 @@ export const searchByMeta = (properties:any) => {
          })
         )
 }
-
 // export
 export const GetSearchExportHeaderApi = async() => {
     const res = await api.get('/nuxeo/search/getExportHeader').then(res => res.data.data)

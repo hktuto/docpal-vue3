@@ -37,8 +37,8 @@
 import { ArrowLeftBold } from '@element-plus/icons-vue';
 import { watchDebounced } from '@vueuse/core'
 import { 
-    nestedSearchApi,getSearchParamsArray, GetDocumentPreview, 
-    TABLE, defaultTableSetting, TableAddMultiColumns } from 'dp-api'
+    nestedSearchApi,getSearchParamsArray, isSearchParamsEqual, GetDocumentPreview, 
+    TABLE, defaultTableSetting, TableAddMultiColumns, deepCopy } from 'dp-api'
 
 // #region module: page
     const route = useRoute()
@@ -91,7 +91,9 @@ import {
     }
     watchDebounced(
         () => route.query,
-        async (newVal) => {
+        async (newVal, oldVal) => {
+            if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
+            
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return
             pageParams = getSearchParamsArray({...newVal})
