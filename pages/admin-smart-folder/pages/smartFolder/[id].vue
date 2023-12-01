@@ -50,7 +50,6 @@ async function handleInit () {
     try {
         state.setting = await GetPreSearchApi(route.params.id)
         state.setting.json = JSON.parse(state.setting.json_value)
-        if(state.setting.json?.paramsInTextSearch) state.setting.json.keyword = state.setting.json.paramsInTextSearch.join(',')
         
         setTimeout(async() => {
             FromRendererRef.value.vFormRenderRef.resetForm()
@@ -87,10 +86,7 @@ async function handleSubmit () {
     try {
         const data = await FromRendererRef.value.vFormRenderRef.getFormData()
         const param = deepCopy(data)
-        param.paramsInTextSearch = [param.keyword]
         if (!param.paramsInTextSearch) delete param.paramsInTextSearch
-        delete param.keyword
-        // delete param.paramsInTextSearch
         const res = await UpdatePreSearchApi({
             ...state.setting,
             json_value: JSON.stringify(param)})

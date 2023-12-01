@@ -76,7 +76,7 @@ async function handleGetOptions(tag: string) {
     if(!state.selectDataMap[tag]) {
         if (tag === 'paramsInTextSearch') {
             setTimeout(() => {
-                state.inputValue = props.searchParams[tag][0]
+                state.inputValue = props.searchParams[tag]
             }, 500)
         }
         return
@@ -145,8 +145,8 @@ function isArrEqual (arr1, arr2) {
     return arr1.length === arr2.length && arr1.every((ele) => arr2.includes(ele));
 }
 function handleInputChange() {
-    if (props.searchParams.paramsInTextSearch === [state.inputValue]) return
-    emits('change', props.tag, [state.inputValue])
+    if (props.searchParams.paramsInTextSearch === state.inputValue) return
+    emits('change', props.tag, state.inputValue)
 }
 watch(() => props.tag, (newValue) => {
     if(newValue) handleGetOptions(newValue)

@@ -78,8 +78,6 @@ function handleReset() {
 }
 function initForm (searchParams) {
   nextTick(async() => {
-        let key = searchParams.paramsInTextSearch
-        if(!!key) searchParams.keyword = key
         searchParams.includeFolder = (searchParams.includeFolder === '1' || searchParams.includeFolder === 1 || searchParams.includeFolder === true|| searchParams.includeFolder === 'true') ? '1' : '0'
         if(searchParams.hight) {
             searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
@@ -101,8 +99,6 @@ function initForm (searchParams) {
 const SearchDownloadDialogRef = ref()
 function dataHandle (formModel) {
     let _formModel = deepCopy(formModel)
-    _formModel.paramsInTextSearch = _formModel.keyword
-    delete _formModel.keyword
     return _formModel
 }
 function handleDownload () {

@@ -11,9 +11,8 @@ type Command = {
 }
 
 type SearchFilter = {
-    paramsInTextSearch?: string[] | string,
+    paramsInTextSearch?: string,
     textSearchType?: string,
-    // paramsInTextSearch?: string[][]
     or?: string[]
     type?: string[]
     modified?: string

@@ -74,7 +74,7 @@ const emits = defineEmits([
         () => route.query,
         async (newVal) => {
             const { currentPageIndex, pageSize } = newVal
-            pageParams = { ...pageParams, paramsInTextSearch: [props.queryParams.keyword],  ...getSearchParamsArray(props.queryParams) }
+            pageParams = { ...pageParams,  ...getSearchParamsArray(props.queryParams) }
             delete pageParams.keyword
             pageParams.currentPageIndex = currentPageIndex && (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = pageSize ? Number(pageSize) : pageParams.pageSize

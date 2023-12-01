@@ -19,7 +19,7 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
 }
 
 export const getSearchParamsArray = (searchParams: SearchFilter) =>{
-    const arrParams = ['paramsInTextSearch' ,'or', 'type', 'authors', 'collections', 'tags', 'creator']
+    const arrParams = ['or', 'type', 'authors', 'collections', 'tags', 'creator']
     const result:any = Object.keys(searchParams).reduce((prev, key) => {
         if(arrParams.includes(key) && typeof(searchParams[key]) === 'string' && searchParams[key]) {
             prev[key] = [searchParams[key]]

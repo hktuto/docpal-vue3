@@ -52,7 +52,6 @@ const state = reactive({
 function handleOpen(searchParams) {
     state.visible = true
     state.searchParams = searchParams
-    if(!state.searchParams.paramsInTextSearch) state.searchParams.paramsInTextSearch = []
 }
 async function handleSubmit() {
     state.loading = true

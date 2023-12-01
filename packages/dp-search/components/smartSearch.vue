@@ -32,7 +32,7 @@ const state = reactive({
 
     keyword: '',
     searchParams: {
-        // paramsInTextSearch: [],
+        // paramsInTextSearch: '',
         // textSearchType: '',
         // folderType: '',
         // type: [],
@@ -115,8 +115,7 @@ function blurInput() {
 
 function keywordInputHandler(event) {
     const value = event.target.value
-    state.keyword = value
-    state.searchParams.paramsInTextSearch = [value]
+    state.searchParams.paramsInTextSearch = value
 }
 // #region module:
     const { ctrl_k, meta_k } = useMagicKeys({
@@ -138,9 +137,6 @@ function keywordInputHandler(event) {
 // #endregion
 onMounted(() => {
     state.searchParams = getSearchParamsArray(route.query)
-    if(state.searchParams.paramsInTextSearch) {
-        state.keyword = state.searchParams.paramsInTextSearch.join('')
-    }
 })
 
 </script>

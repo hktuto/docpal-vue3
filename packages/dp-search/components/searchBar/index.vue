@@ -82,7 +82,7 @@ const state = reactive({
     selectedMenuItem: '',
     collectionMap: {}
 })
-const arrParams = ['paramsInTextSearch' ,'or', 'type', 'authors', 'collections', 'tags', 'creator']
+const arrParams = ['or', 'type', 'authors', 'collections', 'tags', 'creator']
 
 const pendingTags = computed(() => {
     return state.defaultTagList.filter(item => !state.dynamicTags.includes(item))
