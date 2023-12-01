@@ -29,7 +29,7 @@ function handleReset() {
 }
 onMounted(async() => {
     nextTick(() => {
-        const keywordRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('keyword')
+        const keywordRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('paramsInTextSearch')
         keywordRef.setHidden(true)
     })
 })
