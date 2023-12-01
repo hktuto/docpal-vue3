@@ -51,12 +51,12 @@ export const getAggregation = (aggregation, searchParams) => {
                     value: option.key === 'notInclude' ? '0' : '1'
                 }))
                 break
-            case 'hight_pic_agg':
+            case 'height_pic_agg':
             case 'width_pic_agg':
                 if (searchParams.assetType === 'Picture') 
                     prev[newKey] = returnI18nArr(aggregationItem)
                 break
-            case 'hight_vid_agg':
+            case 'height_vid_agg':
             case 'width_vid_agg':
                 if (searchParams.assetType === 'Video') 
                     prev[newKey] = returnI18nArr(aggregationItem)
