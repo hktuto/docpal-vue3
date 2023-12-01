@@ -15,6 +15,7 @@
                         {{getSearchI18n(item)}}:{{ getSearchTag(item) }}
                     </template>
                     <SearchBarForm :tag="item" :titles="getSearchI18n(item)" :searchParams="searchParams"
+                        :aggregation="aggregation"
                         @change="handleChangeTag"></SearchBarForm>
                 </el-popover>
             </el-tag>
@@ -29,6 +30,7 @@
                             <div> {{getSearchI18n(item)}} </div>
                             <template v-if="state.selectedMenuItem === item" #dropdown>
                                 <SearchBarForm :tag="item" :titles="getSearchI18n(item)" :searchParams="searchParams"
+                                    :aggregation="aggregation"
                                     @change="handleAddTag"></SearchBarForm>
                             </template>
                         </el-dropdown>
@@ -47,6 +49,7 @@ const props = defineProps<{
     searchParams: any,
     ready: boolean,
     loading: boolean,
+    aggregation: any
 }>()
 const emits = defineEmits(['change', 'updateForm'])
 const router = useRouter()

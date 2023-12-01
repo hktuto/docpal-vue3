@@ -9,6 +9,7 @@
             </div>
             <div class="table-container">
                 <SearchBar ref="SearchBarRef" :searchParams="state.searchParams"
+                    :aggregation="state.aggregation"
                     @updateForm="handleUpdateForm"></SearchBar>
                 <div style="overflow: hidden">
                     <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
@@ -55,6 +56,7 @@ import {
         firstReady: false,
         loading: false,
         tableData: [],
+        aggregation: {},
         options: {
             showPagination: true,
             paginationConfig: {
@@ -73,12 +75,16 @@ import {
         state.loading = true
         try {
             const res = await nestedSearchApi({ ...param })
+            SearchFilterLeftRef.value.updateOptions(res.aggregation)
             state.tableData = res.entryList
+            state.aggregation = res.aggregation
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.currentPageIndex + 1
         } catch (error) {
             state.tableData = []
+            state.aggregation = {}
+            state.options.paginationConfig.total = 0
         }
         state.loading = false
     }
@@ -92,7 +98,7 @@ import {
     watchDebounced(
         () => route.query,
         async (newVal, oldVal) => {
-            if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
+            // if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
             
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return

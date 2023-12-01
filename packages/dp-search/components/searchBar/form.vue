@@ -31,7 +31,8 @@ import {
 const props = defineProps<{
     tag: string,
     searchParams: any,
-    titles: string
+    titles: string,
+    aggregation: any
 }>()
 const emits = defineEmits(['change'])
 const state = reactive({
@@ -81,6 +82,10 @@ async function handleGetOptions(tag: string) {
         }
         return
     }
+    if (props.aggregation && props.aggregation[tag]) {
+        state.options = props.aggregation[tag]
+        return
+    } 
     state.loading = true
     try {
         switch (tag) {

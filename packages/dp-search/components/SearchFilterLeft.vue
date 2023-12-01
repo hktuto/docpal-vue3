@@ -1,28 +1,28 @@
 <template>
     <div ref="filterContainerRef" class="filterContainer">
-      <div class="formShrink" @click="opened = true">
-        <div class="iconContainer">
-          <arrow-down />
+        <div class="formShrink" @click="opened = true">
+            <div class="iconContainer">
+                <arrow-down />
+            </div>
         </div>
-      </div>
-      <div :class="{formContainerDialog:true, opened}">
-        <div v-if="isMobile" class="dialogCloseBtn" @click="opened = false">
-          <SvgIcon src="/icons/close.svg" />
-        </div>
+        <div :class="{formContainerDialog:true, opened}">
+            <div v-if="isMobile" class="dialogCloseBtn" @click="opened = false">
+                <SvgIcon src="/icons/close.svg" />
+            </div>
 
-        <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
-        <div class="filterContainer-footer">
-            <el-row :gutter="10">
-                <el-col :span="8">
-                    <el-button type="info" @click="handleReset">{{$t('reset')}}</el-button>
-                </el-col>
-                <el-col :span="16">
-                    <el-button type="primary" :loading="loading" @click="handleSubmit">{{$t('search')}}</el-button>
-                </el-col>
-            </el-row>
-            <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" @click="handleDownload">{{$t('export')}}</el-button>
+            <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
+            <div class="filterContainer-footer">
+                <el-row :gutter="10">
+                    <el-col :span="8">
+                        <el-button type="info" @click="handleReset">{{$t('reset')}}</el-button>
+                    </el-col>
+                    <el-col :span="16">
+                        <el-button type="primary" :loading="loading" @click="handleSubmit">{{$t('search')}}</el-button>
+                    </el-col>
+                </el-row>
+                <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" @click="handleDownload">{{$t('export')}}</el-button>
+            </div>
         </div>
-      </div>
         <SearchDownloadDialog ref="SearchDownloadDialogRef" />
     </div>
 </template>
@@ -107,9 +107,19 @@ function handleDownload () {
     _data = getSearchParamsArray(_data)
     SearchDownloadDialogRef.value.handleOpen(_data)
 }
+function updateOptions(aggregation) {
+    Object.keys(aggregation).forEach(async(key) => {
+        const keyRef = await FromRendererRef.value.vFormRenderRef.getWidgetRef(key)
+        if(!keyRef) {
+            console.log(keyRef);
+            return
+        }
+        keyRef.loadOptions(aggregation[key])
+    })
+}
 onMounted(() => {
 })
-defineExpose({ handleSubmit, initForm })
+defineExpose({ handleSubmit, initForm, updateOptions })
 </script>
 
 <style lang="scss" scoped>

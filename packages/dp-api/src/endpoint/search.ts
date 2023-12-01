@@ -14,10 +14,72 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
     delete _params.time
     delete _params.searchBackPath
     const res = await api.post('/nuxeo/search/nestedSearch', _params).then(res => res.data.data)
-    
-    return { entryList: res.page.entryList || [], totalSize: res.page.totalSize, aggregation: res.aggregation }
+    return { entryList: res.page?.entryList || [], totalSize: res.page?.totalSize, aggregation: getAggregation(res.aggregation, params) }
 }
-
+export const getAggregation = (aggregation, searchParams) => {
+    if(!aggregation) return {}
+    const result = Object.keys(aggregation).reduce((prev, key) => {
+        const aggregationItem = aggregation[key]
+        const map = {
+            authors_agg: 'authors',
+            collections_agg: 'collections',
+            creator_agg: 'creator',
+            duration_agg: 'duration',
+            includeFolder_agg: 'includeFolder',
+            mimeType_agg: 'mimeType',
+            modified_agg: 'modified',
+            primaryType_agg: 'type',
+            size_agg: 'size',
+            tags_agg: 'tags',
+            height_pic_agg: 'height',
+            height_vid_agg: 'height',
+            width_pic_agg: 'width',
+            width_vid_agg: 'width',
+        }
+        const newKey = map[key]
+        switch (key) {
+            case 'duration_agg':
+            case 'mimeType_agg':
+            case 'modified_agg':
+            case 'size_agg':
+                prev[newKey] = returnI18nArr(aggregationItem)
+                break
+            case 'includeFolder_agg':
+                prev[newKey] = aggregationItem.map((option) => ({
+                    // @ts-ignore
+                    label: option.key === 'notInclude' ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1'),
+                    value: option.key === 'notInclude' ? '0' : '1'
+                }))
+                break
+            case 'hight_pic_agg':
+            case 'width_pic_agg':
+                if (searchParams.assetType === 'Picture') 
+                    prev[newKey] = returnI18nArr(aggregationItem)
+                break
+            case 'hight_vid_agg':
+            case 'width_vid_agg':
+                if (searchParams.assetType === 'Video') 
+                    prev[newKey] = returnI18nArr(aggregationItem)
+                break
+            default:
+                if(newKey)
+                    prev[newKey] = aggregationItem.map(item => ({
+                        label: item.label || item.key,
+                        value: item.key
+                    }))
+                break;
+        }
+        return prev
+    }, {})
+    function returnI18nArr(arr) {
+        return arr.map(arrItem => ({
+            // @ts-ignore
+            label: $t(`searchType_${arrItem.key}`),
+            value: arrItem.key
+        }))
+    }
+    return result
+}
 export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     const arrParams = ['or', 'type', 'authors', 'collections', 'tags', 'creator']
     const result:any = Object.keys(searchParams).reduce((prev, key) => {
