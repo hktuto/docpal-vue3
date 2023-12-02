@@ -5,7 +5,7 @@ const props = defineProps<{
   data: any,
   allField: any,
 }>();
-const emit = defineEmits(['close', 'submit'])
+const emit = defineEmits(['close', 'submit', 'boundaryChange'])
 
 const allEmailTemplates = ref([]);
 const defaultWorkflowVariable =ref(['HostUrl',"ProcessInstanceId"])
@@ -50,6 +50,9 @@ const templateVariables = computed(() => {
 })
 function fieldMappingUpdate(index, newVal) {
   props.data.extensionElements['flowable:field'][index + 1]['flowable:expression'].__cdata = newVal;
+  const newData = {...props.data}
+  // remove boundry
+  delete newData.boundary;
   emit('submit', props.data)
 }
 const allFieldOptions = computed(() => {
@@ -92,7 +95,21 @@ const selectedEmailTemplate = computed({
         }
       })
     ]
-    emit('submit', props.data)
+    const newData = {...props.data}
+    // remove boundry
+    delete newData.boundary;
+    emit('submit', newData)
+  }
+})
+
+const timeEventValue = computed({
+  get(){
+    const v = props.data.boundary.timerEventDefinition.timeDuration.substring(1, 2);
+    return v
+  },
+  set(value){
+    props.data.boundary.timerEventDefinition.timeDuration = `P${value}D`;
+    emit('boundaryChange', props.data.boundary);
   }
 })
 
@@ -114,6 +131,11 @@ onMounted(async() => {
           </ElSelect>
         </ElFormItem>
       </ElForm>
+      <template v-if="data.boundary && data.boundary.timerEventDefinition">
+        <ElFormItem label="Reminder time">
+        <ElInput type="number" v-model="timeEventValue" />
+        </ElFormItem>
+      </template>
       <table>
         <tr>
           <th>Email Variable</th>

@@ -324,6 +324,13 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
 
   // step 5: add serviceTask
   serviceTask.forEach((task: any) => {
+      const boundary = boundaryEvent.find((event: any) => {
+          if(!event || !event['attr_attachedToRef']) return false;
+          if( event['attr_attachedToRef'] === task['attr_id'] ) return true;
+          
+          const target = sequenceFlow.find((flow: any) => flow['attr_sourceRef'] === event['attr_id'] && flow['attr_targetRef'] === task['attr_id']);
+          return !!target;
+      });
     if(task['attr_flowable:delegateExpression'] === "${sendNotificationDelegate}") {
       data.nodes?.push({
         id: task['attr_id'],
@@ -331,7 +338,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         label: truncateString(task['attr_name']),
         data:{
           type: 'serviceTask',
-          ...task
+          ...task,
+            boundary
         },
           ports:[
           ]
@@ -343,7 +351,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         label: truncateString(task['attr_name']),
         data: {
           type: 'serviceTask',
-          ...task
+          ...task,
+            boundary
         },
           ports:[
           ]
@@ -355,7 +364,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         label: truncateString(task['attr_name']),
         data: {
           type: 'serviceTask',
-          ...task
+          ...task,
+            boundary
         },
           ports:[
           ]

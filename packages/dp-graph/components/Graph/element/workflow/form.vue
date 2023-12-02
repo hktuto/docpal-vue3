@@ -9,12 +9,12 @@ const shape = ref("");
 const dataId = ref("");
 
 const typeOption = {
-  "form-node": {icon:"/bpmn/icons/form.svg", color: "#0099ff", radius: "1rem"},
-  "document-node": {icon:"/bpmn/icons/document.svg", color: "#7B61FF", radius: "1rem"},
-  "email-node": {icon:"/bpmn/icons/email.svg", color: "#29CC6A", radius: "1rem"},
-  "user-node": {icon: undefined, color: "#b7b7b7", radius: "50%"},
-  "exclusive-node": {icon:undefined, color: "#b7b7b7", radius: "50%"},
-  "script-node":{icon:"/bpmn/icons/script.svg", color: "#7B61FF", radius: "1rem"}
+  "form-node": {icon:"/bpmn/icons/form.svg", color: "#0099ff", radius: "1rem", size:"80px"},
+  "document-node": {icon:"/bpmn/icons/document.svg", color: "#7B61FF", radius: "1rem", size:"80px"},
+  "email-node": {icon:"/bpmn/icons/email.svg", color: "#29CC6A", radius: "1rem", size:"80px"},
+  "user-node": {icon: undefined, color: "#b7b7b7", radius: "50%", size:"60px"},
+  "exclusive-node": {icon:undefined, color: "#b7b7b7", radius: "50%", size:"60px"},
+  "script-node":{icon:"/bpmn/icons/script.svg", color: "#7B61FF", radius: "1rem", size:"80px"}
 }
 
 const displayType = computed(() => {
@@ -53,6 +53,14 @@ function emitAddEvent() {
   document.dispatchEvent(ev);
 }
 
+function handleCommand(command) {
+  if(command === 'delete') {
+    emitDeleteEvent();
+  }else if(command === 'approval') {
+    emitAddEvent();
+  }
+}
+
 onMounted(() => {
   node.value = getNode()
   getData();
@@ -63,28 +71,47 @@ onMounted(() => {
 </script>
 
 <template>
-  <ElTooltip :content="label" placement="bottom">
-    <div v-popover="popoverRef" :class="{graphWorkflowElement:true, shape}" :style="`--radius: ${displayType.radius};--color:${displayType.color}`">
-      <SvgIcon v-if="displayType.icon" :src="displayType.icon" />
+  <el-dropdown ref="dropdown1" trigger="contextmenu" style="margin-right: 30px" @command="handleCommand">
+    <div class="icon" :style="`--radius: ${displayType.radius};--color:${displayType.color};--size:${displayType.size};`">
+      
+    <ElTooltip :content="label" placement="bottom">
+      <div v-popover="popoverRef" :class="{graphWorkflowElement:true, shape}" >
+        <SvgIcon v-if="displayType.icon" :src="displayType.icon" />
+      </div>
+    </ElTooltip>
+    <div class="label">{{label}}</div>
+      
     </div>
-  </ElTooltip>
-  <div class="label">{{label}}</div>
-  <el-popover
-      ref="popoverRef"
-      trigger="contextmenu"
-      title="Actions"
-      virtual-triggering
-      persistent
-      :disabled="type === 'endEvent' || type === 'exclusiveGateway' || dataId === 'start' || dataId === 'userTask'"
-  >
-    <div class="actions">
-<!--      <SvgIcon src="/icons/add.svg" @click="emitAddEvent"></SvgIcon >-->
-      <SvgIcon src="/icons/delete.svg" @click="emitDeleteEvent"></SvgIcon>
-    </div>
-  </el-popover>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="delete">Remove</el-dropdown-item>
+        <el-dropdown-item command="approval">Add Approval</el-dropdown-item>
+        <el-dropdown-item command="email">Add Email</el-dropdown-item>
+        <el-dropdown-item command="document">Add Document</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+<!--  <el-popover-->
+<!--      ref="popoverRef"-->
+<!--      trigger="contextmenu"-->
+<!--      title="Actions"-->
+<!--      virtual-triggering-->
+<!--      persistent-->
+<!--      :disabled="type === 'endEvent' || type === 'exclusiveGateway' || dataId === 'start' || dataId === 'userTask'"-->
+<!--  >-->
+<!--    <div class="actions">-->
+<!--&lt;!&ndash;      <SvgIcon src="/icons/add.svg" @click="emitAddEvent"></SvgIcon >&ndash;&gt;-->
+<!--      <SvgIcon src="/icons/delete.svg" @click="emitDeleteEvent"></SvgIcon>-->
+<!--    </div>-->
+<!--  </el-popover>-->
 </template>
 
 <style scoped lang="scss">
+.icon{
+  width: var(--size);
+  height: var(--size);
+  position: relative;
+}
 .graphWorkflowElement{
   width: 100%;
   aspect-ratio: 1/1;

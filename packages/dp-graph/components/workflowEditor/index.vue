@@ -26,13 +26,13 @@ function setupGraph() {
 
 
 function edgeDblClickHandler({edge, e}:any) {
-  console.log("edge click", edge)
-  const data = edge.getData();
-  if(data.type === 'boundaryEvent'){
-    const data = edge.getData();
-    selectedData.value = data;
-    sidePanelOpened.value = true;
-  }
+  // console.log("edge click", edge)
+  // const data = edge.getData();
+  // if(data.type === 'boundaryEvent'){
+  //   const data = edge.getData();
+  //   selectedData.value = data;
+  //   sidePanelOpened.value = true;
+  // }
 }
 
 function saveBoundaryStep(date){
@@ -193,8 +193,6 @@ function getWorkflowData() {
 
 function nodeRightClickHandler({e, node}:any) {
   e.preventDefault();
-  const data = node.getData();
-  console.log('right click', node)
   // 如果 node 是 userTask, 
 }
 
@@ -313,6 +311,21 @@ async function validateForm():Promise<any[]>{
   
 }
 
+function boundaryChangeHandler(newData){
+  console.log(newData)
+  if(newData){
+    // found boundary envent
+    if(Array.isArray(bpmnJson.value.definitions.process.boundaryEvent)){
+      const item = bpmnJson.value.definitions.process.boundaryEvent.find(item => item.attr_id === newData.attr_id);
+      if(item){
+        item.timerEventDefinition.timeDuration = newData.timerEventDefinition.timeDuration;
+      }
+    }else{
+      bpmnJson.value.definitions.process.boundaryEvent.timerEventDefinition.timeDuration = newData.timerEventDefinition.timeDuration;
+    }
+  }
+}
+
 
 
 
@@ -337,7 +350,7 @@ defineExpose({
       <template v-if="selectedData">
         <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'"  @close="closeSidePanel" @submit="saveForm" />
         <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData"  @close="closeSidePanel" @submit="saveUserStep" />
-        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" @boundaryChange="boundaryChangeHandler" />
         <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
         <WorkflowEditorFormBoundaryEvent v-else-if="selectedData.type === 'boundaryEvent'" :data="selectedData" @close="closeSidePanel" @submit="saveBoundaryStep" />
       </template>
