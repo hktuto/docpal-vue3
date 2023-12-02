@@ -1,20 +1,28 @@
 <script setup lang="ts">
   import {api} from "dp-api";
+  import {useEditor} from "~/composables/useEditorjs";
 
   const props = defineProps<{
     options:any,
     data:any,
-    variables:any
   }>();
-  const { variables } = toRefs(props);
+  const {variables} = useEditor()
   
   const testForm = ref({
     to: '',
     templateId: props.data.id,
-    variables: props.variables.reduce((acc:any, cur:any) => {
+    variables: variables.value.reduce((acc:any, cur:any) => {
       acc[cur] = '';
       return acc;
     }, {})
+  })
+  
+  const displayVariables = computed(() => {
+    // if item contain ',' , that mean it a array
+    //TODO need backend support array,, skip from now
+    return variables.value.filter((item:any) => {
+      return !item.includes(',')
+    })
   })
   
   async function send() {
@@ -42,7 +50,7 @@
           <ElFormItem label="To">
             <ElInput v-model="testForm.to"></ElInput>
           </ElFormItem>
-          <ElFormItem v-for="item in variables" :label="item" :key="item">
+          <ElFormItem v-for="item in displayVariables" :label="item" :key="item">
             <ElInput type="textarea" v-model="testForm.variables[item]"></ElInput>
           </ElFormItem>
         </ElForm>

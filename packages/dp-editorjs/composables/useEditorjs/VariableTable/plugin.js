@@ -53,13 +53,16 @@ export default class TableBlock {
    * @param {boolean} readOnly - read-only mode flag
    */
   constructor({data, config, api, readOnly}) {
+    console.log(data);
     this.api = api;
     this.readOnly = readOnly;
     this.config = config;
     this.data = {
       withHeadings: this.getConfig('withHeadings', true, data),
-      content: data && data.content ? data.content : []
+      content: data && data.content ? data.content : [],
+      variable: data && data.variable ? data.variable : ""
     };
+    this.variableName = data && data.variable ? data.variable : "";
     this.table = null;
   }
 
@@ -88,17 +91,22 @@ export default class TableBlock {
     this.table = new Table(this.readOnly, this.api, this.data, this.config);
 
     /** creating container around table */
-    this.container = $.make('div', this.api.styles.block);
+    this.container = $.make('div', [this.api.styles.block, 'tc-container']);
     this.container.appendChild(this.table.getWrapper());
 
     this.table.setHeadingsSetting(this.data.withHeadings);
    
-    setTimeout(()=> this.checkVariable(), 500);
+    setTimeout(()=> this.checkVariable(), 300);
     return this.container;
     
   }
   
   checkVariable(){
+    if(this.variableName) {
+      console.log(this.container)
+      this.container.setAttribute('data-variable', 'Variable: ' + this.variableName);
+      return
+    };
     const variable = window.prompt("Please input Variable Name");
     
     if(!variable) {
@@ -109,6 +117,10 @@ export default class TableBlock {
     if(!variable.match(/^[a-zA-Z]+$/)) {
       window.alert("Please input only letters");
       this.checkVariable();
+    }else {
+      this.variableName = variable;
+      this.container.setAttribute('data-variable', 'Variable: ' + this.variableName);
+      this.save()
     }
     
   }
@@ -150,10 +162,11 @@ export default class TableBlock {
    */
   save() {
     const tableContent = this.table.getData();
-
+    
     const result = {
       withHeadings: this.data.withHeadings,
-      content: tableContent
+      content: tableContent,
+      variable: this.variableName
     };
 
     return result;

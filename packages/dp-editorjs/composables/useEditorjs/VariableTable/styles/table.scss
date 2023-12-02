@@ -191,3 +191,23 @@
 .tc-wrap--readonly .tc-row::after {
   display: none;
 }
+
+.tc-container{
+  &:focus-within{
+    &:after{
+      opacity: 0.5;
+    }
+  }
+  &:after{
+    content: attr(data-variable);
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 12px;
+    line-height: 16px;
+    color: #fff;
+    padding: calc(var(--app-padding) / 2 );
+    background: var(--primary-color);
+    opacity: 0;
+  }
+}
