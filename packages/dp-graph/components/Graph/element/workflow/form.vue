@@ -44,8 +44,8 @@ function emitDeleteEvent(){
   document.dispatchEvent(ev);
 }
 
-function emitAddEvent() {
-  const ev = new CustomEvent('add-workflow-graph-item', {
+function emitNewApproveEvent(){
+  const ev = new CustomEvent('new-approve-workflow-graph-item', {
     detail: {
       node: node.value
     }
@@ -53,12 +53,41 @@ function emitAddEvent() {
   document.dispatchEvent(ev);
 }
 
+function emitNewEmailEvent(){
+  const ev = new CustomEvent('new-email-workflow-graph-item', {
+    detail: {
+      node: node.value
+    }
+  })
+  document.dispatchEvent(ev);
+}
+
+function emitNewDocumentEvent(){
+  const ev = new CustomEvent('new-document-workflow-graph-item', {
+    detail: {
+      node: node.value
+    }
+  })
+  document.dispatchEvent(ev);
+}
+
+
 function handleCommand(command) {
-  if(command === 'delete') {
-    emitDeleteEvent();
-  }else if(command === 'approval') {
-    emitAddEvent();
+  switch (command) {
+    case 'delete':
+      emitDeleteEvent();
+      break;
+    case 'approval':
+      emitNewApproveEvent();
+      break;
+    case 'email':
+      emitNewEmailEvent();
+      break;
+    case 'document':
+      emitNewDocumentEvent();
+      break;
   }
+
 }
 
 onMounted(() => {

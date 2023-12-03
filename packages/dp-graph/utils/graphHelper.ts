@@ -449,29 +449,26 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         const boundary = boundaryEvent.find((event: any) => event['attr_id'] === flow['attr_sourceRef']);
         const sourceNode = data.nodes?.find((node) => node.id === boundary['attr_attachedToRef']);
         
-        // if(!sourceNode) return;
-        const outLength = sourceNode.ports.length
-        sourceNode.ports?.push({
-            id: sourceNode['id'] + '-out' + '-' + outLength,
-            group: 'top',
-        })
+        if(!sourceNode) return;
+        
+        const sourcePort = getAndCreatePorts(sourceNode, 'top')
+        
         // // create port for target node
         const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
         if(!targetNode) return;
-        const inLength = targetNode.ports.length
-        targetNode.ports?.push({
-            id: targetNode['id'] + '-in' + '-' + inLength,
-            group: 'left',
-        })
+        // check targetNode have in port
+       
+        const targetPort = getAndCreatePorts(targetNode, 'left')
+        
 
         data.edges?.push({
             source: {
                 cell: sourceNode['id'],
-                port: sourceNode['id'] + '-out' + '-' + outLength
+                port: sourcePort
             },
             target: {
                 cell: targetNode['id'],
-                port: targetNode['id'] + '-in' + '-' + inLength
+                port: targetPort
             },
             shape: 'boundaryEdge',
             data:{
@@ -486,27 +483,20 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
           const approve = !flow.conditionExpression || flow.conditionExpression.__cdata.includes('!');
           const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef'] + (approve ? '-reject' : '-approve'));
           if(!sourceNode) return;
-          const outLength = sourceNode.ports.length
-          sourceNode.ports?.push({
-              id: sourceNode['id'] + '-out' + '-' + outLength,
-              group: 'right',
-          })
+          
+          const sourcePort = getAndCreatePorts(sourceNode, 'right',approve ? '-reject' : '-approve' )
           // // create port for target node
           const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
           if(!targetNode) return;
-          const inLength = targetNode.ports.length
-          targetNode.ports?.push({
-              id: flow['attr_targetRef'] + '-in' + '-' + inLength,
-              group: 'left',
-          })
+          const targetPort = getAndCreatePorts(targetNode, 'left')
           data.edges?.push({
               source: {
                   cell: flow['attr_sourceRef'] + (approve ? '-reject' : '-approve'),
-                    port: flow['attr_sourceRef'] + (approve ? '-reject' : '-approve') + '-out' + '-' + outLength
+                    port: sourcePort
               },
               target: {
                   cell: flow['attr_targetRef'],
-                    port: flow['attr_targetRef'] + '-in' + '-' + inLength
+                    port: targetPort
               },
               shape: 'normal-edge',
           });
@@ -516,45 +506,34 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
       if( exclusiveGateway.find((gateway: any) => gateway['attr_id'] === flow['attr_targetRef']) ) {
           const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef']);
           if(!sourceNode) return;
-          const outLength = sourceNode.ports.length
-          sourceNode.ports?.push({
-              id: flow['attr_sourceRef'] + '-out' + '-' + outLength,
-              group: 'right',
-          })
+          const sourcePort = getAndCreatePorts(sourceNode, 'right')
           // create port for target node
           const stargetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef'] + '-approve' );
           const rTargetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef'] + '-reject' );
           if(!stargetNode || !rTargetNode) return;
-          const sInLength = stargetNode.ports.length
-          const rInLength = rTargetNode.ports.length;
-          stargetNode.ports?.push({
-              id: flow['attr_targetRef'] + '-approve' + '-in' + '-' + sInLength,
-              group: 'left',
-          })
-          rTargetNode.ports?.push({
-              id: flow['attr_targetRef'] + '-reject' + '-in' + '-' + rInLength,
-              group: 'left',
-          })
+          const stargetPort = getAndCreatePorts(stargetNode, 'left', '-approve')
+          const rtargetPort = getAndCreatePorts(rTargetNode, 'left', '-reject')
+          
 
           data.edges?.push({
               source: {
                   cell: flow['attr_sourceRef'],
-                    port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+                    port: sourcePort
               },
               target: {
                   cell: flow['attr_targetRef'] + '-approve',
-                    port: flow['attr_targetRef'] + '-approve' + '-in' + '-' + sInLength
+                    port: stargetPort
               },
               shape: 'normal-edge',
           });
           data.edges?.push({
               source: {
                   cell:flow['attr_sourceRef'],
-                    port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+                    port: sourcePort
               },
               target: {
                   cell: flow['attr_targetRef'] + '-reject',
-                    port: flow['attr_targetRef'] + '-reject' + '-in' + '-' + rInLength
+                    port: rtargetPort
               },
               shape: 'normal-edge',
           });
@@ -563,28 +542,19 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
 
       const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef']);
       if(!sourceNode) return;
-      const outLength = sourceNode.ports.length
-      sourceNode.ports?.push({
-          id: flow['attr_sourceRef'] + '-out' + '-' + outLength,
-          group: 'right',
-      })
       // create port for target node
       const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
-      if(!targetNode) return;
-      const inLength = targetNode.ports.length
-      targetNode.ports?.push({
-          id: flow['attr_targetRef'] + '-in' + '-' + inLength,
-          group: 'left',
-      })
       
+      const targetPort = getAndCreatePorts(targetNode, 'left')
+      const sourcePort = getAndCreatePorts(sourceNode, 'right')
       data.edges?.push({
           source: {
               cell:flow['attr_sourceRef'],
-                port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+                port: sourcePort
           },
           target: {
               cell:flow['attr_targetRef'],
-                port: flow['attr_targetRef'] + '-in'  + '-' + inLength
+                port: targetPort
           },
           shape: 'normal-edge',
         });
@@ -593,4 +563,21 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
 
   // finally return data
   return data;
+}
+
+export const getAndCreatePorts = (node :Node.Metadata, group:string, suffix:string = "") => {
+    if(!node || !node.data){
+        console.log(node);
+    }
+    let portId = node.data.attr_id + suffix + '-'  + group;
+    const port = node.ports?.find((port: any) => port.group === group)
+    if(port) {
+        portId = port.id;
+    } else {
+        node.ports?.push({
+            id: portId ,
+            group: group,
+        })
+    }
+    return portId
 }

@@ -5,9 +5,10 @@ import {jsonToBpmn} from "../../utils/graphHelper";
 import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
 import {workflowTemplateList} from "../../utils/workflowTemplate";
 import {useEventListener} from '@vueuse/core';
-import {removeAllConnection, removeAndJoinNextNode} from "../../utils/graphNodeHelper";
+import {getLastConnectedNode, removeAllConnection, removeAndJoinNextNode} from "../../utils/graphNodeHelper";
 import {ElMessage} from 'element-plus'
 import {bpmnStepToForm} from "../../utils/formEditorHelper";
+import { ElNotification } from 'element-plus'
 const props = defineProps<{
   bpmn: String
 }>()
@@ -18,10 +19,12 @@ const selectedData = ref();
 const workflowForm = ref();
 const graphEl = ref();
 
+const { bpmn } = toRefs(props);
+
 const { graphJson, bpmnJson, allFormField } = useWorkflowGraph();
 function setupGraph() {
-  graphJson.value = bpmnToX6(props.bpmn, { hideEnd:false });
-  bpmnJson.value = bpmnToJson(props.bpmn);
+  graphJson.value = bpmnToX6(bpmn.value, { hideEnd:false });
+  bpmnJson.value = bpmnToJson(bpmn.value);
 }
 
 
@@ -181,7 +184,6 @@ watch(() => props.bpmn, (newVal, oldVal) => {
 function getWorkflowData() {
   
   const xml = jsonToBpmn(bpmnJson.value)
-  console.log(xml)
   // create blob file
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
   const name = bpmnJson.value.definitions.process.attr_name
@@ -208,16 +210,38 @@ const displayTemplate = computed(() => {
 
 
 function itemDeleteHandler(node:Node) {
-  
   // step 1 show confirm dialog
   // show alert
   const confirmDelete = confirm("Are you sure you want to delete this step?");
   if(!confirmDelete) return;
-
   const data = node.getData();
+  console.log(data)
+  if(data.attr_id === 'start'){
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'Can not delete start event',
+    })
+    return
+  }
+  if(data.type === "endEvent"){
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'Can not delete end event',
+    })
+    return
+  }
+  if(data.type === "exclusiveGateway") {
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'Can not delete exclusive gateway, please delete connected step',
+    })
+    return
+  }
   const itemToDelete = [];
   if(data.type === 'userTask'){
-    return;
     // find step in data
     if(Array.isArray(bpmnJson.value?.definitions?.process.userTask)) {
       const index = bpmnJson.value?.definitions?.process.userTask.findIndex(item => item.attr_id === data.attr_id);
@@ -229,11 +253,19 @@ function itemDeleteHandler(node:Node) {
         bpmnJson.value.definitions.process.userTask = undefined;
       }
     }
-    // get connected node
-    removeAllConnection(node, graphEl.value?.graph);
-    // remove all edge related to this step
-    const items = bpmnJson.value.definitions.process.sequenceFlow.filter(item => item.attr_sourceRef === data.attr_id || item.attr_targetRef === data.attr_id);
+    // get last connected node
+    const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_targetRef === data.attr_id);
     
+    // remove all edge related to this step
+    getLastConnectedNode(node.data.attr_id, bpmnJson)
+    if(otherToNode){
+      bpmnJson.value.definitions.process.sequenceFlow.push({
+        attr_id: 'sid' + new Date().getTime(),
+        attr_sourceRef: otherToNode.attr_sourceRef,
+        attr_targetRef: 'end'
+      })
+    }
+    graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
   }
   
   if(data.type === 'serviceTask') {
@@ -326,15 +358,46 @@ function boundaryChangeHandler(newData){
   }
 }
 
+function canCreateNewStep(stepId:string) {
+  if(stepId === 'end') {
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'Can not create new step at the end',
+    })
+    throw new Error("can't create new step")
+  }
+  const nextStep = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === stepId)
+  console.log("canCreateNewStep", nextStep)
+  if(nextStep){
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'New Step can only be created at the end of the workflow',
+    })
+    throw new Error("can't create new step")
+  }
+  return
+}
 
 
 
+function newApproveHandler(node:Node) {
+  console.log("newApproveHandler", node);
+  canCreateNewStep(node.data.attr_id)
+  
+}
+function newEmailHandler(node:Node) {
+  canCreateNewStep()
+}
 
-function itemAddHandler(node:Node) {
-  console.log('add', node)
+function newDocumentHandler(node:Node) {
+  canCreateNewStep()
 }
 useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => itemDeleteHandler(node))
-useEventListener(document, 'add-workflow-graph-item', ({detail:{node}}) =>itemAddHandler(node))
+useEventListener(document, 'new-approve-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node))
+useEventListener(document, 'new-email-workflow-graph-item', ({detail:{node}}) =>newEmailHandler(node))
+useEventListener(document, 'new-document-workflow-graph-item', ({detail:{node}}) =>newDocumentHandler(node))
 defineExpose({
   getWorkflowData,
   validateForm,
