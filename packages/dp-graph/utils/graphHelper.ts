@@ -1,8 +1,8 @@
 import { Graph, Node, Model, Path } from '@antv/x6'
 import {Attr} from "@antv/x6/es/registry";
-import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 import { register } from '../components/Graph';
 import GraphWorkflowForm from '../components/Graph/element/workflow/form.vue';
+import {BPMNJSON, bpmnToJson, normalizeToX6} from 'dp-bpmn'
 interface ImageMarkerArgs extends Attr.SimpleAttrs {
     imageUrl: string
     imageWidth?: number
@@ -198,30 +198,6 @@ function truncateString(str, n=20) {
   }
 }
 
-export const bpmnToJson = (bpmnText:string) :JSON => {
-    const parser = new XMLParser( {
-        ignoreAttributes: false,
-        attributeNamePrefix : "attr_",
-        cdataPropName:     "__cdata",
-        allowBooleanAttributes: true,
-        parseAttributeValue: true
-    });
-    return parser.parse(bpmnText);
-}
-
-export const jsonToBpmn =  (json:JSON):string => {
-    const builder = new XMLBuilder(
-        {
-            ignoreAttributes: false,
-            attributeNamePrefix : "attr_",
-            cdataPropName:     "__cdata",
-            // @ts-ignore
-            allowBooleanAttributes: true,
-            suppressBooleanAttributes: false
-        }
-    );
-    return builder.build(json);
-}
 
 export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
   // step 1 : get bpmn data
@@ -236,17 +212,15 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
     if(bpmn['bpmndi:BPMNDiagram']) {
         delete bpmn['bpmndi:BPMNDiagram']
     }
-    const process = bpmn['definitions']['process'];
-    
-  const startEvent = process['startEvent'];
-  const endEvent = process['endEvent'];
-  const sequenceFlow = process['sequenceFlow'];
-  // check userTask is array or not
-  const userTask =  !process['userTask'] ? [] : Array.isArray(process['userTask']) ? process['userTask'] : [process['userTask']];
-  const exclusiveGateway = !process['exclusiveGateway'] ? [] :Array.isArray(process['exclusiveGateway']) ? process['exclusiveGateway'] : [process['exclusiveGateway']];
-  const serviceTask = !process['serviceTask'] ? [] : Array.isArray(process['serviceTask']) ? process['serviceTask'] : [process['serviceTask']];
-  const boundaryEvent = !process['boundaryEvent'] ? [] : Array.isArray(process['boundaryEvent']) ? process['boundaryEvent'] : [process['boundaryEvent']];
-  const scriptTask = !process['scriptTask'] ? [] : Array.isArray(process['scriptTask']) ? process['scriptTask'] : [process['scriptTask']];
+    const {
+        startEvent,
+        endEvent,
+        sequenceFlow,
+        userTask,
+        exclusiveGateway,
+        boundaryEvent,
+        serviceTask,
+        scriptTask} = normalizeToX6(bpmn as BPMNJSON);
   // step 2 define x6 graph json data
   const data: Model.FromJSONData = {
     nodes: [],
@@ -405,6 +379,14 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
           ports:[
           ]
       });
+    // get attached ServerTask
+      const item = sequenceFlow.find( seq => seq.attr_targetRef === gateway['attr_id']);
+      if(item) {
+          const task = data.nodes.find((node: any) => node.id === item['attr_sourceRef']);
+          if(task) {
+              task.data.exclusive = true;
+          }
+      }
   });
 
   //step 7: add boundaryEvent
@@ -544,9 +526,10 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
       if(!sourceNode) return;
       // create port for target node
       const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
-      
+      if(!targetNode) return;
       const targetPort = getAndCreatePorts(targetNode, 'left')
       const sourcePort = getAndCreatePorts(sourceNode, 'right')
+      
       data.edges?.push({
           source: {
               cell:flow['attr_sourceRef'],
@@ -567,7 +550,7 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
 
 export const getAndCreatePorts = (node :Node.Metadata, group:string, suffix:string = "") => {
     if(!node || !node.data){
-        console.log(node);
+        console.trace(node);
     }
     let portId = node.data.attr_id + suffix + '-'  + group;
     const port = node.ports?.find((port: any) => port.group === group)

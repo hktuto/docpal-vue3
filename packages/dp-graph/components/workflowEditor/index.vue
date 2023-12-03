@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import {bpmnToX6, bpmnToJson} from "../../utils/graphHelper";
+import {bpmnToX6} from "../../utils/graphHelper";
 import {Node} from "@antv/x6";
-import {jsonToBpmn} from "../../utils/graphHelper";
 import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
 import {workflowTemplateList} from "../../utils/workflowTemplate";
 import {useEventListener} from '@vueuse/core';
-import {getLastConnectedNode, removeAllConnection, removeAndJoinNextNode} from "../../utils/graphNodeHelper";
+import {canCreateNewStep} from "../../utils/graphNodeHelper";
 import {ElMessage} from 'element-plus'
 import {bpmnStepToForm} from "../../utils/formEditorHelper";
+import {bpmnToJson, jsonToBpmn, boundaryDataUpdate, removeUserTask, removeServiceTask, addNewServiceTask} from 'dp-bpmn'
 import { ElNotification } from 'element-plus'
 const props = defineProps<{
   bpmn: String
@@ -53,7 +53,6 @@ function saveBoundaryStep(date){
 }
 
 function dblClickHandler({node}:Node) {
-  console.log("node click", node)
   const data = node.getData();
   if(data.type === 'userTask'){
     // open dialog
@@ -215,7 +214,6 @@ function itemDeleteHandler(node:Node) {
   const confirmDelete = confirm("Are you sure you want to delete this step?");
   if(!confirmDelete) return;
   const data = node.getData();
-  console.log(data)
   if(data.attr_id === 'start'){
     // show error
     ElNotification.error({
@@ -242,61 +240,16 @@ function itemDeleteHandler(node:Node) {
   }
   const itemToDelete = [];
   if(data.type === 'userTask'){
+    const confirmDelete = confirm("Remove this task will remove all following steps. Are you sure you want to delete this step?");
+    if(!confirmDelete) return;
     // find step in data
-    if(Array.isArray(bpmnJson.value?.definitions?.process.userTask)) {
-      const index = bpmnJson.value?.definitions?.process.userTask.findIndex(item => item.attr_id === data.attr_id);
-      if(index > -1){
-        bpmnJson.value.definitions.process.userTask.splice(index, 1);
-      }
-    }else{
-      if(bpmnJson.value?.definitions?.process.userTask?.attr_id === data.attr_id){
-        bpmnJson.value.definitions.process.userTask = undefined;
-      }
-    }
-    // get last connected node
-    const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_targetRef === data.attr_id);
-    
-    // remove all edge related to this step
-    getLastConnectedNode(node.data.attr_id, bpmnJson)
-    if(otherToNode){
-      bpmnJson.value.definitions.process.sequenceFlow.push({
-        attr_id: 'sid' + new Date().getTime(),
-        attr_sourceRef: otherToNode.attr_sourceRef,
-        attr_targetRef: 'end'
-      })
-    }
+    removeUserTask(bpmnJson, data)
     graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
   }
   
   if(data.type === 'serviceTask') {
     // find step in data
-    if(Array.isArray(bpmnJson.value?.definitions?.process.serviceTask)) {
-      const index = bpmnJson.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === data.attr_id);
-      if(index > -1){
-        itemToDelete.push(bpmnJson.value.definitions.process.serviceTask[index])
-        bpmnJson.value.definitions.process.serviceTask.splice(index, 1);
-      }
-    }else{
-      if(bpmnJson.value?.definitions?.process.serviceTask?.attr_id === data.attr_id){
-        itemToDelete.push(bpmnJson.value.definitions.process.serviceTask)
-        bpmnJson.value.definitions.process.serviceTask = undefined;
-      }
-    }
-    const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_targetRef === data.attr_id);
-    const nodeToOther = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === data.attr_id);
-    console.log(otherToNode, nodeToOther)
-    // link other node attr_sourceRef to nodeToOther.attr_targetRef
-    if(otherToNode && nodeToOther){
-      otherToNode.attr_targetRef = nodeToOther.attr_targetRef ;
-    }
-    // remove nodeToOther
-    if(nodeToOther){
-      const index = bpmnJson.value.definitions.process.sequenceFlow.findIndex(item => item.attr_id === nodeToOther.attr_id);
-      if(index > -1){
-        bpmnJson.value.definitions.process.sequenceFlow.splice(index, 1);
-      }
-    }
-    // removeAndJoinNextNode(node, graphEl.value?.graph);
+    removeServiceTask(bpmnJson, data)
     graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
   }
 
@@ -343,60 +296,41 @@ async function validateForm():Promise<any[]>{
   
 }
 
-function boundaryChangeHandler(newData){
-  console.log(newData)
-  if(newData){
-    // found boundary envent
-    if(Array.isArray(bpmnJson.value.definitions.process.boundaryEvent)){
-      const item = bpmnJson.value.definitions.process.boundaryEvent.find(item => item.attr_id === newData.attr_id);
-      if(item){
-        item.timerEventDefinition.timeDuration = newData.timerEventDefinition.timeDuration;
-      }
-    }else{
-      bpmnJson.value.definitions.process.boundaryEvent.timerEventDefinition.timeDuration = newData.timerEventDefinition.timeDuration;
-    }
-  }
-}
 
-function canCreateNewStep(stepId:string) {
-  if(stepId === 'end') {
-    // show error
-    ElNotification.error({
-      title: 'Error',
-      message: 'Can not create new step at the end',
-    })
-    throw new Error("can't create new step")
-  }
-  const nextStep = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === stepId)
-  console.log("canCreateNewStep", nextStep)
-  if(nextStep){
-    // show error
-    ElNotification.error({
-      title: 'Error',
-      message: 'New Step can only be created at the end of the workflow',
-    })
-    throw new Error("can't create new step")
-  }
-  return
-}
+
 
 
 
 function newApproveHandler(node:Node) {
   console.log("newApproveHandler", node);
-  canCreateNewStep(node.data.attr_id)
+  canCreateNewStep(node.data.attr_id, bpmnJson)
   
 }
 function newEmailHandler(node:Node) {
-  canCreateNewStep()
+  const data = node.getData();
+  canCreateNewStep(data.attr_id, bpmnJson)
+  
+  addNewServiceTask(data.attr_id, 'email', bpmnJson);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+}
+function newDueEmailHandler(node:Node) {
+  const data = node.getData();
+  canCreateNewStep(data.attr_id, bpmnJson)
+  
+  addNewServiceTask(data.attr_id, 'dueEmail', bpmnJson);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 function newDocumentHandler(node:Node) {
-  canCreateNewStep()
+  const data = node.getData();
+  canCreateNewStep(data.attr_id, bpmnJson)
+  addNewServiceTask(data.attr_id, 'document', bpmnJson);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => itemDeleteHandler(node))
 useEventListener(document, 'new-approve-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node))
 useEventListener(document, 'new-email-workflow-graph-item', ({detail:{node}}) =>newEmailHandler(node))
+useEventListener(document, 'new-due-email-workflow-graph-item', ({detail:{node}}) =>newDueEmailHandler(node))
 useEventListener(document, 'new-document-workflow-graph-item', ({detail:{node}}) =>newDocumentHandler(node))
 defineExpose({
   getWorkflowData,
@@ -413,7 +347,7 @@ defineExpose({
       <template v-if="selectedData">
         <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'"  @close="closeSidePanel" @submit="saveForm" />
         <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData"  @close="closeSidePanel" @submit="saveUserStep" />
-        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" @boundaryChange="boundaryChangeHandler" />
+        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" @boundaryChange="(newVal) => boundaryDataUpdate(bpmnJson, newVal)" />
         <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
         <WorkflowEditorFormBoundaryEvent v-else-if="selectedData.type === 'boundaryEvent'" :data="selectedData" @close="closeSidePanel" @submit="saveBoundaryStep" />
       </template>

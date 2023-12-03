@@ -59,11 +59,6 @@
           <![CDATA[Administrators group]]>
         </modeler:group-info-name-administrators>
       </extensionElements>
-      <boundary id="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" attachedToRef="approvalForm" cancelActivity="false">
-        <timerEventDefinition>
-          <timeDuration>P5D</timeDuration>
-        </timerEventDefinition>
-      </boundary>
     </userTask>
     <serviceTask id="createDocumentServiceTask" name="Create Document Based On User Input Service Task" flowable:delegateExpression="${generateDocumentDelegate}">
       <extensionElements>
