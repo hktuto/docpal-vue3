@@ -81,14 +81,14 @@ export type TemplateField = {
 }
 
 export type BpmnFormField = {
-    attr_field_disabled:boolean
-    attr_field_hidden:boolean
-    attr_field_label:string
-    attr_field_required: boolean
-    attr_field_type:string
-    attr_field_valid:boolean
-    attr_field_writable:boolean
-    attr_fixed: boolean
+    attr_field_disabled?:boolean
+    attr_field_hidden?:boolean
+    attr_field_label?:string
+    attr_field_required?: boolean
+    attr_field_type?:string
+    attr_field_valid?:boolean
+    attr_field_writable?:boolean
+    attr_fixed?: boolean
     attr_id:string
     attr_name:string
     attr_type:string

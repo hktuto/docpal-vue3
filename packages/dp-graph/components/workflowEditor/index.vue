@@ -7,7 +7,15 @@ import {useEventListener} from '@vueuse/core';
 import {canCreateNewStep} from "../../utils/graphNodeHelper";
 import {ElMessage} from 'element-plus'
 import {bpmnStepToForm} from "../../utils/formEditorHelper";
-import {bpmnToJson, jsonToBpmn, boundaryDataUpdate, removeUserTask, removeServiceTask, addNewServiceTask} from 'dp-bpmn'
+import {
+  bpmnToJson,
+  jsonToBpmn,
+  boundaryDataUpdate,
+  removeUserTask,
+  removeServiceTask,
+  addNewServiceTask,
+  addUserTask, removeUserTaskAndFollowing, UserType
+} from 'dp-bpmn'
 import { ElNotification } from 'element-plus'
 const props = defineProps<{
   bpmn: String
@@ -240,10 +248,16 @@ function itemDeleteHandler(node:Node) {
   }
   const itemToDelete = [];
   if(data.type === 'userTask'){
-    const confirmDelete = confirm("Remove this task will remove all following steps. Are you sure you want to delete this step?");
-    if(!confirmDelete) return;
+    
     // find step in data
-    removeUserTask(bpmnJson, data)
+    if(data.exclusive){
+      const confirmDelete = confirm("Remove this task will remove all following steps. Are you sure you want to delete this step?");
+      if(!confirmDelete) return;
+      removeUserTaskAndFollowing(bpmnJson, data)
+    }else{
+      removeUserTask(bpmnJson, data)
+    }
+    
     graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
   }
   
@@ -299,12 +313,11 @@ async function validateForm():Promise<any[]>{
 
 
 
-
-
-function newApproveHandler(node:Node) {
+function newApproveHandler(node:Node, type:UserType) {
   console.log("newApproveHandler", node);
   canCreateNewStep(node.data.attr_id, bpmnJson)
-  
+  addUserTask(node.data.attr_id,type, bpmnJson);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 function newEmailHandler(node:Node) {
   const data = node.getData();
@@ -328,10 +341,12 @@ function newDocumentHandler(node:Node) {
   graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => itemDeleteHandler(node))
-useEventListener(document, 'new-approve-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node))
+useEventListener(document, 'new-approve-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node, 'approve'))
+useEventListener(document, 'new-form-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node, 'form'))
 useEventListener(document, 'new-email-workflow-graph-item', ({detail:{node}}) =>newEmailHandler(node))
 useEventListener(document, 'new-due-email-workflow-graph-item', ({detail:{node}}) =>newDueEmailHandler(node))
 useEventListener(document, 'new-document-workflow-graph-item', ({detail:{node}}) =>newDocumentHandler(node))
+
 defineExpose({
   getWorkflowData,
   validateForm,

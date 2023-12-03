@@ -38,69 +38,45 @@ function getData() {
 }
 
 function emitDeleteEvent(){
-  const ev = new CustomEvent('delete-workflow-graph-item', {
-    detail: {
-      node: node.value
-    }
-  })
-  document.dispatchEvent(ev);
+  
 }
 
 function emitNewApproveEvent(){
-  const ev = new CustomEvent('new-approve-workflow-graph-item', {
-    detail: {
-      node: node.value
-    }
-  })
-  document.dispatchEvent(ev);
+  
 }
 
-function emitNewEmailEvent(){
-  const ev = new CustomEvent('new-email-workflow-graph-item', {
-    detail: {
-      node: node.value
-    }
-  })
-  document.dispatchEvent(ev);
-}
 
-function emitNewDocumentEvent(){
-  const ev = new CustomEvent('new-document-workflow-graph-item', {
-    detail: {
-      node: node.value
-    }
-  })
-  document.dispatchEvent(ev);
-}
 
-function emitNewDueEmailEvent(){
-  const ev = new CustomEvent('new-due-email-workflow-graph-item', {
-    detail: {
-      node: node.value
-    }
-  })
-  document.dispatchEvent(ev);
-}
+
 
 function handleCommand(command) {
+  let ev;
+  const evDetail = {
+    detail: {
+      node: node.value
+    }
+  }
   switch (command) {
     case 'delete':
-      emitDeleteEvent();
+      ev= new CustomEvent('delete-workflow-graph-item', evDetail)
       break;
     case 'approval':
-      emitNewApproveEvent();
+      ev = new CustomEvent('new-approve-workflow-graph-item', evDetail)
       break;
     case 'email':
-      emitNewEmailEvent();
+      ev= new CustomEvent('new-email-workflow-graph-item', evDetail)
       break;
     case 'document':
-      emitNewDocumentEvent();
+      ev= new CustomEvent('new-document-workflow-graph-item', evDetail)
       break;
     case 'dueEmail':
-      emitNewDueEmailEvent();
+      ev = new CustomEvent('new-due-email-workflow-graph-item', evDetail)
+      break;
+    case 'form':
+      ev = new CustomEvent('new-form-workflow-graph-item', evDetail)
       break;
   }
-
+  document.dispatchEvent(ev);
 }
 
 onMounted(() => {
@@ -126,9 +102,9 @@ onMounted(() => {
     </div>
     <template #dropdown>
       <el-dropdown-menu v-if="dataId !== 'end'">
-        
-        <el-dropdown-item v-if="dataId !== 'start'" command="delete">Remove</el-dropdown-item>
+        <el-dropdown-item v-if="dataId !== 'start' && type !=='exclusiveGateway'" command="delete">Remove</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive" command="approval">Add Approval</el-dropdown-item>
+        <el-dropdown-item v-if="!exclusive" command="form">Add Form</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive" command="email">Add Email</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive && type === 'userTask'" command="dueEmail">Add Remind Email</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive"  command="document">Add Document</el-dropdown-item>
