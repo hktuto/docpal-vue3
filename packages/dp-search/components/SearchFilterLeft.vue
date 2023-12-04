@@ -111,7 +111,6 @@ function updateOptions(aggregation) {
     Object.keys(aggregation).forEach(async(key) => {
         const keyRef = await FromRendererRef.value.vFormRenderRef.getWidgetRef(key)
         if(!keyRef) {
-            console.log(keyRef);
             return
         }
         keyRef.loadOptions(aggregation[key])

@@ -19,25 +19,38 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
     return { entryList: res.page?.entryList || res.entryList || [], totalSize: res.page?.totalSize || res.totalSize || 0, aggregation: getAggregation(res.aggregation, params) }
 }
 export const getAggregation = (aggregation, searchParams) => {
-    if(!aggregation) return {}
+    const map = {
+        authors_agg: 'authors',
+        collections_agg: 'collections',
+        creator_agg: 'creator',
+        duration_agg: 'duration',
+        includeFolder_agg: 'includeFolder',
+        mimeType_agg: 'mimeType',
+        modified_agg: 'modified',
+        primaryType_agg: 'type',
+        size_agg: 'size',
+        tags_agg: 'tags',
+        height_pic_agg: 'height',
+        height_vid_agg: 'height',
+        width_pic_agg: 'width',
+        width_vid_agg: 'width',
+    }
+    if(!aggregation) return {
+        'authors': GetKeyCloakAllUsersApi(),
+        'collections': GetSCollectionsApi(),
+        'creator': GetKeyCloakAllUsersApi(),
+        'duration': [],
+        'includeFolder': [],
+        'mimeType': [],
+        'modified': GetSModifiedDateApi(),
+        'type': GetSTextSearchTypesApi(),
+        'size': GetSSizeApi(),
+        'tags': GetSTagsApi(),
+        'height': [],
+        'width': []
+    }
     const result = Object.keys(aggregation).reduce((prev, key) => {
         const aggregationItem = aggregation[key]
-        const map = {
-            authors_agg: 'authors',
-            collections_agg: 'collections',
-            creator_agg: 'creator',
-            duration_agg: 'duration',
-            includeFolder_agg: 'includeFolder',
-            mimeType_agg: 'mimeType',
-            modified_agg: 'modified',
-            primaryType_agg: 'type',
-            size_agg: 'size',
-            tags_agg: 'tags',
-            height_pic_agg: 'height',
-            height_vid_agg: 'height',
-            width_pic_agg: 'width',
-            width_vid_agg: 'width',
-        }
         const newKey = map[key]
         switch (key) {
             case 'duration_agg':
