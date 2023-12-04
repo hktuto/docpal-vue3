@@ -106,7 +106,7 @@ onMounted(() => {
         <el-dropdown-item v-if="!exclusive" command="approval">Add Approval</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive" command="form">Add Form</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive" command="email">Add Email</el-dropdown-item>
-        <el-dropdown-item v-if="!exclusive && type === 'userTask'" command="dueEmail">Add Remind Email</el-dropdown-item>
+        <el-dropdown-item v-if="type === 'userTask'" command="dueEmail">Add Remind Email</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive"  command="document">Add Document</el-dropdown-item>
       </el-dropdown-menu>
     </template>

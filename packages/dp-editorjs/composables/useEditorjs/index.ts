@@ -328,7 +328,7 @@ export const useEditor = () => {
                 }
                 <tbody>
                     <tr th:each="model :${tableVariable}">
-                        ${body.map((row:any) => `<td>${stringToHtml(row, block.data.variable + '.')}</td>`).join('')}
+                        ${body.map((row:any) => `<td>${stringToHtml(row, 'model.')}</td>`).join('')}
                     </tr>
                 </tbody>
             </table>

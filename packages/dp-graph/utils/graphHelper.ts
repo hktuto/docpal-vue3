@@ -199,7 +199,7 @@ function truncateString(str, n=20) {
 }
 
 
-export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
+export const bpmnToX6 = (bpmnText: string | object, options:any = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
   // step 1 : get bpmn data
     // if bpmnText is Json then skip this step
     let bpmn = bpmnText;
@@ -355,7 +355,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
       shape: 'exclusive-node',
       label: "Approve",
       data: {
-        type: 'exclusiveGateway',
+        type: 'exclusiveGateway', 
+          approve: true,
         ...gateway
       },
         ports:[
@@ -374,6 +375,7 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
           },
           data: {
               type: 'exclusiveGateway',
+              approve: false,
               ...gateway
           },
           ports:[
