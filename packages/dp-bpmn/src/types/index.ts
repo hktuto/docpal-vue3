@@ -37,6 +37,7 @@ export type BoundaryEvent = {
     attr_attachedToRef:string
     attr_cancelActivity:true
     attr_id: string
+    type?:string,
     timerEventDefinition:{timeDuration: string}
 }
 
@@ -45,13 +46,16 @@ export type EndEvent = {
 }
 
 export type ExclusiveGateway = {
-    attr_id: string
+    attr_id: string,
+    approve?: boolean
+    type?:string,
 }
 
 export type SequenceFlow = {
     attr_id: string, 
     attr_sourceRef: string, 
     attr_targetRef: string,
+    type?:string,
     conditionExpression?:{
         attr_xsi:string,
         __cdata:string
@@ -101,6 +105,7 @@ export type ServiceTask ={
     'attr_flowable:exclusive'?:boolean
     attr_id:string
     attr_name:string
+    type?:string,
     extensionElements?: TemplateExtensionElements
 }
 
@@ -109,6 +114,7 @@ export type UserTask = {
     'attr_flowable:formFieldValidation':true
     attr_id:string
     attr_name:string
+    type?:string,
     extensionElements: {
         'flowable:formProperty': BpmnFormField[],
         'flowable:taskListener': {

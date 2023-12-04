@@ -1,17 +1,18 @@
 import {Ref} from "vue-demi";
-import {BPMNJSON, ServiceTask} from "../../types";
+import {BPMNJSON, ExclusiveGateway, ServiceTask, UserTask} from "../../types";
 import {addBoundaryTask} from "../boundary";
+import {linkSequenceFlow} from "../sequence";
 
 export type ServiceType = "email" | "document" | "dueEmail";
 
 /**
  * Adds a new service task to the given target ID with the specified type and BPMN JSON.
  *
- * @param {string} targetId - The ID of the target.
+ * @param {UserTask | ServiceTask | ExclusiveGateway} sourceData - The data of the source.
  * @param {ServiceType} [type="email"] - The type of the service task. Default is "email".
  * @param {Ref<BPMNJSON>} bpmnJson - The BPMN JSON.
  */
-export const addNewServiceTask = (targetId:string, type:ServiceType = "email", bpmnJson: Ref<BPMNJSON>) => {
+export const addNewServiceTask = (sourceData:UserTask | ServiceTask | ExclusiveGateway, type:ServiceType = "email", bpmnJson: Ref<BPMNJSON>) => {
     const newID = 'sig'+ new Date().getTime()
     let newService;
     switch(type){
@@ -26,25 +27,15 @@ export const addNewServiceTask = (targetId:string, type:ServiceType = "email", b
             break
     }
     newService.attr_id = newID
-    // check if service task is array
+    // add task to bpmnJson
     if(Array.isArray(bpmnJson.value.definitions.process.serviceTask)){
         bpmnJson.value.definitions.process.serviceTask.push(newService)
     }else{
         bpmnJson.value.definitions.process.serviceTask = [bpmnJson.value.definitions.process.serviceTask,newService]
     }
-    if(type !== 'dueEmail') {
-        // check if targetId has next step in SequenceFlow, if yes, rewrite the SequenceFlow to newID
-        const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === targetId);
-        if(otherToNode){
-            otherToNode.attr_sourceRef = newID
-        }
-        bpmnJson.value.definitions.process.sequenceFlow.push({
-            attr_sourceRef: targetId,
-            attr_targetRef: newID
-        })
-    }else {
-        addBoundaryTask(bpmnJson, newService, targetId)
-    }
+    // sequenceFlow logic
+    linkSequenceFlow(bpmnJson, sourceData, newService, type)
+
 }
 
 const newEmail:ServiceTask = {

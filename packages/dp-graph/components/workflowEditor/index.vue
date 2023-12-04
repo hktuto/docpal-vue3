@@ -14,7 +14,7 @@ import {
   removeUserTask,
   removeServiceTask,
   addNewServiceTask,
-  addUserTask, removeUserTaskAndFollowing, UserType
+  addUserTask, removeUserTaskAndFollowing, UserType, getExclusiveEventSeq
 } from 'dp-bpmn'
 import { ElNotification } from 'element-plus'
 const props = defineProps<{
@@ -314,30 +314,29 @@ async function validateForm():Promise<any[]>{
 
 
 function newApproveHandler(node:Node, type:UserType) {
-  console.log("newApproveHandler", node);
+  const data = node.getData();
   canCreateNewStep(node.data.attr_id, bpmnJson)
-  addUserTask(node.data.attr_id,type, bpmnJson);
+  addUserTask(data,type, bpmnJson, node.data);
   graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 function newEmailHandler(node:Node) {
   const data = node.getData();
   canCreateNewStep(data.attr_id, bpmnJson)
-  
-  addNewServiceTask(data.attr_id, 'email', bpmnJson);
+  addNewServiceTask(data, 'email', bpmnJson);
   graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 function newDueEmailHandler(node:Node) {
   const data = node.getData();
   canCreateNewStep(data.attr_id, bpmnJson)
-  
-  addNewServiceTask(data.attr_id, 'dueEmail', bpmnJson);
+  addNewServiceTask(data, 'dueEmail', bpmnJson);
   graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
+
 
 function newDocumentHandler(node:Node) {
   const data = node.getData();
   canCreateNewStep(data.attr_id, bpmnJson)
-  addNewServiceTask(data.attr_id, 'document', bpmnJson);
+  addNewServiceTask(data, 'document', bpmnJson);
   graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => itemDeleteHandler(node))

@@ -1,9 +1,9 @@
 import {Ref} from "vue-demi";
-import {BPMNJSON, UserTask} from "../../types";
-import {addExclusiveGateway} from "../exclusive";
+import {BPMNJSON, ExclusiveGateway, ServiceTask, UserTask} from "../../types";
+import {linkSequenceFlow} from "../sequence";
 
 export type UserType = "form" | "approve";
-export const addUserTask = (targetId: string, type:UserType = "form", bpmnJson:Ref<BPMNJSON>) => {
+export const addUserTask = (sourceData:UserTask | ServiceTask | ExclusiveGateway, type:UserType = "form", bpmnJson:Ref<BPMNJSON>, isSourceExclusive: boolean = false, exclusiveData?: ExclusiveGateway) => {
     const newID = 'sig-user-'+ type +'-' + new Date().getTime()
     const newTask = {...newUserTask};
     newTask.attr_id = newID;
@@ -21,34 +21,14 @@ export const addUserTask = (targetId: string, type:UserType = "form", bpmnJson:R
             "attr_field_valid": true
         })
     }
-    // check if user task is array
+    // add user task to bpmnJson
     if(Array.isArray(bpmnJson.value.definitions.process.userTask)){
         bpmnJson.value.definitions.process.userTask.push(newTask)
     }else{
         bpmnJson.value.definitions.process.userTask = [bpmnJson.value.definitions.process.userTask,newTask]
     }
-
-    const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === targetId);
-    const otherSource = otherToNode.attr_targetRef
-    if(otherToNode ){
-        if(type ==='form') {
-            otherToNode.attr_sourceRef = newID
-        }else {
-            // if type is approve, remove otherToNode
-            const index  = bpmnJson.value.definitions.process.sequenceFlow.findIndex(item => item.attr_id === otherToNode.attr_id);
-            bpmnJson.value.definitions.process.sequenceFlow.splice(index, 1);
-            
-        }
-    }
-    bpmnJson.value.definitions.process.sequenceFlow.push({
-        attr_sourceRef: targetId,
-        attr_targetRef: newID
-    })
-    if(type === 'approve') {
-        addExclusiveGateway(bpmnJson, newTask, otherSource)  
-        
-    }
-   
+    linkSequenceFlow(bpmnJson, sourceData, newTask, type)
+    
 }
 
 const newUserTask:UserTask = {
