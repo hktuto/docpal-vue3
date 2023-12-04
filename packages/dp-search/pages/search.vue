@@ -98,7 +98,8 @@ import {
     watchDebounced(
         () => route.query,
         async (newVal, oldVal) => {
-            // if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
+            if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
+            console.log(newVal);
             
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return
@@ -158,7 +159,7 @@ const tableRef = ref()
 function initTable(searchParams) {
     const dynamicColumns = {
         size: { id: 'search_size', label: 'search_size', prop: 'properties.file:content.length', type: 'size' },
-        hight: { id: 'search_hight', label: 'search_hight', prop: 'properties.picture:info.height' },
+        height: { id: 'search_height', label: 'search_height', prop: 'properties.picture:info.height' },
         width: { id: 'search_width', label: 'search_width', prop: 'properties.picture:info.width' },
         duration: { id: 'search_duration', label: 'search_duration', prop: 'properties.vid:info.duration',
                     formatList: [
@@ -177,7 +178,7 @@ function initTable(searchParams) {
     switch (searchParams.assetType) {
         case 'Picture':
             const pic = [
-                dynamicColumns.hight,
+                dynamicColumns.height,
                 dynamicColumns.width,
                 dynamicColumns.size
             ]
@@ -186,7 +187,7 @@ function initTable(searchParams) {
             break;
         case 'Video':
             const vid = [
-                dynamicColumns.hight,
+                dynamicColumns.height,
                 dynamicColumns.width,
                 dynamicColumns.size,
                 dynamicColumns.duration
@@ -215,7 +216,9 @@ function initTable(searchParams) {
 // #region module: search form
     function handleUpdateForm() {
         nextTick(() => {
-            SearchFilterLeftRef.value.initForm(deepCopy(pageParams))
+            const data = deepCopy(pageParams)
+            if(data.includeFolder || data.includeFolder === false) data.includeFolder = data.includeFolder ? 'true' : 'false'
+            SearchFilterLeftRef.value.initForm(data)
         })
     }
 // #endregion

@@ -51,7 +51,9 @@ const emits = defineEmits([
     async function getList (param) {
         state.loading = true
         try {
-            const res = await nestedSearchApi({ ...param })
+            let paramsInTextSearch
+            if (param.paramsInTextSearch && !Array.isArray(param.paramsInTextSearch)) paramsInTextSearch = [pageParams.paramsInTextSearch]
+            const res = await nestedSearchApi({ ...param, paramsInTextSearch })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -75,7 +77,6 @@ const emits = defineEmits([
         async (newVal) => {
             const { currentPageIndex, pageSize } = newVal
             pageParams = { ...pageParams,  ...getSearchParamsArray(props.queryParams) }
-            delete pageParams.keyword
             pageParams.currentPageIndex = currentPageIndex && (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
             pageParams.pageSize = pageSize ? Number(pageSize) : pageParams.pageSize
             await getList(pageParams)
@@ -89,7 +90,7 @@ const tableRef = ref()
 function initTable(searchParams) {
     const dynamicColumns = {
         size: { id: 'search_size', label: 'search_size', prop: 'properties.file:content.length', type: 'size' },
-        hight: { id: 'search_hight', label: 'search_hight', prop: 'properties.picture:info.height' },
+        height: { id: 'search_height', label: 'search_height', prop: 'properties.picture:info.height' },
         width: { id: 'search_width', label: 'search_width', prop: 'properties.picture:info.width' },
         duration: { id: 'search_duration', label: 'search_duration', prop: 'properties.vid:info.duration',
                     formatList: [
@@ -108,7 +109,7 @@ function initTable(searchParams) {
     switch (searchParams.assetType) {
         case 'Picture':
             const pic = [
-                dynamicColumns.hight,
+                dynamicColumns.height,
                 dynamicColumns.width,
                 dynamicColumns.size
             ]
@@ -117,7 +118,7 @@ function initTable(searchParams) {
             break;
         case 'Video':
             const vid = [
-                dynamicColumns.hight,
+                dynamicColumns.height,
                 dynamicColumns.width,
                 dynamicColumns.size,
                 dynamicColumns.duration

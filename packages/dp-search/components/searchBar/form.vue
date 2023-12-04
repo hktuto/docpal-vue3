@@ -106,8 +106,8 @@ async function handleGetOptions(tag: string) {
                 break; 
             case 'includeFolder':
                 state.options = [
-                    { label: $t('searchType_includeFolder_1'), value: true },
-                    { label: $t('searchType_includeFolder_0'), value: false },
+                    { label: $t('searchType_includeFolder_1'), value: 'true' },
+                    { label: $t('searchType_includeFolder_0'), value: 'false' },
                 ]
                 break; 
             case 'modified':
@@ -133,7 +133,13 @@ async function handleGetOptions(tag: string) {
     setTimeout(() => {
         if (!props.searchParams[tag]) state.value = []
         else state.value = state.selectDataMap[tag].isMultiple ? props.searchParams[tag] : [props.searchParams[tag]]
-        if(tag === 'includeFolder') state.value = [ props.searchParams[tag] === '1' || props.searchParams[tag] === 1 || props.searchParams[tag] === 'true' || props.searchParams[tag] === true ]
+        if(tag === 'includeFolder') {
+            state.value = []
+            let includeFolder
+            if (props.searchParams[tag]) includeFolder = 'true'
+            else if( props.searchParams[tag] === false) includeFolder = 'false'
+            if (includeFolder) state.value.push(includeFolder)
+        }
     }, 500)
 }
 function handleChange(selectedData) {

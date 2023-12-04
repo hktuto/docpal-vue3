@@ -6,7 +6,7 @@
                 v-for="(item,index) in state.dynamicTags"
                 :key="index"
                 class="mx-1"
-                :closable="!['textSearchType', 'includeFolder'].includes(item)"
+                :closable="!['textSearchType'].includes(item)"
                 :disable-transitions="false"
                 @close="handleClose(item)"
             >
@@ -106,7 +106,8 @@ function getSearchTag(tag: string) {
                 item = $t('searchType_'+item)
                 break;
             case 'includeFolder':
-                item = item === '0' || item === 'false' || item === false ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1')
+                console.log({tag}, item);
+                if (item || item === false) item = item ? $t('searchType_includeFolder_1') : $t('searchType_includeFolder_0')
                 break
             case 'collections':
                 item = state.collectionMap[item] ? state.collectionMap[item] : item
@@ -139,7 +140,9 @@ function handleSelectDataMap(tag: string) {
 }
 function goRoute(sp) {
     const searchBackPath = route.query.searchBackPath || ''
-    const time = new Date().valueOf().toString()
+    const time = route.query.time
+    console.log(888, time);
+    
     router.push({
         query: {
             ...sp,
@@ -155,14 +158,18 @@ function goRoute(sp) {
 }
 function init(sp) {
     state.dynamicTags.splice(0, state.dynamicTags.length)
-    Object.keys(sp).forEach(key => {
-        if (!sp[key] && key !== 'includeFolder') return
-        else if (sp[key] instanceof Array ) {
-            if (sp[key].length > 0) state.dynamicTags.push(key)
+    console.log({sp});
+    const _sp = deepCopy(sp)
+    if (_sp.includeFolder || _sp.includeFolder === false) _sp.includeFolder = _sp.includeFolder ? 'true' : 'false'
+    Object.keys(_sp).forEach(key => {
+        if (!_sp[key]) return
+        else if (_sp[key] instanceof Array && state.i18nMap[key]) {
+            if (_sp[key].length > 0) state.dynamicTags.push(key)
         } else if(state.i18nMap[key]){
             state.dynamicTags.push(key)
         }
     })
+    
     setTimeout(() => {
         if(state.dynamicTags.length > 0) emits('updateForm')
     })

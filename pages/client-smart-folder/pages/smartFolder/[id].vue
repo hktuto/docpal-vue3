@@ -27,6 +27,7 @@ async function getSfolder() {
     state.breadcrumbs[1].name = state.sfolder.name
     state.breadcrumbs[1].path = `/smartFolder/${state.sfolder.id}`
     state.searchParams = getSearchParamsArray(JSON.parse(state.sfolder.json_value))
+    if(Array.isArray(state.searchParams.paramsInTextSearch)) state.searchParams.paramsInTextSearch = state.searchParams.paramsInTextSearch.join(',')
 }
 watch(() =>route.query, (r) => {
     if(!!r.path) state.isBrowse = true

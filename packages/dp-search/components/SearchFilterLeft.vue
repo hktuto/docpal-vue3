@@ -52,7 +52,7 @@ function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
 }
 function goRoute(formModel:any) {
     const searchBackPath = route.query.searchBackPath || ''
-    const time = new Date().valueOf().toString()
+    const time = route.query.time
     formModelData.value = formModel
     router.push({
         query: {
@@ -78,9 +78,9 @@ function handleReset() {
 }
 function initForm (searchParams) {
   nextTick(async() => {
-        searchParams.includeFolder = (searchParams.includeFolder === '1' || searchParams.includeFolder === 1 || searchParams.includeFolder === true|| searchParams.includeFolder === 'true') ? '1' : '0'
-        if(searchParams.hight) {
-            searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
+        // searchParams.includeFolder = (searchParams.includeFolder === '1' || searchParams.includeFolder === 1 || searchParams.includeFolder === true|| searchParams.includeFolder === 'true') ? '1' : '0'
+        if(searchParams.height) {
+            searchParams.height = Array.isArray(searchParams.height) ? searchParams.height.join('') : searchParams.height
         }
         if(searchParams.width) {
             searchParams.width = Array.isArray(searchParams.width) ? searchParams.width.join('') : searchParams.width

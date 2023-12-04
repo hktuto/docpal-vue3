@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {api} from '../';
 import { pageParams, SearchFilter, paginationResponse,sfloderDetail, paginationResponseData, Response } from '../model';
 export const sfolderGetApi = async():Promise<sfloderDetail[]> => {
@@ -13,8 +14,9 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
     })
     delete _params.time
     delete _params.searchBackPath
+    if(Object.keys(_params).length <= 3) return { entryList: [], totalSize: 0, aggregation: {} }
     const res = await api.post('/nuxeo/search/nestedSearch', _params).then(res => res.data.data)
-    return { entryList: res.page?.entryList || [], totalSize: res.page?.totalSize, aggregation: getAggregation(res.aggregation, params) }
+    return { entryList: res.page?.entryList || res.entryList || [], totalSize: res.page?.totalSize || res.totalSize || 0, aggregation: getAggregation(res.aggregation, params) }
 }
 export const getAggregation = (aggregation, searchParams) => {
     if(!aggregation) return {}
@@ -39,16 +41,14 @@ export const getAggregation = (aggregation, searchParams) => {
         const newKey = map[key]
         switch (key) {
             case 'duration_agg':
-            case 'mimeType_agg':
             case 'modified_agg':
             case 'size_agg':
                 prev[newKey] = returnI18nArr(aggregationItem)
                 break
             case 'includeFolder_agg':
                 prev[newKey] = aggregationItem.map((option) => ({
-                    // @ts-ignore
                     label: option.key === 'notInclude' ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1'),
-                    value: option.key === 'notInclude' ? '0' : '1'
+                    value: option.key === 'notInclude' ? 'false' : 'true'
                 }))
                 break
             case 'height_pic_agg':
@@ -64,7 +64,7 @@ export const getAggregation = (aggregation, searchParams) => {
             default:
                 if(newKey)
                     prev[newKey] = aggregationItem.map(item => ({
-                        label: item.label || item.key,
+                        label: item.value || item.label || item.key,
                         value: item.key
                     }))
                 break;
@@ -73,7 +73,6 @@ export const getAggregation = (aggregation, searchParams) => {
     }, {})
     function returnI18nArr(arr) {
         return arr.map(arrItem => ({
-            // @ts-ignore
             label: $t(`searchType_${arrItem.key}`),
             value: arrItem.key
         }))
@@ -94,10 +93,8 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     
     result.textSearchType = result.textSearchType || 'full text search'
     result.assetType = Array.isArray(result.assetType) ? result.assetType[0] : result.assetType;
-    console.log('result.includeFolder',result.includeFolder);
-    
-    result.includeFolder = result.includeFolder === '1' || result.includeFolder === 1 || result.includeFolder === true|| result.includeFolder === 'true';
-    result.hight = !result.hight ? null : Array.isArray(result.hight)  ? result.height : [result.hight] ;
+    if (result.includeFolder) result.includeFolder = result.includeFolder === 'true' ? true : false 
+    result.height = !result.height ? null : Array.isArray(result.height)  ? result.height : [result.height] ;
     result.width = !result.width ? null : Array.isArray(result.width)  ? result.width : [result.width] ;
     result.duration = !result.duration ? null : Array.isArray(result.duration)  ? result.duration : [result.duration];
     result.mimeType = !result.mimeType ? null : Array.isArray(result.mimeType)  ? result.mimeType : [result.mimeType];
@@ -105,9 +102,11 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     return result
 }
 export const isSearchParamsEqual = (newVal, oldVal) => {
+    console.log(newVal, oldVal);
+    
     if(!newVal || !oldVal) return false
-    delete newVal.time
-    delete oldVal.time
+    // delete newVal.time
+    // delete oldVal.time
     return JSON.stringify(newVal) === JSON.stringify(oldVal)
 }
 
@@ -174,16 +173,15 @@ export const GetSTextSearchTypesApi = async() => {
     const res = await api.get('/nuxeo/search/textSearchTypes', {}).then(res => res.data.data)
     searchOptions.textSearchType = res.map(item => ({
         value: item,
-        // @ts-ignore
         label: $t('searchType_'+item)
     }))
     return searchOptions.textSearchType
 }
 export const GetSAssetTypeApi = async() => {
     return [
-        { label: 'Picture', value: 'Picture'},
-        { label: 'Video', value: 'Video' },
-        { label: 'Audio', value: 'Audio' },
+        { label: $t('searchType_Picture'), value: 'Picture' },
+        { label: $t('searchType_Video'), value: 'Video' },
+        { label: $t('searchType_Audio'), value: 'Audio' }
     ]
 }
 export const GetSTypesApi = async() => {
@@ -191,7 +189,6 @@ export const GetSTypesApi = async() => {
     const res = await api.get('/nuxeo/types', {}).then(res => res.data.data)
     searchOptions.types = res.map(item => ({
         value: item.name,
-        // @ts-ignore
         label: $t(item.name)
     }))
     return searchOptions.types
@@ -208,20 +205,20 @@ export const GetKeyCloakAllUsersApi = async() => {
 
 export const GetSModifiedDateApi = async() => {
     return [
-        { label: 'Last 24h', value: 'last24h'},
-        { label: 'Last week', value: 'lastWeek' },
-        { label: 'Last month', value: 'lastMonth' },
-        { label: 'Last year', value: 'lastYear' },
-        { label: 'More than 1 year ago', value: 'priorToLastYear' },
+        { label: $t('searchType_last24h'), value: 'last24h' },
+        { label: $t('searchType_lastWeek'), value: 'lastWeek' },
+        { label: $t('searchType_lastMonth'), value: 'lastMonth' },
+        { label: $t('searchType_lastYear'), value: 'lastYear' },
+        { label: $t('searchType_priorToLastYear'), value: 'priorToLastYear' }
     ]
 }
 export const GetSSizeApi = async() => {
     return [
-        { label: 'Less than 100 KB', value: '100'},
-        { label: 'Between 100 KB and 1 MB', value: '1000' },
-        { label: 'Between 1 MB and 10 MB', value: '10000' },
-        { label: 'Between 10 MB and 100 MB', value: '100000' },
-        { label: 'More than 100 MB', value: '1000000' },
+        { label: $t('searchType_100'), value: '100' },
+        { label: $t('searchType_1000'), value: '1000' },
+        { label: $t('searchType_10000'), value: '10000' },
+        { label: $t('searchType_100000'), value: '100000' },
+        { label: $t('searchType_1000000'), value: '1000000' }
     ]
 }
 export const GetSCollectionsApi = async() => {
