@@ -14,7 +14,7 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
     })
     delete _params.time
     delete _params.searchBackPath
-    if(Object.keys(_params).length <= 3) return { entryList: [], totalSize: 0, aggregation: await getAggregation(null, params) }
+    if(Object.keys(_params).length <= 3) return { entryList: [], totalSize: 0, aggregation: await getAggregation(null) }
     const res = await api.post('/nuxeo/search/nestedSearch', _params).then(res => res.data.data)
     return { entryList: res.page?.entryList || res.entryList || [], totalSize: res.page?.totalSize || res.totalSize || 0, aggregation: await getAggregation(res.aggregation, params) }
 }
@@ -40,15 +40,15 @@ export const getAggregation = async (aggregation?, searchParams?) => {
             'authors': aggregation === null ? await GetKeyCloakAllUsersApi() : [],
             'collections': aggregation === null ? await GetSCollectionsApi() : [],
             'creator': aggregation === null ? await GetKeyCloakAllUsersApi(): [],
-            'duration': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'duration'): [],
+            // 'duration': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'duration'): [],
             'includeFolder': aggregation === null ? await GetSSIncludeFolderApi(): [],
-            'mimeType': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'mimeType'): [],
+            // 'mimeType': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'mimeType'): [],
             'modified': aggregation === null ? await GetSModifiedDateApi(): [],
             'type': aggregation === null ? await GetSTextSearchTypesApi(): [],
             'size': aggregation === null ? await GetSSizeApi(): [],
             'tags': aggregation === null ? await GetSTagsApi(): [],
-            'height': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'height'): [],
-            'width':aggregation === null ?  await GetSearchExtendsApi(searchParams.assetType, 'width'): []
+            // 'height': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'height'): [],
+            // 'width':aggregation === null ?  await GetSearchExtendsApi(searchParams.assetType, 'width'): []
         }
     }
     const result = Object.keys(aggregation).reduce((prev, key) => {

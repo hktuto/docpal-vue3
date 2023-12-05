@@ -85,6 +85,7 @@ import {
             state.tableData = []
             state.aggregation = {}
             state.options.paginationConfig.total = 0
+            // SearchFilterLeftRef.value.updateOptions(await getAggregation(null))
         }
         state.loading = false
     }
@@ -208,7 +209,9 @@ function initTable(searchParams) {
             state.columns = defData
             break;
     }
-    tableRef.value.reorderColumn(state.columns)
+    nextTick(() => {
+        tableRef.value.reorderColumn(state.columns)
+    })
 
 }
 // #region module: search form
