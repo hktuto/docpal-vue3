@@ -50,6 +50,7 @@ async function handleInit () {
     try {
         state.setting = await GetPreSearchApi(route.params.id)
         state.setting.json = JSON.parse(state.setting.json_value)
+        console.log(state.setting.json, 'state.setting.json');
         
         setTimeout(async() => {
             FromRendererRef.value.vFormRenderRef.resetForm()

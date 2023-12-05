@@ -207,7 +207,9 @@ export const GetSTypesApi = async() => {
 }
 export const GetKeyCloakAllUsersApi = async() => {
     if (searchOptions.users) return searchOptions.users
-    const res = await api.post('/nuxeo/identity/getKeyCloakAllUsers', {}).then(res => res.data.data)
+    const res = await api.post('/nuxeo/identity/getKeyCloakAllUsers', {}, {
+        baseURL: '/client'
+    }).then(res => res.data.data)
     searchOptions.users = res.map(item => ({
         value: item.userId || item.username,
         label: item.username || item.userId
@@ -248,7 +250,9 @@ export const GetSSIncludeFolderApi = async() => {
 }
 export const GetSCollectionsApi = async() => {
     if (searchOptions.collections) return searchOptions.collections
-    const res = await api.get('/nuxeo/collection/all', {}).then(res => res.data.data)
+    const res = await api.get('/nuxeo/collection/all', {
+        baseURL: '/client'
+    }).then(res => res.data.data)
     searchOptions.collections = res.map(item => ({
         value: item.id,
         label: item.name
