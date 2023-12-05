@@ -4,7 +4,7 @@
             <SearchFilterLeft ref="SearchFilterLeftRef"
                 :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
             <div class="search-page-divider">
-                <el-button :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
+                <el-button id="dp-search-zoom-button" :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
                     @click="state.expanded = !state.expanded"/>
             </div>
             <div class="table-container">

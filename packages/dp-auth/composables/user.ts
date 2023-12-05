@@ -289,6 +289,13 @@ export const useUser = () => {
             return ''
         }
     }
+    function getUserName () {
+        try {
+            return user.value.username || user.value.userId
+        } catch (error) {
+            return ''
+        }
+    }
     async function setIsLdapMode (isLdap: boolean) {
         isLdapMode.value = isLdap
     }
@@ -320,6 +327,7 @@ export const useUser = () => {
         savePreference,
         getUserList,
         getUserId,
+        getUserName,
         setIsLdapMode,
         getIsLdapMode,
         getDefaultLanguage,

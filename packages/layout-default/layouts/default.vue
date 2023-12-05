@@ -12,6 +12,7 @@
                 <LogoutButton />
                 <ColorSwitch />
                 <LanguageSwitch v-if="feature.multiLanguage" />
+                <Avatar />
               </div>
                 <InlineSvg :src="collapse ? '/icons/menu/expanded.svg' : '/icons/menu/closed.svg'" @click="toggleOpen"/>
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
