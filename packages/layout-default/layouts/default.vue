@@ -6,13 +6,13 @@
             <Menu :collapse="collapse" />
             <div  :class="{expand:true}" >
               <div class="menuActions" style="--icon-color: var(--color-grey-500)">
+                <Avatar />
                 <Language v-if="mode === 'development'"></Language>
                 <!-- <NotificationBadge v-if="feature.notification"/> -->
   <!--              <UserMiniDropdown v-if="feature.userAuth" />-->
-                <LogoutButton />
                 <ColorSwitch />
                 <LanguageSwitch v-if="feature.multiLanguage" />
-                <Avatar />
+                <LogoutButton />
               </div>
                 <InlineSvg :src="collapse ? '/icons/menu/expanded.svg' : '/icons/menu/closed.svg'" @click="toggleOpen"/>
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
