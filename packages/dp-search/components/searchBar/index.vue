@@ -27,7 +27,7 @@
                     <el-dropdown-item v-for="item in pendingTags" :key="item" @click="handleSelectDataMap(item)"> 
                         <el-dropdown class="search-bar-dropdown" popper-class="hidePopoverBorder" :hide-on-click="false"
                             placement='right-start' trigger="click">
-                            <div class="search-bar-dropdown-item"> {{getSearchI18n(item)}} </div>
+                            <div :data-testid="`search-bar-menuItem-${item}`" class="search-bar-dropdown-item"> {{getSearchI18n(item)}} </div>
                             <template v-if="state.selectedMenuItem === item" #dropdown>
                                 <SearchBarForm :tag="item" :titles="getSearchI18n(item)" :searchParams="searchParams"
                                     :aggregation="aggregation"

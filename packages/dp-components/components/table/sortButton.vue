@@ -1,9 +1,10 @@
 <template>
     <client-only class="reorderButtom__container">
-      <div class="sort-button" v-popover="popoverRef">
+      <div class="sort-button" v-popover="popoverRef" 
+        data-testid="table-sort-button">
         <SvgIcon src="/icons/orderColumn.svg" ></SvgIcon>
       </div>
-      <el-popover ref="popoverRef" width="280">
+      <el-popover ref="popoverRef" width="280" trigger="click">
         <div class="listContainer">
           <draggable class="list-group"
                     :list="displayList"
@@ -12,7 +13,7 @@
                     handle=".handle"
                     @change="handleSubmit">
             <template #item="{ element, index }">
-              <div class="list-group-item">
+              <div class="list-group-item" :data-testid="`table-sort-${element.label}`">
                 <div class="handle">
                   <SvgIcon src="/icons/move-handle.svg" />
                 </div>
