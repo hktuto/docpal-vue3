@@ -6,6 +6,7 @@
                 v-for="(item,index) in state.dynamicTags"
                 :key="index"
                 class="mx-1"
+                :data-testid="`search-bar-item-${item}`"
                 :closable="!['textSearchType'].includes(item)"
                 :disable-transitions="false"
                 @close="handleClose(item)"
