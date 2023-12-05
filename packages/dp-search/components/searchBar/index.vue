@@ -21,7 +21,7 @@
             </el-tag>
         </template>
         <el-dropdown v-if="pendingTags && pendingTags.length > 0" :hide-on-click="false" trigger="click">
-            <el-button v-if="pendingTags.length > 0" id="dp-searchBar-add-button" type="info" :icon="Plus" circle size="small"></el-button>
+            <el-button v-if="pendingTags.length > 0" dp-id="searchBar-add-button" type="info" :icon="Plus" circle size="small"></el-button>
             <template #dropdown>
                 <el-dropdown-menu class="search-bar-dropdown-menu">
                     <el-dropdown-item v-for="item in pendingTags" :key="item" @click="handleSelectDataMap(item)"> 
