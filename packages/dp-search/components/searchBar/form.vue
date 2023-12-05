@@ -105,10 +105,7 @@ async function handleGetOptions(tag: string) {
                 state.options = await GetKeyCloakAllUsersApi()
                 break; 
             case 'includeFolder':
-                state.options = [
-                    { label: $t('searchType_includeFolder_1'), value: 'true' },
-                    { label: $t('searchType_includeFolder_0'), value: 'false' },
-                ]
+                state.options = await GetSSIncludeFolderApi()
                 break; 
             case 'modified':
                 state.options = await GetSModifiedDateApi()

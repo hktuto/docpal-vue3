@@ -99,8 +99,6 @@ import {
         () => route.query,
         async (newVal, oldVal) => {
             if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
-            console.log(newVal);
-            
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return
             pageParams = getSearchParamsArray({...newVal})

@@ -23,11 +23,11 @@
         <el-dropdown v-if="pendingTags && pendingTags.length > 0" :hide-on-click="false" trigger="click">
             <el-button v-if="pendingTags.length > 0" type="info" :icon="Plus" circle size="small"></el-button>
             <template #dropdown>
-                <el-dropdown-menu>
+                <el-dropdown-menu class="search-bar-dropdown-menu">
                     <el-dropdown-item v-for="item in pendingTags" :key="item" @click="handleSelectDataMap(item)"> 
-                        <el-dropdown popper-class="hidePopoverBorder" :hide-on-click="false"
+                        <el-dropdown class="search-bar-dropdown" popper-class="hidePopoverBorder" :hide-on-click="false"
                             placement='right-start' trigger="click">
-                            <div> {{getSearchI18n(item)}} </div>
+                            <div class="search-bar-dropdown-item"> {{getSearchI18n(item)}} </div>
                             <template v-if="state.selectedMenuItem === item" #dropdown>
                                 <SearchBarForm :tag="item" :titles="getSearchI18n(item)" :searchParams="searchParams"
                                     :aggregation="aggregation"
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { deepCopy, getJsonApi, getSearchParamsArray, GetSCollectionsApi } from 'dp-api'
+import { deepCopy, getJsonApi, getSearchParamsArray, GetSCollectionsApi, GetSSIncludeFolderApi } from 'dp-api'
 import { Plus } from "@element-plus/icons-vue";
 import { watchDebounced } from '@vueuse/core'
 const props = defineProps<{
@@ -106,7 +106,6 @@ function getSearchTag(tag: string) {
                 item = $t('searchType_'+item)
                 break;
             case 'includeFolder':
-                console.log({tag}, item);
                 if (item || item === false) item = item ? $t('searchType_includeFolder_1') : $t('searchType_includeFolder_0')
                 break
             case 'collections':
@@ -141,8 +140,6 @@ function handleSelectDataMap(tag: string) {
 function goRoute(sp) {
     const searchBackPath = route.query.searchBackPath || ''
     const time = route.query.time
-    console.log(888, time);
-    
     router.push({
         query: {
             ...sp,
@@ -158,7 +155,6 @@ function goRoute(sp) {
 }
 function init(sp) {
     state.dynamicTags.splice(0, state.dynamicTags.length)
-    console.log({sp});
     const _sp = deepCopy(sp)
     if (_sp.includeFolder || _sp.includeFolder === false) _sp.includeFolder = _sp.includeFolder ? 'true' : 'false'
     Object.keys(_sp).forEach(key => {
@@ -218,5 +214,15 @@ defineExpose({ init })
 }
 .search-bar-popover {
     width: fit-content!important;
+}
+.search-bar-dropdown {
+    width: 100%;
+}
+.search-bar-dropdown-item {
+    width: 100%;
+    padding: calc(var(--app-padding) / 1.5) var(--app-padding);
+}
+.search-bar-dropdown-menu .el-dropdown-menu__item {
+    padding: unset;
 }
 </style>
