@@ -4,7 +4,7 @@
            append-to-body
     class="search-download-dialog"
     >
-    <div class="search-download-container">
+    <div class="search-download-container" data-testid="searchExportDialog">
         <div class="search-download-container-box">
             <h3>{{$t('dragToDisplayList')}}</h3>
             <draggable
@@ -16,7 +16,7 @@
                 item-key="id"
             >
                 <template #item="{ element }">
-                    <div class="list-group-item">
+                    <div class="list-group-item" :data-testid="`searchExportDialog-showItem-${element.name}`">
                         {{ element.name }}
                     </div>
                 </template>
@@ -27,7 +27,7 @@
             <h3>{{$t('dragToHideList')}}</h3>
             <draggable :list="state.hideList" class="list-group" group="a" item-key="name">
                 <template #item="{ element }">
-                    <div class="list-group-item item">
+                    <div class="list-group-item item" :data-testid="`searchExportDialog-hideItem-${element.name}`">
                         {{ element.name }}
                     </div>
                 </template>
@@ -35,7 +35,9 @@
         </div>
     </div>
     <template #footer>
-        <el-button :disabled="state.exportList.length === 0" :loading="state.loading" @click="handleSubmit()">{{$t('export')}}</el-button>
+        <el-button :disabled="state.exportList.length === 0" :loading="state.loading" 
+          data-testid="searchExportDialog-export-button"
+          @click="handleSubmit()">{{$t('export')}}</el-button>
     </template>
 </el-dialog>
 </template>

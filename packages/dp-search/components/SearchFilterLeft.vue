@@ -14,13 +14,19 @@
             <div class="filterContainer-footer">
                 <el-row :gutter="10">
                     <el-col :span="8">
-                        <el-button type="info" @click="handleReset">{{$t('reset')}}</el-button>
+                        <el-button type="info" 
+                            data-testid="search-reset-button"
+                            @click="handleReset">{{$t('reset')}}</el-button>
                     </el-col>
                     <el-col :span="16">
-                        <el-button type="primary" :loading="loading" @click="handleSubmit">{{$t('search')}}</el-button>
+                        <el-button type="primary" :loading="loading" 
+                            data-testid="search-submit-button"
+                            @click="handleSubmit">{{$t('search')}}</el-button>
                     </el-col>
                 </el-row>
-                <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" @click="handleDownload">{{$t('export')}}</el-button>
+                <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" 
+                    data-testid="search-export-button"
+                    @click="handleDownload">{{$t('export')}}</el-button>
             </div>
         </div>
         <SearchDownloadDialog ref="SearchDownloadDialogRef" />
