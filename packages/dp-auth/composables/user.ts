@@ -291,6 +291,7 @@ export const useUser = () => {
     }
     function getUserName () {
         try {
+            if(user.value.firstName && user.value.lastName) return `${user.value.firstName} ${user.value.lastName}`
             return user.value.username || user.value.userId
         } catch (error) {
             return ''
