@@ -14,11 +14,11 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
     })
     delete _params.time
     delete _params.searchBackPath
-    if(Object.keys(_params).length <= 3) return { entryList: [], totalSize: 0, aggregation: {} }
+    if(Object.keys(_params).length <= 3) return { entryList: [], totalSize: 0, aggregation: await getAggregation(null) }
     const res = await api.post('/nuxeo/search/nestedSearch', _params).then(res => res.data.data)
-    return { entryList: res.page?.entryList || res.entryList || [], totalSize: res.page?.totalSize || res.totalSize || 0, aggregation: getAggregation(res.aggregation, params) }
+    return { entryList: res.page?.entryList || res.entryList || [], totalSize: res.page?.totalSize || res.totalSize || 0, aggregation: await getAggregation(res.aggregation, params) }
 }
-export const getAggregation = (aggregation, searchParams) => {
+export const getAggregation = async (aggregation?, searchParams?) => {
     const map = {
         authors_agg: 'authors',
         collections_agg: 'collections',
@@ -35,19 +35,21 @@ export const getAggregation = (aggregation, searchParams) => {
         width_pic_agg: 'width',
         width_vid_agg: 'width',
     }
-    if(!aggregation) return {
-        'authors': GetKeyCloakAllUsersApi(),
-        'collections': GetSCollectionsApi(),
-        'creator': GetKeyCloakAllUsersApi(),
-        'duration': [],
-        'includeFolder': [],
-        'mimeType': [],
-        'modified': GetSModifiedDateApi(),
-        'type': GetSTextSearchTypesApi(),
-        'size': GetSSizeApi(),
-        'tags': GetSTagsApi(),
-        'height': [],
-        'width': []
+    if(!aggregation) {
+        return {
+            'authors': aggregation === null ? await GetKeyCloakAllUsersApi() : [],
+            'collections': aggregation === null ? await GetSCollectionsApi() : [],
+            'creator': aggregation === null ? await GetKeyCloakAllUsersApi(): [],
+            // 'duration': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'duration'): [],
+            'includeFolder': aggregation === null ? await GetSSIncludeFolderApi(): [],
+            // 'mimeType': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'mimeType'): [],
+            'modified': aggregation === null ? await GetSModifiedDateApi(): [],
+            'type': aggregation === null ? await GetSTextSearchTypesApi(): [],
+            'size': aggregation === null ? await GetSSizeApi(): [],
+            'tags': aggregation === null ? await GetSTagsApi(): [],
+            // 'height': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'height'): [],
+            // 'width':aggregation === null ?  await GetSearchExtendsApi(searchParams.assetType, 'width'): []
+        }
     }
     const result = Object.keys(aggregation).reduce((prev, key) => {
         const aggregationItem = aggregation[key]
@@ -111,12 +113,9 @@ export const getSearchParamsArray = (searchParams: SearchFilter) =>{
     result.width = !result.width ? null : Array.isArray(result.width)  ? result.width : [result.width] ;
     result.duration = !result.duration ? null : Array.isArray(result.duration)  ? result.duration : [result.duration];
     result.mimeType = !result.mimeType ? null : Array.isArray(result.mimeType)  ? result.mimeType : [result.mimeType];
-    console.log({result}, 2);
     return result
 }
 export const isSearchParamsEqual = (newVal, oldVal) => {
-    console.log(newVal, oldVal);
-    
     if(!newVal || !oldVal) return false
     // delete newVal.time
     // delete oldVal.time
@@ -208,14 +207,23 @@ export const GetSTypesApi = async() => {
 }
 export const GetKeyCloakAllUsersApi = async() => {
     if (searchOptions.users) return searchOptions.users
-    const res = await api.post('/nuxeo/identity/getKeyCloakAllUsers', {}).then(res => res.data.data)
+    const res = await api.post('/nuxeo/identity/getKeyCloakAllUsers', {}, {
+        baseURL: '/client'
+    }).then(res => res.data.data)
     searchOptions.users = res.map(item => ({
         value: item.userId || item.username,
         label: item.username || item.userId
     }))
     return searchOptions.users
 }
-
+export const GetSearchExtendsApi = async(primaryType, key) => {
+    const res = await api.get(`/nuxeo/search/getSearchExtends?primaryType=${primaryType}`).then(res => res.data.data)
+    if(!!key && res[key]) return res[key].map( item => ({
+        label: ['mimeType'].includes(key) ? item : $t(`searchType_${item}`), 
+        value: item
+    }))
+    return []
+}
 export const GetSModifiedDateApi = async() => {
     return [
         { label: $t('searchType_last24h'), value: 'last24h' },
@@ -234,9 +242,17 @@ export const GetSSizeApi = async() => {
         { label: $t('searchType_1000000'), value: '1000000' }
     ]
 }
+export const GetSSIncludeFolderApi = async() => {
+    return [
+        { label: $t('searchType_includeFolder_1'), value: 'true' },
+        { label: $t('searchType_includeFolder_0'), value: 'false' },
+    ]
+}
 export const GetSCollectionsApi = async() => {
     if (searchOptions.collections) return searchOptions.collections
-    const res = await api.get('/nuxeo/collection/all', {}).then(res => res.data.data)
+    const res = await api.get('/nuxeo/collection/all', {
+        baseURL: '/client'
+    }).then(res => res.data.data)
     searchOptions.collections = res.map(item => ({
         value: item.id,
         label: item.name

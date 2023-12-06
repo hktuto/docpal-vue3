@@ -6,13 +6,16 @@
             :max="state.isMultiple ? 100 : 1 "
             v-model="state.value"
             @change="handleChange(state.value)">
-            <el-checkbox v-for="item in state.options" :label="item.value" :key="item.value" >
+            <el-checkbox v-for="item in state.options" :label="item.value" :key="item.value" 
+                :data-testid="`search-bar-checkbox-${item}`">
                 {{$t(item.label)}}
             </el-checkbox>
         </el-checkbox-group>
    </template>
    <template v-else-if="tag">
-        <el-input v-model="state.inputValue" @change="handleInputChange"/>
+        <el-input v-model="state.inputValue" 
+            data-testid="search-bar-input"
+            @change="handleInputChange"/>
    </template>
 </div>
 </template>
@@ -105,10 +108,7 @@ async function handleGetOptions(tag: string) {
                 state.options = await GetKeyCloakAllUsersApi()
                 break; 
             case 'includeFolder':
-                state.options = [
-                    { label: $t('searchType_includeFolder_1'), value: 'true' },
-                    { label: $t('searchType_includeFolder_0'), value: 'false' },
-                ]
+                state.options = await GetSSIncludeFolderApi()
                 break; 
             case 'modified':
                 state.options = await GetSModifiedDateApi()

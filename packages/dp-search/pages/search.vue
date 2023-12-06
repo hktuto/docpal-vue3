@@ -4,7 +4,7 @@
             <SearchFilterLeft ref="SearchFilterLeftRef"
                 :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
             <div class="search-page-divider">
-                <el-button :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
+                <el-button data-testid="search-zoom-button" :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
                     @click="state.expanded = !state.expanded"/>
             </div>
             <div class="table-container">
@@ -85,6 +85,7 @@ import {
             state.tableData = []
             state.aggregation = {}
             state.options.paginationConfig.total = 0
+            // SearchFilterLeftRef.value.updateOptions(await getAggregation(null))
         }
         state.loading = false
     }
@@ -99,8 +100,6 @@ import {
         () => route.query,
         async (newVal, oldVal) => {
             if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
-            console.log(newVal);
-            
             const { currentPageIndex, pageSize } = newVal
             if(!currentPageIndex || !pageSize) return
             pageParams = getSearchParamsArray({...newVal})
@@ -210,7 +209,9 @@ function initTable(searchParams) {
             state.columns = defData
             break;
     }
-    tableRef.value.reorderColumn(state.columns)
+    nextTick(() => {
+        tableRef.value.reorderColumn(state.columns)
+    })
 
 }
 // #region module: search form
