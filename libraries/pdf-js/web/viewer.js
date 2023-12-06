@@ -230,7 +230,7 @@ function messageFromParent(ev) {
   if (colorMode === "dark") {
     document.getElementsByTagName("html")[0].classList.add("dark");
   }
-  
+
   // check if annotations is Map or not
   if (annotations instanceof Map) {
     window.annotations = annotations;
@@ -250,11 +250,15 @@ function messageFromParent(ev) {
     els.forEach(el => el.classList.remove("hidden"));
   }
 
-  
+
 
   window.PDFViewerApplicationOptions.set("locale", newLocal);
   webViewerLoad(url);
+  // if options.action
 
+  setTimeout(() => {
+    window.PDFViewerApplication.rotatePages(-90);
+  }, 1000)
   // listen to save annotation event
   const saveAnnotationButton = document.querySelectorAll(
     ".saveAnnotationButton"
@@ -270,7 +274,7 @@ function messageFromParent(ev) {
     hiddenEL.forEach(el => el.classList.add("hidden"));
     saveAnnotationButton.forEach(el => el.classList.add("hidden"));
   } else {
-    
+
     saveAnnotationButton.forEach(el => {
       el.removeEventListener("click", saveAnnotation);
       el.addEventListener("click", saveAnnotation);

@@ -2276,6 +2276,7 @@ function webViewerInitialized(url) {
     if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
       if (url) {
         PDFViewerApplication.open({ url });
+
       } else {
         PDFViewerApplication._hideViewBookmark();
       }
@@ -2285,6 +2286,7 @@ function webViewerInitialized(url) {
     } else {
       throw new Error("Not implemented: webViewerInitialized");
     }
+
   } catch (reason) {
     l10n.get("loading_error").then(msg => {
       PDFViewerApplication._documentError(msg, reason);

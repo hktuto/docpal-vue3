@@ -61,22 +61,19 @@ watch(() =>state.selectedDocsIndex, async() => {
     <div v-if="state.selectedDocs.json" class="chevalierContainer">
       <div class="left">
         <div class="header" @click="batchDialogVisible = true">
-            <h1>Batch Index: {{state.batchIndex}}</h1>
+            <h1>Batch Index: {{state.batchIndex}} <SvgIcon class="display:inline" src="/icons/file-general.svg" /></h1>
         </div>
         <h2>{{state.selectedDocs.name}}</h2>
         <ChevalierFields :documents="state.selectedDocs.json.analyzeResult.documents" />
       </div>
       <div class="right">
-        <div class="previewContainer">
-
-        </div>
+        <ChevalierPdfReader :data="state.selectedDocs" />
       </div>
     </div>
     <ElDialog v-model="batchDialogVisible" append-to-body distory-on-close>
       <ElTable :data="docsTable"  @row-click="changeSelected">
         <ElTableColumn
           width="40px"
-
         >
           <template #default="scope">
             <SvgIcon v-if='scope.row.selected' src="/icons/file-general.svg" />
@@ -91,8 +88,8 @@ watch(() =>state.selectedDocsIndex, async() => {
           prop="total"
         />
       </ElTable>
-      <div class="totalR">
-        Differents: {{displayTotal}}
+      <div :class="{total:true, success: displayTotal === 0}">
+        Different: {{displayTotal}}
       </div>
     </ElDialog>
   </NuxtLayout>
@@ -114,5 +111,15 @@ watch(() =>state.selectedDocsIndex, async() => {
 }
 h1,h2 {
   margin:0;
+}
+.header{
+  cursor: pointer;
+  display: inline-block;
+}
+.total {
+  color: red;
+  &.success{
+    color: var(--color-grey-1000);
+  }
 }
 </style>

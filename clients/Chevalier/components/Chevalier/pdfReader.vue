@@ -1,28 +1,65 @@
 <script setup lang="ts">
+
+import { onMounted, reactive, ref } from 'vue';
+import {useEventListener} from "@vueuse/core";
 const props = defineProps<{
-  pdfPath: string,
-  json: any
+  data: any
 }>()
+const {public:{pdfReaderUrl}} = useRuntimeConfig();
+const iframe = ref();
+const {data} = toRefs(props)
+const docs = ref();
+const canvas = ref(null)
+const ready = ref(false)
+const currentPage = ref(1)
 
-const state = reactive({
-  currentPage: 1,
-  totalPages: 1,
-});
-const drawerOpened = ref(false)
-function switchPage(page: number){
-  state.currentPage = page
+async function loadPdf() {
+  
+  // load pdf blob from server
+  console.log(data.value)
+  const blob = await fetch(data.value.pdf).then(r => r.blob())
+  const frame = iframe.value?.contentWindow;
+  frame?.postMessage({blob:blob, filename: props.data.name, annotations:[], locale: 'en-US', options: {
+      print: false,
+      loadAnnotations: true,
+      readOnly: false
+    }, actions:{
+      rotate: 90
+    } }, '*');
+
 }
 
-function renderPage(){
+function gotMessageFromIframe(message:MessageEvent) {
+  const { data:{ data, type} } = message;
+  if(!data && !type ) return;
+  switch(type) {
+    case 'ready':
+      loadPdf()
+      break;
+    case 'annotation':
+      // ignore
+      break;
+    default:
+      break;
+  }
 
 }
 
-function highLightText() {
-}
+useEventListener(window, 'message', gotMessageFromIframe)
 
 defineExpose({
-  switchPage,
-  highLightText
+
+})
+
+watch(data, () => {
+  ready.value = false
+  if(data.value){
+    nextTick(() => {
+      ready.value = true
+    })
+  }
+},{
+  immediate: true
 })
 
 
@@ -30,12 +67,7 @@ defineExpose({
 
 <template>
   <div class="viewerContainer">
-    <div class="readerContainer">
-      <canvas id="chevalierPdfReader"></canvas>
-    </div>
-    <div :class="{viewDrawer:true , drawerOpened}">
-
-    </div>
+    <iframe v-if="ready" ref="iframe" :src="pdfReaderUrl" allowfullscreen />
   </div>
 </template>
 
@@ -45,11 +77,14 @@ defineExpose({
   height: 100%;
   display: block;
   position: relative;
-  .viewerDrawer{
-    position: absolute;
-    top:0;
-    right:0;
-    width:
-  }
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 </style>

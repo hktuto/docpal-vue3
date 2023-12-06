@@ -7,7 +7,8 @@ export default defineAppConfig({
     multiLanguage: true,
     notification: true,
     userAuth: true,
-    search: true
+    search: true,
+    tauri:false,
   }
 })
 
