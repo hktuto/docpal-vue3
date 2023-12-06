@@ -35,8 +35,9 @@
 
 <script lang="ts" setup>
 
-import { deepCopy, getJsonApi, getSearchParamsArray } from 'dp-api'
+import { getJsonApi, getSearchParamsArray } from 'dp-api'
 import {ArrowDown} from "@element-plus/icons-vue";
+import { useDebounceFn } from '@vueuse/core'
 const props = defineProps<{
     searchParams: any,
     ready: boolean,
@@ -51,11 +52,11 @@ const filterContainerRef = ref()
 
 const opened = ref(false);
 const formModelData = ref<any>({});
-function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
+const formChangeHandler = useDebounceFn(({fieldName,newValue,oldValue,formModel}) => {
     if(!props.ready) return
     const _data = dataHandle(formModel)
-    goRoute(_data)
-}
+    if(!isEqual(_data, props.searchParams)) goRoute(_data)
+}, 1000, { maxWait: 5000 })
 function goRoute(formModel:any) {
     const searchBackPath = route.query.searchBackPath || ''
     const time = route.query.time
@@ -83,6 +84,7 @@ function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()
 }
 function initForm (searchParams) {
+    
   nextTick(async() => {
         // searchParams.includeFolder = (searchParams.includeFolder === '1' || searchParams.includeFolder === 1 || searchParams.includeFolder === true|| searchParams.includeFolder === 'true') ? '1' : '0'
         if(searchParams.height) {
@@ -98,14 +100,29 @@ function initForm (searchParams) {
             searchParams.mimeType = Array.isArray(searchParams.mimeType) ? searchParams.mimeType.join('') : searchParams.mimeType
         }
         // searchParams.includeFolder = searchParams.includeFolder === '1' || searchParams.includeFolder === 1;
+        const readyRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('ready')
+        readyRef.setValue(false)
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
         formModelData.value = FromRendererRef.value.vFormRenderRef.getFormData(false)
+        setTimeout(() => {
+            readyRef.setValue(true)
+        }, 1000)
     })
 }
 const SearchDownloadDialogRef = ref()
 function dataHandle (formModel) {
     let _formModel = deepCopy(formModel)
+    delete _formModel.ready
     return _formModel
+}
+function isEqual (newSearch, oldSearch) {
+    const _new = getSearchParamsArray(deepCopy(newSearch))
+    const _old = deepCopy(oldSearch)
+    delete _old.currentPageIndex
+    delete _old.pageSize
+    delete _old.ready
+    delete _new.ready
+    return JSON.stringify(_new) === JSON.stringify(_old)
 }
 function handleDownload () {
     let data = FromRendererRef.value.vFormRenderRef.getFormData(false)

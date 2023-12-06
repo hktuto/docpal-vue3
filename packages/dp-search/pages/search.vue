@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div :class="['search-page',state.expanded ? 'search-page-expanded':'search-page-narrow']">
-            <SearchFilterLeft ref="SearchFilterLeftRef"
+            <SearchFilterLeft ref="SearchFilterLeftRef" :searchParams="state.searchParams"
                 :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
             <div class="search-page-divider">
                 <el-button data-testid="search-zoom-button" :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
