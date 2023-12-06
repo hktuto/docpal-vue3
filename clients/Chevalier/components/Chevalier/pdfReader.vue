@@ -1,14 +1,15 @@
 <script setup lang="ts">
-
+import { PDFDocument } from 'pdf-lib'
 import { onMounted, reactive, ref } from 'vue';
 import {useEventListener} from "@vueuse/core";
 const props = defineProps<{
   data: any
 }>()
 const {public:{pdfReaderUrl}} = useRuntimeConfig();
+const pageImage = ref("");
 const iframe = ref();
 const {data} = toRefs(props)
-const docs = ref();
+const pdfLib = ref();
 const canvas = ref(null)
 const ready = ref(false)
 const currentPage = ref(1)
@@ -16,47 +17,27 @@ const currentPage = ref(1)
 async function loadPdf() {
   
   // load pdf blob from server
-  console.log(data.value)
-  const blob = await fetch(data.value.pdf).then(r => r.blob())
-  const frame = iframe.value?.contentWindow;
-  frame?.postMessage({blob:blob, filename: props.data.name, annotations:[], locale: 'en-US', options: {
-      print: false,
-      loadAnnotations: true,
-      readOnly: false
-    }, actions:{
-      rotate: 90
-    } }, '*');
+  const buffer = await fetch(data.value.pdf).then(r => r.arrayBuffer())
+  pdfLib.value = await PDFDocument.load(buffer)
+  
+  pageImage.value =  await pdfLib.value.saveAsBase64({ dataUri: true });
 
 }
 
-function gotMessageFromIframe(message:MessageEvent) {
-  const { data:{ data, type} } = message;
-  if(!data && !type ) return;
-  switch(type) {
-    case 'ready':
-      loadPdf()
-      break;
-    case 'annotation':
-      // ignore
-      break;
-    default:
-      break;
-  }
-
+async function draw(polygon:number[], pageNumber:number = 1, pageSize:number[], rotate:number) {
+  const pdfPage = await pdfLib.value.getPage(pageNumber)
+  
+  
 }
 
-useEventListener(window, 'message', gotMessageFromIframe)
 
 defineExpose({
-
+  draw
 })
 
 watch(data, () => {
-  ready.value = false
   if(data.value){
-    nextTick(() => {
-      ready.value = true
-    })
+    loadPdf()
   }
 },{
   immediate: true
@@ -67,7 +48,7 @@ watch(data, () => {
 
 <template>
   <div class="viewerContainer">
-    <iframe v-if="ready" ref="iframe" :src="pdfReaderUrl" allowfullscreen />
+    <iframe  ref="iframe" :src="pageImage" allowfullscreen />
   </div>
 </template>
 

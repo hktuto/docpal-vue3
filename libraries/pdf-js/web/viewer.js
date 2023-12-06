@@ -256,9 +256,7 @@ function messageFromParent(ev) {
   webViewerLoad(url);
   // if options.action
 
-  setTimeout(() => {
-    window.PDFViewerApplication.rotatePages(-90);
-  }, 1000)
+
   // listen to save annotation event
   const saveAnnotationButton = document.querySelectorAll(
     ".saveAnnotationButton"
