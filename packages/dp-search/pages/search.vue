@@ -237,14 +237,14 @@ onMounted(() => {
 .search-page {
     height: 100%;
     display: grid;
-    grid-template-columns: 20% min-content 1fr;
+    grid-template-columns: min-content min-content 1fr;
     transition: all 0.5s;
     overflow: hidden;
     position: relative;
     @media(max-width : 1024px) {
       flex-flow: column nowrap;
-      //grid-template-columns: 1fr;
-      //grid-template-rows: min-content 1fr ;
+      grid-template-columns: 20px min-content 1fr;
+    //   grid-template-rows: min-content 1fr ;
     }
 }
 .search-page-narrow {
