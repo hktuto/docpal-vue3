@@ -210,7 +210,7 @@ function initTable(searchParams) {
             break;
     }
     nextTick(() => {
-        tableRef.value.reorderColumn(state.columns)
+        if(state.columns) tableRef.value.reorderColumn(state.columns)
     })
 
 }
