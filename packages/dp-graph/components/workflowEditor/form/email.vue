@@ -133,7 +133,7 @@ onMounted(async() => {
       </ElForm>
       <template v-if="data.boundary && data.boundary.timerEventDefinition">
         <ElFormItem label="Reminder time">
-        <ElInput type="number" v-model="timeEventValue" />
+          <ElInputNumber v-model="timeEventValue" :min="1" :max="9999" :step="1" />
         </ElFormItem>
       </template>
       <table>
