@@ -56,7 +56,7 @@ const formChangeHandler = useDebounceFn(({fieldName,newValue,oldValue,formModel}
     if(!props.ready) return
     const _data = dataHandle(formModel)
     if(!isEqual(_data, props.searchParams)) goRoute(_data)
-}, 1000, { maxWait: 5000 })
+}, 500, { maxWait: 5000 })
 function goRoute(formModel:any) {
     const searchBackPath = route.query.searchBackPath || ''
     const time = route.query.time
