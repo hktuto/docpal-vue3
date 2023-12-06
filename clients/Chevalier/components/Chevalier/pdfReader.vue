@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument, rgb } from 'pdf-lib'
 import { onMounted, reactive, ref } from 'vue';
 import {useEventListener} from "@vueuse/core";
 const props = defineProps<{
   data: any
 }>()
-const {public:{pdfReaderUrl}} = useRuntimeConfig();
 const pageImage = ref("");
 const iframe = ref();
 const {data} = toRefs(props)
 const pdfLib = ref();
 const canvas = ref(null)
 const ready = ref(false)
-const currentPage = ref(1)
+const currentPage = ref(0);
 
 async function loadPdf() {
   
@@ -24,10 +23,40 @@ async function loadPdf() {
 
 }
 
-async function draw(polygon:number[], pageNumber:number = 1, pageSize:number[], rotate:number) {
+async function draw(polygon:number[], pageNumber:number = 0) {
   const pdfPage = await pdfLib.value.getPage(pageNumber)
+  const pageSize = pdfPage.getSize()
+  const {x, y, width, height} = polygonToXYWH(props.data.json.analyzeResult.documents[0].fields['vendor name (zh)'].boundingRegions[0].polygon, pageSize);
+  pdfPage.drawRectangle({x, y, width, height, borderColor: rgb(1, 0, 0),})
+  pageImage.value =  await pdfLib.value.saveAsBase64({ dataUri: true });
+}
+
+function polygonToXYWH (polygon:number[], sizeInPixel: { width: number; height: number; }) {
+  // get page in inch
+  const {width, height} = props.data.json.analyzeResult.pages[currentPage.value];
+  // convert to pixel
+  // convert anchor from bottom left to top left
+  const [x1, y1, x2, y2, x3, y3, x4, y4] = getXYPercentage({width, height}, polygon, sizeInPixel)
+
+  return {
+    x: x1 ,
+    y: y1,
+    width: (x2 - x1) ,
+    height: (y4 - y1)
+  }
   
-  
+}
+function getXYPercentage({width, height}, polygon:number[], pixelSize: { width: number; height: number; }) {
+  return [
+    pixelSize.width * (polygon[0] / width),
+    pixelSize.height * (1 - polygon[1] / height),
+    pixelSize.width * (polygon[2] / width),
+    pixelSize.height *(1 - polygon[3] / height),
+    pixelSize.width * (polygon[4] / width),
+    pixelSize.height *(1 - polygon[5] / height),
+    pixelSize.width * (polygon[6] / width),
+    pixelSize.height *(1 - polygon[7] / height)
+  ]
 }
 
 

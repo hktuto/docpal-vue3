@@ -3,6 +3,7 @@ import {getChevalierBatch} from "~/utils/chevaliierHelper";
 
 const router = useRouter()
 const route = useRoute()
+const reader = ref()
 const state = reactive({
   batchIndex: route.params.id,
   selectedDocsIndex: 0,
@@ -47,6 +48,11 @@ const displayTotal = computed(() => {
   return (total - data.value.docs.find((d) => d.name === 'PRF').total).toFixed(2);
 })
 
+function fieldSelected(){
+  console.log(reader.value)
+  reader.value.draw();
+}
+
 watch(() =>state.selectedDocsIndex, async() => {
     state.selectedDocs = await getSelectedDocData()
 
@@ -64,10 +70,10 @@ watch(() =>state.selectedDocsIndex, async() => {
             <h1>Batch Index: {{state.batchIndex}} <SvgIcon class="display:inline" src="/icons/file-general.svg" /></h1>
         </div>
         <h2>{{state.selectedDocs.name}}</h2>
-        <ChevalierFields :documents="state.selectedDocs.json.analyzeResult.documents" />
+        <ChevalierFields :documents="state.selectedDocs.json.analyzeResult.documents" @click="fieldSelected"/>
       </div>
       <div class="right">
-        <ChevalierPdfReader :data="state.selectedDocs" />
+        <ChevalierPdfReader ref="reader" :data="state.selectedDocs" />
       </div>
     </div>
     <ElDialog v-model="batchDialogVisible" append-to-body distory-on-close>

@@ -13,7 +13,7 @@ const props = defineProps<{
     <template v-for="doc in documents" :key="doc.docType">
 
       <template v-for="(value,key) in doc.fields" :key="key">
-        <div :class="{fieldContainer:true, [value.type]:true}">
+        <div :class="{fieldContainer:true, [value.type]:true}" @click="$emit('focus')">
 
           <div class="label">{{key}}</div>
           <ChevalierFieldsString v-if="value.type  === 'string'"  :field="value" />
