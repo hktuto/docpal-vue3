@@ -97,7 +97,7 @@ import { ElMessage } from 'element-plus';
  *  儲存
  */
 async function save() {
-        const {html, json, variable} = await editor.getData();
+        const {html, json, variable} = await editorEl.value.getData();
         // if id is new , create new
         // check form valid
         
@@ -122,7 +122,6 @@ async function save() {
         }
         // update new variable
         // test save json to backend
-        await editor.updateVariable()
         await UpdateEmailTemplateApi({
              ...data.value,
           // TODO : send html to body

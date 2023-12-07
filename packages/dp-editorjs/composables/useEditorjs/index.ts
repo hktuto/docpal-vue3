@@ -181,25 +181,28 @@ export const useEditor = () => {
     function calculateVariable(blockData:any) {
         const newVariable:string[] = [];
         for( const block of blockData.blocks) {
-            console.log(block)
-            // table
-            var t = document.createElement('template');
-            t.innerHTML = block.data.text;
-            // found by tag name "var"
-            const newsVars = t.content.querySelectorAll('a.ce-text-item');
-            newsVars.forEach((variable) => {
-                const dataURL = variable.getAttribute('data-url') as string;
-                newVariable.push(...getAllVariablesFromString(dataURL));
-            });
-            const varLink = t.content.querySelectorAll('a.ce-link-item');
-            // push data-url to variable
-            varLink.forEach((variable) => {
-                const dataURL = variable.getAttribute('data-url') as string;
-                newVariable.push(...getAllVariablesFromString(dataURL));
-                
-            })
-            // remove t from memory
-            t.remove();
+            // switch between differnet type of blocks
+            switch (block.type) {
+                case 'header':
+                    newVariable.push(...getParagraphVariables(block.data.text));
+                    break;
+                case 'paragraph':
+                    newVariable.push(...getParagraphVariables(block.data.text));
+                    break;
+                case 'list':
+                    newVariable.push(...getListVariable(block.data.items));
+                    break;
+                case 'table':
+                    block.data.content.forEach((row:any) => {
+                        row.forEach((cell:any) => {
+                            newVariable.push(...getParagraphVariables(cell.data.text));
+                        })
+                    })
+                    break;
+                case 'VariableTable':
+                    newVariable.push(...getVariableTableVariable(block));
+                    break;
+            }
         }
         // get string if ${} in data.subject
         newVariable.push(...getAllVariablesFromString(data.value.subject));
@@ -221,7 +224,62 @@ export const useEditor = () => {
         
         variables.value = [... new Set(newVariable)];
     }
+    
+    function getParagraphVariables(text:string){
+        const newVariable:string[] = [];
+        var t = document.createElement('template');
+        t.innerHTML = text
+        // found by tag name "var"
+        const newsVars = t.content.querySelectorAll('a.ce-text-item');
+        newsVars.forEach((variable) => {
+            const dataURL = variable.getAttribute('data-url') as string;
+            newVariable.push(...getAllVariablesFromString(dataURL));
+        });
+        const varLink = t.content.querySelectorAll('a.ce-link-item');
+        // push data-url to variable
+        varLink.forEach((variable) => {
+            const dataURL = variable.getAttribute('data-url') as string;
+            newVariable.push(...getAllVariablesFromString(dataURL));
 
+        })
+        // remove t from memory
+        t.remove();
+        return newVariable;
+    }
+
+    function getVariableTableVariable(block:any):string[] {
+        let newVariable:string = block.data.variable;
+        const newVariableList:string[] = [];
+        block.data.content.forEach((row:any) => {
+            row.forEach((cell:any) => {
+                // get all variable between ${}
+                const regex = /\${(.*?)}/g;
+                const matches = cell.matchAll(regex);
+                for (const match of matches) {
+                    newVariableList.push(match[1]);
+                }
+            })
+        })
+        // remove duplicate
+        newVariableList.forEach((variable) => {
+            if(!newVariable.includes(variable)) {
+                newVariable += `,${variable}`;
+            }
+        })
+        return [newVariable];
+        
+    }
+    function getListVariable(items:any) {
+        const returnDate:string[] = [];
+        items.forEach((level:any) => {
+            returnDate.push(...getParagraphVariables(level.content));
+            
+            if(level.items) {
+                returnDate.push(...getListVariable(level.items));
+            }
+        })
+        return returnDate;
+    }
     async function getData(){
         const data = await editor.value?.save();
         let html = '<html><body>'
@@ -240,17 +298,44 @@ export const useEditor = () => {
                     html += `<table>${blockToTable(block.data.content)}</table>`;
                     break;
                 case "VariableTable":
-                    html += `<table>${blockToTable(block.data.content)}</table>`;
+                    html += variableTableBlockToHtml(block);
                     break;
             }
                 
         }
         html += '</body></html>';
+        console.log(html);
         return {
             html,
             json: data,
             variable: variables.value
         }
+    }
+    
+    function variableTableBlockToHtml(block:any):string {
+        const tableVariable = '${' + block.data.variable + '}';
+        const header = block.data.withHeadings ? block.data.content[0] : undefined;
+        const body = block.data.withHeadings ? block.data.content[1] : block.data.content[0];
+        let html = `
+            <table style="border: 1px solid black; border-spacing: 0; border-collapse: collapse;">
+             ${ block.data.withHeadings ?
+                 `<thead>
+                    <tr>${ header.map((header:string) => `<th>${stringToHtml(header)}</th>`).join('')}
+                    </tr>
+                </thead>
+                
+                ` : ''
+                }
+                <tbody>
+                    <tr th:each="model :${tableVariable}">
+                        ${body.map((row:any) => `<td>${stringToHtml(row, 'model.')}</td>`).join('')}
+                    </tr>
+                </tbody>
+            </table>
+        `;
+        // check need header
+        
+        return html;
     }
 
     function blockToTable(block:any):string{
@@ -263,6 +348,11 @@ export const useEditor = () => {
             html += '</tr>';
         }
         return html;
+    }
+    
+    function stringToHtml(str:string, prefix:string = ''):string{
+        const regex = /\${(.*?)}/g;
+        return str.replace(regex, '<span th:utext="${' + prefix + '$1}" ></span>');
     }
 
     function htmlToString(html:string):string{

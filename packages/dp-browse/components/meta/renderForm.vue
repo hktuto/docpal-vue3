@@ -129,8 +129,8 @@ async function getData() {
     })
     return data
 }
-function formChange(fieldName, newValue, oldValue, formModel) {
-    emits('formChange', {fieldName,newValue,oldValue,formModel})
+function formChange(formData) {
+    emits('formChange', formData)
 }
 function handleApply(formModel) {
     console.log(formModel);
@@ -147,7 +147,7 @@ function handleApply(formModel) {
                 if(!properties 
                     || !properties[metaItem.metaData]
                     || (properties[metaItem.metaData] instanceof Array && properties[metaItem.metaData].length === 0)) {
-                        msg += `[${metaItem.metaData}]: ${$t('common_canNotEmpty')}<br/>`
+                        msg += `[${$t(metaItem.metaData)}]: ${$t('common_canNotEmpty')}<br/>`
                     }
             } 
         })

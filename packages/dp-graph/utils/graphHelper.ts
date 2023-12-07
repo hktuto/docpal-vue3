@@ -1,8 +1,8 @@
 import { Graph, Node, Model, Path } from '@antv/x6'
 import {Attr} from "@antv/x6/es/registry";
-import { XMLParser, XMLBuilder, XMLValidator} from 'fast-xml-parser';
 import { register } from '../components/Graph';
 import GraphWorkflowForm from '../components/Graph/element/workflow/form.vue';
+import {BPMNJSON, bpmnToJson, normalizeToX6} from 'dp-bpmn'
 interface ImageMarkerArgs extends Attr.SimpleAttrs {
     imageUrl: string
     imageWidth?: number
@@ -198,32 +198,8 @@ function truncateString(str, n=20) {
   }
 }
 
-export const bpmnToJson = (bpmnText:string) :JSON => {
-    const parser = new XMLParser( {
-        ignoreAttributes: false,
-        attributeNamePrefix : "attr_",
-        cdataPropName:     "__cdata",
-        allowBooleanAttributes: true,
-        parseAttributeValue: true
-    });
-    return parser.parse(bpmnText);
-}
 
-export const jsonToBpmn =  (json:JSON):string => {
-    const builder = new XMLBuilder(
-        {
-            ignoreAttributes: false,
-            attributeNamePrefix : "attr_",
-            cdataPropName:     "__cdata",
-            // @ts-ignore
-            allowBooleanAttributes: true,
-            suppressBooleanAttributes: false
-        }
-    );
-    return builder.build(json);
-}
-
-export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
+export const bpmnToX6 = (bpmnText: string | object, options:any = {hideEnd: true, direction:'top'}): Model.FromJSONData => {
   // step 1 : get bpmn data
     // if bpmnText is Json then skip this step
     let bpmn = bpmnText;
@@ -236,17 +212,15 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
     if(bpmn['bpmndi:BPMNDiagram']) {
         delete bpmn['bpmndi:BPMNDiagram']
     }
-    const process = bpmn['definitions']['process'];
-    
-  const startEvent = process['startEvent'];
-  const endEvent = process['endEvent'];
-  const sequenceFlow = process['sequenceFlow'];
-  // check userTask is array or not
-  const userTask =  !process['userTask'] ? [] : Array.isArray(process['userTask']) ? process['userTask'] : [process['userTask']];
-  const exclusiveGateway = !process['exclusiveGateway'] ? [] :Array.isArray(process['exclusiveGateway']) ? process['exclusiveGateway'] : [process['exclusiveGateway']];
-  const serviceTask = !process['serviceTask'] ? [] : Array.isArray(process['serviceTask']) ? process['serviceTask'] : [process['serviceTask']];
-  const boundaryEvent = !process['boundaryEvent'] ? [] : Array.isArray(process['boundaryEvent']) ? process['boundaryEvent'] : [process['boundaryEvent']];
-  const scriptTask = !process['scriptTask'] ? [] : Array.isArray(process['scriptTask']) ? process['scriptTask'] : [process['scriptTask']];
+    const {
+        startEvent,
+        endEvent,
+        sequenceFlow,
+        userTask,
+        exclusiveGateway,
+        boundaryEvent,
+        serviceTask,
+        scriptTask} = normalizeToX6(bpmn as BPMNJSON);
   // step 2 define x6 graph json data
   const data: Model.FromJSONData = {
     nodes: [],
@@ -324,6 +298,13 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
 
   // step 5: add serviceTask
   serviceTask.forEach((task: any) => {
+      const boundary = boundaryEvent.find((event: any) => {
+          if(!event || !event['attr_attachedToRef']) return false;
+          if( event['attr_attachedToRef'] === task['attr_id'] ) return true;
+          
+          const target = sequenceFlow.find((flow: any) => flow['attr_sourceRef'] === event['attr_id'] && flow['attr_targetRef'] === task['attr_id']);
+          return !!target;
+      });
     if(task['attr_flowable:delegateExpression'] === "${sendNotificationDelegate}") {
       data.nodes?.push({
         id: task['attr_id'],
@@ -331,7 +312,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         label: truncateString(task['attr_name']),
         data:{
           type: 'serviceTask',
-          ...task
+          ...task,
+            boundary
         },
           ports:[
           ]
@@ -343,7 +325,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         label: truncateString(task['attr_name']),
         data: {
           type: 'serviceTask',
-          ...task
+          ...task,
+            boundary
         },
           ports:[
           ]
@@ -355,7 +338,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         label: truncateString(task['attr_name']),
         data: {
           type: 'serviceTask',
-          ...task
+          ...task,
+            boundary
         },
           ports:[
           ]
@@ -371,7 +355,8 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
       shape: 'exclusive-node',
       label: "Approve",
       data: {
-        type: 'exclusiveGateway',
+        type: 'exclusiveGateway', 
+          approve: true,
         ...gateway
       },
         ports:[
@@ -390,11 +375,20 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
           },
           data: {
               type: 'exclusiveGateway',
+              approve: false,
               ...gateway
           },
           ports:[
           ]
       });
+    // get attached ServerTask
+      const item = sequenceFlow.find( seq => seq.attr_targetRef === gateway['attr_id']);
+      if(item) {
+          const task = data.nodes.find((node: any) => node.id === item['attr_sourceRef']);
+          if(task) {
+              task.data.exclusive = true;
+          }
+      }
   });
 
   //step 7: add boundaryEvent
@@ -439,29 +433,26 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
         const boundary = boundaryEvent.find((event: any) => event['attr_id'] === flow['attr_sourceRef']);
         const sourceNode = data.nodes?.find((node) => node.id === boundary['attr_attachedToRef']);
         
-        // if(!sourceNode) return;
-        const outLength = sourceNode.ports.length
-        sourceNode.ports?.push({
-            id: sourceNode['id'] + '-out' + '-' + outLength,
-            group: 'top',
-        })
+        if(!sourceNode) return;
+        
+        const sourcePort = getAndCreatePorts(sourceNode, 'top')
+        
         // // create port for target node
         const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
         if(!targetNode) return;
-        const inLength = targetNode.ports.length
-        targetNode.ports?.push({
-            id: targetNode['id'] + '-in' + '-' + inLength,
-            group: 'left',
-        })
+        // check targetNode have in port
+       
+        const targetPort = getAndCreatePorts(targetNode, 'left')
+        
 
         data.edges?.push({
             source: {
                 cell: sourceNode['id'],
-                port: sourceNode['id'] + '-out' + '-' + outLength
+                port: sourcePort
             },
             target: {
                 cell: targetNode['id'],
-                port: targetNode['id'] + '-in' + '-' + inLength
+                port: targetPort
             },
             shape: 'boundaryEdge',
             data:{
@@ -476,27 +467,20 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
           const approve = !flow.conditionExpression || flow.conditionExpression.__cdata.includes('!');
           const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef'] + (approve ? '-reject' : '-approve'));
           if(!sourceNode) return;
-          const outLength = sourceNode.ports.length
-          sourceNode.ports?.push({
-              id: sourceNode['id'] + '-out' + '-' + outLength,
-              group: 'right',
-          })
+          
+          const sourcePort = getAndCreatePorts(sourceNode, 'right',approve ? '-reject' : '-approve' )
           // // create port for target node
           const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
           if(!targetNode) return;
-          const inLength = targetNode.ports.length
-          targetNode.ports?.push({
-              id: flow['attr_targetRef'] + '-in' + '-' + inLength,
-              group: 'left',
-          })
+          const targetPort = getAndCreatePorts(targetNode, 'left')
           data.edges?.push({
               source: {
                   cell: flow['attr_sourceRef'] + (approve ? '-reject' : '-approve'),
-                    port: flow['attr_sourceRef'] + (approve ? '-reject' : '-approve') + '-out' + '-' + outLength
+                    port: sourcePort
               },
               target: {
                   cell: flow['attr_targetRef'],
-                    port: flow['attr_targetRef'] + '-in' + '-' + inLength
+                    port: targetPort
               },
               shape: 'normal-edge',
           });
@@ -506,45 +490,34 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
       if( exclusiveGateway.find((gateway: any) => gateway['attr_id'] === flow['attr_targetRef']) ) {
           const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef']);
           if(!sourceNode) return;
-          const outLength = sourceNode.ports.length
-          sourceNode.ports?.push({
-              id: flow['attr_sourceRef'] + '-out' + '-' + outLength,
-              group: 'right',
-          })
+          const sourcePort = getAndCreatePorts(sourceNode, 'right')
           // create port for target node
           const stargetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef'] + '-approve' );
           const rTargetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef'] + '-reject' );
           if(!stargetNode || !rTargetNode) return;
-          const sInLength = stargetNode.ports.length
-          const rInLength = rTargetNode.ports.length;
-          stargetNode.ports?.push({
-              id: flow['attr_targetRef'] + '-approve' + '-in' + '-' + sInLength,
-              group: 'left',
-          })
-          rTargetNode.ports?.push({
-              id: flow['attr_targetRef'] + '-reject' + '-in' + '-' + rInLength,
-              group: 'left',
-          })
+          const stargetPort = getAndCreatePorts(stargetNode, 'left', '-approve')
+          const rtargetPort = getAndCreatePorts(rTargetNode, 'left', '-reject')
+          
 
           data.edges?.push({
               source: {
                   cell: flow['attr_sourceRef'],
-                    port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+                    port: sourcePort
               },
               target: {
                   cell: flow['attr_targetRef'] + '-approve',
-                    port: flow['attr_targetRef'] + '-approve' + '-in' + '-' + sInLength
+                    port: stargetPort
               },
               shape: 'normal-edge',
           });
           data.edges?.push({
               source: {
                   cell:flow['attr_sourceRef'],
-                    port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+                    port: sourcePort
               },
               target: {
                   cell: flow['attr_targetRef'] + '-reject',
-                    port: flow['attr_targetRef'] + '-reject' + '-in' + '-' + rInLength
+                    port: rtargetPort
               },
               shape: 'normal-edge',
           });
@@ -553,28 +526,20 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
 
       const sourceNode = data.nodes?.find((node) => node.id === flow['attr_sourceRef']);
       if(!sourceNode) return;
-      const outLength = sourceNode.ports.length
-      sourceNode.ports?.push({
-          id: flow['attr_sourceRef'] + '-out' + '-' + outLength,
-          group: 'right',
-      })
       // create port for target node
       const targetNode = data.nodes?.find((node) => node.id === flow['attr_targetRef']);
       if(!targetNode) return;
-      const inLength = targetNode.ports.length
-      targetNode.ports?.push({
-          id: flow['attr_targetRef'] + '-in' + '-' + inLength,
-          group: 'left',
-      })
+      const targetPort = getAndCreatePorts(targetNode, 'left')
+      const sourcePort = getAndCreatePorts(sourceNode, 'right')
       
       data.edges?.push({
           source: {
               cell:flow['attr_sourceRef'],
-                port: flow['attr_sourceRef'] + '-out' + '-' + outLength
+                port: sourcePort
           },
           target: {
               cell:flow['attr_targetRef'],
-                port: flow['attr_targetRef'] + '-in'  + '-' + inLength
+                port: targetPort
           },
           shape: 'normal-edge',
         });
@@ -583,4 +548,21 @@ export const bpmnToX6 = (bpmnText: string | object, options = {hideEnd: true, di
 
   // finally return data
   return data;
+}
+
+export const getAndCreatePorts = (node :Node.Metadata, group:string, suffix:string = "") => {
+    if(!node || !node.data){
+        console.trace(node);
+    }
+    let portId = node.data.attr_id + suffix + '-'  + group;
+    const port = node.ports?.find((port: any) => port.group === group)
+    if(port) {
+        portId = port.id;
+    } else {
+        node.ports?.push({
+            id: portId ,
+            group: group,
+        })
+    }
+    return portId
 }

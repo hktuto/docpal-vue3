@@ -127,13 +127,16 @@ function handleDiscard () {
     setUploadFiles([])
     router.push(state.backPath)
 }
-function handleSubmit () {
+async function handleSubmit () {
     const nodeMap = treeRef.value!.store.nodesMap
     const data = Object.keys(nodeMap).reduce((prev,key) => {
         prev[key] = { ...nodeMap[key].data }
         delete prev[key].children
         return prev
     }, {})
+    const validate = await UploadMetaFormRef.value.validate(data)
+    if(!validate) return
+
     updateUploadRequestList(data)
     router.push(state.backPath)
 }

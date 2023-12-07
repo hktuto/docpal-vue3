@@ -180,7 +180,7 @@ function handleMetaChange(data) {
             return children
             function getChild(nodes) {
                 nodes.forEach(node => {
-                    if(!node.isLeaf) {
+                    if(!!node && !node.isLeaf) {
                         if(node.data && node.data.folder === false && node.data.children){
                             children.push(...node.data.children)
                         } 

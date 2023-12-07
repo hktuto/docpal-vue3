@@ -129,7 +129,6 @@ export default class Table {
   }
   
 
-
   /**
    * Returns the rendered table wrapper
    *

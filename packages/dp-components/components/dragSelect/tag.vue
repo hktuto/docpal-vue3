@@ -1,5 +1,5 @@
 <template>
-    <el-tag ref="tagRef" closable
+    <el-tag ref="tagRef" :closable="!element.noDelete"
         v-click-outside="onClickOutside"
         @click="initForm"
         @close="handleClose()">{{ element[itemKey] }}</el-tag>

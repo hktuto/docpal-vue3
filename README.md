@@ -11,3 +11,12 @@ pnpm i --shamefully-hoist
 ```
 require('events').EventEmitter.defaultMaxListeners = 0; // 解除监听器数量限制
 
+2. 添加 属性 data-testid 以方便自动化测试
+```
+<ul>
+  <li data-testid='apple'>apple</li>
+  <li data-testid='banana'>banana</li>
+  <li data-testid='orange'>orange</li>
+</ul>
+await page.getByTestId('orange').click();
+```

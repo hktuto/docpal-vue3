@@ -27,6 +27,7 @@ const cancelAxiosWhiteList = [
     '/docpal/workflow/tasks/exportTasksUser',
     '/docpal/workflow/history/exportProcessHistory',
     // search
+    '/nuxeo/search/nestedSearch',
     '/nuxeo/collection/all',
     '/nuxeo/tags/getAllTags',
     '/nuxeo/types',

@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 
 const getNode = inject('getNode');
 const popoverRef = ref();
@@ -6,15 +6,16 @@ const node = ref();
 const label = ref("");
 const type = ref("");
 const shape = ref("");
+const exclusive = ref(false);
 const dataId = ref("");
 
 const typeOption = {
-  "form-node": {icon:"/bpmn/icons/form.svg", color: "#0099ff", radius: "1rem"},
-  "document-node": {icon:"/bpmn/icons/document.svg", color: "#7B61FF", radius: "1rem"},
-  "email-node": {icon:"/bpmn/icons/email.svg", color: "#29CC6A", radius: "1rem"},
-  "user-node": {icon: undefined, color: "#b7b7b7", radius: "50%"},
-  "exclusive-node": {icon:undefined, color: "#b7b7b7", radius: "50%"},
-  "script-node":{icon:"/bpmn/icons/script.svg", color: "#7B61FF", radius: "1rem"}
+  "form-node": {icon:"/bpmn/icons/form.svg", color: "#0099ff", radius: "1rem", size:"80px"},
+  "document-node": {icon:"/bpmn/icons/document.svg", color: "#7B61FF", radius: "1rem", size:"80px"},
+  "email-node": {icon:"/bpmn/icons/email.svg", color: "#29CC6A", radius: "1rem", size:"80px"},
+  "user-node": {icon: undefined, color: "#b7b7b7", radius: "50%", size:"60px"},
+  "exclusive-node": {icon:undefined, color: "#b7b7b7", radius: "50%", size:"60px"},
+  "script-node":{icon:"/bpmn/icons/script.svg", color: "#7B61FF", radius: "1rem", size:"80px"}
 }
 
 const displayType = computed(() => {
@@ -32,24 +33,49 @@ function getData() {
   label.value = data.attr_name || "";
   type.value = data.type;
   shape.value = node.value.shape;
-  dataId.value = data.attr_id;
+  exclusive.value = data.exclusive || false;
+  dataId.value = data.attr_id || "";
 }
 
 function emitDeleteEvent(){
-  const ev = new CustomEvent('delete-workflow-graph-item', {
-    detail: {
-      node: node.value
-    }
-  })
-  document.dispatchEvent(ev);
+  
 }
 
-function emitAddEvent() {
-  const ev = new CustomEvent('add-workflow-graph-item', {
+function emitNewApproveEvent(){
+  
+}
+
+
+
+
+
+function handleCommand(command) {
+  let ev;
+  const evDetail = {
     detail: {
       node: node.value
     }
-  })
+  }
+  switch (command) {
+    case 'delete':
+      ev= new CustomEvent('delete-workflow-graph-item', evDetail)
+      break;
+    case 'approval':
+      ev = new CustomEvent('new-approve-workflow-graph-item', evDetail)
+      break;
+    case 'email':
+      ev= new CustomEvent('new-email-workflow-graph-item', evDetail)
+      break;
+    case 'document':
+      ev= new CustomEvent('new-document-workflow-graph-item', evDetail)
+      break;
+    case 'dueEmail':
+      ev = new CustomEvent('new-due-email-workflow-graph-item', evDetail)
+      break;
+    case 'form':
+      ev = new CustomEvent('new-form-workflow-graph-item', evDetail)
+      break;
+  }
   document.dispatchEvent(ev);
 }
 
@@ -63,28 +89,49 @@ onMounted(() => {
 </script>
 
 <template>
-  <ElTooltip :content="label" placement="bottom">
-    <div v-popover="popoverRef" :class="{graphWorkflowElement:true, shape}" :style="`--radius: ${displayType.radius};--color:${displayType.color}`">
-      <SvgIcon v-if="displayType.icon" :src="displayType.icon" />
+  <el-dropdown ref="dropdown1" trigger="contextmenu" style="margin-right: 30px" @command="handleCommand">
+    <div class="icon" :style="`--radius: ${displayType.radius};--color:${displayType.color};--size:${displayType.size};`">
+      
+    <ElTooltip :content="label" placement="bottom">
+      <div v-popover="popoverRef" :class="{graphWorkflowElement:true, shape}" >
+        <SvgIcon v-if="displayType.icon" :src="displayType.icon" />
+      </div>
+    </ElTooltip>
+    <div class="label">{{label}}</div>
+      
     </div>
-  </ElTooltip>
-  <div class="label">{{label}}</div>
-  <el-popover
-      ref="popoverRef"
-      trigger="contextmenu"
-      title="Actions"
-      virtual-triggering
-      persistent
-      :disabled="type === 'endEvent' || type === 'exclusiveGateway' || dataId === 'start' || dataId === 'userTask'"
-  >
-    <div class="actions">
-<!--      <SvgIcon src="/icons/add.svg" @click="emitAddEvent"></SvgIcon >-->
-      <SvgIcon src="/icons/delete.svg" @click="emitDeleteEvent"></SvgIcon>
-    </div>
-  </el-popover>
+    <template #dropdown>
+      <el-dropdown-menu v-if="dataId !== 'end'">
+        <el-dropdown-item v-if="dataId !== 'start' && type !=='exclusiveGateway'" command="delete">Remove</el-dropdown-item>
+        <el-dropdown-item v-if="!exclusive" command="approval">Add Approval</el-dropdown-item>
+        <el-dropdown-item v-if="!exclusive" command="form">Add Form</el-dropdown-item>
+        <el-dropdown-item v-if="!exclusive" command="email">Add Email</el-dropdown-item>
+        <el-dropdown-item v-if="type === 'userTask'" command="dueEmail">Add Remind Email</el-dropdown-item>
+        <el-dropdown-item v-if="!exclusive"  command="document">Add Document</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+<!--  <el-popover-->
+<!--      ref="popoverRef"-->
+<!--      trigger="contextmenu"-->
+<!--      title="Actions"-->
+<!--      virtual-triggering-->
+<!--      persistent-->
+<!--      :disabled="type === 'endEvent' || type === 'exclusiveGateway' || dataId === 'start' || dataId === 'userTask'"-->
+<!--  >-->
+<!--    <div class="actions">-->
+<!--&lt;!&ndash;      <SvgIcon src="/icons/add.svg" @click="emitAddEvent"></SvgIcon >&ndash;&gt;-->
+<!--      <SvgIcon src="/icons/delete.svg" @click="emitDeleteEvent"></SvgIcon>-->
+<!--    </div>-->
+<!--  </el-popover>-->
 </template>
 
 <style scoped lang="scss">
+.icon{
+  width: var(--size);
+  height: var(--size);
+  position: relative;
+}
 .graphWorkflowElement{
   width: 100%;
   aspect-ratio: 1/1;

@@ -2166,7 +2166,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.ADMIN_FOLDER_CABINET]: {
         columns: [
-            { id: '1', label: 'docType_label', prop: 'label', defaultColumn: true },
+            { id: '1', label: 'folderCabinet.name', prop: 'label', defaultColumn: true },
             { id: '2', label: 'docType_documentType', prop: 'documentType',
                 formatList: [
                     {
