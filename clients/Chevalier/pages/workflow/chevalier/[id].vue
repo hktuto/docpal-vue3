@@ -5,6 +5,7 @@ import {Content} from "../../../components/Chevalier/chevalierType";
 const router = useRouter()
 const route = useRoute()
 const reader = ref()
+const submitting = ref(false)
 const state = reactive({
   batchIndex: route.params.id,
   selectedDocsIndex: 0,
@@ -56,6 +57,23 @@ const displayTotal = computed(() => {
   return (total - PRF_total).toFixed(2);
 })
 
+async function submitDoc(){
+  
+  submitting.value = true
+  try{
+    // netvigate to browse
+    const path = `/default-domain/Chevalier/${state.batchIndex}/AHPFC3A0018`
+    router.push({
+      path: `/browse?path=${path}`,
+      query: {
+        path: path
+      }
+    })
+  }catch(e){
+  }
+  submitting.value = false
+}
+
 
 watch(() =>state.selectedDocsIndex, async() => {
     state.selectedDocs = await getSelectedDocData()
@@ -98,8 +116,12 @@ watch(() =>state.selectedDocsIndex, async() => {
           prop="total"
         />
       </ElTable>
+      <div class="actions">
+        
       <div :class="{total:true, success: displayTotal === 0.00 || displayTotal === '0.00'}">
         Different: {{displayTotal}}
+      </div>
+        <ElButton v-if="displayTotal === 0.00 || displayTotal === '0.00'" v-loading="submitting" @click="submitDoc">Submit</ElButton>
       </div>
     </ElDialog>
   </NuxtLayout>
