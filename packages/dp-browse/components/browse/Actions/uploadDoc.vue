@@ -28,13 +28,13 @@ const state = reactive({
     doc: {}
 })
 const router = useRouter()
-const { setUploadFiles } = useUploadStore()
+const { getUploadFiles } = useUploadStore()
 const fileUploaderRef = ref(null)
 const folderUploaderRef = ref(null)
 
 function uploadHandler (e) {
     const files = Array.from(e.target.files) 
-    const result = files.reduce((prev, file, index) => {
+    const uploadFiles = files.reduce((prev, file, index) => {
         prev.push({
             id: new Date().valueOf().toString() + index,
             size: file.size,
@@ -46,8 +46,10 @@ function uploadHandler (e) {
         return prev
     }, [])
     e.target.value = '' // 解决不能上传相同文件问题
-    setUploadFiles(result, state.doc, props.backPath)
-    router.push(`/browse/upload?backPath=${props.backPath}`)
+    
+    const treeData = getUploadFiles(uploadFiles)
+    console.log({treeData})
+    // router.push(`/browse/upload?backPath=${props.backPath}`)
 }
 function getPath(path: string) {
     if(!path) return ''
