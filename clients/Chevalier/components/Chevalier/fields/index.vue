@@ -3,8 +3,20 @@ import { Document } from '../chevalierType'
 const props = defineProps<{
   documents: Document[]
 }>()
-
-
+const emit = defineEmits(['update:documents'])
+function selectField(field:Field) {
+  if(field.type === 'array') return
+  const ev = new CustomEvent('draw-step', {detail: field})
+  document.dispatchEvent(ev)
+}
+function valChange(newValue, key) {
+  
+  props.documents[0].fields[key].content = newValue
+  if(props.documents[0].fields[key].type === 'number') {
+    props.documents[0].fields[key].valueNumber = newValue
+  }
+  emit('update:documents', props.documents)
+}
 </script>
 
 <template>
@@ -13,13 +25,15 @@ const props = defineProps<{
     <template v-for="doc in documents" :key="doc.docType">
 
       <template v-for="(value,key) in doc.fields" :key="key">
-        <div :class="{fieldContainer:true, [value.type]:true}" @click="$emit('focus')">
+        <div :class="{fieldContainer:true, [value.type]:true}" >
 
-          <div class="label">{{key}}</div>
-          <ChevalierFieldsString v-if="value.type  === 'string'"  :field="value" />
-          <ChevalierFieldsNumber v-else-if="value.type  === 'number'"  :field="value" />
-          <ChevalierFieldsDate v-else-if="value.type  === 'date'"  :field="value" />
-          <ChevalierFieldsArray v-else-if="value.type === 'array'" :field="value" />
+          <div class="label" @click="() => {
+            selectField(value);
+          }">{{key}}</div>
+          <ChevalierFieldsString v-if="value.type  === 'string'"  :field="value" @change="(val) => valChange(val,key)"/>
+          <ChevalierFieldsNumber v-else-if="value.type  === 'number'"  :field="value" @change="(val) => valChange(val,key)"/>
+          <ChevalierFieldsDate v-else-if="value.type  === 'date'"  :field="value" @change="(val) => valChange(val,key)"/>
+          <ChevalierFieldsArray v-else-if="value.type === 'array'" :field="value" @change="(val) => valChange(val,key)"/>
         </div>
       </template>
     </template>

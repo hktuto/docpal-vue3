@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { PDFDocument, rgb } from 'pdf-lib'
+import { PDFDocument, rgb, degrees } from 'pdf-lib'
 import { onMounted, reactive, ref } from 'vue';
 import {useEventListener} from "@vueuse/core";
+import {Content} from "./chevalierType";
 const props = defineProps<{
   data: any
 }>()
@@ -12,22 +13,29 @@ const pdfLib = ref();
 const canvas = ref(null)
 const ready = ref(false)
 const currentPage = ref(0);
+const sourcePdf = ref();
 
 async function loadPdf() {
   
   // load pdf blob from server
-  const buffer = await fetch(data.value.pdf).then(r => r.arrayBuffer())
-  pdfLib.value = await PDFDocument.load(buffer)
+  sourcePdf.value = await fetch(data.value.pdf).then(r => r.arrayBuffer())
+  pdfLib.value = await PDFDocument.load(sourcePdf.value)
   
   pageImage.value =  await pdfLib.value.saveAsBase64({ dataUri: true });
 
 }
 
-async function draw(polygon:number[], pageNumber:number = 0) {
-  const pdfPage = await pdfLib.value.getPage(pageNumber)
+async function draw(step:Content) {
+  if(!step || !step.boundingRegions) return;
+  pdfLib.value = await PDFDocument.load(sourcePdf.value)
+  const boundary = step.boundingRegions[0]
+  const pageNumber = boundary.pageNumber -1;
+  
+  const pdfPage = await pdfLib.value.getPage(pageNumber);
   const pageSize = pdfPage.getSize()
-  const {x, y, width, height} = polygonToXYWH(props.data.json.analyzeResult.documents[0].fields['vendor name (zh)'].boundingRegions[0].polygon, pageSize);
-  pdfPage.drawRectangle({x, y, width, height, borderColor: rgb(1, 0, 0),})
+  const {x, y, width, height} = polygonToXYWH(boundary.polygon, pageSize);
+
+  pdfPage.drawRectangle({x, y, width, height,   color: rgb(1, 1, 0),opacity:0.3 })
   pageImage.value =  await pdfLib.value.saveAsBase64({ dataUri: true });
 }
 
@@ -39,10 +47,10 @@ function polygonToXYWH (polygon:number[], sizeInPixel: { width: number; height: 
   const [x1, y1, x2, y2, x3, y3, x4, y4] = getXYPercentage({width, height}, polygon, sizeInPixel)
 
   return {
-    x: x1 ,
-    y: y1,
-    width: (x2 - x1) ,
-    height: (y4 - y1)
+    x: x1 - 2,
+    y: y1 + 4,
+    width: (x2 - x1) + 4 ,
+    height: (y4 - y1) - 8
   }
   
 }
@@ -62,6 +70,10 @@ function getXYPercentage({width, height}, polygon:number[], pixelSize: { width: 
 
 defineExpose({
   draw
+})
+
+useEventListener(document, 'draw-step', (e) => {
+  draw(e.detail)
 })
 
 watch(data, () => {

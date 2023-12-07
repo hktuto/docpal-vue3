@@ -7,10 +7,26 @@ const props = withDefaults(defineProps<{
 }>(),{
   type: 'text'
 })
+const emit = defineEmits(['update:field'])
+const displayField = computed({
+  set(value){
+    props.field.content = value
+    emit('update:field', value)
+  },
+  get(){
+    return props.field
+  }
+})
+
+
+function selectField() {
+  const ev = new CustomEvent('draw-step', {detail: props.field})
+  document.dispatchEvent(ev)
+}
 </script>
 
 <template>
-  <ElInput :type="type" :value="field.content" />
+  <ElInput :type="type" v-model="displayField.content" @click="selectField"/>
 </template>
 
 <style scoped lang="scss">

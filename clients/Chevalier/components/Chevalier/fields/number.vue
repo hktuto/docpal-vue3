@@ -4,10 +4,14 @@ import {Field} from "~/components/Chevalier/chevalierType";
 const props = defineProps<{
   field: Field
 }>()
+function selectField() {
+  const ev = new CustomEvent('draw-step', {detail: props.field})
+  document.dispatchEvent(ev)
+}
 </script>
 
 <template>
-  <ElInputNumber :model-value="field.valueNumber" controls-position="right"/>
+  <ElInputNumber v-model="field.valueNumber" controls-position="right" @click="selectField"/>
 </template>
 
 <style scoped lang="scss">

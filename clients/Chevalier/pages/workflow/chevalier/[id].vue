@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {getChevalierBatch} from "~/utils/chevaliierHelper";
+import {Content} from "../../../components/Chevalier/chevalierType";
 
 const router = useRouter()
 const route = useRoute()
@@ -14,6 +15,7 @@ const batchDialogVisible = ref(false)
 const { data, error } = await useAsyncData('chevalier',  async() => await getChevalierBatch(state.batchIndex))
 
 async function getSelectedDocData () {
+  
     return data.value.docs[state.selectedDocsIndex]
 }
 
@@ -26,12 +28,13 @@ function changeSelected(row:any) {
 const docsTable = computed(() => {
   // always show RPF as first row
   const rpf = data.value.docs.find((d) => d.name === 'PRF')
+  console.log(data.value.docs)
   if (rpf) {
     const newArr = [rpf, ...data.value.docs.filter((d) => d.name !== 'PRF')]
     return newArr.map((d) => ({
       selected: state.selectedDocs.name === d.name,
       name: d.name,
-      total: d.total
+      total: d.json.analyzeResult.documents[0].fields[d.totalKey].valueNumber || d.json.analyzeResult.documents[0].fields[d.totalKey].content
     }))
   }
   // return data.value.docs
@@ -41,17 +44,18 @@ const displayTotal = computed(() => {
   let total = 0;
   const allDoc = data.value.docs.filter((d) => d.name !== 'PRF')
   allDoc.map((d) => {
-    total += d.total
+    total += Number(d.json.analyzeResult.documents[0].fields[d.totalKey].valueNumber || d.json.analyzeResult.documents[0].fields[d.totalKey].content)
   })
-  console.log(total);
-  console.log(data.value.docs.find((d) => d.name === 'PRF').total)
-  return (total - data.value.docs.find((d) => d.name === 'PRF').total).toFixed(2);
+  
+  const PRF = data.value.docs.find((d) => d.name === 'PRF')
+  let PRF_total = PRF.json.analyzeResult.documents[0].fields[PRF.totalKey].valueNumber || PRF.json.analyzeResult.documents[0].fields[PRF.totalKey].content
+  console.log("PRF_total", PRF_total, PRF.totalKey)
+  if(typeof PRF_total === 'string' && PRF_total.includes('$')){
+    PRF_total = PRF_total.replace('$', '').replaceAll(',','')
+  }
+  return (total - PRF_total).toFixed(2);
 })
 
-function fieldSelected(){
-  console.log(reader.value)
-  reader.value.draw();
-}
 
 watch(() =>state.selectedDocsIndex, async() => {
     state.selectedDocs = await getSelectedDocData()
@@ -67,13 +71,13 @@ watch(() =>state.selectedDocsIndex, async() => {
     <div v-if="state.selectedDocs.json" class="chevalierContainer">
       <div class="left">
         <div class="header" @click="batchDialogVisible = true">
-            <h1>Batch Index: {{state.batchIndex}} <SvgIcon class="display:inline" src="/icons/file-general.svg" /></h1>
+            <h1>Batch Index: {{state.batchIndex}} <SvgIcon style="display:inline" src="/icons/file-general.svg" /></h1>
         </div>
         <h2>{{state.selectedDocs.name}}</h2>
-        <ChevalierFields :documents="state.selectedDocs.json.analyzeResult.documents" @click="fieldSelected"/>
+        <ChevalierFields v-model:documents="data.docs[state.selectedDocsIndex].json.analyzeResult.documents" />
       </div>
       <div class="right">
-        <ChevalierPdfReader ref="reader" :data="state.selectedDocs" />
+        <ChevalierPdfReader ref="reader" :data="data.docs[state.selectedDocsIndex]" />
       </div>
     </div>
     <ElDialog v-model="batchDialogVisible" append-to-body distory-on-close>
@@ -94,7 +98,7 @@ watch(() =>state.selectedDocsIndex, async() => {
           prop="total"
         />
       </ElTable>
-      <div :class="{total:true, success: displayTotal === 0}">
+      <div :class="{total:true, success: displayTotal === 0.00 || displayTotal === '0.00'}">
         Different: {{displayTotal}}
       </div>
     </ElDialog>
@@ -124,6 +128,8 @@ h1,h2 {
 }
 .total {
   color: red;
+  font-size: 1.2rem;
+  font-weight: bold;
   &.success{
     color: var(--color-grey-1000);
   }
