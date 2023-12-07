@@ -20,6 +20,7 @@
         :list="dropList"
         group="people"
         :itemKey="itemKey"
+        handle=".canDrag"
         @change="() => emit('change', {dropList, dragList})"
     >
         <template #item="{ element, index }">
@@ -27,7 +28,10 @@
                 <!-- <span v-if="element.prefixSymbol" class="list-drop-item--divider" >{{element.prefixSymbol}}</span> -->
                 <!-- <DragSelectTag :element="element" @close="handleClose"/> -->
                 <!-- <span v-if="element.suffixSymbol" class="list-drop-item--divider">{{element.suffixSymbol}}</span> -->
-                <el-tag ref="tagRef" :closable="!element.noDelete" @close="handleClose(element)">{{ $t(element[itemKey]) }}</el-tag>
+                <el-tag ref="tagRef" :class="{ 'el-tag-normal': !element.noDelete }" :closable="!element.noDelete" @close="handleClose(element)">
+                    <SvgIcon v-if="!element.noDelete" class="canDrag" src="/icons/move-handle.svg" />
+                    {{ $t(element[itemKey]) }}
+                </el-tag>
                 <span class="list-drop-item--divider">{{joiner}}</span>
             </span>
         </template>
@@ -104,6 +108,13 @@ onMounted(() => {
         &:last-of-type &--divider{
             display: none;
         }
+    }
+}
+.el-tag-normal  {
+    padding-left: 0;
+    :deep(.el-tag__content) {
+        display: flex;
+        align-items: center;
     }
 }
 </style>

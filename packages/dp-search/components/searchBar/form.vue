@@ -15,7 +15,9 @@
    <template v-else-if="tag">
         <el-input v-model="state.inputValue" 
             data-testid="search-bar-input"
-            @change="handleInputChange"/>
+            @blur="handleInputChange"
+            @keydown.enter.native="handleInputChange"
+            />
    </template>
 </div>
 </template>
@@ -157,7 +159,7 @@ function isArrEqual (arr1, arr2) {
 }
 function handleInputChange() {
     if (props.searchParams.paramsInTextSearch === state.inputValue) return
-    emits('change', props.tag, state.inputValue)
+    emits('change', props.tag, [state.inputValue])
 }
 watch(() => props.tag, (newValue) => {
     if(newValue) handleGetOptions(newValue)

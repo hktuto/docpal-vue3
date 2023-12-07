@@ -15,8 +15,8 @@
                     <SvgIcon class="el-icon--left" src="/icons/add.svg" />
                     <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item @click="handleAdd(setting, false)">File</el-dropdown-item>
-                        <el-dropdown-item @click="handleAdd(setting, true)">Folder</el-dropdown-item>
+                        <el-dropdown-item @click="handleAdd(setting, false)">{{$t('common_file')}}</el-dropdown-item>
+                        <el-dropdown-item @click="handleAdd(setting, true)">{{$t('common_folder')}}</el-dropdown-item>
                     </el-dropdown-menu>
                     </template>
                 </el-dropdown>

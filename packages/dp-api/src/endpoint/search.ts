@@ -14,7 +14,7 @@ export const nestedSearchApi = async(params: SearchFilter):Promise<paginationRes
     })
     delete _params.time
     delete _params.searchBackPath
-    if(Object.keys(_params).length <= 3) return { entryList: [], totalSize: 0, aggregation: await getAggregation(null) }
+    // if(Object.keys(_params).length <= 3) return { entryList: [], totalSize: 0, aggregation: await getAggregation(null) }
     const res = await api.post('/nuxeo/search/nestedSearch', _params).then(res => res.data.data)
     return { entryList: res.page?.entryList || res.entryList || [], totalSize: res.page?.totalSize || res.totalSize || 0, aggregation: await getAggregation(res.aggregation, params) }
 }
@@ -44,7 +44,8 @@ export const getAggregation = async (aggregation?, searchParams?) => {
             'includeFolder': aggregation === null ? await GetSSIncludeFolderApi(): [],
             // 'mimeType': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'mimeType'): [],
             'modified': aggregation === null ? await GetSModifiedDateApi(): [],
-            'type': aggregation === null ? await GetSTextSearchTypesApi(): [],
+            // 'textSearchType': aggregation === null ? await GetSTextSearchTypesApi(): [],
+            'type': aggregation === null ? await GetSTypesApi(): [],
             'size': aggregation === null ? await GetSSizeApi(): [],
             'tags': aggregation === null ? await GetSTagsApi(): [],
             // 'height': aggregation === null ? await GetSearchExtendsApi(searchParams.assetType, 'height'): [],

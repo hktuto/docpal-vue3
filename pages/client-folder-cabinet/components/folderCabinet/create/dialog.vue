@@ -22,7 +22,7 @@
         </template>
     </FromRenderer>
     <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('button.next')}}</el-button>
+        <el-button :loading="state.loading" data-testid="folderCabinet-next-button" @click="handleSubmit">{{$t('button.next')}}</el-button>
     </template>
 </el-dialog>
 <FolderCabinetCreateNextDialog ref="NextDialogRef" />

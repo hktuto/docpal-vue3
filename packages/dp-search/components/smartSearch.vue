@@ -97,6 +97,7 @@ function goRoute() {
         path: '/search',
         query: {
             ...state.searchParams,
+            paramsInTextSearch: state.keyword,
             pageSize: 20,
             currentPageIndex: 1,
             searchBackPath
@@ -115,7 +116,7 @@ function blurInput() {
 
 function keywordInputHandler(event) {
     const value = event.target.value
-    state.searchParams.paramsInTextSearch = value
+    state.keyword = value
 }
 // #region module:
     const { ctrl_k, meta_k } = useMagicKeys({

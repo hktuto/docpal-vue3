@@ -6,7 +6,7 @@
     <template v-else>
         <main>
             <div class=" flex-x-end">
-                <el-button @click="handleAdd">{{$t('folderCabinet.add')}}</el-button>
+                <el-button data-testid="folderCabinetConfig-new-button" @click="handleAdd">{{$t('folderCabinet.add')}}</el-button>
             </div>
             <div >
                 <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.list" :options="options"

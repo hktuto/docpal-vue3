@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout class="fit-height withPadding" :backPath="$route.query.searchBackPath" :showSearch="false">
         <div :class="['search-page',state.expanded ? 'search-page-expanded':'search-page-narrow']">
-            <SearchFilterLeft ref="SearchFilterLeftRef"
+            <SearchFilterLeft ref="SearchFilterLeftRef" :searchParams="state.searchParams"
                 :ready="state.firstReady" :loading="loading"></SearchFilterLeft>
             <div class="search-page-divider">
                 <el-button data-testid="search-zoom-button" :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
@@ -210,7 +210,7 @@ function initTable(searchParams) {
             break;
     }
     nextTick(() => {
-        tableRef.value.reorderColumn(state.columns)
+        if(state.columns) tableRef.value.reorderColumn(state.columns)
     })
 
 }
@@ -237,14 +237,14 @@ onMounted(() => {
 .search-page {
     height: 100%;
     display: grid;
-    grid-template-columns: 20% min-content 1fr;
+    grid-template-columns: min-content min-content 1fr;
     transition: all 0.5s;
     overflow: hidden;
     position: relative;
     @media(max-width : 1024px) {
       flex-flow: column nowrap;
-      //grid-template-columns: 1fr;
-      //grid-template-rows: min-content 1fr ;
+      grid-template-columns: 20px min-content 1fr;
+    //   grid-template-rows: min-content 1fr ;
     }
 }
 .search-page-narrow {
