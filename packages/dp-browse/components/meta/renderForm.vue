@@ -120,14 +120,15 @@ async function getData() {
                 if (data[item.name]) data[item.name] = data[item.name].replaceAll('\n','<br/>')
                 break;
             case 'date':
-                console.log(data[item.name]);
-                console.log(formatDate(data[item.name], 'YYYY-MM-DD HH:mm:ss'));
                 // if (data[item.name]) data[item.name] = formatDate(data[item.name], 'YYYY-MM-DD HH:mm:ss')
             default:
                 break;
         }
     })
-    return data
+    return Object.keys(data).reduce((prev: any, key) => {
+        prev[key] = data[key] ? data[key] : ''
+        return prev
+    }, {})
 }
 function formChange(formData) {
     emits('formChange', formData)
