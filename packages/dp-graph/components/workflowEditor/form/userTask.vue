@@ -8,7 +8,7 @@
                 <ElInput v-model="data.attr_id" placeholder="Name" disabled />
               </ElFormItem>
                 <ElFormItem label="Name" prop="attr_name">
-                    <ElInput v-model="data.attr_name" placeholder="Name" />
+                    <ElInput v-model="data.attr_name" placeholder="Name" @change="$emit('submit', data)" />
                 </ElFormItem>
               
               <div v-if="canAutoAssignee" class="el-form-item">

@@ -96,6 +96,8 @@ function saveForm(updatedData:any) {
     bpmnJson.value.definitions.process['attr_flowable:candidateStarterGroups'] = updatedData['attr_flowable:candidateStarterGroups'];
   }
   workflowForm.value = updatedData;
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+  
 }
 
 function saveUserStep(stepData) {
@@ -117,7 +119,7 @@ function saveUserStep(stepData) {
     const dd = node.getData();
     selectedData.value = dd;
   }
-
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 
@@ -158,6 +160,7 @@ function setStepData(stepId, newData) {
       return;
     }
   }
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 function saveEmailStep(stepData) {
@@ -176,6 +179,7 @@ function saveEmailStep(stepData) {
     })
     node.setData(newData);
   }
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 onMounted(() => {
