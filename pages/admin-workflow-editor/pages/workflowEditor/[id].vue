@@ -59,10 +59,7 @@ async function createNewWorkflow () {
   bpmnFile.value = text.replaceAll('workflowId', nameToId).replaceAll('workflowName', name)
 }
 async function handleSave(isDraft: boolean = true) {
-    // const formData1 = new FormData();
-    // formData1.append('file', WorkflowEditorRef.value.getBlob(), 'workflow.bpmn.xml')
-    // await ValidateWorkflowXMLApi(formData1)
-    // step 1 validate form, throw error if not valid
+
     const formRequest = await WorkflowEditorRef.value.validateForm()
     if(!state.detail.draftId) return
     console.log("handleSave")
