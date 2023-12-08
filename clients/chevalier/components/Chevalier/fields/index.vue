@@ -10,7 +10,9 @@ function selectField(field:Field) {
   document.dispatchEvent(ev)
 }
 function valChange(newValue, key) {
-  
+  if(!props.documents[0].fields[key]) {
+    props.documents[0].fields[key] = {}
+  }
   props.documents[0].fields[key].content = newValue
   if(props.documents[0].fields[key].type === 'number') {
     props.documents[0].fields[key].valueNumber = newValue

@@ -10,11 +10,22 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits(['update:field'])
 const displayField = computed({
   set(value){
-    props.field.content = value
-    emit('update:field', value)
+    if(!props.field|| !props.field.content) {
+      props.field = {
+        content: value
+      }
+    }else{
+      props.field.content = value
+    }
+    emit('update:field',  props.field)
   },
   get(){
-    return props.field
+    if(props.field){
+      return props.field
+    }
+    return {
+      content:""
+    }
   }
 })
 

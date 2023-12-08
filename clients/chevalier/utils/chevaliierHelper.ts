@@ -14,12 +14,13 @@ export type ChevalierBatch = {
 }
 export const getChevalierBatch = async (id:string):ChevalierBatch => {
   const _batch = {...allBatch.find(b => b.id === id) as ChevalierBatch};
+
   for await (const doc of _batch.docs) {
     doc.json = await (await fetch(doc.data)).json();
     console.log(doc.json)
-    doc.total = doc.json.analyzeResult.documents[0].fields[doc.totalKey].valueNumber
 
   }
+  console.log(_batch)
   return  _batch as ChevalierBatch
 }
 
@@ -86,17 +87,17 @@ const allBatch:ChevalierBatch[] = [
     docs: [
       {
         name: "Invoice 1",
-        pdf: '/chevalier/Xinyi/AHPFC3A0018/Invoice 1.pdf',
-        data: '/chevalier/Xinyi/AHPFC3A0018/Invoice 1.pdf.json',
+        pdf: '/chevalier/Xinyi/AHPFC3E0027/Invoice 1.pdf',
+        data: '/chevalier/Xinyi/AHPFC3E0027/Invoice 1.pdf.json',
         total: 0,
-        totalKey: 'invoice total'
+        totalKey: 'InvoiceTotal'
       },
       {
         name: "PRF",
-        pdf: '/chevalier/Xinyi/AHPFC3A0018/PRF.pdf',
-        data: '/chevalier/Xinyi/AHPFC3A0018/PRF.pdf.json',
+        pdf: '/chevalier/Xinyi/AHPFC3E0027/PRF.pdf',
+        data: '/chevalier/Xinyi/AHPFC3E0027/PRF.pdf.json',
         total: 0,
-        totalKey: 'invoice total'
+        totalKey: 'Total'
       }
     ],
     total: 0

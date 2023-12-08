@@ -16,7 +16,7 @@ const batchDialogVisible = ref(false)
 const { data, error } = await useAsyncData('chevalier',  async() => await getChevalierBatch(state.batchIndex))
 
 async function getSelectedDocData () {
-  
+    console.log(state.selectedDocsIndex, data.value)
     return data.value.docs[state.selectedDocsIndex]
 }
 
@@ -45,12 +45,17 @@ const displayTotal = computed(() => {
   let total = 0;
   const allDoc = data.value.docs.filter((d) => d.name !== 'PRF')
   allDoc.map((d) => {
-    total += Number(d.json.analyzeResult.documents[0].fields[d.totalKey].valueNumber || d.json.analyzeResult.documents[0].fields[d.totalKey].content)
+    let tNumber;
+    if(typeof d.json.analyzeResult.documents[0].fields[d.totalKey].type === 'string' && d.json.analyzeResult.documents[0].fields[d.totalKey].content.includes('$')){
+
+      tNumber = d.json.analyzeResult.documents[0].fields[d.totalKey].content.replace('$', '').replaceAll(',','')
+    }
+    console.log(tNumber)
+    total += Number(tNumber || d.json.analyzeResult.documents[0].fields[d.totalKey].content)
   })
-  
+
   const PRF = data.value.docs.find((d) => d.name === 'PRF')
   let PRF_total = PRF.json.analyzeResult.documents[0].fields[PRF.totalKey].valueNumber || PRF.json.analyzeResult.documents[0].fields[PRF.totalKey].content
-  console.log("PRF_total", PRF_total, PRF.totalKey)
   if(typeof PRF_total === 'string' && PRF_total.includes('$')){
     PRF_total = PRF_total.replace('$', '').replaceAll(',','')
   }
@@ -58,7 +63,7 @@ const displayTotal = computed(() => {
 })
 
 async function submitDoc(){
-  
+
   submitting.value = true
   try{
     // netvigate to browse
@@ -117,7 +122,7 @@ watch(() =>state.selectedDocsIndex, async() => {
         />
       </ElTable>
       <div class="actions">
-        
+
       <div :class="{total:true, success: displayTotal === 0.00 || displayTotal === '0.00'}">
         Different: {{displayTotal}}
       </div>
@@ -140,6 +145,13 @@ watch(() =>state.selectedDocsIndex, async() => {
   position: relative;
   display: grid;
   grid-template-rows: min-content min-content 1fr;
+}
+h1{
+  display: inline-block;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 12px;
+  padding: .2rem 0.5rem;
 }
 h1,h2 {
   margin:0;
