@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev --port 3000",
     "build": "nuxi build .playground",
-    "generate": "nuxi generate .playground",
+    "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "preview": "nuxi preview .playground",
     "predev": "nuxi prepare",
     "lint": "eslint ."
