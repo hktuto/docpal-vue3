@@ -87,6 +87,7 @@ async function handleDblclick (row) {
                         watermarkTemplateId: row.watermark,
                         documentId: row.id
                     })
+                    previewFile.loading = false
                 }
             }, 1000)
         } else {
