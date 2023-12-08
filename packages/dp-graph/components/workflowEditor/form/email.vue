@@ -26,7 +26,7 @@ async function getEmailTemplates() {
   }
   props.data.extensionElements['flowable:field'] = [
     item,
-    ...JSON.parse(varList).map((item: any) => {
+    ...JSON.parse(varList).filter(j => !j.includes(",")).map((item: any) => {
       // check if item already exist
       const exist = props.data.extensionElements['flowable:field'].find((field: any) => field.attr_name === item);
       if(exist) return exist;
