@@ -41,11 +41,10 @@ async function getEmailTemplates() {
 }
 
 const templateVariables = computed(() => {
-  console.log(props.data)
   if(!Array.isArray(props.data?.extensionElements['flowable:field'] )) {
     props.data.extensionElements['flowable:field'] = [props.data.extensionElements['flowable:field'] ]
   }
-  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType") && !(item.attr_name === "hostUrl") && !(item.attr_name === "processInstanceId"));
+  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType") && !(item.attr_name === "hostUrl") && !(item.attr_name === "processInstanceId") && !(item.attr_name.includes(',')));
   return item;
 })
 function fieldMappingUpdate(index, newVal) {
@@ -86,7 +85,7 @@ const selectedEmailTemplate = computed({
     }
     props.data.extensionElements['flowable:field'] = [
       item,
-      ...JSON.parse(varList).map((item: any) => {
+      ...JSON.parse(varList).filter(j => !j.includes(',')).map((item: any) => {
         return {
           "attr_name": item,
           "flowable:expression": {
