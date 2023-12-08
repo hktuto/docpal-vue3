@@ -27,7 +27,7 @@ const { allowFeature } = useLayout()
 const state = reactive({
     menuList: [
         { id: 'template', label: 'workflow_GenerateDocument', show: allowFeature('GENERATE_TEMPLATE') },
-        { id: 'bulkImport', label: 'workflow_bulkImport', show: allowFeature('BULK_IMPORT') }
+        // { id: 'bulkImport', label: 'workflow_bulkImport', show: allowFeature('BULK_IMPORT') } // hide request by crystal
     ]
 })
 const BulkImportDialogRef = ref()
@@ -40,7 +40,7 @@ function handleCommand(command) {
             break;
         case 'bulkImport':
             dpLog({BulkImportDialogRef});
-            
+
             BulkImportDialogRef.value.handleOpen()
             break;
         default:
