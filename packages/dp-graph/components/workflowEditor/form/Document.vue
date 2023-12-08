@@ -214,7 +214,7 @@ onMounted(async() => {
     </div>
     <div class="footer">
       <ElButton @click="$emit('close')">Close</ElButton>
-      <ElButton type="primary" @click="save">Save</ElButton>
+<!--      <ElButton type="primary" @click="save">Save</ElButton>-->
     </div>
   </div>
 </template>
