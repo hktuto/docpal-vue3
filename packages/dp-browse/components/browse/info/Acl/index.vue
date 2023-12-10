@@ -138,7 +138,7 @@ watch(doc, async (val: String) => {
 .listSection{
   width: 100%;
   margin-bottom: 6px;
-  + & {
+  & + & {
     border-top: 1px solid var(--color-grey-100);
   }
 }
