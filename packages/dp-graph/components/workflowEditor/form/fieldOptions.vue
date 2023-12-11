@@ -120,7 +120,7 @@ function typeChange(newVal) {
       </ElForm>
   
     <ElButton @click="$emit('close')">Close</ElButton>
-<!--    <ElButton type="primary" @click="saveField">Save</ElButton>-->
+    <ElButton type="primary" @click="saveField">Save</ElButton>
 </template>
 
 <style scoped lang="scss">
