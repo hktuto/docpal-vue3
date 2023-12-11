@@ -6,11 +6,13 @@ export const addExclusiveGateway = (bpmnJson: Ref<BPMNJSON>, data: UserTask, tar
     const newTask: ExclusiveGateway = {
         attr_id: newId,
     }
+    
     // check bpmnJson exclusiveGateway is array
     if (Array.isArray(bpmnJson.value.definitions.process.exclusiveGateway)) {
         bpmnJson.value.definitions.process.exclusiveGateway.push(newTask)
         // Boundary is an array
     } else {
+        
         bpmnJson.value.definitions.process.exclusiveGateway = [bpmnJson.value.definitions.process.exclusiveGateway, newTask]
         // Boundary is not an array
     }
@@ -30,5 +32,14 @@ export const addExclusiveGateway = (bpmnJson: Ref<BPMNJSON>, data: UserTask, tar
                 __cdata: '${approved}'
             }
         },
+        {
+            attr_id: 'sid-seq-' + new Date().getTime(),
+            attr_sourceRef: newId,
+            attr_targetRef: 'end',
+            conditionExpression: {
+                'attr_xsi:type': "tFormalExpression",
+                __cdata: '${!approved}'
+            }
+        }
     )
 }

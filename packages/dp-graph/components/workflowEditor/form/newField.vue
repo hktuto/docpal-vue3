@@ -58,7 +58,8 @@ function add() {
   // validate newFieldForm
   if(!selectedNewField.value) return
   if(isNewField.value){
-    if(newFieldForm.value.type.attr_type === 'date') {
+    console.log(newFieldForm.value)
+    if(newFieldForm.value.attr_type === 'date') {
       newFieldForm.value.attr_datePattern = "yyyy-MM-dd HH:mm:ss"
     }
     emit('submit', newFieldForm.value)
