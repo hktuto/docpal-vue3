@@ -192,9 +192,6 @@ defineExpose({
     
     background: var(--color-grey-0000);
     height: 100%;
-    user-select: none;
-    -ms-touch-action: none;
-    touch-action: none;
     overflow: auto;
     display: grid;
     grid-template-rows: min-content 1fr;

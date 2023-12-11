@@ -67,7 +67,7 @@ async function submitDoc(){
   submitting.value = true
   try{
     // netvigate to browse
-    const path = `/default-domain/Chevalier/${state.batchIndex}/AHPFC3A0018`
+    const path = `/demo+domain/Chevalier/${state.batchIndex}/AHPFC3A0018`
     router.push({
       path: `/browse?path=${path}`,
       query: {
