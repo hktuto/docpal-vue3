@@ -1,15 +1,21 @@
 <template>
     <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"
-        @handleApply="handleApply"/>
+        @handleApply="handleApply">
+        <template v-for="item in state.data" v-slot:[`slot-${item.metaData}`]>
+            <div :id="`slot-${item.metaData}`" :key="item.metaData">
+                {{ item.metaData }}
+            </div>
+        </template>
+    </FromVariablesRenderer>
 </template>
 
 <script lang="ts" setup> 
 import { ElMessageBox } from 'element-plus'
 import { GetMetaValidationRuleApi } from 'dp-api'
 const props = withDefaults(defineProps<{
-    showApply: boolean,
+    mode: 'fileRequest' | 'ai' | 'normal',
 }>(), {
-  showApply: false
+    mode: 'normal',
 })
 const emits = defineEmits(['formChange', 'handleApply'])
 const route = useRoute()
@@ -27,7 +33,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             state.variables = []
             state.data.forEach((item, index) => {
                 if(item.display && ignoreList.indexOf(item.metaData) === -1) {
-                    const _item = {
+                    const _item: any = {
                         name: item.metaData,
                         label: $t(item.metaData),
                         type: item.dataType || 'input',
@@ -60,8 +66,13 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             });
             nextTick(async () => {
                 const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
-                if (props.showApply) {
+                if (props.mode === 'fileRequest') {
                     const newFormJson = getApplyFormJson(formJson)
+                    FromVariablesRendererRef.value.setFormJson(newFormJson)
+                }
+                else if (props.mode === 'ai') {
+                    const newFormJson = getAIFormJson(formJson)
+                    console.log({newFormJson});
                     FromVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
@@ -75,6 +86,17 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             const buttonItem = getMetaApplyButton(item.options.name)
             gridItem.cols[0].widgetList.push(item)
             gridItem.cols[1].widgetList.push(buttonItem)
+            widgetList.push(gridItem)
+        })
+        return { formConfig: formJson.formConfig, widgetList }
+    }
+    function getAIFormJson (formJson) {
+        const widgetList = []
+        formJson.widgetList.forEach(item => {
+            const gridItem = getMetaApplyFormGridItem(16,8,['test'])
+            const slotItem = getMetaAISlot(item.options.name)
+            gridItem.cols[0].widgetList.push(item)
+            gridItem.cols[1].widgetList.push(slotItem)
             widgetList.push(gridItem)
         })
         return { formConfig: formJson.formConfig, widgetList }

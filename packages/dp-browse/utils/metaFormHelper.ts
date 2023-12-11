@@ -1,5 +1,5 @@
 let vformIndex = 1
-export function getMetaApplyFormGridItem () {
+export function getMetaApplyFormGridItem (colSpan1: number = 20, colSpan2: number = 4, customClass:string[] = ["meta-button-flex-end"]) {
     const gridItem = {
         "key": 1000000000000000,
         "type": "grid",
@@ -15,7 +15,7 @@ export function getMetaApplyFormGridItem () {
                 "options": {
                     "name": "gridCol10000000001",
                     "hidden": false,
-                    "span": 20,
+                    "span": colSpan1,
                     "offset": 0,
                     "push": 0,
                     "pull": 0,
@@ -36,7 +36,7 @@ export function getMetaApplyFormGridItem () {
                 "options": {
                     "name": "gridCol10000000002",
                     "hidden": false,
-                    "span": 4,
+                    "span": colSpan2,
                     "offset": 0,
                     "push": 0,
                     "pull": 0,
@@ -44,7 +44,7 @@ export function getMetaApplyFormGridItem () {
                     "md": 12,
                     "sm": 12,
                     "xs": 12,
-                    "customClass": ["meta-button-flex-end"]
+                    "customClass": customClass
                 },
                 "id": "grid-col-10000000002"
           }
@@ -70,14 +70,15 @@ export function getMetaApplyFormGridItem () {
     return gridItem
 }
 export function getMetaApplyButton (widgetName: string) {
+    const buttonId = new Date().valueOf() + vformIndex++
     const buttonObject = {
-        "key": 92926,
+        "key": buttonId,
         "type": "button",
         "icon": "button",
         "formItemFlag": false,
-        "id": "button33665",
+        "id": 'button' + buttonId,
         "options": {
-            "name": "button33665",
+            "name": 'button' + buttonId,
             // @ts-ignore
             "label": $t('dpButtom_apply'),
             "columnWidth": "200px",
@@ -96,9 +97,21 @@ export function getMetaApplyButton (widgetName: string) {
             "onClick": `const name = '${widgetName}'\nconst value = this.getWidgetRef(name).getValue()\nconst vform = this.getFormRef()\nvform.$emit('emit', 'handleApply', {\n  name,\n  value\n})`
         }
     }
-    const buttonId = new Date().valueOf() + vformIndex++
-    buttonObject.key = buttonId
-    buttonObject.id = 'button' + buttonId
-    buttonObject.options.name = 'button' + buttonId
     return buttonObject
+}
+export function getMetaAISlot (widgetName: string) {
+    const slotId = new Date().valueOf() + vformIndex++
+    const slotObject = {
+        "key": slotId,
+        "type": "slot",
+        "icon": "slot-field",
+        "formItemFlag": false,
+        "id": 'slot' + slotId,
+        "options": {
+            "name": 'slot-' + widgetName,
+            "label": 'slot-' + widgetName,
+            "hidden": false
+        }
+    }
+    return slotObject
 }

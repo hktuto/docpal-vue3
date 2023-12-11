@@ -1,4 +1,8 @@
 import {api} from '../';
+import { 
+    pageParams,
+    paginationData,
+} from '../model';
 export const SaveUploadFileOverviewApi = async(userId: string, filesCount: number) => {
     const res = await api.post('/nuxeo/document/saveUploadFileOverview', {
         userId,
@@ -19,9 +23,12 @@ export const UploadTempFileApi = async(params: any, cb) => {
     }).then(res => res.data.data)
     return res
 }
-export const UploadAIPageApi = async(params: any) => {
+export const UploadAIPageApi = async(params: pageParams): Promise<paginationData> => {
     const res = await api.post('/nuxeo/document/queryUploadFileDTOPage', params).then(res => res.data.data)
-    return res
+    return {
+        entryList: res.content,
+        totalSize: res.totalElements
+    }
 }
 export const UploadAIDetailApi = async(userId: string, uploadId: string) => {
     const res = await api.post(`/nuxeo/document/queryUploadFileDetailDTOList?userId=${userId}&uploadId=${uploadId}`).then(res => res.data.data)

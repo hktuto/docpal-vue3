@@ -90,6 +90,7 @@ export enum TABLE {
     CLIENT_RETENTION_DONE = "clientRetentionDone",
     CLIENT_RETENTION_PENDING= "clientRetentionPending",
     CLIENT_DASHBOARD = 'clientDashboard',
+    CLIENT_UPLOAD_AI = 'clientUploadAi',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -402,6 +403,60 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_UPLOAD_AI] : {
+        columns: [
+            { id: '1', label: 'dpTable_createdDate', prop: "createdDate", formatList: [
+                {
+                    "joiner": "",
+                    "prop": "createdDate",
+                    "formatFun": "dateFormat",
+                    "params": {
+                        "format": ""
+                    },
+                    "index": 0
+                }]
+            },
+            { id: '2', label: 'tableHeader_path', prop: 'filesCount' },
+            { id: '3', label: 'tableHeader_uploadStatus', prop: 'uploadStatus' },
+            {
+                id: '4',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/delete.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "restored",
+                        "suffixIcon": "/icons/restored.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'restored'],
+        slots: [
+            { slot: 'docIcon', label: '' },
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },

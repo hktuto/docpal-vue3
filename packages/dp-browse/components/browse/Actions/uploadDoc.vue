@@ -48,7 +48,6 @@ function uploadHandler (e: any) {
     }, [])
     e.target.value = '' // 解决不能上传相同文件问题
     const treeData = createUploadRequest(state.doc, uploadFiles)
-    console.log({treeData})
     // router.push(`/browse/upload?backPath=${props.backPath}`)
 }
 function getPath(path: string) {
