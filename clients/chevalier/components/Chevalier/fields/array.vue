@@ -18,7 +18,6 @@ const columnRow = computed(() => {
     },{})
     return acc
   },{}) as any
-  console.log(fields)
   return Object.keys(fields).map((key) => {
     return fields[key]
   })

@@ -15,7 +15,6 @@ const displayValue = computed({
     if(props.field && props.field.valueNumber) {
       return props.field.valueNumber
     }
-    console.log(props.field)
     return {
       valueNumber:0
     }

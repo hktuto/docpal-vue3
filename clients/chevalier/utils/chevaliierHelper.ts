@@ -17,10 +17,8 @@ export const getChevalierBatch = async (id:string):ChevalierBatch => {
 
   for await (const doc of _batch.docs) {
     doc.json = await (await fetch(doc.data)).json();
-    console.log(doc.json)
 
   }
-  console.log(_batch)
   return  _batch as ChevalierBatch
 }
 

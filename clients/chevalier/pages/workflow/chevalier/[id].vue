@@ -16,20 +16,17 @@ const batchDialogVisible = ref(false)
 const { data, error } = await useAsyncData('chevalier',  async() => await getChevalierBatch(state.batchIndex))
 
 async function getSelectedDocData () {
-    console.log(state.selectedDocsIndex, data.value)
     return data.value.docs[state.selectedDocsIndex]
 }
 
 function changeSelected(row:any) {
   state.selectedDocsIndex = data.value.docs.findIndex((d) => d.name === row.name);
-  console.log(state.selectedDocsIndex)
   batchDialogVisible.value = false;
 }
 
 const docsTable = computed(() => {
   // always show RPF as first row
   const rpf = data.value.docs.find((d) => d.name === 'PRF')
-  console.log(data.value.docs)
   if (rpf) {
     const newArr = [rpf, ...data.value.docs.filter((d) => d.name !== 'PRF')]
     return newArr.map((d) => ({
