@@ -62,7 +62,7 @@ const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useLayout();
-const { uploadState, uploadRequestList } = useUploadStore()
+const { uploadState, uploadRequestList } = useUploadAIStore()
 const sidebarEl = ref();
 const { sideSlot } = useLayout()
 
