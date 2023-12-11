@@ -68,6 +68,7 @@ async function submitDoc(){
   try{
     // netvigate to browse
     const path = `/demo+domain/Chevalier/${state.batchIndex}/AHPFC3A0018`
+    console.log(path);
     router.push({
       path: `/browse?path=${path}`,
       query: {
