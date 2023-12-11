@@ -6,7 +6,7 @@
         xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
         xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
         xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2" workflowTemplate="Single">
-  <process id="SimpleApprovalExample" name="Simple Approval Example" isExecutable="true" flowable:candidateStarterGroups="Demo Approval Group">
+  <process id="workflowId" name="workflowName" isExecutable="true" flowable:candidateStarterGroups="Demo Approval Group">
     <extensionElements>
       <flowable:executionListener event="start" delegateExpression="${notificationListener}">
         <flowable:field name="functionPoint">

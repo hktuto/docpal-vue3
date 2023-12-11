@@ -23,12 +23,13 @@ export const removeServiceTask = (bpmnJson: Ref<BPMNJSON>, data:any ) => {
     const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_targetRef === data.attr_id);
     const nodeToOther = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === data.attr_id);
     // check if otherToNode is boundary event, if true, remove boundary event, then skip link back
+    
     if(Array.isArray(bpmnJson.value.definitions.process.boundaryEvent)){
         const index = bpmnJson.value.definitions.process.boundaryEvent.findIndex(item => item.attr_id === otherToNode.attr_sourceRef);
         if(index > -1){
             bpmnJson.value.definitions.process.boundaryEvent.splice(index, 1);
         }
-    }else if(bpmnJson.value.definitions.process.boundaryEvent.attr_id === otherToNode.attr_sourceRef){
+    }else if(bpmnJson.value.definitions.process.boundaryEvent && bpmnJson.value.definitions.process.boundaryEvent.attr_id === otherToNode.attr_sourceRef){
         delete bpmnJson.value.definitions.process.boundaryEvent;
         
     }

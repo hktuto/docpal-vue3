@@ -60,7 +60,7 @@
         </div>
         <div class="footer">
             <ElButton @click="$emit('close')">Close</ElButton>
-            <ElButton type="primary" @click="$emit('submit', data)">Save</ElButton>
+<!--            <ElButton type="primary" @click="$emit('submit', data)">Save</ElButton>-->
         </div>
       <ElDialog v-model="addFromOpened" append-to-body destroy-on-close>
         <WorkflowEditorFormNewField :currentForm="data" @submit="addFieldHandler"/>
