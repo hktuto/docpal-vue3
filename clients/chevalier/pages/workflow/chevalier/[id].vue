@@ -70,9 +70,10 @@ async function submitDoc(){
     const path = `/demo+domain/Chevalier/${state.batchIndex}/AHPFC3A0018`
     console.log(path);
     router.push({
-      path: `/browse?path=${path}`,
+      path: `/browse`,
       query: {
-        path: path
+        path: path,
+        isFolder: true
       }
     })
   }catch(e){
