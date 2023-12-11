@@ -8,7 +8,7 @@
     "build": "nuxi build .playground",
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "preview": "nuxi preview .playground",
-    "predev": "nuxi prepare",
+    "postinstall": "nuxi prepare",
     "lint": "eslint ."
   },
   "keywords": [],
