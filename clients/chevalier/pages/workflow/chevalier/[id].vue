@@ -45,13 +45,8 @@ const displayTotal = computed(() => {
   let total = 0;
   const allDoc = data.value.docs.filter((d) => d.name !== 'PRF')
   allDoc.map((d) => {
-    let tNumber;
-    if(typeof d.json.analyzeResult.documents[0].fields[d.totalKey].type === 'string' && d.json.analyzeResult.documents[0].fields[d.totalKey].content.includes('$')){
 
-      tNumber = d.json.analyzeResult.documents[0].fields[d.totalKey].content.replace('$', '').replaceAll(',','')
-    }
-    console.log(tNumber)
-    total += Number(tNumber || d.json.analyzeResult.documents[0].fields[d.totalKey].content)
+    total += Number( d.json.analyzeResult.documents[0].fields[d.totalKey].valueNumber)
   })
 
   const PRF = data.value.docs.find((d) => d.name === 'PRF')
@@ -67,15 +62,9 @@ async function submitDoc(){
   submitting.value = true
   try{
     // netvigate to browse
-    const path = `/demo+domain/Chevalier/${state.batchIndex}/AHPFC3A0018`
+    const path = `/browse?path=/demo+domain/Chevalier/${state.batchIndex}/AHPFC3A0018&isFolder=true`
     console.log(path);
-    router.push({
-      path: `/browse`,
-      query: {
-        path: path,
-        isFolder: true
-      }
-    })
+    location.href = location.origin + path;
   }catch(e){
   }
   submitting.value = false
