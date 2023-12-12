@@ -352,7 +352,7 @@ export const useEditor = () => {
     
     function stringToHtml(str:string, prefix:string = ''):string{
         const regex = /\${(.*?)}/g;
-        return str.replace(regex, '<span th:text="${' + prefix + '$1}" ></span>');
+        return str.replace(regex, '<span th:utext="${' + prefix + '$1}" ></span>');
     }
 
     function htmlToString(html:string):string{
@@ -363,7 +363,7 @@ export const useEditor = () => {
         // replace all var tag with span
         varText.forEach((variable) => {
             const dataURL = variable.getAttribute('data-url');
-            variable.replaceWith(`<span  th:text="${variable.getAttribute('data-url')}"></span>`);
+            variable.replaceWith(`<span  th:utext="${variable.getAttribute('data-url')}"></span>`);
         });
         const varLink = t.content.querySelectorAll('a.ce-link-item');
 
