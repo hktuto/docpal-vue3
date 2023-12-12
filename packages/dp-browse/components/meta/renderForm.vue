@@ -1,9 +1,9 @@
 <template>
     <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"
         @handleApply="handleApply">
-        <template v-for="item in state.data" v-slot:[`slot-${item.metaData}`]>
-            <div :id="`slot-${item.metaData}`" :key="item.metaData">
-                {{ item.metaData }}
+        <template v-for="item in state.variables" v-slot:[`slot-${item.name}`]>
+            <div :id="`slot-${item.name}`" :key="item.name">
+                {{ item.name }}
             </div>
         </template>
     </FromVariablesRenderer>
@@ -11,7 +11,7 @@
 
 <script lang="ts" setup> 
 import { ElMessageBox } from 'element-plus'
-import { GetMetaValidationRuleApi } from 'dp-api'
+import { GetMetaValidationRuleApi, GetSTypesApi } from 'dp-api'
 const props = withDefaults(defineProps<{
     mode: 'fileRequest' | 'ai' | 'normal',
 }>(), {
@@ -64,6 +64,19 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     state.variables.push(_item)
                 }
             });
+            
+            if(props.mode === 'ai') {
+                state.variables.unshift({
+                    name: 'documentType',
+                    label: $t('search_documentType'),
+                    type: 'select',
+                    required: true,
+                    options: {
+                        optionItems: await GetSTypesApi()
+                    }
+                })
+            }
+            console.log(state.variables);
             nextTick(async () => {
                 const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
                 if (props.mode === 'fileRequest') {
