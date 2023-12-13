@@ -352,6 +352,10 @@ export const useEditor = () => {
     
     function stringToHtml(str:string, prefix:string = ''):string{
         const regex = /\${(.*?)}/g;
+        // check str contain # or ()
+        if(str.includes('#') || str.includes('(')) {
+            return str.replace(regex, '<span th:text="${' + prefix + '$1}" ></span>');;
+        };
         return str.replace(regex, '<span th:utext="${' + prefix + '$1}" ></span>');
     }
 
