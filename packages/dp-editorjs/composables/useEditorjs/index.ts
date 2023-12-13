@@ -8,20 +8,20 @@ import LinkInlineTool from './VariableLink';
 import VariableTable from './VariableTable'
 export const useEditor = () => {
 
-    const editor = ref();
+    const editor = useState<any>('editorJS');
     const data = useState<any>('editorData', () => ({}));
     const variables = useState<string[]>('editorVariable', () => ([]));
     const containerId = useState('editorContainerId', () => ('emailContent'));
     
-    function createEditor(id:string, formData:any):void{
+    async function createEditor(id:string, formData:any) {
+        if(!document.getElementById(id)) return;
+        console.trace('createEditor');
         // throw error if no containerId or formData
         if(!id || !formData) {
             throw new Error('containerId or formData is required');
         }
         // dispose if editor is exist
-        if(editor.value) {
-            dispose();
-        }
+       
         // set containerId
         containerId.value = id;
         // set data 
@@ -118,22 +118,30 @@ export const useEditor = () => {
                     if(json.blocks.length > 0) {
                         setData(json);
                         // set variable after ready
-                        const d = await editor.value?.save();
-                        calculateVariable(d);
+                        console.log(editor.value);
+                        if(editor.value && editor.value.save) {
+                            const d = await editor.value?.save();
+                            if (d) {
+                                calculateVariable(d);
+                            }
+                        }
                     }
                 }
-            }
+            },
+            
         })
+       
     }
 
     function dispose():void{
-        if(editor.value && editor.value.destroy) {
-            editor.value?.destroy();
-            editor.value = null;
+        if(editor.value) {
+            editor.value.destroy();
         }
+        editor.value = null;
     }
 
     function setData(data:any):void{
+        if(!editor.value || !editor.value.render) return;
         editor.value?.render(data);
     }
     
@@ -366,7 +374,11 @@ export const useEditor = () => {
         const varText = t.content.querySelectorAll('a.ce-text-item');
         // replace all var tag with span
         varText.forEach((variable) => {
-            const dataURL = variable.getAttribute('data-url');
+            const dataURL = variable.getAttribute('data-url') || variable.getAttribute('href') as string;
+            console.log(dataURL, variable);
+            if(dataURL.includes('#') || dataURL.includes('(')) {
+                variable.replaceWith(`<span th:text="${variable.getAttribute('data-url')}"></span>`);
+            }
             variable.replaceWith(`<span  th:utext="${variable.getAttribute('data-url')}"></span>`);
         });
         const varLink = t.content.querySelectorAll('a.ce-link-item');
