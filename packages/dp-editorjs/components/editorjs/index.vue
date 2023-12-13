@@ -45,10 +45,19 @@ const { layout, data } = toRefs(props)
 
 function layoutOrDataChange() {
   if(!layout.value) return;
-  contentHtml.value = layout.value.replaceAll('[[emailContent]]', '<div id="emailContent"></div>');
+  contentHtml.value = "";
   nextTick(() => {
-    editor.createEditor('emailContent', data.value);
+    contentHtml.value = layout.value.replaceAll('[[emailContent]]', '<div id="emailContent"></div>');
+    nextTick(() => {
+      const emailContent = document.getElementById('emailContent')
+      if(emailContent) {
+        emailContent.innerHTML = "";
+      }
+      editor.createEditor('emailContent', data.value);
+    })
   })
+  
+  
 
 }
 
