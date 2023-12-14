@@ -416,43 +416,14 @@ export const defaultTableSetting: TableColumnSetting = {
                     "index": 0
                 }]
             },
-            { id: '2', label: 'tableHeader_path', prop: 'filesCount' },
-            { id: '3', label: 'tableHeader_uploadStatus', prop: 'uploadStatus' },
-            {
-                id: '4',
-                "type": "",
-                "label": "dpTable_actions",
-                class: "slotTopRight",
-                "prop": "",
-                "align": "center",
-                "width": 100,
-                "hide": false,
-                "system": false,
-                "showOverflowTooltip": false,
-                "formatList": [],
-                "buttons": [
-                    {
-                        "name": "",
-                        "type": "text",
-                        "command": "delete",
-                        "suffixIcon": "/icons/delete.svg",
-                        "index": 0
-                    },
-                    {
-                        "name": "",
-                        "type": "text",
-                        "command": "restored",
-                        "suffixIcon": "/icons/restored.svg",
-                        "index": 0
-                    }
-                ],
-                "prefixIcon": "",
-                "suffixIcon": "",
-            }
+            { id: '2', label: 'tableHeader_filesCount', prop: 'filesCount' },
+            { id: '3', label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { id: '4', label: 'dpTable_actions', slot: 'commonActions', width: 100 }
         ],
-        events: ['delete', 'restored'],
+        events: [],
         slots: [
-            { slot: 'docIcon', label: '' },
+            { label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { label: 'dpTable_actions', slot: 'commonActions' }
         ],
         options: { pageSize: 20 }
     },

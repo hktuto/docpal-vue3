@@ -2,14 +2,19 @@
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
             @command="handleAction"
-            @row-dblclick="handleDblclick"
             @pagination-change="handlePaginationChange">
+            <!-- @row-dblclick="handleDblclick" -->
             <template #preSortButton>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                    inputKey="name"/>
-            </template>  
-            <template #suffixSortButton>
-                <el-button type="primary" @click="handleAdd()">{{$t('button.add')}}</el-button>
+                    inputKey="fileName" inputPlaceHolder="tip.fileOrFolderName"/>
+            </template> 
+            <template #status="{ row, index }">
+                <el-tag :type="getTagType(row.uploadStatus )">
+                    {{ row.uploadStatus }}
+                </el-tag>
+            </template>
+            <template #commonActions="{ row, index }">
+                <SvgIcon v-if="row.uploadStatus === 'Ready'" src="/icons/edit.svg" @click="handleDblclick(row)" />
             </template>
         </Table>
         <DashboardDialog ref="DashboardDialogRef" @refresh="handlePaginationChange(1)"/>
@@ -76,6 +81,15 @@ import {
             query: { page, pageSize, time }
         })
     }
+    function getTagType(status) {
+        const map = {
+            Prepare: 'info',
+            Ready: '',
+            Confirmed: 'success',
+            Canceled: 'danger'
+        }
+        return map[status] || map[status] === '' ? map[status] : 'warning'
+    }
     watch(
         () => route.query,
         async (newval) => {
@@ -115,6 +129,22 @@ function handleAdd (setting) {
     DashboardDialogRef.value.handleOpen(setting)
 }
 // #region module: ResponsiveFilterRef
+    const ResponsiveFilterRef = ref()
+    async function getFilter() {
+        const data = [
+            { key: "fileUploadStatus", label: $t('common_status'), type: "string", 
+                isMultiple: false,
+                options: [
+                        { label: 'Prepare', value: 'Prepare'},
+                        { label: 'Ready', value: 'Ready' },
+                        { label: 'Confirmed', value: 'Confirmed' },
+                        { label: 'Cancel', value: 'Cancel' },
+                        { label: 'Progress', value: 'Progress' },
+                    ]
+            }
+        ]
+        ResponsiveFilterRef.value.init(data)
+    }
     function handleFilterFormChange(formModel) {
         state.extraParams = formModel
         handlePaginationChange(1)
@@ -124,6 +154,7 @@ function handleEditEmailLayout () {
     router.push('/layoutTemplate')
 }
 onMounted(() => {
+    getFilter()
 })
 </script>
 

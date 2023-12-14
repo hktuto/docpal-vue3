@@ -1,30 +1,39 @@
+import { uploadRequest } from './uploadAI';
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { SaveUploadFileOverviewApi, DocDetail, UploadTempFileApi, UploadTempFolderApi } from 'dp-api'
 import { isTemplateExpression } from 'typescript'
-
+export type uploadRequest = {
+    doc: any,
+    startDate: Date,
+    docList: any[],
+    finishCount: number,
+    uploadAiId: string
+}
 export const useUploadAIStore = () => {
     const userId = useUser().getUserId()
     const uploadState = useState('uploadAIState', () => ({
-        uploadRequestList: <any>[],
+        uploadRequestList: <uploadRequest[]>[],
     }) )
     async function createUploadRequest(doc: any, files: any[]) {
         const docList = getUploadFiles(files)
         const uploadAiId = await SaveUploadFileOverviewApi(userId, docList.length)
         if(!uploadAiId) return false
-        console.log({uploadAiId})
         uploadState.value.uploadRequestList.push(
             {
                 doc,
                 startDate: new Date(),
-                docList
+                docList,
+                finishCount: 0,
+                uploadAiId,
+                aiFinish: false
             }
         )
-        docList.forEach((docItem: any) => {
+        const curRequest = uploadState.value.uploadRequestList[uploadState.value.uploadRequestList.length - 1]
+        curRequest.docList.forEach((docItem: any) => {
             docItem.uploadId = uploadAiId
-            handleCreateDocument(docItem, doc.path)
+            handleCreateDocument(docItem, doc.path, curRequest)
         });
-
         return uploadState.value
     }
     function getUploadFiles (files: any[]) {
@@ -48,7 +57,8 @@ export const useUploadAIStore = () => {
                             name: __namePaths.pop(),
                             parentId: __namePaths.join('/'),
                             documentType: 'Folder',
-                            children: []
+                            children: [],
+                            status: 'loading'
                         }
                     }
                 })
@@ -60,7 +70,8 @@ export const useUploadAIStore = () => {
                 parentId: item.path,
                 documentType: 'File',
                 file: item.file,
-                progress: 0
+                progress: 0,
+                status: 'loading'
             }
         })
         Object.keys(treeMap).forEach((key: any) => {
@@ -76,7 +87,7 @@ export const useUploadAIStore = () => {
         return treeData
     }
     
-    async function handleCreateDocument (doc: any, parentPath: string) {
+    async function handleCreateDocument (doc: any, parentPath: string, uploadRequestItem: uploadRequest) {
         let result
         const _document = {
             fileName: doc.name,
@@ -96,14 +107,14 @@ export const useUploadAIStore = () => {
                 formData.append('uploadTempFileRequestStr', JSON.stringify(_document))
                 result = await UploadTempFileApi(formData, (e: any) => {
                     doc.progress = Math.round((e.loaded / e.total) * 100)
-                    const id =`${doc.id}_progress`
-                    const el = document.getElementById(id)
-                    if(el) el.innerHTML = `${Math.round((e.loaded / e.total) * 100)}%`
                 })
             }
+            doc.status = 'success'
         } catch (error) {
             result = false
+            doc.status = 'exception'
         }
+        uploadRequestItem.finishCount ++
         return result
     }
     function getUploadRequestList () {
@@ -126,8 +137,6 @@ export const useUploadAIStore = () => {
                 result.push(item)
             }
         })
-        console.log({result});
-        
         return result
       }
     return {

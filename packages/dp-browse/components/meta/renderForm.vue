@@ -1,17 +1,28 @@
 <template>
+<div v-loading="state.loading" style="height: 100%;">
     <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"
-        @handleApply="handleApply">
+        @handleApply="handleApply" >
         <template v-for="item in state.variables" v-slot:[`slot-${item.name}`]>
-            <div :id="`slot-${item.name}`" :key="item.name">
-                {{ item.name }}
+            <div v-if="mode === 'ai' && state.aiAnalysis && state.aiAnalysis[item.name]" 
+                :id="`slot-${item.name}`" :key="item.name" class="ai-suggestion-content">
+                <SvgIcon src="/icons/file/ai.svg" />
+                <pre>{{state.aiAnalysis[item.name].label || state.aiAnalysis[item.name].value}}</pre> 
+                <div class="flex-x-start ai-button-list">
+                    <el-button :icon="Check" type="primary" text style="color: #fff"
+                        @click="aiFormChange(item.name, state.aiAnalysis[item.name])"></el-button>
+                    <el-button :icon="Close" type="primary" text class="el-icon--right" style="color: #fff"
+                        @click="deleteAiSuggestion(item.name)"></el-button>
+                </div>
             </div>
         </template>
     </FromVariablesRenderer>
+</div>
 </template>
 
 <script lang="ts" setup> 
+import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import { GetMetaValidationRuleApi, GetSTypesApi } from 'dp-api'
+import { GetMetaValidationRuleApi, GetDocListWithIsFolderApi, UploadAiDocumentApi } from 'dp-api'
 const props = withDefaults(defineProps<{
     mode: 'fileRequest' | 'ai' | 'normal',
 }>(), {
@@ -20,14 +31,17 @@ const props = withDefaults(defineProps<{
 const emits = defineEmits(['formChange', 'handleApply'])
 const route = useRoute()
 const state = reactive({
+    loading: false,
     data: [],
     variables: [],
-    documentTypeSelected: ''
+    documentTypeSelected: '',
+    aiAnalysis: {},
+    aiDocId: '',
 })
 const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
 // #region module: Variables
     const FromVariablesRendererRef = ref()
-    async function getVariables() {
+    async function getVariables(isFolder?: boolean) {
         try {
             const date = new Date().valueOf()
             state.variables = []
@@ -54,6 +68,8 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                             break;
                         case 'select':
                             if(item.values) _item.options.optionItems = item.values
+                            _item.options.clearable = true
+                            _item.options.filterable = true
                             break
                         default:
                             break;
@@ -72,11 +88,12 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     type: 'select',
                     required: true,
                     options: {
-                        optionItems: await GetSTypesApi()
+                        optionItems: await GetDocListWithIsFolderApi(isFolder),
+                        clearable: false,
+                        filterable: true
                     }
                 })
             }
-            console.log(state.variables);
             nextTick(async () => {
                 const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
                 if (props.mode === 'fileRequest') {
@@ -106,7 +123,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
     function getAIFormJson (formJson) {
         const widgetList = []
         formJson.widgetList.forEach(item => {
-            const gridItem = getMetaApplyFormGridItem(16,8,['test'])
+            const gridItem = getMetaApplyFormGridItem(16,8, ['ai-suggestion-container'])
             const slotItem = getMetaAISlot(item.options.name)
             gridItem.cols[0].widgetList.push(item)
             gridItem.cols[1].widgetList.push(slotItem)
@@ -121,18 +138,22 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
         state.variables = []
         FromVariablesRendererRef.value.createJson(state.variables )
     }
-    async function init(documentType) {
+    async function init(documentType, isFolder, aiAnalysis?, aiDocId?) {
         if (!documentType) {
             clear()
             return
         }
         try {
+            state.loading = true
             state.data = []
             state.variables = []
             state.data = await GetMetaValidationRuleApi({ documentType })
+            await getVariables(isFolder)
         } catch (error) {
         }
-        getVariables()
+        if(aiAnalysis) state.aiAnalysis = aiAnalysis
+        if(aiDocId) state.aiDocId = aiDocId
+        state.loading = false
     }
 // #endregion
 async function setData(properties) {
@@ -168,6 +189,35 @@ async function getData() {
 function formChange(formData) {
     emits('formChange', formData)
 }
+async function aiFormChange (key, analysis) {
+    FromVariablesRendererRef.value.setData({
+        [key]: analysis.value
+    })
+}
+async function deleteAiSuggestion(deleteName: string) {
+    const _aiAnalysis = deepCopy(state.aiAnalysis)
+    delete _aiAnalysis.documentType
+    delete _aiAnalysis[deleteName]
+    const params: any = {
+        id: state.aiDocId,
+        documentType: deleteName === 'documentType' ? null : state.aiAnalysis.documentType.value,
+        metaDatas: Object.keys(_aiAnalysis).reduce((prev: any,key) => {
+            const item = _aiAnalysis[key]
+            prev.push({
+                name: key,
+                value: item.value
+            })
+            return prev
+        }, [])
+    }
+    try {
+        console.log(params)
+        const res = await UploadAiDocumentApi(params)
+        delete state.aiAnalysis[deleteName]
+    } catch (error) {
+        
+    }
+}
 function handleApply(formModel) {
     console.log(formModel);
     emits('handleApply', formModel)
@@ -194,6 +244,7 @@ function handleApply(formModel) {
         if (_msg) return `<h4 class="msg-h4">${doc[docKey]}:</h4>${_msg}`
         return ''
     }
+    // docListItem: name,properties, documentType
     async function checkMetaValidate(docList: any[], docKey: string = 'name') {
         const pList = []
         docList.forEach(item => {
@@ -214,15 +265,50 @@ function handleApply(formModel) {
         
     }
 // #endregion
+
+
 defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
 </script>
+<style lang="scss" scoped>
+.ai-button-list {
+    gap: var(--app-padding);
+    .el-button {
+        margin: unset;
+        padding: unset;
+    }
+}
+</style>
 
 <style lang="scss">
-.meta-button-flex-end {
-  display: flex!important;
-  align-items: flex-end;
-}
-.meta-button-flex-end button{
-   margin-bottom: 18px;
+.ai-suggestion-container {
+    .field-wrapper, .static-content-item, .slot-wrapper-render {
+        height: 100%;
+    }
+    padding: 24px 0 18px;
+    .ai-suggestion-content {
+        height: 100%;
+        --icon-color: #fff;
+        --icon-size: 18px;
+        padding: 3px var(--app-padding);
+        background-color: #FFC401;
+        color: #fff;
+        border-radius: 15px;
+        display: grid;
+        grid-template-columns: min-content 1fr min-content;
+        align-items: self-start;
+        gap: var(--app-padding);
+        line-height: 30px;
+        .el-button.is-text:not(.is-disabled):hover, .el-button.is-text:not(.is-disabled):focus {
+            background-color: unset;
+            opacity: .5;
+        }
+        pre {
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            padding: unset;
+            margin: unset;
+        }
+    }
 }
 </style>

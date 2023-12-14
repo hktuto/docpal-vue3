@@ -42,8 +42,13 @@ export const CancelUploadAIApi = async(params) => {
     const res = await api.post('/nuxeo/document/batchCancel', params).then(res => res.data.data)
     return res
 }
-export const ConfirmUploadAIApi = async(id: string) => {
-    const res = await api.post('/nuxeo/document/batchConfirm').then(res => res.data.data)
+export const ConfirmUploadAIApi = async(params: any) => {
+    const res = await api.post('/nuxeo/document/batchConfirm', params).then(res => res.data.data)
     return res
 }
+export const UploadAiDocumentApi = async(params: any) => {
+    const res = await api.patch('/nuxeo/document/UploadAiDocument', params).then(res => res.data.data)
+    return res
+}
+
 

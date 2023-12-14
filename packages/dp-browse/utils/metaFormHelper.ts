@@ -44,7 +44,7 @@ export function getMetaApplyFormGridItem (colSpan1: number = 20, colSpan2: numbe
                     "md": 12,
                     "sm": 12,
                     "xs": 12,
-                    "customClass": customClass
+                    customClass
                 },
                 "id": "grid-col-10000000002"
           }

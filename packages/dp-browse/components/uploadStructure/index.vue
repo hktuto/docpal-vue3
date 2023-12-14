@@ -1,30 +1,48 @@
 <template>
-    <div>
-        <div>{{$t('upload')}}</div>
-      <el-collapse v-model="activeNames" >
-        <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :title="formatDate(item.startDate)" :name="index.toString()">
-          <el-button v-show="isFinish(index)" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
-          <div class="listContainer">
-            <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
-              <div class="nameContainer" @click="itemClickHandler(uploadItem)">
-
-                <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
-                {{ uploadItem.name }}
-              </div>
-              <div class="uploadStatus">
-                <span :id="`${uploadItem.id}_progress`"></span>
-                {{ uploadItem.progress }}
-                {{ $t('upload_Status_' + uploadItem.status) }}
-              </div>
+<div>
+    <div style="margin-bottom: 10px;">{{$t('upload')}}</div>
+    <el-collapse v-model="activeNames" >
+        <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :name="index.toString()">
+            <template #title>
+                <div :title="getRequestTitle(item)">
+                    <div style="padding: unset;margin: unset;line-height: 28px;height: 28px;">
+                        {{formatDate(item.startDate)}}
+                    </div>
+                    <el-progress class="ai-upload-progress" 
+                        :percentage="getPercentage(item.finishCount, item.docList.length)" 
+                        :stroke-width="6"
+                        :show-text="false"
+                        :striped="!item.aiFinish"
+                        :striped-flow="!item.aiFinish"	/>
+                </div>
+            </template>
+            <el-divider />
+            <el-button v-show="item.finishCount === item.docList.length" type="info" size="small" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
+            <div class="listContainer">
+                <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
+                    <div class="nameContainer" @click="itemClickHandler(uploadItem)">
+                        <el-button v-if="uploadItem.status === 'success'" type="success" :icon="Check" text></el-button>
+                        <el-button v-else-if="uploadItem.status === 'loading'" loading text></el-button>
+                        <el-button v-else :icon="Close" type="danger" text></el-button>
+                        <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
+                        <span> {{ uploadItem.name }} </span>
+                    </div>
+                    <div v-if="uploadItem.status === 'exception'" class="uploadStatus-exception">
+                        {{ uploadItem.status }}
+                    </div>
+                    <div v-else-if="!uploadItem.isFolder && uploadItem.status !== 'success'" class="uploadStatus-progress">
+                        {{ uploadItem.progress }}%
+                    </div>
+                </div>
             </div>
-          </div>
         </el-collapse-item>
-      </el-collapse>
-    </div>
+    </el-collapse>
+</div>
 </template>
 
 <script lang="ts" setup>
 import * as XLSX from 'xlsx'
+import { Check, Close, Loading } from '@element-plus/icons-vue'
 import { useEventListener } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 const props = defineProps<{
@@ -33,18 +51,6 @@ const props = defineProps<{
 const router = useRouter()
 const activeNames = ref(['0'])
 const { uploadState }  = useUploadAIStore()
-function getType(status) {
-    switch(status){
-        case 'finish':
-            return 'success'
-        case 'skip':
-            return 'info'
-        case 'fail':
-            return 'danger'
-        default:
-            return 'primary'
-    }
-}
 function fileSizeFilter (bytes) {
     if (!bytes) return ''
     bytes = Number(bytes)
@@ -96,15 +102,15 @@ function itemClickHandler(item:any) {
     router.push({ path:'/browse', query: {path : item.path} })
   }
 }
-function isFinish(index: number){
-  const item = uploadState.value.uploadRequestList[index]
-  if(item.count === item.docList.length) {
-    uploadState.value.uploadRequestList[index].status = 'finish'
-    return true
-  }
-  return false
+function getPercentage(finish, total) {
+    return Math.round((finish / total) * 100) 
 }
-
+function getRequestTitle(uploadRequestItem) {
+    const percentage = getPercentage(uploadRequestItem.finishCount, uploadRequestItem.docList.length)
+    if(percentage !== 100) return percentage + '%'
+    else if(!uploadRequestItem.aiFinish) return $t('ai.waitForAi')
+    else return $t('ai.finish')
+}
 watch(uploadState, () => {
     console.log("uploadState", uploadState.value)
 }, {
@@ -113,18 +119,12 @@ watch(uploadState, () => {
 </script>
 
 <style lang="scss" scoped>
-.tree-item {
-    width: 100%;
-    padding-right: var(--app-padding);
-}
 .uploadItem{
     display: grid;
     grid-template-columns: 1fr min-content;
     margin-block: calc(var(--app-padding) / 2 );
     padding-block: calc(var(--app-padding) / 2 );
-}
-.uploadItem + .uploadItem {
-  // border-top: 1px solid var(--color-grey-050);
+    gap: var(--app-padding);
 }
 .nameContainer{
     display: flex;
@@ -132,9 +132,24 @@ watch(uploadState, () => {
     align-items: center;
     gap: 10px;
     font-size: 0.7rem;
-  cursor: pointer;
+    cursor: pointer;
+    .el-button {
+        margin: unset;
+        padding: unset;
+        cursor: unset;
+        &:hover {
+            background-color: unset;
+        }
+    }
 }
-.uploadStatus {
-  word-break: keep-all;
+.uploadStatus-exception {
+    color: red;
+}
+.ai-upload-progress {
+    :deep(.el-progress-circle) {
+
+        width: 28px!important;
+        height: 28px!important;
+    }
 }
 </style>
