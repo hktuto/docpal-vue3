@@ -119,6 +119,9 @@ watch(uploadState, () => {
 </script>
 
 <style lang="scss" scoped>
+.el-divider {
+    margin: 3px 0 12px 0;
+}
 .uploadItem{
     display: grid;
     grid-template-columns: 1fr min-content;

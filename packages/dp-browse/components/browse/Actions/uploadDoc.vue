@@ -29,7 +29,7 @@ const state = reactive({
     doc: {}
 })
 const router = useRouter()
-const { getUploadFiles, createUploadRequest } = useUploadAIStore()
+const { createUploadRequest } = useUploadAIStore()
 const fileUploaderRef = ref()
 const folderUploaderRef = ref()
 
@@ -48,7 +48,6 @@ function uploadHandler (e: any) {
     }, [])
     e.target.value = '' // 解决不能上传相同文件问题
     const treeData = createUploadRequest(state.doc, uploadFiles)
-    // router.push(`/browse/upload?backPath=${props.backPath}`)
 }
 function getPath(path: string) {
     if(!path) return ''

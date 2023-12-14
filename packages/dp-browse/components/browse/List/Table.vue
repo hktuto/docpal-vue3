@@ -46,7 +46,6 @@
                 </template>
         </Table>
         
-        <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
 </div>
 
 </template>
@@ -281,12 +280,6 @@ defineExpose({ TableRef })
             height: var(--icon-size);
         }
     }
-}
-.FileUpload2 {
-    pointer-events: auto!important;
-    display: none;
-    height: 100%;
-    width: 100%;
 }
 .backgroundDrop{
     position: absolute;

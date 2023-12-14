@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="state.visible" :title="$t('ai.uploadText')">
+    <el-dialog class="scroll-dialog aiUploadPreviewDialog" v-model="state.visible" :title="$t('ai.uploadText')">
         <el-tree ref="treeRef" :data="state.fileList"
                 default-expand-all
                 nodeKey="id" :expand-on-click-node="false">
@@ -44,7 +44,10 @@ onMounted(async() => {
 })
 defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
+<style lang="scss">
+.aiUploadPreviewDialog {
+    height: 50vh;
+    width: 600px!important;
+}
 </style>
     
