@@ -2,8 +2,8 @@
     <NuxtLayout class="fit-height withPadding">
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
             @command="handleAction"
+            @row-dblclick="handleDblclick"
             @pagination-change="handlePaginationChange">
-            <!-- @row-dblclick="handleDblclick" -->
             <template #preSortButton>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
                     inputKey="fileName" inputPlaceHolder="tip.fileOrFolderName"/>
@@ -14,10 +14,10 @@
                 </el-tag>
             </template>
             <template #commonActions="{ row, index }">
-                <SvgIcon v-if="row.uploadStatus === 'Ready'" src="/icons/edit.svg" @click="handleDblclick(row)" />
+                <SvgIcon v-if="row.uploadStatus === 'Ready'" src="/icons/edit.svg" @click="handleEdit(row)" />
             </template>
         </Table>
-        <DashboardDialog ref="DashboardDialogRef" @refresh="handlePaginationChange(1)"/>
+        <AiUploadPreviewDialog ref="AiUploadPreviewDialogRef" />
     </NuxtLayout>
 </template>
 
@@ -121,25 +121,25 @@ async function handleDelete(id: string) {
     await DeleteDashboardApi(id)
     handlePaginationChange(pageParams.pageNum + 1)
 }
+
+const AiUploadPreviewDialogRef = ref()
 function handleDblclick(row) {
-    router.push(`/AIUpload/${row.uploadId}`)
+    AiUploadPreviewDialogRef.value.handleOpen(row)
 }
-const DashboardDialogRef = ref()
-function handleAdd (setting) {
-    DashboardDialogRef.value.handleOpen(setting)
+function handleEdit(row) {
+    router.push(`/AIUpload/${row.uploadId}`)
 }
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
         const data = [
             { key: "fileUploadStatus", label: $t('common_status'), type: "string", 
-                isMultiple: false,
                 options: [
                         { label: 'Prepare', value: 'Prepare'},
                         { label: 'Ready', value: 'Ready' },
                         { label: 'Confirmed', value: 'Confirmed' },
-                        { label: 'Cancel', value: 'Cancel' },
-                        { label: 'Progress', value: 'Progress' },
+                        { label: 'Canceled', value: 'Canceled' },
+                        // { label: 'Progress', value: 'Progress' },
                     ]
             }
         ]
