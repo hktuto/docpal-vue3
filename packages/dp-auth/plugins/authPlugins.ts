@@ -40,6 +40,7 @@ const cancelAxiosWhiteList = [
     // workflow
     '/docpal/workflow/process/list',
     '/docpal/workflow/process/model',
+    '/notification/api/v1/receive/messages'
 ]
 let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
