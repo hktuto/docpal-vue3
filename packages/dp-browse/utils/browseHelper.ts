@@ -140,7 +140,15 @@ export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
         }})
     document.dispatchEvent(ev);
 }
-
+export const openFileEdit = (pathOrId:string, options: FileDetailOptions) => {
+  console.log('???????openFileEdit????????');
+  
+  const ev = new CustomEvent('openFileEdit', {detail: {
+          pathOrId,
+          options
+      }})
+  document.dispatchEvent(ev);
+}
 export function downloadUrl(url:string, name:string){
   const a = document.createElement('a')
   a.id = 'file_' + Date.now();

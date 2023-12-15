@@ -13,6 +13,7 @@
                     <el-input v-model="form.name" clearable />
                 </el-form-item>
             </el-form>
+            
             <MetaRenderForm ref="MetaFormRef"></MetaRenderForm>
             <template #footer>
                 <el-button :loading="state.loading"  @click="handleSave"
@@ -44,6 +45,8 @@ const state = reactive({
 })
 const MetaFormRef = ref()
 function openDialog(doc){
+    console.log('????????????????doc', doc);
+    
     state.doc = doc
     form.value.name = doc.name
     form.value.id = doc.id
@@ -88,4 +91,5 @@ async function handleSave(){
 onMounted(async() => {
     useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))  
 })
+defineExpose({ openDialog })
 </script>

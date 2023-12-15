@@ -15,7 +15,6 @@ const { isLogin, token } = useUser();
 const router = useRouter()
 const Cookies = useCookie('messageToken')
 const { uploadState }  = useUploadAIStore()
-
 const userId:string = useUser().getUserId()
 function handleOpen () {
     NotificationDialogRef.value.handleOpen()
@@ -33,8 +32,16 @@ function messageChange(notiData) {
     NotificationDialogRef.value.initData()
     try {
         const messageJson = notiData.messageJson
-        if(messageJson.functionPoint === 'Ai-analysis_UPLOAD_FOLDER') {
-            handleAiUpload(JSON.parse(messageJson.content) )
+        const content = JSON.parse(messageJson.content)
+        switch (messageJson.functionPoint) {
+            case 'Ai-analysis_UPLOAD_FOLDER':
+                handleAiUpload(content)
+                break;
+            case 'Ai-analysis_REPLACE_FILE':
+                handleReplaceFileWithAi(content)
+                break;
+            default:
+                break;
         }
     } catch (error) {
         
@@ -49,6 +56,20 @@ function handleAiUpload(content) {
             duration: 2000,
             onClick: () => {
                 router.push(`/AIUpload/${content.uploadId}`)
+            }
+        });
+        const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)
+        if(requetUpload) requetUpload.aiFinish = true
+    }
+}
+function handleReplaceFileWithAi(content) {
+    if(content.idOrPath) {
+        ElNotification({
+            title: $t('ai.complete'),
+            message: $t('ai.confirmAiMetadataExtractionViewDocument'),
+            type: 'success',
+            duration: 2000,
+            onClick: () => {
             }
         });
         const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)

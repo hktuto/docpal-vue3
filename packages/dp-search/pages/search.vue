@@ -140,11 +140,16 @@ async function handleDblclick (row) {
     } else if(row.type === 'Collection') {
         goRoute(row.id, '/collection', 'tab')
     } else{
-      openFileDetail(row.path, {
-        showInfo:true,
-        showHeaderAction:true
-      })
+    //   openFileDetail(row.path, {
+    //     showInfo:true,
+    //     showHeaderAction:true
+    //   })
+        openFileEdit(row.path, {
+            showInfo:true,
+            showHeaderAction:true
+        })
     }
+
 }
 function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
     router.push({

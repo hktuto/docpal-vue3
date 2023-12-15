@@ -51,4 +51,7 @@ export const UploadAiDocumentApi = async(params: any) => {
     return res
 }
 
-
+export const ReplaceFileAiDocumentApi = async(params: any) => {
+    const res = await api.patch('/nuxeo/document/replaceFile/v2', params).then(res => res.data.data)
+    return res
+}

@@ -139,7 +139,6 @@ function handleDblclick (row:any) {
       showInfo:true,
       showHeaderAction:true
     })
-    
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()

@@ -12,7 +12,7 @@
                     <template #default="{collapse}">
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <BrowseActionsHold :doc="doc" :permission="permission"/>
-                      <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
+                      <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
                       <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
                       <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefreshPreview"/>
@@ -114,8 +114,13 @@ async function openPreview({detail}:any) {
   cancelAxios()
   show.value = false
   options.value = detail.options
-  getData(detail.pathOrId)
   show.value = true
+  await getData(detail.pathOrId)
+}
+const BrowseActionsEditRef = ref()
+async function openEdit({detail}:any) {
+  await openPreview({detail})
+  BrowseActionsEditRef.value.openDialog(doc.value)
 }
 async function getData (docId) {
   const response = await getDocumentDetailSync(docId, userId);
@@ -140,6 +145,7 @@ onKeyStroke("Escape", (e) => {
     }
 })
 
+useEventListener(document, 'openFileEdit', openEdit )
 useEventListener(document, 'openFilePreview', openPreview )
 useEventListener(document, 'closeFilePreview', closePreview)
 useEventListener(document, 'checkIsPdf', () => {
