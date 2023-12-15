@@ -64,16 +64,17 @@ function handleAiUpload(content) {
 }
 function handleReplaceFileWithAi(content) {
     if(content.idOrPath) {
-        ElNotification({
+        const noti = ElNotification({
             title: $t('ai.complete'),
             message: $t('ai.confirmAiMetadataExtractionViewDocument'),
             type: 'success',
-            duration: 2000,
+            duration: 0,
             onClick: () => {
                 openFileEdit(content.idOrPath, {
                     showInfo:true,
                     showHeaderAction:true
                 })
+                noti.close()
             }
         });
         const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)
