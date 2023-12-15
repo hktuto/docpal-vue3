@@ -15,8 +15,11 @@ export const addBoundaryTask = (bpmnJson:Ref<BPMNJSON>, data:ServiceTask, target
     if (Array.isArray(bpmnJson.value.definitions.process.boundaryEvent)) {
         bpmnJson.value.definitions.process.boundaryEvent.push(newTask)
         // Boundary is an array
-    } else {
+    } else if(bpmnJson.value.definitions.process.boundaryEvent) {
         bpmnJson.value.definitions.process.boundaryEvent = [bpmnJson.value.definitions.process.boundaryEvent,newTask]
+        // Boundary is not an array
+    } else {
+        bpmnJson.value.definitions.process.boundaryEvent = [newTask]
         // Boundary is not an array
     }
     // add sequence flow
