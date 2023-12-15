@@ -28,7 +28,7 @@ function handleUnreadCountChange (count:number) {
     else getUnreadCount()
 }
 function messageChange(notiData) {
-    console.log(notiData, notiData.value,'button')
+    console.log(notiData, notiData.messageJson, JSON.parse(notiData),'button')
     getUnreadCount()
     NotificationDialogRef.value.initData()
     try {
