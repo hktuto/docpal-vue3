@@ -40,7 +40,7 @@ export const useNotification = (username:string, messageChangeCB) => {
     })
     watch(notiData, () => {
         if(!notiData.value) return
-        messageChangeCB(notiData.value)
+        messageChangeCB(JSON.parse(notiData.value))
     })
     onMounted(() => {
         start()
