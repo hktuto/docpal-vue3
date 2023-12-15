@@ -141,8 +141,6 @@ export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
     document.dispatchEvent(ev);
 }
 export const openFileEdit = (pathOrId:string, options: FileDetailOptions) => {
-  console.log('???????openFileEdit????????');
-  
   const ev = new CustomEvent('openFileEdit', {detail: {
           pathOrId,
           options

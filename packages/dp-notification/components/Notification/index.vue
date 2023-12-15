@@ -70,6 +70,10 @@ function handleReplaceFileWithAi(content) {
             type: 'success',
             duration: 2000,
             onClick: () => {
+                openFileEdit(content.idOrPath, {
+                    showInfo:true,
+                    showHeaderAction:true
+                })
             }
         });
         const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)
