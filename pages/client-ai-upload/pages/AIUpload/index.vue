@@ -10,7 +10,7 @@
             </template> 
             <template #status="{ row, index }">
                 <el-tag :type="getTagType(row.uploadStatus )">
-                    {{ row.uploadStatus }}
+                    {{ $t(`ai.status.${row.uploadStatus}`) }}
                 </el-tag>
             </template>
             <template #commonActions="{ row, index }">
@@ -135,10 +135,10 @@ function handleEdit(row) {
         const data = [
             { key: "fileUploadStatus", label: $t('common_status'), type: "string", 
                 options: [
-                        { label: 'Prepare', value: 'Prepare'},
-                        { label: 'Ready', value: 'Ready' },
-                        { label: 'Confirmed', value: 'Confirmed' },
-                        { label: 'Canceled', value: 'Canceled' },
+                        { label: 'ai.status.Prepare', value: 'Prepare'},
+                        { label: 'ai.status.Ready', value: 'Ready' },
+                        { label: 'ai.status.Confirmed', value: 'Confirmed' },
+                        { label: 'ai.status.Canceled', value: 'Canceled' },
                         // { label: 'Progress', value: 'Progress' },
                     ]
             }

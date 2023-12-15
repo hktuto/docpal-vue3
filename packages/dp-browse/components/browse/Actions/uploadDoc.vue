@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<{
     accept: '',
     backPath: '/browse'
 })
+
+const handleOpenUploadDrawer = inject('handleOpenUploadDrawer')
 const state = reactive({
     doc: {}
 })
@@ -48,6 +50,7 @@ function uploadHandler (e: any) {
     }, [])
     e.target.value = '' // 解决不能上传相同文件问题
     const treeData = createUploadRequest(state.doc, uploadFiles)
+    handleOpenUploadDrawer(true)
 }
 function getPath(path: string) {
     if(!path) return ''

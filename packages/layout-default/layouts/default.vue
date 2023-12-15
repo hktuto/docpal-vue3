@@ -81,12 +81,12 @@ function toggleOpen() {
 
 // #region module:
   const InteractDrawerRef = ref()
-  function handleOpenUpload() {
-    InteractDrawerRef.value.handleSwitch()
+  function handleOpenUpload(isOpen: boolean = false) {
+    InteractDrawerRef.value.handleSwitch(isOpen)
   }
 // #endregion
 
-
+provide('handleOpenUploadDrawer', handleOpenUpload)
 </script>
 
 <style lang="scss" scoped>

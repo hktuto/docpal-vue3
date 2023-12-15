@@ -109,7 +109,7 @@ function getRequestTitle(uploadRequestItem) {
     const percentage = getPercentage(uploadRequestItem.finishCount, uploadRequestItem.docList.length)
     if(percentage !== 100) return percentage + '%'
     else if(!uploadRequestItem.aiFinish) return $t('ai.waitForAi')
-    else return $t('ai.finish')
+    else return $t('ai.uploadcomplete')
 }
 watch(uploadState, () => {
     console.log("uploadState", uploadState.value)
