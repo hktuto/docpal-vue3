@@ -39,7 +39,6 @@ const formRef = ref()
 const availableLanguage = ref()
 
 async function handleConfirm () {
-    return
     if (form.value.fileList.length === 0) {
         state.visible = false
         return
