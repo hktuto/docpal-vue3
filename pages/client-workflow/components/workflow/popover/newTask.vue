@@ -78,7 +78,7 @@ async function workflowClickHandler (item: Workflow) {
                 processKey: state.selectedWorkflow.key,
                 businessKey: data.businessKey || "",
                 properties: Object.entries(data).reduce((newObj, [key, val]) => {
-                    if (val) newObj[key]= val
+                    if (val || val === false) newObj[key]= val
                     return newObj;
                 },{}),
             }
