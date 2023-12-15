@@ -14,6 +14,7 @@ const NotificationDialogRef = ref();
 const { isLogin, token } = useUser();
 const router = useRouter()
 const Cookies = useCookie('messageToken')
+const { uploadState }  = useUploadAIStore()
 
 const userId:string = useUser().getUserId()
 function handleOpen () {
@@ -28,7 +29,6 @@ function handleUnreadCountChange (count:number) {
     else getUnreadCount()
 }
 function messageChange(notiData) {
-    console.log(notiData, notiData.messageJson,'button')
     getUnreadCount()
     NotificationDialogRef.value.initData()
     try {
@@ -53,6 +53,9 @@ function handleAiUpload(content) {
                 router.push(`/AIUpload/${content.uploadId}`)
             }
         });
+        // console.log(uploadState);
+        const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)
+        if(requetUpload) requetUpload.aiFinish = true
     }
 }
 onMounted(() => {
