@@ -71,7 +71,10 @@ export const GetDocumentAiAnalyzeApi = async(docId: string, needDocType: boolean
         if(needDocType && res.documentType) metaDatas.documentType = {
             value: res.documentType
         }
-        return metaDatas
+        return {
+            metaDatas,
+            aiId: res.aiId
+        }
     } catch (error) {
         return {}
     }

@@ -23,7 +23,7 @@
                       <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @refresh="handleRefreshPreview" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
                       <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
-      
+
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
                       
@@ -116,7 +116,7 @@ async function openPreview({detail}:any) {
   options.value = detail.options
   show.value = true
   await getData(detail.pathOrId)
-  if (detail.openEdit) openEdit()
+  if (detail.options?.openEdit) openEdit()
 }
 const BrowseActionsEditRef = ref()
 async function openEdit() {

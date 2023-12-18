@@ -3,7 +3,7 @@
     <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"
         @handleApply="handleApply" >
         <template v-for="item in state.variables" v-slot:[`slot-${item.name}`]>
-            <div v-if="mode === 'ai' && state.aiAnalysis && state.aiAnalysis[item.name]" 
+            <div v-if="state.aiAnalysis && state.aiAnalysis[item.name]" 
                 :id="`slot-${item.name}`" :key="item.name" class="ai-suggestion-content">
                 <SvgIcon src="/icons/file/ai.svg" />
                 <pre>{{state.aiAnalysis[item.name].label || state.aiAnalysis[item.name].value}}</pre> 
@@ -154,9 +154,9 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             state.variables = []
             state.data = await GetMetaValidationRuleApi({ documentType })
             await getVariables(initOptions.isFolder)
-            if(props.mode === 'ai') {
-                if(initOptions.aiAnalysis) state.aiAnalysis = aiAnalysis
-                if(initOptions.aiDocId) state.aiDocId = aiDocId
+            if(props.mode === 'ai' || props.mode === 'ai-edit') {
+                if(initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
+                if(initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
             }
         } catch (error) {
         }
@@ -207,7 +207,7 @@ async function deleteAiSuggestion(deleteName: string) {
     delete _aiAnalysis[deleteName]
     const params: any = {
         id: state.aiDocId,
-        documentType: deleteName === 'documentType' ? null : state.aiAnalysis.documentType.value,
+        documentType: deleteName === 'documentType' || !state.aiAnalysis.documentType ? null : state.aiAnalysis?.documentType?.value,
         metaDatas: Object.keys(_aiAnalysis).reduce((prev: any,key) => {
             const item = _aiAnalysis[key]
             prev.push({
