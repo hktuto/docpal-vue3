@@ -67,7 +67,11 @@ const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
     state.selectedDoc.properties = deepCopy(formModel)
     state.selectedDoc.fileType = formModel.documentType
     if(fieldName === 'documentType' && newValue !== oldValue && !!oldValue) {
-        await MetaFormRef.value.init(state.selectedDoc.fileType, state.selectedDoc.isFolder, state.selectedDoc.aiAnalysis, state.selectedDoc.id)
+        await MetaFormRef.value.init(state.selectedDoc.fileType, {
+            isFolder: state.selectedDoc.isFolder,
+            aiAnalysis: state.selectedDoc.aiAnalysis,
+            aiDocId: state.selectedDoc.id
+        })
         setTimeout(() => {
             MetaFormRef.value.setData({ ...state.selectedDoc.properties, documentType: state.selectedDoc.fileType})
         });
@@ -88,8 +92,11 @@ async function handleNodeClick(row) {
             value: row.aiAnalysisDocument.documentType
         }
     }
-    console.log(row);
-    await MetaFormRef.value.init(row.fileType, row.isFolder, row.aiAnalysis, row.id)
+    await MetaFormRef.value.init(row.fileType, {
+        isFolder: row.isFolder,
+        aiAnalysis: row.aiAnalysis,
+        aiDocId: row.id
+    })
     setTimeout(() => {
         if(!row.properties) row.properties = {}
         MetaFormRef.value.setData({ ...row.properties, documentType: row.fileType})

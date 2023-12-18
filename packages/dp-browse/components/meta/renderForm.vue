@@ -23,8 +23,13 @@
 import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { GetMetaValidationRuleApi, GetDocListWithIsFolderApi, UploadAiDocumentApi } from 'dp-api'
+type initMetaFormOptions = {
+    isFolder?: boolean,
+    aiAnalysis?: any,
+    aiDocId?: string
+}
 const props = withDefaults(defineProps<{
-    mode: 'fileRequest' | 'ai' | 'normal',
+    mode: 'fileRequest' | 'ai' | 'ai-edit', 'normal',
 }>(), {
     mode: 'normal',
 })
@@ -100,7 +105,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     const newFormJson = getApplyFormJson(formJson)
                     FromVariablesRendererRef.value.setFormJson(newFormJson)
                 }
-                else if (props.mode === 'ai') {
+                else if (props.mode === 'ai' || props.mode === 'ai-edit') {
                     const newFormJson = getAIFormJson(formJson)
                     console.log({newFormJson});
                     FromVariablesRendererRef.value.setFormJson(newFormJson)
@@ -138,7 +143,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
         state.variables = []
         FromVariablesRendererRef.value.createJson(state.variables )
     }
-    async function init(documentType, isFolder, aiAnalysis?, aiDocId?) {
+    async function init(documentType, initOptions: initMetaFormOptions) {
         if (!documentType) {
             clear()
             return
@@ -148,11 +153,13 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             state.data = []
             state.variables = []
             state.data = await GetMetaValidationRuleApi({ documentType })
-            await getVariables(isFolder)
+            await getVariables(initOptions.isFolder)
+            if(props.mode === 'ai') {
+                if(initOptions.aiAnalysis) state.aiAnalysis = aiAnalysis
+                if(initOptions.aiDocId) state.aiDocId = aiDocId
+            }
         } catch (error) {
         }
-        if(aiAnalysis) state.aiAnalysis = aiAnalysis
-        if(aiDocId) state.aiDocId = aiDocId
         state.loading = false
     }
 // #endregion
@@ -211,7 +218,6 @@ async function deleteAiSuggestion(deleteName: string) {
         }, [])
     }
     try {
-        console.log(params)
         const res = await UploadAiDocumentApi(params)
         delete state.aiAnalysis[deleteName]
     } catch (error) {

@@ -55,3 +55,22 @@ export const ReplaceFileAiDocumentApi = async(params: any) => {
     const res = await api.patch('/nuxeo/document/replaceFile/v2', params).then(res => res.data.data)
     return res
 }
+export const GetDocumentAiAnalyzeApi = async(docId: string, needDocType: boolean = false) => {
+    try {
+        const res = await api.get(`/nuxeo/document/queryAiAnalyze/${docId}`).then(res => res.data.data)
+        const metaDatas = res.metaDatas.reduce((prev: any, item) => {
+            if(item.label || item.value) {
+                prev[item.name] = {}
+                if(item.label) prev[item.name].label = item.label
+                if(item.value) prev[item.name].value = item.value
+            }
+            return prev
+        }, {})
+        if(needDocType && res.documentType) metaDatas.documentType = {
+            value: res.documentType
+        }
+        return metaDatas
+    } catch (error) {
+        return {}
+    }
+}
