@@ -22,7 +22,7 @@
 <script lang="ts" setup> 
 import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import { GetMetaValidationRuleApi, GetDocListWithIsFolderApi, UploadAiDocumentApi } from 'dp-api'
+import { GetMetaValidationRuleApi, GetDocListWithIsFolderApi, UpdateAiDocumentApi } from 'dp-api'
 type initMetaFormOptions = {
     isFolder?: boolean,
     aiAnalysis?: any,
@@ -173,7 +173,10 @@ async function setData(properties) {
                 break;
         }
     })
-    return await FromVariablesRendererRef.value.setData(properties)
+    setTimeout(() => {
+        FromVariablesRendererRef.value.setData(properties)
+    })
+    // return await FromVariablesRendererRef.value.setData(properties)
 }
 async function getData() {
     const data = await FromVariablesRendererRef.value.getData()
@@ -206,7 +209,6 @@ async function deleteAiSuggestion(deleteName: string) {
     delete _aiAnalysis.documentType
     delete _aiAnalysis[deleteName]
     const params: any = {
-        id: state.aiDocId,
         documentType: deleteName === 'documentType' || !state.aiAnalysis.documentType ? null : state.aiAnalysis?.documentType?.value,
         metaDatas: Object.keys(_aiAnalysis).reduce((prev: any,key) => {
             const item = _aiAnalysis[key]
@@ -217,8 +219,10 @@ async function deleteAiSuggestion(deleteName: string) {
             return prev
         }, [])
     }
+    if(props.mode === 'edit') params.id = state.aiDocId
+    else params.idOrPath = state.aiDocId
     try {
-        const res = await UploadAiDocumentApi(params)
+        const res = await UpdateAiDocumentApi(params)
         delete state.aiAnalysis[deleteName]
     } catch (error) {
         

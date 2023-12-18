@@ -46,8 +46,8 @@ export const ConfirmUploadAIApi = async(params: any) => {
     const res = await api.post('/nuxeo/document/batchConfirm', params).then(res => res.data.data)
     return res
 }
-export const UploadAiDocumentApi = async(params: any) => {
-    const res = await api.patch('/nuxeo/document/UploadAiDocument', params).then(res => res.data.data)
+export const UpdateAiDocumentApi = async(params: any) => {
+    const res = await api.patch('/nuxeo/document/updateAiDocument', params).then(res => res.data.data)
     return res
 }
 
@@ -71,10 +71,7 @@ export const GetDocumentAiAnalyzeApi = async(docId: string, needDocType: boolean
         if(needDocType && res.documentType) metaDatas.documentType = {
             value: res.documentType
         }
-        return {
-            metaDatas,
-            aiId: res.aiId
-        }
+        return metaDatas
     } catch (error) {
         return {}
     }
