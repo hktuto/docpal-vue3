@@ -11,9 +11,23 @@
             <template #suffixSortButton>
                 <el-button v-if="isSuperAdmin" type="primary" @click="handleAdd()">{{$t('button.add')}}</el-button>
             </template>
+            <template #more="{ row }">
+                <el-dropdown @click.stop @dblclick.stop>
+                    <SvgIcon src="/icons/dots.svg" @click.stop @dblclick.stop></SvgIcon>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <!-- <el-dropdown-item v-loading="loading" @click="handleDblclick(row)">{{$t('masterTable.editInfo')}}</el-dropdown-item> -->
+                            <el-dropdown-item v-loading="loading" @click="handleDblclick(row)">{{$t('masterTable.editDetail')}}</el-dropdown-item>
+                            <el-dropdown-item v-loading="loading" @click="handleShowSchema(row)">{{$t('masterTable.showSchema')}}</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+                
+            </template>
         </Table>
         <MasterTableDialog ref="MasterTableDialogRef" @refresh="handlePaginationChange(1)"/>
         <MasterTableNewRowDialog ref="MasterTableNewRowDialogRef" @refresh="handlePaginationChange(1)"/>
+        <MasterTablePreviewDialog ref="MasterPreviewDialogRef" @refresh="handlePaginationChange(1)"/>
     </NuxtLayout>
 </template>
 
@@ -99,9 +113,15 @@ function handleAction (command, row: any, index: number) {
         case 'edit':
             handleDblclick(row)
             break
+        case 'more':
+
         default:
             break
     }
+}
+const MasterPreviewDialogRef = ref()
+function handleShowSchema(row) {
+    MasterPreviewDialogRef.value.handleOpen(row)
 }
 async function handleDelete(id: string) {
     const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)

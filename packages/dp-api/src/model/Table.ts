@@ -2476,41 +2476,12 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_MASTER_TABLE]: {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'name' },
-            { id: '3', label: 'role.creator', prop: 'createdBy'},
-            {   
-                id: '7',
-                "type": "",
-                "label": "dpTable_actions",
-                class: "slotTopRight",
-                "prop": "",
-                "align": "center",
-                "width": 100,
-                "hide": false,
-                "system": false,
-                "showOverflowTooltip": false,
-                "formatList": [],
-                "buttons": [
-                    {
-                        "name": "",
-                        "type": "text",
-                        "command": "edit",
-                        "suffixIcon": "/icons/edit.svg",
-                        "index": 0
-                    },
-                    // {
-                    //     "name": "",
-                    //     "type": "text",
-                    //     "command": "delete",
-                    //     "suffixIcon": "/icons/menu/trash.svg",
-                    //     "index": 0
-                    // }
-                ],
-                "prefixIcon": "",
-                "suffixIcon": "",
-            }
+            { id: '2', label: 'role.creator', prop: 'createdBy'},
+            { id: '3', label: "dpTable_actions", slot: 'more', width: 100}
         ],
-        events: ['delete', 'edit', 'preview'],
+        events: ['delete', 'edit', 'preview', 'more'],
         slots: [
+            { label: "dpTable_actions", slot: 'more', width: 100 }
         ],
         options: { pageSize: 20 }
     },
