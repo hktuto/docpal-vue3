@@ -8,12 +8,12 @@
                 <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1"></BrowseActionsReplaceUpload>
         </el-form-item>
         <el-checkbox v-model="form.openAiAnalyzeMetadata">{{ $t('ai.checkAI') }}</el-checkbox>
-        <el-form-item :label="$t('filePopover_OCRLanguages')" prop="targetFile">
+        <!-- <el-form-item :label="$t('filePopover_OCRLanguages')" prop="targetFile">
             <el-select v-model="form.languages" :multiple-limit="2" multiple placeholder="N/A">
                 <el-option  v-for="l in availableLanguage"
                         :key="l" :value="l" :label="$t(`languages.${l}`)"></el-option>
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
     </el-form>
     <template #footer>
         <el-button style="width: 100%" type="primary" :loading="state.loading" @click="handleConfirm">{{$t('common_submit')}}</el-button>
@@ -32,7 +32,7 @@ const state = reactive({
 })
 const form = ref<any>({
     fileList: [],
-    languages: ['eng'],
+    // languages: ['eng'],
     openAiAnalyzeMetadata: true
 })
 const formRef = ref()
@@ -45,7 +45,7 @@ async function handleConfirm () {
     }
     const d = {
         idOrPath: state.doc.id,
-        languages: form.value.languages
+        // languages: form.value.languages
     }
     const formData = new FormData()
     formData.append('file', form.value.fileList[0].blob)
@@ -57,7 +57,8 @@ async function handleConfirm () {
         state.visible = false
         form.value = {
             fileList: [],
-            languages: []
+            // languages: ['eng'],
+            openAiAnalyzeMetadata: true
         }
         emits('update')
     } catch (error) {
