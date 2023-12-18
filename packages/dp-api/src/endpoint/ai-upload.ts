@@ -57,7 +57,9 @@ export const ReplaceFileAiDocumentApi = async(params: any) => {
 }
 export const GetDocumentAiAnalyzeApi = async(docId: string, needDocType: boolean = false) => {
     try {
-        const res = await api.get(`/nuxeo/document/queryAiAnalyze/${docId}`).then(res => res.data.data)
+        const res = await api.get(`/nuxeo/document/queryAiAnalyze/${docId}`, {
+            headers: { 'noThrowError' : "true" }
+        }).then(res => res.data.data)
         const metaDatas = res.metaDatas.reduce((prev: any, item) => {
             if(item.label || item.value) {
                 prev[item.name] = {}
