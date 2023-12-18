@@ -49,13 +49,14 @@ function messageChange(notiData) {
 }
 function handleAiUpload(content) {
     if(content.uploadId) {
-        ElNotification({
+        const noti = ElNotification({
             title: $t('ai.uploadcomplete'),
             message: $t('ai.uploadAndAIComplete'),
             type: 'success',
-            duration: 2000,
+            duration: 0,
             onClick: () => {
                 router.push(`/AIUpload/${content.uploadId}`)
+                noti.close()
             }
         });
         const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)
