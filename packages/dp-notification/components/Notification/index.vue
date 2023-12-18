@@ -71,9 +71,10 @@ function handleReplaceFileWithAi(content) {
             type: 'success',
             duration: 0,
             onClick: () => {
-                openFileEdit(content.idOrPath, {
+                openFileDetail(content.idOrPath, {
                     showInfo:true,
-                    showHeaderAction:true
+                    showHeaderAction:true,
+                    openEdit: true
                 })
                 noti.close()
             }

@@ -131,7 +131,8 @@ const deepCopy  = (data:any) => {
 
 export type FileDetailOptions = {
     showInfo: boolean,
-    showHeaderAction: boolean
+    showHeaderAction: boolean,
+    openEdit: boolean
 }
 export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
     const ev = new CustomEvent('openFilePreview', {detail: {
@@ -140,13 +141,7 @@ export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
         }})
     document.dispatchEvent(ev);
 }
-export const openFileEdit = (pathOrId:string, options: FileDetailOptions) => {
-  const ev = new CustomEvent('openFileEdit', {detail: {
-          pathOrId,
-          options
-      }})
-  document.dispatchEvent(ev);
-}
+
 export function downloadUrl(url:string, name:string){
   const a = document.createElement('a')
   a.id = 'file_' + Date.now();

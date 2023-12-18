@@ -116,10 +116,10 @@ async function openPreview({detail}:any) {
   options.value = detail.options
   show.value = true
   await getData(detail.pathOrId)
+  if (detail.openEdit) openEdit()
 }
 const BrowseActionsEditRef = ref()
-async function openEdit({detail}:any) {
-  await openPreview({detail})
+async function openEdit() {
   BrowseActionsEditRef.value.openDialog(doc.value)
 }
 async function getData (docId) {
@@ -145,7 +145,6 @@ onKeyStroke("Escape", (e) => {
     }
 })
 
-useEventListener(document, 'openFileEdit', openEdit )
 useEventListener(document, 'openFilePreview', openPreview )
 useEventListener(document, 'closeFilePreview', closePreview)
 useEventListener(document, 'checkIsPdf', () => {
