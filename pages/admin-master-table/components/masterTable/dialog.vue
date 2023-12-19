@@ -56,7 +56,7 @@ async function handleSubmit () {
     const _data = {
         ...state.setting,
         name: data.table,
-        fields: [ ...data.extraFields, ...data.fields  ]
+        fields: [ ...state.extraFields, ...data.fields  ]
     }
     try {
         const res = await SaveMasterTablesApi(_data)
