@@ -7,12 +7,34 @@
     "distDir": "../.output/public"
   },
   "package": {
-    "productName": "tauri",
-    "version": "0.1.0"
+    "productName": "DocPal",
+    "version": "1.0.1"
   },
   "tauri": {
     "macOSPrivateApi": true,
     "allowlist": {
+      "path": {
+        "all": true
+      },
+      "clipboard": {
+        "all": true
+      },
+      "dialog": {
+        "all": true, 
+        "ask": true, 
+        "confirm": true,
+        "message": true,
+        "open": true,
+        "save": true
+      },
+      "http": {
+        "all": true, 
+        "request": true,
+        "scope": ["https://app4.wclsolution.com/*"]
+      },
+      "notification": {
+        "all": true
+      },
       "window": {
         "all": true
       }
@@ -54,7 +76,12 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+        "https://app4.wclsolution.com/resources/desktop/release.json"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERGMUUyQUNCMEVFREJGRjcKUldUM3YrME95eW9lMzJ6NzJCeXVTNlZvSWVObEtCVC91WGVzUHAzeEwxR1MvcjIvaTdtRU44c1AK"
     },
     "windows": [
       {

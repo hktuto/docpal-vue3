@@ -9,7 +9,7 @@ const defaultConfig = {
       public:{
         env,
         mode: process.env.NODE_ENV,
-        pdfReaderUrl: process.env.pdfReaderUrl || 'http://localhost:8888/web/viewer.html',
+        pdfReaderUrl: process.env.DOCPAL_END_POINT + process.env.pdfReaderUrl,
         LOCAL_KEY: process.env.LOCAL_KEY || 'client,meta',
         PROXY: process.env.PROXY || 'https://app4.wclsolution.com/api',
         DASHBOARD_PROXY: process.env.DASHBOARD_PROXY || 'https://app4.wclsolution.com/public-api/report/v1/api',
