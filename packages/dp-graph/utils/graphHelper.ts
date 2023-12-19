@@ -430,6 +430,7 @@ export const bpmnToX6 = (bpmnText: string | object, options:any = {hideEnd: true
     // check source is boundaryEvent or not
       // if yes then change source to boundaryEvent[attachedToRef]
     if( boundaryEvent.find((event: any) => event && event['attr_id'] === flow['attr_sourceRef']) ) {
+        console.log(boundaryEvent);
         const boundary = boundaryEvent.find((event: any) => event['attr_id'] === flow['attr_sourceRef']);
         const sourceNode = data.nodes?.find((node) => node.id === boundary['attr_attachedToRef']);
         

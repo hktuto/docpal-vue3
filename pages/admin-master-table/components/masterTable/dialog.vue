@@ -5,7 +5,14 @@
     :close-on-click-modal="false"
     @close="handleClose"
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FromRenderer ref="FromRendererRef" :form-json="formJson" >
+        <template v-slot:defaultFields>
+            <div>
+                {{ $t('masterTable.defaultFields') }}:
+                <b>{{ getFields() }}</b>
+            </div>
+        </template>
+    </FromRenderer>
     <template #footer>
         <div class="footer-grid">
             <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
@@ -34,6 +41,13 @@ const state = reactive({
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/masterTable.json')
 const router = useRouter()
+function getFields () {
+    return state.extraFields.reduce((prev, item, index) => {
+        prev += item.fieldName
+        if(index !== state.extraFields.length - 1) prev += ', '
+        return prev
+    }, '')
+}
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     console.log({data});
