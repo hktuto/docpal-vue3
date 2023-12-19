@@ -85,10 +85,10 @@ watch(() =>state.selectedDocsIndex, async() => {
             <h1>Batch Index: {{state.batchIndex}} <SvgIcon style="display:inline" src="/icons/file-general.svg" /></h1>
         </div>
         <h2>{{state.selectedDocs.name}}</h2>
-        <ChevalierFields v-model:documents="data.docs[state.selectedDocsIndex].json.analyzeResult.documents" />
+        <AzureFields v-model:documents="data.docs[state.selectedDocsIndex].json.analyzeResult.documents" />
       </div>
       <div class="right">
-        <ChevalierPdfReader ref="reader" :data="data.docs[state.selectedDocsIndex]" />
+        <AzurePdfReader ref="reader" :data="data.docs[state.selectedDocsIndex]" />
       </div>
     </div>
     <ElDialog v-model="batchDialogVisible" append-to-body distory-on-close>

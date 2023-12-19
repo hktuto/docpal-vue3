@@ -32,10 +32,10 @@ function valChange(newValue, key) {
           <div class="label" @click="() => {
             selectField(value);
           }">{{key}}</div>
-          <ChevalierFieldsString v-if="value.type  === 'string'"  :field="value" @change="(val) => valChange(val,key)"/>
-          <ChevalierFieldsNumber v-else-if="value.type  === 'number'"  :field="value" @change="(val) => valChange(val,key)"/>
-          <ChevalierFieldsDate v-else-if="value.type  === 'date'"  :field="value" @change="(val) => valChange(val,key)"/>
-          <ChevalierFieldsArray v-else-if="value.type === 'array'" :field="value" @change="(val) => valChange(val,key)"/>
+          <AzureFieldsString v-if="value.type  === 'string'"  :field="value" @change="(val) => valChange(val,key)"/>
+          <AzureFieldsNumber v-else-if="value.type  === 'number'"  :field="value" @change="(val) => valChange(val,key)"/>
+          <AzureFieldsDate v-else-if="value.type  === 'date'"  :field="value" @change="(val) => valChange(val,key)"/>
+          <AzureFieldsArray v-else-if="value.type === 'array'" :field="value" @change="(val) => valChange(val,key)"/>
         </div>
       </template>
     </template>

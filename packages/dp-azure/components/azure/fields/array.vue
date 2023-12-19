@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Field} from "~/components/Chevalier/chevalierType";
+import {Field} from "~/components/Azure/chevalierType";
 
 
 const props = defineProps<{
@@ -33,8 +33,8 @@ const displayTable = computed(() => {
   <ElTable :data="displayTable">
     <ElTableColumn v-for="column in columnRow" :key="column" :prop="column" :label="column.label" >
       <template #default="scope">
-        <ChevalierFieldsString v-if="column.type === 'string'" type="textarea"  :field="scope.row[column.label]" />
-        <ChevalierFieldsNumber v-if="column.type === 'number'"  :field="scope.row[column.label]" />
+        <AzureFieldsString v-if="column.type === 'string'" type="textarea"  :field="scope.row[column.label]" />
+        <AzureFieldsNumber v-if="column.type === 'number'"  :field="scope.row[column.label]" />
       </template>
     </ElTableColumn>
   </ElTable>

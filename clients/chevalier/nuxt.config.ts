@@ -28,7 +28,7 @@ const config = defineNuxtConfig({
   },
   // color mode setting
   extends: [
-    ...customLayer()
+    ...customLayer(), "../../packages/dp-azure"
   ],
   ...playgroundConfig({}),
 })
