@@ -51,7 +51,20 @@ export const ImportMasterTablesRecordApi = async(params) => {
 export const ExportMasterTablesRecordApi = async(tableId: string) => {
     const res = await api.post(`/docpal/master/tables/${tableId}/record/export`, {}, { 
         responseType: 'blob', 
-        timeout: 0 
+        timeout: 0,
+        headers: {'white': 'true'} 
+    }).then(res => res.data)
+    return res
+}
+
+export const ExportMasterTablesDownloadFailureListApi = async(id: string) => {
+    const res = await api.get('/docpal/master/tables/download/failure', { 
+        params: {
+            id
+        },
+        responseType: 'blob', 
+        timeout: 0 ,
+        headers: {'white': 'true'}
     }).then(res => res.data)
     return res
 }

@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElNotification } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
     DeleteMasterTablesRecordApi,
@@ -28,6 +29,7 @@ import {
     GetMasterTablesDetailApi,
     ExportMasterTablesRecordApi,
     ImportMasterTablesRecordApi,
+    ExportMasterTablesDownloadFailureListApi,
     defaultTableSetting, TABLE, TableAddColumns,
     
 } from 'dp-api'
@@ -241,11 +243,22 @@ async function initTableColumns() {
             formData.append('file', event.target.files[0])
             formData.append('id', route.params.id)
             event.target.value = ''
-            await ImportMasterTablesRecordApi(formData)
+            const data = await ImportMasterTablesRecordApi(formData)
+            if (data?.failureNumber > 0) downloadFailList(data.failureNumber)
             handlePaginationChange(1)
         } catch (error) {
         }
         state.importLoading = false
+    }
+    async function downloadFailList (failureNumber) {
+        const noti = ElNotification({
+            title: $t('masterTable.importFailList'),
+            showClose: true,
+            duration: 0,
+            type: 'warning'
+        });
+        const res = await ExportMasterTablesDownloadFailureListApi(route.params.id)
+        downloadBlob(res, masterTable.name + '-failure')
     }
 // #endregion
 onMounted(() => {

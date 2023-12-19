@@ -80,7 +80,8 @@ export const GetCabinetConditionsApi = async(templateId) => {
 export const ExportCabinetApi = async(params) => {
     const res = await api.post('/docpal/cabinet/export', params, {
         responseType: 'blob',
-        timeout: 0
+        timeout: 0,
+        headers: {'white': 'true'}
     }).then(res => res.data)
     return res
 }

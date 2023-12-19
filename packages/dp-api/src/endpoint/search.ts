@@ -144,7 +144,7 @@ export const ExportSearchCsvApi = async(params) => {
     const res = await api.post('/nuxeo/search/exportCsv', params, {
         responseType: 'blob',
         timeout: 0,
-        headers: { TimeZone }
+        headers: { TimeZone, 'white': 'true' }
     }).then(res => res.data)
     return res
 }

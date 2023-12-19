@@ -139,6 +139,7 @@ function init(list: ResSelectData[]) {
     state.list = list.reduce((prev, item) => {
         if(item.isMultiple !== false) item.isMultiple = true
         item.value = []
+        item.options = item.options.filter(o => !!o.label && !!o.value)
         prev.push(item)
         return prev
     }, [])
