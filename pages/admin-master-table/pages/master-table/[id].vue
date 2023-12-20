@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout class="fit-height withPadding" backPath="/master-table" :pageTitle="`${$t('admin_master-table')}/${masterTable.name}`">
+        
         <Table ref="tableRef" v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
             @command="handleAction"
             @row-dblclick="handleDblclick"
@@ -14,9 +15,19 @@
                 <el-button :loading="state.exportLoading" type="info" @click="handleExport()">{{$t('button.export')}}</el-button>
                 <el-button type="primary" @click="handleAddRow()">{{$t('button.add')}}</el-button>
             </template>
+            <template #defaultHeader="{column}">
+                <div class="column-dynamic" :style="`--column-color: ${getColor(column.property)}`"> {{ $t(column.label) }}
+                    <div class="column-dynamic-point"></div>
+                </div>
+            </template>
         </Table>
         <input v-show="false"  ref="inputRef" type="file" accept=".csv" @change="handleFile"/>
         <MasterTableNewRowDialog ref="MasterTableNewRowDialogRef" :ignoreList="ignoreList" @refresh="handlePaginationChange(1)"/>
+        <div class="marsterTable-note">
+            <div v-for="item in ['optional', 'unique', 'required' ]" class="column-dynamic" :style="`--column-color: ${getColor('',item)}`"> {{ $t(`marsterTable.${item}`) }}
+                <div class="column-dynamic-point"></div>
+            </div>   
+        </div>
     </NuxtLayout>
 </template>
 
@@ -46,7 +57,7 @@ import {
     const tableSetting = ref({
         columns: [
             { id: '1', label: 'docType_id', prop: 'id', defaultColumn: true },
-            { id: '2', label: 'workflow_createDate', prop: 'created_date', 
+            { id: '2', label: 'workflow_createDate', prop: 'created_date', width: 140, 
                 formatList: [
                     {
                         "joiner": "",
@@ -59,7 +70,7 @@ import {
                     }
                 ]
             },
-            { id: '3', label: 'tableHeader_modifiedDate', prop: 'modified_date', 
+            { id: '3', label: 'tableHeader_modifiedDate', prop: 'modified_date', width: 140, 
                 formatList: [
                     {
                         "joiner": "",
@@ -72,7 +83,7 @@ import {
                     }
                 ]
             },
-            { id: '4', label: 'modified_by', prop: 'modified_by', width: 100 },
+            { id: '4', label: 'modified_by', prop: 'modified_by', width: 110 },
             {   
                 id: '5',
                 "type": "",
@@ -132,7 +143,6 @@ import {
         name: '',
         fields: [],
         columns: [],
-
     })
 
 
@@ -193,6 +203,28 @@ async function handleDelete(id: string) {
 function handleDblclick(row) {
     handleAddRow(row)
 }
+function getColor(prop, option?: 'unique' | 'required' | 'optional') {
+    try {
+        if(!!prop) {
+            const mItem = masterTable.fields.find(item => item.columnName === prop)
+            if (mItem.unique) return '#0099FF'
+            else if (mItem.required) return '#7B61FF'
+        }
+    } catch (error) {
+    }
+    switch (option) {
+        case 'unique':
+            return '#0099FF'
+        case 'required':
+            return '#7B61FF'
+        default:
+            break;
+    }
+    console.log(option);
+    
+    // return 'red'
+    return '#373D43'
+}
 const MasterTableNewRowDialogRef = ref()
 function handleAddRow (row) {
     MasterTableNewRowDialogRef.value.handleOpen(masterTable.fields, row)
@@ -215,7 +247,8 @@ async function initTableColumns() {
         const _item = {
             id: item.columnName,
             label: item.columnName,
-            prop: item.columnName
+            prop: item.columnName,
+            headerSlot: 'defaultHeader'
         }
         if(item.dataType === 'timestamp') _item.type = 'date'
         TableAddColumns(_item, tableSetting.value.columns, index)
@@ -275,5 +308,26 @@ onMounted(() => {
 }
 .emailActionButton {
     padding: unset;
+}
+.column-dynamic {
+    color: var(--column-color);
+    display: flex;
+    align-items: center;
+    &-point {
+        width: 8px;
+        height: 8px;
+        margin-left: 3px;
+        border-radius: 50%;
+        background-color: var(--column-color);
+    }
+}
+.marsterTable-note {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    &>div {
+        margin-left: var(--app-padding)
+    }
 }
 </style>

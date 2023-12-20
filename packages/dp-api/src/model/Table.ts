@@ -19,6 +19,7 @@ export type TableColumnItem = {
     label?: string,
     sortable?:boolean,
     slot ?: string,
+    headerSlot ?: string,
     align ?: string,
     width ?: string | number,
     defaultValue ?: any,
@@ -2544,9 +2545,7 @@ export const defaultTableSetting: TableColumnSetting = {
 
 export function TableAddColumns (columnItem: TableColumnItem, columnList: any, position: number = 1) {
     const _columnItem: TableColumnItem = {
-        label: columnItem.label,
-        prop: columnItem.prop,
-        id: columnItem.id,
+        ...columnItem,
         showOverflowTooltip: true
     }
     if (columnItem.type === 'date') {
