@@ -9,7 +9,7 @@
         <template v-slot:defaultFields>
             <div>
                 {{ $t('masterTable.defaultFields') }}:
-                <b>{{ state.extraFields.join(', ') }}</b>
+                <b>{{ getFields() }}</b>
             </div>
         </template>
     </FromRenderer>
@@ -27,7 +27,13 @@ const state = reactive({
     },
     extraFields: [ 'id', 'created_date', 'modified_date', 'modified_by'],
     edit: false,
-    detail: {}
+    detail: {},
+    fieldNameMap: {
+        created_date: $t('workflow_createDate'),
+        id:  $t('docType_id'),
+        modified_date:  $t('tableHeader_modifiedDate'),
+        modified_by:  $t('modified_by')
+    }
 })
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/masterPreviewTable.json')
@@ -42,6 +48,13 @@ async function handleOpen(row) {
         await FromRendererRef.value.vFormRenderRef.setFormData({ fields: state.detail.fields })
         state.loading = false
     })
+}
+function getFields () {
+    return state.extraFields.reduce((prev, item, index) => {
+        prev += state.fieldNameMap[item]
+        if(index !== state.extraFields.length - 1) prev += ', '
+        return prev
+    }, '')
 }
 defineExpose({ handleOpen })
 </script>
