@@ -8,7 +8,7 @@ export default defineAppConfig({
             routeName:"master-table",
             url:"/master-table",
             icon: "/icons/menu/masterTable.svg",
-            order: 1,
+            order: 15,
             parentId: "admin_glossary"
         }
     ]
