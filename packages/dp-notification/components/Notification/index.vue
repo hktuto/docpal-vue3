@@ -66,7 +66,7 @@ function handleAiUpload(content) {
 function handleReplaceFileWithAi(content) {
     if(content.idOrPath) {
         const noti = ElNotification({
-            title: $t('ai.complete'),
+            title: $t('status.completed'),
             message: $t('ai.confirmAiMetadataExtractionViewDocument'),
             type: 'success',
             duration: 0,
