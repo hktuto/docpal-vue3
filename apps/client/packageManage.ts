@@ -21,6 +21,8 @@ export function customLayer():string[] {
     packages.push('../../packages/dp-browse');
     packages.push('../../pages/client-hold-policies');
     packages.push('../../pages/client-retention');
+    packages.push('../../pages/client-ai-upload');
+    
     // all stores
     packages.push("../../packages/dp-stores")
     packages.push("../../packages/dp-auth")

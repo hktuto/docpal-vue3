@@ -1,26 +1,24 @@
 <template>
-    <div>
-        <el-upload
-            action=""
-            name='files'
-            class="upload-demo"
-            drag
-            :file-list="modelValue"
-            :limit="limit" :multiple="multiple" :disabled="disabled"
+    <el-upload
+        action=""
+        name='files'
+        class="upload-demo"
+        drag
+        :file-list="modelValue"
+        :limit="limit" :multiple="multiple" :disabled="disabled"
 
-            :on-change="onChange"
-            :before-remove="beforeRemove"
-            :on-remove="onRemove"
-            :auto-upload="false"
-            :accept="accept"
-            :on-exceed="handleExceed"
-            >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">{{$t('common_dragFileHere')}}，{{$t('common_or')}} <em>{{$t('common_clickToUpload')}}</em></div>
-            <div v-if="accept" class="el-upload__accept">{{$t('file.onlyAccept')}} {{accept}}</div>
-            <div class="el-upload__tip" slot="tip"> <slot name="tip"></slot> </div> 
-        </el-upload>
-    </div>
+        :on-change="onChange"
+        :before-remove="beforeRemove"
+        :on-remove="onRemove"
+        :auto-upload="false"
+        :accept="accept"
+        :on-exceed="handleExceed"
+        >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">{{$t('common_dragFileHere')}}，{{$t('common_or')}} <em>{{$t('common_clickToUpload')}}</em></div>
+        <div v-if="accept" class="el-upload__accept">{{$t('file.onlyAccept')}} {{accept}}</div>
+        <div class="el-upload__tip" slot="tip"> <slot name="tip"></slot> </div> 
+    </el-upload>
 </template>
 
 <script lang="ts" setup>

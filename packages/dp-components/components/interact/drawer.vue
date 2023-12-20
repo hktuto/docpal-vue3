@@ -9,7 +9,7 @@
 >
   <slot></slot>
   <SvgIcon v-if="interact.closeShow" class="drawer-close" src="/icons/close.svg"
-    @click="handleSwitch"></SvgIcon>
+    @click="handleSwitch()"></SvgIcon>
 </Interact>
 </template>
 
@@ -40,9 +40,11 @@ const style = computed(() => {
     s += `--drawer-min-width: ${interact.w === 0 ? 0 : props.minWidth }px;`
     return s
 })
-function handleSwitch(width: number = props.defaultW) {
-    if (interact.w === 0) {
-        interact.w = width 
+function handleSwitch(isOpen: boolean = false) {
+    console.log(isOpen , 'isOpen');
+    
+    if (interact.w === 0 || isOpen) {
+        interact.w = props.defaultW 
         interact.closeShow = true
     } else {
         interact.w = 0 
@@ -73,6 +75,7 @@ defineExpose({
     padding: var(--drawer-padding);
     box-shadow: 0px 0px 12px rgba(0,0,0,.12);
     overflow: auto;
+    transition: all .5s;
 }
 .drawer-close {
     position: absolute;

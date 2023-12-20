@@ -91,6 +91,7 @@ export enum TABLE {
     CLIENT_RETENTION_DONE = "clientRetentionDone",
     CLIENT_RETENTION_PENDING= "clientRetentionPending",
     CLIENT_DASHBOARD = 'clientDashboard',
+    CLIENT_UPLOAD_AI = 'clientUploadAi',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -403,6 +404,31 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_UPLOAD_AI] : {
+        columns: [
+            { id: '1', label: 'dpTable_createdDate', prop: "createdDate", formatList: [
+                {
+                    "joiner": "",
+                    "prop": "createdDate",
+                    "formatFun": "dateFormat",
+                    "params": {
+                        "format": ""
+                    },
+                    "index": 0
+                }]
+            },
+            { id: '2', label: 'tableHeader_filesCount', prop: 'filesCount' },
+            { id: '3', label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { id: '4', label: 'dpTable_actions', slot: 'commonActions', width: 100 }
+        ],
+        events: [],
+        slots: [
+            { label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { label: 'dpTable_actions', slot: 'commonActions' }
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },

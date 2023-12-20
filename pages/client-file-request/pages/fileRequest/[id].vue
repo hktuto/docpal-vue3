@@ -57,7 +57,7 @@
                         </el-select>
                     </el-form-item>
                 </el-form>
-                <MetaRenderForm ref="MetaFormRef" :showApply="true" 
+                <MetaRenderForm ref="MetaFormRef" mode="fileRequest" 
                     @formChange="handleMetaChange"
                     @handleApply="handleApply"></MetaRenderForm>
             </div>

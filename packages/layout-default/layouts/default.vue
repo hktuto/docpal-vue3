@@ -62,7 +62,7 @@ const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useLayout();
-const { uploadState, uploadRequestList } = useUploadStore()
+const { uploadState, uploadRequestList } = useUploadAIStore()
 const sidebarEl = ref();
 const { sideSlot } = useLayout()
 
@@ -81,12 +81,12 @@ function toggleOpen() {
 
 // #region module:
   const InteractDrawerRef = ref()
-  function handleOpenUpload() {
-    InteractDrawerRef.value.handleSwitch()
+  function handleOpenUpload(isOpen: boolean = false) {
+    InteractDrawerRef.value.handleSwitch(isOpen)
   }
 // #endregion
 
-
+provide('handleOpenUploadDrawer', handleOpenUpload)
 </script>
 
 <style lang="scss" scoped>
