@@ -3,6 +3,7 @@
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
+    destroy-on-close
     @close="handleClose"
     >
     <FromVariablesRenderer ref="FromVariablesRendererRef"/>

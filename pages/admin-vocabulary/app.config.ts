@@ -8,7 +8,8 @@ export default defineAppConfig({
       routeName:"vocabulary",
       url:"/vocabulary",
       icon: "/icons/menu/vocabulary.svg",
-      order:8,
+      order: 13,
+      parentId: "admin_glossary"
     }
   ],
 })

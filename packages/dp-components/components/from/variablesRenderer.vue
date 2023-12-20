@@ -1,6 +1,10 @@
 <template>
 <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"
-    @emit="handleEmit"/>    
+    @emit="handleEmit">
+    <template v-for="(idx, slotName) in $slots" #[slotName]="data">
+        <slot :name="slotName" :data="data"></slot>
+    </template>     
+</FromRenderer>    
 </template>
 <script lang="ts" setup>
 export type variableItem = {

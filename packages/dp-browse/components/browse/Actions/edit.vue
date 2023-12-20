@@ -9,11 +9,12 @@
         <el-dialog v-model="dialogOpened" append-to-body :title="$t('tip.editDocDetail')" class="scroll-dialog">
             <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
                 <el-form-item :label="$t('name')" prop="name"
-                    :rules="[ { required: true, message: 'Please input email address', trigger: 'change'}]">
+                    :rules="[ { required: true, message: $t('form_common_requird'), trigger: 'change'}]">
                     <el-input v-model="form.name" clearable />
                 </el-form-item>
             </el-form>
-            <MetaRenderForm ref="MetaFormRef"></MetaRenderForm>
+            
+            <MetaRenderForm ref="MetaFormRef" :mode="state.MetaRenderMode"></MetaRenderForm>
             <template #footer>
                 <el-button :loading="state.loading"  @click="handleSave"
                     @keyup.enter="handleSave">{{$t('common_save')}}</el-button>
@@ -25,7 +26,7 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import { patchDocumentApi } from 'dp-api'
+import { patchDocumentApi, GetDocumentAiAnalyzeApi } from 'dp-api'
 import {ElMessage} from 'element-plus'
 const props = defineProps<{
     doc: any,
@@ -39,18 +40,24 @@ const form = ref({
     idOrPath: ''
 })
 const state = reactive({
-  doc: {},
-  loading: false
+    doc: {},
+    loading: false,
+    MetaRenderMode: 'ai-edit'
 })
 const MetaFormRef = ref()
-function openDialog(doc){
+async function openDialog(doc){
     state.doc = doc
     form.value.name = doc.name
     form.value.id = doc.id
     form.value.path = doc.path
     dialogOpened.value = true
     nextTick(async() => {
-        await MetaFormRef.value.init(doc.type)
+        const analysis = await GetDocumentAiAnalyzeApi(state.doc.id)
+        if(Object.keys(analysis).length === 0) state.MetaRenderMode = 'normal'
+        await MetaFormRef.value.init(doc.type, {
+            aiAnalysis: analysis,
+            aiDocId: doc.id
+        })
         MetaFormRef.value.setData(doc.properties)
     })
 }
@@ -88,4 +95,5 @@ async function handleSave(){
 onMounted(async() => {
     useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))  
 })
+defineExpose({ openDialog })
 </script>
