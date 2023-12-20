@@ -9,7 +9,6 @@ export const api = axios.create({
         if(window?.__TAURI__){
             // config.baseURL = undefined
             if(config.baseURL === '/api'){
-                console.log(config)
                 config.baseURL = undefined
                 config.url = 'https://app4.wclsolution.com/api' + config.url;
             }
