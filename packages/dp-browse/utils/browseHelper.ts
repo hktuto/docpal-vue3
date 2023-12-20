@@ -131,7 +131,8 @@ const deepCopy  = (data:any) => {
 
 export type FileDetailOptions = {
     showInfo: boolean,
-    showHeaderAction: boolean
+    showHeaderAction: boolean,
+    openEdit: boolean
 }
 export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
     const ev = new CustomEvent('openFilePreview', {detail: {

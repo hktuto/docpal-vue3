@@ -19,6 +19,7 @@ export type TableColumnItem = {
     label?: string,
     sortable?:boolean,
     slot ?: string,
+    headerSlot ?: string,
     align ?: string,
     width ?: string | number,
     defaultValue ?: any,
@@ -90,6 +91,7 @@ export enum TABLE {
     CLIENT_RETENTION_DONE = "clientRetentionDone",
     CLIENT_RETENTION_PENDING= "clientRetentionPending",
     CLIENT_DASHBOARD = 'clientDashboard',
+    CLIENT_UPLOAD_AI = 'clientUploadAi',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -402,6 +404,31 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_UPLOAD_AI] : {
+        columns: [
+            { id: '1', label: 'dpTable_createdDate', prop: "createdDate", formatList: [
+                {
+                    "joiner": "",
+                    "prop": "createdDate",
+                    "formatFun": "dateFormat",
+                    "params": {
+                        "format": ""
+                    },
+                    "index": 0
+                }]
+            },
+            { id: '2', label: 'tableHeader_filesCount', prop: 'filesCount' },
+            { id: '3', label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { id: '4', label: 'dpTable_actions', slot: 'commonActions', width: 100 }
+        ],
+        events: [],
+        slots: [
+            { label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { label: 'dpTable_actions', slot: 'commonActions' }
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },
@@ -2476,41 +2503,12 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.ADMIN_MASTER_TABLE]: {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'name' },
-            { id: '3', label: 'role.creator', prop: 'createdBy'},
-            {   
-                id: '7',
-                "type": "",
-                "label": "dpTable_actions",
-                class: "slotTopRight",
-                "prop": "",
-                "align": "center",
-                "width": 100,
-                "hide": false,
-                "system": false,
-                "showOverflowTooltip": false,
-                "formatList": [],
-                "buttons": [
-                    {
-                        "name": "",
-                        "type": "text",
-                        "command": "edit",
-                        "suffixIcon": "/icons/edit.svg",
-                        "index": 0
-                    },
-                    // {
-                    //     "name": "",
-                    //     "type": "text",
-                    //     "command": "delete",
-                    //     "suffixIcon": "/icons/menu/trash.svg",
-                    //     "index": 0
-                    // }
-                ],
-                "prefixIcon": "",
-                "suffixIcon": "",
-            }
+            { id: '2', label: 'role.creator', prop: 'createdBy'},
+            { id: '3', label: "dpTable_actions", slot: 'more', width: 100}
         ],
-        events: ['delete', 'edit', 'preview'],
+        events: ['delete', 'edit', 'preview', 'more'],
         slots: [
+            { label: "dpTable_actions", slot: 'more', width: 100 }
         ],
         options: { pageSize: 20 }
     },
@@ -2573,9 +2571,7 @@ export const defaultTableSetting: TableColumnSetting = {
 
 export function TableAddColumns (columnItem: TableColumnItem, columnList: any, position: number = 1) {
     const _columnItem: TableColumnItem = {
-        label: columnItem.label,
-        prop: columnItem.prop,
-        id: columnItem.id,
+        ...columnItem,
         showOverflowTooltip: true
     }
     if (columnItem.type === 'date') {

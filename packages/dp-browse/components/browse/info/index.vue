@@ -141,8 +141,6 @@ async function docUpdated(forceRefresh?: boolean = false) {
         if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
             currentTab.value = 'info'
         }
-        console.log('updateaa1');
-        
         // get detail
         //   const response = await getDocumentDetail(doc.value.id, userId);
         const response = await getDocumentDetailSync(doc.value.id, userId);

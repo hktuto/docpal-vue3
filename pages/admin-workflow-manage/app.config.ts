@@ -8,7 +8,7 @@ export default defineAppConfig({
       routeName:"workflowManage",
       url:"/workflowManage",
       icon: "/icons/menu/workflow.svg",
-      order:1,
+      order: 41,
       parentId: "admin_workflow"
     }
   ],

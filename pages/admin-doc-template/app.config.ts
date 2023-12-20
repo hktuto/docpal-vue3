@@ -17,7 +17,7 @@ export default defineAppConfig({
       routeName:"template",
       url:"/template",
       icon: "/icons/menu/docTemplate.svg",
-      order:29,
+      order: 49,
       parentId: "admin_templateManagement"
     }
   ],

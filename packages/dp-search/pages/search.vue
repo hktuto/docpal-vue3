@@ -145,6 +145,7 @@ async function handleDblclick (row) {
         showHeaderAction:true
       })
     }
+
 }
 function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
     router.push({

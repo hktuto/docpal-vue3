@@ -16,7 +16,8 @@ export const GetWorkflowDraftDetailApi = async(draftId: string) => {
 export const GetWorkflowDraftXMLApi = async(draftId: string) => {
     return api.get(`/docpal/workflow/process/definition/draft/${draftId}/download/xml`,{
         responseType: 'blob',
-        timeout: 0
+        timeout: 0,
+        headers: {'white': 'true'}
     }).then(res => res.data);
 }
 export const ValidateWorkflowXMLApi = async(file) => {

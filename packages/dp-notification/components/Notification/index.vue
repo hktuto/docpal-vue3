@@ -6,13 +6,15 @@
 </template>
 
 <script lang="ts" setup>
+import { ElNotification } from 'element-plus'
 import { getUnreadNotificationNumberApi } from 'dp-api';
 const unreadCount = ref(0);
 const notificationStore = ref()
 const NotificationDialogRef = ref();
 const { isLogin, token } = useUser();
+const router = useRouter()
 const Cookies = useCookie('messageToken')
-
+const { uploadState }  = useUploadAIStore()
 const userId:string = useUser().getUserId()
 function handleOpen () {
     NotificationDialogRef.value.handleOpen()
@@ -25,9 +27,61 @@ function handleUnreadCountChange (count:number) {
     if (count >= 0) unreadCount.value = count
     else getUnreadCount()
 }
-function messageChange() {
+function messageChange(notiData) {
     getUnreadCount()
     NotificationDialogRef.value.initData()
+    try {
+        const messageJson = notiData.messageJson
+        const content = JSON.parse(messageJson.content)
+        switch (messageJson.functionPoint) {
+            case 'Ai-analysis_UPLOAD_FOLDER':
+                handleAiUpload(content)
+                break;
+            case 'Ai-analysis_REPLACE_FILE':
+                handleReplaceFileWithAi(content)
+                break;
+            default:
+                break;
+        }
+    } catch (error) {
+        
+    }
+}
+function handleAiUpload(content) {
+    if(content.uploadId) {
+        const noti = ElNotification({
+            title: $t('ai.uploadcomplete'),
+            message: $t('ai.uploadAndAIComplete'),
+            type: 'success',
+            duration: 0,
+            onClick: () => {
+                router.push(`/AIUpload/${content.uploadId}`)
+                noti.close()
+            }
+        });
+        const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)
+        if(requetUpload) requetUpload.aiFinish = true
+    }
+}
+function handleReplaceFileWithAi(content) {
+    if(content.idOrPath) {
+        const noti = ElNotification({
+            title: $t('status.completed'),
+            message: $t('ai.confirmAiMetadataExtractionViewDocument'),
+            type: 'success',
+            duration: 0,
+            onClick: () => {
+                openFileDetail(content.idOrPath, {
+                    showInfo:true,
+                    showHeaderAction:true,
+                    openEdit: true
+                })
+                noti.close()
+            }
+        });
+        const requetUpload = uploadState.value.uploadRequestList.find(item => item.uploadAiId === content.uploadId)
+        if(requetUpload) requetUpload.aiFinish = true
+    }
 }
 onMounted(() => {
     getUnreadCount();

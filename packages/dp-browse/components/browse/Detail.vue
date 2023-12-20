@@ -12,7 +12,7 @@
                     <template #default="{collapse}">
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <BrowseActionsHold :doc="doc" :permission="permission"/>
-                      <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
+                      <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
                       <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
                       <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefreshPreview"/>
@@ -23,7 +23,7 @@
                       <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @refresh="handleRefreshPreview" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
                       <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
-      
+
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
                       
@@ -114,8 +114,13 @@ async function openPreview({detail}:any) {
   cancelAxios()
   show.value = false
   options.value = detail.options
-  getData(detail.pathOrId)
   show.value = true
+  await getData(detail.pathOrId)
+  if (detail.options?.openEdit) openEdit()
+}
+const BrowseActionsEditRef = ref()
+async function openEdit() {
+  BrowseActionsEditRef.value.openDialog(doc.value)
 }
 async function getData (docId) {
   const response = await getDocumentDetailSync(docId, userId);

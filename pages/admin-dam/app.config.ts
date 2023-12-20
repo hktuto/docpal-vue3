@@ -8,7 +8,7 @@ export default defineAppConfig({
       routeName:"dam",
       url:"/dam",
       icon: "/icons/menu/dam.svg",
-      order:99,
+      order:29,
       parentId: "admin_browse",
       parentIcon: "/icons/menu/browser.svg"
     }

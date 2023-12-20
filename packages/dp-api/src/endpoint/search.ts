@@ -144,7 +144,7 @@ export const ExportSearchCsvApi = async(params) => {
     const res = await api.post('/nuxeo/search/exportCsv', params, {
         responseType: 'blob',
         timeout: 0,
-        headers: { TimeZone }
+        headers: { TimeZone, 'white': 'true' }
     }).then(res => res.data)
     return res
 }
@@ -202,9 +202,14 @@ export const GetSTypesApi = async() => {
     const res = await api.get('/nuxeo/types', {}).then(res => res.data.data)
     searchOptions.types = res.map(item => ({
         value: item.name,
-        label: $t(item.name)
+        label: $t(item.name),
+        isFolder: item.isFolder
     }))
     return searchOptions.types
+}
+export const GetDocListWithIsFolderApi = async(isFolder:boolean = true) => {
+    const docList = await GetSTypesApi()
+    return docList.filter(item => item.isFolder === isFolder)
 }
 export const GetKeyCloakAllUsersApi = async() => {
     if (searchOptions.users) return searchOptions.users
