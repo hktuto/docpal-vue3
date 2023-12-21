@@ -3,8 +3,8 @@
     @emit="handleEmit">
     <template v-for="(idx, slotName) in $slots" #[slotName]="data">
         <slot :name="slotName" :data="data"></slot>
-    </template>     
-</FromRenderer>    
+    </template>
+</FromRenderer>
 </template>
 <script lang="ts" setup>
 export type variableItem = {
@@ -80,6 +80,7 @@ function createJson(variables: variableItem[]) {
             }
         }
         if(!['date','input','switch','textarea','number','select'].includes(item.type)) _item.type = 'input'
+      console.log("item", item)
         if(item.type === 'date') {
             _item.options.format = 'YYYY-MM-DD HH:mm',  //日期显示格式
             _item.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'
