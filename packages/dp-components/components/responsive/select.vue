@@ -16,11 +16,12 @@
     >
         <template #default>
             <template v-if="selectData.options && selectData.options.length > 0">
-                <el-checkbox-group 
+                <el-checkbox-group
                     :max="selectData.isMultiple ? 100 : 1 "
                     v-model="selectData.value"
                     @change="handleChange(selectData)">
-                    <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" >
+                    <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" 
+                        :data-testid="`filter-${item.value}`">
                         <template v-if="selectData.type === 'date'">
                             {{formatDate(item.label)}}
                         </template>
@@ -48,8 +49,7 @@ const emits = defineEmits(['change'])
 const buttonRef = ref()
 const popoverRef = ref()
 const onClickOutside = () => {
-    console.log(popoverRef);
-    
+
 //   unref(popoverRef).popperRef?.delayHide?.()
 }
 function handleChange (data: ResSelectData) {

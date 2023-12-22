@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import * as echarts from "echarts";
 import { GetCoCountCountApi } from 'dp-api'
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, watchDebounced } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     documentType?: string,
     user?: string
@@ -130,12 +130,9 @@ onMounted(async() => {
 onUnmounted(() => {
     echartInstance.dispose()
 })
-watch(() => props, (newValue) => {
+watchDebounced(props, (newValue) => {
     handleInitChart(props.documentType)
-}, {
-    immediate: true,
-    deep: true
-})
+},{ debounce: 200, maxWait: 500, immediate: true })
 defineExpose({
     resize
 })

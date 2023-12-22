@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import * as echarts from "echarts";
 import { GetDocTypeSizeApi, GetDocTypeSizeTrendApi } from 'dp-api'
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, watchDebounced } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
     hideSetting?: boolean,
@@ -35,11 +35,14 @@ const setting = {
             },
             yAxis: {
                 type: 'value',
+                // interval: 1024 ,
                 axisLabel: {
-                    show: true,
-                    formatter:function (value) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                    formatter:function (value, index) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
                         return fileSize(value, ['MB', 'GB', 'TB', 'PB'])
                     }
+                },
+                splitLine: {
+                    show: true
                 }
             },
             tooltip: {
@@ -131,7 +134,12 @@ const setting = {
     barSetting: {
         options: {
             xAxis: {
-                type: 'value'
+                type: 'value',
+                axisLabel: {
+                    formatter:function (value, index) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
+                        return fileSize(value)
+                    }
+                }
             },
             yAxis: {
                 data: [],
@@ -282,7 +290,7 @@ let options = {}
             const value = chartData[key]
             const _sItem = {
                 value,
-                name: key
+                name: $t(key)
             }
             const dItem = displayList.find(item => item.documentType === key)
             if(!!dItem && !!dItem.color) {
@@ -305,7 +313,7 @@ let options = {}
             const values = chartData[key]
             const _sItem = {
                 ...setting[`${type}Setting`].series,
-                name: key,
+                name: $t(key),
                 data: values instanceof Array ? values : [values]
             }
             if(!displayList) displayList = []
@@ -488,11 +496,9 @@ onMounted(async() => {
 onUnmounted(() => {
     echartInstance.dispose()
 })
-watch(() => props.setting, (newSetting) => {
+watchDebounced(props.setting, (newSetting) => {
     handleInitChart(newSetting)
-}, {
-    immediate: true
-})
+},{ debounce: 200, maxWait: 500, immediate: true })
 defineExpose({
     resize
 })

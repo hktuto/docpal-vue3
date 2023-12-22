@@ -3,7 +3,7 @@
     <el-card>
         <div class="infoSection">
             <div class="infoTitle">{{$t('info_type')}}</div>
-            <div class="infoContent">{{ info.type }}</div>
+            <div class="infoContent" v-if="info.type">{{ $t(info.type) }}</div>
         </div>
         <div v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')" class="infoSection">
             <div class="infoTitle">{{ $t('info_version') }}</div>
@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <el-divider />
+        
         <BrowseInfoMeta v-bind="$props" :permission="permission" @update="$emit('update', true)"/>
         <BrowseInfoTag :doc="doc" :permission="permission" @update="$emit('update', true)"/>
         <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" :permission="permission" @update="$emit('update', true)" />

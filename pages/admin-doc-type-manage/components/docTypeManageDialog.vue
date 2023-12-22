@@ -14,7 +14,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { CreateDocTypesApi, UpdateDocTypesApi, GetDocTypeApi, getDocTypeListApi, fieldTypeRelatedList,
+import { CreateDocTypesApi, UpdateDocTypesApi, GetDocTypeApi, fieldTypeRelatedList,
     getJsonApi,
     TABLE, defaultTableSetting, deepCopy } from 'dp-api'
 const props = defineProps<{

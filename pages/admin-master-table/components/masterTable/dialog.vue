@@ -3,9 +3,17 @@
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
+    destroy-on-close
     @close="handleClose"
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FromRenderer ref="FromRendererRef" :form-json="formJson" >
+        <template v-slot:defaultFields>
+            <div>
+                {{ $t('masterTable.defaultFields') }}:
+                <b>{{ getFields() }}</b>
+            </div>
+        </template>
+    </FromRenderer>
     <template #footer>
         <div class="footer-grid">
             <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
@@ -29,18 +37,33 @@ const state = reactive({
         { dataType: "timestamp", fieldName: "modified_date", required: true, unique: false },
         { dataType: "varchar:255", fieldName: "modified_by", required: true, unique: false }
     ],
+    fieldNameMap: {
+        created_date: $t('workflow_createDate'),
+        id:  $t('docType_id'),
+        modified_date:  $t('tableHeader_modifiedDate'),
+        modified_by:  $t('modified_by')
+    },
     edit: false
 })
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/masterTable.json')
 const router = useRouter()
+function getFields () {
+    return state.extraFields.reduce((prev, item, index) => {
+        prev += state.fieldNameMap[item.fieldName]
+        if(index !== state.extraFields.length - 1) prev += ', '
+        return prev
+    }, '')
+}
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    console.log({data});
+    
     state.loading = true
     const _data = {
         ...state.setting,
         name: data.table,
-        fields: [ ...data.extraFields, ...data.fields  ]
+        fields: [ ...state.extraFields, ...data.fields  ]
     }
     try {
         const res = await SaveMasterTablesApi(_data)

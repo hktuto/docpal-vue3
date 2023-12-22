@@ -3,7 +3,10 @@
         <main class="share-main" v-loading="state.loading">
             <FromRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
             <div class="div2" v-loading="previewFile.loading">
-                <template v-if="previewFile.name">
+                <template v-if="state.loadingFileFail">
+                    <div class="no-file-preview"> {{$t('tip.loadingFileFail')}}</div>
+                </template>
+                <template v-else-if="previewFile.name">
                     <div class="reader-container">
                         <h3>{{previewFile.name}}</h3>
                         <Reader ref="ReaderRef" v-bind="previewFile" ></Reader>
@@ -47,7 +50,8 @@ const state = reactive({
     minTypeShareList: [],
     interval: null,
     loading: false,
-    backPath: '/browse'
+    backPath: '/browse',
+    loadingFileFail: false
 })
 
 const previewFile = reactive({
@@ -65,25 +69,40 @@ const previewFile = reactive({
 })
 async function handleDblclick (row) {
     previewFile.loading = true
-    if(row.watermark) {
-        if(!!state.interval) clearInterval(state.interval)
-        state.interval = setInterval(async() => {
-            const res = await getPrepareShareDownloadUrlApi(row.id)
-            if (res === 'YES') {
-                clearInterval(state.interval)
-                previewFile.blob = await GetWatermarkDocPreview({
-                    watermarkTemplateId: row.watermark,
-                    documentId: row.id
-                })
-                previewFile.loading = false
-            }
-        }, 1000)
-    } else {
-        previewFile.blob = await GetDocumentPreview(row.id)
-        previewFile.loading = false
+    state.loadingFileFail = false
+    try {
+        if(row.watermark) {
+            if(!!state.interval) clearInterval(state.interval)
+            let intervalNum = 0
+            state.interval = setInterval(async() => {
+                intervalNum ++
+                if(intervalNum === 50) {
+                    clearInterval(state.interval)
+                    handlePreviewFail()
+                }
+                const res = await getPrepareShareDownloadUrlApi(row.id)
+                if (res === 'YES') {
+                    clearInterval(state.interval)
+                    previewFile.blob = await GetWatermarkDocPreview({
+                        watermarkTemplateId: row.watermark,
+                        documentId: row.id
+                    })
+                    previewFile.loading = false
+                }
+            }, 1000)
+        } else {
+            previewFile.blob = await GetDocumentPreview(row.id)
+            previewFile.loading = false
+        }
+        previewFile.name = row.name
+        previewFile.id = row.id
+    } catch (error) {
+        handlePreviewFail()
     }
-    previewFile.name = row.name
-    previewFile.id = row.id
+    function handlePreviewFail() {
+        previewFile.loading = false
+        state.loadingFileFail = true
+    }
 }
 async function handleSubmit () {
     state.loading = true

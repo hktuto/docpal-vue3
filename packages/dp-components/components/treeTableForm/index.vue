@@ -45,6 +45,9 @@
                                     <slot v-else-if="col.slot" name="expand" :row="row" :index="$index"></slot>
                                     <!-- 自定义slot (END) -->
                                 </template>
+                                <template #header="{ row, $index }">
+                                    <span>{{ $t(col.label) }}</span>
+                                </template>
                             </el-table-column>
                         <!---复选框, 序号 (END)-->
                         <el-table-column v-else v-bind="col" :class-name="classComputed(col)" @command="handleAction">
@@ -55,6 +58,9 @@
                                             <el-input v-model="row[col.prop]" :disabled="disabled"></el-input>
                                         </slot>
                                     </el-form-item>
+                                </template>
+                                <template #header="{ row, $index }">
+                                    <span>{{ $t(col.label) }}</span>
                                 </template>
                             <!-- 自定义列插槽 -->
                         </el-table-column>

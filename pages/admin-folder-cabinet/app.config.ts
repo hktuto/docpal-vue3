@@ -8,7 +8,7 @@ export default defineAppConfig({
       routeName:"folderCabinet",
       url:"/folderCabinet",
       icon: "/icons/menu/folderCabinet.svg",
-      order:29,
+      order:23,
       parentId: "admin_browse"
     }
   ],

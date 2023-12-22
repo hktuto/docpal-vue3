@@ -3,7 +3,7 @@
    class="responsive-container" v-element-size="onResize">
      <div class="flex-x-start">
         <el-input v-if="inputKey" v-model="state.inputValue" :placeholder="$t(inputPlaceHolder)"
-            @input="handleChange"></el-input>
+            clearable @input="handleChange"></el-input>
         <div v-for="item in state.list" :key="item.label" :ref="el => { boxRefs[item.label] = el }">
             <ResponsiveSelect  :selectData="item" @change="handleChange"/>
         </div>
@@ -139,10 +139,12 @@ function init(list: ResSelectData[]) {
     state.list = list.reduce((prev, item) => {
         if(item.isMultiple !== false) item.isMultiple = true
         item.value = []
+        item.options = item.options.filter(o => !!o.label && !!o.value)
         prev.push(item)
         return prev
     }, [])
     nextTick(() => {
+        if(!responsiveRef.value) return
         onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
     })
 }
@@ -169,8 +171,9 @@ function handleChange (filedData: {fieldName: string, value: any}) {
         if(props.inputKey) formModel[props.inputKey] = state.inputValue
         
         emits('form-change', deepCopy(formModel), filedData)
-        onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
         clearInterval(state.interval)
+        if(responsiveRef.value) return
+        onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
     }, 200)
 }
 function handleFilter () {
@@ -196,3 +199,4 @@ defineExpose({ init })
     }
 }
 </style>
+

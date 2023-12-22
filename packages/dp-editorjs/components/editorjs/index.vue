@@ -1,152 +1,158 @@
 <template>
-    <div id="editorEl">
+    <div id="editorjsEditorContainer">
+      <div class="actions">
+        <div class="name">
+          <div class="span">{{data.label}}</div>
+          <slot name="name"></slot>
+        </div>
+        <div class="action">
+          <slot name="action"></slot>
+        </div>
+      </div>
+      <div :class="`email_content ${mode}`">
+        <div class="responsiveSizeEditorContainer">
+          <SvgIcon :class="{desktop:true, active:mode === 'desktop'}" :src="'/icons/desktop.svg'" @click="mode = 'desktop'" />
+          <SvgIcon :class="{mobile:true, active:mode === 'mobile'}" :src="'/icons/smartphone.svg'" @click="mode = 'mobile'" />
+        </div>
+        <div :class="`emailTemplateContainer ${mode}`" v-html="contentHtml">
 
+        </div>
+      </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import EditorJS from '@editorjs/editorjs';
-import Header from '@editorjs/header';
-import Table from '@editorjs/table';
-import NestedList from '@editorjs/nested-list';
-import  Paragraph from '@editorjs/paragraph';
-import VariableOptions from '../../editorComponents/variableOptions';
-import VariableSelect from '../../editorComponents/variableSelect';
-const props = withDefaults(defineProps<{
-    options:any,
-    data:any,
-    variable:any
-}>(),{
-    options:{},
-    data:{},
-    variable:[]
-})
 
-const { variable } = toRefs(props);
-const editor = ref<EditorJS | null>(null);
-function setupEditor() {
-    // init editorjs
-    editor.value = new EditorJS({
-        holderId: 'editorEl',
-        autofocus: true,
-        data: props.data,
-        tools:{
-            header: {
-                class: Header,
-                inlineToolbar: true,
-            },
-            list : {
-                class: NestedList,
-                inlineToolbar: true,
-            },
-            table:{
-                class: Table,
-                inlineToolbar: true,
-            },
-            paragraph: {
-                class: Paragraph,
-                inlineToolbar: true,
-            },
-            VariableOptions: {
-                class: VariableOptions,
-                config:{
-                    variables: variable.value
-                }
-            },
-        },
-        i18n:{
-            messages:{
-                toolNames: {
-                    "Text": "Text",
-                    "Heading": "Heading",
-                    "List": "List",
-                    "Warning": "Warning",
-                    "Checklist": "Checklist",
-                    "Quote": "Quote",
-                    "Delimiter": "Delimiter",
-                    "Table": "Table",
-                    "Link": "Link",
-                    "Marker": "Marker",
-                    "Bold": "Bold",
-                    "Italic": "Italic",
-                    "InlineCode": "InlineCode",
-                },
-                blockTunes: {
-                    "delete": {
-                        "Delete": "Delete"
-                    },
-                    "moveUp": {
-                        "Move up": "Move up"
-                    },
-                    "moveDown": {
-                        "Move down": "Move down"
-                    }
-                },
-            }
-        },
-        onChange: (api, event) => {
-            const data = api.saver.save().then((outputData) => {
-                calculateVariable(outputData);
-            });
-        },
+//#region setup
+  import {useEditor} from "~/composables/useEditorjs";
+
+const props = defineProps<{
+    data: any,
+    layout: string,
+  }>()
+
+const { layout, data } = toRefs(props)
+  
+  const emits = defineEmits([
+    'save',
+  ])
+
+  const mode = ref<'desktop' | 'mobile'>('desktop');
+  const contentHtml = ref()
+  const editor = useEditor();
+  
+//#endregion
+
+function layoutOrDataChange() {
+  if(!layout.value) return;
+  contentHtml.value = "";
+  nextTick(() => {
+    contentHtml.value = layout.value.replaceAll('[[emailContent]]', '<div id="emailContent"></div>');
+    nextTick(() => {
+      const emailContent = document.getElementById('emailContent')
+      if(emailContent) {
+        emailContent.innerHTML = "";
+      }
+      editor.createEditor('emailContent', data.value);
     })
+  })
+  
+  
+
 }
 
-function dispose(){
-    editor.value?.destroy();
-    editor.value = null;
-}
-async function setData(data:any) {
-    await editor.value?.isReady;
-    await editor.value?.render(data);
-}
-async function getData() {
-    const outputData = await editor.value?.save();
-    return outputData;
+
+function getVariables(){
+  return editor.variables.value;
 }
 
-async function getHTML() {
-    const outputData = await editor.value?.save();
-    const html = "";
-    if(!outputData) return;
-    for( const block of outputData.blocks) {
-        console.log(block)
-    }
-    return html
-}
-
-function calculateVariable(data:any) {
-    const variable = [];
-    for( const block of data.blocks) {
-        if(block.type === 'variableOptions') {
-            variable.push(block.data.variable)
-        }
-    }
-}
-
-onMounted(() => {
-    setupEditor();
-})
-
-
-onUnmounted(() => {
-    dispose();
-})
-
-watch(() => props.data, async (data) => {
-    await setData(data);
+watch(()=> [layout.value, data.value], () => {
+  layoutOrDataChange()
+},{
+  immediate: true
 })
 
 defineExpose({
-    getData,
-    getHTML,
-    setData
+  getVariables,
+  getData: () => editor.getData(),
 })
+
+
 </script>
 
 <style scoped>
-#editorEl {
-    width: 100%;
+#editorjsEditorContainer{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .actions{
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: var(--app-padding);
+    margin-bottom: 20px;
+    .name {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--app-padding);
+      flex:1 0 auto;
+      word-break: break-all;
+      span{
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    }
+    .action{
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--app-padding);
+      .el-select{
+        width: 200px;
+      }
+      > * {
+        margin:0;
+
+      }
+    }
+  }
+  .email_content{
+    flex: 1 0 auto;
+    position: relative;
+    &.desktop{
+      width: 100%;
+    }
+    &.mobile{
+      width: 375px;
+      margin: 0 auto;
+    }
+  }
+  .emailTemplateContainer{
     height: 100%;
+  }
+}
+
+.responsiveSizeEditorContainer{
+  position: absolute;
+  left: calc(50% - 31px);
+  top: -15px;
+  width: 62px;
+  height: 30px;
+  background-color: #fff;
+  z-index: 2;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  --icon-color: var(--color-grey-600);
+  .desktop, .mobile{
+    cursor: pointer;
+    &.active{
+      --icon-color: var(--primary-color);
+    }
+  }
 }
 </style>

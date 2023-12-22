@@ -7,7 +7,7 @@
             </el-progress>
             <div class="dashboard-item-progress-count">{{state.data[setting.documentType]}}</div>
             <div class="dashboard-item-progress-title"
-                >{{setting.documentType}}</div>
+                >{{$t(setting.documentType)}}</div>
             <DocCountSetting ref="settingRef" 
                 @delete="handleDelete"
                 @refresh="handleRefresh"/>
@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import * as echarts from "echarts";
 import { GetDocTypeCountApi } from 'dp-api'
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, watchDebounced } from '@vueuse/core'
 const props = withDefaults( defineProps<{
     setting?: any;
     hideSetting?: boolean,
@@ -96,12 +96,9 @@ onMounted(async() => {
 })
 onUnmounted(() => {
 })
-watch(() => props.setting, (newSetting) => {
-    console.log(newSetting, 'newSetting')
+watchDebounced(props.setting, (newSetting) => {
     getData(props.setting.documentType)
-}, {
-    immediate: true
-})
+},{ debounce: 200, maxWait: 500, immediate: true })
 defineExpose({
     resize
 })

@@ -7,8 +7,6 @@
             </div> -->
           <div class="main">
             <div class="main-left">
-              
-            
               <div class="upload-main-left-header">
                 <el-button @click="resetChecked">{{$t('reset')}}</el-button>
               </div>
@@ -25,7 +23,7 @@
                                  <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
                                 {{data.name}}
                             </span>
-                    <div>{{data.documentType}}</div>
+                    <div>{{$t(data.documentType)}}</div>
                   </div>
                 </template>
               </el-tree>
@@ -90,7 +88,7 @@ function handleNodeClick(row) {
     UploadMetaFormRef.value.init(row)
     previewRef.value.init(row)
 }
-function handleApplyToSelected({documentType, metaList, isFolder}) {
+function handleApplyToSelected({documentType, properties, isFolder}) {
     if(state.checkList.length === 0) {
         ElMessage.warning($t('dpTip_noSelection'))
         return
@@ -101,7 +99,7 @@ function handleApplyToSelected({documentType, metaList, isFolder}) {
     }
     state.checkList.forEach(item => {
         item.documentType = documentType
-        item.metaList = metaList
+        item.properties = properties
     })
     ElMessage.success($t('dpMsg_success'))
 }
@@ -129,25 +127,18 @@ function handleDiscard () {
     setUploadFiles([])
     router.push(state.backPath)
 }
-function handleSubmit () {
+async function handleSubmit () {
     const nodeMap = treeRef.value!.store.nodesMap
     const data = Object.keys(nodeMap).reduce((prev,key) => {
         prev[key] = { ...nodeMap[key].data }
-        if (prev[key].metaList) {
-            prev[key].properties = getPropertiesFromMetaList(prev[key].metaList)
-            delete prev[key].metaList
-        }
         delete prev[key].children
         return prev
     }, {})
+    const validate = await UploadMetaFormRef.value.validate(data)
+    if(!validate) return
+
     updateUploadRequestList(data)
     router.push(state.backPath)
-    function getPropertiesFromMetaList(metaList) {
-        return metaList.reduce((prev, item) => {
-            if (item.value) prev[item.metaData] = deepCopy(item.value) 
-            return prev
-        }, {})
-    }
 }
 async function handleBreadcrumb() {
     state.rootDoc = getRootDoc()
@@ -203,6 +194,7 @@ onMounted(async() => {
         }
         .main-right {
             height: 100%;
+            overflow: hidden;
             display: grid;
             grid-template-columns: 1fr min-content ;
             grid-column-gap: var(--app-padding);

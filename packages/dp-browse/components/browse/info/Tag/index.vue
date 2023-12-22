@@ -1,4 +1,5 @@
 <template>
+  <el-divider content-position="left">{{$t('info.tag&collection')}}</el-divider>
    <div class="infoSection" v-show="tags.length > 0 || canWrite" >
      <div class="infoTitle">{{ $t('rightDetail_tags') }}</div>
     <div class="infoContent">
@@ -68,7 +69,11 @@ async function getAllTags() {
 }
 
 watch(doc, () => {
-    tags.value =( props.doc.properties['nxtag:tags'] || []).map((item:any) => ({
+    if(!props.doc && !props.doc.properties) {
+      tags.value = []
+      return
+    }
+    tags.value =( props.doc?.properties['nxtag:tags'] || []).map((item:any) => ({
       key: item.label,
       value: item.label
     }))

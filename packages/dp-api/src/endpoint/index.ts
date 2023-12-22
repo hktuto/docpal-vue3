@@ -15,9 +15,12 @@ export * from './hold-policies'
 export * from './retention'
 
 export * from './ocrAPi'
+export * from './ai-upload'
 
 export * from './admin-acl'
 export * from './admin-meta'
+export * from './admin-meta-validation'
+
 export * from './admin-workflow'
 export * from './admin-docType'
 export * from './admin-vocabulary'

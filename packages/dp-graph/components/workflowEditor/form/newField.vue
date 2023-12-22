@@ -30,7 +30,7 @@ const newFieldFormEl = ref();
 const newFieldForm = ref<FormObject>({
   attr_id: '',
   attr_name: '',
-  attr_type: 'String',
+  attr_type: 'string',
 })
 
 const newFieldRules= {
@@ -58,6 +58,10 @@ function add() {
   // validate newFieldForm
   if(!selectedNewField.value) return
   if(isNewField.value){
+    console.log(newFieldForm.value)
+    if(newFieldForm.value.attr_type === 'date') {
+      newFieldForm.value.attr_datePattern = "yyyy-MM-dd HH:mm:ss"
+    }
     emit('submit', newFieldForm.value)
     return
   }

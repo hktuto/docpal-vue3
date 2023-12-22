@@ -15,7 +15,6 @@
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
 </el-dialog>
-<MetaEditForm v-show="false" ref="MetaFormRef2"></MetaEditForm>
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -43,9 +42,11 @@ const route = useRoute()
 // #region module: handleSubmit
     const FolderCabinetUploadTreeRef = ref()
     async function handleSubmit () {
-        state.loading = true
+        // state.loading = true
         try {
-            const uploadList = FolderCabinetUploadTreeRef.value.getData(true)
+            const uploadList = await FolderCabinetUploadTreeRef.value.getData(true)
+            console.log(uploadList);
+            
             state.uploadLength = getUploadLength()
             state.uploadedLength = 0
             if(!uploadList) {
@@ -128,14 +129,12 @@ const route = useRoute()
         }
         state.treeLoading = false
     }
-    const MetaFormRef2 = ref()
     function initTreeData (children, parentId: string = '') {
         children.forEach(async(item) => {
             item.isLack = false
             if(parentId) item.parentId = parentId
             if (item.folder === true) {
                 item.properties = {}
-                item.metaList = await MetaFormRef2.value.metaListGet(item.documentType, {})
             }
             if (item.children) initTreeData(item.children, item.id)
             else item.children = []

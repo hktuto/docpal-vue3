@@ -45,7 +45,7 @@
         </ElForm>
         <div class="footer">
             <ElButton @click="$emit('close')">Close</ElButton>
-            <ElButton type="primary" @click="$emit('submit', allFormField)">Save</ElButton>
+<!--            <ElButton type="primary" @click="$emit('submit', allFormField)">Save</ElButton>-->
         </div>
 
     </div>
@@ -67,6 +67,8 @@ const nameRules = [
     trigger: 'blur'
   },
 ]
+
+
 
 
 </script>

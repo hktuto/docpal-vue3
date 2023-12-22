@@ -11,7 +11,9 @@ export type UserSetting = {
 
 export type User = {
     username: string,
-    userId: string
+    userId: string,
+    lastName: string,
+    firstName: string
 }
 
 

@@ -27,6 +27,7 @@ const cancelAxiosWhiteList = [
     '/docpal/workflow/tasks/exportTasksUser',
     '/docpal/workflow/history/exportProcessHistory',
     // search
+    '/nuxeo/search/nestedSearch',
     '/nuxeo/collection/all',
     '/nuxeo/tags/getAllTags',
     '/nuxeo/types',
@@ -34,9 +35,13 @@ const cancelAxiosWhiteList = [
     '/nuxeo/identity/users',
     '/nuxeo/search/getSearchExtends',
     '/nuxeo/collection',
+    '/nuxeo/identity/getAllUsers',
+    '/nuxeo/identity/getKeyCloakAllUsers',
     // workflow
     '/docpal/workflow/process/list',
     '/docpal/workflow/process/model',
+    // '/docpal/master/tables/download/failure'
+    '/notification/api/v1/receive/messages'
 ]
 let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
@@ -64,7 +69,11 @@ export default defineNuxtPlugin((nuxtApp) => {
         }
         return config;
     },(error) => Promise.reject(error));
-    api.interceptors.response.use((response) => response, async(error) => {
+    api.interceptors.response.use((response) => {
+      console.log(response)
+      return response
+    }, async(error) => {
+        console.log(error)
         const config = error?.config;
         const messageErrorCode = [403, 500]
         if (error?.response?.status === 401 && !config?.sent) {

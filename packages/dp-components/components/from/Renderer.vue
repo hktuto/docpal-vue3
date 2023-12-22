@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import { WorkflowAttachmentDownloadApi } from 'dp-api'
-    const emits = defineEmits(['submit','clean','fail', 'formChange']);
+    const emits = defineEmits(['submit','clean','fail', 'formChange', 'emit']);
     const props = withDefaults(defineProps<{
         data?: Object,
         formJson?: Object,
@@ -56,6 +56,7 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
     }
     function handleEmit (funName, newValue, oldValue) {
         emits(funName, newValue, oldValue)
+        emits('emit', funName, newValue, oldValue)
     }
     const ReaderRef = ref()
     const previewFile = reactive({

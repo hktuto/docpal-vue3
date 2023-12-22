@@ -1,5 +1,5 @@
 <template>
-    <el-tag ref="tagRef" closable 
+    <el-tag ref="tagRef" :closable="!element.noDelete"
         v-click-outside="onClickOutside"
         @click="initForm"
         @close="handleClose()">{{ element[itemKey] }}</el-tag>
@@ -33,8 +33,7 @@ const popoverRef = ref()
 const FromRendererRef = ref()
 const formJson = getJsonApi('admin/dragSelect.json')
 const onClickOutside = () => {
-    console.log(popoverRef);
-    
+
   unref(popoverRef).popperRef?.delayHide?.()
 }
 function handleClose () {

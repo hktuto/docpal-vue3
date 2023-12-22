@@ -1,36 +1,43 @@
 <template>
     <div ref="filterContainerRef" class="filterContainer">
-      <div class="formShrink" @click="opened = true">
-        Filter
-        <div class="iconContainer">
-          <arrow-down />
+        <div class="formShrink" @click="opened = true">
+            <div class="iconContainer">
+                <arrow-down />
+            </div>
         </div>
-      </div>
-      <div :class="{formContainerDialog:true, opened}">
-        <div v-if="isMobile" class="dialogCloseBtn" @click="opened = false">
-          <SvgIcon src="/icons/close.svg" />
+        <div :class="{formContainerDialog:true, opened}">
+            <div v-if="isMobile" class="dialogCloseBtn" @click="opened = false">
+                <SvgIcon src="/icons/close.svg" />
+            </div>
+
+            <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
+            <div class="filterContainer-footer">
+                <el-row :gutter="10">
+                    <el-col :span="8">
+                        <el-button type="info" 
+                            data-testid="search-reset-button"
+                            @click="handleReset">{{$t('reset')}}</el-button>
+                    </el-col>
+                    <el-col :span="16">
+                        <el-button type="primary" :loading="loading" 
+                            data-testid="search-submit-button"
+                            @click="handleSubmit">{{$t('search')}}</el-button>
+                    </el-col>
+                </el-row>
+                <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" 
+                    data-testid="search-export-button"
+                    @click="handleDownload">{{$t('export')}}</el-button>
+            </div>
         </div>
-        <FromRenderer ref="FromRendererRef" :form-json="filterJson" @form-change="formChangeHandler" ></FromRenderer>
-        <div class="filterContainer-footer">
-            <el-row :gutter="10">
-                <el-col :span="8">
-                    <el-button type="info" @click="handleReset">{{$t('reset')}}</el-button>
-                </el-col>
-                <el-col :span="16">
-                    <el-button type="primary" :loading="loading" @click="handleSubmit">{{$t('search')}}</el-button>
-                </el-col>
-            </el-row>
-            <el-button v-if="allowFeature('SEARCH_EXPORT')" type="info" @click="handleDownload">{{$t('export')}}</el-button>
-        </div>
-      </div>
         <SearchDownloadDialog ref="SearchDownloadDialogRef" />
     </div>
 </template>
 
 <script lang="ts" setup>
 
-import { deepCopy, getJsonApi, getSearchParamsArray } from 'dp-api'
+import { getJsonApi, getSearchParamsArray } from 'dp-api'
 import {ArrowDown} from "@element-plus/icons-vue";
+import { useDebounceFn } from '@vueuse/core'
 const props = defineProps<{
     searchParams: any,
     ready: boolean,
@@ -39,21 +46,20 @@ const props = defineProps<{
 const { isMobile, allowFeature } = useLayout()
 const route = useRoute()
 const router = useRouter()
-const emits = defineEmits(['submit'])
 const filterJson = getJsonApi('search.json')
 const FromRendererRef = ref()
 const filterContainerRef = ref()
 
 const opened = ref(false);
 const formModelData = ref<any>({});
-function formChangeHandler({fieldName,newValue,oldValue,formModel}) {
+const formChangeHandler = useDebounceFn(({fieldName,newValue,oldValue,formModel}) => {
     if(!props.ready) return
     const _data = dataHandle(formModel)
-    goRoute(_data)
-}
+    if(!isEqual(_data, props.searchParams)) goRoute(_data)
+}, 500, { maxWait: 5000 })
 function goRoute(formModel:any) {
     const searchBackPath = route.query.searchBackPath || ''
-    const time = new Date().valueOf().toString()
+    const time = route.query.time
     formModelData.value = formModel
     router.push({
         query: {
@@ -78,12 +84,11 @@ function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()
 }
 function initForm (searchParams) {
+    
   nextTick(async() => {
-        let key = searchParams.paramsInTextSearch
-        if(!!key) searchParams.keyword = key
-        searchParams.includeFolder = searchParams.includeFolder ? '1' : '0'
-        if(searchParams.hight) {
-            searchParams.hight = Array.isArray(searchParams.hight) ? searchParams.hight.join('') : searchParams.hight
+        // searchParams.includeFolder = (searchParams.includeFolder === '1' || searchParams.includeFolder === 1 || searchParams.includeFolder === true|| searchParams.includeFolder === 'true') ? '1' : '0'
+        if(searchParams.height) {
+            searchParams.height = Array.isArray(searchParams.height) ? searchParams.height.join('') : searchParams.height
         }
         if(searchParams.width) {
             searchParams.width = Array.isArray(searchParams.width) ? searchParams.width.join('') : searchParams.width
@@ -95,16 +100,29 @@ function initForm (searchParams) {
             searchParams.mimeType = Array.isArray(searchParams.mimeType) ? searchParams.mimeType.join('') : searchParams.mimeType
         }
         // searchParams.includeFolder = searchParams.includeFolder === '1' || searchParams.includeFolder === 1;
+        const readyRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('ready')
+        readyRef.setValue(false)
         await FromRendererRef.value.vFormRenderRef.setFormData(searchParams)
         formModelData.value = FromRendererRef.value.vFormRenderRef.getFormData(false)
+        setTimeout(() => {
+            readyRef.setValue(true)
+        }, 1000)
     })
 }
 const SearchDownloadDialogRef = ref()
 function dataHandle (formModel) {
     let _formModel = deepCopy(formModel)
-    _formModel.paramsInTextSearch = _formModel.keyword
-    delete _formModel.keyword
+    delete _formModel.ready
     return _formModel
+}
+function isEqual (newSearch, oldSearch) {
+    const _new = getSearchParamsArray(deepCopy(newSearch))
+    const _old = deepCopy(oldSearch)
+    delete _old.currentPageIndex
+    delete _old.pageSize
+    delete _old.ready
+    delete _new.ready
+    return JSON.stringify(_new) === JSON.stringify(_old)
 }
 function handleDownload () {
     let data = FromRendererRef.value.vFormRenderRef.getFormData(false)
@@ -112,9 +130,18 @@ function handleDownload () {
     _data = getSearchParamsArray(_data)
     SearchDownloadDialogRef.value.handleOpen(_data)
 }
+function updateOptions(aggregation) {
+    Object.keys(aggregation).forEach(async(key) => {
+        const keyRef = await FromRendererRef.value.vFormRenderRef.getWidgetRef(key)
+        if(!keyRef) {
+            return
+        }
+        keyRef.loadOptions(aggregation[key])
+    })
+}
 onMounted(() => {
 })
-defineExpose({ handleSubmit, initForm })
+defineExpose({ handleSubmit, initForm, updateOptions })
 </script>
 
 <style lang="scss" scoped>

@@ -22,16 +22,18 @@ export function customLayer():string[] {
     packages.push('../../pages/admin-log-manage');
     packages.push('../../pages/admin-doc-type-manage');
     packages.push('../../pages/admin-mail-config');
-    packages.push('../../packages/dp-editorjs');
+    packages.push('../../pages/admin-email-template');
 
     packages.push('../../pages/admin-message-queue');
     packages.push('../../pages/admin-dashboard');
     packages.push('../../pages/admin-workflow-editor');
     packages.push('../../pages/admin-master-table');
+
     // core
     packages.push('../../pages/admin-retention');
     packages.push('../../pages/admin-acl');
-    packages.push('../../pages/admin-meta-manage');
+    // packages.push('../../pages/admin-meta-manage');
+    packages.push('../../pages/admin-meta-validation');
     packages.push('../../pages/admin-table-setting');
     packages.push('../../pages/admin-user-manage');
     packages.push('../../pages/admin-hold-policies');

@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "2.0.0",
+  "version": "2.0.7",
   "private": true,
   "scripts": {
     "tauri:dev": "tauri dev",
@@ -14,7 +14,7 @@
     "@element-plus/nuxt": "^1.0.3",
     "@types/node": "^18.11.18",
     "dp-api": "workspace:*",
-    "nuxt": "^3.4.3",
+    "nuxt": "3.7.0",
     "sass": "^1.58.0"
   },
   "dependencies": {

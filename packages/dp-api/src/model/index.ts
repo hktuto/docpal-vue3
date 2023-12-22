@@ -31,6 +31,7 @@ export type paginationData = {
 export type paginationResponseData= {
     entryList: any[],
     totalSize: number,
+    aggregation: any
 }
 
 export type Response<T> = {

@@ -12,7 +12,7 @@
             </template>
             <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" 
                 @formChange="formChange"/>
-            <MetaEditForm ref="MetaFormRef"></MetaEditForm>
+            <MetaRenderForm ref="MetaFormRef"></MetaRenderForm>
             <template #footer>
                 <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{$t('submit')}}</el-button>
             </template>
@@ -35,12 +35,13 @@ const emits = defineEmits(['success'])
 const state = reactive({
     loading: false,
     docPath: '',
-    doc: {}
+    doc: {},
 })
 const FromRendererRef = ref()
 const MetaFormRef = ref()
 function iconClickHandler(doc:any){
     dialogOpened.value = true
+    state.dialogOpened = ''
     state.docPath = doc.path 
     state.doc = doc
     // open upload dialog
@@ -51,12 +52,13 @@ function iconClickHandler(doc:any){
 }
 const formJson = getJsonApi('fileNewFolder.json')
 function formChange ({fieldName,newValue,oldValue,formModel}) {
-    if(fieldName === 'type') MetaFormRef.value.initMeta(newValue)
+    if(fieldName === 'type') MetaFormRef.value.init(newValue)
+    // if(fieldName === 'type') MetaFormRef.value.initMeta(newValue)
 }
 async function handleSubmit () {
     try {
         const timestamp = new Date().valueOf()
-        const metaFormData = MetaFormRef.value.getData()
+        const metaFormData = await MetaFormRef.value.getData()
         if(!metaFormData) return
         const data = await FromRendererRef.value.vFormRenderRef.getFormData()
         const parentPath = state.docPath === '/' ? '' : state.docPath

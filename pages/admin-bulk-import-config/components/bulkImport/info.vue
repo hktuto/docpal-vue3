@@ -1,7 +1,7 @@
 <template>
 <el-card>
     <template #header><div>{{$t('common_info')}}</div></template>
-    <div class="flexContent">
+    <div class="flexContent" v-if="docType">
         <div>{{$t('tableHeader_name')}}</div>
         <div class="ellipsis" :title="docType.name">{{docType.name}}</div>
     </div>

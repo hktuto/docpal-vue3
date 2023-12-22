@@ -20,7 +20,7 @@
                 <el-tag class="el-icon--left" v-for="(item, index) in row.bulkImportConfigs" :key="index">{{item}}</el-tag>
             </template>
         </Table>
-        <MetaAddDocTypeDialog ref="MetaAddDocTypeDialogRef" @refresh="getList()"></MetaAddDocTypeDialog>
+        <MetaValidationAddDocTypeDialog ref="MetaAddDocTypeDialogRef" @refresh="getList()"></MetaValidationAddDocTypeDialog>
     </NuxtLayout>
 </template>
 
@@ -62,6 +62,8 @@ async function handleSubmit (shareInfo) {
 }
 const MetaAddDocTypeDialogRef = ref()
 function handleAdd() {
+    console.log(MetaAddDocTypeDialogRef);
+    
     MetaAddDocTypeDialogRef.value.handleOpen(state.tableData)
 }
 onMounted(async() => {

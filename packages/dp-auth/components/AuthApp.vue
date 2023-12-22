@@ -1,5 +1,6 @@
 <template>
     <div class="appThemeBg">
+      <slot v-if="appStore.displayState !== 'ready'" name="loadingHeader" />
     <div v-if="appStore.displayState === 'defaultLogin'" ref="needAuthEl" class="LoginContainer">
       <LazyLoginForm :showForgetPassword="showForgetPassword" />
     </div>
@@ -11,7 +12,11 @@
       <!-- <ElButton @click="state = 'ready' ">ready</ElButton> -->
     </div>
     <div v-else ref="readyElement" class="clientPageContainer">
-      <NuxtPage />
+      <NuxtPage >
+        <template #header-right>
+          <slot name="header-right" />
+        </template>
+      </NuxtPage>
       <component v-for="s in globalSlots" :key="s.name" :is="s.component" v-bind="$props" />
     </div>
      <LoadingBg v-if="appStore.displayState != 'ready'" />

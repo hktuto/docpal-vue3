@@ -46,7 +46,6 @@
                 </template>
         </Table>
         
-        <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
 </div>
 
 </template>
@@ -140,7 +139,6 @@ function handleDblclick (row:any) {
       showInfo:true,
       showHeaderAction:true
     })
-    
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()
@@ -281,12 +279,6 @@ defineExpose({ TableRef })
             height: var(--icon-size);
         }
     }
-}
-.FileUpload2 {
-    pointer-events: auto!important;
-    display: none;
-    height: 100%;
-    width: 100%;
 }
 .backgroundDrop{
     position: absolute;

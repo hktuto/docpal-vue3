@@ -70,12 +70,7 @@ const state = reactive<State>({
         const index = state.sFolderList.findIndex(item => item.id === tab)
         if(index === -1) return
         const data = JSON.parse(state.sFolderList[index].json_value)
-        const paramsInTextSearch =  data.paramsInTextSearch
-                        ?
-                        data.paramsInTextSearch.split(/ /).filter(s => { return s && s.trim() })
-                        :
-                        []
-        return { ...data, paramsInTextSearch }
+        return { ...data }
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize

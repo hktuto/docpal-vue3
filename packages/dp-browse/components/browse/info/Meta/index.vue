@@ -1,67 +1,41 @@
 <template>
+    <el-divider v-if="displayMeta.length > 0" content-position="left">{{$t('info.displayMeta')}}</el-divider>
     <div v-for="(item, index) in displayMeta" :key="item.metaData"  class="infoSection">
-      <div class="infoTitle">{{ $t(item.metaData) }}</div>
-      <div class="infoContent">
-        <template v-if="!canWrite">
-          <span v-if="item.dataType === 'date'">{{ displayTime(item.value) }}</span>
-          <span v-else>{{ item.value }}</span>
-        </template>
-        <template v-else>
-          <BrowseInfoMetaEditField :item="item"  @change="itemUpdate"/>
-        </template>
-      </div>
+        <div class="infoTitle">{{ $t(item.metaData) }}</div>
+        <div class="infoContent">
+            <span v-if="item.dataType === 'date'">{{ formatDate(item.value, item.options.formatDate) }}</span>
+            <BrowseInfoMetaDocumentType v-else-if="item.dataType === 'select' && item.options.dropdownType === 'documentType'"
+                :data="item.value" />
+            <span v-else-if="item.metaDataType ==='array' && item.value">{{ item.value.join(',') || '-'}}</span>
+            <span v-else-if="item.value" v-html="item.value"></span>
+            <span v-else>{{ item.value || '-'}}</span>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import {patchDocumentApi} from "dp-api";
-    import {ElMessage} from "element-plus";
+const props = defineProps<{doc:any, permission:any}>();
+const { doc } = toRefs(props)
+const emit = defineEmits(['update'])
+const displayMeta = ref<any[]>([])
+const metaStructureByProperties = (metaList: any[], properties: string) => {
+    if(!properties || !metaList) return []
+    return  metaList.reduce((p, item) => {
+            if (item.display) {
+                item.value = properties[item.metaData];
+                p.push(item)
+            }
+                return p
+            }, [])
+}
 
-    const props = defineProps<{doc:any, permission:any}>();
-    const displayMeta = ref<any[]>([])
-    const { displayTime } = useTime();
-    const { doc } = toRefs(props)
-    const hasMeta = ref(false)
-    const { t } = useI18n()
-    const emit = defineEmits(['update'])
-
-    const canWrite = computed(() => {
-      return AllowTo({feature:'ReadWrite', permission: props.permission })
-    })
-
-    const metaStructureByProperties = (metaList: any[], properties: string) => {
-      if(!properties || !metaList) return []
-      return  metaList.reduce((p, item) => {
-                if (item.display) {
-                  item.value = properties[item.metaData];
-                  p.push(item)
-                }
-                  return p
-              }, [])
-    }
-
-    function updateDisplayMeta() {
-      if(!doc.value.displayMeta) return;
-      hasMeta.value = doc.value.displayMeta.length > 0
-      displayMeta.value = metaStructureByProperties(doc.value.displayMeta, doc.value.properties)
-    }
-
-
-
-    async function itemUpdate({key, value}:any) {
-      await patchDocumentApi({
-        idOrPath: doc.value.id,
-        name: doc.value.name,
-        properties: {[key] : value},
-      })
-      emit('update')
-      updateDisplayMeta()
-      ElMessage.success(t('msg_successfullyModified'))
-    }
-
-    watch(doc, async (newValue) => {
-      if (newValue) updateDisplayMeta()
-    }, { immediate: true, deep: true })
+function updateDisplayMeta() {
+    if(!doc.value.displayMeta) return;
+    displayMeta.value = metaStructureByProperties(doc.value.displayMeta, doc.value.properties)
+}
+watch(doc, async (newValue) => {
+    if (newValue) updateDisplayMeta()
+}, { immediate: true, deep: true })
 
 </script>
 

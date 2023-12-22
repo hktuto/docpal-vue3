@@ -1,10 +1,10 @@
-
+import {BPMNJSON, getFormItems} from "dp-bpmn";
 
 
 export const useWorkflowGraph = () => {
     
     const graphJson = useState('graphJson')
-    const bpmnJson = useState('bpmnJson');
+    const bpmnJson = useState<BPMNJSON>('bpmnJson');
     
     const formTypeOptions = [
         {label:"String", value:"string"},
@@ -17,7 +17,7 @@ export const useWorkflowGraph = () => {
         // startEvent form
         const startEvent = process?.startEvent;
         if(startEvent){
-            const formItem = getForm(startEvent);
+            const formItem = getFormItems(startEvent);
             formItem.forEach(item => {
                 form[item.attr_id] = item;
             })
@@ -25,7 +25,7 @@ export const useWorkflowGraph = () => {
         // userTask form
         const userTask = Array.isArray(process?.userTask) ? process?.userTask : [process?.userTask];
         userTask.forEach(item => {
-            const formItem = getForm(item);
+            const formItem = getFormItems(item);
             formItem.forEach(item => {
                 form[item.attr_id] = item;
             })
@@ -38,17 +38,20 @@ export const useWorkflowGraph = () => {
         }
     })
 
-    function getForm(item):any[] {
-        if(item.extensionElements){
-            const form = item.extensionElements['flowable:formProperty'];
-            if(form){
-                return form;
-            }
-        }
-        return [];
-    }
+    const allFormFieldArray = computed(() => {
+        return Object.keys(allFormField.value.form).map((key) => allFormField.value.form[key]);
+    })
+
     
 
+
+    /**
+     * Form vaidation for id
+     *
+     * @param {any} rule - the rule object
+     * @param {any} value - the new value of the id
+     * @param {any} callback - the callback function to handle errors
+     */
     function idChanged(rule: any, value: any, callback: any) {
         if (!value) {
             return callback(new Error('Please input id'))
@@ -60,6 +63,13 @@ export const useWorkflowGraph = () => {
         }
     }
 
+    /**
+     * Form vaidation for name
+     *
+     * @param {any} rule - the rule object
+     * @param {any} value - the new value of the id
+     * @param {any} callback - the callback function to handle errors
+     */
     function nameChanged(rule: any, value: any, callback: any) {
         if (!value) {
             return callback(new Error('Please input Name'))
@@ -71,6 +81,13 @@ export const useWorkflowGraph = () => {
         }
     }
 
+    /**
+     * Form vaidation for new form item name
+     *
+     * @param {any} rule - the rule object
+     * @param {any} value - the new value of the id
+     * @param {any} callback - the callback function to handle errors
+     */
     function newNameChanged(rule: any, value: any, callback: any) {
         if (!value) {
             return callback(new Error('Please input Name'))
@@ -83,12 +100,14 @@ export const useWorkflowGraph = () => {
     }
 
     
+    
 
     return {
         // data
         graphJson,
         bpmnJson,
         allFormField,
+        allFormFieldArray,
         // static
         formTypeOptions,
         // methods

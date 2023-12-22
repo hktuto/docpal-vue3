@@ -20,6 +20,8 @@
                         @click="handleAddFile(data)"></SvgIcon>
                     <SvgIcon v-if="data.isDoc" src="/icons/menu/trash.svg"
                         @click="handleDeleteFile(data)"></SvgIcon>
+                    <SvgIcon v-if="data.isDoc" src="/icons/eye.svg" :content="$t('common_preview')"
+                        @click="handlePreview(data)"></SvgIcon>
                     <SvgIcon v-if="data.isDoc" :src="'/icons/replace.svg'" :content="$t('tip.replace')" 
                         @click="handleOpenReplaceDialog(data)"/>
                 </div>
@@ -27,20 +29,19 @@
         </template>    
     </el-tree>
     <BrowseActionsReplaceDialog ref="BrowseActionsReplaceDialogRef" 
-        @update="refresh"/>
-    <input  v-show="false" ref="fileUploaderRef" multiple type="file"
-        @change="handleInputFiles($event, 'fileUploader')"/>
+        @update="refresh" />
+    <FolderCabinetCreateUploadFileDialog ref="UploadFileDialogRef" 
+        @success="refresh" />
 </div>
 </template>
 
 <script lang="ts" setup>
-import {ElMessage} from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
     GetCabinetResultApi, 
     MatchingTemplateApi, 
     trashApi, 
-    replaceFileDocumentApi,
-    CreateDocumentApi } from 'dp-api'
+    replaceFileDocumentApi } from 'dp-api'
 const route = useRoute()
 const state = reactive({
     id: '',
@@ -129,55 +130,24 @@ const emits = defineEmits([
     }
     const treeRef = ref()
     // #region module: handleAddFile
-        const fileUploaderRef = ref()
+        const UploadFileDialogRef = ref()
         function handleAddFile (treeItem) {
             state.activeTreeItem = treeItem
-            fileUploaderRef.value.click()
-        }
-        let num = 1
-        async function handleInputFiles(e) {
-            let pList: any = []
-            const files = Array.from(e.target.files) 
-            files.forEach((file) => {
-                pList.push(handleUpload(file))
-            })
-            if (pList.length === 0) return
-            let result = await Promise.all(pList)
-            refresh()
-            e.target.value = '' // 解决不能上传相同文件问题
-        }
-        async function handleUpload(file) {
-            const parentPath = state.activeTreeItem!.documentPath
-            const { isDuplicate } = await duplicateNameFilter(parentPath, [{ name: file.name }]);
-            if (isDuplicate) {
-                ElMessage({
-                    message: $t('dpTip_duplicateFileName') as string,
-                    type: 'error'
-                })
-                return file.name + ':Duplicate'
-            }
-            if (parentPath) {
-                return await uploadDoc(file, parentPath)
-            }
-        }
-        async function uploadDoc (file, parentPath) {
-            const document = {
-                name: file.name,
-                idOrPath: parentPath + '/' + file.name,
-                type: state.activeTreeItem.documentType,
-            }
-            const formData = new FormData()
-            formData.append('files', file)
-            formData.append('document', JSON.stringify(document))
-            const res = await CreateDocumentApi(formData)
-            if (res.result) return ''
-            return file.name + ':' + res.result
+            UploadFileDialogRef.value.handleOpen(treeItem)
         }
     // #endregion
     
     async function handleDeleteFile (data) {
+        const action = await ElMessageBox.confirm(`${$t('msg_confirmWhetherToDelete')}`)
+        if(action !== 'confirm') return
         await trashApi([{ idOrPath: data.path }])
         refresh()
+    }
+    function handlePreview(row) {
+        openFileDetail(row.path, {
+            showInfo:true,
+            showHeaderAction: true
+        })
     }
     const BrowseActionsReplaceDialogRef = ref()
     function handleOpenReplaceDialog(doc) {

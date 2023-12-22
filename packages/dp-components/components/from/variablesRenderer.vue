@@ -1,17 +1,27 @@
 <template>
-<FromRenderer ref="FromRendererRef" :form-json="formJson" />    
+<FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"
+    @emit="handleEmit">
+    <template v-for="(idx, slotName) in $slots" #[slotName]="data">
+        <slot :name="slotName" :data="data"></slot>
+    </template>
+</FromRenderer>
 </template>
 <script lang="ts" setup>
 export type variableItem = {
     name: string,
-    type: 'date' | 'input' | 'switch' | 'textarea' | 'number',
+    type: 'date' | 'input' | 'switch' | 'textarea' | 'number' | 'select',
     disabled: Boolean,
     hidden: Boolean,
-    required: Boolean
+    required: Boolean,
+    // format?: string,
+    options?: any[],
+    // maxLength?: number,
+    // onValidate?: string
 }
 const props = defineProps<{
     variables: variableItem[],
 }>()
+const emits = defineEmits(['formChange'])
 const FromRendererRef = ref()
 const formJson = ref({
     "widgetList": [],
@@ -69,29 +79,48 @@ function createJson(variables: variableItem[]) {
                 onEnter: "",
             }
         }
+        if(!['date','input','switch','textarea','number','select'].includes(item.type)) _item.type = 'input'
+      console.log("item", item)
         if(item.type === 'date') {
             _item.options.format = 'YYYY-MM-DD HH:mm',  //日期显示格式
-            _item.options.valueFormat = 'YYYY-MM-DD HH:mm'
+            _item.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'
         } else if(item.type === 'input') {
             _item.options.type = 'text'
-        } else if(item.type === 'number') {
+        } else if(item.type === 'textarea') {
+            _item.options.rows = 5
+        }else if(item.type === 'number') {
+            _item.options.defaultValue = 0
+            _item.options.min = -999999999999999
+            _item.options.max = 999999999999999
             _item.options.controlsPosition = 'right'
         } else if(item.type === 'switch') {
             _item.options.defaultValue = false
             _item.options.labelIconPosition = 'rear'
+        } else if(item.type === 'select') {
         }
+        if (item.options) _item.options = { ..._item.options, ...item.options }
         formJson.value.widgetList.push(_item)
     })
     FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
+    return formJson.value
+}
+function handleEmit (funName, newValue, oldValue) {
+    emits(funName, newValue, oldValue)
 }
 async function getData () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     return data
 }
+async function setFormJson (formJson) {
+    await FromRendererRef.value.vFormRenderRef.setFormJson(formJson)
+}
 async function setData (data) {
     await FromRendererRef.value.vFormRenderRef.setFormData(data)
 }
-defineExpose({ createJson, getData, setData })
+function formChange(formData) {
+    emits('formChange', formData)
+}
+defineExpose({ createJson, getData, setData, setFormJson })
 </script>
 <style lang="scss" scoped>
 

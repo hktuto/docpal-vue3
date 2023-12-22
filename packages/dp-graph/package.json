@@ -26,6 +26,8 @@
     "@antv/layout": "^0.3.23",
     "@antv/x6": "^2.15.1",
     "fast-xml-parser": "^4.2.7",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "dp-form": "workspace:*",
+    "dp-bpmn": "workspace:*"
   }
 }

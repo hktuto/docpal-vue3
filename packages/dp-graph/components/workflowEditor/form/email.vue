@@ -5,40 +5,70 @@ const props = defineProps<{
   data: any,
   allField: any,
 }>();
-const emit = defineEmits(['close', 'submit'])
+const emit = defineEmits(['close', 'submit', 'boundaryChange'])
 
 const allEmailTemplates = ref([]);
+const defaultWorkflowVariable =ref(['HostUrl',"ProcessInstanceId"])
 
 async function getEmailTemplates() {
   const entryList = await GetAllEmailTemplatePageApi()
   allEmailTemplates.value = entryList;
+
+  const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType");
+  const item = props.data.extensionElements['flowable:field'][index];
+  if(!item) return;
+  const varList = allEmailTemplates.value.find((ii: any) => ii.id === item['flowable:string']['__cdata']).emailTemplateVariable;
+  if(!varList || !JSON.parse(varList)) {
+    props.data.extensionElements['flowable:field'] = [
+      item
+    ]
+    return;
+  }
+  props.data.extensionElements['flowable:field'] = [
+    item,
+    ...JSON.parse(varList).filter(j => !j.includes(",")).map((item: any) => {
+      // check if item already exist
+      const exist = props.data.extensionElements['flowable:field'].find((field: any) => field.attr_name === item);
+      if(exist) return exist;
+      return {
+        "attr_name": item,
+        "flowable:expression": {
+          "__cdata": ''
+        }
+      }
+    })
+  ]
 }
 
 const templateVariables = computed(() => {
-  console.log(props.data)
   if(!Array.isArray(props.data?.extensionElements['flowable:field'] )) {
     props.data.extensionElements['flowable:field'] = [props.data.extensionElements['flowable:field'] ]
   }
-  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType"));
+  const item = props.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType") && !(item.attr_name === "hostUrl") && !(item.attr_name === "processInstanceId") && !(item.attr_name.includes(',')));
   return item;
 })
 function fieldMappingUpdate(index, newVal) {
   props.data.extensionElements['flowable:field'][index + 1]['flowable:expression'].__cdata = newVal;
+  const newData = {...props.data}
+  // remove boundry
+  delete newData.boundary;
   emit('submit', props.data)
 }
 const allFieldOptions = computed(() => {
-  return Object.keys(props.allField).map((key) => {
+  const all = Object.keys(props.allField).map((key) => {
     return {
       label: props.allField[key].attr_name,
       value: '${variables:get(' + props.allField[key].attr_id + ')}'
     }
   })
+  return all;
 })
 
 const selectedEmailTemplate = computed({
   get() {
     const index = props.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType");
     // props.data.extensionElements['flowable:field']['flowable:string']['__cdata'];
+    
     return props.data.extensionElements['flowable:field'][index]['flowable:string']['__cdata'];
   },
   set(value) {
@@ -47,7 +77,6 @@ const selectedEmailTemplate = computed({
     item['flowable:string']['__cdata'] = value;
     
     const varList = allEmailTemplates.value.find((item: any) => item.id === value).emailTemplateVariable;
-    console.log(varList, allEmailTemplates.value.find((item: any) => item.id === value))
     if(!varList || !JSON.parse(varList)) {
       props.data.extensionElements['flowable:field'] = [
         item
@@ -56,7 +85,7 @@ const selectedEmailTemplate = computed({
     }
     props.data.extensionElements['flowable:field'] = [
       item,
-      ...JSON.parse(varList).map((item: any) => {
+      ...JSON.parse(varList).filter(j => !j.includes(',')).map((item: any) => {
         return {
           "attr_name": item,
           "flowable:expression": {
@@ -65,7 +94,21 @@ const selectedEmailTemplate = computed({
         }
       })
     ]
-    emit('submit', props.data)
+    const newData = {...props.data}
+    // remove boundry
+    delete newData.boundary;
+    emit('submit', newData)
+  }
+})
+
+const timeEventValue = computed({
+  get(){
+    const v = props.data.boundary.timerEventDefinition.timeDuration.substring(1, 2);
+    return v
+  },
+  set(value){
+    props.data.boundary.timerEventDefinition.timeDuration = `P${value}D`;
+    emit('boundaryChange', props.data.boundary);
   }
 })
 
@@ -87,6 +130,11 @@ onMounted(async() => {
           </ElSelect>
         </ElFormItem>
       </ElForm>
+      <template v-if="data.boundary && data.boundary.timerEventDefinition">
+        <ElFormItem label="Reminder time">
+          <ElInputNumber v-model="timeEventValue" :min="1" :max="9999" :step="1" />
+        </ElFormItem>
+      </template>
       <table>
         <tr>
           <th>Email Variable</th>
@@ -104,7 +152,7 @@ onMounted(async() => {
     </div>
     <div class="footer">
       <ElButton @click="$emit('close')">Close</ElButton>
-      <ElButton type="primary" @click="$emit('submit', data)">Save</ElButton>
+<!--      <ElButton type="primary" @click="$emit('submit', data)">Save</ElButton>-->
     </div>
   </div>
 </template>

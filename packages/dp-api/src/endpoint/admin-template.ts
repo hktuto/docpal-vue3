@@ -35,6 +35,7 @@ export const GenerateFileApi = async(params, cb?) => {
     const res = await api.post('/docpal/template/document/generate/file', params, {
         timeout:0,
         responseType: 'blob',
+        headers: {'white': 'true'},
         onDownloadProgress: function (progressEvent) {
             if(cb) cb(progressEvent)
         }

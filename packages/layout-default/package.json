@@ -21,10 +21,10 @@
     "eslint": "^8.28.0",
     "nuxt": "^3.4.3",
     "sass": "^1.58.0",
-    "typescript": "^4.9.3",
-    "v-form": "github:hktuto/v-form-designer"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
+    "v-form": "file:../dp-form/dist/V-form.tar.gz",
     "vue-inline-svg": "^3.1.2"
   }
 }

@@ -47,7 +47,7 @@ const querySearch = (queryString: string, cb?: any) => {
 const createFilter = (queryString: string) => {
   return (listItem) => {
     return (
-      listItem[props.attr].toLowerCase().indexOf(queryString.toLowerCase()) === 0
+      listItem[props.attr].toLowerCase().includes(queryString.toLowerCase())
     )
   }
 }

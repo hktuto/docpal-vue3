@@ -6,12 +6,13 @@
             <Menu :collapse="collapse" />
             <div  :class="{expand:true}" >
               <div class="menuActions" style="--icon-color: var(--color-grey-500)">
+                <Avatar />
                 <Language v-if="mode === 'development'"></Language>
                 <!-- <NotificationBadge v-if="feature.notification"/> -->
   <!--              <UserMiniDropdown v-if="feature.userAuth" />-->
-                <LogoutButton />
                 <ColorSwitch />
                 <LanguageSwitch v-if="feature.multiLanguage" />
+                <LogoutButton />
               </div>
                 <InlineSvg :src="collapse ? '/icons/menu/expanded.svg' : '/icons/menu/closed.svg'" @click="toggleOpen"/>
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
@@ -61,7 +62,7 @@ const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useLayout();
-const { uploadState, uploadRequestList } = useUploadStore()
+const { uploadState, uploadRequestList } = useUploadAIStore()
 const sidebarEl = ref();
 const { sideSlot } = useLayout()
 
@@ -80,12 +81,12 @@ function toggleOpen() {
 
 // #region module:
   const InteractDrawerRef = ref()
-  function handleOpenUpload() {
-    InteractDrawerRef.value.handleSwitch()
+  function handleOpenUpload(isOpen: boolean = false) {
+    InteractDrawerRef.value.handleSwitch(isOpen)
   }
 // #endregion
 
-
+provide('handleOpenUploadDrawer', handleOpenUpload)
 </script>
 
 <style lang="scss" scoped>

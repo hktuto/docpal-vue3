@@ -4,20 +4,27 @@
         <div :class="setting.folder ? 'folder-title' : 'file-title'">{{setting.label}}</div>
         <div class="flex-x-end" style="--icon-size: 14px; --icon-bg-size: 24px">
             <span v-if="setting.multiple" class="el-icon--left file-title">{{$t('multiple')}}</span>
-            <span class="el-icon--left">{{setting.documentType}}</span>
+            <span class="el-icon--left" v-if="setting.documentType">{{$t(setting.documentType)}}</span>
             <slot name="actions">
-                <SvgIcon class="el-icon--left" round src="/icons/edit.svg" 
-                    @click="handleEdit(setting, isRoot)"/>
-                <SvgIcon v-if="!isRoot"  class="el-icon--left" round src="/icons/menu/trash.svg" 
+                <SvgIcon class="el-icon--left" src="/icons/edit.svg" 
+                    @click="handleEdit(setting, isRoot, parentSetting?.children)"/>
+                <SvgIcon v-if="!isRoot"  class="el-icon--left" src="/icons/menu/trash.svg" 
                     @click="handleDelete(setting)"/>
-                <SvgIcon v-if="setting.folder" class="el-icon--left" round src="/icons/add.svg" 
-                    @click="handleAdd(setting)"/>
-
+                
+                <el-dropdown v-if="setting.folder">
+                    <SvgIcon class="el-icon--left" src="/icons/add.svg" />
+                    <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="handleAdd(setting, false)">{{$t('common_file')}}</el-dropdown-item>
+                        <el-dropdown-item @click="handleAdd(setting, true)">{{$t('common_folder')}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
                 <el-icon v-if="!isRoot" :class="state.isCollapse ? 'rotate' : 'revert'" @click="handleCollapse"><ArrowDownBold /></el-icon>
             </slot>
         </div>
     </div>
-    <FolderCabinetCard v-for="item in setting.children" :setting="item"></FolderCabinetCard>
+    <FolderCabinetCard v-for="item in setting.children" :setting="item" :parentSetting="setting"></FolderCabinetCard>
      
 </div>
 </template>
@@ -26,6 +33,7 @@
 import { ArrowDownBold } from '@element-plus/icons-vue'
 import { tpFolderCabinetSetting, CreateCabinetTemplateApi } from 'dp-api'
 const props = defineProps<{
+    parentSetting: tpFolderCabinetSetting,
     setting: tpFolderCabinetSetting,
     isRoot: boolean
 }>()

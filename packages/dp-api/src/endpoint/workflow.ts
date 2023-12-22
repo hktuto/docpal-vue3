@@ -48,7 +48,7 @@ export const exportProcessHistoryApi = async(params: any) => {
     return await api.post('/docpal/workflow/history/exportProcessHistory', params, {
         responseType: 'blob',
         timeout: 0,
-        headers: { TimeZone }
+        headers: { TimeZone, 'white': 'true' }
     }).then(res => res.data);
 }
 export const exportTasksUserApi = async(params: any) => {
@@ -56,7 +56,7 @@ export const exportTasksUserApi = async(params: any) => {
     return await api.post('/docpal/workflow/tasks/exportTasksUser', params, {
         responseType: 'blob',
         timeout: 0,
-        headers: { TimeZone }
+        headers: { TimeZone, 'white': 'true' }
     }).then(res => res.data);
 }
 
@@ -119,7 +119,7 @@ export const getActivityApi = async(processInstanceId:string) => {
 }
 export const getBpmnApi = async(params: workflowBpmnReq) => {
     return api.post('/docpal/workflow/process/model', params, {
-        responseType: 'blob'
+        responseType: 'blob',
     }).then(res =>res.data)
 }
 export const attachmentInfoGetApi = async(attachmentId: string) => {
@@ -127,7 +127,11 @@ export const attachmentInfoGetApi = async(attachmentId: string) => {
     return res
 }
 export const WorkflowAttachmentDownloadApi = async(attachmentId: string) => {
-    return api.get(`/docpal/workflow/task/attachment?attachmentId=${attachmentId}`, { responseType: 'blob', timeout: 0}).then(res => res.data)
+    return api.get(`/docpal/workflow/task/attachment?attachmentId=${attachmentId}`, { 
+        responseType: 'blob', 
+        timeout: 0,
+        headers: { 'white': 'true' }
+    }).then(res => res.data)
 }
 export const WorkflowAttachmentPreviewApi = async(attachmentId: string) => {
     return api.get(`/docpal/workflow/task/attachment/preview?attachmentId=${attachmentId}`, { responseType: 'blob', timeout: 0}).then(res => res.data)

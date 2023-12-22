@@ -20,7 +20,7 @@
       <div class="header">
         <span>{{$t('filePopover_batchTip')}}</span>
         <el-select v-model="state.documentType" class="el-icon--right" filterable default-first-option >
-          <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
+          <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="$t(item.name)"></el-option>
         </el-select>
         <el-button class="el-icon--right" @click="applyToSelect('documentType', state.documentType)">{{$t('dpButtom_apply')}}</el-button>
       </div>

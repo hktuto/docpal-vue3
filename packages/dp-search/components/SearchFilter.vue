@@ -27,13 +27,16 @@ function handleSubmit () {
 function handleReset() {
     FromRendererRef.value.vFormRenderRef.resetForm()
 }
+function updateOptions(options) {
+    console.log(options)
+}
 onMounted(async() => {
     nextTick(() => {
-        const keywordRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('keyword')
+        const keywordRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('paramsInTextSearch')
         keywordRef.setHidden(true)
     })
 })
-defineExpose({ handleSubmit })
+defineExpose({ handleSubmit, updateOptions })
 </script>
 
 <style lang="scss" scoped>

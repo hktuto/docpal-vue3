@@ -112,7 +112,7 @@
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
             <slot name="actions"><div></div></slot>
-            <el-pagination
+            <el-pagination v-if="_paginationConfig.total > 0"
                 v-bind="_paginationConfig"
                 @size-change="pageSizeChange"
                 @current-change="currentPageChange" />

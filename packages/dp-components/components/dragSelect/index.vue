@@ -12,7 +12,7 @@
         :itemKey="itemKey"
     >
         <template #item="{ element, index }">
-            <el-tag class="list-drag-item">{{ element[itemKey] }}</el-tag>
+            <el-tag class="list-drag-item">{{ $t(element[itemKey]) }}</el-tag>
         </template>
     </draggable>
     <draggable
@@ -20,13 +20,18 @@
         :list="dropList"
         group="people"
         :itemKey="itemKey"
+        handle=".canDrag"
+        @change="() => emit('change', {dropList, dragList})"
     >
         <template #item="{ element, index }">
             <span class="list-drop-item">
                 <!-- <span v-if="element.prefixSymbol" class="list-drop-item--divider" >{{element.prefixSymbol}}</span> -->
                 <!-- <DragSelectTag :element="element" @close="handleClose"/> -->
                 <!-- <span v-if="element.suffixSymbol" class="list-drop-item--divider">{{element.suffixSymbol}}</span> -->
-                <el-tag ref="tagRef" closable @close="handleClose(element)">{{ element[itemKey] }}</el-tag>
+                <el-tag ref="tagRef" :class="{ 'el-tag-normal': !element.noDelete }" :closable="!element.noDelete" @close="handleClose(element)">
+                    <SvgIcon v-if="!element.noDelete" class="canDrag" src="/icons/move-handle.svg" />
+                    {{ $t(element[itemKey]) }}
+                </el-tag>
                 <span class="list-drop-item--divider">{{joiner}}</span>
             </span>
         </template>
@@ -40,17 +45,15 @@ const props = withDefaults(defineProps<{
     dragList: any,
     joiner: string,
     itemKey: string,
-    nullTip: string
+    nullTip: string,
 }>(), {
     joiner: '-',
     itemKey: 'metaData',
     nullTip: 'tip.pleaseGoToConfigDisplayMetaOrSelectDocumentType'
 })
 const FromRendererRef = ref()
-
+const emit = defineEmits(['change'])
 function handleClose(element) {
-    console.log(props.dropList, element);
-    
     let addItem
     const index = props.dropList.findIndex(item => {
         if(item[props.itemKey] === element[props.itemKey]) {
@@ -61,6 +64,7 @@ function handleClose(element) {
     })
     props.dropList.splice(index, 1)
     props.dragList.push(addItem)
+    emit('change', {dropList:props.dropList, dragList: props.dragList})
 }
 function handleChange (evt) {
     const dropLen = props.dropList.length
@@ -80,7 +84,7 @@ function handleChange (evt) {
             if(lastEl.suffixSymbol === '-') lastEl.suffixSymbol = ''
         }
     }
-    // emit('update:modelValue', JSON.stringify(props.dropList))
+    emit('change')
 }
 onMounted(() => {
 })
@@ -104,6 +108,13 @@ onMounted(() => {
         &:last-of-type &--divider{
             display: none;
         }
+    }
+}
+.el-tag-normal  {
+    padding-left: 0;
+    :deep(.el-tag__content) {
+        display: flex;
+        align-items: center;
     }
 }
 </style>

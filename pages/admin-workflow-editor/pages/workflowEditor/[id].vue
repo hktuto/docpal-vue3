@@ -59,15 +59,15 @@ async function createNewWorkflow () {
   bpmnFile.value = text.replaceAll('workflowId', nameToId).replaceAll('workflowName', name)
 }
 async function handleSave(isDraft: boolean = true) {
-    // const formData1 = new FormData();
-    // formData1.append('file', WorkflowEditorRef.value.getBlob(), 'workflow.bpmn.xml')
-    // await ValidateWorkflowXMLApi(formData1)
+
+    const formRequest = await WorkflowEditorRef.value.validateForm()
     if(!state.detail.draftId) return
     console.log("handleSave")
     state.loading = true
     try {
         const { blob, name, key } = WorkflowEditorRef.value.getWorkflowData()
         const formData = new FormData();
+        
         formData.append('name', name)
         formData.append('key', key)
         formData.append('draftId', state.detail.draftId)
@@ -76,16 +76,14 @@ async function handleSave(isDraft: boolean = true) {
         state.detail = await UploadWorkflowApi(formData)
         if(!isDraft){
           
-          const request = allFormToJson()
-          await Promise.all(request.map((param) => {
+          await Promise.all(formRequest.map((param) => {
             return SaveTaskFormJsonApi(param)
           }))
         }
-        // if not draft, then send all userTask form json to server
-      
     } catch (error) {
       console.log(error)
     }
+    
     state.loading = false
 }
 async function handelCreate() {

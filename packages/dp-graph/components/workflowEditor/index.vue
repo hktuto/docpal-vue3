@@ -1,11 +1,22 @@
 <script lang="ts" setup>
-import {bpmnToX6, bpmnToJson} from "../../utils/graphHelper";
+import {bpmnToX6} from "../../utils/graphHelper";
 import {Node} from "@antv/x6";
-import {jsonToBpmn} from "../../utils/graphHelper";
 import {useWorkflowGraph} from "../../composables/useWorkflowGraph";
 import {workflowTemplateList} from "../../utils/workflowTemplate";
 import {useEventListener} from '@vueuse/core';
-import {removeAllConnection, removeAndJoinNextNode} from "../../utils/graphNodeHelper";
+import {canCreateNewStep} from "../../utils/graphNodeHelper";
+import {ElMessage} from 'element-plus'
+import {bpmnStepToForm} from "../../utils/formEditorHelper";
+import {
+  bpmnToJson,
+  jsonToBpmn,
+  boundaryDataUpdate,
+  removeUserTask,
+  removeServiceTask,
+  addNewServiceTask,
+  addUserTask, removeUserTaskAndFollowing, UserType, getExclusiveEventSeq
+} from 'dp-bpmn'
+import { ElNotification } from 'element-plus'
 const props = defineProps<{
   bpmn: String
 }>()
@@ -16,21 +27,23 @@ const selectedData = ref();
 const workflowForm = ref();
 const graphEl = ref();
 
+const { bpmn } = toRefs(props);
+
 const { graphJson, bpmnJson, allFormField } = useWorkflowGraph();
 function setupGraph() {
-  graphJson.value = bpmnToX6(props.bpmn, { hideEnd:false });
-  bpmnJson.value = bpmnToJson(props.bpmn);
+  graphJson.value = bpmnToX6(bpmn.value, { hideEnd:false });
+  bpmnJson.value = bpmnToJson(bpmn.value);
 }
 
 
 function edgeDblClickHandler({edge, e}:any) {
-  console.log("edge click", edge)
-  const data = edge.getData();
-  if(data.type === 'boundaryEvent'){
-    const data = edge.getData();
-    selectedData.value = data;
-    sidePanelOpened.value = true;
-  }
+  // console.log("edge click", edge)
+  // const data = edge.getData();
+  // if(data.type === 'boundaryEvent'){
+  //   const data = edge.getData();
+  //   selectedData.value = data;
+  //   sidePanelOpened.value = true;
+  // }
 }
 
 function saveBoundaryStep(date){
@@ -48,7 +61,6 @@ function saveBoundaryStep(date){
 }
 
 function dblClickHandler({node}:Node) {
-  console.log("node click", node)
   const data = node.getData();
   if(data.type === 'userTask'){
     // open dialog
@@ -84,6 +96,8 @@ function saveForm(updatedData:any) {
     bpmnJson.value.definitions.process['attr_flowable:candidateStarterGroups'] = updatedData['attr_flowable:candidateStarterGroups'];
   }
   workflowForm.value = updatedData;
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+  
 }
 
 function saveUserStep(stepData) {
@@ -105,7 +119,7 @@ function saveUserStep(stepData) {
     const dd = node.getData();
     selectedData.value = dd;
   }
-
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 
@@ -146,6 +160,7 @@ function setStepData(stepId, newData) {
       return;
     }
   }
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 function saveEmailStep(stepData) {
@@ -164,6 +179,7 @@ function saveEmailStep(stepData) {
     })
     node.setData(newData);
   }
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 onMounted(() => {
@@ -179,7 +195,6 @@ watch(() => props.bpmn, (newVal, oldVal) => {
 function getWorkflowData() {
   
   const xml = jsonToBpmn(bpmnJson.value)
-  console.log(xml);
   // create blob file
   const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
   const name = bpmnJson.value.definitions.process.attr_name
@@ -191,8 +206,6 @@ function getWorkflowData() {
 
 function nodeRightClickHandler({e, node}:any) {
   e.preventDefault();
-  const data = node.getData();
-  console.log('right click', node)
   // 如果 node 是 userTask, 
 }
 
@@ -208,63 +221,53 @@ const displayTemplate = computed(() => {
 
 
 function itemDeleteHandler(node:Node) {
-  
   // step 1 show confirm dialog
   // show alert
   const confirmDelete = confirm("Are you sure you want to delete this step?");
   if(!confirmDelete) return;
-
   const data = node.getData();
+  if(data.attr_id === 'start'){
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'Can not delete start event',
+    })
+    return
+  }
+  if(data.type === "endEvent"){
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'Can not delete end event',
+    })
+    return
+  }
+  if(data.type === "exclusiveGateway") {
+    // show error
+    ElNotification.error({
+      title: 'Error',
+      message: 'Can not delete exclusive gateway, please delete connected step',
+    })
+    return
+  }
   const itemToDelete = [];
   if(data.type === 'userTask'){
-    return;
-    // find step in data
-    if(Array.isArray(bpmnJson.value?.definitions?.process.userTask)) {
-      const index = bpmnJson.value?.definitions?.process.userTask.findIndex(item => item.attr_id === data.attr_id);
-      if(index > -1){
-        bpmnJson.value.definitions.process.userTask.splice(index, 1);
-      }
-    }else{
-      if(bpmnJson.value?.definitions?.process.userTask?.attr_id === data.attr_id){
-        bpmnJson.value.definitions.process.userTask = undefined;
-      }
-    }
-    // get connected node
-    removeAllConnection(node, graphEl.value?.graph);
-    // remove all edge related to this step
-    const items = bpmnJson.value.definitions.process.sequenceFlow.filter(item => item.attr_sourceRef === data.attr_id || item.attr_targetRef === data.attr_id);
     
+    // find step in data
+    if(data.exclusive){
+      const confirmDelete = confirm("Remove this task will remove all following steps. Are you sure you want to delete this step?");
+      if(!confirmDelete) return;
+      removeUserTaskAndFollowing(bpmnJson, data)
+    }else{
+      removeUserTask(bpmnJson, data)
+    }
+    
+    graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
   }
   
   if(data.type === 'serviceTask') {
     // find step in data
-    if(Array.isArray(bpmnJson.value?.definitions?.process.serviceTask)) {
-      const index = bpmnJson.value?.definitions?.process.serviceTask.findIndex(item => item.attr_id === data.attr_id);
-      if(index > -1){
-        itemToDelete.push(bpmnJson.value.definitions.process.serviceTask[index])
-        bpmnJson.value.definitions.process.serviceTask.splice(index, 1);
-      }
-    }else{
-      if(bpmnJson.value?.definitions?.process.serviceTask?.attr_id === data.attr_id){
-        itemToDelete.push(bpmnJson.value.definitions.process.serviceTask)
-        bpmnJson.value.definitions.process.serviceTask = undefined;
-      }
-    }
-    const otherToNode = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_targetRef === data.attr_id);
-    const nodeToOther = bpmnJson.value.definitions.process.sequenceFlow.find(item => item.attr_sourceRef === data.attr_id);
-    console.log(otherToNode, nodeToOther)
-    // link other node attr_sourceRef to nodeToOther.attr_targetRef
-    if(otherToNode && nodeToOther){
-      otherToNode.attr_targetRef = nodeToOther.attr_targetRef ;
-    }
-    // remove nodeToOther
-    if(nodeToOther){
-      const index = bpmnJson.value.definitions.process.sequenceFlow.findIndex(item => item.attr_id === nodeToOther.attr_id);
-      if(index > -1){
-        bpmnJson.value.definitions.process.sequenceFlow.splice(index, 1);
-      }
-    }
-    // removeAndJoinNextNode(node, graphEl.value?.graph);
+    removeServiceTask(bpmnJson, data)
     graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
   }
 
@@ -272,13 +275,88 @@ function itemDeleteHandler(node:Node) {
 }
 
 
-function itemAddHandler(node:Node) {
-  console.log('add', node)
+async function validateForm():Promise<any[]>{
+  const userTask = bpmnJson.value.definitions.process.userTask;
+  const startEvent = bpmnJson.value.definitions.process.startEvent;
+  const allStep = [];
+  if(userTask){
+    if(Array.isArray(userTask)){
+      allStep.push(...userTask)
+    }else{
+      allStep.push(userTask)
+    }
+  }
+  if(startEvent){
+    allStep.push(startEvent)
+  }
+  // Loop allStep and check all field in extensionElements['flowable:formProperty'] is valid
+
+  const params:any[] = [];
+  for(const step of allStep) {
+    const valid = step.extensionElements['flowable:formProperty'].reduce((acc, cur) => {
+      if(!cur.attr_field_valid) acc = false;
+      return acc;
+    }, true)
+    if(!valid) {
+      ElMessage.error('Please fix all field error before preview')
+      throw new Error();
+    }
+    const formJson = bpmnStepToForm(step.extensionElements['flowable:formProperty'], bpmnJson.value.definitions.process)
+    const param = {
+      processKey: bpmnJson.value.definitions.process.attr_id,
+      userTaskId: step.attr_id,
+      jsonValue: JSON.stringify(formJson)
+    }
+    params.push(param);
+    // TODO : upload formJson to server and get response
+  }
+  return params;
+  
+}
+
+
+
+
+function newApproveHandler(node:Node, type:UserType) {
+  const data = node.getData();
+  canCreateNewStep(node.data.attr_id, bpmnJson)
+  addUserTask(data,type, bpmnJson, node.data);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+}
+function newEmailHandler(node:Node) {
+  const data = node.getData();
+  canCreateNewStep(data.attr_id, bpmnJson)
+  addNewServiceTask(data, 'email', bpmnJson);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+}
+function newDueEmailHandler(node:Node) {
+  const data = node.getData();
+  canCreateNewStep(data.attr_id, bpmnJson)
+  addNewServiceTask(data, 'dueEmail', bpmnJson);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+}
+
+
+function newDocumentHandler(node:Node) {
+  const data = node.getData();
+  canCreateNewStep(data.attr_id, bpmnJson)
+  addNewServiceTask(data, 'document', bpmnJson);
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+}
+
+function boundaryChange(value){
+  boundaryDataUpdate(bpmnJson, value);
 }
 useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => itemDeleteHandler(node))
-useEventListener(document, 'add-workflow-graph-item', ({detail:{node}}) =>itemAddHandler(node))
+useEventListener(document, 'new-approve-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node, 'approve'))
+useEventListener(document, 'new-form-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node, 'form'))
+useEventListener(document, 'new-email-workflow-graph-item', ({detail:{node}}) =>newEmailHandler(node))
+useEventListener(document, 'new-due-email-workflow-graph-item', ({detail:{node}}) =>newDueEmailHandler(node))
+useEventListener(document, 'new-document-workflow-graph-item', ({detail:{node}}) =>newDocumentHandler(node))
+
 defineExpose({
   getWorkflowData,
+  validateForm,
 })
 </script>
 
@@ -291,7 +369,7 @@ defineExpose({
       <template v-if="selectedData">
         <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'"  @close="closeSidePanel" @submit="saveForm" />
         <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData"  @close="closeSidePanel" @submit="saveUserStep" />
-        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
+        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" @boundaryChange="boundaryChange" />
         <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
         <WorkflowEditorFormBoundaryEvent v-else-if="selectedData.type === 'boundaryEvent'" :data="selectedData" @close="closeSidePanel" @submit="saveBoundaryStep" />
       </template>

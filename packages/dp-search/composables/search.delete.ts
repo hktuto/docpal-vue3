@@ -9,7 +9,7 @@ type Command = {
 }
 
 type SearchFilter = {
-    paramsInTextSearch?: string[]
+    paramsInTextSearch?: string
     textSearchType?: string,
     // paramsInTextSearch?: string[][]
     or?: string[]

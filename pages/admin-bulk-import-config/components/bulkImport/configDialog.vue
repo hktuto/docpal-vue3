@@ -26,7 +26,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { SaveDocumentTypeProfileApi, getDocTypeListApi,
+import { SaveDocumentTypeProfileApi,
     GetChildThumbnail,
     GetBreadcrumb,
     checkNameOrTitleApi,

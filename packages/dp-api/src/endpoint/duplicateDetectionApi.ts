@@ -76,6 +76,7 @@ export const GetDocumentAdditionalApi = async(params) => {
 
 
 export const GetDocumentPreview = async(idOrPath:string) => {
+    console.log("GetDocumentPreview")
     return api.post('/nuxeo/document/preview', {
         idOrPath
     },{
@@ -252,6 +253,14 @@ export const downloadDocRecord = async(params) => {
         let response = await api.get<Response<DocType[]>>('/nuxeo/types').then(res => res.data.data);
         docTypesStore = [...response.sort((a,b)=> (a.name.localeCompare(b.name) ))]
         return docTypesStore
+    }
+    export const getDocTypeDetailApi = async(docType: string):Promise<DocType> => {
+        try {
+            if (docTypesStore.length === 0) await getDocTypeListApi()
+            return docTypesStore.find(item => item.name === docType)
+        }
+        catch (error) {
+        }
     }
     const metaStore = {}
     export const metaValidationRuleGetApi = async (documentType: string, refresh: boolean = false):Promise<Meta[]> => {

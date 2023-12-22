@@ -112,7 +112,7 @@ const tableRef = ref()
 function initTable(searchParams) {
     const dynamicColumns = {
         size: { id: 'search_size', label: 'search_size', prop: 'properties.file:content.length', type: 'size' },
-        hight: { id: 'search_hight', label: 'search_hight', prop: 'properties.picture:info.height' },
+        height: { id: 'search_height', label: 'search_height', prop: 'properties.picture:info.height' },
         width: { id: 'search_width', label: 'search_width', prop: 'properties.picture:info.width' },
         duration: { id: 'search_duration', label: 'search_duration', prop: 'properties.vid:info.duration',
                     formatList: [
@@ -131,7 +131,7 @@ function initTable(searchParams) {
     switch (searchParams.assetType) {
         case 'Picture':
             const pic = [
-                dynamicColumns.hight,
+                dynamicColumns.height,
                 dynamicColumns.width,
                 dynamicColumns.size
             ]
@@ -140,7 +140,7 @@ function initTable(searchParams) {
             break;
         case 'Video':
             const vid = [
-                dynamicColumns.hight,
+                dynamicColumns.height,
                 dynamicColumns.width,
                 dynamicColumns.size,
                 dynamicColumns.duration
