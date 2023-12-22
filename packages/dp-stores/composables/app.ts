@@ -32,9 +32,9 @@ export const useAppStore = defineStore('app', () => {
         if(value === 'needAuth') {
             const superAdmin = sessionStorage.getItem('superAdmin')
             if(superAdmin === 'superAdmin') {
-                
-                
-                displayState.value = 'defaultLogin' 
+
+
+                displayState.value = 'defaultLogin'
                 return
             }
             router.go(0)
@@ -43,6 +43,7 @@ export const useAppStore = defineStore('app', () => {
     }
     const appLoadingList = ref<any[]>([]);
     async function appInit(){
+      console.log("appInit")
         const locale = user.getDefaultLanguage()
         appLoadingList.value.push({key:`Getting Language Pack : ${locale}`, function: languageStore.loadLanguage(locale)})
         for await ( const item of appLoadingList.value) {
@@ -82,7 +83,7 @@ export const useAppStore = defineStore('app', () => {
 
     async function checkLicense() {
         const {data} = await api.get('/docpal/systemfeature/getFeatures').then(res => res.data)
-        
+
         licenseFeatures.value = data
     }
     function getLicenseFeatures() {
