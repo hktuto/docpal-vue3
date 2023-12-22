@@ -36,19 +36,9 @@ export const axiosTauriApiAdapter = (config: TauriAxiosRequestConfig): AxiosProm
             .then((response) => {
                 // @ts-ignore
                 const statusText = ReasonPhrases[StatusCodes[response.status]]
-                if (response.ok) {
-                    return resolve({
-                        data: response.data,
-                        status: response.status,
-                        statusText: statusText,
-                        headers: {
-                            ...response.headers,
-                            'set-cookie': response.rawHeaders['set-cookie'],
-                        },
-                        config: config,
-                    })
-                } else {
-                    reject(
+                console.log('response',response.headers['content-type'])
+                if(!response.ok){
+                    return reject(
                         new AxiosError(
                             'Request failed with status code ' + response.status,
                             [AxiosError.ERR_BAD_REQUEST, AxiosError.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4],
@@ -64,6 +54,36 @@ export const axiosTauriApiAdapter = (config: TauriAxiosRequestConfig): AxiosProm
                         )
                     )
                 }
+                
+                //if response if file , convert bindary array to blob
+                if(response.headers['content-type'] === 'application/pdf' || response.headers['content-type'] === 'application/octet-stream' && Array.isArray(response.data)) {
+                    // convert array to Uint8Array
+                    const uint8Array = new Uint8Array(response.data as any)
+                    const blob = new Blob([uint8Array], { type: response.headers['content-type'] })
+                    return resolve({
+                        data: blob,
+                        status: response.status,
+                        statusText: statusText,
+                        headers: {
+                            ...response.headers,
+                            'set-cookie': response.rawHeaders['set-cookie'],
+                        },
+                        config: config,
+                    })
+                    
+                }
+
+                return resolve({
+                    data: response.data,
+                    status: response.status,
+                    statusText: statusText,
+                    headers: {
+                        ...response.headers,
+                        'set-cookie': response.rawHeaders['set-cookie'],
+                    },
+                    config: config,
+                })
+                
             })
             .catch((error) => {
                 console.trace(error);
