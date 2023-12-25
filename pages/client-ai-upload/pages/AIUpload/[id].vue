@@ -79,7 +79,7 @@ const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
 }
 async function handleNodeClick(row) {
     state.selectedDoc = row
-    if(row.aiAnalysisDocument && !row.aiAnalysis) {
+    if(row.aiAnalysisDocument && !row.aiAnalysis && row.aiAnalysisDocument.metaDatas) {
         row.aiAnalysis = row.aiAnalysisDocument.metaDatas.reduce((prev: any, item) => {
             if(item.label || item.value) {
                 prev[item.name] = {}
@@ -88,6 +88,7 @@ async function handleNodeClick(row) {
             }
             return prev
         }, {})
+        if(!row.aiAnalysis) row.aiAnalysis = {}
         if(row.aiAnalysisDocument.documentType) row.aiAnalysis.documentType = {
             value: row.aiAnalysisDocument.documentType
         }
