@@ -66,7 +66,7 @@ export const useUploadAIStore = () => {
             treeMap[item.path + '/' +item.name] = {
                 id: item.path + '/' +item.name,
                 isFolder: false,
-                name: item.name,
+                name: getFileName(item.name),
                 parentId: item.path,
                 documentType: 'File',
                 file: item.file,
@@ -86,7 +86,11 @@ export const useUploadAIStore = () => {
         })
         return treeData
     }
-    
+    function getFileName(name) {
+        const names = name.split('.')
+        names.pop()
+        return names.join('.')
+    }
     async function handleCreateDocument (doc: any, parentPath: string, uploadRequestItem: uploadRequest) {
         let result
         const _document = {

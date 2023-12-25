@@ -35,14 +35,17 @@
                         </div>
                         <div class="label">{{row.name}}</div>
                         <DropzoneContainer v-if="row.isFolder" :doc="row" class="folderDropzone backgroundDrop"></DropzoneContainer>
-                        
                     </div>
                 </template>
+                <template #mimeType="{ row, index }">
+                    <template v-if="!row.isFolder && row.mimeType">{{ mime.extension(row.mimeType) }}</template>
+                    <template v-else>-</template>
+                </template>
                 <template #tags="{ row, index }">
-                    <el-tag v-for="tag in row.tags">{{ tag }}</el-tag>
+                    <el-tag class="el-icon--left" v-for="tag in row.tags">{{ tag }}</el-tag>
                 </template>
                 <template #contributors="{ row, index }">
-                    <el-tag v-for="tag in row.contributors">{{ tag }}</el-tag>
+                    <el-tag class="el-icon--left" v-for="tag in row.contributors">{{ tag }}</el-tag>
                 </template>
         </Table>
         
@@ -55,6 +58,7 @@
 import { GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
 import {openFileDetail} from "~/utils/browseHelper";
 import { useEventListener } from '@vueuse/core'
+import * as mime from 'mime-types'
 const emit = defineEmits([
     'right-click',
     'select-change',

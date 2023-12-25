@@ -9,6 +9,10 @@
             <div class="infoTitle">{{ $t('info_version') }}</div>
             <div class="infoContent"><BrowseInfoVersionPopover v-if="info.id" :doc="info"></BrowseInfoVersionPopover></div>
         </div>
+        <div v-if="!info.isFolder && info.properties && info.properties['file:content'] && info.properties['file:content']['mime-type']" class="infoSection">
+            <div class="infoTitle">{{ $t('docInfo.fileExtension') }}</div>
+            <div class="infoContent">{{ getFileExtension(info.properties['file:content']['mime-type']) }}</div>
+        </div>
         <div class="infoSection">
             <div class="infoTitle">{{ $t('info_modified') }}</div>
             <div class="infoContent">{{
@@ -50,6 +54,7 @@
 </template>
 
 <script lang="ts" setup>
+import * as mime from 'mime-types'
 const props = defineProps<{
     doc: any,
     permission: any
@@ -66,6 +71,9 @@ const info = computed(() => {
     }
     )
 })
+function getFileExtension(mimeType) {
+    return mime.extension(mimeType)
+}
 const version = computed(() => {
     const majorVersion = props.doc?.properties?.['uid:major_version'] || 0
     const minorVersion = props.doc?.properties?.['uid:minor_version'] || 0
