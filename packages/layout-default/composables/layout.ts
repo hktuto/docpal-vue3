@@ -24,6 +24,7 @@ enum pageFeatures {
 export const useLayout = () => {
   const { getLicenseFeatures } = useAppStore()
   const globalSlots = useState<AppSlot[]>('globalSlots', () => shallowRef<AppSlot[]>([]))
+  const headerSlots = useState<AppSlot[]>('headerSlots', () => shallowRef<AppSlot[]>([]))
   const breakpoints = useBreakpoints({
     mobile: 640,
     laptop: 1024,
@@ -47,6 +48,7 @@ export const useLayout = () => {
   return {
     isSmallMobile,
     globalSlots,
+    headerSlots,
     isMobile,
     allowFeature
   }

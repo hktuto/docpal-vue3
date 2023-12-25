@@ -13,8 +13,8 @@
     </div>
     <div v-else ref="readyElement" class="clientPageContainer">
       <NuxtPage >
-        <template #header-right>
-          <slot name="header-right" />
+        <template #headerRight>
+          <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
         </template>
       </NuxtPage>
       <component v-for="s in globalSlots" :key="s.name" :is="s.component" v-bind="$props" />
@@ -34,7 +34,7 @@ const route = useRoute()
 const router = useRouter()
 const {token, beforeLogin, publicPages} = useUser();
 
-const { globalSlots } = useLayout()
+const { globalSlots, headerSlots } = useLayout()
 const { uploadState } = useUploadStore()
 const props = withDefaults(defineProps<{
     showForgetPassword: boolean,
