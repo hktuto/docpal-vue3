@@ -19,7 +19,7 @@
     
     async function getDownloadLinkFromServer() {
         //TODO : get download link from server
-        return location.origin + '/app/win/DocPal_x64-setup.exe';    
+        return location.origin + '/app/' + platform.value + '/DocPal' + platform.value === 'mac' ? '.dmg' : '.exe'
     }
 
     async function download() {
@@ -31,8 +31,10 @@
 </script>
 
 <template>
-    <div class="downloadButtonDropDownContainer" @click="download">
-        <SvgIcon src="/icons/file/download.svg" />   
+    <div class="downloadButtonDropDownContainer" >
+        <div v-if="platform === 'mac' || platform === 'win'" class="buttonContainer" @click="download">
+            <SvgIcon src="/icons/file/download.svg" />   
+        </div>
     </div>
 </template>
 
