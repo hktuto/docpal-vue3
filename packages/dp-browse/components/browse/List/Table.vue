@@ -120,8 +120,12 @@ const { tableData, options, loading } = toRefs(state)
 // #endregion
 
 
-function handleDblclick (row:any) {
-  
+function handleDblclick (row:any, column: any, event: any) {
+    if (event.ctrlKey) {
+        const url = router.resolve({  path: '/browse', query: { path: row.path } })
+        window.open(url.href, '_blank');
+        return
+    }
     state.curDoc = row;
     if(row.isFolder) {
       router.push({

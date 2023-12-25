@@ -7,10 +7,10 @@
             </div>
             <div v-for="item in list" :key="item.id"
                 class="doc-container"
-                @dblclick="handleDblclick(item)" 
+                @dblclick="(event) => handleDblclick(item, event)" 
                 @contextmenu.stop="(event) => handleRightClick(item, event)">
                 <template v-if="item.blobUrl">
-                    <img :src="item.blobUrl" class="thumbnail" @error="imgError" @dblclick="handleDblclick(item)"/>
+                    <img :src="item.blobUrl" class="thumbnail" @error="imgError" @dblclick="(event) => handleDblclick(item, event)"/>
                 </template>
                 <template v-else>
                     <BrowseItemIcon class="folderIcon" :type="item.isFolder ? 'folder' : 'file'" status="general" :mimeType="item.mimeType" />
@@ -81,7 +81,12 @@ function imgError(event) {
         { immediate: true }
     )
 // #endregion
-function handleDblclick (row:any) {
+function handleDblclick (row:any, evt: any) {
+    if (evt.ctrlKey) {
+        const url = router.resolve({  path: '/browse', query: { path: row.path } })
+        window.open(url.href, '_blank');
+        return
+    }
   if(!row.isFolder) {
     openFileDetail(row.path, {
       showInfo:true,
