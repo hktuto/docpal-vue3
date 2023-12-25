@@ -18,6 +18,7 @@
                     <div v-else class="clickActor backgroundDrop"></div>
                 </template>
                 <div class="name">{{item.name}}</div>
+                <el-tag v-if="!item.isFolder && item.mimeType" class="doc-extension" effect="dark">{{ mime.extension(item.mimeType) }}</el-tag>
             </div>
         </div>
         
@@ -27,6 +28,7 @@
 <script lang="ts" setup>
 import { DocumentThumbnailGetApi, TABLE, defaultTableSetting } from 'dp-api'
 import {openFileDetail} from "~/utils/browseHelper";
+import * as mime from 'mime-types'
 const route = useRoute()
 const router = useRouter()
 const props = defineProps<{doc:true,list:any[]}>();
@@ -183,5 +185,11 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+.doc-extension {
+    position: absolute;
+    top: -1px;
+    right: -5px;
+    opacity: .8;
 }
 </style>
