@@ -76,6 +76,7 @@ export const GetDocumentAdditionalApi = async(params) => {
 
 
 export const GetDocumentPreview = async(idOrPath:string) => {
+    console.log("GetDocumentPreview")
     return api.post('/nuxeo/document/preview', {
         idOrPath
     },{

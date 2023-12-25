@@ -54,7 +54,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "hk.com.docpal",
+      "identifier": "com.wclsolution.docpal",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

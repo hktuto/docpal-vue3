@@ -6,7 +6,9 @@
 const router = useRouter()
 const route = useRoute()
 const { publicPages } = useUser()
-onMounted(() => {
+
+onMounted(async() => {
+  
     nextTick(() => {
         if(!!publicPages.find(item => route.path.includes(item))) {
             appStore.setDisplayState('ready') 
@@ -16,6 +18,7 @@ onMounted(() => {
             })
         }
     })
+    
 })
 
 </script>
