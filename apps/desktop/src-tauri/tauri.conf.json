@@ -90,7 +90,7 @@
         "resizable": true,
         "title": "DocPal",
         "width": 1200,
-        "transparent": true,
+        "transparent": false,
         "decorations": false
       }
     ]

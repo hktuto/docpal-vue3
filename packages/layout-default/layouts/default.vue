@@ -18,7 +18,10 @@
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
         </div>
-        <div data-tauri-drag-region id="topBarContainer">
+        <div  id="topBarContainer">
+          <div v-if="feature.tauri" data-tauri-drag-region class="tauriHeader">
+
+          </div>
         <div class="headerLeft">
           <SvgIcon v-if="isMobile" src="/icons/menu.svg" @click="toggleOpen" />
           <PageTitle :title="pageTitle"  :backPath="backPath"/>
