@@ -33,6 +33,7 @@
         </div>
 
         <div v-if="isLogin"  class="actions">
+          <AppDownload v-if="!feature.tauri" />
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Notification v-if="feature.notification" />
           <TauriHeader v-if="feature.tauri" />
