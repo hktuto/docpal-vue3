@@ -217,10 +217,9 @@ async function deleteAiSuggestion(deleteName: string) {
                 value: item.value
             })
             return prev
-        }, [])
+        }, []),
+        aiId:  state.aiDocId
     }
-    if(props.mode === 'edit') params.id = state.aiDocId
-    else params.idOrPath = state.aiDocId
     try {
         const res = await UpdateAiDocumentApi(params)
         delete state.aiAnalysis[deleteName]
@@ -318,6 +317,11 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
             font-weight: normal;
             padding: unset;
             margin: unset;
+            white-space: pre-wrap; /* css-3 */
+            word-wrap: break-word; /* InternetExplorer5.5+ */
+            white-space: -moz-pre-wrap; /* Mozilla,since1999 */
+            white-space: -pre-wrap; /* Opera4-6 */
+            white-space: -o-pre-wrap;
         }
     }
 }
