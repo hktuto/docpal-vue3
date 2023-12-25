@@ -184,7 +184,9 @@ $--scroll-dialog-height: fit-content;
     max-width: 60vw;
     overflow-x: auto;
 }
-
+.el-notification__content p {
+    text-align: left;
+}
 .el-tabs{
   max-width: calc( 100vw - (var(--app-padding) * 4) + 60px);
   @media(max-width: 1024px){
