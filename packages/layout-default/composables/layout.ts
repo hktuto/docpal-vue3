@@ -23,7 +23,7 @@ enum pageFeatures {
 }
 export const useLayout = () => {
   const { getLicenseFeatures } = useAppStore()
-  const globalSlots = useState<AppSlot[]>('globalSlots', () => ([]))
+  const globalSlots = useState<AppSlot[]>('globalSlots', () => shallowRef<AppSlot[]>([]))
   const breakpoints = useBreakpoints({
     mobile: 640,
     laptop: 1024,
@@ -34,7 +34,7 @@ export const useLayout = () => {
 
 
   function allowFeature(f: pageFeatures) {
-    
+
     const feature = getLicenseFeatures()
     if(!pageFeatures[f] || !feature || !feature[pageFeatures[f]]) return false
     // if(f === 'DOC_COMMENT') return false
