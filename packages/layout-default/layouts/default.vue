@@ -36,7 +36,7 @@
           <AppDownload v-if="!feature.tauri" />
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Notification v-if="feature.notification" />
-          <slot name="headerRight" />
+          <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
         </div>
       </div>
         <main id="mainContainer">
@@ -68,7 +68,7 @@ const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useLayout();
 const { uploadState, uploadRequestList } = useUploadAIStore()
 const sidebarEl = ref();
-const { sideSlot } = useLayout()
+const { sideSlot, headerSlots } = useLayout()
 
 onClickOutside(sidebarEl, () => {
   if(isMobile && !collapse.value) {
