@@ -1,5 +1,5 @@
 [package]
-name = "desk"
+name = "DocPal"
 version = "0.0.0"
 description = "A Tauri App"
 authors = ["you"]
@@ -16,6 +16,7 @@ tauri-build = { version = "1.5", features = [] }
 tauri = { version = "1.5", features = [ "notification-all", "window-all", "path-all", "http-all", "clipboard-all", "updater", "macos-private-api", "dialog-all"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+window-shadows = "0.2.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
