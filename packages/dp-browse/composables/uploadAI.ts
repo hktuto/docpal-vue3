@@ -66,7 +66,7 @@ export const useUploadAIStore = () => {
             treeMap[item.path + '/' +item.name] = {
                 id: item.path + '/' +item.name,
                 isFolder: false,
-                name: getFileName(item.name),
+                name: item.name,
                 parentId: item.path,
                 documentType: 'File',
                 file: item.file,
