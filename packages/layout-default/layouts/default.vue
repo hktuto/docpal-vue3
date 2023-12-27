@@ -91,7 +91,7 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
 
 <style lang="scss" scoped>
 #pageContainer{
-  background-color: aquamarine;
+  background-color: #fff;
     width: 100%;
     height: 100%;
     position: relative;
@@ -217,7 +217,11 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
 }
 
 
-
+.bc-grey {
+  #mainContainer{
+    background-color: #fcfdff!important;
+  }
+}
 .fit-height {
   #mainContainer{
     width: 100%;
