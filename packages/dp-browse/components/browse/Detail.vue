@@ -40,6 +40,7 @@
             </div>
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
+                    <LazyXlsViewer v-if="readerType === 'xls'" ref="PreviewRef" :doc="doc" />
                     <LazyHtmlViewer v-if="readerType === 'html'" ref="PreviewRef" :doc="doc" />
                     <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
@@ -84,6 +85,10 @@ const readerType = computed(() => {
     const properties = doc.value.properties as any
     const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
     if(!mineType) return "pdf"; // set to pdf for testing
+    // check if mimetype is xlsx
+    if(mineType.includes('application/vnd.ms-excel') || mineType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+      return 'xls';
+    }
     if(mineType.includes('text/html')) {
       return 'html';
     }
