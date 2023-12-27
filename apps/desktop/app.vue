@@ -13,10 +13,7 @@ import { enable, isEnabled, disable } from "tauri-plugin-autostart-api";
 import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import {useEventListener} from '@vueuse/core';
 
-// listen to scheme-request-received
-useEventListener('tauri-scheme-request-received', (event) => {
-  console.log(event)
-})
+
 onMounted(async()=> {
   // const isAutostartEnabled = await isEnabled();
   // console.log("isAutostartEnabled", isAutostartEnabled)

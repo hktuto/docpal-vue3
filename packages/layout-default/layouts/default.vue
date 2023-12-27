@@ -18,7 +18,10 @@
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
         </div>
-        <div data-tauri-drag-region id="topBarContainer">
+        <div  id="topBarContainer">
+          <div v-if="feature.tauri" data-tauri-drag-region class="tauriHeader">
+
+          </div>
         <div class="headerLeft">
           <SvgIcon v-if="isMobile" src="/icons/menu.svg" @click="toggleOpen" />
           <PageTitle :title="pageTitle"  :backPath="backPath"/>
@@ -30,9 +33,10 @@
         </div>
 
         <div v-if="isLogin"  class="actions">
+          <AppDownload v-if="!feature.tauri" />
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Notification v-if="feature.notification" />
-          <TauriHeader v-if="feature.tauri" />
+          <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
         </div>
       </div>
         <main id="mainContainer">
@@ -64,7 +68,7 @@ const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useLayout();
 const { uploadState, uploadRequestList } = useUploadAIStore()
 const sidebarEl = ref();
-const { sideSlot } = useLayout()
+const { sideSlot, headerSlots } = useLayout()
 
 onClickOutside(sidebarEl, () => {
   if(isMobile && !collapse.value) {
@@ -215,8 +219,6 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
   display: grid;
   grid-template-columns: 1fr min-content;
 }
-
-
 .bc-grey {
   #mainContainer{
     background-color: #fcfdff!important;
