@@ -107,7 +107,6 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                 }
                 else if (props.mode === 'ai' || props.mode === 'ai-edit') {
                     const newFormJson = getAIFormJson(formJson)
-                    console.log({newFormJson});
                     FromVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
@@ -228,7 +227,6 @@ async function deleteAiSuggestion(deleteName: string) {
     }
 }
 function handleApply(formModel) {
-    console.log(formModel);
     emits('handleApply', formModel)
 }
 // #region module: Validate

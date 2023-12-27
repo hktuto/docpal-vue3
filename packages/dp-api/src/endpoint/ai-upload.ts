@@ -43,16 +43,24 @@ export const CancelUploadAIApi = async(params) => {
     return res
 }
 export const ConfirmUploadAIApi = async(params: any) => {
-    const res = await api.post('/nuxeo/document/batchConfirm', params).then(res => res.data.data)
+    const res = await api.post('/nuxeo/document/batchConfirm', params, {
+        timeout: 0,
+        headers: {'white': 'true'}
+    }).then(res => res.data.data)
     return res
 }
 export const UpdateAiDocumentApi = async(params: any) => {
-    const res = await api.patch('/nuxeo/document/updateAiDocument', params).then(res => res.data.data)
+    const res = await api.patch('/nuxeo/document/updateAiDocument', params, {
+        timeout: 0,
+    }).then(res => res.data.data)
     return res
 }
 
 export const ReplaceFileAiDocumentApi = async(params: any) => {
-    const res = await api.patch('/nuxeo/document/replaceFile/v2', params).then(res => res.data.data)
+    const res = await api.patch('/nuxeo/document/replaceFile/v2', params, {
+        timeout: 0,
+        headers: {'white': 'true'}
+    }).then(res => res.data.data)
     return res
 }
 export const GetDocumentAiAnalyzeApi = async(docId: string, needDocType: boolean = false) => {
