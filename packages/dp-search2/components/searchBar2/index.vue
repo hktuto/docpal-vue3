@@ -51,6 +51,7 @@ const state = reactive<any>({
     conditionStore: [],
     suggestList: [],
     suggestFilterList: [],
+    suggestKeywordList: [],
     
     dynamicTags: [],
     loading: false,
@@ -157,7 +158,12 @@ async function getOptions() {
         }
     }
     getSuggestList()
+    getKeywords()
 }
+function getKeywords() {
+    state.suggestKeywordList = Object.keys(state.conditionStore).reduce((prev: any[],key: string) => {})
+}
+
 function getSuggestList() {
     state.suggestList = Object.keys(state.conditionStore).reduce((prev: any[],key: string) => {
         const sItem = state.conditionStore[key]
