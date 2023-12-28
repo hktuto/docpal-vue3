@@ -13,9 +13,6 @@
     </div>
     <div v-else ref="readyElement" class="clientPageContainer">
       <NuxtPage >
-        <template #header-right>
-          <slot name="header-right" />
-        </template>
       </NuxtPage>
       <component v-for="s in globalSlots" :key="s.name" :is="s.component" v-bind="$props" />
     </div>

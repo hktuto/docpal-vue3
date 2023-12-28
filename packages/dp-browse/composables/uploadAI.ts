@@ -86,7 +86,11 @@ export const useUploadAIStore = () => {
         })
         return treeData
     }
-    
+    function getFileName(name) {
+        const names = name.split('.')
+        names.pop()
+        return names.join('.')
+    }
     async function handleCreateDocument (doc: any, parentPath: string, uploadRequestItem: uploadRequest) {
         let result
         const _document = {

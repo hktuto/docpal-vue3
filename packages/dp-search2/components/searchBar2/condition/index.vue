@@ -1,0 +1,93 @@
+<template>
+    <div class="checkbox-group-container">
+        <div class="checkbox-title">{{ $t(label) }} </div>
+        <SearchBar2ConditionFilter v-if="filter" @change="handleFilter"/>
+        <el-checkbox-group v-model="state.chackList" :max="max"
+            @change="handleChange">
+            <template v-for="item in state._optionItems">
+                <template v-if="item.children">
+                    <el-checkbox :label="item.label" disabled />
+                    <el-checkbox v-for="cItem in item.children" :key="cItem.value" :label="cItem.value" > {{ cItem.label }} </el-checkbox>
+                </template>
+                <el-checkbox v-else :label="item.value"> {{ item.label }} </el-checkbox>
+            </template>
+        </el-checkbox-group>
+    </div>
+</template>
+<script lang="ts" setup>
+const props = withDefaults(defineProps<{
+    modelValue: any,
+    optionItems: any[],
+    label: string,
+    max?: number,
+    filter?: boolean
+}>(),{
+    modelValue: [],
+    filter: false
+})
+const emits = defineEmits(['update:modelValue'])
+
+const state = reactive<any>({
+    chackList: [],
+    _optionItems: [],
+    filterKey: ''
+})
+
+function handleChange(val:string) {
+    let result: any = [] 
+    if(val.length > 0) {
+        result = props.max === 1 ? val[0] : [...val]
+    }
+    else result = ''
+    emits('update:modelValue', result)
+}
+function handleFilter(filterKey: string) {
+    state.filterKey = filterKey
+    state._optionItems = props.optionItems.filter((item: any) => {
+        return item.label.toLowerCase().includes(filterKey.toLowerCase())
+    })
+}
+watch(() => props.modelValue, (val: any) => {
+    if(!!val) {
+        state.chackList = val instanceof Array ? val : [val]
+    } else {
+        state.chackList = []
+    }
+})
+watch(() => props.optionItems, (val: any) => {
+    state._optionItems = [...val]
+}, {
+    immediate: true
+})
+</script>
+<style lang="scss" scoped>
+.checkbox-group-container {
+    // border-top: 1px dashed #DBE6EE;
+    .checkbox-title {
+        color: #333;
+        font-size: 18px;
+        line-height: 32px;
+        padding-top: var(--app-padding);
+    }
+    .el-checkbox-group {
+        // border-right: 1px solid #DBE6EE;
+        display: flex;
+        flex-direction: column;
+        margin-top: var(--app-padding);
+        .el-checkbox {
+            padding: 4px 0;
+        }
+    }
+}
+.el-checkbox.is-disabled {
+    :deep(.el-checkbox__input) {
+        opacity: 0;
+    }
+}
+.h-200 {
+    .el-checkbox-group {
+        max-height: 200px;
+        overflow: auto;
+    }
+}
+</style>

@@ -4,7 +4,9 @@
         <div v-if="show && doc" class="dialog">
             <div id="modalHeader">
               <div class="fileNameContainer">
-                <div class="fileName">{{ doc.name }}</div>
+                <div class="fileName">{{ doc.name }}
+                  <el-tag v-if="doc.properties && doc.properties['file:content'] && doc.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(doc.properties['file:content']['mime-type']) }}</el-tag>
+                </div>
               </div>
               <div class="actions">
                 <template v-if="options.showHeaderAction" >
@@ -61,7 +63,7 @@ import {onKeyStroke, useEventListener} from '@vueuse/core'
 import { Permission } from '~/utils/permissionHelper';
 import {DocDetail} from "dp-api";
 import {FileDetailOptions} from "~/utils/browseHelper";
-
+import * as mime from 'mime-types'
 const auth = useUser();
 const userId:string = useUser().getUserId()
 const mobileActionOpened = ref(false);
@@ -107,7 +109,7 @@ function handleRefresh() {
 }
 const PreviewRef = ref()
 function handleRefreshPreview() {
-  PreviewRef.value.refresh()
+  if(PreviewRef.value) PreviewRef.value.refresh()
   handleRefresh()
 }
 async function openPreview({detail}:any) {

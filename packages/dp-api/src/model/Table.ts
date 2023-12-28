@@ -561,6 +561,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ],
             },
+            { id: '7', slot: 'mimeType', label: 'docInfo.fileExtension' },
             { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
             { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
             {

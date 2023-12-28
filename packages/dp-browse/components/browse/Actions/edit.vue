@@ -53,10 +53,10 @@ async function openDialog(doc){
     dialogOpened.value = true
     nextTick(async() => {
         const analysis = await GetDocumentAiAnalyzeApi(state.doc.id)
-        if(Object.keys(analysis).length === 0) state.MetaRenderMode = 'normal'
+        state.MetaRenderMode = analysis.aiId ? 'ai-edit' : 'normal'
         await MetaFormRef.value.init(doc.type, {
-            aiAnalysis: analysis,
-            aiDocId: doc.id
+            aiAnalysis: analysis.metaDatas,
+            aiDocId: analysis.aiId
         })
         MetaFormRef.value.setData(doc.properties)
     })

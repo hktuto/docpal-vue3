@@ -275,3 +275,19 @@ export const GetSTagsApi = async() => {
     return searchOptions.tags
 }
 
+export const GetRecentSearchPageApi = async(params: pageParams):Promise<paginationData> => {
+    if (searchOptions.tags) return searchOptions.tags
+    const res = await api.post('/docpal/logs/recent/search/page', params).then(res => res.data.data)
+    return {
+        entryList: res.entryList,
+        totalSize: res.totalSize
+    }
+}
+export const GetRecentDocumentPageApi = async(params: pageParams):Promise<paginationData> => {
+    if (searchOptions.tags) return searchOptions.tags
+    const res = await api.post('/docpal/logs/recent/document/page', params).then(res => res.data.data)
+    return {
+        entryList: res.entryList,
+        totalSize: res.totalSize
+    }
+}

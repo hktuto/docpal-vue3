@@ -69,7 +69,7 @@ const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
     if(fieldName === 'documentType' && newValue !== oldValue && !!oldValue) {
         await MetaFormRef.value.init(state.selectedDoc.fileType, {
             isFolder: state.selectedDoc.isFolder,
-            aiAnalysis: state.selectedDoc.aiAnalysis,
+            aiAnalysis: state.selectedDoc.aiAnalysis || {},
             aiDocId: state.selectedDoc.id
         })
         setTimeout(() => {
@@ -79,7 +79,7 @@ const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
 }
 async function handleNodeClick(row) {
     state.selectedDoc = row
-    if(row.aiAnalysisDocument && !row.aiAnalysis) {
+    if(row.aiAnalysisDocument && !row.aiAnalysis && row.aiAnalysisDocument.metaDatas) {
         row.aiAnalysis = row.aiAnalysisDocument.metaDatas.reduce((prev: any, item) => {
             if(item.label || item.value) {
                 prev[item.name] = {}
@@ -88,13 +88,14 @@ async function handleNodeClick(row) {
             }
             return prev
         }, {})
+        if(!row.aiAnalysis) row.aiAnalysis = {}
         if(row.aiAnalysisDocument.documentType) row.aiAnalysis.documentType = {
             value: row.aiAnalysisDocument.documentType
         }
     }
     await MetaFormRef.value.init(row.fileType, {
         isFolder: row.isFolder,
-        aiAnalysis: row.aiAnalysis,
+        aiAnalysis: row.aiAnalysis || {},
         aiDocId: row.id
     })
     setTimeout(() => {
@@ -208,7 +209,11 @@ onMounted(async() => {
     grid-row-gap: var(--app-padding);
     position: relative;
     overflow: hidden;
-    .main-left { grid-area: 1 / 1 / 2 / 2; }
+    .main-left { 
+        grid-area: 1 / 1 / 2 / 2;
+        height: 100%;
+        overflow: auto;
+    }
     .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto;}
     .main-right { grid-area: 1 / 3 / 2 / 4; }
     .upload-footer{
