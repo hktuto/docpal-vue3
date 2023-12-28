@@ -19,7 +19,7 @@
     
     async function getDownloadLinkFromServer() {
         //TODO : get download link from server
-        return location.origin + '/app/' + platform.value + '/DocPal' + platform.value === 'mac' ? '.dmg' : '.exe'
+        return location.origin + '/app/' + platform.value + '/DocPal' + (platform.value === 'mac' ? '.dmg' : '.exe')
     }
 
     async function download() {
