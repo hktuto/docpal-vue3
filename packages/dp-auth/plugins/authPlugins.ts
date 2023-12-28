@@ -70,7 +70,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         return config;
     },(error) => Promise.reject(error));
     api.interceptors.response.use((response) => {
-      console.log(response)
+     
       return response
     }, async(error) => {
         console.log(error)

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useEventListener } from '@vueuse/core';
 import { getOfficeTokenApi } from 'dp-api';
 
 const props = defineProps<{
@@ -7,26 +8,75 @@ const props = defineProps<{
 const { doc } = toRefs(props)
 const formEl = ref();
 const collaboraUrl = ref('');
-const css = ref('');
-const ui = ref('UIMode=Default')
+const css = ref('--co-primary-element: #4c566a;--co-body-bg=#FFF;--co-txt-accent=#2e1a47;');
+const ui = ref('UITheme=light;UIMode=notebookbar;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false;SavedUIState=false;SpreadsheetToolbar=false;TextSidebar=true;TextToolbar=false')
 const token = ref('')
+const xlsxIframe = ref()
 
 async function displayIframe(){
 
     token.value = await getOfficeTokenApi(props.doc.id)
     collaboraUrl.value = officeUrl(props.doc.id, token)
-    formEl.value.submit
+    
+    nextTick(() => {
+        formEl.value.submit()
+    });
 }
 
 
 const officeUrl = (docId:string, token:string) =>{
     let host = window.location.host.replace('admin.', '');
     if(!host.includes('localhost')){
-        return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}`
+        return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}&access_token=${token.value}&ui_defaults=${ui.value}&css_variables=${css.value}`
     }else{
-        return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}`
+        return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}&access_token=${token.value}&ui_defaults=${ui.value}&css_variables=${css.value}`
     }
 }
+
+function gotMessageFromIframe(e:MessageEvent){
+
+   const data = e.data !== 'unchanged' ? JSON.parse(e.data) : undefined;
+   if(!data) return
+   if(data.MessageId === "App_LoadingStatus"){
+    console.log('App_LoadingStatus')
+       // set readonly
+       
+       xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
+                MessageId: "Hide_Menubar",
+                SendTime: new Date().getTime(),
+                
+        }), '*')
+       xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
+                MessageId: "Hide_StatusBar",
+                SendTime: new Date().getTime(),
+                
+        }), '*')
+       
+   }
+   if(data.MessageId === "View_Added"){
+    console.log('View_Added')
+    xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
+                MessageId: "Action_Print",
+                SendTime: new Date().getTime(),
+                
+        }), '*')
+   }
+}
+
+function iframeLoaded(){
+    console.log('iframeLoaded')
+    // send message to collabora iframe to make it readonly
+    // @ts-ignore
+    // xlsxIframe.contentWindow.postMessage({
+    //     MessageId: "Get_Views_Resp",
+    //         SendTime: new Date().getTime(),
+    //     Values: {
+    //         ReadOnly: true
+    //     }
+    // }, '*')
+}
+
+useEventListener(window, 'message', gotMessageFromIframe)
 
 watch(doc, ()=>{
     if(!doc) return;
@@ -44,9 +94,8 @@ watch(doc, ()=>{
         <input name="css_variables" :value="css" type="hidden" id="css-variables"/>
         <input name="ui_defaults" :value="ui" type="hidden" id="ui-defaults"/>
         <input name="access_token" :value="token" type="hidden" id="access-token"/>
-        <input type="submit" value="" />
     </form>
-    <iframe ref="xlsxIframe" id="xlsxIframe" class="xlsxIframe" frameborder="0" name="collabora-online-viewer"></iframe>
+    <iframe ref="xlsxIframe" id="xlsxIframe" class="xlsxIframe" frameborder="0" name="collabora-online-viewer" @load="iframeLoaded"></iframe>
 </div>
 </template>
 
