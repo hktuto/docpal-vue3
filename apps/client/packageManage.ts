@@ -8,6 +8,7 @@ export function customLayer():string[] {
     packages.push('../../pages/client-file-request');
     packages.push('../../pages/client-smart-folder');
     packages.push('../../packages/dp-search');
+    // packages.push('../../packages/dp-search2');
     packages.push('../../pages/client-workflow');
     packages.push('../../pages/client-folder-cabinet');
     packages.push('../../pages/client-share-list');
