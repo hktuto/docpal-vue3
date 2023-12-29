@@ -4,7 +4,7 @@ import { useEventListener } from '@vueuse/core';
 import { getOfficeTokenApi } from 'dp-api';
 import * as xpath from 'xpath';
 import { ref, toRefs, nextTick } from 'vue'; 
-import { getMineTypeFromDocument } from '../utils/browseHelper';
+import { getMimeTypeFromDocument } from '../utils/browseHelper';
 
 const {userPreference} = useUser()
 const props = defineProps<{

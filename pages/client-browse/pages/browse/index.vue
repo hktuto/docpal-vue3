@@ -4,8 +4,8 @@
         <slot name="headerLeft"></slot>
     </template>
     <page-container>
-        <div v-if="listData" class="browsePageContainer">
-            <div v-if="selectList.length === 0 && listData.doc.path !== '/'"
+        <div v-if="currentDocument" class="browsePageContainer">
+            <div v-if="selectList.length === 0 && currentDocument.doc.path !== '/'"
                  class="browseHeader">
                  <slot name="breadcrumb">
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
@@ -13,46 +13,44 @@
                 <div id="browseHeaderRight" class="folderAction">
                     <CollapseMenu>
                         <template #default="{collapse}">
-                        <BrowseActionsHold :permission="listData.permission" :doc="listData.doc" />
-                        <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="listData.doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :class="{actionDivider:true, collapse}"></div>
-                        <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @success="handleRefresh"/>
-                        <!-- <BrowseActionsUpload v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @success="handleRefresh"/> -->
-                        <BrowseActionsNew v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @success="handleRefresh"/>
-                        <BrowseActionsDelete v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" @delete="itemDeleted" @success="handleRefresh"/>
-                        <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :doc="listData.doc" />
-                        <div v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :class="{actionDivider:true, collapse}"></div>
-                        <BrowseActionsUploadRequest v-if="allowFeature('UPLOAD_REQUEST')" v-show="AllowTo({feature:'ReadWrite', permission: listData.permission })" :path="listData.doc.path" />
+                           
+                            <template v-for="(group,key) in folderActions" :key="key">
+                                <template v-for="item in group" :key="item.name">
+                                <component :is="item.component" :doc="currentDocument.doc" :permission="currentDocument.permission"  @success="handleRefresh" @delete="itemDeleted" />
+                                </template>
+                                <div :class="{actionDivider:true, collapse}"></div>
+                            </template>
+                       
                         </template>
                     </CollapseMenu>
-                    <div :class="{actionDivider:true, collapse}"></div>
-                    <BrowseActionsInfo :doc="listData.doc" @click="infoOpened = !infoOpened"/>
+                    <BrowseActionsInfo :doc="currentDocument.doc" :permission="currentDocument.permission" @click="infoOpened = !infoOpened"/>
                 </div>
             </div>
             <div v-else-if="selectList.length !== 0" class="browseHeader--multi selectedAction">
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
                 <CollapseMenu>
                     <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
-                    <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission: listData.permission })"
-                        :doc="listData.doc" :selectedList="selectList"/>
+                    <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission: currentDocument.permission })"
+                        :doc="currentDocument.doc" :selectedList="selectList"/>
                     <BrowseActionsCollection :selectedList="selectList" @clearSelected="handleClearSelected"></BrowseActionsCollection>
-                    <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission: listData.permission })" :selected="selectList" @success="handleRefresh"
+                    <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission: currentDocument.permission })" :selected="selectList" @success="handleRefresh"
                         />
-                    <!-- <div class="actionDivider"></div> -->
-                    <!-- <BrowseActionsInfo :doc="listData.doc" @click="infoOpened = !infoOpened"
-                        class="el-icon--right"/> -->
+                    <div class="actionDivider"></div> 
+                   <BrowseActionsInfo :doc="currentDocument.doc" @click="infoOpened = !infoOpened"
+                        class="el-icon--right"/> 
                 </CollapseMenu>
             </div>
             <BrowseList
                 v-loading="loading"
-                :doc="listData.doc"
-                :permission="listData.permission"
+                
+                :doc="currentDocument.doc"
+                :permission="currentDocument.permission"
                 @select-change="handleSelectionChange"
             >
-                <template #default="{doc, permission}" >
-                    <BrowseInfo :doc="selectList.length === 1 ? selectList[0] : doc" :listData="listData" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
+                <template  #default="{doc, permission}" >
+                    <BrowseInfo v-if="currentDocument.doc && currentDocument.permission" :doc="selectList.length === 1 ? selectList[0] : doc" :listData="currentDocument" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
                     <BrowseRightClick></BrowseRightClick>
-                    <!-- <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" v-show="false" :doc="listData.doc" @success="handleRefresh"/> -->
+                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" v-show="false" :doc="currentDocument.doc" @success="handleRefresh"/> 
                 </template>
             </BrowseList>
         </div>
@@ -68,7 +66,7 @@
 
 
 <script lang="ts" setup>
-import { useEventListener } from '@vueuse/core'
+
 import { DocDetail } from 'dp-api';
 import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
 import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper';
@@ -76,56 +74,27 @@ import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper'
 
 // #region refs
 const breadCrumb = ref();
-const route = useRoute();
+
 const router = useRouter();
 const { allowFeature } = useLayout()
-const listData = ref<{
-    doc: DocDetail;
-    permission: Permission
-}>();
 
+
+const {loading,folderActions,currentDocument,getDocDetail} = useClientBrowseStore()
 
 const forceRefresh = ref(false)
 
-const loading = ref(false)
-const auth = useUser();
+
 const userId:string = useUser().getUserId()
 const { public:{feature} } = useRuntimeConfig();
 const selectList = ref<any[]>([])
 // #endregion
 provide('selectList', selectList)
-const routePath = computed( () => (route.query.path as string) || '/')
+
 const infoOpened = ref(false);
 
 
 
 
-async function getDocDetail() {
-    // const response = await getDocumentDetail(routePath.value, userId)
-    const response = await getDocumentDetailSync(routePath.value, userId)
-    
-    if(response.doc.isFolder) {
-        // check if the path is the same
-        if(listData.value && listData.value.doc.id === response.doc.id && !forceRefresh.value) {
-            return
-        }
-        listData.value = response
-        forceRefresh.value = false
-
-    } else {
-        if(!listData.value) {
-            // split router path to get parent path
-            const parentPath = routePath.value.split('/').slice(0, -1).join('/')
-            // listData.value =  await getDocumentDetail(parentPath, userId)
-            listData.value =  await getDocumentDetailSync(parentPath, userId)
-        }
-        // open detail
-        openFileDetail(routePath.value, {
-          showInfo:true,
-          showHeaderAction:true
-        })
-    }
-}
 
 function itemDeleted(){
      //  FIXME: item deleted may not be the current path
@@ -134,7 +103,7 @@ function itemDeleted(){
 async function handleRefresh () {
     forceRefresh.value = true
     await getDocDetail()
-    if(listData?.value?.doc?.isFolder) breadCrumb.value.handleRefresh();
+    if(currentDocument?.value?.doc?.isFolder) breadCrumb.value.handleRefresh();
 }
 
 function handleSelectionChange (rows:any) {
@@ -144,23 +113,12 @@ function handleClearSelected() {
     const ev = new CustomEvent('setTableSelection')
     document.dispatchEvent(ev)
 }
-watch(()=>routePath, async(newRoute, oldRoute) => {
-    loading.value = true;
-    try {
-        await getDocDetail()
-    } catch (error) {
 
-    }
-    loading.value = false;
-},{immediate:true, deep: true});
 
 function detailClosed() {
     breadCrumb.value.goParent();
 }
-onMounted(() => {
-    useEventListener(document, 'docActionRefresh', (event) => handleRefresh())
-    useEventListener(document, 'tree-node-update', (event) => getDocDetail())
-})
+
 </script>
 
 <style lang="scss" scoped>

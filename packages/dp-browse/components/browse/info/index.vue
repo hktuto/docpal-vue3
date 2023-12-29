@@ -13,7 +13,8 @@
 <div class="infoHeaderSection">
     <slot name="header" />
     <div class="headerTopRow">
-        <div class="name">{{ doc.name }}</div>
+        <div class="name">{{ doc.name }} <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/></div>
+        
         <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
     </div>
 </div>
@@ -42,9 +43,9 @@
     <!-- <el-tab-pane v-if="!detail.isFolder" :label="$t('rightDetail_related')" name="relate">
         <BrowseInfoRelate v-if="currentTab === 'relate'"  :doc="detail" />
     </el-tab-pane> -->
-    <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
+    <!-- <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
       <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail, permission}" />
-    </el-tab-pane>
+    </el-tab-pane> -->
 </el-tabs>
   <div v-else v-loading="loading" class="loadingContainer">
     {{ detail }}
@@ -183,6 +184,11 @@ defineExpose({
     font-weight: 800;
     font-size: 1.2rem;
     word-break: break-all;
+    display: flex;
+    flex-flow:row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap:clac(var(--app-padding));
   }
 }
 .infoContainer {

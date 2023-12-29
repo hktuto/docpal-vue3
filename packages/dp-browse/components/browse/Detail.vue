@@ -13,27 +13,33 @@
                 <template v-if="options.showHeaderAction" >
                   <CollapseMenu @openedChange="mobileActionsOpenedChanged">
                     <template #default="{collapse}">
+                      <template v-for="(group,key) in detailActions" :key="key">
+                          <template v-for="item in group" :key="item.name">
+                          <component :is="item.component" :doc="doc" :permission="permission"  @success="handleRefresh" @delete="itemDeleted" :hideAfterClick="true" />
+                          </template>
+                          <div :class="{actionDivider:true, collapse}"></div>
+                      </template>
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
-                      <BrowseActionsHold :doc="doc" :permission="permission"/>
+                      <!-- <BrowseActionsHold :doc="doc" :permission="permission"/>
                       <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
                       <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
                       <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefreshPreview"/>
-                      <!-- <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
-                      <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
+                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
+                      <!-- <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
                       <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                       <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
                       <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @submit="editMode = !editMode"/>
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
-                      <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
+                      <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" /> -->
 
                       <!-- {{AllowTo({feature:'Read', permission })}} -->
                       <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
                       
                     </template>
                   </CollapseMenu>
-                  <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
-                  <BrowseActionsInfo  :doc="doc" @click="infoOpened = !infoOpened"/>
+                 
+                  <BrowseActionsInfo  :doc="doc"  @click="infoOpened = !infoOpened"/>
                   <div  :class="{actionDivider:true, collapse}"></div>
                 </template>
                 <SvgIcon class="closeBtn" src="/icons/close-only.svg" :content="$t('close')" round @click="closePreview"></SvgIcon>
@@ -54,7 +60,6 @@
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
                 </h2>
                 <div class="info">
-                  
                   <BrowseInfo v-if="options.showInfo" :doc="doc" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false" />
                 </div>
             </div>
@@ -69,7 +74,7 @@ import { Permission } from '~/utils/permissionHelper';
 import {DocDetail} from "dp-api";
 import {FileDetailOptions} from "~/utils/browseHelper";
 import * as mime from 'mime-types'
-import { getMineTypeFromDocument } from '../../utils/browseHelper';
+import { getMimeTypeFromDocument } from '../../utils/browseHelper';
 const auth = useUser();
 const userId:string = useUser().getUserId()
 const mobileActionOpened = ref(false);
@@ -84,51 +89,45 @@ const options = ref<FileDetailOptions>({
 })
 const emit = defineEmits(['close'])
 const { public:{feature} } = useRuntimeConfig();
+const {actions} = useClientBrowseStore()
+const detailActions = computed(()=> {
+  if(!doc.value || !permission.value) return {}
+  const result = actions.filter((item) => {
+            return item.showInDetail
+        }).filter((item) => {
+            return AllowTo({feature:item.permission, permission: permission.value})
+        })
+        .reduce((prev:any, item:BrowseActionItem) => {
+            prev[item.groupBy] = prev[item.groupBy] || []
+            prev[item.groupBy].push(item)
+            return prev
+        }, {})
+        return result
+})
 const { allowFeature } = useLayout()
 const readerType = computed(() => {
   try {
     if(!doc.value) return "";
     const properties = doc.value.properties as any
-    const mineType = getMineTypeFromDocument(doc.value);
-    if(!mineType) return "pdf"; // set to pdf for testing
+    const mimeType = getMimeTypeFromDocument(doc.value);
+    if(!mimeType) return "pdf"; // set to pdf for testing
     // check if it is excel
-    if(mineType.includes('application/vnd.ms-excel')) {
-      return 'collabora';
+    if(canCollaboraEdit(mimeType)){
+      return 'collabora'
     }
-    if(mineType.includes('application/vnd.ms-powerpoint')) {
-      return 'collabora';
-    }
-    if(mineType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-      return 'collabora';
-    }
-    if(mineType.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
-      return 'collabora';
-    }
-    if(mineType.includes('application/vnd.ms-word')) {
-      return 'collabora';
-    }
-    if(mineType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-      return 'collabora';
-    }
-    if(mineType.includes('application/vnd.collabora') || mineType.includes('application/vnd.collabora-project')) {
-      return 'collabora';
-    }
-    if(mineType.includes('text/plain')) {
-      return 'collabora';
-    }
-    if(mineType.includes('text/html')) {
+    if(mimeType.includes('text/html')) {
       return 'html';
     }
-    if(mineType.includes('image/tiff')) {
+    if(mimeType.includes('image/tiff')) {
       return 'other';
     }
-    if(mineType.includes('image') || mineType.includes('pdf') || mineType.includes('document') || mineType.includes('text') || mineType.includes('photoshop') || mineType.includes('psd') || mineType.includes('illustrator')  ) {
+    if(mimeType.includes('image') || mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator')  ) {
       return 'pdf';
     }
-    if(mineType.includes('video')) {
+    if(mimeType.includes('video')) {
         return 'video';
     }
-    if (mineType.includes('audio')) {
+    if (mimeType.includes('audio')) {
         return 'other';
     }
     return '';
@@ -314,5 +313,12 @@ watch(show, (isShow) => {
 }
 .closeBtn{
   --icon-color: var(--color-grey-900);
+}
+.dialog{
+  .actionDivider{
+    height: calc( var(--icon-size) + 16px);
+    width: 1px;
+    background: var(--color-grey-100);
+  }
 }
 </style>

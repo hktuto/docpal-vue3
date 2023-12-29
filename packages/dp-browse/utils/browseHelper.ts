@@ -139,6 +139,7 @@ export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
             pathOrId,
             options
         }})
+    console.log('open detail', ev)
     document.dispatchEvent(ev);
 }
 
@@ -169,11 +170,40 @@ export function calFileNameAndExt(mimeType: string, name: string):string {
  * @param {any} doc - The document object from which to retrieve the mime type.
  * @returns {string} The mime type of the document. If the mime type is not available, it returns an empty string.
  */
-export function getMineTypeFromDocument(doc:any):string | undefined{
+export function getMimeTypeFromDocument(doc:any):string | undefined{
   const properties = doc.properties as any
-  const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
-  if(!mineType) return undefined;
-  return mineType
+  const mimeType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
+  if(!mimeType) return undefined;
+  return mimeType
+}
+
+export function canCollaboraEdit(mimeType:string) {
+  // is mimeType is .doc or .docx file
+  if(mimeType.includes('application/vnd.ms-excel')) {
+    return true;
+  }
+  if(mimeType.includes('application/vnd.ms-powerpoint')) {
+    return true;
+  }
+  if(mimeType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+    return true;
+  }
+  if(mimeType.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
+    return true;
+  }
+  if(mimeType.includes('application/vnd.ms-word')) {
+    return true;
+  }
+  if(mimeType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+    return true;
+  }
+  if(mimeType.includes('application/vnd.collabora') || mimeType.includes('application/vnd.collabora-project')) {
+    return true;
+  }
+  if(mimeType.includes('text/plain')) {
+    return true;
+  }
+  return false;
 }
 
 export function downloadBlob (blob:any, name:string, type = "application/octet-stream") {
