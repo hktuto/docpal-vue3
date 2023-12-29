@@ -1,20 +1,22 @@
 <template>
-    <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
-            @pagination-change="handlePaginationChange"
-            @row-dblclick="handleDblclick">
-            <template #tags="{ row, index }">
-                <div v-if="row.properties && row.properties['nxtag:tags']">
-                    <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
-                </div>
-            </template>
+    <Table ref="tableRef" v-loading="state.loading" 
+        :columns="state.columns" 
+        :table-data="state.tableData" :options="state.options"
+        @sort-change="handleSortChange"
+        @pagination-change="handlePaginationChange"
+        @row-dblclick="handleDblclick">
+        <template #tags="{ row, index }">
+            <div v-if="row.properties && row.properties['nxtag:tags']">
+                <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+            </div>
+        </template>
     </Table>
 </template>
 
 <script lang="ts" setup>
-import { watchDebounced } from '@vueuse/core'
 import { 
-    nestedSearchApi,getSearchParamsArray, isSearchParamsEqual, GetDocumentPreview, 
-    TABLE, defaultTableSetting, TableAddMultiColumns, deepCopy } from 'dp-api'
+    nestedSearchApi, 
+    TABLE, defaultTableSetting, TableAddMultiColumns } from 'dp-api'
 
 // #region module: page
     const route = useRoute()
@@ -25,7 +27,7 @@ import {
     }
     const tableKey = TABLE.CLIENT_SEARCH
     const tableSetting = defaultTableSetting[tableKey]
-    const state = reactive<State>({
+    const state = reactive<any>({
         loading: false,
         tableData: [],
         options: {
@@ -35,14 +37,12 @@ import {
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
-            sortKey: 'clientSearch',
-            sortAll: true
         },
         searchParams: {},
         columns: tableSetting.columns
     })
 
-    async function getList (param) {
+    async function getList (param: any) {
         state.loading = true
         try {
             const res = await nestedSearchApi({ ...param })
@@ -58,35 +58,18 @@ import {
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
-        const time = new Date().valueOf().toString()
-        router.push({
-            query: { ...route.query, ...pageParams, currentPageIndex:page, pageSize, time }
+        getList({...state.searchParams, currentPageIndex: page - 1, pageSize})
+    }
+    function handleSortChange({ column, prop, order }: any) {
+        console.log(column, prop, order);
+        if (!order) getList({ ...state.searchParams, ...pageParams })
+        else  getList({...state.searchParams, ...pageParams, 
+            orderBy: prop,
+            isDesc: order === 'descending' ? true : false
         })
     }
-    watchDebounced(
-        () => route.query,
-        async (newVal, oldVal) => {
-            if (isSearchParamsEqual(deepCopy(newVal), deepCopy(oldVal))) return
-            const { currentPageIndex, pageSize } = newVal
-            if(!currentPageIndex || !pageSize) return
-            pageParams = getSearchParamsArray({...newVal})
-
-            state.searchParams = pageParams
-
-            // pageParams = {...newVal}
-            pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
-            pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-
-            await getList(pageParams)
-            setTimeout(() => {
-                initTable(pageParams)
-            }, 100)
-        },
-        { debounce: 200, maxWait: 500, immediate: true }
-    )
-    const { tableData, loading } = toRefs(state)
 // #endregion
-async function handleDblclick (row) {
+async function handleDblclick (row: any) {
     if(row.isFolder) {
         goRoute(row.path)
     } else if(row.type === 'Collection') {
@@ -99,7 +82,7 @@ async function handleDblclick (row) {
     }
 
 }
-function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
+function goRoute (qPath: string, path: string = '/browse', qPathKey: string='path') {
     router.push({
         path,
         query: {
@@ -108,7 +91,7 @@ function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
     })
 }
 const tableRef = ref()
-function initTable(searchParams) {
+function initTable(searchParams: any) {
     const dynamicColumns = {
         size: { id: 'search_size', label: 'search_size', prop: 'properties.file:content.length', type: 'size' },
         height: { id: 'search_height', label: 'search_height', prop: 'properties.picture:info.height' },
@@ -167,9 +150,14 @@ function initTable(searchParams) {
     })
 
 }
-
+function handleSearch(searchParams: any) {
+    state.searchParams = { ...searchParams }
+    initTable(searchParams)
+    getList({...searchParams, currentPageIndex: 0, pageSize: pageParams.pageSize })
+}
 onMounted(() => {
 })
+defineExpose({ handleSearch })
 </script>
 
 <style lang="scss" scoped>

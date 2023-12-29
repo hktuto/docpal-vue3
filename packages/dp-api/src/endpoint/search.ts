@@ -1,5 +1,6 @@
 // @ts-nocheck
 import {api} from '../';
+import { GetGroupListApi } from './user'
 import { pageParams, SearchFilter, paginationResponse,sfloderDetail, paginationResponseData, Response } from '../model';
 export const sfolderGetApi = async():Promise<sfloderDetail[]> => {
     return api.get<Response<sfloderDetail[]>>('/nuxeo/sfolder/').then(res => res.data.data);
@@ -222,6 +223,15 @@ export const GetKeyCloakAllUsersApi = async() => {
     }))
     return searchOptions.users
 }
+export const GetUsersAndGroupsApi = async() => {
+    const users = await GetKeyCloakAllUsersApi()
+    const groups = await GetGroupListApi()
+    
+    return [
+        {  label: $t('user_users'),  children: users },
+        {  label: $t('user_groups'),  children: groups.map(item => ({ value: item.id, label: item.name })) },
+    ]
+}
 export const GetSearchExtendsApi = async(primaryType, key) => {
     const res = await api.get(`/nuxeo/search/getSearchExtends?primaryType=${primaryType}`).then(res => res.data.data)
     if(!!key && res[key]) return res[key].map( item => ({
@@ -276,7 +286,6 @@ export const GetSTagsApi = async() => {
 }
 
 export const GetRecentSearchPageApi = async(params: pageParams):Promise<paginationData> => {
-    if (searchOptions.tags) return searchOptions.tags
     const res = await api.post('/docpal/logs/recent/search/page', params).then(res => res.data.data)
     return {
         entryList: res.entryList,
@@ -284,7 +293,6 @@ export const GetRecentSearchPageApi = async(params: pageParams):Promise<paginati
     }
 }
 export const GetRecentDocumentPageApi = async(params: pageParams):Promise<paginationData> => {
-    if (searchOptions.tags) return searchOptions.tags
     const res = await api.post('/docpal/logs/recent/document/page', params).then(res => res.data.data)
     return {
         entryList: res.entryList,

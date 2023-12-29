@@ -1,24 +1,21 @@
 <template>
 <div class="searchBar-container" @mouseleave="handleClearInputValue">
     <div class="searchBar-main">
-        <SearchBar2AssetType v-model:assetType="state.assetType" />
-        <el-tag
-            v-for="tag in state.dynamicTags"
-            :key="tag.key"
-            class="mx-1"
-            closable
-            @close="handleClose(tag)"
-            >
-            <!-- size="large" -->
-            <b>{{ $t(tag.label) }}:  </b>{{ tag.value }}
-        </el-tag>
-        <el-input v-model="state.inputValue" clearable></el-input>
-        <el-button type="primary" :loading="state.loading" @click="handleSearch">{{ $t('search') }}
+        <SearchBar2AssetType v-model:assetType="searchConfig.assetType" />
+        <searchBar2ConditionTag :dynamicTags="state.dynamicTags"
+            :conditionStore="state.conditionStore"
+            :textSearchType="searchConfig.textSearchType"
+            @change="handleChangeParams"
+            @handleClose="handleRemoveParams"/>
+        <el-input v-model="state.inputValue" style="min-width: 100px;" clearable></el-input>
+        <el-button type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
             <el-icon class="el-icon--right"><Search /></el-icon>
         </el-button>
-        <el-button v-if="exportButton" type="primary" @click="emits('export')">{{ $t('export') }}</el-button>
+        <el-button v-if="exportButton" type="primary" @click="emits('export')">{{ $t('search.export') }}</el-button>
     </div>
-    <SearchBar2Suggestion :inputValue="state.inputValue" :suggestList="state.suggestList"
+    <SearchBar2Suggestion :inputValue="state.inputValue" 
+        :suggestList="state.suggestList"
+        :suggestKeywordList="state.suggestKeywordList"
         @adoptSuggestion="handleAdoptSuggestion"/>
     <!-- <div></div> -->
     <el-icon :class="['ArrowDownBold', state.expanded ? 'icon-expanded':'icon-narrow']" 
@@ -34,24 +31,24 @@
 <script lang="ts" setup>
 import { ArrowDownBold, Search  } from '@element-plus/icons-vue';
 import { 
-    GetSTypesApi,
-    GetKeyCloakAllUsersApi,
-    GetSCollectionsApi,
-    GetSTagsApi,
-    GetSModifiedDateApi,
-    GetSSizeApi,
-} from 'dp-api'
+    getConditionStore, 
+    getSuggestKeywordList,
+    getSuggestList
+} from '../../utils/searchBar2'
 const props = defineProps(['exportButton'])
 const emits = defineEmits(['export', 'search'])
-const state = reactive<any>({
+const searchConfig = reactive<any>({
     assetType: '',
+    textSearchType: 'full text search',
+})
+const state = reactive<any>({
     inputValue: '',
     searchParams: {
     },
     conditionStore: [],
-    suggestList: [],
-    suggestFilterList: [],
-    suggestKeywordList: [],
+    suggestList: [], // 推荐列表
+    suggestFilterList: [], // 推荐列表过滤数据
+    suggestKeywordList: [], // 用于精度推荐
     
     dynamicTags: [],
     loading: false,
@@ -71,126 +68,74 @@ function handleAdoptSuggestion(key: string, value: string) {
 function handleClearInputValue() {
     // setTimeout(() => { state.inputValue = '' }, 200)
 }
+function handleChangeParams(params: any, reset: boolean = false) {
+    if (reset)  state.searchParams = { }
+    if (params.textSearchType) {
+        searchConfig.textSearchType = params.textSearchType
+        delete params.textSearchType
+    }
+    state.searchParams = { ...state.searchParams, ...params}
+    getTags()
+}
 function handleSearch() {
     state.loading = true
-    const searchParams = { ...state.searchParams }
-    if ( state.assetType) searchParams.assetType = state.assetType
-    emits('search', searchParams)
+    emits('search', { ...state.searchParams, ...searchConfig })
     setTimeout(() => {
         state.loading = false
     }, 3000);
 }
-function handleClose(tagItem: any) {
+function handleRemoveParams(tagItem: any) {
     state.searchParams[tagItem.key] = ''
     getTags()
 }
 function getTags () {
     state.dynamicTags = Object.keys(state.searchParams).reduce((prev:any, key: string) => {
-        if(key === 'paramsInTextSearch') {
+        console.log(key);
+        
+        if(key === 'paramsInTextSearch' && state.searchParams[key]) {
             prev.push({
                 label: 'search_keyword',
                 key: 'paramsInTextSearch',
+                str: state.searchParams[key],
                 value: state.searchParams[key]
             })
         } else {
-            let tagItem: any = state.searchParams[key] ? [...state.searchParams[key]] : ''
+            const isMultiple = state.conditionStore[key].max !== 1
+            let tagItem: any = state.searchParams[key] ? 
+                                isMultiple ? 
+                                [...state.searchParams[key]] : 
+                                [state.searchParams[key]] : 
+                                ''
             if(tagItem) {
+                // 获取翻译
                 if(['type', 'size', 'modified', 'collections'].includes(key)) {
                     const optionItems = state.conditionStore[key].optionItems
-                    tagItem = tagItem.reduce((prev: string[], value: string) => {
+                    tagItem = tagItem.reduce((prevTags: string[], value: string) => {
                         const optionItem = optionItems.find((c: any) => c.value === value)
-                        prev.push(optionItem.label)
-                        return prev
+                        prevTags.push(optionItem.label)
+                        return prevTags
                     }, [])
                 }
                 prev.push({
                     label: state.conditionStore[key].label,
                     key: key,
-                    value: tagItem instanceof Array ? tagItem.join(',') : tagItem
+                    str: tagItem instanceof Array ? tagItem.join(',') : tagItem,
+                    value: isMultiple ? [...state.searchParams[key]] : state.searchParams[key]
                 })
             }
         }
         return prev
     }, [])
-}
-async function getOptions() {
-    state.conditionStore = {
-        type :{ 
-            name: 'type', 
-            label: 'search_documentType',
-            filter: true,
-            optionItems: await GetSTypesApi()
-        },
-        collections: {
-            name: 'collections', 
-            label: 'search_collections',
-            filter: true,
-            optionItems: await GetSCollectionsApi()
-        },
-        tags: {
-            name: 'tags', 
-            label: 'search_tags',
-            filter: true,
-            optionItems: await GetSTagsApi()
-        },
-        creator: { 
-            name: 'creator', 
-            label: 'search_authors',
-            filter: true,
-            optionItems: await GetKeyCloakAllUsersApi()
-        },
-        authors: { 
-            name: 'authors', 
-            label: 'search_contributors',
-            filter: true,
-            optionItems: await GetKeyCloakAllUsersApi()
-        },
-        modified: { 
-            name: 'modified', 
-            label: 'search_modificationDate',
-            optionItems: await GetSModifiedDateApi(),
-            max: 1
-        },
-        size: { 
-            name: 'size', 
-            label: 'search_size',
-            optionItems: await GetSSizeApi()
-        }
-    }
-    getSuggestList()
-    getKeywords()
-}
-function getKeywords() {
-    state.suggestKeywordList = Object.keys(state.conditionStore).reduce((prev: any[],key: string) => {})
 }
 
-function getSuggestList() {
-    state.suggestList = Object.keys(state.conditionStore).reduce((prev: any[],key: string) => {
-        const sItem = state.conditionStore[key]
-        sItem.optionItems.forEach((pItem: any) => {
-            if (pItem.children) {
-                pItem.children.forEach((cItem: any) => {
-                    prev.push({
-                        label: sItem.label,
-                        key: sItem.name,
-                        optionLabel: cItem.label,
-                        optionValue: cItem.value
-                    })
-                })
-            }
-            else prev.push({
-                label: sItem.label,
-                key: sItem.name,
-                optionLabel: pItem.label,
-                optionValue: pItem.value
-            })
-        });
-        return prev
-    }, [])
-}
-onMounted(() => {
-    getOptions()
+onMounted(async() => {
+    state.conditionStore = await getConditionStore()
+    state.suggestList = getSuggestList(state.conditionStore)
+    state.suggestKeywordList = getSuggestKeywordList(state.conditionStore)
 }) 
+defineExpose({
+    handleChangeParams, handleSearch
+})
 </script>
 <style lang="scss" scoped>
 .searchBar-container {

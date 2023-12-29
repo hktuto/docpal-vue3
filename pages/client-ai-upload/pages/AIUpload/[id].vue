@@ -36,7 +36,7 @@
             <div>
                 <el-button :loading="state.submitLoading" type="danger" @click.native="handleDiscard">{{$t('ai.cancelPatch')}}</el-button>
                 <el-button :loading="state.submitLoading" type="info" @click.native="handleClose">{{$t('common_close')}}</el-button>
-                <el-button :loading="state.submitLoading" type="primary" @click.native="handleSubmit">{{$t('confirm')}}</el-button>
+                <el-button :loading="state.submitLoading" type="primary" @click.native="handleSubmit">{{$t('dpButtom_confirm')}}</el-button>
             </div>
         </div>
     </main>

@@ -1221,10 +1221,10 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SEARCH] : {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath', showOverflowTooltip: true },
-            { id: '3', label: 'tableHeader_type', prop: 'type' },
-            { id: '6', label: 'search_authors', prop: 'createdBy' },
+            { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true },
+            { id: '6', label: 'search_authors', prop: 'createdBy', sortable: true },
             { id: '7', label: 'search_contributors', prop: 'properties.dc:contributors',
                 formatList: [
                     {
@@ -1238,7 +1238,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180',
+            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180', sortable: true,
                 formatList: [
                     {
                         "joiner": "",

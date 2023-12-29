@@ -1,9 +1,10 @@
 <template>
     <div>
-        <div>{{ $t('search.recentSearchs') }}</div>
-        <div>
+        <h3>{{ $t('search.recentSearchs') }}</h3>
+        <div class="main">
             <!-- textSearchType -->
-            <el-card v-for="(item,index) in state.recentSearchs" :key="index">
+            <el-card v-for="(item,index) in state.recentSearchs" :key="index"
+                @click="emits('setSearchParams', item.searchRequestDTO)">
                 <template v-for="(qItem, qkey) in item.searchRequestDTO">
                     <el-tag v-if="qItem && !['pageSize'].includes(qkey)">
                         {{ qkey }}: 
@@ -11,13 +12,15 @@
                     </el-tag>
                 </template>
                 <el-divider />
+                <div> {{ $t('search.result') }}:{{ item.totalSize }}</div>
             </el-card>
         </div>
-        <el-button></el-button>
+        <el-button v-if="state.showMore" :loading="state.loading" text @click="getRecentSearchPage">{{ $t('button.more') }}...</el-button>
     </div>
 </template>
 <script lang="ts" setup>
 import { GetRecentSearchPageApi } from "dp-api";
+const emits = defineEmits(['setSearchParams'])
 
 const pageParams = reactive({
     pageNum: -1,
@@ -31,9 +34,13 @@ const state = reactive<any>({
 async function getRecentSearchPage() {
     pageParams.pageNum ++
     state.loading = true
-    const { entryList, totalSize } = await GetRecentSearchPageApi(pageParams)
-    state.recentSearchs.push(...entryList)
-    state.showMore = state.recentSearchs.length < totalSize
+    try {
+        const { entryList, totalSize } = await GetRecentSearchPageApi(pageParams)
+        state.recentSearchs.push(...entryList)
+        state.showMore = state.recentSearchs.length < totalSize
+    } catch (error) {
+    }
+    state.loading = false
 }
 onMounted(() => {
     getRecentSearchPage()

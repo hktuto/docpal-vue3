@@ -2,16 +2,17 @@
     <NuxtLayout class="fit-height withPadding bc-grey" :backPath="route.query.searchBackPath" :showSearch="false">
         <div :class="['search-page',{ 'search-page-narrow': !state.expanded}]">
             <div class="search-container">
-                <SearchBar2 @search="handleSearch">bar</SearchBar2>
-                <SearchTable></SearchTable>
+                <SearchBar2 ref="SearchBar2Ref" @search="handleSearch"></SearchBar2>
+                <SearchTable ref="SearchTableRef"></SearchTable>
             </div>
             <div class="search-page-divider">
                 <el-button data-testid="search-zoom-button" :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
                     @click="state.expanded = !state.expanded"/>
             </div>
-            
-            <SearchRecentDoc class="recent-doc-container"></SearchRecentDoc>
-            <SearchRecentSearch class="recent-search-container"> recent-search-container </SearchRecentSearch>
+            <div class="search-container-right">
+                <SearchRecentDoc class="recent-doc-container"></SearchRecentDoc>
+                <SearchRecentSearch class="recent-search-container" @setSearchParams="handleSetSearchParams"></SearchRecentSearch>
+            </div>
         </div>
     </NuxtLayout>
 </template>
@@ -29,10 +30,18 @@ import { } from 'dp-api'
 // #endregion
 
 // #region module: search form
+    const SearchTableRef = ref()
     function handleSearch(searchParams: any) {
         console.log({searchParams})
+        SearchTableRef.value.handleSearch(searchParams)
     }
 // #endregion
+const SearchBar2Ref = ref()
+function handleSetSearchParams(searchParams: any) {
+    console.log({...searchParams})
+    SearchBar2Ref.value.handleChangeParams({...searchParams}, true)
+    SearchBar2Ref.value.handleSearch()
+}
 onMounted(() => {
 })
 </script>
@@ -42,7 +51,7 @@ onMounted(() => {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr min-content min-content ;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr;
     transition: all 0.5s;
     overflow: hidden;
     position: relative;
@@ -53,8 +62,12 @@ onMounted(() => {
         gap: var(--app-padding)
     }
     .search-page-divider { grid-area: 1 / 2 / 3 / 3; }
-    .recent-doc-container { grid-area: 1 / 3 / 2 / 4; }
-    .recent-search-container { grid-area: 2 / 3 / 3 / 4; }
+    .search-container-right { 
+        grid-area: 1 / 3 / 2 / 4; 
+        overflow: auto; 
+        overflow-x: hidden;
+        padding-right: var(--app-padding);
+    }
     @media(max-width : 1024px) {
         display: unset;
         overflow: auto;
@@ -79,19 +92,25 @@ onMounted(() => {
         height: 15px;
     }
     .button-narrow {
-        transform: rotate(180deg);
         transition: all 0.5s;
     }
     .button-expanded {
+        transform: rotate(180deg);
         transition: all 0.5s;
     }
 }
-.recent-search-container {
-    overflow: auto;
+.recent-search-container , .recent-doc-container{
+    overflow: hidden;
     min-width: 300px;
-    padding-right: 5px;
+    :deep h3 {
+        color: var(--color-grey-300);
+    }
+    :deep(.main) {
+        padding-right: var(--app-padding);
+        overflow: auto;
+    }
     @media(max-width : 1024px) {
-        min-width: 200px;
+        min-width: unset;
     }
 }
 </style>
