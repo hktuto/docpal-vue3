@@ -6,6 +6,7 @@
               <div class="fileNameContainer">
                 <div class="fileName">{{ doc.name }}
                   <el-tag v-if="doc.properties && doc.properties['file:content'] && doc.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(doc.properties['file:content']['mime-type']) }}</el-tag>
+                  <el-tag effect="dark">{{ editMode ? 'edit' : 'readonly' }}</el-tag>
                 </div>
               </div>
               <div class="actions">
@@ -22,7 +23,7 @@
                       <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
                       <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
                       <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
-                      <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @refresh="handleRefreshPreview" />
+                      <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @submit="editMode = !editMode"/>
                       <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
                       <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" />
 
@@ -39,12 +40,15 @@
               </div>
             </div>
             <div class="content">
-                <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
-                    <LazyCollaboraViewer v-if="readerType === 'xls' || readerType === 'txt'" ref="PreviewRef" :doc="doc" />
+                <div v-if="readerType && !editMode" :class="{preview:true, mobileActionOpened}" >
+                    <LazyCollaboraViewer v-if="readerType === 'collabora'" ref="PreviewRef" :docId="doc.id" fileType="nuxeo" :readonly="true"/>
                     <LazyHtmlViewer v-if="readerType === 'html'" ref="PreviewRef" :doc="doc" />
                     <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" ref="PreviewRef" :doc="doc"></LazyOtherPlayer>
+                </div>
+                <div v-else-if="editMode" :class="{preview:true, mobileActionOpened}">
+                  <LazyCollaboraViewer  ref="PreviewRef" :docId="doc.id" fileType="nuxeo" :readonly="false"/>
                 </div>
                 <h2 v-else class="noSupportContainer" >
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
@@ -73,6 +77,7 @@ const show = ref(false);
 const doc = ref<DocDetail>()
 const permission = ref<Permission>();
 const infoOpened =ref(false);
+const editMode = ref(false);
 const options = ref<FileDetailOptions>({
   showInfo: false,
   showHeaderAction: false,
@@ -86,12 +91,30 @@ const readerType = computed(() => {
     const properties = doc.value.properties as any
     const mineType = getMineTypeFromDocument(doc.value);
     if(!mineType) return "pdf"; // set to pdf for testing
-    // check if mimetype is xlsx or plain txt
-    if(mineType.includes('application/vnd.ms-excel') || mineType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || mineType.includes('application/vnd.ms-excel.sheet.macroEnabled.12') ) {
-      return 'xls';
+    // check if it is excel
+    if(mineType.includes('application/vnd.ms-excel')) {
+      return 'collabora';
+    }
+    if(mineType.includes('application/vnd.ms-powerpoint')) {
+      return 'collabora';
+    }
+    if(mineType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+      return 'collabora';
+    }
+    if(mineType.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
+      return 'collabora';
+    }
+    if(mineType.includes('application/vnd.ms-word')) {
+      return 'collabora';
+    }
+    if(mineType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+      return 'collabora';
+    }
+    if(mineType.includes('application/vnd.collabora') || mineType.includes('application/vnd.collabora-project')) {
+      return 'collabora';
     }
     if(mineType.includes('text/plain')) {
-      return 'txt';
+      return 'collabora';
     }
     if(mineType.includes('text/html')) {
       return 'html';
@@ -172,6 +195,7 @@ watch(show, (isShow) => {
     document.body.classList.add('noScroll')
   }else{
     document.body.classList.remove('noScroll')
+    editMode.value = false
   }
 })
 </script>
@@ -262,6 +286,9 @@ watch(show, (isShow) => {
     text-align: left;
     color: #fff !important;
     word-break: break-all;
+    display: flex;
+    gap: var(--app-padding);
+    align-items: center;
 }
 
 :deep {

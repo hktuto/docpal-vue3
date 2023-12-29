@@ -5,21 +5,25 @@ import { getOfficeTokenApi } from 'dp-api';
 import * as xpath from 'xpath';
 import { ref, toRefs, nextTick } from 'vue'; 
 import { getMineTypeFromDocument } from '../utils/browseHelper';
+
+const {userPreference} = useUser()
 const props = defineProps<{
-    doc: any
+    docId?: string,
+    readonly: boolean
+    fileType: string
 }>()
-const { doc } = toRefs(props)
+const { docId } = toRefs(props)
 const formEl = ref();
 const collaboraUrl = ref('');
-const css = ref('--co-primary-element: #4c566a;--co-body-bg=#FFF;--co-txt-accent=#2e1a47;');
-const ui = ref('UITheme=light;UIMode=notebookbar;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=true;SavedUIState=false;SpreadsheetToolbar=false;TextSidebar=true;TextToolbar=false')
+const css = ref('');
+const ui = ref(`UITheme=${userPreference.value.color};UIMode=notebookbar;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false;SavedUIState=false;TextSidebar=false;TextToolbar=false`)
 const token = ref('')
 const xlsxIframe = ref()
 
 async function displayIframe(){
 
-    token.value = await getOfficeTokenApi(props.doc.id)
-    collaboraUrl.value = officeUrl(props.doc.id)
+    token.value = await getOfficeTokenApi(props.docId)
+    collaboraUrl.value = officeUrl(props.docId)
     
     nextTick(() => {
         formEl.value.submit()
@@ -30,9 +34,9 @@ async function displayIframe(){
 const officeUrl = (docId:string) =>{
     let host = window.location.host.replace('admin.', '');
     if(!host.includes('localhost')){
-        return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}&access_token=${token.value}&ui_defaults=${ui.value}&css_variables=${css.value}`
+        return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}&access_token=${token.value}?readonly=${props.readonly}&fileType=${props.fileType}`
     }else{
-        return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}&access_token=${token.value}&ui_defaults=${ui.value}&css_variables=${css.value}`
+        return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}?readonly=${props.readonly}&fileType=${props.fileType}`
     }
 }
 
@@ -56,26 +60,15 @@ function gotMessageFromIframe(e:MessageEvent){
     //     }), '*')
        
    }
-
+   
 }
 
-function iframeLoaded(){
-    console.log('iframeLoaded')
-    // send message to collabora iframe to make it readonly
-    // @ts-ignore
-    // xlsxIframe.contentWindow.postMessage({
-    //     MessageId: "Get_Views_Resp",
-    //         SendTime: new Date().getTime(),
-    //     Values: {
-    //         ReadOnly: true
-    //     }
-    // }, '*')
-}
+
 
 useEventListener(window, 'message', gotMessageFromIframe)
 
-watch(doc, ()=>{
-    if(!doc) return;
+watch(docId, ()=>{
+    if(!docId) return;
     displayIframe()
 },{
     immediate: true
@@ -91,7 +84,7 @@ watch(doc, ()=>{
         <input name="ui_defaults" :value="ui" type="hidden" id="ui-defaults"/>
         <input name="access_token" :value="token" type="hidden" id="access-token"/>
     </form>
-    <iframe ref="xlsxIframe" id="xlsxIframe" class="xlsxIframe" frameborder="0" name="collabora-online-viewer" @load="iframeLoaded"></iframe>
+    <iframe ref="xlsxIframe" id="xlsxIframe" class="xlsxIframe" frameborder="0" name="collabora-online-viewer" ></iframe>
 </div>
 </template>
 
