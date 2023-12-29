@@ -163,6 +163,19 @@ export function calFileNameAndExt(mimeType: string, name: string):string {
   
 }
 
+/**
+ * Retrieves the mime type from a given document object.
+ *
+ * @param {any} doc - The document object from which to retrieve the mime type.
+ * @returns {string} The mime type of the document. If the mime type is not available, it returns an empty string.
+ */
+export function getMineTypeFromDocument(doc:any):string | undefined{
+  const properties = doc.properties as any
+  const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
+  if(!mineType) return undefined;
+  return mineType
+}
+
 export function downloadBlob (blob:any, name:string, type = "application/octet-stream") {
   
   const blobStream = new Blob([blob], { type })

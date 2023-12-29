@@ -15,6 +15,7 @@
   "dependencies": {
     "@interactjs/types": "^1.10.17",
     "@vue-office/excel": "^1.4.0",
+    "@xmldom/xmldom": "^0.8.10",
     "animejs": "^3.2.1",
     "bpmn-js": "^9.4.1",
     "dayjs": "^1.11.7",
@@ -26,7 +27,8 @@
     "v-code-diff": "^1.4.0",
     "v-form": "github:hktuto/v-form-designer",
     "vue-inline-svg": "^3.1.2",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "xpath": "^0.0.34"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",

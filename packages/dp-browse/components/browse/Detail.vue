@@ -40,7 +40,7 @@
             </div>
             <div class="content">
                 <div :class="{preview:true, mobileActionOpened}" v-if="readerType">
-                    <LazyXlsViewer v-if="readerType === 'xls' || readerType === 'txt'" ref="PreviewRef" :doc="doc" />
+                    <LazyCollaboraViewer v-if="readerType === 'xls' || readerType === 'txt'" ref="PreviewRef" :doc="doc" />
                     <LazyHtmlViewer v-if="readerType === 'html'" ref="PreviewRef" :doc="doc" />
                     <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
@@ -65,6 +65,7 @@ import { Permission } from '~/utils/permissionHelper';
 import {DocDetail} from "dp-api";
 import {FileDetailOptions} from "~/utils/browseHelper";
 import * as mime from 'mime-types'
+import { getMineTypeFromDocument } from '../../utils/browseHelper';
 const auth = useUser();
 const userId:string = useUser().getUserId()
 const mobileActionOpened = ref(false);
@@ -83,7 +84,7 @@ const readerType = computed(() => {
   try {
     if(!doc.value) return "";
     const properties = doc.value.properties as any
-    const mineType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
+    const mineType = getMineTypeFromDocument(doc.value);
     if(!mineType) return "pdf"; // set to pdf for testing
     // check if mimetype is xlsx or plain txt
     if(mineType.includes('application/vnd.ms-excel') || mineType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || mineType.includes('application/vnd.ms-excel.sheet.macroEnabled.12') ) {

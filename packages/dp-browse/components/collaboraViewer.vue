@@ -1,7 +1,10 @@
 <script lang="ts" setup>
+import * as Dom from '@xmldom/xmldom';
 import { useEventListener } from '@vueuse/core';
 import { getOfficeTokenApi } from 'dp-api';
-
+import * as xpath from 'xpath';
+import { ref, toRefs, nextTick } from 'vue'; 
+import { getMineTypeFromDocument } from '../utils/browseHelper';
 const props = defineProps<{
     doc: any
 }>()
@@ -9,14 +12,14 @@ const { doc } = toRefs(props)
 const formEl = ref();
 const collaboraUrl = ref('');
 const css = ref('--co-primary-element: #4c566a;--co-body-bg=#FFF;--co-txt-accent=#2e1a47;');
-const ui = ref('UITheme=light;UIMode=notebookbar;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false;SavedUIState=false;SpreadsheetToolbar=false;TextSidebar=true;TextToolbar=false')
+const ui = ref('UITheme=light;UIMode=notebookbar;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=true;SavedUIState=false;SpreadsheetToolbar=false;TextSidebar=true;TextToolbar=false')
 const token = ref('')
 const xlsxIframe = ref()
 
 async function displayIframe(){
 
     token.value = await getOfficeTokenApi(props.doc.id)
-    collaboraUrl.value = officeUrl(props.doc.id, token)
+    collaboraUrl.value = officeUrl(props.doc.id)
     
     nextTick(() => {
         formEl.value.submit()
@@ -24,7 +27,7 @@ async function displayIframe(){
 }
 
 
-const officeUrl = (docId:string, token:string) =>{
+const officeUrl = (docId:string) =>{
     let host = window.location.host.replace('admin.', '');
     if(!host.includes('localhost')){
         return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}&access_token=${token.value}&ui_defaults=${ui.value}&css_variables=${css.value}`
@@ -41,26 +44,19 @@ function gotMessageFromIframe(e:MessageEvent){
     console.log('App_LoadingStatus')
        // set readonly
        
-       xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
-                MessageId: "Hide_Menubar",
-                SendTime: new Date().getTime(),
+    //    xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
+    //             MessageId: "Hide_Menubar",
+    //             SendTime: new Date().getTime(),
                 
-        }), '*')
-       xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
-                MessageId: "Hide_StatusBar",
-                SendTime: new Date().getTime(),
+    //     }), '*')
+    //    xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
+    //             MessageId: "Hide_StatusBar",
+    //             SendTime: new Date().getTime(),
                 
-        }), '*')
+    //     }), '*')
        
    }
-   if(data.MessageId === "View_Added"){
-    console.log('View_Added')
-    xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
-                MessageId: "Action_Print",
-                SendTime: new Date().getTime(),
-                
-        }), '*')
-   }
+
 }
 
 function iframeLoaded(){
