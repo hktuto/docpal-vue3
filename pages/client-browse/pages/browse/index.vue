@@ -9,18 +9,18 @@
                  class="browseHeader">
                  <slot name="breadcrumb">
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
-                </slot>                    
+                </slot>
                 <div id="browseHeaderRight" class="folderAction">
                     <CollapseMenu>
                         <template #default="{collapse}">
-                           
+
                             <template v-for="(group,key) in folderActions" :key="key">
                                 <template v-for="item in group" :key="item.name">
                                 <component :is="item.component" :doc="currentDocument.doc" :permission="currentDocument.permission"  @success="handleRefresh" @delete="itemDeleted" />
                                 </template>
                                 <div :class="{actionDivider:true, collapse}"></div>
                             </template>
-                       
+
                         </template>
                     </CollapseMenu>
                     <BrowseActionsInfo :doc="currentDocument.doc" :permission="currentDocument.permission" @click="infoOpened = !infoOpened"/>
@@ -35,14 +35,14 @@
                     <BrowseActionsCollection :selectedList="selectList" @clearSelected="handleClearSelected"></BrowseActionsCollection>
                     <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission: currentDocument.permission })" :selected="selectList" @success="handleRefresh"
                         />
-                    <div class="actionDivider"></div> 
+                    <div class="actionDivider"></div>
                    <BrowseActionsInfo :doc="currentDocument.doc" @click="infoOpened = !infoOpened"
-                        class="el-icon--right"/> 
+                        class="el-icon--right"/>
                 </CollapseMenu>
             </div>
             <BrowseList
                 v-loading="loading"
-                
+
                 :doc="currentDocument.doc"
                 :permission="currentDocument.permission"
                 @select-change="handleSelectionChange"
@@ -50,7 +50,7 @@
                 <template  #default="{doc, permission}" >
                     <BrowseInfo v-if="currentDocument.doc && currentDocument.permission" :doc="selectList.length === 1 ? selectList[0] : doc" :listData="currentDocument" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
                     <BrowseRightClick></BrowseRightClick>
-                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" v-show="false" :doc="currentDocument.doc" @success="handleRefresh"/> 
+                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" v-show="false" :doc="currentDocument.doc" @success="handleRefresh"/>
                 </template>
             </BrowseList>
         </div>
@@ -70,6 +70,10 @@
 import { DocDetail } from 'dp-api';
 import { Permission } from '../../../../packages/dp-browse/utils/permissionHelper';
 import {openFileDetail} from '../../../../packages/dp-browse/utils/browseHelper';
+import {useBrowse} from "../../../../packages/dp-browse/composables/browse";
+import {useRoute} from "vue-router";
+import {useEventListener} from "@vueuse/core";
+import {actions, ActionsFilter} from "../../../../packages/dp-browse/utils/browseActions";
 
 
 // #region refs
@@ -78,13 +82,11 @@ const breadCrumb = ref();
 const router = useRouter();
 const { allowFeature } = useLayout()
 
-
-const {loading,folderActions,currentDocument,getDocDetail} = useClientBrowseStore()
-
-const forceRefresh = ref(false)
+const route = useRoute();
+const {loading,actions, currentDocument,getDocDetail,handleRefresh} = useBrowse()
 
 
-const userId:string = useUser().getUserId()
+
 const { public:{feature} } = useRuntimeConfig();
 const selectList = ref<any[]>([])
 // #endregion
@@ -100,11 +102,7 @@ function itemDeleted(){
      //  FIXME: item deleted may not be the current path
      breadCrumb.value.goParent();
 }
-async function handleRefresh () {
-    forceRefresh.value = true
-    await getDocDetail()
-    if(currentDocument?.value?.doc?.isFolder) breadCrumb.value.handleRefresh();
-}
+
 
 function handleSelectionChange (rows:any) {
     selectList.value = [...rows]
@@ -118,6 +116,22 @@ function handleClearSelected() {
 function detailClosed() {
     breadCrumb.value.goParent();
 }
+
+const folderActions = computed(() => {
+  if(!currentDocument.value.doc || !currentDocument.value.permission) return {}
+  return ActionsFilter(actions, currentDocument.value.permission, 'showInFolder')
+})
+
+useEventListener(document, 'docActionRefresh', (event) => handleRefresh())
+useEventListener(document, 'tree-node-update', (event) => getDocDetail())
+
+watch(()=>route, async() => {
+  try {
+    await getDocDetail()
+  } catch (error) {
+
+  }
+},{immediate:true,deep:true});
 
 </script>
 

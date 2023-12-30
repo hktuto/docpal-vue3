@@ -89,20 +89,10 @@ const options = ref<FileDetailOptions>({
 })
 const emit = defineEmits(['close'])
 const { public:{feature} } = useRuntimeConfig();
-const {actions} = useClientBrowseStore()
+const {actions} = useBrowse()
 const detailActions = computed(()=> {
   if(!doc.value || !permission.value) return {}
-  const result = actions.filter((item) => {
-            return item.showInDetail
-        }).filter((item) => {
-            return AllowTo({feature:item.permission, permission: permission.value})
-        })
-        .reduce((prev:any, item:BrowseActionItem) => {
-            prev[item.groupBy] = prev[item.groupBy] || []
-            prev[item.groupBy].push(item)
-            return prev
-        }, {})
-        return result
+  return ActionsFilter(actions, permission.value, 'showInDetail')
 })
 const { allowFeature } = useLayout()
 const readerType = computed(() => {
