@@ -1,7 +1,6 @@
 
 import {DocDetail} from "dp-api";
 import {actions } from '../utils/browseActions'
-import { AllowTo } from "../utils/permissionHelper";
 import {useRoute} from "vue-router";
 import {getDocumentDetailSync, openFileDetail} from "../utils/browseHelper";
 type SlotData = {
@@ -20,6 +19,7 @@ export const useBrowse = () => {
     const route = useRoute();
     const loading = useState('browseLoadingState', () => false)
     const forceRefresh = useState('browseForceRefreshState', () => false)
+    const routePath = ref('/');
 
     const currentDocument = useState<{
         doc?: DocDetail
@@ -30,9 +30,9 @@ export const useBrowse = () => {
     
 
     async function getDocDetail() {
-        loading.value = true;
         const currentPath = route.query.path as string || '/'
-        console.log("getDocDetail", currentPath)
+
+        routePath.value = currentPath
         // const response = await getDocumentDetail(routePath.value, userId)
         const response = await getDocumentDetailSync(currentPath, userId)
 
@@ -43,13 +43,14 @@ export const useBrowse = () => {
             }
             currentDocument.value = response
             forceRefresh.value = false
-
+            routePath.value = currentPath
         } else {
             if(!currentDocument.value) {
                 // split router path to get parent path
                 const parentPath = currentPath.split('/').slice(0, -1).join('/')
                 // currentDocument.value =  await getDocumentDetail(parentPath, userId)
                 currentDocument.value =  await getDocumentDetailSync(parentPath, userId)
+                routePath.value = parentPath
             }
             // open detail
             openFileDetail(currentPath, {
@@ -58,7 +59,6 @@ export const useBrowse = () => {
                 openEdit:false
             })
         }
-        loading.value = false;
     }
 
     async function handleRefresh(){
@@ -73,11 +73,12 @@ export const useBrowse = () => {
     return {
         // slots
         infoSlots,
-        // data 
+        // const
         actions,
         // state
         loading,
         currentDocument,
+        routePath,
         // method
         getDocDetail,
         handleRefresh

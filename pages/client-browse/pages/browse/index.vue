@@ -30,14 +30,12 @@
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
                 <CollapseMenu>
                     <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
-                    <BrowseActionsShare v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission: currentDocument.permission })"
-                        :doc="currentDocument.doc" :selectedList="selectList"/>
-                    <BrowseActionsCollection :selectedList="selectList" @clearSelected="handleClearSelected"></BrowseActionsCollection>
-                    <BrowseActionsDeleteSelected v-if="AllowTo({feature:'ReadWrite', permission: currentDocument.permission })" :selected="selectList" @success="handleRefresh"
-                        />
-                    <div class="actionDivider"></div>
-                   <BrowseActionsInfo :doc="currentDocument.doc" @click="infoOpened = !infoOpened"
-                        class="el-icon--right"/>
+                  <template v-for="(group,key) in shareActions" :key="key">
+                    <template v-for="item in group" :key="item.name">
+                      <component :is="item.component" :doc="currentDocument.doc" :permission="currentDocument.permission" :selectedList="selectList"  @clearSelected="handleClearSelected" @success="handleRefresh" />
+                    </template>
+                    <div :class="{actionDivider:true, collapse}"></div>
+                  </template>
                 </CollapseMenu>
             </div>
             <BrowseList
@@ -83,7 +81,7 @@ const router = useRouter();
 const { allowFeature } = useLayout()
 
 const route = useRoute();
-const {loading,actions, currentDocument,getDocDetail,handleRefresh} = useBrowse()
+const {loading,actions,routePath, currentDocument,getDocDetail,handleRefresh} = useBrowse()
 
 
 
@@ -122,15 +120,22 @@ const folderActions = computed(() => {
   return ActionsFilter(actions, currentDocument.value.permission, 'showInFolder')
 })
 
+const shareActions = computed(() => {
+  if(!currentDocument.value.doc || !currentDocument.value.permission) return {}
+  return ActionsFilter(actions, currentDocument.value.permission, 'showInShare')
+})
+
 useEventListener(document, 'docActionRefresh', (event) => handleRefresh())
 useEventListener(document, 'tree-node-update', (event) => getDocDetail())
 
 watch(()=>route, async() => {
+  loading.value = true
   try {
     await getDocDetail()
   } catch (error) {
 
   }
+  loading.value = false
 },{immediate:true,deep:true});
 
 </script>

@@ -9,13 +9,18 @@ import BrowseActionsDownload from "../components/browse/Actions/download.vue";
 import BrowseActionsOffice from "../components/browse/Actions/office.vue";
 import BrowseActionsShare from "../components/browse/Actions/share.vue";
 import BrowseActionsUploadRequest from "../components/browse/Actions/uploadRequest.vue";
+import BrowseActionsCollection from "../components/browse/Actions/collection.vue";
+import BrowseActionsDeleteSelected from "../components/browse/Actions/deleteSelected.vue";
+import BrowseActionsInfo from "../components/browse/Actions/info.vue";
+
 import {AllPermission, Permission} from "./permissionHelper";
 
 export type BrowseActionItem = {
     name: string
     icon?: string
-    showInFolder:boolean
-    showInDetail:boolean
+    showInFolder?:boolean
+    showInDetail?:boolean
+    showInShare?:boolean
     permission:Permission
     needFeature?:string[]
     component:any
@@ -51,6 +56,7 @@ export const actions:BrowseActionItem[] = [
         name:'Edit',
         showInFolder:true,
         showInDetail:false,
+        showInShare:false,
         permission:'ReadWrite',
         component:BrowseActionsEdit,
         groupBy:'normal'
@@ -107,8 +113,27 @@ export const actions:BrowseActionItem[] = [
         name:'share',
         showInFolder:false,
         showInDetail:true,
+        showInShare:true,
         permission:'ReadWrite',
+        needFeature:['SHARE_EXTERNAL'],
         component:BrowseActionsShare,
+        groupBy:'other'
+    },
+    {
+        name:'collection',
+        showInFolder:false,
+        showInDetail:false,
+        showInShare:true,
+        permission:'ReadWrite',
+        component:BrowseActionsCollection,
+        groupBy:'other'
+    },{
+        name:'deleteSelected',
+        showInFolder:false,
+        showInDetail:false,
+        showInShare:true,
+        permission:'Read',
+        component:BrowseActionsDeleteSelected,
         groupBy:'other'
     },
     {

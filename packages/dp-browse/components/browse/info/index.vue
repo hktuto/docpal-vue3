@@ -13,7 +13,7 @@
 <div class="infoHeaderSection">
     <slot name="header" />
     <div class="headerTopRow">
-        <div class="name">{{ doc.name }} <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/></div>
+        <div class="name"><div class="namespan" @dblclick="openEditInfo">{{ doc.name }}</div> <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/></div>
         
         <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
     </div>
@@ -59,6 +59,8 @@ import {deepCopy, DocDetail} from "dp-api";
 import { getDocumentDetailSync } from '../../../utils/browseHelper';
 
 const { infoSlots } = useBrowse()
+
+const BrowseActionsEditRef = ref();
 const props = withDefaults(defineProps<{
     doc?: any,
     infoOpened?:boolean,
@@ -128,6 +130,12 @@ function dragmove(event:any) {
     y.value += event.dy;
 }
 
+function openEditInfo() {
+    if(BrowseActionsEditRef.value) {
+        BrowseActionsEditRef.value.openDialog()
+    }
+}
+
 async function docUpdated(forceRefresh?: boolean = false) {
     if(props.listData && doc.value.id === props.listData.doc.id && !forceRefresh) {
         detail.value = deepCopy(props.listData.doc)
@@ -188,7 +196,7 @@ defineExpose({
     flex-flow:row wrap;
     justify-content: flex-start;
     align-items: center;
-    gap:clac(var(--app-padding));
+    gap:calc(var(--app-padding));
   }
 }
 .infoContainer {

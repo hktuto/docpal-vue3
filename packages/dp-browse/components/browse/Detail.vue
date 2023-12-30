@@ -6,7 +6,7 @@
               <div class="fileNameContainer">
                 <div class="fileName">{{ doc.name }}
                   <el-tag v-if="doc.properties && doc.properties['file:content'] && doc.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(doc.properties['file:content']['mime-type']) }}</el-tag>
-                  <el-tag effect="dark">{{ editMode ? 'edit' : 'readonly' }}</el-tag>
+                  <el-tag effect="dark" @click="editMode = !editMode">{{ editMode ? 'edit' : 'readonly' }}</el-tag>
                 </div>
               </div>
               <div class="actions">
@@ -15,7 +15,7 @@
                     <template #default="{collapse}">
                       <template v-for="(group,key) in detailActions" :key="key">
                           <template v-for="item in group" :key="item.name">
-                          <component :is="item.component" :doc="doc" :permission="permission"  @success="handleRefresh" @delete="itemDeleted" :hideAfterClick="true" />
+                          <component :is="item.component" :doc="doc" :ref="(el) => itemRefs[item.name] = el" :permission="permission"  @success="handleRefresh" @delete="itemDeleted" :hideAfterClick="true" />
                           </template>
                           <div :class="{actionDivider:true, collapse}"></div>
                       </template>
@@ -87,6 +87,7 @@ const options = ref<FileDetailOptions>({
   showInfo: false,
   showHeaderAction: false,
 })
+const itemRefs = ref({});
 const emit = defineEmits(['close'])
 const { public:{feature} } = useRuntimeConfig();
 const {actions} = useBrowse()
@@ -128,11 +129,12 @@ const readerType = computed(() => {
 function handleRefresh() {
   getData(doc.value.path)
 }
-const PreviewRef = ref()
-function handleRefreshPreview() {
-  if(PreviewRef.value) PreviewRef.value.refresh()
-  handleRefresh()
+function editInfo(){
+  console.log("editInfo", itemRefs.value)
+  if(itemRefs.value.Edit) itemRefs.value.Edit.openDialog()
 }
+const PreviewRef = ref()
+
 async function openPreview({detail}:any) {
   cancelAxios()
   show.value = false
@@ -143,7 +145,7 @@ async function openPreview({detail}:any) {
 }
 const BrowseActionsEditRef = ref()
 async function openEdit() {
-  BrowseActionsEditRef.value.openDialog(doc.value)
+  BrowseActionsEditRef.value.openDialog()
 }
 async function getData (docId) {
   const response = await getDocumentDetailSync(docId, userId);
