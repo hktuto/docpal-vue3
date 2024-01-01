@@ -6,7 +6,6 @@
               <div class="fileNameContainer">
                 <div class="fileName">{{ doc.name }}
                   <el-tag v-if="doc.properties && doc.properties['file:content'] && doc.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(doc.properties['file:content']['mime-type']) }}</el-tag>
-                  <el-tag effect="dark" @click="editMode = !editMode">{{ editMode ? 'edit' : 'readonly' }}</el-tag>
                 </div>
               </div>
               <div class="actions">
@@ -46,15 +45,12 @@
               </div>
             </div>
             <div class="content">
-                <div v-if="readerType && !editMode" :class="{preview:true, mobileActionOpened}" >
-                    <LazyCollaboraViewer v-if="readerType === 'collabora'" ref="PreviewRef" :docId="doc.id" fileType="nuxeo" :readonly="true"/>
+                <div v-if="readerType" :class="{preview:true, mobileActionOpened}" >
+                    <LazyCollaboraViewer v-if="readerType === 'collabora'" ref="PreviewRef" :docId="doc.id" fileType="nuxeo" :readonly="true" :editable="AllowTo({feature:'ReadWrite', permission })"/>
                     <LazyHtmlViewer v-if="readerType === 'html'" ref="PreviewRef" :doc="doc" />
                     <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" ref="PreviewRef" :doc="doc"></LazyOtherPlayer>
-                </div>
-                <div v-else-if="editMode" :class="{preview:true, mobileActionOpened}">
-                  <LazyCollaboraViewer  ref="PreviewRef" :docId="doc.id" fileType="nuxeo" :readonly="false"/>
                 </div>
                 <h2 v-else class="noSupportContainer" >
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
@@ -82,7 +78,6 @@ const show = ref(false);
 const doc = ref<DocDetail>()
 const permission = ref<Permission>();
 const infoOpened =ref(false);
-const editMode = ref(false);
 const options = ref<FileDetailOptions>({
   showInfo: false,
   showHeaderAction: false,
@@ -186,7 +181,6 @@ watch(show, (isShow) => {
     document.body.classList.add('noScroll')
   }else{
     document.body.classList.remove('noScroll')
-    editMode.value = false
   }
 })
 </script>

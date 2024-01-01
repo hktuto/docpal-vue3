@@ -52,6 +52,7 @@ export const actions:BrowseActionItem[] = [
         component:BrowseActionsSubscribe,
         groupBy:'holdStatus'
     },
+ 
     {
         name:'Edit',
         showInFolder:true,
@@ -101,14 +102,7 @@ export const actions:BrowseActionItem[] = [
         component:BrowseActionsDownload,
         groupBy:'normal'
     },
-    {
-        name:'office',
-        showInFolder:false,
-        showInDetail:true,
-        permission:'ReadWrite',
-        component:BrowseActionsOffice,
-        groupBy:'normal'
-    },
+    
     {
         name:'share',
         showInFolder:false,
