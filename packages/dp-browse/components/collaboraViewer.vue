@@ -16,13 +16,14 @@ const { docId } = toRefs(props)
 const iframeReady = ref(false)
 const editing = ref(props.readonly);
 const mode = ref<'view' | 'edit'>('view');
+const isModified = ref(false);
 const formEl = ref();
 const collaboraUrl = ref('');
 const css = ref('');
 const ui = ref(`UITheme=${userPreference.value.color};UIMode=notebookbar;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false;SavedUIState=false;TextSidebar=false;TextToolbar=false`)
 const token = ref('')
 const xlsxIframe = ref()
-
+const emit = defineEmits(['saved'])
 async function displayIframe(){
   iframeReady.value = false;
     token.value = await getOfficeTokenApi(props.docId)
@@ -50,12 +51,21 @@ function gotMessageFromIframe(e:MessageEvent){
 
    const data = e.data !== 'unchanged' ? JSON.parse(e.data) : undefined;
    if(!data) return
+  console.log(data);
    if(data.MessageId === "App_LoadingStatus"){
     console.log('App_LoadingStatus')
      iframeReady.value = true
    }
+   if(data.MessageId === "Doc_ModifiedStatus"){
+     isModified.value = data.Values.Modified || false
+   }
+   
+   if(data.MessageId === "UI_Save"){
+     emit('saved')
+   }
    // TODO : check if data is modified, if so , submit refesh event
-  
+  // modified "Doc_ModifiedStatus" Values Modified:boolean
+  // SAVE Event "UI_Save"
    
 }
 
