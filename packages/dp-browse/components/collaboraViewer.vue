@@ -26,7 +26,7 @@ const xlsxIframe = ref()
 const emit = defineEmits(['saved'])
 async function displayIframe(){
   iframeReady.value = false;
-    token.value = await getOfficeTokenApi(props.docId)
+    token.value = await getOfficeTokenApi(props.docId, props.fileType)
     collaboraUrl.value = officeUrl(props.docId)
     
     nextTick(() => {
