@@ -46,7 +46,7 @@
             </div>
             <div class="content">
                 <div v-if="readerType" :class="{preview:true, mobileActionOpened}" >
-                    <LazyCollaboraViewer v-if="readerType === 'collabora'" ref="PreviewRef" :docId="doc.id" fileType="NUXEO" :readonly="true" :editable="AllowTo({feature:'ReadWrite', permission })" @saved="handleRefresh"/>
+                    <LazyCollaboraViewer v-if="readerType === 'collabora'" ref="PreviewRef" :docId="doc.id" fileType="NUXEO" :readonly="true" :editable="AllowTo({feature:'ReadWrite', permission })" @saved="() => handleRefresh(false)"/>
                     <LazyHtmlViewer v-if="readerType === 'html'" ref="PreviewRef" :doc="doc" />
                     <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
@@ -121,9 +121,9 @@ const readerType = computed(() => {
     return ''
   }
 });
-function handleRefresh() {
+function handleRefresh(needRefresh:boolean = true) {
   getData(doc.value.path)
-  if(PreviewRef.value) {
+  if(PreviewRef.value && needRefresh) {
     if(PreviewRef.value.refresh) PreviewRef.value.refresh()
   }
 }
