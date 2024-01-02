@@ -1,6 +1,6 @@
 <template>
     <div class="keyword-card">
-        <div style="margin-bottom: 10px;font-weight: bold;">{{ $t('search_keyword') }}</div>
+        <div style="margin-bottom: 10px;font-weight: bold;">{{ $t('search.keyword') }}</div>
         <el-form label-position="top">
             <el-form-item :label="$t('searchType')">
                 <el-select v-model="state.textSearchType" :teleported="false">
@@ -8,7 +8,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('search_keyword')">
+            <el-form-item :label="$t('search.keyword')">
                 <el-input v-model="state.keyword"></el-input>
             </el-form-item>
         </el-form>

@@ -11,50 +11,50 @@ export async function getConditionStore(assetType?: string): Promise<Search.cond
     const normal: Search.conditionMap = {
         type :{ 
             name: 'type', 
-            label: 'search_documentType',
+            label: 'search.documentType',
             filter: true,
-            keywords: ['type', $t('search_documentType')],
+            keywords: ['type', $t('search.documentType')],
             optionItems: await GetSTypesApi()
         },
         collections: {
             name: 'collections', 
-            label: 'search_collections',
+            label: 'search.collections',
             filter: true,
-            keywords: ['collections', $t('search_collections')],
+            keywords: ['collections', $t('search.collections')],
             optionItems: await GetSCollectionsApi()
         },
         tags: {
             name: 'tags', 
-            label: 'search_tags',
+            label: 'search.tags',
             filter: true,
-            keywords: ['tags', $t('search_tags')],
+            keywords: ['tags', $t('search.tags')],
             optionItems: await GetSTagsApi()
         },
         creator: { 
             name: 'creator', 
-            label: 'search_authors',
+            label: 'search.authors',
             filter: true,
-            keywords: ['creator', $t('search_authors')],
+            keywords: ['creator', $t('search.authors')],
             optionItems: await GetUsersAndGroupsApi()
         },
         authors: { 
             name: 'authors', 
-            label: 'search_contributors',
+            label: 'search.contributors',
             filter: true,
-            keywords: ['authors', $t('search_contributors')],
+            keywords: ['authors', $t('search.contributors')],
             optionItems: await GetUsersAndGroupsApi()
         },
         modified: { 
             name: 'modified', 
-            label: 'search_modificationDate',
-            keywords: ['modified', $t('search_modificationDate')],
+            label: 'search.modificationDate',
+            keywords: ['modified', $t('search.modificationDate')],
             optionItems: await GetSModifiedDateApi(),
             max: 1
         },
         size: { 
             name: 'size', 
-            label: 'search_size',
-            keywords: ['size', $t('search_size')],
+            label: 'search.size',
+            keywords: ['size', $t('search.size')],
             optionItems: await GetSSizeApi(),
             max: 1
         }
@@ -64,26 +64,26 @@ export async function getConditionStore(assetType?: string): Promise<Search.cond
         const dynamic: Search.conditionMap = {
             width: { 
                 name: 'width', 
-                label: 'search_width',
-                keywords: ['width', $t('search_width')],
+                label: 'search.width',
+                keywords: ['width', $t('search.width')],
                 optionItems: await GetSearchExtendsApi(assetType, 'width'),
             },
             height: { 
                 name: 'height', 
-                label: 'search_hight',
-                keywords: ['height', $t('search_hight')],
+                label: 'search.hight',
+                keywords: ['height', $t('search.hight')],
                 optionItems: await GetSearchExtendsApi(assetType, 'height'),
             },
             duration: { 
                 name: 'duration', 
-                label: 'search_duration',
-                keywords: ['duration', $t('search_duration')],
+                label: 'search.duration',
+                keywords: ['duration', $t('search.duration')],
                 optionItems: await GetSearchExtendsApi(assetType, 'duration'),
             },
             mimeType: {
                 name: 'mimeType', 
-                label: 'search_mimeType',
-                keywords: ['mimeType', $t('search_mimeType')],
+                label: 'search.mimeType',
+                keywords: ['mimeType', $t('search.mimeType')],
                 optionItems: await GetSearchExtendsApi(assetType, 'mimeType'),
             }
         }

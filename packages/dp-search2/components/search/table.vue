@@ -134,10 +134,10 @@ function goRoute (qPath: string, path: string = '/browse', qPathKey: string='pat
 const tableRef = ref()
 function initTable(searchParams: any) {
     const dynamicColumns = {
-        size: { id: 'search_size', label: 'search_size', prop: 'properties.file:content.length', type: 'size' },
-        height: { id: 'search_height', label: 'search_height', prop: 'properties.picture:info.height' },
-        width: { id: 'search_width', label: 'search_width', prop: 'properties.picture:info.width' },
-        duration: { id: 'search_duration', label: 'search_duration', prop: 'properties.vid:info.duration',
+        size: { id: 'search.size', label: 'search.size', prop: 'properties.file:content.length', type: 'size' },
+        height: { id: 'search.height', label: 'search.height', prop: 'properties.picture:info.height' },
+        width: { id: 'search.width', label: 'search.width', prop: 'properties.picture:info.width' },
+        duration: { id: 'search.duration', label: 'search.duration', prop: 'properties.vid:info.duration',
                     formatList: [
                         {
                             "joiner": "",

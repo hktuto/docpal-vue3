@@ -7,12 +7,12 @@
                 @click="emits('setSearchParams', item.searchRequestDTO)">
                 <template v-for="(qItem, qkey) in item.searchRequestDTO">
                     <el-tag v-if="qItem && !['pageSize'].includes(qkey)" class="el-icon--left">
-                        {{ qkey }}: 
-                        <b>{{ qItem }}</b>
+                        {{ $t(`search.${qkey}`) }}: 
+                        <b> {{ getI18n(qItem, qkey) }}</b>
                     </el-tag>
                 </template>
-                <el-divider />
-                <div> {{ $t('search.result') }}:{{ item.totalSize }}</div>
+                <!-- <el-divider /> -->
+                <!-- <div> {{ $t('search.result') }}:{{ item.totalSize }}</div> -->
             </el-card>
         </div>
         <el-button v-if="state.showMore" :loading="state.loading" text @click="getRecentSearchPage">{{ $t('button.more') }}...</el-button>
@@ -46,6 +46,10 @@ function hadnleRefresh() {
     pageParams.pageNum = -1
     state.recentSearchs = []
     getRecentSearchPage()
+}
+function getI18n(value: any, key:string) {
+    console.log(value, key);
+    return value
 }
 onMounted(() => {
     getRecentSearchPage()

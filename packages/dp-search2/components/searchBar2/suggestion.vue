@@ -1,12 +1,13 @@
 <template>
     <div>
         <el-tag v-if="inputValue" @click="handleClick('paramsInTextSearch', inputValue)">
-            {{ $t('search_keyword') }}: <b>{{ inputValue }}</b>
+            {{ $t('search.keyword') }}: <b>{{ inputValue }}</b>
         </el-tag>
         <el-tag v-for="(item, index) in state.tagList" :key="item.optionValue + index"
             @click="handleClick(item.key, item.optionValue)">
             {{ $t(item.label) }}:  <b> {{ item.optionLabel }} </b>   
         </el-tag>
+        <!-- <SearchBar2MetaButton></SearchBar2MetaButton> -->
     </div>
 </template>
 <script lang="ts" setup>
@@ -40,6 +41,7 @@ watch(() => props.inputValue, (val: any) => {
 })
 </script>
 <style lang="scss" scoped>
+
 .el-tag {
     margin: 6px 6px 0 0 ;
     cursor: pointer;

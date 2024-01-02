@@ -1226,8 +1226,8 @@ export const defaultTableSetting: TableColumnSetting = {
             { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue', sortable: true },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true, headerSlot: 'documentTypeHeader', width: 165 },
-            { id: '6', label: 'search_authors', prop: 'createdBy', sortable: true },
-            { id: '7', label: 'search_contributors', prop: 'properties.dc:contributors',
+            { id: '6', label: 'search.authors', prop: 'createdBy', sortable: true },
+            { id: '7', label: 'search.contributors', prop: 'properties.dc:contributors',
                 formatList: [
                     {
                         "joiner": "",

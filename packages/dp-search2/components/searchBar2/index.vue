@@ -109,7 +109,7 @@ function getTags () {
         if(['isDesc', 'orderBy', 'assetType', 'textSearchType'].includes(key)) return
         if(key === 'paramsInTextSearch' && state.searchParams[key]) {
             prev.push({
-                label: 'search_keyword',
+                label: 'search.keyword',
                 key: 'paramsInTextSearch',
                 str: state.searchParams[key],
                 value: state.searchParams[key]

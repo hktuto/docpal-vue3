@@ -89,7 +89,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             if(props.mode === 'ai') {
                 state.variables.unshift({
                     name: 'documentType',
-                    label: $t('search_documentType'),
+                    label: $t('search.documentType'),
                     type: 'select',
                     required: true,
                     options: {
