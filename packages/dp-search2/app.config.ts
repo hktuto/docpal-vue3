@@ -2,7 +2,7 @@ export default defineAppConfig({
     menu:[
         {
           feature:'SEARCH',
-          name:"file_search2",
+          name:"file_search",
           routeName:'search2',
           url:"/search2",
           icon: "/icons/menu/search.svg",
