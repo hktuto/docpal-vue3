@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import * as Dom from '@xmldom/xmldom';
-import { useEventListener } from '@vueuse/core';
-import { getOfficeTokenApi } from 'dp-api';
-import * as xpath from 'xpath';
-import { ref, toRefs, nextTick } from 'vue'; 
+import {useEventListener} from '@vueuse/core';
+import {getOfficeTokenApi} from 'dp-api';
+import {nextTick, ref, toRefs} from 'vue';
 
 const {userPreference} = useUser()
+const {public:{OFFICE_END_POINT}} = useRuntimeConfig()
 const props = defineProps<{
     docId?: string,
     readonly: boolean
@@ -43,19 +42,14 @@ function toggleMode() {
     mode.value = mode.value === 'view' ? 'edit' : 'view';
 }
 const officeUrl = (docId:string) =>{
-    let host = window.location.host.replace('admin.', '');
-    if(!host.includes('localhost')){
-        return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}&access_token=${token.value}?readonly=${mode.value === 'view'}&fileType=${props.fileType}`
-    }else{
-        return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}?readonly=${mode.value === 'view'}&fileType=${props.fileType}`
-    }
+    const WOPISrc = `https://${OFFICE_END_POINT}/wopi/files/${docId}?fileType=${props.fileType.toUpperCase()}&readonly=${mode.value === 'view'}`
+    return `https://${OFFICE_END_POINT}/browser/85ac843/cool.html?lang=${userPreference.value.language.replaceAll('HK', "TW")}&WOPISrc=${encodeURIComponent(WOPISrc)}`;
 }
 
 function gotMessageFromIframe(e:MessageEvent){
 
    const data = e.data !== 'unchanged' ? JSON.parse(e.data) : undefined;
    if(!data) return
-  console.log(data);
    if(data.MessageId === "App_LoadingStatus"){
     console.log('App_LoadingStatus')
      iframeReady.value = true
