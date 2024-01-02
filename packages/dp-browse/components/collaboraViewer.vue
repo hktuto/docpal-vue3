@@ -34,6 +34,10 @@ async function displayIframe(){
     });
 }
 
+function refresh(){
+    displayIframe()
+}
+
 
 function toggleMode() {
     mode.value = mode.value === 'view' ? 'edit' : 'view';
@@ -81,6 +85,10 @@ watch(docId, ()=>{
     displayIframe()
 },{
     immediate: true
+})
+
+defineExpose({
+  refresh
 })
 
 </script>

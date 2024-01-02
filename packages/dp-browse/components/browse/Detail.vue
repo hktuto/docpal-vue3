@@ -123,6 +123,9 @@ const readerType = computed(() => {
 });
 function handleRefresh() {
   getData(doc.value.path)
+  if(PreviewRef.value) {
+    if(PreviewRef.value.refresh) PreviewRef.value.refresh()
+  }
 }
 function editInfo(){
   console.log("editInfo", itemRefs.value)
