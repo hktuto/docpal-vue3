@@ -61,9 +61,6 @@ function gotMessageFromIframe(e:MessageEvent){
    if(data.MessageId === "UI_Save"){
      emit('saved')
    }
-   // TODO : check if data is modified, if so , submit refesh event
-  // modified "Doc_ModifiedStatus" Values Modified:boolean
-  // SAVE Event "UI_Save"
    
 }
 
