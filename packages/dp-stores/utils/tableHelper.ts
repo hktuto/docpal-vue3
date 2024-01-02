@@ -108,6 +108,7 @@ export const useTableHelper = () => {
                 joiner: 'string',
             },
             fun(value: any, params: any) {
+                if (!value) return ''
                 if (!params.joiner) params.joiner = ','
                 return value.join(params.joiner)
             }

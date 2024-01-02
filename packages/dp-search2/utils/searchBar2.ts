@@ -5,9 +5,10 @@ import {
     GetSTagsApi,
     GetSModifiedDateApi,
     GetSSizeApi,
+    GetSearchExtendsApi
 } from 'dp-api'
-export async function getConditionStore() {
-    return {
+export async function getConditionStore(assetType?: string): Promise<Search.conditionMap> {
+    const normal: Search.conditionMap = {
         type :{ 
             name: 'type', 
             label: 'search_documentType',
@@ -58,8 +59,51 @@ export async function getConditionStore() {
             max: 1
         }
     }
+    let result = { ...normal }
+    if(assetType) {
+        const dynamic: Search.conditionMap = {
+            width: { 
+                name: 'width', 
+                label: 'search_width',
+                keywords: ['width', $t('search_width')],
+                optionItems: await GetSearchExtendsApi(assetType, 'width'),
+            },
+            height: { 
+                name: 'height', 
+                label: 'search_hight',
+                keywords: ['height', $t('search_hight')],
+                optionItems: await GetSearchExtendsApi(assetType, 'height'),
+            },
+            duration: { 
+                name: 'duration', 
+                label: 'search_duration',
+                keywords: ['duration', $t('search_duration')],
+                optionItems: await GetSearchExtendsApi(assetType, 'duration'),
+            },
+            mimeType: {
+                name: 'mimeType', 
+                label: 'search_mimeType',
+                keywords: ['mimeType', $t('search_mimeType')],
+                optionItems: await GetSearchExtendsApi(assetType, 'mimeType'),
+            }
+        }
+        switch (assetType) {
+            case 'Video':
+                result.duration = dynamic.duration
+            case 'Picture':
+                result.width = dynamic.width
+                result.height = dynamic.height
+            case 'Audio':
+                result.mimeType = dynamic.mimeType
+                break;
+        
+            default:
+                break;
+        }
+    }
+    return result
 }
-export function getSuggestKeywordList(conditionStore: any): string[] {
+export function getSuggestKeywordList(conditionStore: Search.conditionMap): string[] {
     return Object.keys(conditionStore).reduce((prev: string[], key: string) => {
         const item = conditionStore[key]
         if (item.keywords) prev.push(...item.keywords)
@@ -67,12 +111,12 @@ export function getSuggestKeywordList(conditionStore: any): string[] {
     }, [])
 }
 
-export function getSuggestList(conditionStore: any): Search.suggestionItem[] {
-    return Object.keys(conditionStore).reduce((prev: any[],key: string) => {
+export function getSuggestList(conditionStore: Search.conditionMap): Search.suggestionOption[] {
+    return Object.keys(conditionStore).reduce((prev: Search.suggestionOption[],key: string) => {
         const sItem = conditionStore[key]
-        sItem.optionItems.forEach((pItem: any) => {
+        sItem.optionItems.forEach((pItem: Search.optionItem) => {
             if (pItem.children) {
-                pItem.children.forEach((cItem: any) => {
+                pItem.children.forEach((cItem: Search.optionItem) => {
                     prev.push({
                         label: sItem.label,
                         key: sItem.name,

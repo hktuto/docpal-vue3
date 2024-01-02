@@ -5,7 +5,7 @@
         class="mx-1"
         closable
         @click="handleClick(tag)"
-        @close="emits('handleClose', tag)"
+        @close="handleClose(tag)"
         @mouseover="changeHoverEle(tag, $event)"
         >
         <!-- @mouseleave="visible = false" -->
@@ -48,12 +48,15 @@ function changeHoverEle(tag: any, evt: any) {
     currentTag.value = tag
     // visible.value = true;
 }
+function handleClose(tag: any) {
+    emits('handleClose', tag)
+    popoverRef.value.hide()
+}
 function handleClick(tag: any) {
     visible.value = true
     currentTag.value = tag
 }
 function handleChange(data: any) {
-    console.log(data);
     emits('change', { ...data })
     popoverRef.value.hide()
 }

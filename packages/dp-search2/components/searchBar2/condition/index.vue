@@ -64,6 +64,7 @@ watch(() => props.optionItems, (val: any) => {
 </script>
 <style lang="scss" scoped>
 .checkbox-group-container {
+    overflow: hidden;
     // border-top: 1px dashed #DBE6EE;
     .checkbox-title {
         color: #333;
@@ -76,6 +77,8 @@ watch(() => props.optionItems, (val: any) => {
         display: flex;
         flex-direction: column;
         margin-top: var(--app-padding);
+        
+        width: 100%;
         .el-checkbox {
             padding: 4px 0;
         }
@@ -90,12 +93,17 @@ watch(() => props.optionItems, (val: any) => {
         font-size: 18px;
         line-height: 32px;
         padding-top: var(--app-padding);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        display: block;
     }
 }
 .h-200 {
     .el-checkbox-group {
         max-height: 200px;
         overflow: auto;
+        // overflow-x: hidden;
     }
 }
 </style>

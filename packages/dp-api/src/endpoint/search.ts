@@ -232,12 +232,20 @@ export const GetUsersAndGroupsApi = async() => {
         {  label: $t('user_groups'),  children: groups.map(item => ({ value: item.id, label: item.name })) },
     ]
 }
-export const GetSearchExtendsApi = async(primaryType, key) => {
-    const res = await api.get(`/nuxeo/search/getSearchExtends?primaryType=${primaryType}`).then(res => res.data.data)
-    if(!!key && res[key]) return res[key].map( item => ({
-        label: ['mimeType'].includes(key) ? item : $t(`searchType_${item}`), 
-        value: item
-    }))
+export const GetSearchExtendsApi = async(assetType, key: width | height | duration | mimeType) => {
+    if(searchOptions[`${assetType}-${key}`]) return searchOptions[`${assetType}-${key}`]
+    const res = await api.get(`/nuxeo/search/getSearchExtends?primaryType=${assetType}`).then(res => res.data.data)
+    if(!!key && res[key]) {
+        searchOptions[`${assetType}-${key}`] = Object.keys(res[key]).map( kKey => {
+            const kItem = res[key][kKey]
+            return {
+                label: ['mimeType', 'width', 'height', 'duration'].includes(key) ? kItem : $t(`searchType_${kItem}`), 
+                value: kKey
+            }
+        })
+        return searchOptions[`${assetType}-${key}`]
+    } 
+    
     return []
 }
 export const GetSModifiedDateApi = async() => {
@@ -258,6 +266,7 @@ export const GetSSizeApi = async() => {
         { label: $t('searchType_1000000'), value: '1000000' }
     ]
 }
+
 export const GetSSIncludeFolderApi = async() => {
     return [
         { label: $t('searchType_includeFolder_1'), value: 'true' },

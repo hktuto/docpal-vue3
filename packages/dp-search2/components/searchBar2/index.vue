@@ -1,7 +1,7 @@
 <template>
 <div class="searchBar-container" @mouseleave="handleClearInputValue">
     <div class="searchBar-main">
-        <SearchBar2AssetType v-model:assetType="searchConfig.assetType" />
+        <SearchBar2AssetType v-model:assetType="searchConfig.assetType" @update:assetType="init(searchConfig.assetType)"/>
         <searchBar2ConditionTag :dynamicTags="state.dynamicTags"
             :conditionStore="state.conditionStore"
             :textSearchType="searchConfig.textSearchType"
@@ -54,7 +54,9 @@ const state = reactive<any>({
     loading: false,
     expanded: false
 })
-function handleAdoptSuggestion(key: string, value: string) {
+function handleAdoptSuggestion(key: string, value: any) {
+    console.log(value);
+    
     if(key !== 'paramsInTextSearch') {
         const isMultiple = state.conditionStore[key].max !== 1
         state.searchParams[key] = isMultiple ? [value] : value
@@ -62,27 +64,41 @@ function handleAdoptSuggestion(key: string, value: string) {
     else {
         state.searchParams[key] = value
     }
+    console.log(state.searchParams, 'handleAdoptSuggestion');
+    
     getTags()
     state.inputValue = ''
 }
 function handleClearInputValue() {
     // setTimeout(() => { state.inputValue = '' }, 200)
 }
-function handleChangeParams(params: any, reset: boolean = false) {
+async function handleChangeParams(params: any, reset: boolean = false) {
     if (reset)  state.searchParams = { }
     if (params.textSearchType) {
         searchConfig.textSearchType = params.textSearchType
         delete params.textSearchType
     }
+    if (params.assetType) {
+        await init(params.assetType)
+        searchConfig.assetType = params.assetType
+        delete params.assetType
+    }
+    if (params.orderBy) {
+        searchConfig.orderBy = params.orderBy
+        delete params.orderBy
+    }
+    if (params.isDesc) {
+        searchConfig.isDesc = params.isDesc
+        delete params.isDesc
+    }
+    
     state.searchParams = { ...state.searchParams, ...params}
     getTags()
 }
 function handleSearch() {
     state.loading = true
+    if(Object.keys(state.searchParams).length === 0) return
     emits('search', { ...state.searchParams, ...searchConfig })
-    setTimeout(() => {
-        state.loading = false
-    }, 3000);
 }
 function handleRemoveParams(tagItem: any) {
     state.searchParams[tagItem.key] = ''
@@ -90,8 +106,7 @@ function handleRemoveParams(tagItem: any) {
 }
 function getTags () {
     state.dynamicTags = Object.keys(state.searchParams).reduce((prev:any, key: string) => {
-        console.log(key);
-        
+        if(['isDesc', 'orderBy', 'assetType', 'textSearchType'].includes(key)) return
         if(key === 'paramsInTextSearch' && state.searchParams[key]) {
             prev.push({
                 label: 'search_keyword',
@@ -99,7 +114,7 @@ function getTags () {
                 str: state.searchParams[key],
                 value: state.searchParams[key]
             })
-        } else {
+        } else if(key !== 'paramsInTextSearch'){
             const isMultiple = state.conditionStore[key].max !== 1
             let tagItem: any = state.searchParams[key] ? 
                                 isMultiple ? 
@@ -107,12 +122,14 @@ function getTags () {
                                 [state.searchParams[key]] : 
                                 ''
             if(tagItem) {
+                console.log(key, tagItem);
+                
                 // 获取翻译
                 if(['type', 'size', 'modified', 'collections'].includes(key)) {
                     const optionItems = state.conditionStore[key].optionItems
                     tagItem = tagItem.reduce((prevTags: string[], value: string) => {
                         const optionItem = optionItems.find((c: any) => c.value === value)
-                        prevTags.push(optionItem.label)
+                        if(optionItem) prevTags.push(optionItem.label)
                         return prevTags
                     }, [])
                 }
@@ -127,14 +144,20 @@ function getTags () {
         return prev
     }, [])
 }
-
-onMounted(async() => {
-    state.conditionStore = await getConditionStore()
+async function init(assetType?: any) {
+    state.conditionStore = await getConditionStore(assetType)
     state.suggestList = getSuggestList(state.conditionStore)
     state.suggestKeywordList = getSuggestKeywordList(state.conditionStore)
+}
+function setLoading(loading: boolean = false) {
+    state.loading = loading
+
+}
+onMounted(() => {
+    init()
 }) 
 defineExpose({
-    handleChangeParams, handleSearch
+    handleChangeParams, handleSearch, setLoading
 })
 </script>
 <style lang="scss" scoped>
@@ -148,6 +171,7 @@ defineExpose({
     padding: var(--app-padding);
     max-height: 80vh;
     overflow: auto;
+    overflow-x: hidden;
     &:hover {
         .ArrowDownBold {
             display: unset;

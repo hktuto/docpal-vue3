@@ -3,15 +3,16 @@
         <div :class="['search-page',{ 'search-page-narrow': !state.expanded}]">
             <div class="search-container">
                 <SearchBar2 ref="SearchBar2Ref" @search="handleSearch"></SearchBar2>
-                <SearchTable ref="SearchTableRef"></SearchTable>
+                <SearchTable ref="SearchTableRef" @filterChange="handleFilterChange"
+                    @loadingChange="handleLodingChange"></SearchTable>
             </div>
             <div class="search-page-divider">
                 <el-button data-testid="search-zoom-button" :class="['zoom-button', state.expanded ? 'button-expanded':'button-narrow']" type="info" :icon="ArrowLeftBold" circle 
                     @click="state.expanded = !state.expanded"/>
             </div>
             <div class="search-container-right">
-                <SearchRecentDoc class="recent-doc-container"></SearchRecentDoc>
-                <SearchRecentSearch class="recent-search-container" @setSearchParams="handleSetSearchParams"></SearchRecentSearch>
+                <SearchRecentDoc ref="SearchRecentDocRef" class="recent-doc-container"></SearchRecentDoc>
+                <SearchRecentSearch ref="SearchRecentSearchRef" class="recent-search-container" @setSearchParams="handleSetSearchParams"></SearchRecentSearch>
             </div>
         </div>
     </NuxtLayout>
@@ -32,15 +33,25 @@ import { } from 'dp-api'
 // #region module: search form
     const SearchTableRef = ref()
     function handleSearch(searchParams: any) {
-        console.log({searchParams})
         SearchTableRef.value.handleSearch(searchParams)
     }
 // #endregion
 const SearchBar2Ref = ref()
-function handleSetSearchParams(searchParams: any) {
-    console.log({...searchParams})
-    SearchBar2Ref.value.handleChangeParams({...searchParams}, true)
+async function handleSetSearchParams(searchParams: any) {
+    await SearchBar2Ref.value.handleChangeParams({...searchParams}, true)
     SearchBar2Ref.value.handleSearch()
+}
+function handleFilterChange(key: string, value: any) {
+    SearchBar2Ref.value.handleChangeParams({[key]: value})
+}
+const SearchRecentDocRef = ref()
+const SearchRecentSearchRef = ref()
+function handleLodingChange(loading: boolean) {
+    SearchBar2Ref.value.setLoading(loading)
+    if(!loading) {
+        // SearchRecentDocRef.value.hadnleRefresh()
+        SearchRecentSearchRef.value.hadnleRefresh()
+    }
 }
 onMounted(() => {
 })
@@ -64,6 +75,7 @@ onMounted(() => {
     .search-page-divider { grid-area: 1 / 2 / 3 / 3; }
     .search-container-right { 
         grid-area: 1 / 3 / 2 / 4; 
+        max-width: 400px;
         overflow: auto; 
         overflow-x: hidden;
         padding-right: var(--app-padding);

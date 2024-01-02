@@ -10,14 +10,50 @@
                 <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
             </div>
         </template>
+        <template #logicalPath="{ row }">
+            <el-tooltip
+                effect="dark"
+                :content="row.logicalPath"
+                placement="top-start"
+            >
+                {{ getLogicalPath(row) }}
+            </el-tooltip>
+        </template>
+        <template #documentTypeHeader="{column}">
+            <div> {{ $t(column.label) }} 
+                <el-popover
+                    v-if="state.conditionStore && state.conditionStore.type"
+                    ref="documentTypeFilterPopover"
+                    placement="bottom"
+                    :width="250"
+                    popper-class="searbar-card-container"
+                >
+                    <template #reference>
+                        <el-icon class="document-type-filter-icon" @click.stop><ArrowDown /></el-icon>
+                    </template>
+                    
+                    
+                    <template #default>
+                        <SearchBar2CardCheckbox
+                            :tag="{ value: state.searchParams.type, key: 'type' }"
+                            :condition="state.conditionStore.type"
+                            @confirm="(searchParam: any)=>handleFilterChange('type', searchParam['type'])"></SearchBar2CardCheckbox>
+                    </template>
+                </el-popover>
+            </div>
+        </template>
     </Table>
 </template>
 
 <script lang="ts" setup>
+import { ArrowDown  } from '@element-plus/icons-vue';
 import { 
     nestedSearchApi, 
     TABLE, defaultTableSetting, TableAddMultiColumns } from 'dp-api'
-
+import { 
+    getConditionStore, 
+} from '../../utils/searchBar2'
+const emits = defineEmits(['filterChange', 'loadingChange'])
 // #region module: page
     const route = useRoute()
     const router = useRouter()
@@ -37,15 +73,20 @@ import {
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
+            sortKey: tableKey
         },
         searchParams: {},
-        columns: tableSetting.columns
+        sortParams: {},
+        conditionStore: {},
+        columns: tableSetting.columns,
     })
-
+    const filters = reactive<any>({
+        type: ''
+    })
     async function getList (param: any) {
         state.loading = true
         try {
-            const res = await nestedSearchApi({ ...param })
+            const res = await nestedSearchApi({ ...param, ...state.sortParams })
             state.tableData = res.entryList
             state.options.paginationConfig.total = res.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
@@ -55,18 +96,18 @@ import {
             state.options.paginationConfig.total = 0
         }
         state.loading = false
+        emits('loadingChange', false)
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
         getList({...state.searchParams, currentPageIndex: page - 1, pageSize})
     }
     function handleSortChange({ column, prop, order }: any) {
-        console.log(column, prop, order);
-        if (!order) getList({ ...state.searchParams, ...pageParams })
-        else  getList({...state.searchParams, ...pageParams, 
+        state.sortParams = order ? {
             orderBy: prop,
             isDesc: order === 'descending' ? true : false
-        })
+        } : {}
+        getList({ ...state.searchParams, ...pageParams })
     }
 // #endregion
 async function handleDblclick (row: any) {
@@ -155,7 +196,19 @@ function handleSearch(searchParams: any) {
     initTable(searchParams)
     getList({...searchParams, currentPageIndex: 0, pageSize: pageParams.pageSize })
 }
-onMounted(() => {
+const documentTypeFilterPopover = ref()
+function handleFilterChange(key: string, value: any) {
+    emits('filterChange', key, value)
+    documentTypeFilterPopover.value.hide()
+    state.searchParams = { ...state.searchParams, [key]: value }
+    getList({...state.searchParams, currentPageIndex: 0, pageSize: pageParams.pageSize })
+}
+function getLogicalPath(row: any) {
+    if(!row || !row.logicalPath) return ''
+    return '/' + row.logicalPath.split('/').shift()
+}
+onMounted(async() => {
+    state.conditionStore = await getConditionStore()
 })
 defineExpose({ handleSearch })
 </script>
@@ -168,4 +221,19 @@ defineExpose({ handleSearch })
     gap: var(--app-padding);
     overflow-y: hidden;
 }
+:deep(th.el-table__cell) {
+    position: relative;
+}
+:deep(th.el-table__cell .cell) {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.document-type-filter-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0%,-50%);
+}
 </style>
+

@@ -35,7 +35,6 @@ function getIcon(assetType: string) {
     return commandItem ? commandItem.icon : '/icons/file/document.svg'
 }
 function handleCommand (command: string) {
-    console.log(command)
     emits('update:assetType', command)
 }
 </script>

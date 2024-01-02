@@ -6,7 +6,7 @@
             <el-card v-for="(item,index) in state.recentSearchs" :key="index"
                 @click="emits('setSearchParams', item.searchRequestDTO)">
                 <template v-for="(qItem, qkey) in item.searchRequestDTO">
-                    <el-tag v-if="qItem && !['pageSize'].includes(qkey)">
+                    <el-tag v-if="qItem && !['pageSize'].includes(qkey)" class="el-icon--left">
                         {{ qkey }}: 
                         <b>{{ qItem }}</b>
                     </el-tag>
@@ -42,8 +42,16 @@ async function getRecentSearchPage() {
     }
     state.loading = false
 }
+function hadnleRefresh() {
+    pageParams.pageNum = -1
+    state.recentSearchs = []
+    getRecentSearchPage()
+}
 onMounted(() => {
     getRecentSearchPage()
+})
+defineExpose({
+    hadnleRefresh
 })
 </script>
 <style lang="scss" scoped>

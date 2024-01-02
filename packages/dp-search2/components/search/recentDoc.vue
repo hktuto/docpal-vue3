@@ -30,14 +30,22 @@ async function getRecentDocumentPage() {
     state.recentDocuments.push(...entryList)
     state.showMore = state.recentDocuments.length < totalSize
 }
-function handlePreview(row) {
+function handlePreview(row: any) {
     openFileDetail(row.id, {
         showInfo:true,
         showHeaderAction:true
     })
 }
+function hadnleRefresh() {
+    pageParams.pageNum = -1
+    state.recentDocuments = []
+    getRecentDocumentPage()
+}
 onMounted(() => {
     getRecentDocumentPage()
+})
+defineExpose({
+    hadnleRefresh
 })
 </script>
 <style lang="scss" scoped>
