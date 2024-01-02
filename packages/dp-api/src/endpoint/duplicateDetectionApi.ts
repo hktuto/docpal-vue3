@@ -386,7 +386,7 @@ export const CommentsGetApi = (params:any) => {
 
 // get doc office 
 export const getOfficeTokenApi = (documentId:string, fileType:string) => {
-    return api.get(`/nuxeo/getOfficeToken/${documentId}?fileType=${fileType}`).then(res => res.data.data);
+    return api.get(`/nuxeo/getOfficeToken/${documentId}?fileType=${fileType.toUpperCase()}`).then(res => res.data.data);
 }
 
 

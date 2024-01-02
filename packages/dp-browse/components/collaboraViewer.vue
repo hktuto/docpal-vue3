@@ -45,9 +45,9 @@ function toggleMode() {
 const officeUrl = (docId:string) =>{
     let host = window.location.host.replace('admin.', '');
     if(!host.includes('localhost')){
-        return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}&access_token=${token.value}?readonly=${mode.value === 'view'}&fileType=${props.fileType}`
+        return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}?fileType=${props.fileType.toUpperCase()}&readonly=${mode.value === 'view'}&fileType=${props.fileType.toUpperCase()}&lang=${userPreference.value.language.replaceAll('HK',"TW")}&access_token=${token.value}`
     }else{
-        return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}?readonly=${mode.value === 'view'}&fileType=${props.fileType}`
+        return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}?fileType=${props.fileType.toUpperCase()}&readonly=${mode.value === 'view'}&fileType=${props.fileType.toUpperCase()}&lang=${userPreference.value.language.replaceAll('HK',"TW")}&access_token=${token.value}`
     }
 }
 
@@ -55,7 +55,6 @@ function gotMessageFromIframe(e:MessageEvent){
 
    const data = e.data !== 'unchanged' ? JSON.parse(e.data) : undefined;
    if(!data) return
-  console.log(data);
    if(data.MessageId === "App_LoadingStatus"){
     console.log('App_LoadingStatus')
      iframeReady.value = true

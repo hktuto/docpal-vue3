@@ -31,7 +31,7 @@
             </div>
         </div>
       <div v-if="state.selectedDoc.id" class="main-right">
-        <CollaboraViewer :docId="state.selectedDoc.id" fileType="local" :readonly="true" />
+        <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
       </div>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
