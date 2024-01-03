@@ -1,5 +1,5 @@
 <template>
-    <div v-if="state.inputValue || state.expanded" class="searchBar-container-absolute" ></div>
+    <div v-if="state.inputValue || state.expanded" class="searchBar-container-placeholder" ></div>
     <div :class="['searchBar-container', {'searchBar-container-absolute': state.inputValue || state.expanded }]" @mouseleave="handleClearInputValue">
         <div class="searchBar-main">
             <SearchBar2AssetType v-model:assetType="searchConfig.assetType" @update:assetType="init(searchConfig.assetType)"/>
@@ -183,7 +183,9 @@ defineExpose({
         }
     }
 }
-
+.searchBar-container-placeholder {
+    min-height: 58px;
+}
 .searchBar-container-absolute {
     position: absolute;
     z-index: 100;
