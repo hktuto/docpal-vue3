@@ -2,13 +2,13 @@
   "name": "desktop",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
     "app:dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
-    "main": "dist-electron/main.js",
+    
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
-    "build": "tauri build",
+    "build": "pnpm generate && electron-builder",
     "build:debug": "tauri build --debug"
   },
   "dependencies": {

@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  "appId": "your.app.id",
+  "appId": "docpal.wclsolution.com",
   "asar": false,
   "directories": {
     "output": "release/${version}"

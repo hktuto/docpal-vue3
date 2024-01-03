@@ -268,7 +268,7 @@ export const useUser = () => {
             ElMessage.error($i18n.t('dpTip_keycloakError'))
             return false
         }
-
+        console.log(config.keyCloakProperty)
         setIsLdapMode(config.isLdap)
         dpKeyCloak = new Keycloak({
             "url": config.keyCloakProperty.url,

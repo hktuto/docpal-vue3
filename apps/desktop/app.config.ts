@@ -7,7 +7,7 @@ export default defineAppConfig({
     notification: true,
     userAuth: true,
     search: true,
-    tauri: true,
+    tauri: false,
   }
 })
 
