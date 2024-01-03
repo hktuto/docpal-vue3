@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-tag v-if="inputValue" @click="handleClick('paramsInTextSearch', inputValue)">
-            {{ $t('search.keyword') }}: <b>{{ inputValue }}</b>
+            {{ $t('search.paramsInTextSearch') }}: <b>{{ inputValue }}</b>
         </el-tag>
         <el-tag v-for="(item, index) in state.tagList" :key="item.optionValue + index"
             @click="handleClick(item.key, item.optionValue)">

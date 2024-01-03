@@ -1,14 +1,14 @@
 <template>
     <div class="keyword-card">
-        <div style="margin-bottom: 10px;font-weight: bold;">{{ $t('search.keyword') }}</div>
+        <div style="margin-bottom: 10px;font-weight: bold;">{{ $t('search.paramsInTextSearch') }}</div>
         <el-form label-position="top">
-            <el-form-item :label="$t('searchType')">
+            <el-form-item :label="$t('search.textSearchType')">
                 <el-select v-model="state.textSearchType" :teleported="false">
                     <el-option v-for="item in state.options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('search.keyword')">
+            <el-form-item :label="$t('search.paramsInTextSearch')">
                 <el-input v-model="state.keyword"></el-input>
             </el-form-item>
         </el-form>

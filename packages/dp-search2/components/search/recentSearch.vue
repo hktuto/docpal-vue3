@@ -4,9 +4,10 @@
         <div class="main">
             <!-- textSearchType -->
             <el-card v-for="(item,index) in state.recentSearchs" :key="index"
-                @click="emits('setSearchParams', item.searchRequestDTO)">
+                @dblclick="emits('setSearchParams', item.searchRequestDTO)">
                 <template v-for="(qItem, qkey) in item.searchRequestDTO">
-                    <el-tag v-if="qItem && !['pageSize'].includes(qkey)" class="el-icon--left">
+                    <el-tag v-if="qItem && !['pageSize'].includes(qkey)" class="el-icon--left"
+                     :title="getI18n(qItem, qkey)">
                         {{ $t(`search.${qkey}`) }}: 
                         <b> {{ getI18n(qItem, qkey) }}</b>
                     </el-tag>
@@ -49,7 +50,17 @@ function hadnleRefresh() {
 }
 function getI18n(value: any, key:string) {
     console.log(value, key);
-    return value
+    if(!value) return '-'
+    const _value = value instanceof Array ? value : [value]
+    if(['height','width','duration','assetType','size','modified'].includes(key)) {
+        return _value.map(v => $t(`searchType.${v}`)).join(',')
+    } else if(['orderBy'].includes(key)) {
+        return _value.map(v => $t(`search.${v}`)).join(',')
+    }
+    else if(['isDesc'].includes(key)) {
+        return _value.map(v => $t(`searchType.desc${v}`)).join(',')
+    }
+    return _value.join(',')
 }
 onMounted(() => {
     getRecentSearchPage()
@@ -66,6 +77,17 @@ defineExpose({
     }
     .el-divider {
         margin: var(--app-padding) 0;
+    }
+}
+.el-tag {
+    max-width: 100%;
+    overflow: hidden;
+    :deep(.el-tag__content) {
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: block;
     }
 }
 </style>

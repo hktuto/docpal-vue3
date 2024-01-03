@@ -71,8 +71,8 @@ const state = reactive({
         'tags'
     ],
     i18nMap: {
-        'paramsInTextSearch': 'search.keyword',
-        'textSearchType': 'searchType',
+        'paramsInTextSearch': 'search.paramsInTextSearch',
+        'textSearchType': 'search.textSearchType',
         'assetType': 'search.assetType',
         'type': 'search.documentType',
         'creator': 'search.authors',
@@ -104,7 +104,7 @@ function getSearchTag(tag: string) {
             case 'textSearchType':
             case 'modified':
             case 'size':
-                item = $t('searchType_'+item)
+                item = $t('searchType.'+item)
                 break;
             case 'includeFolder':
                 if (item || item === false) item = item ? $t('searchType_includeFolder_1') : $t('searchType_includeFolder_0')

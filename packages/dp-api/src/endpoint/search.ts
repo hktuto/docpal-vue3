@@ -90,7 +90,7 @@ export const getAggregation = async (aggregation?, searchParams?) => {
     }, {})
     function returnI18nArr(arr) {
         return arr.map(arrItem => ({
-            label: $t(`searchType_${arrItem.key}`),
+            label: $t(`searchType.${arrItem.key}`),
             value: arrItem.key
         }))
     }
@@ -187,7 +187,7 @@ export const GetSTextSearchTypesApi = async() => {
     const res = await api.get('/nuxeo/search/textSearchTypes', {}).then(res => res.data.data)
     searchOptions.textSearchType = res.map(item => ({
         value: item,
-        label: $t('searchType_'+item)
+        label: $t('searchType.'+item)
     }))
     return searchOptions.textSearchType
 }
@@ -239,7 +239,7 @@ export const GetSearchExtendsApi = async(assetType, key: width | height | durati
         searchOptions[`${assetType}-${key}`] = Object.keys(res[key]).map( kKey => {
             const kItem = res[key][kKey]
             return {
-                label: ['mimeType', 'width', 'height', 'duration'].includes(key) ? kItem : $t(`searchType_${kItem}`), 
+                label: ['mimeType', 'width', 'height', 'duration'].includes(key) ? kItem : $t(`searchType.${kItem}`), 
                 value: kKey
             }
         })
