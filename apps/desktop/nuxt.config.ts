@@ -7,7 +7,6 @@ export default defineNuxtConfig({
        
     },
     css:[
-        '~/assets/tauri.scss',
     ],
     devtools: {
         enabled: true,
@@ -16,6 +15,15 @@ export default defineNuxtConfig({
     extends: [
         "../client"
     ],
+    modules: ['nuxt-electron'],
+    electron: {
+        build: [
+          {
+            // Main-Process entry file of the Electron App.
+            entry: 'electron/main.ts',
+          },
+        ],
+      },
     //  for local preview dev only
     // nitro:{
     //     routeRules:{
