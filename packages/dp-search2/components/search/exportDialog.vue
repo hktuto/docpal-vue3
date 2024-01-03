@@ -53,18 +53,21 @@ const state = reactive({
 })
 function handleOpen(searchParams) {
     state.visible = true
-    state.searchParams = searchParams
+    state.searchParams = Object.keys(searchParams).reduce((prev: any, key:string) => {
+        if(searchParams[key]) prev[key] = searchParams[key]
+        return prev
+    }, {})
 }
 async function handleSubmit() {
     state.loading = true
     try {
-      const orderList = state.exportList.reduce((prev,item) => {
-          prev.push(item.id)
-          return prev
-      }, [])
-      const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList })
-      await downloadBlob(blob, 'search.csv')
-      state.visible = false
+        const orderList = state.exportList.reduce((prev,item) => {
+            prev.push(item.id)
+            return prev
+        }, [])
+        const blob = await ExportSearchCsvApi({ ...state.searchParams, orderList })
+        await downloadBlob(blob, 'search.csv')
+        state.visible = false
     } catch (error) {
       
     }
@@ -72,11 +75,11 @@ async function handleSubmit() {
 }
 
 async function getExportList () {
-  const res = await GetSearchExportHeaderApi()
-  state.exportList = []
-  Object.keys(res).forEach(key => {
-    state.exportList.push({ id: key, name: res[key]})
-  })
+    const res = await GetSearchExportHeaderApi()
+    state.exportList = []
+    Object.keys(res).forEach(key => {
+        state.exportList.push({ id: key, name: res[key]})
+    })
 }
 onMounted(async() => {
    getExportList()

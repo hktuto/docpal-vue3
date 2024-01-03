@@ -95,7 +95,7 @@ async function handleChangeParams(params: any, reset: boolean = false) {
         searchConfig.orderBy = params.orderBy
         delete params.orderBy
     }
-    if (params.isDesc) {
+    if (params.isDesc || params.isDesc === false) {
         searchConfig.isDesc = params.isDesc
         delete params.isDesc
     }
