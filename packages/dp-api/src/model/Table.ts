@@ -1222,8 +1222,8 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_SEARCH] : {
         columns: [
             { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true },
-            { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey', sortable: true },
-            { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue', sortable: true },
+            { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey' },
+            { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue' },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath' },
             { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true, headerSlot: 'documentTypeHeader', width: 165 },
             { id: '6', label: 'search.authors', prop: 'createdBy', sortable: true },

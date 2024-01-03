@@ -70,7 +70,8 @@ onMounted(() => {
         grid-area: 1 / 1 / 3 / 2; 
         display: grid;
         grid-template-rows: min-content 1fr;
-        gap: var(--app-padding)
+        gap: var(--app-padding);
+        position: relative;
     }
     .search-page-divider { grid-area: 1 / 2 / 3 / 3; }
     .search-container-right { 

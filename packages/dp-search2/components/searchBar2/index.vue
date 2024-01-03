@@ -1,32 +1,34 @@
 <template>
-<div class="searchBar-container" @mouseleave="handleClearInputValue">
-    <div class="searchBar-main">
-        <SearchBar2AssetType v-model:assetType="searchConfig.assetType" @update:assetType="init(searchConfig.assetType)"/>
-        <searchBar2ConditionTag :dynamicTags="state.dynamicTags"
-            :conditionStore="state.conditionStore"
-            :textSearchType="searchConfig.textSearchType"
-            @change="handleChangeParams"
-            @handleClose="handleRemoveParams"/>
-        <el-input v-model="state.inputValue" style="min-width: 100px;" clearable></el-input>
-        <el-button type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
-            <el-icon class="el-icon--right"><Search /></el-icon>
-        </el-button>
-        <el-button v-if="exportButton" type="primary" @click="emits('export')">{{ $t('search.export') }}</el-button>
+    <div v-if="state.inputValue || state.expanded" class="searchBar-container-absolute" ></div>
+    <div :class="['searchBar-container', {'searchBar-container-absolute': state.inputValue || state.expanded }]" @mouseleave="handleClearInputValue">
+        <div class="searchBar-main">
+            <SearchBar2AssetType v-model:assetType="searchConfig.assetType" @update:assetType="init(searchConfig.assetType)"/>
+            <searchBar2ConditionTag :dynamicTags="state.dynamicTags"
+                :conditionStore="state.conditionStore"
+                :textSearchType="searchConfig.textSearchType"
+                @change="handleChangeParams"
+                @handleClose="handleRemoveParams"/>
+            <el-input v-model="state.inputValue" style="min-width: 100px;" clearable></el-input>
+            <el-button type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
+                <el-icon class="el-icon--right"><Search /></el-icon>
+            </el-button>
+            <el-button v-if="exportButton" type="primary" @click="emits('export')">{{ $t('search.export') }}</el-button>
+        </div>
+        <SearchBar2Suggestion :inputValue="state.inputValue" 
+            :suggestList="state.suggestList"
+            :suggestKeywordList="state.suggestKeywordList"
+            @adoptSuggestion="handleAdoptSuggestion"/>
+        <el-affix target=".searchBar-container" :offset="80">
+            <el-button :class="['ArrowDownBold', state.expanded ? 'icon-expanded':'icon-narrow']" :icon="ArrowDownBold" text
+                @click="state.expanded = !state.expanded"></el-button>
+        </el-affix>
+        <div :class="['condition-container',{ 'condition-container-narrow': !state.expanded}]">
+            <SearchBar2Condition class="h-200" v-for="item in state.conditionStore" :key="item.name" 
+                v-model="state.searchParams[item.name]" 
+                v-bind="item"
+                @change="getTags"/>
+        </div>
     </div>
-    <SearchBar2Suggestion :inputValue="state.inputValue" 
-        :suggestList="state.suggestList"
-        :suggestKeywordList="state.suggestKeywordList"
-        @adoptSuggestion="handleAdoptSuggestion"/>
-    <!-- <div></div> -->
-    <el-icon :class="['ArrowDownBold', state.expanded ? 'icon-expanded':'icon-narrow']" 
-        @click="state.expanded = !state.expanded"><ArrowDownBold /></el-icon>
-    <div :class="['condition-container',{ 'condition-container-narrow': !state.expanded}]">
-        <SearchBar2Condition class="h-200" v-for="item in state.conditionStore" :key="item.name" 
-            v-model="state.searchParams[item.name]" 
-            v-bind="item"
-            @change="getTags"/>
-    </div>
-</div>
 </template>
 <script lang="ts" setup>
 import { ArrowDownBold, Search  } from '@element-plus/icons-vue';
@@ -161,15 +163,18 @@ defineExpose({
 })
 </script>
 <style lang="scss" scoped>
-.searchBar-container {
+.searchBar {
     position: relative;
+    min-height: 58px;
+}
+.searchBar-container {
+    max-height: 80vh;
     width: 100%;
     background-color: #fff;
     box-shadow: 0 8px 36px 0 rgba(104,122,143,0.15);
     border: 1px solid #DBE6EE;
     border-radius: 5px;
     padding: var(--app-padding);
-    max-height: 80vh;
     overflow: auto;
     overflow-x: hidden;
     &:hover {
@@ -177,6 +182,12 @@ defineExpose({
             display: unset;
         }
     }
+}
+
+.searchBar-container-absolute {
+    position: absolute;
+    z-index: 100;
+    // background-color: red
 }
 .searchBar-main {
     display: flex;
@@ -206,6 +217,10 @@ defineExpose({
     &-narrow {
         height: 0px;
         display: none;
+    }
+    @media(max-width : 1024px) {
+        display: unset;
+        overflow: auto;
     }
 }
 .icon-narrow {

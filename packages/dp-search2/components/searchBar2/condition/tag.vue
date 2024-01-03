@@ -20,6 +20,7 @@
         placement="bottom-start"
         :width="250"
         popper-class="searbar-card-container"
+        trigger="click"
     >
         <SearchBar2CardKeyword v-if="currentTag && currentTag.key === 'paramsInTextSearch'"
             :textSearchType="textSearchType"

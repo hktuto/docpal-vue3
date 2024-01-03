@@ -70,8 +70,8 @@ export async function getConditionStore(assetType?: string): Promise<Search.cond
             },
             height: { 
                 name: 'height', 
-                label: 'search.hight',
-                keywords: ['height', $t('search.hight')],
+                label: 'search.height',
+                keywords: ['height', $t('search.height')],
                 optionItems: await GetSearchExtendsApi(assetType, 'height'),
             },
             duration: { 
