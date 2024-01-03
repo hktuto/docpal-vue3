@@ -12,7 +12,7 @@
             <el-button type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
                 <el-icon class="el-icon--right"><Search /></el-icon>
             </el-button>
-            <el-button v-if="exportButton" type="primary" @click="handleExport">{{ $t('search.export') }}</el-button>
+            <el-button v-if="!!state.dynamicTags && state.dynamicTags.length !== 0" type="primary" @click="handleExport">{{ $t('search.export') }}</el-button>
         </div>
         <SearchBar2Suggestion :inputValue="state.inputValue" 
             :suggestList="state.suggestList"
@@ -76,6 +76,8 @@ function handleClearInputValue() {
     // setTimeout(() => { state.inputValue = '' }, 200)
 }
 async function handleChangeParams(params: any, reset: boolean = false) {
+    console.log(params);
+    
     if (reset)  {
         state.searchParams = { }
         searchConfig.assetType = ''
@@ -115,7 +117,7 @@ function handleRemoveParams(tagItem: any) {
 }
 function getTags () {
     state.dynamicTags = Object.keys(state.searchParams).reduce((prev:any, key: string) => {
-        if(['isDesc', 'orderBy', 'assetType', 'textSearchType'].includes(key)) return
+        if(['isDesc', 'orderBy', 'assetType', 'textSearchType'].includes(key)) return prev
         if(key === 'paramsInTextSearch' && state.searchParams[key]) {
             prev.push({
                 label: 'search.paramsInTextSearch',

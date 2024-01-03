@@ -105,9 +105,14 @@ const emits = defineEmits(['filterChange', 'loadingChange'])
     function handleSortChange({ column, prop, order }: any) {
         state.sortParams = order ? {
             orderBy: prop,
-            isDesc: order === 'descending' ? true : false
+            isDesc: order === 'descending'
         } : {}
         getList({ ...state.searchParams, ...pageParams })
+
+        emits('filterChange', {
+            'orderBy': order ? prop : '',
+            'isDesc': order === 'descending'
+        })
     }
 // #endregion
 async function handleDblclick (row: any) {
@@ -198,7 +203,7 @@ function handleSearch(searchParams: any) {
 }
 const documentTypeFilterPopover = ref()
 function handleFilterChange(key: string, value: any) {
-    emits('filterChange', key, value)
+    emits('filterChange', {[key]: value})
     documentTypeFilterPopover.value.hide()
     state.searchParams = { ...state.searchParams, [key]: value }
     getList({...state.searchParams, currentPageIndex: 0, pageSize: pageParams.pageSize })

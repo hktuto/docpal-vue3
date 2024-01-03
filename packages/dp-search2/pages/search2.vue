@@ -44,8 +44,8 @@ async function handleSetSearchParams(searchParams: any) {
     await SearchBar2Ref.value.handleChangeParams({...searchParams}, true)
     SearchBar2Ref.value.handleSearch()
 }
-function handleFilterChange(key: string, value: any) {
-    SearchBar2Ref.value.handleChangeParams({[key]: value})
+function handleFilterChange(searchParams: any) {
+    SearchBar2Ref.value.handleChangeParams({ ...searchParams })
 }
 const SearchRecentDocRef = ref()
 const SearchRecentSearchRef = ref()
