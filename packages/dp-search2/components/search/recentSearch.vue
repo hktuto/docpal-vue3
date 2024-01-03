@@ -21,6 +21,9 @@
 </template>
 <script lang="ts" setup>
 import { GetRecentSearchPageApi } from "dp-api";
+import { 
+    getConditionStore, 
+} from '../../utils/searchBar2'
 const emits = defineEmits(['setSearchParams'])
 
 const pageParams = reactive({
@@ -30,7 +33,8 @@ const pageParams = reactive({
 const state = reactive<any>({
     loading: false,
     recentSearchs: [],
-    showMore: false
+    showMore: false,
+    conditionStore: {},
 })
 async function getRecentSearchPage() {
     pageParams.pageNum ++
@@ -49,10 +53,9 @@ function hadnleRefresh() {
     getRecentSearchPage()
 }
 function getI18n(value: any, key:string) {
-    console.log(value, key);
     if(!value) return '-'
     const _value = value instanceof Array ? value : [value]
-    if(['height','width','duration','assetType','size','modified'].includes(key)) {
+    if(['height','width','duration','assetType','size','modified','textSearchType'].includes(key)) {
         return _value.map(v => $t(`searchType.${v}`)).join(',')
     } else if(['orderBy'].includes(key)) {
         return _value.map(v => $t(`search.${v}`)).join(',')
@@ -60,10 +63,19 @@ function getI18n(value: any, key:string) {
     else if(['isDesc'].includes(key)) {
         return _value.map(v => $t(`searchType.desc${v}`)).join(',')
     }
+    else if(['collections'].includes(key) && state.conditionStore[key]) {
+        const conditionLabels = _value.reduce((prev, v) => {
+            const optionItem = state.conditionStore[key].optionItems.find((oItem: any) => oItem.value === v)
+            if (optionItem) prev.push(optionItem.label)
+            return prev
+        }, []);
+        return conditionLabels.join(',')
+    }
     return _value.join(',')
 }
-onMounted(() => {
+onMounted(async() => {
     getRecentSearchPage()
+    state.conditionStore = await getConditionStore()
 })
 defineExpose({
     hadnleRefresh
