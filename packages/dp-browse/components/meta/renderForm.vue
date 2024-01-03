@@ -320,6 +320,7 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
             white-space: -moz-pre-wrap; /* Mozilla,since1999 */
             white-space: -pre-wrap; /* Opera4-6 */
             white-space: -o-pre-wrap;
+            word-break: break-all;
         }
     }
 }

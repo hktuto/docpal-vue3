@@ -92,6 +92,9 @@ import { WorkflowAttachmentDownloadApi } from 'dp-api'
 </script>
 
 <style lang="scss" scoped>
+.formContainer {
+    overflow-x: hidden;
+}
 :deep(.el-form-item__content>div) {
     width: 100%;
     .el-date-editor {

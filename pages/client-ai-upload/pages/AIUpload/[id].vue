@@ -217,7 +217,7 @@ onMounted(async() => {
         height: 100%;
         overflow: auto;
     }
-    .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto;}
+    .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto; overflow-x: hidden;}
     .main-right { grid-area: 1 / 3 / 2 / 4; min-width: clamp(320px, 400px, min(50vw, 640px)); }
     .upload-footer{
         grid-area: 2 / 1 / 3 / 4;
