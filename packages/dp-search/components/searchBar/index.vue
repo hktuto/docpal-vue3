@@ -107,7 +107,7 @@ function getSearchTag(tag: string) {
                 item = $t('searchType.'+item)
                 break;
             case 'includeFolder':
-                if (item || item === false) item = item ? $t('searchType_includeFolder_1') : $t('searchType_includeFolder_0')
+                if (item || item === false) item = item ? $t('searchType.includeFolder_1') : $t('searchType.includeFolder_0')
                 break
             case 'collections':
                 item = state.collectionMap[item] ? state.collectionMap[item] : item

@@ -64,7 +64,7 @@ export const getAggregation = async (aggregation?, searchParams?) => {
                 break
             case 'includeFolder_agg':
                 prev[newKey] = aggregationItem.map((option) => ({
-                    label: option.key === 'notInclude' ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1'),
+                    label: option.key === 'notInclude' ? $t('searchType.includeFolder_0') : $t('searchType.includeFolder_1'),
                     value: option.key === 'notInclude' ? 'false' : 'true'
                 }))
                 break
@@ -193,9 +193,9 @@ export const GetSTextSearchTypesApi = async() => {
 }
 export const GetSAssetTypeApi = async() => {
     return [
-        { label: $t('searchType_Picture'), value: 'Picture' },
-        { label: $t('searchType_Video'), value: 'Video' },
-        { label: $t('searchType_Audio'), value: 'Audio' }
+        { label: $t('searchType.Picture'), value: 'Picture' },
+        { label: $t('searchType.Video'), value: 'Video' },
+        { label: $t('searchType.Audio'), value: 'Audio' }
     ]
 }
 export const GetSTypesApi = async() => {
@@ -250,27 +250,27 @@ export const GetSearchExtendsApi = async(assetType, key: width | height | durati
 }
 export const GetSModifiedDateApi = async() => {
     return [
-        { label: $t('searchType_last24h'), value: 'last24h' },
-        { label: $t('searchType_lastWeek'), value: 'lastWeek' },
-        { label: $t('searchType_lastMonth'), value: 'lastMonth' },
-        { label: $t('searchType_lastYear'), value: 'lastYear' },
-        { label: $t('searchType_priorToLastYear'), value: 'priorToLastYear' }
+        { label: $t('searchType.last24h'), value: 'last24h' },
+        { label: $t('searchType.lastWeek'), value: 'lastWeek' },
+        { label: $t('searchType.lastMonth'), value: 'lastMonth' },
+        { label: $t('searchType.lastYear'), value: 'lastYear' },
+        { label: $t('searchType.priorToLastYear'), value: 'priorToLastYear' }
     ]
 }
 export const GetSSizeApi = async() => {
     return [
-        { label: $t('searchType_100'), value: '100' },
-        { label: $t('searchType_1000'), value: '1000' },
-        { label: $t('searchType_10000'), value: '10000' },
-        { label: $t('searchType_100000'), value: '100000' },
-        { label: $t('searchType_1000000'), value: '1000000' }
+        { label: $t('searchType.100'), value: '100' },
+        { label: $t('searchType.1000'), value: '1000' },
+        { label: $t('searchType.10000'), value: '10000' },
+        { label: $t('searchType.100000'), value: '100000' },
+        { label: $t('searchType.1000000'), value: '1000000' }
     ]
 }
 
 export const GetSSIncludeFolderApi = async() => {
     return [
-        { label: $t('searchType_includeFolder_1'), value: 'true' },
-        { label: $t('searchType_includeFolder_0'), value: 'false' },
+        { label: $t('searchType.includeFolder_1'), value: 'true' },
+        { label: $t('searchType.includeFolder_0'), value: 'false' },
     ]
 }
 export const GetSCollectionsApi = async() => {

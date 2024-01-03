@@ -2,7 +2,9 @@
     <NuxtLayout class="fit-height withPadding bc-grey" :backPath="route.query.searchBackPath" :showSearch="false">
         <div :class="['search-page',{ 'search-page-narrow': !state.expanded}]">
             <div class="search-container">
-                <SearchBar2 ref="SearchBar2Ref" @search="handleSearch"></SearchBar2>
+                <SearchBar2 ref="SearchBar2Ref" :exportButton="state.showExportButton" 
+                    @search="handleSearch"
+                    @export="handleExport"></SearchBar2>
                 <SearchTable ref="SearchTableRef" @filterChange="handleFilterChange"
                     @loadingChange="handleLodingChange"></SearchTable>
             </div>
@@ -27,6 +29,7 @@ import { } from 'dp-api'
     const state = reactive<any>({
         expanded: true,
         loading: false,
+        showExportButton: false
     })
 // #endregion
 
@@ -46,13 +49,15 @@ function handleFilterChange(key: string, value: any) {
 }
 const SearchRecentDocRef = ref()
 const SearchRecentSearchRef = ref()
-function handleLodingChange(loading: boolean) {
+function handleLodingChange(loading: boolean, showExportButton: boolean = false) {
+    state.showExportButton = showExportButton
     SearchBar2Ref.value.setLoading(loading)
     if(!loading) {
         // SearchRecentDocRef.value.hadnleRefresh()
         SearchRecentSearchRef.value.hadnleRefresh()
     }
 }
+function handleExport() {}
 onMounted(() => {
 })
 </script>

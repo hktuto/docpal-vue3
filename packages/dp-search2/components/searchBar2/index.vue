@@ -12,7 +12,7 @@
             <el-button type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
                 <el-icon class="el-icon--right"><Search /></el-icon>
             </el-button>
-            <el-button v-if="exportButton" type="primary" @click="emits('export')">{{ $t('search.export') }}</el-button>
+            <el-button v-if="exportButton" type="primary" @click="handleExport">{{ $t('search.export') }}</el-button>
         </div>
         <SearchBar2Suggestion :inputValue="state.inputValue" 
             :suggestList="state.suggestList"
@@ -29,6 +29,7 @@
                 @change="getTags"/>
         </div>
     </div>
+    <SearchExportDialog ref="SearchDownloadDialogRef" />
 </template>
 <script lang="ts" setup>
 import { ArrowDownBold, Search  } from '@element-plus/icons-vue';
@@ -158,6 +159,10 @@ async function init(assetType?: any) {
 function setLoading(loading: boolean = false) {
     state.loading = loading
 
+}
+const SearchDownloadDialogRef = ref()
+function handleExport() {
+    SearchDownloadDialogRef.value.handleOpen({ ...state.searchParams, ...searchConfig })
 }
 onMounted(() => {
     init()

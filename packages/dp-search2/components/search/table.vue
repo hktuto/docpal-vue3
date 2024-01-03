@@ -96,7 +96,7 @@ const emits = defineEmits(['filterChange', 'loadingChange'])
             state.options.paginationConfig.total = 0
         }
         state.loading = false
-        emits('loadingChange', false)
+        emits('loadingChange', false, state.options.paginationConfig.total !== 0)
     }
     function handlePaginationChange (page: number, pageSize: number) {
         if(!pageSize) pageSize = pageParams.pageSize
