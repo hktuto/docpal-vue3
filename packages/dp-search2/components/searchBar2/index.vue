@@ -9,7 +9,7 @@
                 @change="handleChangeParams"
                 @handleClose="handleRemoveParams"/>
             <el-input v-model="state.inputValue" style="min-width: 100px;" clearable></el-input>
-            <el-button type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
+            <el-button style="z-index: 101;" type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
                 <el-icon class="el-icon--right"><Search /></el-icon>
             </el-button>
             <el-button v-if="!!state.dynamicTags && state.dynamicTags.length !== 0" type="primary" @click="handleExport">{{ $t('search.export') }}</el-button>
