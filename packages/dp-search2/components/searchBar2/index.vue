@@ -75,7 +75,13 @@ function handleClearInputValue() {
     // setTimeout(() => { state.inputValue = '' }, 200)
 }
 async function handleChangeParams(params: any, reset: boolean = false) {
-    if (reset)  state.searchParams = { }
+    if (reset)  {
+        state.searchParams = { }
+        searchConfig.assetType = ''
+        searchConfig.textSearchType = ''
+        searchConfig.orderBy = ''
+        searchConfig.isDesc = ''
+    }
     if (params.textSearchType) {
         searchConfig.textSearchType = params.textSearchType
         delete params.textSearchType
@@ -124,8 +130,6 @@ function getTags () {
                                 [state.searchParams[key]] : 
                                 ''
             if(tagItem) {
-                console.log(key, tagItem);
-                
                 // 获取翻译
                 if(['type', 'size', 'modified', 'collections'].includes(key)) {
                     const optionItems = state.conditionStore[key].optionItems

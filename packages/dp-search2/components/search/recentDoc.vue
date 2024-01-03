@@ -3,7 +3,7 @@
         <h3>{{ $t('search.recentDocument') }}</h3>
         <div class="main">
             <div v-for="(item,index) in state.recentDocuments" :key="`${index}-${item.id}`" class="flex-x-start doc-card"
-                @click="handlePreview(item)">
+                @dblclick="handlePreview(item)">
                 <BrowseItemIcon class="icon el-icon--left" :type="item.isFolder ? 'folder' : 'file'" :mimeType="item.mimeType" status="general"/>
                 <div>{{ item.name }}</div>
             </div>

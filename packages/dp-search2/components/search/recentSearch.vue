@@ -84,11 +84,15 @@ defineExpose({
 <style lang="scss" scoped>
 .el-card {
     margin-bottom: var(--app-padding);
+    cursor: pointer;
     :deep(.el-card__body) {
         padding: var(--app-padding);
     }
     .el-divider {
         margin: var(--app-padding) 0;
+    }
+    &:hover{
+        background-color: var(--primary-color);
     }
 }
 .el-tag {
