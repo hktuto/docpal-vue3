@@ -4,7 +4,7 @@
             <div class="search-container">
                 <SearchBar2 ref="SearchBar2Ref" :exportButton="state.showExportButton" 
                     @search="handleSearch"
-                    @export="handleExport"></SearchBar2>
+                    @setSearchParams="handleSetTableSearchParams"></SearchBar2>
                 <SearchTable ref="SearchTableRef" @filterChange="handleFilterChange"
                     @loadingChange="handleLodingChange"></SearchTable>
             </div>
@@ -45,6 +45,8 @@ async function handleSetSearchParams(searchParams: any) {
     SearchBar2Ref.value.handleSearch()
 }
 function handleFilterChange(searchParams: any) {
+    console.log({ ...searchParams });
+    
     SearchBar2Ref.value.handleChangeParams({ ...searchParams })
 }
 const SearchRecentDocRef = ref()
@@ -57,7 +59,10 @@ function handleLodingChange(loading: boolean, showExportButton: boolean = false)
         SearchRecentSearchRef.value.hadnleRefresh()
     }
 }
-function handleExport() {}
+
+function handleSetTableSearchParams(searchParams: any) {
+    SearchTableRef.value.setSearchParams(searchParams)
+}
 onMounted(() => {
 })
 </script>

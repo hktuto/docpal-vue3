@@ -212,10 +212,13 @@ function getLogicalPath(row: any) {
     if(!row || !row.logicalPath) return ''
     return '/' + row.logicalPath.split('/').shift()
 }
+function setSearchParams(searchParams: any) {
+    state.searchParams = searchParams
+}
 onMounted(async() => {
     state.conditionStore = await getConditionStore()
 })
-defineExpose({ handleSearch })
+defineExpose({ handleSearch, setSearchParams })
 </script>
 
 <style lang="scss" scoped>

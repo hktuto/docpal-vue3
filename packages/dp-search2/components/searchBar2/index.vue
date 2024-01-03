@@ -39,7 +39,7 @@ import {
     getSuggestList
 } from '../../utils/searchBar2'
 const props = defineProps(['exportButton'])
-const emits = defineEmits(['export', 'search'])
+const emits = defineEmits(['export', 'search', 'setSearchParams'])
 const searchConfig = reactive<any>({
     assetType: '',
     textSearchType: 'full text search',
@@ -58,8 +58,6 @@ const state = reactive<any>({
     expanded: false
 })
 function handleAdoptSuggestion(key: string, value: any) {
-    console.log(value);
-    
     if(key !== 'paramsInTextSearch') {
         const isMultiple = state.conditionStore[key].max !== 1
         state.searchParams[key] = isMultiple ? [value] : value
@@ -67,16 +65,15 @@ function handleAdoptSuggestion(key: string, value: any) {
     else {
         state.searchParams[key] = value
     }
-    console.log(state.searchParams, 'handleAdoptSuggestion');
-    
     getTags()
+    emits('setSearchParams', { ...state.searchParams, ...searchConfig})
     state.inputValue = ''
 }
 function handleClearInputValue() {
     // setTimeout(() => { state.inputValue = '' }, 200)
 }
 async function handleChangeParams(params: any, reset: boolean = false) {
-    console.log(params);
+    console.log({params});
     
     if (reset)  {
         state.searchParams = { }
@@ -102,8 +99,8 @@ async function handleChangeParams(params: any, reset: boolean = false) {
         searchConfig.isDesc = params.isDesc
         delete params.isDesc
     }
-    
     state.searchParams = { ...state.searchParams, ...params}
+    emits('setSearchParams', { ...state.searchParams, ...searchConfig})
     getTags()
 }
 function handleSearch() {
