@@ -3,12 +3,13 @@
     <div :class="['searchBar-container', {'searchBar-container-absolute': state.inputValue || state.expanded }]" @mouseleave="handleClearInputValue">
         <div class="searchBar-main">
             <SearchBar2AssetType v-model:assetType="searchConfig.assetType" @update:assetType="init(searchConfig.assetType)"/>
-            <searchBar2ConditionTag :dynamicTags="state.dynamicTags"
+            <searchBar2ConditionTag
+                :dynamicTags="state.dynamicTags"
                 :conditionStore="state.conditionStore"
                 :textSearchType="searchConfig.textSearchType"
                 @change="handleChangeParams"
                 @handleClose="handleRemoveParams"/>
-            <el-input v-model="state.inputValue" style="min-width: 100px;" clearable></el-input>
+            <el-input v-model="state.inputValue" style="min-width: 100px;" @keyup.enter="inputPressEnterHandler"  clearable></el-input>
             <el-button style="z-index: 101;" type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
                 <el-icon class="el-icon--right"><Search /></el-icon>
             </el-button>
@@ -71,6 +72,16 @@ function handleAdoptSuggestion(key: string, value: any) {
 }
 function handleClearInputValue() {
     // setTimeout(() => { state.inputValue = '' }, 200)
+}
+
+function inputPressEnterHandler(){
+  if(!state.inputValue) return
+  console.log('inputPressEnterHandler', state.inputValue)
+  state.searchParams['paramsInTextSearch'] = state.inputValue
+  getTags()
+  emits('setSearchParams', { ...state.searchParams, ...searchConfig})
+  state.inputValue = ''
+  handleSearch();
 }
 async function handleChangeParams(params: any, reset: boolean = false) {
     console.log({params});
