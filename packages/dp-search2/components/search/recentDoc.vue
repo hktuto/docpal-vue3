@@ -29,6 +29,7 @@ async function getRecentDocumentPage() {
     const { entryList, totalSize } = await GetRecentDocumentPageApi(pageParams)
     state.recentDocuments.push(...entryList)
     state.showMore = state.recentDocuments.length < totalSize
+  state.loading = false
 }
 function handlePreview(row: any) {
     openFileDetail(row.id, {
