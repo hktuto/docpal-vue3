@@ -103,6 +103,7 @@ export async function getConditionStore(assetType?: string): Promise<Search.cond
     }
     return result
 }
+// 获取建议精度关键词列表
 export function getSuggestKeywordList(conditionStore: Search.conditionMap): string[] {
     return Object.keys(conditionStore).reduce((prev: string[], key: string) => {
         const item = conditionStore[key]
