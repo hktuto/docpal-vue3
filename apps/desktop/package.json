@@ -1,14 +1,14 @@
 {
   "name": "desktop",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.2.9",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
     "app:dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
-    
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
-    "build": "pnpm generate && electron-builder",
+    "build": "nuxt build --dotenv ../../.env.deploy.dev",
+    "build:electron": "nuxt build && electron-builder",
     "build:debug": "tauri build --debug"
   },
   "dependencies": {
@@ -21,9 +21,9 @@
     "@vitejs/plugin-vue": "^4.2.3",
     "electron": "^28.1.0",
     "electron-builder": "^24.9.1",
+    "nuxt": "3.8.2",
     "nuxt-electron": "^0.7.0",
     "sass": "^1.58.0",
-    "nuxt": "^3.8.2",
     "typescript": "^5.0.2",
     "vite": "^5.0.0",
     "vite-plugin-electron": "^0.15.5",

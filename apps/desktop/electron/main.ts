@@ -23,10 +23,11 @@ function bootstrap() {
   })
 
   if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL)
+    win.loadURL("http://localhost:3000")
     win.webContents.openDevTools()
   } else {
     win.loadFile(path.join(process.env.VITE_PUBLIC!, 'index.html'))
+    win.webContents.openDevTools()
   }
 }
 
