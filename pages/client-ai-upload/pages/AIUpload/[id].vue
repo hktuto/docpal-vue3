@@ -140,10 +140,12 @@ async function handleDiscard () {
     formData.append('userId', userId)
     formData.append('uploadId', route.params.id)
     await CancelUploadAIApi(formData)
-    router.push(state.backPath)
+    router.back()
+    // router.push(state.backPath)
 }
 function handleClose() {
-    router.push(state.backPath)
+  router.back()
+    // router.push(state.backPath)
 }
 async function handleSubmit () {
     const nodeMap = treeRef.value!.store.nodesMap
@@ -179,7 +181,8 @@ async function handleSubmit () {
             uploadId: route.params.id,
             fileConfirmDTOList: data
         })
-        router.push(state.backPath)
+      router.back()
+        // router.push(state.backPath)
     } catch (error) {
         console.log('Validate fail')
     }
