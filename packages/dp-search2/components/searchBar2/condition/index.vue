@@ -6,7 +6,7 @@
             @change="handleChange">
             <template v-for="item in state._optionItems">
                 <template v-if="item.children">
-                    <el-checkbox :label="item.label" disabled />
+                    <el-checkbox :label="item.label" class="parent-checkbox" />
                     <el-checkbox v-for="cItem in item.children" :key="cItem.value" :label="cItem.value" > {{ cItem.label }} </el-checkbox>
                 </template>
                 <el-checkbox v-else :label="item.value"> {{ item.label }} </el-checkbox>
@@ -53,15 +53,18 @@ watch(() => props.modelValue, (val: any) => {
     } else {
         state.chackList = []
     }
+}, {
+    immediate: true
 })
 watch(() => props.optionItems, (val: any) => {
-    state._optionItems = [...val]
+    if(val) state._optionItems = [...val]
 }, {
     immediate: true
 })
 </script>
 <style lang="scss" scoped>
 .checkbox-group-container {
+    overflow: hidden;
     // border-top: 1px dashed #DBE6EE;
     .checkbox-title {
         color: #333;
@@ -74,20 +77,33 @@ watch(() => props.optionItems, (val: any) => {
         display: flex;
         flex-direction: column;
         margin-top: var(--app-padding);
+        
+        width: 100%;
         .el-checkbox {
             padding: 4px 0;
         }
     }
 }
-.el-checkbox.is-disabled {
+.parent-checkbox {
     :deep(.el-checkbox__input) {
         opacity: 0;
+    }
+    :deep(.el-checkbox__label) {
+        color: #333;
+        font-size: 18px;
+        line-height: 32px;
+        padding-top: var(--app-padding);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        display: block;
     }
 }
 .h-200 {
     .el-checkbox-group {
         max-height: 200px;
         overflow: auto;
+        // overflow-x: hidden;
     }
 }
 </style>

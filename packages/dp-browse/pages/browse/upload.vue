@@ -43,7 +43,7 @@
               <div class="space"></div>
                 <div>
                     <el-button @click.native="handleDiscard">{{$t('discard')}}</el-button>
-                    <el-button @click.native="handleSubmit">{{$t('confirm')}}</el-button>
+                    <el-button @click.native="handleSubmit">{{$t('dpButtom_confirm')}}</el-button>
                 </div>
             </div>
         </main>

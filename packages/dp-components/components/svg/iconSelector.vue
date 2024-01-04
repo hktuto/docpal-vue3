@@ -16,7 +16,7 @@
                 <div class="flex-x-start">{{$t('selectedSvg')}}:<SvgIcon class="el-icon--right" :src="_src" /></div>
                 <div>
                     <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
-                    <el-button type="primary" @click="handleConfirm">{{$t('confirm')}}</el-button>
+                    <el-button type="primary" @click="handleConfirm">{{$t('dpButtom_confirm')}}</el-button>
                 </div>
             </div>
         </template>

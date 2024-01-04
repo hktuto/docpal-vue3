@@ -71,17 +71,17 @@ const state = reactive({
         'tags'
     ],
     i18nMap: {
-        'paramsInTextSearch': 'search_keyword',
-        'textSearchType': 'searchType',
-        'assetType': 'search_assetType',
-        'type': 'search_documentType',
-        'creator': 'search_authors',
-        'authors': 'search_contributors',
-        'includeFolder': 'search_includeFolder',
-        'modified': 'search_modificationDate',
-        'size': 'search_size',
-        'collections': 'search_collections',
-        'tags': 'search_tags',
+        'paramsInTextSearch': 'search.paramsInTextSearch',
+        'textSearchType': 'search.textSearchType',
+        'assetType': 'search.assetType',
+        'type': 'search.documentType',
+        'creator': 'search.authors',
+        'authors': 'search.contributors',
+        'includeFolder': 'search.includeFolder',
+        'modified': 'search.modificationDate',
+        'size': 'search.size',
+        'collections': 'search.collections',
+        'tags': 'search.tags',
     },
     selectedMenuItem: '',
     collectionMap: {}
@@ -104,10 +104,10 @@ function getSearchTag(tag: string) {
             case 'textSearchType':
             case 'modified':
             case 'size':
-                item = $t('searchType_'+item)
+                item = $t('searchType.'+item)
                 break;
             case 'includeFolder':
-                if (item || item === false) item = item ? $t('searchType_includeFolder_1') : $t('searchType_includeFolder_0')
+                if (item || item === false) item = item ? $t('searchType.includeFolder_1') : $t('searchType.includeFolder_0')
                 break
             case 'collections':
                 item = state.collectionMap[item] ? state.collectionMap[item] : item

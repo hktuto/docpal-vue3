@@ -52,7 +52,7 @@
     <div class="flex-x-end" style="text-align: right; margin: 0">
       <el-button size="small" text @click="state.deletePopoverShow = false">{{$t('cancelText')}}</el-button>
       <el-button size="small" type="primary" @click="handelDelete">
-        {{$t('confirm')}}
+        {{$t('dpButtom_confirm')}}
       </el-button>
     </div>
     <template #reference>

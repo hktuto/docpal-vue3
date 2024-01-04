@@ -8,7 +8,7 @@
             <p>{{$t('file_resetVersionTip')}} v{{version}}</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="popoverShow = false">{{$t('cancelText')}}</el-button>
-              <el-button type="primary" size="mini" @click="handleRestore()">{{$t('confirm')}}</el-button>
+              <el-button type="primary" size="mini" @click="handleRestore()">{{$t('dpButtom_confirm')}}</el-button>
             </div>
           </div>
           <template #reference>

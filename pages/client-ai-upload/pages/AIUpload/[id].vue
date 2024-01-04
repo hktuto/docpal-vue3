@@ -30,13 +30,16 @@
                 <MetaRenderForm ref="MetaFormRef" mode="ai" @formChange="handleMetaChange"></MetaRenderForm>
             </div>
         </div>
-        <UploadStructurePreview class="main-right" ref="previewRef" />
+      <div v-if="state.selectedDoc.id" class="main-right">
+        <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
+      </div>
+<!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
             <div class="space"></div>
             <div>
                 <el-button :loading="state.submitLoading" type="danger" @click.native="handleDiscard">{{$t('ai.cancelPatch')}}</el-button>
                 <el-button :loading="state.submitLoading" type="info" @click.native="handleClose">{{$t('common_close')}}</el-button>
-                <el-button :loading="state.submitLoading" type="primary" @click.native="handleSubmit">{{$t('confirm')}}</el-button>
+                <el-button :loading="state.submitLoading" type="primary" @click.native="handleSubmit">{{$t('dpButtom_confirm')}}</el-button>
             </div>
         </div>
     </main>
@@ -214,15 +217,18 @@ onMounted(async() => {
         height: 100%;
         overflow: auto;
     }
-    .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto;}
-    .main-right { grid-area: 1 / 3 / 2 / 4; }
+    .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto; overflow-x: hidden;}
+    .main-right { grid-area: 1 / 3 / 2 / 4; min-width: clamp(320px, 400px, min(50vw, 640px)); }
     .upload-footer{
         grid-area: 2 / 1 / 3 / 4;
         display: flex;
         flex-flow: row wrap;
         gap: var(--app-padding);
     }
-    @media(max-width: 1024px) {
+  @media(max-width: 640px) {
+    .main-right { min-width: 320px }
+  }  
+  @media(max-width: 1024px) {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: min-content 1fr repeat(2, min-content);

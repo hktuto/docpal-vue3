@@ -89,7 +89,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             if(props.mode === 'ai') {
                 state.variables.unshift({
                     name: 'documentType',
-                    label: $t('search_documentType'),
+                    label: $t('search.documentType'),
                     type: 'select',
                     required: true,
                     options: {
@@ -320,6 +320,7 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
             white-space: -moz-pre-wrap; /* Mozilla,since1999 */
             white-space: -pre-wrap; /* Opera4-6 */
             white-space: -o-pre-wrap;
+            word-break: break-all;
         }
     }
 }

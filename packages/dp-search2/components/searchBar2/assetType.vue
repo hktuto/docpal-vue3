@@ -28,14 +28,13 @@ const state = reactive({
     ]
 })
 function getCommand(command: string) {
-    return command ? $t(`searchType_${command}`) : $t('search.allFiles')
+    return command ? $t(`searchType.${command}`) : $t('search.allFiles')
 }
 function getIcon(assetType: string) {
     const commandItem = state.commandList.find(item => item.command === assetType)
     return commandItem ? commandItem.icon : '/icons/file/document.svg'
 }
 function handleCommand (command: string) {
-    console.log(command)
     emits('update:assetType', command)
 }
 </script>
