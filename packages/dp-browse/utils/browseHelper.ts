@@ -179,28 +179,21 @@ export function getMimeTypeFromDocument(doc:any):string | undefined{
 
 export function canCollaboraEdit(mimeType:string) {
   // is mimeType is .doc or .docx file
-  if(mimeType.includes('application/vnd.ms-excel')) {
+    // check is doc or docx
+    
+  if(mimeType.includes('application/vnd.ms-excel') || mimeType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
     return true;
   }
-  if(mimeType.includes('application/vnd.ms-powerpoint')) {
+  if(mimeType.includes('application/vnd.ms-powerpoint') || mimeType.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
     return true;
   }
-  if(mimeType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-    return true;
-  }
-  if(mimeType.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
-    return true;
-  }
-  if(mimeType.includes('application/vnd.ms-word')) {
+  if(mimeType.includes('application/vnd.ms-word') || mimeType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document') || mimeType.includes('application/msword') ) {
     return true;
   }
   if(mimeType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
     return true;
   }
   if(mimeType.includes('application/vnd.collabora') || mimeType.includes('application/vnd.collabora-project')) {
-    return true;
-  }
-  if(mimeType.includes('text/plain')) {
     return true;
   }
   return false;
