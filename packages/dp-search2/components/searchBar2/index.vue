@@ -14,17 +14,17 @@
             </el-button>
             <el-button v-if="!!state.dynamicTags && state.dynamicTags.length !== 0" type="primary" @click="handleExport">{{ $t('search.export') }}</el-button>
         </div>
-        <SearchBar2Suggestion :inputValue="state.inputValue" 
+        <SearchBar2Suggestion :inputValue="state.inputValue"
             :suggestList="state.suggestList"
             :suggestKeywordList="state.suggestKeywordList"
             @adoptSuggestion="handleAdoptSuggestion"/>
-        <el-affix target=".searchBar-container" :offset="80">
+        <el-affix target=".searchBar-container" :offset="0">
             <el-button :class="['ArrowDownBold', state.expanded ? 'icon-expanded':'icon-narrow']" :icon="ArrowDownBold" text
                 @click="state.expanded = !state.expanded"></el-button>
         </el-affix>
         <div :class="['condition-container',{ 'condition-container-narrow': !state.expanded}]">
-            <SearchBar2Condition class="h-200" v-for="item in state.conditionStore" :key="item.name" 
-                v-model="state.searchParams[item.name]" 
+            <SearchBar2Condition class="h-200" v-for="item in state.conditionStore" :key="item.name"
+                v-model="state.searchParams[item.name]"
                 v-bind="item"
                 @change="getTags"/>
         </div>
@@ -33,8 +33,8 @@
 </template>
 <script lang="ts" setup>
 import { ArrowDownBold, Search  } from '@element-plus/icons-vue';
-import { 
-    getConditionStore, 
+import {
+    getConditionStore,
     getSuggestKeywordList,
     getSuggestList
 } from '../../utils/searchBar2'
@@ -52,7 +52,7 @@ const state = reactive<any>({
     suggestList: [], // 推荐列表
     suggestFilterList: [], // 推荐列表过滤数据
     suggestKeywordList: [], // 用于精度推荐
-    
+
     dynamicTags: [],
     loading: false,
     expanded: false
@@ -74,7 +74,7 @@ function handleClearInputValue() {
 }
 async function handleChangeParams(params: any, reset: boolean = false) {
     console.log({params});
-    
+
     if (reset)  {
         state.searchParams = { }
         searchConfig.assetType = ''
@@ -124,10 +124,10 @@ function getTags () {
             })
         } else if(key !== 'paramsInTextSearch'){
             const isMultiple = state.conditionStore[key].max !== 1
-            let tagItem: any = state.searchParams[key] ? 
-                                isMultiple ? 
-                                [...state.searchParams[key]] : 
-                                [state.searchParams[key]] : 
+            let tagItem: any = state.searchParams[key] ?
+                                isMultiple ?
+                                [...state.searchParams[key]] :
+                                [state.searchParams[key]] :
                                 ''
             if(tagItem) {
                 // 获取翻译
@@ -165,7 +165,7 @@ function handleExport() {
 }
 onMounted(() => {
     init()
-}) 
+})
 defineExpose({
     handleChangeParams, handleSearch, setLoading
 })
@@ -215,10 +215,14 @@ defineExpose({
 .ArrowDownBold {
     display: none;
     position: absolute;
-    bottom: 5px;
+    top: 20px;
     right: 50%;
     cursor: pointer;
     color: #b1bac3;
+    &.icon-expanded{
+      top: initial;
+      bottom:5px;
+    }
 }
 .condition-container {
     display: grid;
