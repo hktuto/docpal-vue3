@@ -10,7 +10,7 @@ import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
 import { trashApi, CheckShareInternalApi } from 'dp-api'
 const props = defineProps<{
-    selected: any
+    selectedList: any
 }>()
 const emits = defineEmits(['success'])
 async function deleteSelected () {
@@ -29,7 +29,7 @@ async function deleteSelected () {
             duration: 0,
             position: 'bottom-right'
         });
-        const params = props.selected.map(item => ({ idOrPath: item.id }))
+        const params = props.selectedList.map(item => ({ idOrPath: item.id }))
         const response = await trashApi(params)
         emits('success')
         noti.close()
@@ -44,7 +44,7 @@ async function deleteSelected () {
 async function checkAllShareInternal () {
     let msg = ''
     let pList = []
-    props.selected.forEach((element) => {
+    props.selectedList.forEach((element) => {
         pList.push(checkShareInternal(element))
     });
     await Promise.all(pList)
