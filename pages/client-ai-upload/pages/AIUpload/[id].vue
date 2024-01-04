@@ -30,8 +30,9 @@
                 <MetaRenderForm ref="MetaFormRef" mode="ai" @formChange="handleMetaChange"></MetaRenderForm>
             </div>
         </div>
-      <div v-if="state.selectedDoc.id" class="main-right">
-        <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
+      <div v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" class="main-right">
+<!--        {{ checkExtension(state.selectedDoc.fileRelativePath) }}-->
+        <CollaboraViewer  :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
       </div>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
@@ -143,9 +144,23 @@ async function handleDiscard () {
     router.back()
     // router.push(state.backPath)
 }
-function handleClose() {
+  function handleClose() {
   router.back()
     // router.push(state.backPath)
+}
+
+function checkExtension(filename:string) {
+    const ext = filename.split('.').pop()
+    console.log(ext)
+    const collaboraList = ['doc','docx','xls','xlsx','ppt','pptx','pdf','jpg','png','jpeg','tif']
+    const videoList = ['mp4']
+    if(videoList.includes(ext)) {
+        return 'video'
+    }
+    if(collaboraList.includes(ext)) {
+        return 'collabora'
+    }
+    return 'notSupport'
 }
 async function handleSubmit () {
     const nodeMap = treeRef.value!.store.nodesMap
