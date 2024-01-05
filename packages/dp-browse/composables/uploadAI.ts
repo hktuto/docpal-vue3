@@ -88,7 +88,7 @@ export const useUploadAIStore = () => {
     }
     function getFileName(name) {
         const names = name.split('.')
-        names.pop()
+        if(names.length > 1) names.pop()
         return names.join('.')
     }
     async function handleCreateDocument (doc: any, parentPath: string, uploadRequestItem: uploadRequest) {
@@ -148,6 +148,7 @@ export const useUploadAIStore = () => {
         getUploadFiles,
         getUploadRequestList,
         uploadState,
-        arrayToTree
+        arrayToTree,
+        getFileName
     }
 }

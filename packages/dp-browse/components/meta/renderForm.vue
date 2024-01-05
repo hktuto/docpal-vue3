@@ -98,6 +98,15 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                         filterable: true
                     }
                 })
+                state.variables.unshift({
+                    name: 'docName',
+                    label: $t('tableHeader_name'),
+                    type: 'input',
+                    required: true,
+                    options: {
+                        clearable: false,
+                    }
+                })
             }
             nextTick(async () => {
                 const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
