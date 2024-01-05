@@ -55,7 +55,12 @@ export const UpdateAiDocumentApi = async(params: any) => {
     }).then(res => res.data.data)
     return res
 }
-
+export const CheckFileExistApi = async(params: any) => {
+    const res = await api.post('/nuxeo/document/checkFileExist', params, {
+        timeout: 0,
+    }).then(res => res.data.data.checkFailedList)
+    return res
+}
 export const ReplaceFileAiDocumentApi = async(params: any) => {
     const res = await api.patch('/nuxeo/document/replaceFile/v2', params, {
         timeout: 0,
