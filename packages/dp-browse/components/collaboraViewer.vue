@@ -47,8 +47,8 @@ function toggleMode() {
     // check 
     console.log("Doc_ModifiedStatus", isModified.value)
     if(isModified.value){
-      const confirm = prompt("unsave data will auto save, are you sure?");
-      if(!confirm) return
+      const confirmSave = confirm("Data will auto save when you close, are you sure?");
+      if(!confirmSave) return
       // save 
       xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
         MessageId: "Action_Save",
