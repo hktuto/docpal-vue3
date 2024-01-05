@@ -24,6 +24,7 @@ const token = ref('')
 const xlsxIframe = ref()
 const emit = defineEmits(['saved'])
 async function displayIframe(){
+  console.log("displayIframe")
   iframeReady.value = false;
     token.value = await getOfficeTokenApi(props.docId, props.fileType)
     collaboraUrl.value = officeUrl(props.docId)
@@ -39,7 +40,30 @@ function refresh(){
 
 
 function toggleMode() {
-    mode.value = mode.value === 'view' ? 'edit' : 'view';
+    if(!editing.value) return
+  if(mode.value === 'view') {
+    mode.value = 'edit';
+  } else {
+    // check 
+    console.log("Doc_ModifiedStatus", isModified.value)
+    if(isModified.value){
+      const confirm = prompt("unsave data will auto save, are you sure?");
+      if(!confirm) return
+      // save 
+      xlsxIframe.value.contentWindow.postMessage(JSON.stringify({
+        MessageId: "Action_Save",
+        Values: {
+          DontTerminateEdit: false,
+          DontSaveIfUnmodified: true,
+          Notify:true
+        }
+      }), '*');
+      window.location.reload();
+    }else{
+      mode.value = 'view';
+    }
+    
+  }
 }
 const officeUrl = (docId:string) =>{
     const WOPISrc = `https://${OFFICE_END_POINT}/wopi/files/${docId}?fileType=${props.fileType.toUpperCase()}&readonly=${mode.value === 'view'}`
@@ -47,19 +71,27 @@ const officeUrl = (docId:string) =>{
 }
 
 function gotMessageFromIframe(e:MessageEvent){
-
+  
    const data = e.data !== 'unchanged' ? JSON.parse(e.data) : undefined;
    if(!data) return
+  console.log(data)
    if(data.MessageId === "App_LoadingStatus"){
     console.log('App_LoadingStatus')
      iframeReady.value = true
+     return
+   }
+   if(data.MessageId === "App_LoadingStatus"){
+     // Values.success = load success or not
    }
    if(data.MessageId === "Doc_ModifiedStatus"){
      isModified.value = data.Values.Modified || false
+     return
    }
    
+  isModified.value = false;
    if(data.MessageId === "UI_Save"){
      emit('saved')
+     return
    }
    
 }
@@ -72,7 +104,6 @@ watch(mode, () =>{
     displayIframe()
 })
 watch(docId, ()=>{
-  console.log('doc or editing chagne')
     displayIframe()
 },{
     immediate: true
@@ -87,7 +118,7 @@ defineExpose({
 
 <template>
 <div class="xlsContainer">
-    <div v-if="editable" :class="{editToggleButton:true, iframeReady}" @click="toggleMode">
+    <div  :class="{editToggleButton:true, iframeReady}" @click="toggleMode">
       {{ $t('collabora.'+mode)}} <SvgIcon :src="mode === 'view' ? '/icons/file/edit.svg' : '/icons/close.svg'"  ></SvgIcon>
     </div>
     <form ref="formEl" :action="collaboraUrl" enctype="multipart/form-data" method="post" target="collabora-online-viewer" id="collabora-submit-form">

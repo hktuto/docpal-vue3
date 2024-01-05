@@ -30,10 +30,9 @@
                 <MetaRenderForm ref="MetaFormRef" mode="ai" @formChange="handleMetaChange"></MetaRenderForm>
             </div>
         </div>
-      <div v-if="state.selectedDoc.id" class="main-right">
-        <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
-      </div>
-
+        <div v-if="state.selectedDoc.id" class="main-right">
+            <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
+        </div>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
             <div class="space"></div>
@@ -144,7 +143,8 @@ async function handleDiscard () {
     formData.append('userId', userId)
     formData.append('uploadId', route.params.id)
     await CancelUploadAIApi(formData)
-    router.push(state.backPath)
+    router.back()
+    // router.push(state.backPath)
 }
 function handleClose() {
   router.back()

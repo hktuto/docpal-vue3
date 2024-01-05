@@ -107,7 +107,7 @@ const readerType = computed(() => {
     if(mimeType.includes('image/tiff')) {
       return 'other';
     }
-    if(mimeType.includes('image') || mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator')  ) {
+    if(mimeType.includes('image') || mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator') || mimeType.includes('text')) {
       return 'pdf';
     }
     if(mimeType.includes('video')) {
