@@ -131,22 +131,18 @@ function handleDblclick (row:any, column: any, event: any) {
         return
     }
     state.curDoc = row;
-    if(row.isFolder) {
-      router.push({
-          query: {
-                ...route.query,
-              path: row.path,
-              isFolder: row.isFolder
-          }
-      });
-      return 
-      
-    }
+    router.push({
+      query: {
+        ...route.query,
+        path: row.path,
+        isFolder: row.isFolder
+      }
+    });
     
-    openFileDetail(row.path, {
-      showInfo:true,
-      showHeaderAction:true
-    })
+    // openFileDetail(row.path, {
+    //   showInfo:true,
+    //   showHeaderAction:true
+    // })
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()
