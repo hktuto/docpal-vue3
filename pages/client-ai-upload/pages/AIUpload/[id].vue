@@ -30,7 +30,7 @@
                 <MetaRenderForm ref="MetaFormRef" mode="ai" @formChange="handleMetaChange"></MetaRenderForm>
             </div>
         </div>
-        <div v-if="state.selectedDoc.id" class="main-right">
+        <div v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" class="main-right">
             <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
         </div>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
