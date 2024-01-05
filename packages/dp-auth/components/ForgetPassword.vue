@@ -14,7 +14,7 @@
                 <el-input v-model="form.userId" type="text" @keyup.enter.native="handleSubmit"/>
               </el-form-item>
               <el-button class="fullSize" type="primary" size="large" :block="true" @click="handleSubmit" :loading="loading">
-                      {{ $t('confirm') }}
+                      {{ $t('dpButtom_confirm') }}
               </el-button>
           </template>
         </el-form>

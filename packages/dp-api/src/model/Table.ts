@@ -561,6 +561,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ],
             },
+            { id: '7', slot: 'mimeType', label: 'docInfo.fileExtension' },
             { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
             { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
             {
@@ -1220,11 +1221,13 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SEARCH] : {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
-            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', showOverflowTooltip: true },
-            { id: '3', label: 'tableHeader_type', prop: 'type' },
-            { id: '6', label: 'search_authors', prop: 'createdBy' },
-            { id: '7', label: 'search_contributors', prop: 'properties.dc:contributors',
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true },
+            { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey' },
+            { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue' },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath' },
+            { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true, headerSlot: 'documentTypeHeader', width: 165 },
+            { id: '6', label: 'search.authors', prop: 'createdBy', sortable: true },
+            { id: '7', label: 'search.contributors', prop: 'properties.dc:contributors',
                 formatList: [
                     {
                         "joiner": "",
@@ -1237,7 +1240,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180',
+            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180', sortable: true,
                 formatList: [
                     {
                         "joiner": "",

@@ -7,10 +7,10 @@
             </div>
             <div v-for="item in list" :key="item.id"
                 class="doc-container"
-                @dblclick="handleDblclick(item)" 
+                @dblclick="(event) => handleDblclick(item, event)" 
                 @contextmenu.stop="(event) => handleRightClick(item, event)">
                 <template v-if="item.blobUrl">
-                    <img :src="item.blobUrl" class="thumbnail" @error="imgError" @dblclick="handleDblclick(item)"/>
+                    <img :src="item.blobUrl" class="thumbnail" @error="imgError" @dblclick="(event) => handleDblclick(item, event)"/>
                 </template>
                 <template v-else>
                     <BrowseItemIcon class="folderIcon" :type="item.isFolder ? 'folder' : 'file'" status="general" :mimeType="item.mimeType" />
@@ -18,6 +18,7 @@
                     <div v-else class="clickActor backgroundDrop"></div>
                 </template>
                 <div class="name">{{item.name}}</div>
+                <el-tag v-if="!item.isFolder && item.mimeType" class="doc-extension" effect="dark">{{ mime.extension(item.mimeType) }}</el-tag>
             </div>
         </div>
         
@@ -27,6 +28,7 @@
 <script lang="ts" setup>
 import { DocumentThumbnailGetApi, TABLE, defaultTableSetting } from 'dp-api'
 import {openFileDetail} from "~/utils/browseHelper";
+import * as mime from 'mime-types'
 const route = useRoute()
 const router = useRouter()
 const props = defineProps<{doc:true,list:any[]}>();
@@ -81,7 +83,12 @@ function imgError(event) {
         { immediate: true }
     )
 // #endregion
-function handleDblclick (row:any) {
+function handleDblclick (row:any, evt: any) {
+    if (evt.ctrlKey) {
+        const url = router.resolve({  path: '/browse', query: { path: row.path } })
+        window.open(url.href, '_blank');
+        return
+    }
   if(!row.isFolder) {
     openFileDetail(row.path, {
       showInfo:true,
@@ -178,5 +185,11 @@ function handleRightClick (item, event, isEmpty: boolean = false) {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+.doc-extension {
+    position: absolute;
+    top: -1px;
+    right: -5px;
+    opacity: .8;
 }
 </style>

@@ -53,7 +53,7 @@
                     <el-form-item :label="$t('dpDocument_fileType')" prop="documentType">
                         <el-select v-model="state.selectedRow.documentType" filterable default-first-option
                             @change="handleDocTypeChange(state.selectedRow)">
-                            <el-option v-for="item in fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
+                            <el-option v-for="item in state.fileTypes" :key="item.name" :value="item.name" :label="item.name"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>

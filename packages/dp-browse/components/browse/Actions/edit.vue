@@ -1,6 +1,6 @@
 <template>
    <div>
-     <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog(doc)">
+     <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog">
         <el-tooltip :content="$t('tip.editDocDetail')">
             <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.editDocDetail')"
                 ></SvgIcon> 
@@ -45,20 +45,20 @@ const state = reactive({
     MetaRenderMode: 'ai-edit'
 })
 const MetaFormRef = ref()
-async function openDialog(doc){
-    state.doc = doc
-    form.value.name = doc.name
-    form.value.id = doc.id
-    form.value.path = doc.path
+async function openDialog(){
+    state.doc = props.doc
+    form.value.name = props.doc.name
+    form.value.id = props.doc.id
+    form.value.path = props.doc.path
     dialogOpened.value = true
     nextTick(async() => {
         const analysis = await GetDocumentAiAnalyzeApi(state.doc.id)
-        if(Object.keys(analysis).length === 0) state.MetaRenderMode = 'normal'
-        await MetaFormRef.value.init(doc.type, {
-            aiAnalysis: analysis,
-            aiDocId: doc.id
+        state.MetaRenderMode = analysis.aiId ? 'ai-edit' : 'normal'
+        await MetaFormRef.value.init(props.doc.type, {
+            aiAnalysis: analysis.metaDatas,
+            aiDocId: analysis.aiId
         })
-        MetaFormRef.value.setData(doc.properties)
+        MetaFormRef.value.setData(props.doc.properties)
     })
 }
 async function handleSave(){

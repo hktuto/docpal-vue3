@@ -8,7 +8,7 @@
                     @node-click="handleNodeClick">
                 <template #default="{ node, data }">
                     <div class="flex-x-between tree-item">
-                        <span class="flex-x-start">
+                        <span :class="['flex-x-start', { 'color__danger': state.repearNameIdList.includes(data.id) }]">
                             <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
                             {{data.name}}
                         </span>
@@ -26,17 +26,21 @@
             <div class="flex-x-between" v-show="state.selectedDoc">{{ state.selectedDoc.name }}
                 <el-button type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>
             </div>
-            <div>
+            <div :class="{ 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }">
                 <MetaRenderForm ref="MetaFormRef" mode="ai" @formChange="handleMetaChange"></MetaRenderForm>
             </div>
         </div>
-        <UploadStructurePreview class="main-right" ref="previewRef" />
+        <div v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" class="main-right">
+    <!--        {{ checkExtension(state.selectedDoc.fileRelativePath) }}-->
+            <CollaboraViewer  :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
+        </div>
+<!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
             <div class="space"></div>
             <div>
                 <el-button :loading="state.submitLoading" type="danger" @click.native="handleDiscard">{{$t('ai.cancelPatch')}}</el-button>
                 <el-button :loading="state.submitLoading" type="info" @click.native="handleClose">{{$t('common_close')}}</el-button>
-                <el-button :loading="state.submitLoading" type="primary" @click.native="handleSubmit">{{$t('confirm')}}</el-button>
+                <el-button :loading="state.submitLoading" type="primary" @click.native="handleSubmit">{{$t('dpButtom_confirm')}}</el-button>
             </div>
         </div>
     </main>
@@ -45,13 +49,13 @@
 
 
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
-import { UploadAIDetailApi, ConfirmUploadAIApi, CancelUploadAIApi, DeleteUploadAIApi } from 'dp-api'
+import { ElMessageBox, ElNotification } from 'element-plus'
+import { UploadAIDetailApi, ConfirmUploadAIApi, CancelUploadAIApi, DeleteUploadAIApi, CheckFileExistApi } from 'dp-api'
 import { useDebounceFn } from '@vueuse/core'
 const route = useRoute()
 const router = useRouter()
 const userId:string = useUser().getUserId()
-const { arrayToTree } = useUploadAIStore()
+const { arrayToTree, getFileName } = useUploadAIStore()
 const treeRef = ref()
 const MetaFormRef = ref()
 const previewRef = ref();
@@ -60,16 +64,19 @@ const state = reactive({
     submitLoading: false,
     fileList: [],
     backPath: '/AIUpload',
-    selectedDoc: {}
+    selectedDoc: {},
+    repearNameIdList: []
 })
 
 const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
     state.selectedDoc.properties = deepCopy(formModel)
     state.selectedDoc.fileType = formModel.documentType
+    state.selectedDoc.docName = formModel.docName
+    
     if(fieldName === 'documentType' && newValue !== oldValue && !!oldValue) {
         await MetaFormRef.value.init(state.selectedDoc.fileType, {
             isFolder: state.selectedDoc.isFolder,
-            aiAnalysis: state.selectedDoc.aiAnalysis,
+            aiAnalysis: state.selectedDoc.aiAnalysis || {},
             aiDocId: state.selectedDoc.id
         })
         setTimeout(() => {
@@ -79,7 +86,7 @@ const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
 }
 async function handleNodeClick(row) {
     state.selectedDoc = row
-    if(row.aiAnalysisDocument && !row.aiAnalysis) {
+    if(row.aiAnalysisDocument && !row.aiAnalysis && row.aiAnalysisDocument.metaDatas) {
         row.aiAnalysis = row.aiAnalysisDocument.metaDatas.reduce((prev: any, item) => {
             if(item.label || item.value) {
                 prev[item.name] = {}
@@ -88,18 +95,19 @@ async function handleNodeClick(row) {
             }
             return prev
         }, {})
+        if(!row.aiAnalysis) row.aiAnalysis = {}
         if(row.aiAnalysisDocument.documentType) row.aiAnalysis.documentType = {
             value: row.aiAnalysisDocument.documentType
         }
     }
     await MetaFormRef.value.init(row.fileType, {
         isFolder: row.isFolder,
-        aiAnalysis: row.aiAnalysis,
+        aiAnalysis: row.aiAnalysis || {},
         aiDocId: row.id
     })
     setTimeout(() => {
         if(!row.properties) row.properties = {}
-        MetaFormRef.value.setData({ ...row.properties, documentType: row.fileType})
+        MetaFormRef.value.setData({ ...row.properties, documentType: row.fileType, docName: getFileName(state.selectedDoc.name) })
     });
 }
 function applyAllAi() {
@@ -136,15 +144,31 @@ async function handleDiscard () {
     formData.append('userId', userId)
     formData.append('uploadId', route.params.id)
     await CancelUploadAIApi(formData)
-    router.push(state.backPath)
+    router.back()
+    // router.push(state.backPath)
 }
 function handleClose() {
-    router.push(state.backPath)
+  router.back()
+    // router.push(state.backPath)
+}
+
+function checkExtension(filename:string) {
+    const ext = filename.split('.').pop()
+    const collaboraList = ['doc','docx','xls','xlsx','ppt','pptx','pdf','jpg','png','jpeg','tif']
+    const videoList = ['mp4']
+    if(videoList.includes(ext)) {
+        return 'video'
+    }
+    if(collaboraList.includes(ext)) {
+        return 'collabora'
+    }
+    return 'notSupport'
 }
 async function handleSubmit () {
     const nodeMap = treeRef.value!.store.nodesMap
     const docList: any = []
-    const data = Object.keys(nodeMap).reduce((prev:any,key) => {
+    
+    const fileConfirmDTOList = Object.keys(nodeMap).reduce((prev:any,key) => {
         const nodeItem = { ...nodeMap[key].data }
         if(!nodeItem.properties) nodeItem.properties = {}
         const properties = Object.keys(nodeItem.properties).reduce((prev: any, key) => {
@@ -154,6 +178,8 @@ async function handleSubmit () {
         }, {})
         prev.push({
             id: key,
+            parentId: nodeItem.parentId,
+            docName: nodeItem.docName || getFileName(nodeItem.name),
             metadatas: JSON.stringify(properties),
             documentType: nodeItem.fileType
         })
@@ -165,6 +191,7 @@ async function handleSubmit () {
         return prev
     }, [])
     try {
+        if (await checkFailedListExist(fileConfirmDTOList)) return
         state.submitLoading = true
         const metaValid = await MetaFormRef.value.checkMetaValidate(docList)
         if(!metaValid) {
@@ -173,14 +200,45 @@ async function handleSubmit () {
         await ConfirmUploadAIApi({
             userId,
             uploadId: route.params.id,
-            fileConfirmDTOList: data
+            fileConfirmDTOList
         })
+        // router.back()
         router.push(state.backPath)
     } catch (error) {
         console.log('Validate fail')
     }
     setTimeout(() => { state.submitLoading = false }, 1000)
     
+}
+async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean> {
+    const checkFailedList = await CheckFileExistApi({
+        uploadId: route.params.id,
+        fileCheckList: fileConfirmDTOList.reduce((prev,item) => {
+            if(!item.parentId) prev.push({
+                id: item.id,
+                docName: item.docName
+            })
+            return prev
+        }, [])
+    })
+    state.repearNameIdList = []
+    const fileNames = checkFailedList.reduce((prev, item) => {
+        prev.push(item.docName)
+        state.repearNameIdList.push(item.id)
+        return prev
+    }, [])
+    if(checkFailedList && checkFailedList.length > 0) {
+        const noti = ElNotification({
+            title: 'Duplicate File',
+            message: `A file with the name ${fileNames.join(', ')} already exists in this folder. Please rename the file and try again.`,
+            type: 'warning',
+            duration: 0,
+            onClick() {
+                noti.close()
+            }
+        })
+    }    
+    return checkFailedList && checkFailedList.length > 0
 }
 onMounted(async() => {
     let docList = await UploadAIDetailApi(userId, route.params.id)
@@ -208,16 +266,23 @@ onMounted(async() => {
     grid-row-gap: var(--app-padding);
     position: relative;
     overflow: hidden;
-    .main-left { grid-area: 1 / 1 / 2 / 2; }
-    .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto;}
-    .main-right { grid-area: 1 / 3 / 2 / 4; }
+    .main-left { 
+        grid-area: 1 / 1 / 2 / 2;
+        height: 100%;
+        overflow: auto;
+    }
+    .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto; overflow-x: hidden;}
+    .main-right { grid-area: 1 / 3 / 2 / 4; min-width: clamp(320px, 400px, min(50vw, 640px)); }
     .upload-footer{
         grid-area: 2 / 1 / 3 / 4;
         display: flex;
         flex-flow: row wrap;
         gap: var(--app-padding);
     }
-    @media(max-width: 1024px) {
+  @media(max-width: 640px) {
+    .main-right { min-width: 320px }
+  }  
+  @media(max-width: 1024px) {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: min-content 1fr repeat(2, min-content);
@@ -238,4 +303,9 @@ onMounted(async() => {
 :deep(.el-tree-node.is-current > .el-tree-node__content) {
     background-color: var(--el-tree-node-hover-bg-color);
 } 
+.vform-dp-docName_color__danger {
+    :deep(#vform-dp-docName .el-form-item__label){
+        color: #F56C6C;
+    }
+}
 </style>

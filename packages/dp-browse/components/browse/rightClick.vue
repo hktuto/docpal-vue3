@@ -34,6 +34,9 @@
             <el-menu-item index="docActionRefresh" v-show="state.actions.refresh">
                 <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg"></SvgIcon>
                 {{$t('common_refresh')}}</el-menu-item>
+            <el-menu-item index="docActionNewTab">
+                <SvgIcon class="el-icon--left" src="/icons/file/new-tab.svg"></SvgIcon>
+                {{$t('rightClick.newTab')}}</el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -68,6 +71,7 @@ const state = reactive({
     canManage: false,
     loading: false
 })
+const router = useRouter()
 const userId:string = useUser().getUserId()
 const FileRightClickPopoverRef = ref()
 async function handleRightClick (detail: any) {
@@ -147,7 +151,12 @@ function hidePopover () {
     }
 }
 function handleSelect (command: string) {
-    if(command === 'docActionCopy' || command === 'docActionCut') state.copyItem.path = state.doc.path
+    if (command === 'docActionNewTab') {
+        const url = router.resolve({  path: '/browse', query: { path: state.doc.path } })
+        window.open(url.href, '_blank');
+        return
+    }
+    else if (command === 'docActionCopy' || command === 'docActionCut') state.copyItem.path = state.doc.path
     const data = state.doc
     const ev = new CustomEvent(command,{ detail: data })
     document.dispatchEvent(ev)
