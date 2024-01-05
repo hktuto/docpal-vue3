@@ -31,7 +31,8 @@
             </div>
         </div>
         <div v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" class="main-right">
-            <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
+    <!--        {{ checkExtension(state.selectedDoc.fileRelativePath) }}-->
+            <CollaboraViewer  :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
         </div>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
