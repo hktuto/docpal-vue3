@@ -8,7 +8,6 @@ export default defineNuxtConfig({
     modules:[
         // 'dp/nuxt-session'
         '@pinia/nuxt',
-        'nuxt-proxy'
     ],
     // @ts-ignore
     pinia: {
@@ -27,7 +26,7 @@ export default defineNuxtConfig({
       },
 
         // devProxy:{
-        //   '/api':{
+        //   '/docpalApi':{
         //     target: process.env.PROXY,
         //     changeOrigin: true,
         //     prependPath: true

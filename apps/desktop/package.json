@@ -8,8 +8,8 @@
     "app:dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "build": "nuxt build --dotenv ../../.env.deploy.dev",
-    "build:electron": "nuxt build && electron-builder",
-    "build:debug": "tauri build --debug"
+    "build:electron": "nuxt generate --dotenv ../../.env.deploy.dev && electron-builder",
+    "start" : "node .output/server/index.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.2",

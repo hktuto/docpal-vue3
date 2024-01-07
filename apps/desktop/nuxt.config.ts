@@ -6,9 +6,10 @@ export default defineNuxtConfig({
   extends: [
       '../client'
   ],
+
     modules: ['nuxt-electron'],
     electron: {
-      disableDefaultOptions:true,
+      disableDefaultOptions:false,
         build: [
           {
             // Main-Process entry file of the Electron App.
@@ -25,9 +26,6 @@ export default defineNuxtConfig({
         ],
       },
     //  for local preview dev only
-    nitro:{
-      preset: 'node-server',
-    },
   
 
 })

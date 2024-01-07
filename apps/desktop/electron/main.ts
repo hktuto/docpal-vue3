@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import path from 'path'
 
 process.env.ROOT = path.join(__dirname, '..')
@@ -13,6 +13,8 @@ const preload = path.join(process.env.DIST, 'preload.js')
 
 function bootstrap() {
   win = new BrowserWindow({
+    width: 1024,
+    height: 768,
     webPreferences: {
       preload,
       nodeIntegrationInWorker: true,
@@ -26,9 +28,35 @@ function bootstrap() {
     win.loadURL("http://localhost:3000")
     win.webContents.openDevTools()
   } else {
-    win.loadFile(path.join(process.env.VITE_PUBLIC!, 'index.html'))
+    win.loadFile(process.env.VITE_PUBLIC + '/index.html')
     win.webContents.openDevTools()
   }
 }
 
-app.whenReady().then(bootstrap)
+app.whenReady().then(() => {
+
+  const filter = { urls: ['*://*.wclsolution.com/*'] };
+
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+      filter,
+      (details, callback) => {
+        console.log(details);
+        details.requestHeaders['Origin'] = 'https://app4.wclsolution.com';
+        callback({ requestHeaders: details.requestHeaders });
+      }
+  );
+
+  session.defaultSession.webRequest.onHeadersReceived(
+      filter,
+      (details, callback) => {
+        console.log(details);
+        details.responseHeaders['Access-Control-Allow-Origin'] = [
+          'capacitor-electron://-',
+            '*'
+        ];
+        callback({ responseHeaders: details.responseHeaders });
+      }
+  );
+  
+    bootstrap();
+})
