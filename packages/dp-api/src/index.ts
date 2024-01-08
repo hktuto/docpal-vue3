@@ -3,19 +3,8 @@ import axiosTauriApiAdapter from './tauri';
 
 import tableSettingJson from "./table/setting.json";
 export const api = axios.create({
-    baseURL: '/api',
+    baseURL: 'https://app4.wclsolution.com/api', //TODO : set base url from env
     timeout: 50000,
-    adapter: (config) => {
-        if(window?.__TAURI__){
-            // config.baseURL = undefined
-            if(config.baseURL === '/api'){
-                config.baseURL = undefined
-                config.url = 'https://app4.wclsolution.com/api' + config.url;
-            }
-            return axiosTauriApiAdapter(config);
-        }
-        return axios(Object.assign({}, config, { adapter: undefined }));
-    }
 })
 
 export * from './endpoint';
