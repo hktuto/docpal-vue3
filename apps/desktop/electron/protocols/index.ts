@@ -9,7 +9,7 @@ const handlers:EventHandlers[] = [
     {
         path:'/login',
         handler: protocolLoginHandler
-    }
+    },
 ]
 
 export const protocolHandler = (mainWindow: BrowserWindow, event:any, url:string ) => {
