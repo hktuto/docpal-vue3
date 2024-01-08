@@ -1,0 +1,45 @@
+/**
+ * @see https://www.electron.build/configuration/configuration
+ */
+{
+  "appId": "docpal.wclsolution.com",
+  productName: "DocPal",
+  "asar": false,
+  "directories": {
+    "output": "release/${version}"
+  },
+  "files": [
+    ".output/**/*",
+    "dist-electron"
+  ],
+  "mac": {
+    "artifactName": "${productName}_${version}.${ext}",
+    icon: ".output/public/icon.png",
+    "target": [
+      "dmg"
+    ]
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "artifactName": "${productName}_${version}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false
+  },
+  "protocols":[
+      {
+        "name":"DocPal Protocol",
+        "schemes":["docpal"]
+      }
+    ]
+}
