@@ -210,6 +210,7 @@ defineExpose({ initColumn })
   transform: scale(1);
   transition: transform .2s ease-in-out;
   transform-origin: top right;
+  z-index: 1;
   &:hover {
     transform: scale(1.1);
   }

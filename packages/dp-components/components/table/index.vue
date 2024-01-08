@@ -5,9 +5,7 @@
                 <slot name="preSortButton"></slot>
             </div>
             <slot name="suffixSortButton">
-
             </slot>
-
         </div>
         <div class="dp-table-container--main">
           <template v-if="!isSmallMobile">
@@ -23,6 +21,7 @@
                 @row-dblclick="handleRowDblclick"
                 @cell-click="handleCellClick"
                 @sort-change="handleSortChange"
+                @header-dragend="handleHeaderDragEnd"
                 @expand-change="(row, expandedRows) => emit('expand-change', row, expandedRows)">
                 <template v-for="(col, index) in columns__sub" :key="index">
                     <template v-if="!col.hide">
@@ -57,11 +56,6 @@
                         </TableColumn>
                     </template>
                 </template>
-                <el-table-column v-if="_options.sortKey" :width="40">
-                  <template #header="{ column, $index }">
-                    <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
-                  </template>
-                </el-table-column>
             </el-table>
           </template>
           <template v-else>
@@ -117,16 +111,13 @@
                 @size-change="pageSizeChange"
                 @current-change="currentPageChange" />
         </div>
+        <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
     </div>
 </template>
 <script lang="ts" setup>
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
-
-
-
 const { isSmallMobile, isMobile } = useLayout()
-
 export type SortParams = {
     column: TableColumnCtx<T | any>,
     prop: string,
@@ -154,7 +145,8 @@ const _options = computed<Table.Options>(() => {
         showPagination: false,
         height: '100%',
         scrollbarAlwaysOn: true,
-        sortAll: false
+        sortAll: false,
+        border: false
     }
     return Object.assign(option, props?.options)
 })
@@ -378,6 +370,9 @@ function toggleSelection (rows?: any[]) {
         tableRef.value!.clearSelection()
     }
 }
+function handleHeaderDragEnd(newWidth, oldWidth, column, event) {
+    console.log(newWidth, oldWidth, column, event);
+}
 onMounted(() => {
     onKeyDown('Control', (e) => {
       CtrlDown = true
@@ -405,6 +400,7 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
     }
 }
 .dp-table-container {
+    position: relative;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     height: 99%;
@@ -512,10 +508,13 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
 }
 </style>
 <style lang="scss">
-.el-table__row {
+.dp-table-container .el-table__row {
     color: var(--color-grey-900);
 }
-.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+.dp-table-container .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
     background-color: var(--color-grey-050);
+}
+.dp-table-container .el-table--border .el-table__cell {
+    border-right: transparent;
 }
 </style>
