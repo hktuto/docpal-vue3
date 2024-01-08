@@ -12,6 +12,7 @@ export const useUser = () => {
     const router = useRouter()
     const publicRouteList = ['/resetPassword', '/resetPassword/']
     const Cookies = useCookie('docpal-user')
+    const {public:{ CUSTOM_KEYCLOAK_REDIRECT}} = useRuntimeConfig()
     // @ts-ignore
     const appStore = useAppStore();
     const isLogin = useState<boolean>('isLogin',() => false);
@@ -126,7 +127,13 @@ export const useUser = () => {
     async function keycloakLogin() {
         
         try {
-            const authenticated = await dpKeyCloak.init({onLoad: 'login-required'})
+            let keycloakInitParmas:any = {
+                onLoad:'login-required'
+            }
+            if(CUSTOM_KEYCLOAK_REDIRECT){
+                keycloakInitParmas.redirectUri = CUSTOM_KEYCLOAK_REDIRECT
+            }
+            const authenticated = await dpKeyCloak.init(keycloakInitParmas)
         
             if(!authenticated) {
                 throw new Error("unAuth");

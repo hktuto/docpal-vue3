@@ -35,5 +35,11 @@
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
     "deleteAppDataOnUninstall": false
-  }
+  },
+  "protocols":[
+      {
+        "name":"DocPal Protocol",
+        "schemes":["docpal"]
+      }
+    ]
 }

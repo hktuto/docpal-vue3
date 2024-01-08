@@ -9,7 +9,7 @@
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "build": "nuxt build --dotenv ../../.env.deploy.dev",
     "build:electron": "nuxt generate --dotenv ../../.env.deploy.dev && electron-builder",
-    "start" : "node .output/server/index.mjs"
+    "start": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.2",
@@ -24,6 +24,7 @@
     "nuxt": "3.8.2",
     "nuxt-electron": "^0.7.0",
     "sass": "^1.58.0",
+    "tree-kill": "^1.2.2",
     "typescript": "^5.0.2",
     "vite": "^5.0.0",
     "vite-plugin-electron": "^0.15.5",
