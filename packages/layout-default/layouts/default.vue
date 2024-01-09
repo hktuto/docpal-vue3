@@ -34,15 +34,20 @@
 
         <div v-if="isLogin"  class="actions">
           <AppDownload v-if="!feature.tauri" />
-          <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
+          <!-- <el-button round @click="handleOpenUpload(true, 'ai')" >
+            <SvgIcon style="--icon-size: 24px" src="/icons/logo/ai.svg"></SvgIcon>
+          </el-button> -->
+          <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
           <Notification v-if="feature.notification" />
           <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
         </div>
       </div>
         <main id="mainContainer">
           <slot />
-          <InteractDrawer ref="InteractDrawerRef">
-            <UploadStructure></UploadStructure>
+          <InteractDrawer ref="InteractDrawerRef" :close="!['ai'].includes(state.interactDrawerAction)"
+            :style="`--drawer-bg: ${getDrawerBg(state.interactDrawerAction)}`">
+            <UploadStructure v-if="state.interactDrawerAction === 'upload'"></UploadStructure>
+            <AiChat v-else-if="state.interactDrawerAction === 'ai'">aiaiai</AiChat>
           </InteractDrawer>
         </main>
         <SharePublicButton></SharePublicButton>
@@ -66,7 +71,7 @@ const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useLayout();
-const { uploadState, uploadRequestList } = useUploadAIStore()
+const { uploadState } = useUploadAIStore()
 const sidebarEl = ref();
 const { sideSlot, headerSlots } = useLayout()
 
@@ -76,17 +81,27 @@ onClickOutside(sidebarEl, () => {
   }
 })
 const state = reactive({
+  interactDrawerAction: 'upload'
 })
 function toggleOpen() {
   collapse.value = !collapse.value
-  console.log(collapse.value);
-
 }
 
 // #region module:
   const InteractDrawerRef = ref()
-  function handleOpenUpload(isOpen: boolean = false) {
-    InteractDrawerRef.value.handleSwitch(isOpen)
+  function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' = 'upload') {
+    console.log({action});
+    
+    state.interactDrawerAction = action
+    InteractDrawerRef.value.handleSwitch(show)
+  }
+  function getDrawerBg(action: 'upload' | 'ai' = 'upload') {
+    switch (action) {
+      case 'ai':
+        return 'linear-gradient(45deg, blue, red);'
+      default:
+        return ''
+    }
   }
 // #endregion
 
