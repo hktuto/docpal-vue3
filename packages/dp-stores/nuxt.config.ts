@@ -19,29 +19,25 @@ export default defineNuxtConfig({
     },
 
     nitro:{
-      routeRules:{
-        '/api/**': {proxy: {to: process.env.PROXY +"/**"}},
-        '/dashboard/**': {proxy: {to:process.env.DASHBOARD_PROXY+"/**"}},
-        '/client/**': {proxy: {to:process.env.CLIENT_PROXY+"/**"}},
-      },
+      
 
-        // devProxy:{
-        //   '/docpalApi':{
-        //     target: process.env.PROXY,
-        //     changeOrigin: true,
-        //     prependPath: true
-        //   },
-        //   '/dashboard':{
-        //     target: process.env.DASHBOARD_PROXY,
-        //     changeOrigin: true,
-        //     prependPath: true
-        //   },
-        //   '/client':{
-        //     target: process.env.CLIENT_PROXY,
-        //     changeOrigin: true,
-        //     prependPath: true
-        //   }
-        // }
+        devProxy:{
+          '/api':{
+            target: process.env.PROXY,
+            changeOrigin: true,
+            prependPath: true
+          },
+          '/dashboard':{
+            target: process.env.DASHBOARD_PROXY,
+            changeOrigin: true,
+            prependPath: true
+          },
+          '/client':{
+            target: process.env.CLIENT_PROXY,
+            changeOrigin: true,
+            prependPath: true
+          }
+        }
         // routeRules: {
         //     '/dashboard/**': {
         //         proxy: 'https://app4.wclsolution.com/public-api/report/v1/api/**'

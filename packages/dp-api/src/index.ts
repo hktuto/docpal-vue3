@@ -3,7 +3,7 @@ import axiosTauriApiAdapter from './tauri';
 
 import tableSettingJson from "./table/setting.json";
 export const api = axios.create({
-    baseURL: 'https://app4.wclsolution.com/api', //TODO : set base url from env
+    baseURL: '/api', //TODO : set base url from env
     timeout: 50000,
 })
 
