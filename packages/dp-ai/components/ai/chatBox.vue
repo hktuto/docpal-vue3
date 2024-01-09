@@ -4,8 +4,7 @@
         v-model="message"
         type="textarea"
         :rows="4"
-        :autosize="{ minRows: 4, maxRows: 6 }"
-        :placeholder="$t('comments_placeholder')"
+        :placeholder="$t('ai.askMeAnything')"
         resize="none"
         :maxlength="state.maxLen"
         @keydown.enter.native="keyDown"
@@ -16,7 +15,7 @@
     </el-input>
     <div class="commentInputBox_ribbon">
         <span class="commentInputBox_ribbon_len">{{ message.length }} / {{ state.maxLen }}</span>
-        <el-button type="primary" circle text class="buttonText" @click="handleEnter" :loading="loading">
+        <el-button type="primary" circle text class="buttonText" @click="handleEnter" :disabled="loading">
             <SvgIcon src="/icons/tools/send.svg"></SvgIcon>
         </el-button>
     </div>
@@ -44,6 +43,7 @@ function keyDown (e) {
     }
 }
 function handleEnter () {
+    if (props.loading) return
     console.log('?????????????');
     console.log(props.modelValue);
     emits('enter')
@@ -57,7 +57,7 @@ function handleEnter () {
 <style lang="scss" scoped>
 .commentInputBox {
     border-radius: 5px;
-    background-color: var(--color-grey-050);
+    background-color: #fff;
     padding: var(--app-padding);
     :deep(.el-textarea__inner) {
         border: unset;

@@ -34,9 +34,9 @@
 
         <div v-if="isLogin"  class="actions">
           <AppDownload v-if="!feature.tauri" />
-          <!-- <el-button round @click="handleOpenUpload(true, 'ai')" >
+          <el-button round @click="handleOpenUpload(true, 'ai')" >
             <SvgIcon style="--icon-size: 24px" src="/icons/logo/ai.svg"></SvgIcon>
-          </el-button> -->
+          </el-button>
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
           <Notification v-if="feature.notification" />
           <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
@@ -47,7 +47,8 @@
           <InteractDrawer ref="InteractDrawerRef" :close="!['ai'].includes(state.interactDrawerAction)"
             :style="`--drawer-bg: ${getDrawerBg(state.interactDrawerAction)}`">
             <UploadStructure v-if="state.interactDrawerAction === 'upload'"></UploadStructure>
-            <AiChat v-else-if="state.interactDrawerAction === 'ai'">aiaiai</AiChat>
+            <AiChat v-else-if="state.interactDrawerAction === 'ai'"
+              @close="handleOpenUpload(false, 'ai')">aiaiai</AiChat>
           </InteractDrawer>
         </main>
         <SharePublicButton></SharePublicButton>
@@ -98,7 +99,7 @@ function toggleOpen() {
   function getDrawerBg(action: 'upload' | 'ai' = 'upload') {
     switch (action) {
       case 'ai':
-        return 'linear-gradient(45deg, blue, red);'
+        return 'linear-gradient(-45deg, #b8dfe4, #e3f1f1);'
       default:
         return ''
     }

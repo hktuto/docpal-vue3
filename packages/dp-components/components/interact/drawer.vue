@@ -1,5 +1,6 @@
 <template>
 <Interact
+    id="drawer"
     :resizable="true"
     :resizeOption="{
             edges: { left: true, right: false, bottom: false, top: false }
