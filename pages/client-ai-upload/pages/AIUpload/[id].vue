@@ -172,7 +172,7 @@ async function handleSubmit () {
         if(!nodeItem.properties) nodeItem.properties = {}
         const properties = Object.keys(nodeItem.properties).reduce((prev: any, key) => {
             const pValue = nodeItem.properties[key]
-            if(!!pValue && key !== 'documentType') prev[key] = pValue
+            if(!!pValue && !['documentType','docName'].includes(key)) prev[key] = pValue
             return prev
         }, {})
         prev.push({
