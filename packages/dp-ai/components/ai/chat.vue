@@ -27,6 +27,7 @@ import { useResizeObserver } from '@vueuse/core'
 import { AiChatInitApi, AiAaskQuestionApi } from 'dp-api'
 import { aiChatRecord } from '../../utils/aiChat'
 
+const props = defineProps(['idOrPath'])
 const emits = defineEmits(['close'])
 
 const userId:string = useUser().getUserId()
@@ -73,17 +74,12 @@ async function handleEnter() {
             id: _chatRecord2.answerId,
             type: _chatRecord2.questionType,
             question: searchParams.question,
+            answer: _chatRecord2.answer
         })
         // state.chatRecord.pop()
         state.chatRecord.push(chatRecord2) // 分开写，避免接口异常带来bug
-        const chatRecordOdd = new aiChatRecord({
-            author: 'AI',
-            type: 'odd'
-        })
-        state.chatRecord.push(chatRecordOdd)
     } catch (error) {
-        console.log('errrrrrrrrrrrrrrr');
-        // state.chatRecord.pop()
+        console.log('error', error);
         const chatRecordOdd = new aiChatRecord({
             author: 'AI',
             type: 'odd'
@@ -123,12 +119,13 @@ async function init() {
             topicId: ''
         }
     }
+    if(props.idOrPath) state.searchParams.idOrPath = props.idOrPath
     state.newTopicLoading = false
 }
 function handleNewTopic() {
-    init()
     state.searchParams.idOrPath = ''
     state.chatRecord = []
+    init()
 }
 onMounted(() => {
     init()
@@ -137,6 +134,9 @@ onMounted(() => {
             if(!isFullscreen()) state.fullScreen = false
         })
     })
+})
+watch(() => props.idOrPath, (value) => {
+    if(value) handleNewTopic()
 })
 </script>
 <style lang="scss" scoped>

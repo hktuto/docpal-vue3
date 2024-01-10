@@ -48,7 +48,7 @@
             :style="`--drawer-bg: ${getDrawerBg(state.interactDrawerAction)}`">
             <UploadStructure v-if="state.interactDrawerAction === 'upload'"></UploadStructure>
             <AiChat v-else-if="state.interactDrawerAction === 'ai'"
-              @close="handleOpenUpload(false, 'ai')">aiaiai</AiChat>
+              @close="handleOpenUpload(false, 'ai')"></AiChat>
           </InteractDrawer>
         </main>
         <SharePublicButton></SharePublicButton>

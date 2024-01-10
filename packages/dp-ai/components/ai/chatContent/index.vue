@@ -2,9 +2,9 @@
     <div class="ai-chat-content" style="--icon-color: var(--primary-color)">
         <SvgIcon class="logo" src="/icons/logo/docpal-ai.svg"></SvgIcon>
         <div class="ai-init-help">
-            <small>Here are some things DocPal Ai can help you do.</small>
+            <small>{{ $t('ai.helpTip') }}</small>
             <el-card v-for="item in questionList" @click="emits('aiInput', item)">{{ item }}</el-card>
-            <small>DocPal Ai is powered by AI, so surprises and mistakes are possible. Please share feedback so we can improve!</small>
+            <small>{{ $t('ai.mistakesHelpTip') }}</small>
         </div>
         <AiChatContentList :chatRecord="chatRecord"></AiChatContentList>
     </div>

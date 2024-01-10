@@ -43,7 +43,6 @@ function getPreviewFile(list) {
     
 }
 watch(props.searchResult, (val) => {
-    console.log('searchResult', val);
     if(!!val) {
         getPreviewFile(val)
     }

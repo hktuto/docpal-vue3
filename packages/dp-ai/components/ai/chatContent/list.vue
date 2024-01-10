@@ -8,6 +8,10 @@
                 </AiChatContentAiAction>
                 <AiChatContentSearchResult :searchResult="item.searchResult" />
             </div>
+            <div v-else-if="item.type === 'explain'"  :key="item.id" class="ai-chat--explain">
+                <div>{{ item.answer }}</div>
+                <el-button @click="handleAddToComment(item.id)">{{ $t('ai.addTocomment') }}</el-button>
+            </div>
             <AiChatContentAiAction v-else-if="item.type === 'loading'" placeholder="ai.generatingAnswer"/>
             <AiChatContentAiAction v-else :placeholder="`ai.${item.type}`"/>
         </template>
@@ -15,11 +19,17 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { AddAiCommentApi } from 'dp-api'
+
 const props = withDefaults(defineProps<{
     chatRecord: any
 }>(),{
     chatRecord: []
 })
+
+async function handleAddToComment(id) {
+    await AddAiCommentApi(id)
+}
 </script>
 <style lang="scss" scoped>
 .ai-chat-record-container {
@@ -37,7 +47,17 @@ const props = withDefaults(defineProps<{
     align-self: end;
     word-break: break-all; 
 }
-.ai-chat--search {
-
+.ai-chat--explain {
+    div:first-child {
+        background-color: var(--primary-color);
+        padding: var(--app-padding);
+        color: var(--color-grey-050);
+        text-align: left;
+        border-radius: 4px;
+        word-break: break-all; 
+    }
+    .el-button {
+        margin-top: var(--app-padding);
+    }
 }
 </style>

@@ -14,7 +14,11 @@
                     <template #default="{collapse}">
                       <template v-for="(group,key) in detailActions" :key="key">
                           <template v-for="item in group" :key="item.name">
-                          <component :is="item.component" :doc="doc" :ref="(el) => itemRefs[item.name] = el" :permission="permission"  @success="handleRefresh" @delete="itemDeleted" :hideAfterClick="true" />
+                          <component :is="item.component" :doc="doc" :ref="(el) => itemRefs[item.name] = el" :permission="permission"  
+                            @success="handleRefresh" 
+                            @delete="itemDeleted" 
+                            @openAiDrawer="handleOpenAiDrawer"
+                            :hideAfterClick="true" />
                           </template>
                           <div :class="{actionDivider:true, collapse}"></div>
                       </template>
@@ -61,6 +65,7 @@
             </div>
         </div>
       </teleport>
+      <BrowseActionsAiDrawer ref="BrowseActionsAiDrawerRef" :doc="doc" />
     </div>
 </template>
 
@@ -145,6 +150,14 @@ const BrowseActionsEditRef = ref()
 async function openEdit() {
   BrowseActionsEditRef.value.openDialog()
 }
+
+const BrowseActionsAiDrawerRef = ref()
+function handleOpenAiDrawer() {
+  console.log('ooo');
+  
+  BrowseActionsAiDrawerRef.value.open()
+}
+
 async function getData (docId) {
   const response = await getDocumentDetailSync(docId, userId);
   doc.value = response.doc
