@@ -1,5 +1,4 @@
 import axios from 'axios';
-import axiosTauriApiAdapter from './tauri';
 
 import tableSettingJson from "./table/setting.json";
 export const api = axios.create({

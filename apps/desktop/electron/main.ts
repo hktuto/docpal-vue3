@@ -57,8 +57,8 @@ if (!gotTheLock) {
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1920,
+    height: 1080,
     webPreferences: {
       webSecurity: false,
       preload: path.join(__dirname, 'preload.js')
