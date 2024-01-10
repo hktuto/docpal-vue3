@@ -102,6 +102,8 @@
               </TableCard>
             </div>
           </template>
+            <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+
         </div>
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
@@ -111,7 +113,6 @@
                 @size-change="pageSizeChange"
                 @current-change="currentPageChange" />
         </div>
-        <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
     </div>
 </template>
 <script lang="ts" setup>
@@ -400,13 +401,13 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
     }
 }
 .dp-table-container {
-    position: relative;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     height: 99%;
     overflow: hidden;
     user-select: none;
     &--main {
+        position: relative;
         overflow: hidden;
         .el-table {
             height: 100%;

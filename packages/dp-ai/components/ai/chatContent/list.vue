@@ -1,23 +1,17 @@
 <template>
     <div class="ai-chat-record-container">
         <template v-for="item in chatRecord">
-            <div v-if="item.type === 'question'"  :key="item.id" class="ai-chat--question">{{ item.text }}</div>
-            <div v-else-if="item.type === 'search'"  :key="item.id" class="ai-chat--search">
-                <div>
-                    <SvgIcon src="/icons/tools/answer.svg"></SvgIcon>
-                </div>
-                
-                <!-- {{ item }} -->
+            <div v-if="item.type === 'question'"  :key="item.id" class="ai-chat--question">{{ item.question }}</div>
+            <div v-else-if="item.type === 'search'" :key="item.id" class="ai-chat--search">
+                <AiChatContentAiAction placeholder="ai.searchingFor">
+                    <b>{{ item.question }}</b>
+                </AiChatContentAiAction>
+                <AiChatContentSearchResult :searchResult="item.searchResult" />
             </div>
-            <div v-else-if="item.type === 'odd'" class="flex-x-start">
-                <SvgIcon src="/icons/tools/answer.svg"></SvgIcon>
-                {{ item.type }}
-            </div>
-            <div v-else-if="item.type === 'loading'" class="flex-x-start">
-                <SvgIcon src="/icons/tools/answer.svg"></SvgIcon>
-                {{ $t('ai.generating') }}{{ item.type }}
-            </div>
+            <AiChatContentAiAction v-else-if="item.type === 'loading'" placeholder="ai.generatingAnswer"/>
+            <AiChatContentAiAction v-else :placeholder="`ai.${item.type}`"/>
         </template>
+        <br/>
     </div>
 </template>
 <script lang="ts" setup>

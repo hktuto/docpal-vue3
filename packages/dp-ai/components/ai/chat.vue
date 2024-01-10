@@ -6,7 +6,8 @@
             v-bind="state.aiInit"
             @aiInput="(value: string) => state.searchParams.question = value"> </AiChatContent>
         <div>
-            <el-button class="ai-new-topic" type="primary" :icon="Plus" text >{{ $t('ai.topic')  }}</el-button>
+            <el-button v-if="showAddCurrentContext" class="ai-new-topic" type="primary" :icon="Plus" text @click="state.searchParams.idOrPath = route.query.path">{{ $t('ai.addCurrentContext')  }}</el-button>
+            <el-button class="ai-new-topic" type="primary" :loading="state.newTopicLoading" :icon="Plus" text @click="handleNewTopic">{{ $t('ai.newTopic')  }}</el-button>
             <AiChatBox v-model="state.searchParams.question" :loading="state.loading" @enter="handleEnter"/>
         </div>
         <div class="ai-chat-tools" style="--icon-color: var(--color-grey-500)">
@@ -21,6 +22,7 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { Plus } from '@element-plus/icons-vue';
 import { useResizeObserver } from '@vueuse/core'
 import { AiChatInitApi, AiAaskQuestionApi } from 'dp-api'
 import { aiChatRecord } from '../../utils/aiChat'
@@ -28,11 +30,13 @@ import { aiChatRecord } from '../../utils/aiChat'
 const emits = defineEmits(['close'])
 
 const userId:string = useUser().getUserId()
+const route = useRoute()
 const state = reactive<any>({
     searchParams: {
         question: ''
     },
     loading: false,
+    newTopicLoading: false,
     fullScreen: false,
 
     aiInit: {
@@ -42,14 +46,18 @@ const state = reactive<any>({
     },
     chatRecord: []
 })
+const showAddCurrentContext = computed(() => {
+    return route.path.includes('/browse') && !state.searchParams.idOrPath
+})
 const AiChatContentRef = ref()
+
 async function handleEnter() {
     state.loading = true
     try {
         const searchParams = { ... state.searchParams }
         const chatRecord1 = new aiChatRecord({
             author: userId,
-            text: state.searchParams.question,
+            question: state.searchParams.question,
         })
         const chatRecordLoading = new aiChatRecord({
             author: 'ai',
@@ -63,9 +71,10 @@ async function handleEnter() {
             author: 'AI',
             searchResult: _chatRecord2.searchResult,
             id: _chatRecord2.answerId,
-            type: _chatRecord2.questionType
+            type: _chatRecord2.questionType,
+            question: searchParams.question,
         })
-        state.chatRecord.pop()
+        // state.chatRecord.pop()
         state.chatRecord.push(chatRecord2) // 分开写，避免接口异常带来bug
         const chatRecordOdd = new aiChatRecord({
             author: 'AI',
@@ -74,7 +83,7 @@ async function handleEnter() {
         state.chatRecord.push(chatRecordOdd)
     } catch (error) {
         console.log('errrrrrrrrrrrrrrr');
-        state.chatRecord.pop()
+        // state.chatRecord.pop()
         const chatRecordOdd = new aiChatRecord({
             author: 'AI',
             type: 'odd'
@@ -104,6 +113,7 @@ function isFullscreen() {
     );
 }
 async function init() {
+    state.newTopicLoading = true
     try {
         state.aiInit = await AiChatInitApi()
     } catch (error) {
@@ -113,6 +123,12 @@ async function init() {
             topicId: ''
         }
     }
+    state.newTopicLoading = false
+}
+function handleNewTopic() {
+    init()
+    state.searchParams.idOrPath = ''
+    state.chatRecord = []
 }
 onMounted(() => {
     init()

@@ -1,5 +1,5 @@
 <template>
-    <div class="ai-chat-content">
+    <div class="ai-chat-content" style="--icon-color: var(--primary-color)">
         <SvgIcon class="logo" src="/icons/logo/docpal-ai.svg"></SvgIcon>
         <div class="ai-init-help">
             <small>Here are some things DocPal Ai can help you do.</small>
@@ -11,7 +11,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus } from '@element-plus/icons-vue';
 import {  } from 'dp-api'
 
 const props = withDefaults(defineProps<{

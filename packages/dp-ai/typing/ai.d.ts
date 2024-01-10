@@ -1,7 +1,8 @@
 declare namespace AiChat {
 	interface chatRecord {
         author: string,
-        text?: string,
+        question?: string,
+        answer?: string,
         searchResult?: any,
         parentId?: string | any,
         id?: string | any,

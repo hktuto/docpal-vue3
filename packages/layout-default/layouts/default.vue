@@ -34,9 +34,9 @@
 
         <div v-if="isLogin"  class="actions">
           <AppDownload v-if="!feature.tauri" />
-          <!-- <el-button round @click="handleOpenUpload(true, 'ai')" >
+          <el-button round @click="handleOpenUpload(true, 'ai')" >
             <SvgIcon style="--icon-size: 24px" src="/icons/logo/ai.svg"></SvgIcon>
-          </el-button> -->
+          </el-button>
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
           <Notification v-if="feature.notification" />
           <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
@@ -90,7 +90,7 @@ function toggleOpen() {
 
 // #region module:
   const InteractDrawerRef = ref()
-  function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' = 'upload') {
+  function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 'upload') {
     console.log({action});
     
     state.interactDrawerAction = action
