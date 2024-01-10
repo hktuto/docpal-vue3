@@ -16,6 +16,7 @@ export * from './retention'
 
 export * from './ocrAPi'
 export * from './ai-upload'
+export * from './ai'
 
 export * from './admin-acl'
 export * from './admin-meta'

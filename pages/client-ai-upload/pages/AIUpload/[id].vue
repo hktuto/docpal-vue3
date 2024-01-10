@@ -1,6 +1,6 @@
 <template>
-<NuxtLayout class="fit-height withPadding" :backPath="state.backPath" :pageTitle="$t('ai.uploadText')">
-    <main class="upload-main" v-loading="state.loading">
+<NuxtLayout class="fit-height" :backPath="state.backPath" :pageTitle="$t('ai.uploadText')">
+    <main class="upload-main withPadding" v-loading="state.loading">
         <div class="main-left">
             <el-tree ref="treeRef" :data="state.fileList"
                     default-expand-all

@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<{
     defaultOpen: false,
     showClose: true,
     defaultW: 400,
-    minWidth: 120,
+    minWidth: 340,
     maxWidth: 600,
     close: true
 })
