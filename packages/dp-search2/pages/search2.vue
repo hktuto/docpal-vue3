@@ -1,6 +1,6 @@
 <template>
-    <NuxtLayout class="fit-height withPadding bc-grey" :backPath="route.query.searchBackPath" :showSearch="false">
-        <div :class="['search-page',{ 'search-page-narrow': !state.expanded}]">
+    <NuxtLayout class="fit-height bc-grey" :backPath="route.query.searchBackPath" :showSearch="false">
+        <div :class="['withPadding','search-page',{ 'search-page-narrow': !state.expanded}]">
             <div class="search-container">
                 <SearchBar2 ref="SearchBar2Ref" :exportButton="state.showExportButton" 
                     @search="handleSearch"

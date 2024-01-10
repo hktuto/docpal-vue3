@@ -3,7 +3,7 @@
     <el-input
         v-model="message"
         type="textarea"
-        :rows="4"
+        :rows="3"
         :placeholder="$t('ai.askMeAnything')"
         resize="none"
         :maxlength="state.maxLen"
@@ -58,7 +58,7 @@ function handleEnter () {
 .commentInputBox {
     border-radius: 5px;
     background-color: #fff;
-    padding: var(--app-padding);
+    padding: var(--app-padding) 2px 2px;
     :deep(.el-textarea__inner) {
         border: unset;
         box-shadow: unset;

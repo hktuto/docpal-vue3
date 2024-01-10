@@ -246,6 +246,9 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     height: 100%;
     position: relative;
     overflow: hidden;
+    :deep .withPadding {
+      padding: calc(var(--app-padding) * 2);
+    }
   }
   &.withPadding #mainContainer {
     padding: calc(var(--app-padding) * 2);
