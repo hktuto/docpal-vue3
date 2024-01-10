@@ -28,7 +28,7 @@ import { ElMessage } from 'element-plus'
 import { saveFileRequestListApi, getJsonApi } from 'dp-api'
 const emits = defineEmits(['success'])
 const props = defineProps<{
-    path: string
+  doc: string
 }>()
 const state = reactive({
   loading: false,
@@ -52,7 +52,7 @@ function uploadDialog(){
       if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
       if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
       data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
-      data.idOrPath = props.path
+      data.idOrPath = props.doc.path
       const res = await saveFileRequestListApi(data)
       state.loading = false
       if (res.errorCode) throw new Error(res.message || 'error');
