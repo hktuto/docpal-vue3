@@ -6,26 +6,33 @@
       </div>
       <el-popover ref="popoverRef" width="280" trigger="click">
         <div class="listContainer">
+          <!-- preList -->
+          <TableSortItem v-for="element in preList" :key="element.name" :element="element" />
           <draggable class="list-group"
                     :list="displayList"
                     itemKey="name"
                     group="people"
                     handle=".handle"
+                    :animation="200"
+                    :disabled="false"
+                    ghostClass="ghost"
                     @change="handleSubmit">
             <template #item="{ element, index }">
               <div class="list-group-item" :data-testid="`table-sort-${element.label}`">
-                <div class="handle">
+                <div v-if="!element.fixed"  class="handle">
                   <SvgIcon src="/icons/move-handle.svg" />
                 </div>
                   <div class="label">
                     {{$t(element.label || element.type)}}
                   </div>
-                  <div class="show">
+                  <div v-if="!element.canNotDelete" class="show">
                     <el-switch v-model="element.show" :disabled="element.defaultColumn" @change="handleSubmit"/>
                   </div>
                 </div>
             </template>
           </draggable>
+          <!-- postList -->
+          <TableSortItem v-for="element in postList" :key="element.name" :element="element" />
           <hr />
           <el-button @click="handleRevert"> {{ $t('revert')}} </el-button>
         </div>
@@ -89,10 +96,14 @@ const emit = defineEmits([
 const popoverRef = ref();
 
 const dialogShow = ref(false)
+
 const displayList = ref([
 ])
+
 const originalColumns = ref()
-const showList = computed(() => displayList.value.filter(item => item.show))
+const preList = computed(() => props.columns.filter(item => item.fixed && item.fixed === 'left'))
+const showList = computed(() => [...preList.value, ...displayList.value.filter(item => item.show), ...postList.value] )
+const postList = computed(() => props.columns.filter(item => item.fixed && item.fixed === 'right'))
 const loading = ref(false)
 // const hideList =ref([])
 
@@ -153,12 +164,12 @@ function initColumn () {
       userColumns = userPreference.value.tableSettings[props.sortKey]
     }
     if(props.sortAll) {
-      displayList.value = props.columns.map( (item,index) => {
+      displayList.value = props.columns.filter((item) => !item.fixed).map( (item,index) => {
         item.show = true
         return item
       })
     } else {
-      displayList.value = props.columns.map( (item,index) => {
+      displayList.value = props.columns.filter((item) => !item.fixed).map( (item,index) => {
         item.rowIndex = index;
         item.show = userColumns.includes(index)
         return item
@@ -210,6 +221,7 @@ defineExpose({ initColumn })
   transform: scale(1);
   transition: transform .2s ease-in-out;
   transform-origin: top right;
+  z-index: 2;
   &:hover {
     transform: scale(1.1);
   }
@@ -220,15 +232,26 @@ defineExpose({ initColumn })
   position: relative;
   .list-group-item {
     display: grid;
-    grid-template-columns: min-content 1fr min-content;
+    grid-template-columns: 20px 1fr 40px;
+    grid-template-areas: 'handle label toggle';
     padding: calc(var(--app-padding)) calc(var(--app-padding) / 2) ;
-    background: var(--color-grey-000);
+    background: var(--color-grey-0000);
     align-items: center;
     &:hover {
       background: var(--color-grey-0000);
     }
     & + & {
       border-top: 1px solid var(--color-grey-150);
+    }
+    .handle{
+      grid-area: handle;
+    }
+    .label{
+      grid-area: label;
+    }
+    .show{
+      grid-area: toggle;
+      justify-self: end;
     }
   }
   // .list-group-item.sortable-chose {}

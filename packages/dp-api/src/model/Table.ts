@@ -22,10 +22,14 @@ export type TableColumnItem = {
     headerSlot ?: string,
     align ?: string,
     width ?: string | number,
+    'min-width'?: string | number,
     defaultValue ?: any,
     headerAlign ?: string,
     isFilter ?: boolean,
     canNotDelete ?:boolean,
+    fixed?: boolean | 'left' | 'right'
+    cellStyle?: Object
+    headerStyle?: Object
     prop?: string,
     type?: string,
     hide?: boolean,
@@ -309,6 +313,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 "system": false,
                 "showOverflowTooltip": false,
                 "formatList": [],
+                "cellStyle":{},
                 "buttons": [
                     {
                         "name": "",
@@ -534,9 +539,21 @@ export const defaultTableSetting: TableColumnSetting = {
     [TABLE.CLIENT_BROWSE] : {
         columns: [
             // { id: '4', type: 'selection' },
-            { id: '1', slot: 'docName', label: 'table_name', prop: 'name', sortable: true, headerSlot:"nameFilter", defaultColumn: true },
+            { id: '1', 
+            slot: 'docName', 
+            label: 'table_name', 
+            prop: 'name', 
+            fixed:'left',
+            sortable: true, 
+            headerSlot:"nameFilter", 
+            defaultColumn: true,
+            'min-width':300,
+            canNotDelete:true,
+         },
            
-            { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
+            { 
+                id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
+                'min-width':150,
                 formatList: [
                     {
                         "joiner": "",
@@ -550,6 +567,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 ] 
             },
             { id: '3', label: 'info_type', prop: 'documentType', sortable: true,
+            'min-width':200,
                 formatList: [
                     {
                         "joiner": "",
@@ -561,21 +579,27 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ],
             },
-            { id: '7', slot: 'mimeType', label: 'docInfo.fileExtension' },
-            { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
-            { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
+            { id: '7', slot: 'mimeType', label: 'docInfo.fileExtension', 'min-width':150, },
+            { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true, 'min-width':250, },
+            { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true, 'min-width':250, },
             {
                 id: '6',
-                "type": "",
-                "label": "dpTable_actions",
+                "type": "dpTable_actions",
+                "label": "",
                 class: "slotTopRight",
                 "prop": "",
                 "align": "center",
-                "width": 100,
+                "width": 40,
                 "hide": false,
                 "system": false,
                 "showOverflowTooltip": false,
                 "formatList": [],
+                fixed:'right',
+                canNotDelete:true,
+                cellStyle:{
+                    padding:'0px',
+                    '--icon-color':"var(--color-grey-200)"
+                },
                 "buttons": [
                     {
                         "name": "",

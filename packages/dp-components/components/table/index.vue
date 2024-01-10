@@ -5,9 +5,7 @@
                 <slot name="preSortButton"></slot>
             </div>
             <slot name="suffixSortButton">
-
             </slot>
-
         </div>
         <div class="dp-table-container--main">
           <template v-if="!isSmallMobile">
@@ -16,13 +14,17 @@
                 :data="tableData"
                 :row-class-name="tableRowClassName"
                 v-bind="_options"
-                :header-cell-style="{'background': 'var(--color-grey-050)'}"
+                :cell-style="cellStyle"
+                :header-cell-style="headerStyle"
+                :resizable="true"
+                :border="true"
                 @row-contextmenu="handleRightClick"
                 @selection-change="handleSelectionChange"
                 @row-click="handleRowClick"
                 @row-dblclick="handleRowDblclick"
                 @cell-click="handleCellClick"
                 @sort-change="handleSortChange"
+                @header-dragend="handleHeaderDragEnd"
                 @expand-change="(row, expandedRows) => emit('expand-change', row, expandedRows)">
                 <template v-for="(col, index) in columns__sub" :key="index">
                     <template v-if="!col.hide">
@@ -30,7 +32,7 @@
                             <el-table-column
                                 v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
                                 :index="indexMethod"
-                                v-bind="col"
+                                v-bind="{...col}"
                                 :selectable="_options.selectable">
                                 <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
                                 <template #default="slotData">
@@ -43,7 +45,7 @@
                                 </template>
                             </el-table-column>
                         <!---复选框, 序号 (END)-->
-                        <TableColumn v-else :col="col" @command="handleAction">
+                        <TableColumn v-else :col="col" @command="handleAction" v-bind="{...col}">
                              <!-- 自定义表头插槽 -->
                                 <template #customHeader="{ slotName, column, index }">
                                     <slot :name="slotName" :column="column" :index="index" />
@@ -57,11 +59,6 @@
                         </TableColumn>
                     </template>
                 </template>
-                <el-table-column v-if="_options.sortKey" :width="40">
-                  <template #header="{ column, $index }">
-                    <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
-                  </template>
-                </el-table-column>
             </el-table>
           </template>
           <template v-else>
@@ -117,16 +114,13 @@
                 @size-change="pageSizeChange"
                 @current-change="currentPageChange" />
         </div>
+        <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
     </div>
 </template>
 <script lang="ts" setup>
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
-
-
-
 const { isSmallMobile, isMobile } = useLayout()
-
 export type SortParams = {
     column: TableColumnCtx<T | any>,
     prop: string,
@@ -154,7 +148,8 @@ const _options = computed<Table.Options>(() => {
         showPagination: false,
         height: '100%',
         scrollbarAlwaysOn: true,
-        sortAll: false
+        sortAll: false,
+        border: false
     }
     return Object.assign(option, props?.options)
 })
@@ -378,6 +373,21 @@ function toggleSelection (rows?: any[]) {
         tableRef.value!.clearSelection()
     }
 }
+function handleHeaderDragEnd(newWidth, oldWidth, column, event) {
+    console.log(newWidth, oldWidth, column, event);
+}
+
+function cellStyle({ row, column, rowIndex, columnIndex }) {
+    const style = props.columns[columnIndex].cellStyle || {}
+    return Object.assign({padding:'4px 12px'}, style);
+}
+
+function headerStyle({ row, column, rowIndex, columnIndex }) {
+    const style = props.columns[columnIndex].headerStyle || {}
+    return Object.assign({padding:'12px', 'border-right-color': 'var(--color-grey-100)', 'background-color': 'var(--color-grey-000)'}, style);
+}
+
+
 onMounted(() => {
     onKeyDown('Control', (e) => {
       CtrlDown = true
@@ -393,6 +403,7 @@ onMounted(() => {
       shiftOrAltDown = false
     })
 })
+
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
 defineExpose({ reorderColumn, toggleSelection, tableRef })
 </script>
@@ -405,6 +416,7 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
     }
 }
 .dp-table-container {
+    position: relative;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     height: 99%;
@@ -512,10 +524,16 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
 }
 </style>
 <style lang="scss">
-.el-table__row {
-    color: var(--color-grey-900);
+.dp-table-container .el-table .cell {
+    padding:0px;
 }
-.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
-    background-color: var(--color-grey-050);
+.dp-table-container .el-table__row {
+    // color: var(--color-grey-900);
+}
+.dp-table-container .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+    // background-color: var(--color-grey-050);
+}
+.dp-table-container .el-table--border .el-table__cell {
+    // border-right: transparent;
 }
 </style>
