@@ -14,7 +14,10 @@
                 :data="tableData"
                 :row-class-name="tableRowClassName"
                 v-bind="_options"
-                :header-cell-style="{'background': 'var(--color-grey-050)'}"
+                :cell-style="cellStyle"
+                :header-cell-style="headerStyle"
+                :resizable="true"
+                :border="true"
                 @row-contextmenu="handleRightClick"
                 @selection-change="handleSelectionChange"
                 @row-click="handleRowClick"
@@ -29,7 +32,7 @@
                             <el-table-column
                                 v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'"
                                 :index="indexMethod"
-                                v-bind="col"
+                                v-bind="{...col}"
                                 :selectable="_options.selectable">
                                 <!-- 当type等于expand时， 配置通过h函数渲染、txs语法或者插槽自定义内容 -->
                                 <template #default="slotData">
@@ -42,7 +45,7 @@
                                 </template>
                             </el-table-column>
                         <!---复选框, 序号 (END)-->
-                        <TableColumn v-else :col="col" @command="handleAction">
+                        <TableColumn v-else :col="col" @command="handleAction" v-bind="{...col}">
                              <!-- 自定义表头插槽 -->
                                 <template #customHeader="{ slotName, column, index }">
                                     <slot :name="slotName" :column="column" :index="index" />
@@ -374,6 +377,18 @@ function toggleSelection (rows?: any[]) {
 function handleHeaderDragEnd(newWidth, oldWidth, column, event) {
     console.log(newWidth, oldWidth, column, event);
 }
+
+function cellStyle({ row, column, rowIndex, columnIndex }) {
+    const style = props.columns[columnIndex].cellStyle || {}
+    return Object.assign({padding:'4px 12px'}, style);
+}
+
+function headerStyle({ row, column, rowIndex, columnIndex }) {
+    const style = props.columns[columnIndex].headerStyle || {}
+    return Object.assign({padding:'12px', 'border-right-color': 'var(--color-grey-100)', 'background-color': 'var(--color-grey-000)'}, style);
+}
+
+
 onMounted(() => {
     onKeyDown('Control', (e) => {
       CtrlDown = true
@@ -389,6 +404,7 @@ onMounted(() => {
       shiftOrAltDown = false
     })
 })
+
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
 defineExpose({ reorderColumn, toggleSelection, tableRef })
 </script>
@@ -509,13 +525,16 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
 }
 </style>
 <style lang="scss">
+.dp-table-container .el-table .cell {
+    padding:0px;
+}
 .dp-table-container .el-table__row {
-    color: var(--color-grey-900);
+    // color: var(--color-grey-900);
 }
 .dp-table-container .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
-    background-color: var(--color-grey-050);
+    // background-color: var(--color-grey-050);
 }
 .dp-table-container .el-table--border .el-table__cell {
-    border-right: transparent;
+    // border-right: transparent;
 }
 </style>

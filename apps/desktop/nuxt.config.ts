@@ -1,3 +1,4 @@
+console.log(process.env.NODE_ENV )
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -9,7 +10,7 @@ export default defineNuxtConfig({
 
   modules: ['nuxt-electron'],
   electron: {
-    disableDefaultOptions:false,
+    disableDefaultOptions: process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development',
       build: [
         {
           // Main-Process entry file of the Electron App.

@@ -163,8 +163,8 @@ export const ActionsFilter = (actions: BrowseActionItem[], permission:AllPermiss
             return item[booleanKey] 
         })
         .filter((item) => {
-        
-            return AllowTo({feature:item.permission, permission})
+            
+            return  AllowTo({feature:item.permission, permission})
         })
         .reduce((prev:any, item:BrowseActionItem) => {
             prev[item.groupBy] = prev[item.groupBy] || []

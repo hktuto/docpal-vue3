@@ -8,6 +8,9 @@ export const setUpSessionProxy = function (){
         (details, callback) => {
           details.requestHeaders['Origin'] = 'https://app4.wclsolution.com';
           details.requestHeaders['Referer'] = 'https://app4.wclsolution.com';
+          if(details.url.includes('/api')) {
+            console.log("api", details.url)
+          }
           callback({ requestHeaders: details.requestHeaders });
         }
     );
