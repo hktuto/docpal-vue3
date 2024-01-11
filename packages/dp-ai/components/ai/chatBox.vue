@@ -8,11 +8,7 @@
         resize="none"
         :maxlength="state.maxLen"
         @keydown.enter.native="keyDown"
-        >
-        <template #suffix>
-            123456
-        </template>
-    </el-input>
+        />
     <div class="commentInputBox_ribbon">
         <span class="commentInputBox_ribbon_len">{{ message.length }} / {{ state.maxLen }}</span>
         <el-button type="primary" circle text class="buttonText" @click="handleEnter" :disabled="loading">
@@ -43,15 +39,8 @@ function keyDown (e) {
     }
 }
 function handleEnter () {
-    if (props.loading) return
-    console.log('?????????????');
-    console.log(props.modelValue);
+    if (props.loading || !message.value) return
     emits('enter')
-    // const s = state._text.replace(/[\ +\n\r]/g, '')
-    // if (!s) {
-    //     state._text = ''
-    //     return
-    // }
 }
 </script>
 <style lang="scss" scoped>

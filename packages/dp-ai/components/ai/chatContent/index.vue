@@ -15,7 +15,8 @@ import {  } from 'dp-api'
 
 const props = withDefaults(defineProps<{
     questionList: any,
-    chatRecord: any
+    chatRecord: any,
+    idOrPath: string
 }>(),{
     questionList: [],
     chatRecord: []

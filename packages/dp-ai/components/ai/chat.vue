@@ -3,6 +3,7 @@
         <AiChatContent ref="AiChatContentRef" 
             :loading="state.loading" 
             :chatRecord="state.chatRecord"
+            :idOrPath="idOrPath"
             v-bind="state.aiInit"
             @aiInput="(value: string) => state.searchParams.question = value"> </AiChatContent>
         <div>
@@ -10,6 +11,7 @@
             <el-button class="ai-new-topic" type="primary" :loading="state.newTopicLoading" :icon="Plus" text @click="handleNewTopic">{{ $t('ai.newTopic')  }}</el-button>
             <AiChatBox v-model="state.searchParams.question" :loading="state.loading" @enter="handleEnter"/>
         </div>
+
         <div class="ai-chat-tools" style="--icon-color: var(--color-grey-500)">
             <template v-if="!state.fullScreen">
                 <SvgIcon src="/icons/tools/fullScreen.svg" @click="handleFullScreen"></SvgIcon>
@@ -72,7 +74,7 @@ async function handleEnter() {
             author: 'AI',
             searchResult: _chatRecord2.searchResult,
             id: _chatRecord2.answerId,
-            type: _chatRecord2.questionType,
+            type: _chatRecord2.questionType === 'explain' && !_chatRecord2.answer ? 'notFound' : _chatRecord2.questionType,
             question: searchParams.question,
             answer: _chatRecord2.answer
         })
@@ -82,7 +84,7 @@ async function handleEnter() {
         console.log('error', error);
         const chatRecordOdd = new aiChatRecord({
             author: 'AI',
-            type: 'odd'
+            type: error.message.includes('timeout') ? 'timeout' : 'notFound'
         })
         state.chatRecord.push(chatRecordOdd)
     }
@@ -91,8 +93,9 @@ async function handleEnter() {
     }, 50)
 }
 function handleFullScreen() {
-    document.getElementById('drawer')?.requestFullscreen()
-    state.fullScreen = true
+    let drawer = props.idOrPath ?  document.getElementsByClassName('ai-file-drawer')[0] : document.getElementById('drawer')
+    if(!!drawer) drawer.requestFullscreen()
+    state.fullScreen = isFullscreen()
 }
 function handleExitFullScreen() {
     if (document.exitFullscreen) {
