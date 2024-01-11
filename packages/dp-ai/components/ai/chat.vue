@@ -95,7 +95,7 @@ async function handleEnter() {
 function handleFullScreen() {
     let drawer = props.idOrPath ?  document.getElementsByClassName('ai-file-drawer')[0] : document.getElementById('drawer')
     if(!!drawer) drawer.requestFullscreen()
-    state.fullScreen = isFullscreen()
+    state.fullScreen = true
 }
 function handleExitFullScreen() {
     if (document.exitFullscreen) {
