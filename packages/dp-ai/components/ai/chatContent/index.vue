@@ -2,8 +2,10 @@
     <div class="ai-chat-content" style="--icon-color: var(--primary-color)">
         <SvgIcon class="logo" src="/icons/logo/docpal-ai.svg"></SvgIcon>
         <div class="ai-init-help">
-            <small>{{ $t('ai.helpTip') }}</small>
-            <el-card v-for="item in questionList" @click="emits('aiInput', item)">{{ item }}</el-card>
+            <template v-if="!idOrPath">
+                <small>{{ $t('ai.helpTip') }}</small>
+                <el-card v-for="item in questionList" @click="emits('aiInput', item)">{{ item }}</el-card>
+            </template>
             <small>{{ $t('ai.mistakesHelpTip') }}</small>
         </div>
         <AiChatContentList :chatRecord="chatRecord"></AiChatContentList>

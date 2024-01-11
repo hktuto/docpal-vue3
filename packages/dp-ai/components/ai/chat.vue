@@ -9,7 +9,7 @@
         <div>
             <el-button v-if="showAddCurrentContext" class="ai-new-topic" type="primary" :icon="Plus" text @click="state.searchParams.idOrPath = route.query.path">{{ $t('ai.addCurrentContext')  }}</el-button>
             <el-button class="ai-new-topic" type="primary" :loading="state.newTopicLoading" :icon="Plus" text @click="handleNewTopic">{{ $t('ai.newTopic')  }}</el-button>
-            <AiChatBox v-model="state.searchParams.question" :loading="state.loading" @enter="handleEnter"/>
+            <AiChatBox v-model="state.searchParams.question" :rows="state.fullScreen ? 3 : rows" :loading="state.loading" @enter="handleEnter"/>
         </div>
 
         <div class="ai-chat-tools" style="--icon-color: var(--color-grey-500)">
@@ -29,7 +29,7 @@ import { useResizeObserver } from '@vueuse/core'
 import { AiChatInitApi, AiAaskQuestionApi } from 'dp-api'
 import { aiChatRecord } from '../../utils/aiChat'
 
-const props = defineProps(['idOrPath'])
+const props = defineProps(['idOrPath', 'rows'])
 const emits = defineEmits(['close'])
 
 const userId:string = useUser().getUserId()
@@ -93,7 +93,12 @@ async function handleEnter() {
     }, 50)
 }
 function handleFullScreen() {
-    let drawer = props.idOrPath ?  document.getElementsByClassName('ai-file-drawer')[0] : document.getElementById('drawer')
+    let drawer = props.idOrPath ?  document.getElementById('browseAi') : document.getElementById('drawer')
+    if(props.idOrPath) {
+        if(!!drawer) {
+            drawer.style.background = 'linear-gradient(-45deg, #b8dfe4, #e3f1f1)'
+        }
+    }
     if(!!drawer) drawer.requestFullscreen()
     state.fullScreen = true
 }
@@ -135,6 +140,12 @@ onMounted(() => {
     nextTick(() => {
         useResizeObserver(AiChatContentRef, (entries) => {
             if(!isFullscreen()) state.fullScreen = false
+            if(state.fullScreen === false && props.idOrPath) {
+                let drawer = document.getElementById('browseAi')
+                if(!!drawer) {
+                    drawer.style.background = ''
+                }
+            }
         })
     })
 })
@@ -154,6 +165,9 @@ watch(() => props.idOrPath, (value) => {
 :fullscreen .ai-chat-container {
     width: 60vw;
     margin: auto;
+}
+:fullscreen #browseAi {
+    background: #fff;
 }
 
 .ai-chat-tools {

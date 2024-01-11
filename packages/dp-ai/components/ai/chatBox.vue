@@ -3,7 +3,7 @@
     <el-input
         v-model="message"
         type="textarea"
-        :rows="3"
+        :rows="rows"
         :placeholder="$t('ai.askMeAnything')"
         resize="none"
         :maxlength="state.maxLen"
@@ -19,10 +19,13 @@
 </template>
 <script lang="ts" setup>
 const emits = defineEmits(['enter', 'update:modelValue'])
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     modelValue?: string,
-    loading: boolean
-}>()
+    loading: boolean,
+    rows: number,
+}>(),{
+    rows: 3
+})
 const state = reactive({
     test: '1',
     maxLen: 2000

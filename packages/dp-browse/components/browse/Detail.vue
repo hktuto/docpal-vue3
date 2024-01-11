@@ -3,50 +3,50 @@
       <teleport to="body">
         <div v-if="show && doc" class="dialog">
             <div id="modalHeader">
-              <div class="fileNameContainer">
-                <div class="fileName">{{ doc.name }}
-                  <el-tag v-if="doc.properties && doc.properties['file:content'] && doc.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(doc.properties['file:content']['mime-type']) }}</el-tag>
+                <div class="fileNameContainer">
+                    <div class="fileName">{{ doc.name }}
+                        <el-tag v-if="doc.properties && doc.properties['file:content'] && doc.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(doc.properties['file:content']['mime-type']) }}</el-tag>
+                    </div>
                 </div>
-              </div>
-              <div class="actions">
-                <template v-if="options.showHeaderAction" >
-                  <CollapseMenu @openedChange="mobileActionsOpenedChanged">
-                    <template #default="{collapse}">
-                      <template v-for="(group,key) in detailActions" :key="key">
-                          <template v-for="item in group" :key="item.name">
-                          <component :is="item.component" :doc="doc" :ref="(el) => itemRefs[item.name] = el" :permission="permission"  
-                            @success="handleRefresh" 
-                            @delete="itemDeleted" 
-                            @openAiDrawer="handleOpenAiDrawer"
-                            :hideAfterClick="true" />
-                          </template>
-                          <div :class="{actionDivider:true, collapse}"></div>
-                      </template>
-                      <!-- {{AllowTo({feature:'Read', permission })}} -->
-                      <!-- <BrowseActionsHold :doc="doc" :permission="permission"/>
-                      <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
-                      <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
-                      <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
-                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefreshPreview"/>
-                      <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
-                      <!-- <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
-                      <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
-                      <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
-                      <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @submit="editMode = !editMode"/>
-                      <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
-                      <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" /> -->
+                <div class="actions">
+                    <template v-if="options.showHeaderAction" >
+                        <CollapseMenu @openedChange="mobileActionsOpenedChanged">
+                            <template #default="{collapse}">
+                            <template v-for="(group,key) in detailActions" :key="key">
+                                <template v-for="item in group" :key="item.name">
+                                <component :is="item.component" :doc="doc" :ref="(el) => itemRefs[item.name] = el" :permission="permission"  
+                                    @success="handleRefresh" 
+                                    @delete="itemDeleted" 
+                                    @openAiDrawer="handleOpenAiDrawer"
+                                    :hideAfterClick="true" />
+                                </template>
+                                <div :class="{actionDivider:true, collapse}"></div>
+                            </template>
+                            <!-- {{AllowTo({feature:'Read', permission })}} -->
+                            <!-- <BrowseActionsHold :doc="doc" :permission="permission"/>
+                            <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
+                            <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
+                            <div v-show="AllowTo({feature:'ReadWrite', permission })" :class="{actionDivider:true, collapse}"></div>
+                            <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefreshPreview"/>
+                            <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission }) && !doc.isCheckedOut" @success="handleRefresh"/> -->
+                            <!-- <BrowseActionsDownload v-if="AllowTo({feature:'Read', permission })"  :doc="doc"  />
+                            <BrowseActionsDelete v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @delete="itemDeleted" @success="handleRefresh"/>
+                            <BrowseActionsCopyPath v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" />
+                            <BrowseActionsOffice v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @submit="editMode = !editMode"/>
+                            <div v-show="AllowTo({feature:'ReadWrite', permission })" class="actionDivider"></div>
+                            <BrowseActionsShare  v-if="allowFeature('SHARE_EXTERNAL') && AllowTo({feature:'ReadWrite', permission })" :doc="doc" :hideAfterClick="true" /> -->
 
-                      <!-- {{AllowTo({feature:'Read', permission })}} -->
-                      <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
-                      
+                            <!-- {{AllowTo({feature:'Read', permission })}} -->
+                            <!-- <SvgIcon src="/icons/close.svg" round ></SvgIcon> -->
+                            
+                            </template>
+                        </CollapseMenu>
+                        
+                        <BrowseActionsInfo  :doc="doc"  @click="infoOpened = !infoOpened"/>
+                        <div  :class="{actionDivider:true, collapse}"></div>
                     </template>
-                  </CollapseMenu>
-                 
-                  <BrowseActionsInfo  :doc="doc"  @click="infoOpened = !infoOpened"/>
-                  <div  :class="{actionDivider:true, collapse}"></div>
-                </template>
-                <SvgIcon class="closeBtn" src="/icons/close-only.svg" :content="$t('close')" round @click="closePreview"></SvgIcon>
-              </div>
+                    <SvgIcon class="closeBtn" src="/icons/close-only.svg" :content="$t('close')" round @click="closePreview"></SvgIcon>
+                </div>
             </div>
             <div class="content">
                 <div v-if="readerType" :class="{preview:true, mobileActionOpened}" >
@@ -55,17 +55,18 @@
                     <LazyPdfViewer v-if="readerType === 'pdf'" ref="PreviewRef" :doc="doc" :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}" />
                     <LazyVideoPlayer v-else-if="readerType === 'video'" ref="PreviewRef" :doc="doc" />
                     <LazyOtherPlayer v-else-if="readerType === 'other'" ref="PreviewRef" :doc="doc"></LazyOtherPlayer>
+                    <BrowseAiPopover :doc="doc"></BrowseAiPopover>
                 </div>
                 <h2 v-else class="noSupportContainer" >
                     {{ $t('msg_thisFormatFileIsNotSupported') }}
                 </h2>
                 <div class="info">
-                  <BrowseInfo v-if="options.showInfo" :doc="doc" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false" />
+                    <BrowseInfo v-if="options.showInfo" :doc="doc" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false" />
                 </div>
             </div>
         </div>
-      </teleport>
-      <BrowseActionsAiDrawer ref="BrowseActionsAiDrawerRef" :doc="doc" />
+        </teleport>
+        <BrowseActionsAiDrawer ref="BrowseActionsAiDrawerRef" :doc="doc" />
     </div>
 </template>
 
@@ -92,86 +93,86 @@ const emit = defineEmits(['close'])
 const { public:{feature} } = useRuntimeConfig();
 const {actions} = useBrowse()
 const detailActions = computed(()=> {
-  if(!doc.value || !permission.value) return {}
-  return ActionsFilter(actions, permission.value, 'showInDetail')
+    if(!doc.value || !permission.value) return {}
+    return ActionsFilter(actions, permission.value, 'showInDetail')
 })
 const { allowFeature } = useLayout()
 const readerType = computed(() => {
-  try {
-    if(!doc.value) return "";
-    const properties = doc.value.properties as any
-    const mimeType = getMimeTypeFromDocument(doc.value);
-    if(!mimeType) return "pdf"; // set to pdf for testing
-    // check if it is excel
-    if(canCollaboraEdit(mimeType)){
-      return 'collabora'
+    try {
+        if(!doc.value) return "";
+        const properties = doc.value.properties as any
+        const mimeType = getMimeTypeFromDocument(doc.value);
+        if(!mimeType) return "pdf"; // set to pdf for testing
+        // check if it is excel
+        if(canCollaboraEdit(mimeType)){
+            return 'collabora'
+        }
+        if(mimeType.includes('text/html')) {
+            return 'html';
+        }
+        if(mimeType.includes('image/tiff')) {
+            return 'other';
+        }
+        if(mimeType.includes('image') || mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator') || mimeType.includes('text')) {
+            return 'pdf';
+        }
+        if(mimeType.includes('video')) {
+            return 'video';
+        }
+        if (mimeType.includes('audio')) {
+            return 'other';
+        }
+        return '';
+    } catch (error) {
+        return ''
     }
-    if(mimeType.includes('text/html')) {
-      return 'html';
-    }
-    if(mimeType.includes('image/tiff')) {
-      return 'other';
-    }
-    if(mimeType.includes('image') || mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator') || mimeType.includes('text')) {
-      return 'pdf';
-    }
-    if(mimeType.includes('video')) {
-        return 'video';
-    }
-    if (mimeType.includes('audio')) {
-        return 'other';
-    }
-    return '';
-  } catch (error) {
-    return ''
-  }
 });
 function handleRefresh(needRefresh:boolean = true) {
-  getData(doc.value.path)
-  if(PreviewRef.value && needRefresh) {
-    if(PreviewRef.value.refresh) PreviewRef.value.refresh()
-  }
+    getData(doc.value.path)
+    if(PreviewRef.value && needRefresh) {
+        if(PreviewRef.value.refresh) PreviewRef.value.refresh()
+    }
 }
 function editInfo(){
-  console.log("editInfo", itemRefs.value)
-  if(itemRefs.value.Edit) itemRefs.value.Edit.openDialog()
+    console.log("editInfo", itemRefs.value)
+    if(itemRefs.value.Edit) itemRefs.value.Edit.openDialog()
 }
 const PreviewRef = ref()
 
 async function openPreview({detail}:any) {
-  cancelAxios()
-  show.value = false
-  options.value = detail.options
-  show.value = true
-  await getData(detail.pathOrId)
-  if (detail.options?.openEdit) openEdit()
+    cancelAxios()
+    show.value = false
+    options.value = detail.options
+    show.value = true
+    await getData(detail.pathOrId)
+    if (detail.options?.openEdit) openEdit()
 }
 const BrowseActionsEditRef = ref()
 async function openEdit() {
-  BrowseActionsEditRef.value.openDialog()
+    BrowseActionsEditRef.value.openDialog()
 }
 
 const BrowseActionsAiDrawerRef = ref()
 function handleOpenAiDrawer() {
-  console.log('ooo');
-  
-  BrowseActionsAiDrawerRef.value.open()
+    console.log('ooo');
+    
+    BrowseActionsAiDrawerRef.value.open()
 }
 
 async function getData (docId) {
-  const response = await getDocumentDetailSync(docId, userId);
-  doc.value = response.doc
-  permission.value = response.permission
+    const response = await getDocumentDetailSync(docId, userId);
+    doc.value = response.doc
+    permission.value = response.permission
 }
 function mobileActionsOpenedChanged(bool:boolean) {
-  mobileActionOpened.value = bool
+    mobileActionOpened.value = bool
 }
 
 function closePreview(){
-  cancelAxios()
-  show.value = false;
-  doc.value = null
-  permission.value = null;
+    cancelAxios()
+    show.value = false;
+    doc.value = null
+    permission.value = null;
 }
 
 onKeyStroke("Escape", (e) => {
@@ -184,20 +185,20 @@ onKeyStroke("Escape", (e) => {
 useEventListener(document, 'openFilePreview', openPreview )
 useEventListener(document, 'closeFilePreview', closePreview)
 useEventListener(document, 'checkIsPdf', () => {
-  if(readerType.value === 'pdf') {
-    const ev = new CustomEvent('isDocPdf')
-    document.dispatchEvent(ev)
-  }else{
-    const ev = new CustomEvent('notDocPdf')
-    document.dispatchEvent(ev)
-  }
+    if(readerType.value === 'pdf') {
+        const ev = new CustomEvent('isDocPdf')
+        document.dispatchEvent(ev)
+    }else{
+        const ev = new CustomEvent('notDocPdf')
+        document.dispatchEvent(ev)
+    }
 })
 watch(show, (isShow) => {
-  if(isShow) {
-    document.body.classList.add('noScroll')
-  }else{
-    document.body.classList.remove('noScroll')
-  }
+    if(isShow) {
+        document.body.classList.add('noScroll')
+    }else{
+        document.body.classList.remove('noScroll')
+    }
 })
 </script>
 
@@ -222,15 +223,15 @@ watch(show, (isShow) => {
     color: var(--color-grey-0000);
     align-content: center;
     .actions {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      gap: calc(var(--app-padding) / 2 );
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: calc(var(--app-padding) / 2 );
     }
     @media(max-width: 640px) {
-      .actions {
-        flex-flow: row nowrap;
-      }
+        .actions {
+            flex-flow: row nowrap;
+        }
     }
 }
 .header{
@@ -245,15 +246,15 @@ watch(show, (isShow) => {
     overflow: hidden;
     position: relative;
     @media (max-width: 640px) {
-      grid-template-columns: 1fr;
-      .info {
-        position: absolute;
-        z-index: 2;
-        top: var(--app-padding);
-        left: var(--app-padding);
-        width: calc( 100% - var(--app-padding) * 2);
-        height: calc( 100% - var(--app-padding) * 2);
-      }
+        grid-template-columns: 1fr;
+        .info {
+            position: absolute;
+            z-index: 2;
+            top: var(--app-padding);
+            left: var(--app-padding);
+            width: calc( 100% - var(--app-padding) * 2);
+            height: calc( 100% - var(--app-padding) * 2);
+        }
     }
     .info {
         transition: width .2s ease-in-out;
@@ -276,11 +277,11 @@ watch(show, (isShow) => {
     border-bottom: 1px soild var(--el-text-color-regular);
 }
 .fileNameContainer {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  align-items: center;
-  gap: calc(var(--app-padding) / 2 );
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: calc(var(--app-padding) / 2 );
 }
 .fileName{
     font-size: var(--el-font-size-large);
@@ -293,34 +294,34 @@ watch(show, (isShow) => {
 }
 
 :deep {
-  .actionIconContainer{
-    font-size: var(--icon-size);
-    background: var(--color-grey-150);
-    padding: 8px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    color: var(--color-grey-950);
-    cursor: pointer;
-    &:hover{
-      background: var(--color-grey-200);
+    .actionIconContainer{
+        font-size: var(--icon-size);
+        background: var(--color-grey-150);
+        padding: 8px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--color-grey-950);
+        cursor: pointer;
+        &:hover{
+            background: var(--color-grey-200);
+        }
     }
-  }
 }
 .preview{
-  overflow: hidden;
-  &.mobileActionOpened{
-    pointer-events: none;
-  }
+    overflow: hidden;
+    &.mobileActionOpened{
+        pointer-events: none;
+    }
 }
 .closeBtn{
-  --icon-color: var(--color-grey-900);
+    --icon-color: var(--color-grey-900);
 }
 .dialog{
-  .actionDivider{
-    height: calc( var(--icon-size) + 16px);
-    width: 1px;
-    background: var(--color-grey-100);
-  }
+    .actionDivider{
+        height: calc( var(--icon-size) + 16px);
+        width: 1px;
+        background: var(--color-grey-100);
+    }
 }
 </style>

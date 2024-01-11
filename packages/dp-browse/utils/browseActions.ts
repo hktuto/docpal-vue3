@@ -12,7 +12,7 @@ import BrowseActionsUploadRequest from "../components/browse/Actions/uploadReque
 import BrowseActionsCollection from "../components/browse/Actions/collection.vue";
 import BrowseActionsDeleteSelected from "../components/browse/Actions/deleteSelected.vue";
 import BrowseActionsInfo from "../components/browse/Actions/info.vue";
-import BrowseActionsAi from "../components/browse/Actions/ai/index.vue";
+// import BrowseActionsAi from "../components/browse/Actions/ai/index.vue";
 import {AllPermission, Permission} from "./permissionHelper";
 
 export type BrowseActionItem = {
@@ -136,14 +136,6 @@ export const actions:BrowseActionItem[] = [
         showInDetail:false,
         permission:'ReadWrite',
         component:BrowseActionsUploadRequest,
-        groupBy:'other'
-    },
-    {
-        name:'AI',
-        showInFolder:false,
-        showInDetail:true,
-        permission:'Read',
-        component: BrowseActionsAi,
         groupBy:'other'
     },
 ]
