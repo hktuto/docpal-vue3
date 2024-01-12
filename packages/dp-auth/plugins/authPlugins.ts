@@ -70,7 +70,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return config;
     },(error) => Promise.reject(error));
     api.interceptors.response.use((response) => {
-     
       return response
     }, async(error) => {
         console.log(error)
@@ -112,9 +111,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     });
 })
 function getBaseUrl(baseURL) {
-    const { public:{ DASHBOARD_PROXY, CLIENT_PROXY } } = useRuntimeConfig();
-    if(baseURL === '/dashboard') return DASHBOARD_PROXY
-    if(baseURL === '/client') return CLIENT_PROXY
+    const { public:{ DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY } } = useRuntimeConfig();
+    if (baseURL === '/dashboard') return DASHBOARD_PROXY
+    if (baseURL === '/client') return CLIENT_PROXY
+    if (baseURL === '/admin') return ADMIN_PROXY
     return baseURL
 }
 function routeMatcher (path, routeList) {

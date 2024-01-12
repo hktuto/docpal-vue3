@@ -30,10 +30,11 @@ export const exportFolderStructureApi = async(idOrPath: string, name: string = "
       const res = await api.post('/nuxeo/folderStructure/export', { idOrPath }, { 
         responseType: 'blob', 
         timeout: 0,
-        headers: {'white': 'true'}
+        headers: {'white': 'true'},
+        baseURL: '/admin'
     })
       // @ts-ignore
-      downloadBlob(res.data, name + '.zip', res.data.type )
+      downloadBlob(res, name + '.zip', res.data.type )
       return res
     }catch(error){
       return false
