@@ -40,7 +40,7 @@ function closePopper() {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 #browseAiButton {
     --icon-color: #fff; 
     --icon-size: 20px;
@@ -68,6 +68,9 @@ function closePopper() {
 #browseAi {
     overflow: hidden;
     height: 100%;
+}
+:fullscreen #browseAi {
+    background: #fff;
 }
 </style>
 <style>

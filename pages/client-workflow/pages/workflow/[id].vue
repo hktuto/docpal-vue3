@@ -1,6 +1,6 @@
 <template>
-<NuxtLayout class="fit-height withPadding " :backPath="`/workflow?tab=${backState}`">
-    <div class="grid-layout">
+<NuxtLayout class="fit-height " :backPath="`/workflow?tab=${backState}`">
+    <div class="grid-layout withPadding">
         <el-tabs v-model="activeTab" class="grid-layout-tab" @tab-change="tabChange">
             <el-tab-pane class="grid-layout-tab-pane" :label="$t('workflow_info')" name="info" v-loading="state.loading">
                 <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>

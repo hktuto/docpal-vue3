@@ -76,7 +76,8 @@ async function handleEnter() {
             id: _chatRecord2.answerId,
             type: _chatRecord2.questionType === 'explain' && !_chatRecord2.answer ? 'notFound' : _chatRecord2.questionType,
             question: searchParams.question,
-            answer: _chatRecord2.answer
+            answer: _chatRecord2.answer,
+            supportList: _chatRecord2.supportList
         })
         // state.chatRecord.pop()
         state.chatRecord.push(chatRecord2) // 分开写，避免接口异常带来bug
@@ -94,13 +95,15 @@ async function handleEnter() {
 }
 function handleFullScreen() {
     let drawer = props.idOrPath ?  document.getElementById('browseAi') : document.getElementById('drawer')
-    if(props.idOrPath) {
-        if(!!drawer) {
-            drawer.style.background = 'linear-gradient(-45deg, #b8dfe4, #e3f1f1)'
-        }
-    }
-    if(!!drawer) drawer.requestFullscreen()
     state.fullScreen = true
+    if(!!drawer) drawer.requestFullscreen()
+    setTimeout(() => { // 有延时
+        if(props.idOrPath) {
+            if(!!drawer) {
+                drawer.style.background = 'linear-gradient(-45deg, #b8dfe4, #e3f1f1)'
+            }
+        }
+    },100)
 }
 function handleExitFullScreen() {
     if (document.exitFullscreen) {
@@ -116,6 +119,7 @@ function isFullscreen() {
         document.msFullScreen 
     );
 }
+const isFFF = computed(() => isFullscreen())
 async function init() {
     state.newTopicLoading = true
     try {
@@ -139,13 +143,15 @@ onMounted(() => {
     init()
     nextTick(() => {
         useResizeObserver(AiChatContentRef, (entries) => {
-            if(!isFullscreen()) state.fullScreen = false
-            if(state.fullScreen === false && props.idOrPath) {
-                let drawer = document.getElementById('browseAi')
-                if(!!drawer) {
-                    drawer.style.background = ''
+            setTimeout(() => { // 有延时
+                if(!isFullscreen()) state.fullScreen = false
+                if(!isFullscreen() && props.idOrPath) {
+                    let drawer = document.getElementById('browseAi')
+                    if(!!drawer) {
+                        drawer.style.background = ''
+                    }
                 }
-            }
+            }, 50)
         })
     })
 })

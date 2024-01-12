@@ -1,17 +1,19 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
-        <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
-                @pagination-change="handlePaginationChange"
-                @command="handleAction"
-                @row-dblclick="handleDblclick"
-                @row-contextmenu="handleRightClick">
-                <template #docIcon="{ row, index }">
-                    <div class="nameItem">
-                        <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
-                        <div class="label">{{row.documentName}}</div>
-                    </div>
-                </template>   
-        </Table>
+    <NuxtLayout class="fit-height ">
+        <div class="withPadding">
+            <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                    @pagination-change="handlePaginationChange"
+                    @command="handleAction"
+                    @row-dblclick="handleDblclick"
+                    @row-contextmenu="handleRightClick">
+                    <template #docIcon="{ row, index }">
+                        <div class="nameItem">
+                            <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
+                            <div class="label">{{row.documentName}}</div>
+                        </div>
+                    </template>   
+            </Table>
+        </div>
         <BrowseRightClick></BrowseRightClick>
         <BrowseInfoAclEditDialog />
         <BrowseActionsEdit v-show="false" @success="handleRefresh" />

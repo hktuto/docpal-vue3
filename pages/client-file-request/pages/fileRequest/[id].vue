@@ -1,6 +1,6 @@
 <template>
-    <NuxtLayout class="fit-height withPadding" backPath="/fileRequest" >
-        <div class="pageContainer" v-loading="state.submitLoading || state.loading">
+    <NuxtLayout class="fit-height " backPath="/fileRequest" >
+        <div class="pageContainer withPadding" v-loading="state.submitLoading || state.loading">
             <div class="left-top">
                 <div class="flex-x-between">
                     <el-select v-model="state.applyDocumentType" filterable default-first-option >

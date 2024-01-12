@@ -5,6 +5,7 @@ declare namespace AiChat {
         answer?: string,
         searchResult?: any,
         parentId?: string | any,
+        supportList?: string[],
         id?: string | any,
         type?: 'search' | 'explain' | 'support' | 'question' | 'loading' | 'notFound' | 'timeout',
         createdDate?: Date

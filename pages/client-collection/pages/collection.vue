@@ -1,6 +1,6 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
-        <div class="collection-container">
+    <NuxtLayout class="fit-height ">
+        <div class="collection-container withPadding">
             <div :class="['collection-container--left', { collapse: style.collapse }]">
                 <div class="flex-x-end">
                     <el-button :loading="fileFormAddLoading" @click="openDialog()">{{$t('collections_new')}}</el-button>
@@ -292,7 +292,8 @@ onMounted(() => {
         height: 100%;
         overflow: hidden;
         gap: var(--app-padding);
-        box-shadow: 0 0 12px rgba(0,0,0,.12);
+        border-right: 1px solid #ddd;
+        // box-shadow: 0 0 12px rgba(0,0,0,.12);
         padding-right: var(--app-padding);
         .collection-list {
             overflow: auto;
@@ -335,7 +336,7 @@ onMounted(() => {
             height: 50vh;
             width: 100%;
             padding-right: unset;
-            box-shadow:  -1px 0px 3px rgba(0, 0, 0, .12);
+            // box-shadow:  -1px 0px 3px rgba(0, 0, 0, .12);
         }
         .collection-list {
             display: grid;

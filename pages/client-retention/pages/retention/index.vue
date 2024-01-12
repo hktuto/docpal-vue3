@@ -1,6 +1,6 @@
 <template>
-<NuxtLayout class="fit-height withPadding">
-    <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
+<NuxtLayout class="fit-height ">
+    <el-tabs v-model="activeTab" class="tag-container grid-layout withPadding" @tab-change="tabChange">
         <el-tab-pane :label="$t('retention_done')" name="done">
             <RetentionDoneTable v-if="activeTab === 'done'" />
         </el-tab-pane>

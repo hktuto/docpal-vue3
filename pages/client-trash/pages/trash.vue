@@ -1,29 +1,31 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
-      <Table  :columns="tableSetting.columns" :table-data="tableData" :options="options"
-              @command="handleAction"
-              @pagination-change="handlePaginationChange"
-              @selection-change="handleSelectionChange"
-              @row-dblclick="handleDblclick"
-              v-loading="state.loading">
-
+<NuxtLayout class="fit-height">
+    <div class="withPadding">
+        <Table  :columns="tableSetting.columns" :table-data="tableData" :options="options"
+                @command="handleAction"
+                @pagination-change="handlePaginationChange"
+                @selection-change="handleSelectionChange"
+                @row-dblclick="handleDblclick"
+                v-loading="state.loading">
+    
         <template #docIcon="{ row, index }">
-          <div class="nameItem">
+            <div class="nameItem">
             <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
             <div class="label">{{row.name}}</div>
-          </div>
+            </div>
         </template>
         <template #preSortButton>
-          <div style="margin-bottom: 3px">
+            <div style="margin-bottom: 3px">
             <el-button :disabled="!selectedRow || selectedRow.length === 0" type="primary" @click="handleRestore"> {{$t('trash_actions_restore')}} </el-button>
             <el-button :disabled="!selectedRow || selectedRow.length === 0" type="danger" @click="handleDelete"> {{$t('trash_actions_delete')}} </el-button>
             <el-button type="danger" @click="handleDeleteAll"> {{$t('trash_actions_deleteAll')}} </el-button>
-          </div>
+            </div>
         </template>
-      </Table>
-      <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
-      <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
-    </NuxtLayout>
+        </Table>
+        <ProgressNotification ref="ProgressNotificationRef" :options="processDetail"></ProgressNotification>
+        <!-- <ProgressDialog ref="ProgressDialogRef" :options="processDetail"></ProgressDialog> -->
+    </div>
+</NuxtLayout>
 </template>
 
 

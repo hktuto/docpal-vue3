@@ -1,6 +1,6 @@
 <template>
-<NuxtLayout class="fit-height withPadding">
-    <div class="grid-layout">
+<NuxtLayout class="fit-height ">
+    <div class="grid-layout withPadding">
         <el-tabs v-model="activeTab" class="tag-container" @tab-change="tabChange">
             <template v-for="item in state.tabList" :key="item.id">
                 <el-tab-pane  

@@ -1,14 +1,16 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
-                <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="options"
-                    @pagination-change="handlePaginationChange"
-                    @row-dblclick="handleDblclick"
-                    @command="handleAction">
-                    <template #preSortButton>
-                        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                            inputKey="documentName"/>
-                    </template> 
-                </Table>
+    <NuxtLayout class="fit-height">
+        <div class="withPadding">
+            <Table v-loading="loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="options"
+                @pagination-change="handlePaginationChange"
+                @row-dblclick="handleDblclick"
+                @command="handleAction">
+                <template #preSortButton>
+                    <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
+                        inputKey="documentName"/>
+                </template> 
+            </Table>
+        </div>
     </NuxtLayout>
 </template>
 

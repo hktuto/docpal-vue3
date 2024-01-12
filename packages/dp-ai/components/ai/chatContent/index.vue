@@ -2,10 +2,9 @@
     <div class="ai-chat-content" style="--icon-color: var(--primary-color)">
         <SvgIcon class="logo" src="/icons/logo/docpal-ai.svg"></SvgIcon>
         <div class="ai-init-help">
-            <template v-if="!idOrPath">
-                <small>{{ $t('ai.helpTip') }}</small>
-                <el-card v-for="item in questionList" @click="emits('aiInput', item)">{{ item }}</el-card>
-            </template>
+            <AiChatContentSupport v-if="!idOrPath" :supportList="questionList"
+                @aiInput="(value) => emits('aiInput', value)">
+            </AiChatContentSupport>
             <small>{{ $t('ai.mistakesHelpTip') }}</small>
         </div>
         <AiChatContentList :chatRecord="chatRecord"></AiChatContentList>
@@ -13,8 +12,6 @@
 </template>
 
 <script lang="ts" setup>
-import {  } from 'dp-api'
-
 const props = withDefaults(defineProps<{
     questionList: any,
     chatRecord: any,
@@ -25,12 +22,6 @@ const props = withDefaults(defineProps<{
 })
 const emits = defineEmits(['aiInput'])
 
-const state = reactive<any>({
-})
-
-onMounted(() => {
-})
-defineExpose({})
 </script>
 <style lang="scss" scoped>
 .ai-chat-content {

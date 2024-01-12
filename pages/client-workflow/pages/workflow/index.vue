@@ -1,29 +1,30 @@
 <template>
-<NuxtLayout class="fit-height withPadding">
-
-    <div class="buttons--absolute">
-        <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
-        <WorkflowPopoverPersonal />
-        <WorkflowPopoverNewTask @created="tabChange(activeTab)"/>
+<NuxtLayout class="fit-height ">
+    <div class="withPadding">
+        <div class="buttons--absolute">
+            <el-button v-if="activeTab !== 'adhocTask'" class="el-icon--left" type="info" @click="handleDownload">{{$t('export')}}</el-button>
+            <WorkflowPopoverPersonal />
+            <WorkflowPopoverNewTask @created="tabChange(activeTab)"/>
+        </div>
+        <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
+            <el-tab-pane :label="$t('workflow_allTask')" name="allTask">
+                <WorkflowAllTask v-if="activeTab === 'allTask'" ref="WorkflowRef"/>
+            </el-tab-pane>
+            <el-tab-pane :label="$t('workflow_myTask')" name="myTask">
+                <WorkflowMyTask v-if="activeTab === 'myTask'" ref="WorkflowRef"/>
+            </el-tab-pane>
+            <el-tab-pane :label="$t('workflow_completedTask')" name="completeTask">
+                <WorkflowCompleteTask v-if="activeTab === 'completeTask'" ref="WorkflowRef"/>
+            </el-tab-pane>
+            <el-tab-pane :label="$t('workflow_ActiveTask')" name="activeTask">
+                <WorkflowActiveTask v-if="activeTab === 'activeTask'" ref="WorkflowRef"/>
+            </el-tab-pane>
+            <el-tab-pane v-if="allowFeature('WORKFLOW_ADHOC')" :label="$t('workflow_adhocTask')" name="adhocTask">
+                <WorkflowAdhocTask v-if="activeTab === 'adhocTask'" ref="WorkflowRef"/>
+            </el-tab-pane>
+        </el-tabs>
+        <WorkflowPopoverDownload ref="WorkflowPopoverDownloadRef"/>
     </div>
-    <el-tabs v-model="activeTab" class="tag-container grid-layout" @tab-change="tabChange">
-        <el-tab-pane :label="$t('workflow_allTask')" name="allTask">
-            <WorkflowAllTask v-if="activeTab === 'allTask'" ref="WorkflowRef"/>
-        </el-tab-pane>
-        <el-tab-pane :label="$t('workflow_myTask')" name="myTask">
-            <WorkflowMyTask v-if="activeTab === 'myTask'" ref="WorkflowRef"/>
-        </el-tab-pane>
-        <el-tab-pane :label="$t('workflow_completedTask')" name="completeTask">
-            <WorkflowCompleteTask v-if="activeTab === 'completeTask'" ref="WorkflowRef"/>
-        </el-tab-pane>
-        <el-tab-pane :label="$t('workflow_ActiveTask')" name="activeTask">
-            <WorkflowActiveTask v-if="activeTab === 'activeTask'" ref="WorkflowRef"/>
-        </el-tab-pane>
-        <el-tab-pane v-if="allowFeature('WORKFLOW_ADHOC')" :label="$t('workflow_adhocTask')" name="adhocTask">
-            <WorkflowAdhocTask v-if="activeTab === 'adhocTask'" ref="WorkflowRef"/>
-        </el-tab-pane>
-    </el-tabs>
-    <WorkflowPopoverDownload ref="WorkflowPopoverDownloadRef"/>
 </NuxtLayout>
 </template>
 
@@ -61,6 +62,9 @@ watch(() => route.query, (q) => {
 </script>
 
 <style lang="scss" scoped>
+.withPadding {
+    position: relative;
+}
 .pageContainer {
   padding: calc(var(--app-padding) * 2 );
   position: relative;

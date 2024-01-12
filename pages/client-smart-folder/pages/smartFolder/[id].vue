@@ -1,7 +1,7 @@
 <template>
     <SmartFolderBrowseTable v-if="state.isBrowse"  v-bind="state"></SmartFolderBrowseTable>
-    <NuxtLayout  v-else class="fit-height withPadding" backPath="/smartFolder" :pageTitle="$t('file_smartFolder')">
-        <SmartFolderTable v-bind="state"></SmartFolderTable>
+    <NuxtLayout  v-else class="fit-height" backPath="/smartFolder" :pageTitle="$t('file_smartFolder')">
+        <SmartFolderTable class="withPadding" v-bind="state"></SmartFolderTable>
     </NuxtLayout>
 </template>
 
