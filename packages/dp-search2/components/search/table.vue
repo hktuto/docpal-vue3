@@ -1,6 +1,6 @@
 <template>
-    <Table ref="tableRef" v-loading="state.loading" 
-        :columns="state.columns" 
+    <Table ref="tableRef" v-loading="state.loading"
+        :columns="state.columns"
         :table-data="state.tableData" :options="state.options"
         @sort-change="handleSortChange"
         @pagination-change="handlePaginationChange"
@@ -16,11 +16,11 @@
                 :content="row.logicalPath"
                 placement="top-start"
             >
-                {{ getLogicalPath(row) }}
+              <div class="logicalPathText">{{ getLogicalPath(row) }}</div>
             </el-tooltip>
         </template>
         <template #documentTypeHeader="{column}">
-            <div> {{ $t(column.label) }} 
+            <div> {{ $t(column.label) }}
                 <el-popover
                     v-if="state.conditionStore && state.conditionStore.type"
                     ref="documentTypeFilterPopover"
@@ -31,8 +31,8 @@
                     <template #reference>
                         <el-icon class="document-type-filter-icon" @click.stop><ArrowDown /></el-icon>
                     </template>
-                    
-                    
+
+
                     <template #default>
                         <SearchBar2CardCheckbox
                             :tag="{ value: state.searchParams.type, key: 'type' }"
@@ -47,11 +47,11 @@
 
 <script lang="ts" setup>
 import { ArrowDown  } from '@element-plus/icons-vue';
-import { 
-    nestedSearchApi, 
+import {
+    nestedSearchApi,
     TABLE, defaultTableSetting, TableAddMultiColumns } from 'dp-api'
-import { 
-    getConditionStore, 
+import {
+    getConditionStore,
 } from '../../utils/searchBar2'
 const emits = defineEmits(['filterChange', 'loadingChange'])
 // #region module: page
@@ -210,7 +210,10 @@ function handleFilterChange(key: string, value: any) {
 }
 function getLogicalPath(row: any) {
     if(!row || !row.logicalPath) return ''
-    return '/' + row.logicalPath.split('/').shift()
+    const pathArray = row.logicalPath.split('/');
+    // get last 2 item in pathArray
+    const last2Items = pathArray.slice(-2);
+    return '...' + last2Items.join('/');
 }
 function setSearchParams(searchParams: any) {
     state.searchParams = searchParams
@@ -242,6 +245,11 @@ defineExpose({ handleSearch, setSearchParams })
     right: 0;
     top: 50%;
     transform: translate(0%,-50%);
+}
+.logicalPathText{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
 

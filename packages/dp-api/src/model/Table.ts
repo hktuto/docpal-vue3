@@ -1245,13 +1245,13 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SEARCH] : {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true },
-            { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey' },
-            { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue' },
-            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath' },
-            { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true, headerSlot: 'documentTypeHeader', width: 165 },
-            { id: '6', label: 'search.authors', prop: 'createdBy', sortable: true },
-            { id: '7', label: 'search.contributors', prop: 'properties.dc:contributors',
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true, canNotDelete:true, fixed:'left', "min-width": "320" },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath',  "min-width": "160" },
+            { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey', "min-width": "140" },
+            { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue', "min-width": "200" },
+            { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true, headerSlot: 'documentTypeHeader', "min-width": "200"},
+            { id: '6', label: 'search.authors', prop: 'createdBy', sortable: true, "min-width": "150" },
+            { id: '7', label: 'search.contributors', prop: 'properties.dc:contributors', "min-width": "200",
                 formatList: [
                     {
                         "joiner": "",
@@ -1264,7 +1264,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180', sortable: true,
+            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180', sortable: true, "min-width": "200",
                 formatList: [
                     {
                         "joiner": "",
@@ -1277,7 +1277,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]  
             },
-            { id: '5', slot: 'tags', label: 'dpTable_tags', prop: 'tags' },
+            { id: '5', slot: 'tags', label: 'dpTable_tags', prop: 'tags', "min-width": "200" },
 
         ],
         events: [],

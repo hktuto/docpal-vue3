@@ -10,7 +10,7 @@
                 @change="handleChangeParams"
                 @handleClose="handleRemoveParams"/>
             <el-input v-model="state.inputValue" style="min-width: 100px;" @keyup.enter="inputPressEnterHandler"  clearable></el-input>
-            <el-button style="z-index: 101;" type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="handleSearch">{{ $t('search.text') }}
+            <el-button style="z-index: 101;" type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="() => {handleSearch(); state.expanded = false}">{{ $t('search.text') }}
                 <el-icon class="el-icon--right"><Search /></el-icon>
             </el-button>
             <el-button v-if="!!state.dynamicTags && state.dynamicTags.length !== 0" type="primary" @click="handleExport">{{ $t('search.export') }}</el-button>
@@ -69,6 +69,7 @@ function handleAdoptSuggestion(key: string, value: any) {
     getTags()
     emits('setSearchParams', { ...state.searchParams, ...searchConfig})
     state.inputValue = ''
+  handleSearch();
 }
 function handleClearInputValue() {
     // setTimeout(() => { state.inputValue = '' }, 200)
@@ -81,6 +82,7 @@ function inputPressEnterHandler(){
   getTags()
   emits('setSearchParams', { ...state.searchParams, ...searchConfig})
   state.inputValue = ''
+  state.expanded = false
   handleSearch();
 }
 async function handleChangeParams(params: any, reset: boolean = false) {
@@ -238,7 +240,7 @@ defineExpose({
 .condition-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--app-padding);
+    gap: calc(var(--app-padding) * 2 );
     &-narrow {
         height: 0px;
         display: none;

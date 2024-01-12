@@ -6,8 +6,10 @@
             @change="handleChange">
             <template v-for="item in state._optionItems">
                 <template v-if="item.children">
+
                     <el-checkbox :label="item.label" class="parent-checkbox" />
                     <el-checkbox v-for="cItem in item.children" :key="cItem.value" :label="cItem.value" > {{ cItem.label }} </el-checkbox>
+                    <el-divider />
                 </template>
                 <el-checkbox v-else :label="item.value"> {{ item.label }} </el-checkbox>
             </template>
@@ -34,7 +36,7 @@ const state = reactive<any>({
 })
 
 function handleChange(val:string) {
-    let result: any = [] 
+    let result: any = []
     if(val.length > 0) {
         result = props.max === 1 ? val[0] : [...val]
     }
@@ -67,17 +69,33 @@ watch(() => props.optionItems, (val: any) => {
     overflow: hidden;
     // border-top: 1px dashed #DBE6EE;
     .checkbox-title {
+        font-weight: bold;
         color: #333;
-        font-size: 18px;
+        font-size: 1rem;
         line-height: 32px;
         padding-top: var(--app-padding);
     }
     .el-checkbox-group {
+      :deep{
+        --el-checkbox-height:1.5rem;
+        --el-checkbox-text-color: var(--color-grey-300);
+        --el-font-weight-primary:300;
+        .el-checkbox__label{
+
+          --el-checkbox-font-size:1rem;
+          word-break: break-word;
+          line-height:1.2;
+        }
+        .el-checkbox {
+          white-space: pre-wrap;
+          height: initial;
+        }
+      }
         // border-right: 1px solid #DBE6EE;
         display: flex;
         flex-direction: column;
-        margin-top: var(--app-padding);
-        
+        //margin-top: var(--app-padding);
+
         width: 100%;
         .el-checkbox {
             padding: 4px 0;
@@ -90,9 +108,9 @@ watch(() => props.optionItems, (val: any) => {
     }
     :deep(.el-checkbox__label) {
         color: #333;
-        font-size: 18px;
-        line-height: 32px;
-        padding-top: var(--app-padding);
+        font-size: 0.8rem;
+        font-weight: 500;
+
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
@@ -102,7 +120,7 @@ watch(() => props.optionItems, (val: any) => {
 .h-200 {
     .el-checkbox-group {
         max-height: 200px;
-        overflow: auto;
+        overflow: hidden auto;
         // overflow-x: hidden;
     }
 }
