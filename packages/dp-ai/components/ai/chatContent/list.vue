@@ -14,6 +14,10 @@
             </div>
             <AiChatContentAiAction v-else-if="item.type === 'loading'" placeholder="ai.generatingAnswer"/>
             <AiChatContentAiAction v-else :placeholder="`ai.${item.type}`"/>
+            <AiChatContentSupport v-if="item.type === 'notFound'" :supportList="item.supportList"
+                :noInput="true">
+                <!-- mode="tag" position="start" -->
+            </AiChatContentSupport>
         </template>
         <br/>
     </div>
