@@ -37,8 +37,7 @@
             <el-menu-item index="docActionNewTab">
                 <SvgIcon class="el-icon--left" src="/icons/file/new-tab.svg"></SvgIcon>
                 {{$t('rightClick.newTab')}}</el-menu-item>
-                <!-- v-show="!state.doc.isFolder" -->
-            <el-menu-item index="docActionDownload">
+            <el-menu-item  v-show="!state.doc.isFolder" index="docActionDownload">
                 <SvgIcon class="el-icon--left" src="/icons/file/download.svg"></SvgIcon>
                 {{$t('rightClick.download')}}</el-menu-item>
         </el-menu>
