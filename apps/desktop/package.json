@@ -8,7 +8,8 @@
     "app:dev": "nuxt dev --dotenv ../../.env.dev --port 3000",
     "generate": "nuxt generate --dotenv ../../.env.deploy.dev",
     "build": "nuxt build --dotenv ../../.env.deploy.dev",
-    "build:electron": "nuxt generate --dotenv ../../.env.deploy.dev && electron-builder",
+    "build:electron": "nuxt build --dotenv ../../.env.deploy.dev && electron-builder",
+    "preview": "nuxt preview",
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {

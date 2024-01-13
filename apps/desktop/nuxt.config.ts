@@ -1,4 +1,4 @@
-console.log(process.env.NODE_ENV )
+
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -9,8 +9,9 @@ export default defineNuxtConfig({
   ],
 
   modules: ['nuxt-electron'],
+
   electron: {
-    disableDefaultOptions: process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development',
+    disableDefaultOptions: true, //process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development',
       build: [
         {
           // Main-Process entry file of the Electron App.
@@ -28,9 +29,12 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      CUSTOM_KEYCLOAK_REDIRECT:"docpal://login"
+      CUSTOM_KEYCLOAK_REDIRECT: process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development' ? "" : "docpal://login"
     }
-  }
+  },
+  nitro:{
+    preset: 'node-server',
+  },
     //  for local preview dev only
   
 

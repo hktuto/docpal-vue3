@@ -26,10 +26,10 @@ export const useUser = () => {
 
     const userList = useState<User[]>('userList', () => ([]));
     const publicPages = [
-        '/forgetPassword', 
-        '/resetPassword', 
-        '/language', 
-        '/error/503', 
+        '/forgetPassword',
+        '/resetPassword',
+        '/language',
+        '/error/503',
         '/error/404',
         '/FormEditor'
     ]
@@ -70,7 +70,7 @@ export const useUser = () => {
 
     async function getUserSetting() {
         const userSetting = await GetSetting()
-        
+
         const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
         if(!userSizeValid) {
           delete userSetting.size;
@@ -89,13 +89,13 @@ export const useUser = () => {
             },
             {...userSetting}
         )
-        appStore.setDisplayState('ready') 
+        appStore.setDisplayState('ready')
         settingStore.init()
         loadLanguage(getDefaultLanguage())
     }
     function getDefaultLanguage() {
         return userPreference?.value?.language || navigator.language
-        // return userPreference?.value?.language || 'zh' 
+        // return userPreference?.value?.language || 'zh'
     }
     async function savePreference() {
         await UserSettingSaveApi(userPreference.value)
@@ -125,7 +125,7 @@ export const useUser = () => {
         }
     }
     async function keycloakLogin() {
-        
+
         try {
             let keycloakInitParmas:any = {
                 onLoad:'login-required'
@@ -134,10 +134,10 @@ export const useUser = () => {
                 keycloakInitParmas.redirectUri = CUSTOM_KEYCLOAK_REDIRECT
             }
             const authenticated = await dpKeyCloak.init(keycloakInitParmas)
-        
+
             if(!authenticated) {
                 throw new Error("unAuth");
-            } 
+            }
             else {
                 callApi()
             }
@@ -154,14 +154,14 @@ export const useUser = () => {
         try {
             await dpKeyCloak.updateToken(10) // Refresh token if it's less than 10 seconds from expiring
             localStorage.setItem('token', dpKeyCloak.token);
-            const data = await api.get('/docpal/systemfeature/keycloak-token-verification').then( res => { 
+            const data = await api.get('/docpal/systemfeature/keycloak-token-verification').then( res => {
                                     if(!res.data || !res.data.data) {
                                         handleKeycloakLoginFail()
                                     }
-                                    return res.data.data 
+                                    return res.data.data
                                 })
             if (!data) return
-            token.value = data.access_token 
+            token.value = data.access_token
             refreshToken.value = data.refresh_token
             localStorage.setItem('token', token.value);
             localStorage.setItem('refreshToken', refreshToken.value);
@@ -209,14 +209,14 @@ export const useUser = () => {
         isLogin.value = false;
         token.value = "";
         refreshToken.value = "";
-        
+
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         if(dpKeyCloak && dpKeyCloak.token) dpKeyCloak.logout()
         else{
             appStore.setDisplayState('needAuth')
             sessionStorage.clear()
-        } 
+        }
     }
     function logoutKeyCloak() {
         if(dpKeyCloak && dpKeyCloak.token) {
@@ -232,12 +232,12 @@ export const useUser = () => {
     /**
      * public page 与 default login 需要提前 appInit
      * keycloakLogin 在登陆成功后再 appInit
-     * @returns 
+     * @returns
      */
     async function beforeLogin(goHome: boolean) {
         await appStore.checkLicense();
         if(isLogin.value) {
-            appStore.setDisplayState('ready') 
+            appStore.setDisplayState('ready')
             return
         }
         const _superAdmin = sessionStorage.getItem('superAdmin')
@@ -246,20 +246,20 @@ export const useUser = () => {
         const superAdmin = route.query.superAdmin
         if(!!publicPages.find(item => route.path.includes(item)) && !goHome) {
             console.log('publicPages', route.path, publicPages);
-            
+
             await appStore.appInit();
-            appStore.setDisplayState('ready') 
+            appStore.setDisplayState('ready')
         }else if(superAdmin === 'superAdmin' && endPoint === 'admin' || superAdmin === 'clientSuperAdmin' || _superAdmin === 'superAdmin') {
             console.log('superAdmin');
             await appStore.appInit();
-            appStore.setDisplayState('defaultLogin') 
+            appStore.setDisplayState('defaultLogin')
             sessionStorage.setItem('superAdmin', 'superAdmin')
             setIsLdapMode(await getIsLdapMode())
             verify()
         } else {
             if(!dpKeyCloak) {
                 const result = await setKeyCloak()
-                if(!result) return 
+                if(!result) return
             }
             sessionStorage.removeItem('superAdmin')
             keycloakLogin();
@@ -315,7 +315,7 @@ export const useUser = () => {
             const userDetail: any = jwt_decode(token.value)
             return userDetail.roles.includes(role)
         } catch (error) {
-            return false            
+            return false
         }
     }
     return {

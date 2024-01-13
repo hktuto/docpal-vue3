@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import tableSettingJson from "./table/setting.json";
 export const api = axios.create({
-    baseURL: '/api', //TODO : set base url from env
+    baseURL: window.__NUXT__.config.public.CUSTOM_KEYCLOAK_REDIRECT ? window.__NUXT__.config.public.CLIENT_PROXY : "/api", 
     timeout: 50000,
 })
 
