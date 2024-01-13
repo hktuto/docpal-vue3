@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     nitro:{
       routeRules:{
         '/api/**': {proxy: {to: process.env.PROXY +"/**"}},
+        '/notification/api/**': {proxy: {to: process.env.NOTIFICATION_PROXY+"/**"}},
         '/dashboard/**': {proxy: {to:process.env.DASHBOARD_PROXY+"/**"}},
         '/client/**': {proxy: {to:process.env.CLIENT_PROXY+"/**"}},
       },

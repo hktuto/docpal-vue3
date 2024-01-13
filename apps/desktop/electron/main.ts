@@ -81,9 +81,13 @@ function createWindow () {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
-  process.exit(0) // TODO : kill local server
 })
 
+app.on('quit', function () {
+  if (mainServer) {
+    mainServer.kill()
+  }
+})
 // Handle window controls via IPC
 ipcMain.on('shell:open', () => {
   const pageDirectory = __dirname.replace('app.asar', 'app.asar.unpacked')
