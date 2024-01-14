@@ -45,7 +45,7 @@ const cancelAxiosWhiteList = [
 ]
 let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
-    const { logout } = useUser()
+    const { logout, isLogin } = useUser()
     const router:any = nuxtApp.$router;
     const route:any = nuxtApp._route;
     // Doing something with nuxtApp
@@ -109,6 +109,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         return Promise.reject(error);
     });
+
+
 })
 function getBaseUrl(baseURL) {
     const { public:{ DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY } } = useRuntimeConfig();

@@ -1,4 +1,5 @@
 // import { useAppStore } from './../../dp-stores/composables/app';
+import { watch } from 'vue-demi'
 import jwt_decode from "jwt-decode";
 import { ElMessage } from 'element-plus'
 import { useSetting } from './../../dp-stores/composables/setting';
@@ -7,7 +8,17 @@ import { GetSetting, UserSettingSaveApi, getKeyCloakPropertyApi, Login, api, Ver
 import { User, UserSetting } from 'dp-api/src/model/user'
 import Keycloak from 'keycloak-js'
 let dpKeyCloak: any
+
+export type LoginHandler = {
+  name: string,
+  handler: (user: User) => void
+}
 export const useUser = () => {
+
+    // global callback function
+    const loginHandlers = useState<LoginHandler[]>('loginMessageHandlers', () => shallowRef<any[]>([]))
+    const logoutHandlers = useState<LoginHandler[]>('logoutMessageHandlers', () => shallowRef<any[]>([]))
+
     const route = useRoute()
     const router = useRouter()
     const publicRouteList = ['/resetPassword', '/resetPassword/']
@@ -318,6 +329,9 @@ export const useUser = () => {
             return false
         }
     }
+
+
+
     return {
         // data
         token,
@@ -341,6 +355,10 @@ export const useUser = () => {
         getDefaultLanguage,
         userList,
         beforeLogin,
-        getUserRolePermission
+        getUserRolePermission,
+
+        // global handler
+        loginHandlers,
+        logoutHandlers
     }
 }

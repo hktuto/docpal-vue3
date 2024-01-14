@@ -1,4 +1,4 @@
-import {TauriHeader} from "#components";
+
 
 
 export default defineNuxtPlugin(nuxtApp => {
