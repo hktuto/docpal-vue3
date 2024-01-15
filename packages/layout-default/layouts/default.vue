@@ -98,7 +98,7 @@ function toggleOpen() {
   function getDrawerBg(action: 'upload' | 'ai' = 'upload') {
     switch (action) {
       case 'ai':
-        return 'linear-gradient(-45deg, #b8dfe4, #e3f1f1);'
+        return 'var(--ask-ai-bg)'
       default:
         return ''
     }

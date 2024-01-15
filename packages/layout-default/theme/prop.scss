@@ -60,7 +60,7 @@
   --color-glass: rgba(255,255,255,0.9);
   --color-glass-border: rgba(255, 255, 255, 0.3);
   --header-bg: var(--color-s3);
-
+  --ask-ai-bg: linear-gradient(-45deg, #b8dfe4, #e3f1f1);
   --menu-color: var(--color-b4);
   --menu-selected-color: var(--secondary-color);
   --menu-selected-bg: var(--color-b4);
@@ -106,7 +106,6 @@ html.dark{
   --background-color: rgb(30, 31, 32);
   --second-background-color: linear-gradient(180deg, #3F484F 0%, #2B3138 100%);
 
-
   #gradient-canvas{
     --gradient-color-1: #1088c9;
     --gradient-color-2: #4963bb;
@@ -137,6 +136,7 @@ html.dark{
   --sidebar-bg: var(--color-b1);
 
   --header-bg: #282a2a;
+  --ask-ai-bg: linear-gradient(-45deg, #373d43, #282a2a);
 
   --menu-color: var(--color-b3);
   --menu-selected-color: var(--primary-color);

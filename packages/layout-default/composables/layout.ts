@@ -37,11 +37,11 @@ export const useLayout = () => {
 
   function allowFeature(f: pageFeatures) {
     const feature = getLicenseFeatures()
+    if (f === 'ASK_AI') return true
     if(!pageFeatures[f] || !feature || !feature[pageFeatures[f]]) return false
     // if(f === 'DOC_COMMENT') return false
     // if(f === 'DOC_ANNOTATION') return false
     // if(f === 'WORKFLOW_ADHOC') return false
-    // if (f === 'ASK_AI') return false
     // @ts-ignore
     return feature[pageFeatures[f]]
   }

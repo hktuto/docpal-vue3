@@ -100,7 +100,7 @@ function handleFullScreen() {
     setTimeout(() => { // 有延时
         if(props.idOrPath) {
             if(!!drawer) {
-                drawer.style.background = 'linear-gradient(-45deg, #b8dfe4, #e3f1f1)'
+                drawer.style.background = 'var(--ask-ai-bg)'
             }
         }
     },100)

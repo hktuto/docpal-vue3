@@ -26,7 +26,7 @@ defineExpose({open})
         padding: unset;
     }
     .el-drawer__body {
-        background: linear-gradient(-45deg, #b8dfe4, #e3f1f1);
+        background: var(--ask-ai-bg);
     }
 }
 </style>
