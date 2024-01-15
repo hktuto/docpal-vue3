@@ -1,8 +1,9 @@
 <template>
     <div class="listContainer">
-        <div class="left">
+        <div :class="['left', { 'left--drag': isDrag }]">
           <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" 
-            @contextmenu="handleEmptyRightClick"/>
+            @contextmenu="handleEmptyRightClick"
+            @change="(value) => isDrag = value"/>
             <el-tabs v-model="modelProps" @tab-click="tabChange">
             <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100" >
                 <browse-list-table v-if="modelProps === 'table'" id="browseTable" :list="children" :loading="pending" 
@@ -43,6 +44,7 @@ const props = withDefaults(defineProps<{
     view: 'table'
 })
 const {doc} = toRefs(props)
+const isDrag = ref(false)
 const modelProps = ref('table')
 
 function tabChange(tab: TabsPaneContext, event: Event) {
@@ -149,5 +151,10 @@ watch( doc, () => {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+.left--drag {
+  :deep .el-table-fixed-column--left, :deep .el-table-fixed-column--right {
+    background: #b9e8ec;
+  }
 }
 </style>
