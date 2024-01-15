@@ -9,7 +9,7 @@
                 :textSearchType="searchConfig.textSearchType"
                 @change="handleChangeParams"
                 @handleClose="handleRemoveParams"/>
-            <el-input v-model="state.inputValue" style="min-width: 100px;" @keyup.enter="inputPressEnterHandler"  clearable></el-input>
+            <el-input v-model="state.inputValue" style="min-width: 100px;" placeholder="Fill in the keyword" @keyup.enter="inputPressEnterHandler"  clearable></el-input>
             <el-button style="z-index: 101;" type="primary" :disabled="!state.dynamicTags || state.dynamicTags.length === 0" :loading="state.loading" @click="() => {handleSearch(); state.expanded = false}">{{ $t('search.text') }}
                 <el-icon class="el-icon--right"><Search /></el-icon>
             </el-button>
