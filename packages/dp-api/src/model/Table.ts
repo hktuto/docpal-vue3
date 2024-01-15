@@ -1245,7 +1245,7 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SEARCH] : {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true, canNotDelete:true, fixed:'left', "min-width": "320" },
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true, canNotDelete:true, "min-width": "320" },
             { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath',  "min-width": "160" },
             { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey', "min-width": "140" },
             { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue', "min-width": "200" },

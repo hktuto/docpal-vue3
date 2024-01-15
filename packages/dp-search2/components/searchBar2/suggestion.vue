@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-tag v-if="inputValue" @click="handleClick('paramsInTextSearch', inputValue)" class="tagOption">
-            {{ $t('search.paramsInTextSearch') }}: <b>{{ inputValue }}</b>
+          <div class="label">{{ $t('search.paramsInTextSearch') }}:</div> <b>{{ inputValue }}</b>
         </el-tag>
         <el-tag v-for="(value,key) in state.tagList" :key="key" class="tagOption">
            <div class="label"> {{ $t(value.label) }}:</div>
@@ -71,6 +71,9 @@ watch(() => props.inputValue, (val: any) => {
   --el-tag-text-color:var(--color-grey-600);
   --el-tag-border-radius: 1rem;
   padding:0 0.8rem;
+  .label{
+    margin-right: .4rem;
+  }
   :deep {
     .el-tag__content {
       display: flex;
