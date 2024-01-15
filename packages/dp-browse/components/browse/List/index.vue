@@ -153,8 +153,10 @@ watch( doc, () => {
   z-index: 1;
 }
 .left--drag {
-  :deep .el-table-fixed-column--left, :deep .el-table-fixed-column--right {
-    background: #b9e8ec;
+  :deep .el-table-fixed-column--left, 
+  :deep .el-table-fixed-column--right,
+  :deep thead .el-table__cell{
+    background: var(--table-drag-bg);
   }
 }
 </style>
