@@ -1,7 +1,8 @@
 <template>
     <div class="listContainer">
         <div class="left">
-          <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" />
+          <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" 
+            @contextmenu="handleEmptyRightClick"/>
             <el-tabs v-model="modelProps" @tab-click="tabChange">
             <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100" >
                 <browse-list-table v-if="modelProps === 'table'" id="browseTable" :list="children" :loading="pending" 
@@ -64,8 +65,24 @@ async function getList (param:any):Promise<any> {
     return
   }
 }
-
-
+async function handleEmptyRightClick(event: MouseEvent) {
+    event.preventDefault()
+    const data = {
+        doc: props.doc,
+        isFolder: props.doc.isFolder,
+        idOrPath: props.doc.path,
+        pageX: event.pageX,
+        pageY: event.pageY,
+        actions: {
+            cut: false,
+            copy: false,
+            rename: false,
+            delete: false
+        }
+    }
+    const ev = new CustomEvent('fileRightClick',{ detail: data })
+    document.dispatchEvent(ev)
+}
 async function cleanList () {
   children.value = []
 }
