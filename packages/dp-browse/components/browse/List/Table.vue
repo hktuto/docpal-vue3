@@ -207,6 +207,9 @@ defineExpose({ TableRef })
 .tableContainer{
     height: 100%;
 }
+.el-tag {
+    margin-bottom: calc(var(--app-padding) / 3)
+}
 :deep(.el-table__row){
     height: 100%;
     &:hover{
