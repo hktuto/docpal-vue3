@@ -34,7 +34,7 @@
 
         <div v-if="isLogin"  class="actions">
           <AppDownload v-if="!feature.tauri" />
-          <el-button v-if="endPoint === 'client'" round @click="handleOpenUpload(true, 'ai')" >
+          <el-button v-if="endPoint === 'client' && allowFeature('ASK_AI')" round @click="handleOpenUpload(true, 'ai')" >
             <SvgIcon style="--icon-size: 24px" src="/icons/logo/ai.svg"></SvgIcon>
           </el-button>
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
@@ -68,13 +68,12 @@ const props = withDefaults(defineProps<{
 })
 const collapse = ref(true)
 const logo = computed(() =>  collapse.value ? 'white_logo' : 'withName_white' )
+const { isLogin } = useUser()
 const { feature, menu } = useAppConfig();
-const {isLogin} = useUser()
-const { public:{ mode, endPoint }} = useRuntimeConfig();
-const { isMobile } = useLayout();
 const { uploadState } = useUploadAIStore()
+const { public:{ mode, endPoint }} = useRuntimeConfig();
+const { isMobile, sideSlot, headerSlots, allowFeature } = useLayout()
 const sidebarEl = ref();
-const { sideSlot, headerSlots } = useLayout()
 
 onClickOutside(sidebarEl, () => {
   if(isMobile && !collapse.value) {

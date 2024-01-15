@@ -8,7 +8,7 @@
 
     >
     <template #reference>
-        <div id="browseAiButton" :class="{'browseAiButton--left': state.position === 'bottom-start'}">
+        <div v-if="allowFeature('ASK_AI')" id="browseAiButton" :class="{'browseAiButton--left': state.position === 'bottom-start'}">
             <SvgIcon v-if="state.position !== 'bottom-start'" class="el-icon--left" src="/icons/tools/toLeft.svg" @click.stop="state.position = 'bottom-start'"></SvgIcon>
             <b style="margin-top: 3px; font-size: 16px;">Ask</b>
             <SvgIcon class="el-icon--right" src="/icons/logo/ai-pure.svg"></SvgIcon>
@@ -27,6 +27,7 @@
 const props = defineProps(['doc'])
 const emits = defineEmits(['openAiDrawer'])
 
+const { allowFeature } = useLayout()
 const state = reactive<any>({
     position: 'bottom-end'
 })
