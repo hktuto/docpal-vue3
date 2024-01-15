@@ -116,8 +116,8 @@ export const getDocumentDetailSync = async (idOrPath: string, userId?:string) =>
     doc.displayMeta = await GetDocumentAdditionalApi({ documentType })
   }
   async function getPermission() {
-    if(userId) {
-      const _permission:any = await GetDocPermission(idOrPath, userId);
+    if(userId && doc.id) {
+      const _permission:any = await GetDocPermission(doc.id, userId);
       if(!_permission.hold) _permission.hold = {}
       if(!!_permission) permission = _permission
     }
