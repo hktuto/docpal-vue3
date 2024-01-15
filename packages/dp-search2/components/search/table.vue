@@ -13,9 +13,9 @@
         <template #logicalPath="{ row }">
             <el-tooltip
                 effect="dark"
-                :content="row.logicalPath"
                 placement="top-start"
             >
+              <template #content> <div class="pathPoper">{{ row.logicalPath }}</div> </template>
               <div class="logicalPathText">{{ getLogicalPath(row) }}</div>
             </el-tooltip>
         </template>

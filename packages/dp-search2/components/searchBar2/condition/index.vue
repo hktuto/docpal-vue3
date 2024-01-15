@@ -47,7 +47,7 @@ function handleFilter(filterKey: string) {
     state.filterKey = filterKey
     state._optionItems = props.optionItems.filter((item: any) => {
         return item.label.toLowerCase().includes(filterKey.toLowerCase())
-    })
+    }).sort((a: any, b: any) => a.label.localeCompare(b.label))
 }
 watch(() => props.modelValue, (val: any) => {
     if(!!val) {
@@ -59,7 +59,7 @@ watch(() => props.modelValue, (val: any) => {
     immediate: true
 })
 watch(() => props.optionItems, (val: any) => {
-    if(val) state._optionItems = [...val]
+    if(val) state._optionItems = [...val.sort((a: any, b: any) => a.label.localeCompare(b.label))]
 }, {
     immediate: true
 })
