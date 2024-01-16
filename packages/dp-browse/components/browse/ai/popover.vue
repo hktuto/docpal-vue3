@@ -54,8 +54,8 @@ function closePopper() {
     height: 28px;
     line-height: 28px;
     position: absolute;
-    right: calc(var(--el-component-size-small) + 15px);
-    bottom: calc(var(--el-component-size-small) + 40px);
+    right: calc(var(--el-component-size-small));
+    bottom: calc(var(--el-component-size-small) + 15px);
     cursor: pointer;
     width: fit-content;
     &:hover {
@@ -63,7 +63,7 @@ function closePopper() {
     }
 }
 .browseAiButton--left {
-    left: calc(var(--el-component-size-small) + 15px);
+    left: calc(var(--el-component-size-small));
     right: unset;
 }
 #browseAi {

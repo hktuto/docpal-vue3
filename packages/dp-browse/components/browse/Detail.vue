@@ -310,6 +310,7 @@ watch(show, (isShow) => {
 }
 .preview{
     overflow: hidden;
+    position: reactive;
     &.mobileActionOpened{
         pointer-events: none;
     }

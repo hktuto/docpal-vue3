@@ -92,7 +92,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             return api(config);
         }
         if ((error?.response?.status === 404 || error?.response?.status === 503) &&
-                    !routeMatcher(route.path, noRouteErrorPages)) {
+                    !routeMatcher(route.path, noRouteErrorPages) && !error.config.headers.noRouteErrorPage) {
                 router.push(`/error/${error.response.status}`)
                 return
             } else if (messageErrorCode.includes(error?.response?.status)) {

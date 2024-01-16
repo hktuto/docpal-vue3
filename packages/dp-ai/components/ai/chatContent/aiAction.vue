@@ -17,6 +17,7 @@ const props = defineProps(['placeholder'])
 }
 .action-content {
     word-break: break-all;
+    line-height: 24px;
     :deep b {
         display: contents;
     }

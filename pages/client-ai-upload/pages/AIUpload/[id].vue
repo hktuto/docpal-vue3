@@ -24,10 +24,10 @@
         </div>
         <div class="main-center">
             <div class="flex-x-between" v-show="state.selectedDoc">{{ state.selectedDoc.name }}
-                <el-button type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>
+                <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>
             </div>
             <div :class="{ 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }">
-                <MetaRenderForm ref="MetaFormRef" mode="ai" @formChange="handleMetaChange"></MetaRenderForm>
+                <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'normal'" @formChange="handleMetaChange"></MetaRenderForm>
             </div>
         </div>
         <div v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" class="main-right">
@@ -55,6 +55,7 @@ const route = useRoute()
 const router = useRouter()
 const userId:string = useUser().getUserId()
 const { arrayToTree, getFileName } = useUploadAIStore()
+const { allowFeature } = useLayout()
 const treeRef = ref()
 const MetaFormRef = ref()
 const previewRef = ref();
@@ -84,6 +85,7 @@ const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
     }
 }
 async function handleNodeClick(row) {
+    if(row.id === state.selectedDoc.id) return
     state.selectedDoc = row
     if(row.aiAnalysisDocument && !row.aiAnalysis && row.aiAnalysisDocument.metaDatas) {
         row.aiAnalysis = row.aiAnalysisDocument.metaDatas.reduce((prev: any, item) => {
