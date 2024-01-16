@@ -37,7 +37,7 @@ const canWrite = computed(() => {
 const emit = defineEmits(['update'])
 async function handleTagsAdded(tagSelected:any) {
   // if tagSelected is already in props.doc.properties['nxtag:tags'] return
-  if (props.doc.properties['nxtag:tags'].some((item:any) => item.label === tagSelected.value )) {
+  if (props.doc?.properties['nxtag:tags'].some((item:any) => item.label === tagSelected.value )) {
     return
   }
   const param = {

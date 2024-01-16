@@ -16,8 +16,8 @@
                             @pagination-change="handlePaginationChange"
                             @row-dblclick="handleDblclick">
                             <template #tags="{ row, index }">
-                                <div v-if="row.properties && row.properties['nxtag:tags']">
-                                    <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+                                <div v-if="row?.properties && row?.properties['nxtag:tags']">
+                                    <el-tag v-for="item in row?.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
                                 </div>
                             </template>
                     </Table>
