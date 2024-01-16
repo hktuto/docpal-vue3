@@ -65,5 +65,6 @@ function handleChange(data: any) {
 <style lang="scss">
 .searbar-card-container {
     overflow: hidden !important;
+    max-width: 300px;
 }
 </style>
