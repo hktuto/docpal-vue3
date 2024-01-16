@@ -10,8 +10,6 @@ export const GetLanguageApi = async(locale: string, languageKey: string) => {
     const data = await api.get(`/docpal/relation/queryLanguage?locale=${locale}&languageKey=${languageKey}`, {
         headers: { 'noRouteErrorPage' : "true" }
     }).then(res=>res.data.data)
-    console.log('???????????????????');
-    
     if(data[0]) return {
         ...data[0],
         languageContent: JSON.parse(data[0].languageContent),
