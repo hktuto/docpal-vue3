@@ -12,7 +12,6 @@ process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 
-
 let mainWindow : BrowserWindow
 let mainServer 
 if (process.defaultApp) {
