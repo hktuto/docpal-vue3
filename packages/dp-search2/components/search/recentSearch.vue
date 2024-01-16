@@ -98,6 +98,7 @@ defineExpose({
 .el-tag {
     max-width: 100%;
     overflow: hidden;
+    margin-bottom: 3px;
     :deep(.el-tag__content) {
         width: 100%;
         white-space: nowrap;

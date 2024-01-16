@@ -29,7 +29,7 @@ const emits = defineEmits(['openAiDrawer'])
 
 const { allowFeature } = useLayout()
 const state = reactive<any>({
-    position: 'bottom-end'
+    position: 'bottom-start'
 })
 function itemClicked() {
     emits('openAiDrawer')
