@@ -6,7 +6,7 @@
                 <AiChatContentAiAction placeholder="ai.searchingFor">
                     <b>{{ item.question }}</b>
                 </AiChatContentAiAction>
-                <AiChatContentSearchResult :searchResult="item.searchResult" />
+                <AiChatContentSearchResult :searchResult="item.searchResult" @scrollBottom="$emit('scrollBottom')"/>
             </div>
             <div v-else-if="item.type === 'explain'"  :key="item.id" class="ai-chat--explain">
                 <div>{{ item.answer }}</div>
@@ -24,7 +24,7 @@
 </template>
 <script lang="ts" setup>
 import { AddAiCommentApi } from 'dp-api'
-
+const emits = defineEmits(['scrollBottom'])
 const props = withDefaults(defineProps<{
     chatRecord: any
 }>(),{
