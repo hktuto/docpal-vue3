@@ -6,8 +6,11 @@
 
 const router = useRouter();
 
-router.push({
-    path:'/acl'
+onMounted(() => {
+  const { public: {DEFAULT_PATH} } = useRuntimeConfig()
+  router.push({
+    path: DEFAULT_PATH as string || '/acl'
+  })
 })
 
 </script>
