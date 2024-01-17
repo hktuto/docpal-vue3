@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div style="margin-bottom: 10px;">{{$t('upload')}}</div>
+    <div style="margin-bottom: 10px;">{{$t('upload.upload')}}</div>
     <el-collapse v-model="activeNames" >
         <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :name="index.toString()">
             <template #title>
