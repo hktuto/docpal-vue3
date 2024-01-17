@@ -1,13 +1,13 @@
 <template>
-    <div class="ai-chat-content" style="--icon-color: var(--primary-color)">
+    <div id="ai-chat-content" class="ai-chat-content" style="--icon-color: var(--primary-color)">
         <SvgIcon class="logo" src="/icons/logo/docpal-ai.svg"></SvgIcon>
         <div class="ai-init-help">
             <AiChatContentSupport v-if="!idOrPath" :supportList="questionList"
-                @aiInput="(value) => emits('aiInput', value)">
+                @aiInput="(value) => emits('aiInput', value)" >
             </AiChatContentSupport>
             <small>{{ $t('ai.mistakesHelpTip') }}</small>
         </div>
-        <AiChatContentList :chatRecord="chatRecord"></AiChatContentList>
+        <AiChatContentList :chatRecord="chatRecord" @scrollBottom="scrollBottom"></AiChatContentList>
     </div>
 </template>
 
@@ -21,13 +21,31 @@ const props = withDefaults(defineProps<{
     chatRecord: []
 })
 const emits = defineEmits(['aiInput'])
+const scrollDownInterval = ref<any>()
 
+
+function scrollBottom(){
+  // scroll ai-chat-content to bottom
+  const aiChatContent = document.getElementById('ai-chat-content')
+  if (aiChatContent) {
+    // set an interval to scrolldown aiChatContent
+    scrollDownInterval.value = setInterval(() => {
+      if(aiChatContent.scrollTop === aiChatContent.scrollHeight){
+        console.log("clean")
+        clearInterval(scrollDownInterval.value)
+      }
+      aiChatContent.scrollTop = aiChatContent.scrollHeight
+    }, 300)
+    
+  }
+}
 </script>
 <style lang="scss" scoped>
 .ai-chat-content {
     position: relative;
     overflow: auto;
     padding-right: 4px;
+  scroll-behavior: smooth;
 }
 // .ai-new-topic {
 //     position: absolute;

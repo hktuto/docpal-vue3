@@ -85,7 +85,7 @@ function imgError(event) {
 // #endregion
 function handleDblclick (row:any, evt: any) {
     if (evt.ctrlKey) {
-        const url = router.resolve({  path: '/browse', query: { path: row.path } })
+        const url = router.resolve({  path: '/browse', query: { path: row.path, docId: row.id } })
         window.open(url.href, '_blank');
         return
     }
@@ -96,7 +96,7 @@ function handleDblclick (row:any, evt: any) {
     })
   }else{
     router.push({
-      query: { path: row.path, isFolder: row.isFolder}
+      query: { path: row.path, isFolder: row.isFolder, docId: row.id }
     })
   }
 }

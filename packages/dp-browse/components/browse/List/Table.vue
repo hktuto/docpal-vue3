@@ -125,7 +125,7 @@ const { tableData, options, loading } = toRefs(state)
 
 function handleDblclick (row:any, column: any, event: any) {
     if (event.ctrlKey) {
-        const url = router.resolve({  path: '/browse', query: { path: row.path } })
+        const url = router.resolve({  path: '/browse', query: { path: row.path, docId: row.id } })
         window.open(url.href, '_blank');
         return
     }
@@ -134,6 +134,7 @@ function handleDblclick (row:any, column: any, event: any) {
       query: {
         ...route.query,
         path: row.path,
+        docId: row.id,
         isFolder: row.isFolder
       }
     });

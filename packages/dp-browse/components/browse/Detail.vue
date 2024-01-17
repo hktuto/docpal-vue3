@@ -111,7 +111,7 @@ const readerType = computed(() => {
             return 'html';
         }
         if(mimeType.includes('image/tiff')) {
-            return 'other';
+            return 'pdf';
         }
         if(mimeType.includes('image') || mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator') || mimeType.includes('text')) {
             return 'pdf';
@@ -120,7 +120,7 @@ const readerType = computed(() => {
             return 'video';
         }
         if (mimeType.includes('audio')) {
-            return 'other';
+            return 'video';
         }
         return '';
     } catch (error) {
