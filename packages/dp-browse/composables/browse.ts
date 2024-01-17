@@ -30,7 +30,7 @@ export const useBrowse = () => {
     
 
     async function getDocDetail() {
-        const currentPath = route.query.path as string || '/'
+        const currentPath = route.query.docId || route.query.path as string || '/'
 
         routePath.value = currentPath
         // const response = await getDocumentDetail(routePath.value, userId)
