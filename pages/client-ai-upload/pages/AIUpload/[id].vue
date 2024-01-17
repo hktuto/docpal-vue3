@@ -27,7 +27,7 @@
                 <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>
             </div>
             <div :class="{ 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }">
-                <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'normal'" @formChange="handleMetaChange"></MetaRenderForm>
+                <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'upload'" @formChange="handleMetaChange"></MetaRenderForm>
             </div>
         </div>
         <div v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" class="main-right">

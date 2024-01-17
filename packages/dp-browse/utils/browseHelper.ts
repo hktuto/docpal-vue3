@@ -117,7 +117,8 @@ export const getDocumentDetailSync = async (idOrPath: string, userId?:string) =>
   }
   async function getPermission() {
     if(userId && doc.id) {
-      const _permission:any = await GetDocPermission(doc.id, userId);
+      const idPath = doc.path === '/' ? '/' : doc.id
+      const _permission:any = await GetDocPermission(idPath, userId);
       if(!_permission.hold) _permission.hold = {}
       if(!!_permission) permission = _permission
     }
