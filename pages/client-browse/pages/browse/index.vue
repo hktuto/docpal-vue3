@@ -38,6 +38,7 @@
                   </template>
                 </CollapseMenu>
             </div>
+            <div v-else class="placeholder"></div>
             <BrowseList
                 v-loading="loading"
 

@@ -1,6 +1,6 @@
 <template>
-<NuxtLayout class="fit-height withPadding" backPath="/data-dashboard" :pageTitle="`${$t('admin_dashboard')}/${$t('common_preview')}`">
-    <div class="template-container">
+<NuxtLayout class="fit-height " backPath="/data-dashboard" :pageTitle="`${$t('admin_dashboard')}/${$t('common_preview')}`">
+    <div class="template-container withPadding">
         <div class="flex-x-between">
             <div class="flex-x-between">
                 <span class="template-title"> {{ state.info.name }} </span>

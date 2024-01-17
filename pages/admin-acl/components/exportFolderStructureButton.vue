@@ -24,7 +24,7 @@ async function handleExport () {
     });
     const res = await exportFolderStructureApi(props.exportId, props.exportName)
     noti.close()
-    downloadBlob(res, props.exportName)
+    // downloadBlob(res, props.exportName)
 }
 </script>
 

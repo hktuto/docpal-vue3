@@ -1,5 +1,5 @@
 <template>
-<el-dropdown id="newActionButton" @command="handleCommand">
+<el-dropdown id="newActionButton" trigger="click" @command="handleCommand">
   <BrowseActionsButton  :label="$t('tip.new')" >
     <SvgIcon src="/icons/file/newFolder.svg" round></SvgIcon>
   </BrowseActionsButton>

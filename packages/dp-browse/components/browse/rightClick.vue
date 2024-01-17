@@ -37,6 +37,9 @@
             <el-menu-item index="docActionNewTab">
                 <SvgIcon class="el-icon--left" src="/icons/file/new-tab.svg"></SvgIcon>
                 {{$t('rightClick.newTab')}}</el-menu-item>
+            <el-menu-item  v-show="!state.doc.isFolder" index="docActionDownload">
+                <SvgIcon class="el-icon--left" src="/icons/file/download.svg"></SvgIcon>
+                {{$t('rightClick.download')}}</el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -45,6 +48,7 @@
 import { useEventListener } from '@vueuse/core'
 import { DocDetail, GetDocPermission, GetDocumentHoldApi } from 'dp-api'
 import { AllowTo } from '~/utils/permissionHelper'
+import { downloadHandler } from "~/utils/browseHelper";
 const props = defineProps<{
     permission?: any
 }>()
@@ -156,9 +160,12 @@ function handleSelect (command: string) {
         window.open(url.href, '_blank');
         return
     }
+    else if (command === 'docActionDownload') {
+        downloadHandler(state.doc)
+        return
+    }
     else if (command === 'docActionCopy' || command === 'docActionCut') state.copyItem.path = state.doc.path
-    const data = state.doc
-    const ev = new CustomEvent(command,{ detail: data })
+    const ev = new CustomEvent(command,{ detail: state.doc })
     document.dispatchEvent(ev)
     emits('rightActionClick', command)
 }

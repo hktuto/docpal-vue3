@@ -105,6 +105,8 @@
               </TableCard>
             </div>
           </template>
+            <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+
         </div>
         <!-- 分页器 -->
         <div v-if="_options.showPagination" class="mt20">
@@ -423,6 +425,7 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
     overflow: hidden;
     user-select: none;
     &--main {
+        position: relative;
         overflow: hidden;
         .el-table {
             height: 100%;

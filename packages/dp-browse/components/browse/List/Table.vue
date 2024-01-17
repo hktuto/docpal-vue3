@@ -13,8 +13,7 @@
                 @command="handleAction"
                 @row-dblclick="handleDblclick"
                 @row-contextmenu="handleRightClick"
-                @selection-change="handleSelect"
-                @contextmenu="handleEmptyRightClick">
+                @selection-change="handleSelect">
                 <template #nameFilter="{column, index}">
                     <el-input
                         v-model="keywords"
@@ -144,24 +143,7 @@ function handleDblclick (row:any, column: any, event: any) {
     //   showHeaderAction:true
     // })
 }
-async function handleEmptyRightClick(event: MouseEvent) {
-    event.preventDefault()
-    const data = {
-        doc: props.doc,
-        isFolder: props.doc.isFolder,
-        idOrPath: props.doc.path,
-        pageX: event.pageX,
-        pageY: event.pageY,
-        actions: {
-            cut: false,
-            copy: false,
-            rename: false,
-            delete: false
-        }
-    }
-    const ev = new CustomEvent('fileRightClick',{ detail: data })
-    document.dispatchEvent(ev)
-}
+
 
 function handleRightClick (row: any, column: any, event: MouseEvent) {
     event.preventDefault()
@@ -224,6 +206,9 @@ defineExpose({ TableRef })
 }
 .tableContainer{
     height: 100%;
+}
+.el-tag {
+    margin-bottom: calc(var(--app-padding) / 3)
 }
 :deep(.el-table__row){
     height: 100%;

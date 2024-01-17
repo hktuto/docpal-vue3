@@ -1,6 +1,6 @@
 <template>
-<NuxtLayout class="fit-height withPadding " :backPath="`/workflow?tab=${backState}`">
-    <div class="grid-layout">
+<NuxtLayout class="fit-height " :backPath="`/workflow?tab=${backState}`">
+    <div class="grid-layout withPadding">
         <el-tabs v-model="activeTab" class="grid-layout-tab" @tab-change="tabChange">
             <el-tab-pane class="grid-layout-tab-pane" :label="$t('workflow_info')" name="info" v-loading="state.loading">
                 <WorkflowDetailCompleteInfo v-if="state.processState[backState]" :taskDetail="taskDetail" :state="backState"></WorkflowDetailCompleteInfo>
@@ -123,9 +123,10 @@ const isAssigneeUser = computed(() => {
     function formDataGetFromProps (list) {
         return list.reduce((prev, item) => {
                     // if item type is boolean, convert string to boolean
-                    if (item.type === 'boolean') {
+                    if (item.type === 'boolean' && (item.value === 'true' || item.value === 'false')) {
                         item.value = item.value === 'true'
                     }
+                    
                     prev[item.id] = item.value
                     return prev
                 }, {})
@@ -162,11 +163,11 @@ const isAssigneeUser = computed(() => {
             const data = await vFormRef.value.getFormData(true, false)
             if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
             // convert all item in data which is boolean to string
-            Object.keys(data).forEach(key => {
-                if (typeof data[key] === 'boolean') {
-                    data[key] = String(data[key])
-                }
-            })
+            // Object.keys(data).forEach(key => {
+            //     if (typeof data[key] === 'boolean') {
+            //         data[key] = String(data[key])
+            //     }
+            // })
             const param = {
                 taskId: route.params.id,
                 properties: { ...data },

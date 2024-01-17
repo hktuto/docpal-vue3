@@ -1,5 +1,6 @@
 <template>
 <Interact
+    id="drawer"
     :resizable="true"
     :resizeOption="{
             edges: { left: true, right: false, bottom: false, top: false }
@@ -8,8 +9,11 @@
     @resizemove="resizeMove"
 >
   <slot></slot>
-  <SvgIcon v-if="interact.closeShow" class="drawer-close" src="/icons/close.svg"
-    @click="handleSwitch()"></SvgIcon>
+  <div class="drawer-close" v-show="interact.closeShow">
+        <slot name="drawerAction"></slot>
+        <SvgIcon v-if="close" src="/icons/close.svg"
+            @click="handleSwitch()"></SvgIcon>
+  </div>
 </Interact>
 </template>
 
@@ -20,12 +24,14 @@ const props = withDefaults(defineProps<{
     defaultW: number,
     minWidth: number,
     maxWidth: number,
+    close: boolean
 }>(),{
     defaultOpen: false,
     showClose: true,
     defaultW: 400,
-    minWidth: 120,
-    maxWidth: 600
+    minWidth: 340,
+    maxWidth: 600,
+    close: true
 })
 const interact = reactive({
     // maxWidth: 600,
@@ -76,8 +82,11 @@ defineExpose({
     box-shadow: 0px 0px 12px rgba(0,0,0,.12);
     overflow: auto;
     transition: all .5s;
+    background: var(--drawer-bg, --color-grey-0000);
 }
 .drawer-close {
+    display: flex;
+    gap: 4px;
     position: absolute;
     top: var(--drawer-padding);
     right: var(--drawer-padding);

@@ -2,6 +2,7 @@ import { api } from 'dp-api';
 import { useLanguage } from '../composables/language';
 export default defineNuxtPlugin(({$i18n,_route}) => {
     const { addLanguageKeys } = useLanguage()
+
     const router = useRouter()
     if( typeof window !== undefined) {
         // @ts-ignore

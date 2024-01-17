@@ -1,5 +1,7 @@
 <template>
-    <div class="page"></div>
+    <div class="page">
+        
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -11,8 +13,9 @@ onMounted(() => {
         if(!!publicPages.find(item => route.path.includes(item))) {
             appStore.setDisplayState('ready') 
         } else {
+            const { public: {DEFAULT_PATH} } = useRuntimeConfig()
             router.push({
-                path:'/browse'
+                path: DEFAULT_PATH as string || '/browse'
             })
         }
     })

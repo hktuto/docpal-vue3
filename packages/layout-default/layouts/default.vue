@@ -34,15 +34,21 @@
 
         <div v-if="isLogin"  class="actions">
           <AppDownload v-if="!feature.tauri" />
-          <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
+          <el-button v-if="endPoint === 'client' && allowFeature('ASK_AI')" round @click="handleOpenUpload(true, 'ai')" >
+            <SvgIcon style="--icon-size: 24px" src="/icons/logo/ai.svg"></SvgIcon>
+          </el-button>
+          <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
           <Notification v-if="feature.notification" />
           <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
         </div>
       </div>
         <main id="mainContainer">
           <slot />
-          <InteractDrawer ref="InteractDrawerRef">
-            <UploadStructure></UploadStructure>
+          <InteractDrawer ref="InteractDrawerRef" :close="!['ai'].includes(state.interactDrawerAction)"
+            :style="`--drawer-bg: ${getDrawerBg(state.interactDrawerAction)}`">
+            <UploadStructure v-if="state.interactDrawerAction === 'upload'"></UploadStructure>
+            <AiChat v-else-if="state.interactDrawerAction === 'ai'"
+              @close="handleOpenUpload(false, 'ai')"></AiChat>
           </InteractDrawer>
         </main>
         <SharePublicButton></SharePublicButton>
@@ -62,13 +68,12 @@ const props = withDefaults(defineProps<{
 })
 const collapse = ref(true)
 const logo = computed(() =>  collapse.value ? 'white_logo' : 'withName_white' )
+const { isLogin } = useUser()
 const { feature, menu } = useAppConfig();
-const {isLogin} = useUser()
-const { public:{ mode }} = useRuntimeConfig();
-const { isMobile } = useLayout();
-const { uploadState, uploadRequestList } = useUploadAIStore()
+const { uploadState } = useUploadAIStore()
+const { public:{ mode, endPoint }} = useRuntimeConfig();
+const { isMobile, sideSlot, headerSlots, allowFeature } = useLayout()
 const sidebarEl = ref();
-const { sideSlot, headerSlots } = useLayout()
 
 onClickOutside(sidebarEl, () => {
   if(isMobile && !collapse.value) {
@@ -76,17 +81,27 @@ onClickOutside(sidebarEl, () => {
   }
 })
 const state = reactive({
+  interactDrawerAction: 'upload'
 })
 function toggleOpen() {
   collapse.value = !collapse.value
-  console.log(collapse.value);
-
 }
 
 // #region module:
   const InteractDrawerRef = ref()
-  function handleOpenUpload(isOpen: boolean = false) {
-    InteractDrawerRef.value.handleSwitch(isOpen)
+  function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 'upload') {
+    console.log({action});
+    
+    state.interactDrawerAction = action
+    InteractDrawerRef.value.handleSwitch(show)
+  }
+  function getDrawerBg(action: 'upload' | 'ai' = 'upload') {
+    switch (action) {
+      case 'ai':
+        return 'var(--ask-ai-bg)'
+      default:
+        return ''
+    }
   }
 // #endregion
 
@@ -230,6 +245,11 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     height: 100%;
     position: relative;
     overflow: hidden;
+    :deep .withPadding {
+      padding: calc(var(--app-padding) * 2);
+      height: 100%;
+      overflow: hidden;
+    }
   }
   &.withPadding #mainContainer {
     padding: calc(var(--app-padding) * 2);

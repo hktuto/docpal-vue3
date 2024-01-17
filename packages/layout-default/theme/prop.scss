@@ -60,7 +60,7 @@
   --color-glass: rgba(255,255,255,0.9);
   --color-glass-border: rgba(255, 255, 255, 0.3);
   --header-bg: var(--color-s3);
-
+  --ask-ai-bg: linear-gradient(-45deg, #b8dfe4, #e3f1f1);
   --menu-color: var(--color-b4);
   --menu-selected-color: var(--secondary-color);
   --menu-selected-bg: var(--color-b4);
@@ -68,7 +68,7 @@
 
   --outline-color: rgba(255,255,255,0.5);
   // --el-table-tr-bg-color: var(--color-grey-050);
-
+  --table-drag-bg: #b9e8ec;
 
 
 
@@ -84,12 +84,27 @@
   --gradient-color-3: #1dd6c3;
   --gradient-color-4: #9adfee;
 }
-
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: var(--color-grey-500);
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background: var(--color-grey-100);
+}
 html.dark{
 
   --background-color: rgb(30, 31, 32);
   --second-background-color: linear-gradient(180deg, #3F484F 0%, #2B3138 100%);
-
 
   #gradient-canvas{
     --gradient-color-1: #1088c9;
@@ -121,6 +136,7 @@ html.dark{
   --sidebar-bg: var(--color-b1);
 
   --header-bg: #282a2a;
+  --ask-ai-bg: linear-gradient(-45deg, #373d43, #282a2a);
 
   --menu-color: var(--color-b3);
   --menu-selected-color: var(--primary-color);
@@ -129,6 +145,7 @@ html.dark{
 
   --color-glass: rgba(0,0,0,0.8);
   --color-glass-border: rgba(92, 92, 92, 0.6);
+  --table-drag-bg: #154448;
 }
 
 .highContract-mode{

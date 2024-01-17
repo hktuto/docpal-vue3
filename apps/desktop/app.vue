@@ -1,16 +1,10 @@
 <template>
     <AuthApp >
-      <template #loadingHeader>
-        <div data-tauri-drag-region class="headerContainer">
-          <TauriHeader  />
-        </div>
-      </template>
+      
     </AuthApp>
 </template>
 
 <script setup>
-import { enable, isEnabled, disable } from "tauri-plugin-autostart-api";
-import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import {useEventListener} from '@vueuse/core';
 
 

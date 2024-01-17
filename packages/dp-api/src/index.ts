@@ -1,21 +1,9 @@
 import axios from 'axios';
-import axiosTauriApiAdapter from './tauri';
 
 import tableSettingJson from "./table/setting.json";
 export const api = axios.create({
-    baseURL: '/api',
+    baseURL: window.__NUXT__.config.public.CUSTOM_KEYCLOAK_REDIRECT ? window.__NUXT__.config.public.CLIENT_PROXY : "/api", 
     timeout: 50000,
-    adapter: (config) => {
-        if(window?.__TAURI__){
-            // config.baseURL = undefined
-            if(config.baseURL === '/api'){
-                config.baseURL = undefined
-                config.url = 'https://app4.wclsolution.com/api' + config.url;
-            }
-            return axiosTauriApiAdapter(config);
-        }
-        return axios(Object.assign({}, config, { adapter: undefined }));
-    }
 })
 
 export * from './endpoint';

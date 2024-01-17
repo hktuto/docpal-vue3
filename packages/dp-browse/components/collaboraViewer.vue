@@ -119,7 +119,7 @@ defineExpose({
 <template>
 <div class="xlsContainer">
     <div  :class="{editToggleButton:true, iframeReady}" @click="toggleMode">
-      {{ $t('collabora.'+mode)}} <SvgIcon :src="mode === 'view' ? '/icons/file/edit.svg' : '/icons/close.svg'"  ></SvgIcon>
+      {{ $t('collabora.'+mode)}} <SvgIcon v-if="editable" :src="mode === 'view' ? '/icons/file/edit.svg' : '/icons/close.svg'"  ></SvgIcon>
     </div>
     <form ref="formEl" :action="collaboraUrl" enctype="multipart/form-data" method="post" target="collabora-online-viewer" id="collabora-submit-form">
         <input name="css_variables" :value="css" type="hidden" id="css-variables"/>
@@ -134,6 +134,7 @@ defineExpose({
 .xlsContainer{
     width:100%;
     height:100%;
+  position: relative;
 }
 #xlsxIframe{
     width: 100%;
@@ -144,12 +145,12 @@ defineExpose({
   --icon-color: var(--color-grey-0000);
   --icon-size: .8rem;
   position: absolute;
-  left: calc(50% - 75px);
+  left: calc(50% - 60px);
   top: 0;
-  width: 150px;
+  width: 120px;
   color: var(--color-grey-0000);
-  font-size: 1rem;
-  padding: .5rem 1rem;
+  font-size: .8rem;
+  padding: .5rem .5rem;
   display: flex;
   gap:calc( var(--app-padding) / 2 );
   flex-flow: row nowrap;

@@ -10,9 +10,9 @@ export const useLanguage = defineStore('Language', () => {
     const ignoreList:string[] = ['en-US', 'zh-CN', 'zh-HK']
     const route = useRoute()
     const languageKeys = new Set<string>()
-    const localeSectionKeys = useNuxtApp().$config.public.LOCAL_KEY.split(',');
+    const localeSectionKeys = 'admin,mete,client'.split(',');
     const i18n: any = useNuxtApp().$i18n
-    
+
     const languageStores = new Map();
     const languageKeysStores = new Map();
     // 步骤1：添加key
@@ -46,7 +46,7 @@ export const useLanguage = defineStore('Language', () => {
                         data[item] = key
                     })
                     languageKeysStores.set(key, data)
-                } 
+                }
                 prev.push(languageKeysStores.get(key))
                 return prev
             }, [])
@@ -119,11 +119,11 @@ export const useLanguage = defineStore('Language', () => {
     // 步骤四：保存设置，并且重新加载语言
     async function setLanguageStores (row: any) {
         let pList: any = []
-        
+
         availableLocales.forEach((code) => {
             const data = languageStores.get(getStoreKey(code, row.section))
-            
-            
+
+
             if(data._languageContent[row.key] !== row[code]) {
                 data._languageContent[row.key] = row[code]
                 pList.push(handleSetLanguage(data, {code, section: row.section, key: row[code]}))
@@ -157,7 +157,7 @@ export const useLanguage = defineStore('Language', () => {
             // 仅重加载变更的语言
             await restored(locales, sections)
             resolve()
-        }, 800)) 
+        }, 800))
     }
     async function restored (locales: string[], sections: string[]) {
         await getLanguageListStore(locales, sections)
@@ -174,9 +174,9 @@ export const useLanguage = defineStore('Language', () => {
         try {
             const params = {
                 ...data,
-                languageContent: JSON.stringify(restoreChainJson(data._languageContent)) 
+                languageContent: JSON.stringify(restoreChainJson(data._languageContent))
             }
-            
+
             delete params._languageContent
             const res = await SetLanguageApi(params)
             return { ...result, result: res}
@@ -189,14 +189,14 @@ export const useLanguage = defineStore('Language', () => {
         if (locale.includes('zh') && locale !== 'zh-HK') locale = 'zh-CN'
         if (!i18n.availableLocales.includes(locale)) {
             const jsonKeys = {}
-            
+
             // @ts-ignore
             for await ( const languageKey of localeSectionKeys) {
                 try {
                     const { languageContent } = await GetLanguageApi(locale, languageKey)
                     Object.assign(jsonKeys, languageContent);
                 } catch (error) {
-        
+
                 }
             }
             i18n.setLocaleMessage(locale, jsonKeys);
@@ -215,7 +215,7 @@ export const useLanguage = defineStore('Language', () => {
         languageKeysStores,
         addLanguageKeys,
         getLanguageKeys,
-        
+
         getLanguageList,
         getLanguageListStore,
 

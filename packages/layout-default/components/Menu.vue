@@ -105,7 +105,7 @@ onMounted(() => {
     border-radius: 4px 0 0 4px;
 }
 .el-menu, :deep(.el-menu)  {
-  --icon-size: 1rem;
+  --icon-size: 16px;
   --icon-color: var(--menu-color);
   --icon-hover-color: var(--menu-color);
   background-color: unset;

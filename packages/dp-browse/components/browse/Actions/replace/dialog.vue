@@ -7,7 +7,7 @@
                 :rules="[{ required: true, message: $t('form_common_requird')}]">
                 <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1"></BrowseActionsReplaceUpload>
         </el-form-item>
-        <el-checkbox v-model="form.openAiAnalyzeMetadata">{{ $t('ai.checkAI') }}</el-checkbox>
+        <el-checkbox v-if="allowFeature('AI_CLASSIFICATION')" v-model="form.openAiAnalyzeMetadata">{{ $t('ai.checkAI') }}</el-checkbox>
         <!-- <el-form-item :label="$t('filePopover_OCRLanguages')" prop="targetFile">
             <el-select v-model="form.languages" :multiple-limit="2" multiple placeholder="N/A">
                 <el-option  v-for="l in availableLanguage"
@@ -25,6 +25,8 @@ import { getOcrSupportedLanguage, ReplaceFileAiDocumentApi } from 'dp-api'
 const emits = defineEmits([
     'update'
 ])
+
+const { allowFeature } = useLayout()
 const state = reactive({
     loading: false,
     visible: false,

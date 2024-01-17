@@ -20,6 +20,8 @@ enum pageFeatures {
   SHARE_EXTERNAL = 'SHARE_EXTERNAL',
   HOLD_POLICIES = 'HOLD_POLICIES',
   RETENTION_POLICIES = 'RETENTION_POLICIES',
+  ASK_AI = 'ASK_AI',
+  AI_CLASSIFICATION = 'AI_CLASSIFICATION'
 }
 export const useLayout = () => {
   const { getLicenseFeatures } = useAppStore()
@@ -35,13 +37,12 @@ export const useLayout = () => {
 
 
   function allowFeature(f: pageFeatures) {
-
     const feature = getLicenseFeatures()
+    // if (f === 'AI_CLASSIFICATION') return true
     if(!pageFeatures[f] || !feature || !feature[pageFeatures[f]]) return false
     // if(f === 'DOC_COMMENT') return false
     // if(f === 'DOC_ANNOTATION') return false
     // if(f === 'WORKFLOW_ADHOC') return false
-    // if(f === 'WATERMARK') return false
     // @ts-ignore
     return feature[pageFeatures[f]]
   }

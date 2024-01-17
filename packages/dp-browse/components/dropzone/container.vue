@@ -1,5 +1,5 @@
 <template>
-    <div ref="dropZoneRef" :class="{dropzone:true, isOverDropZone}">
+    <div ref="dropZoneRef" :class="{dropzone:true, isOverDropZone }">
         <slot />
     </div>
 </template>
@@ -8,6 +8,8 @@
 <script lang="ts" setup >
 import { useDropZone } from '@vueuse/core'
 import { addDataTransfer } from '../../../dp-components/utils/upload'
+const emits = defineEmits(['change'])
+
 const handleOpenUploadDrawer = inject('handleOpenUploadDrawer')
 const { createUploadRequest } = useUploadAIStore()
 const props = defineProps<{doc: any}>();
@@ -20,6 +22,12 @@ const handleDrop = async (_, e) => {
     handleOpenUploadDrawer(true)
 }
 const { isOverDropZone } = useDropZone(dropZoneRef, handleDrop)
+watch(() => isOverDropZone, (newVal) => {
+    emits('change', newVal.value)
+}, {
+    immediate: true,
+    deep: true
+})
 </script>
 
 <style lang="scss" >

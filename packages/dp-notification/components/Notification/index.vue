@@ -11,10 +11,12 @@ import { getUnreadNotificationNumberApi } from 'dp-api';
 const unreadCount = ref(0);
 const notificationStore = ref()
 const NotificationDialogRef = ref();
-const { isLogin, token } = useUser();
 const router = useRouter()
-const Cookies = useCookie('messageToken')
+
 const { uploadState }  = useUploadAIStore()
+const { messageHandlers } = useNotification()
+const { allowFeature } = useLayout()
+
 const userId:string = useUser().getUserId()
 function handleOpen () {
     NotificationDialogRef.value.handleOpen()
@@ -28,6 +30,7 @@ function handleUnreadCountChange (count:number) {
     else getUnreadCount()
 }
 function messageChange(notiData) {
+    console.log("messageChange", notiData)
     getUnreadCount()
     NotificationDialogRef.value.initData()
     try {
@@ -51,7 +54,7 @@ function handleAiUpload(content) {
     if(content.uploadId) {
         const noti = ElNotification({
             title: $t('ai.uploadcomplete'),
-            message: $t('ai.uploadAndAIComplete'),
+            message: allowFeature('AI_CLASSIFICATION') ? $t('ai.uploadAndAIComplete') : '',
             type: 'success',
             duration: 0,
             onClick: () => {
@@ -85,16 +88,16 @@ function handleReplaceFileWithAi(content) {
 }
 onMounted(() => {
     getUnreadCount();
+    messageHandlers.value.push({
+      name: 'localMessageDialog',
+      handler: messageChange
+    })
 })
-watch( () => isLogin.value, (newValue) => {
-    Cookies.value = token.value || ''
-    if(newValue) {
-        notificationStore.value = useNotification(userId, messageChange)
-        // notificationStore.value.start()
-    }
-}, {
-    immediate:true 
+
+onBeforeUnmount(() => {
+    messageHandlers.value = messageHandlers.value.filter(item => item.name !== 'localMessageDialog')
 })
+
 </script>
 
 <style lang="scss" scoped>

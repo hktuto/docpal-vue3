@@ -1,23 +1,25 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
-        <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
-            @command="handleAction"
-            @row-dblclick="handleDblclick"
-            @pagination-change="handlePaginationChange">
-            <template #preSortButton>
-                <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                    inputKey="fileName" inputPlaceHolder="tip.fileOrFolderName"/>
-            </template> 
-            <template #status="{ row, index }">
-                <el-tag :type="getTagType(row.uploadStatus )">
-                    {{ $t(`ai.status.${row.uploadStatus}`) }}
-                </el-tag>
-            </template>
-            <template #commonActions="{ row, index }">
-                <SvgIcon v-if="row.uploadStatus === 'Ready'" src="/icons/edit.svg" @click="handleEdit(row)" />
-            </template>
-        </Table>
-        <AiUploadPreviewDialog ref="AiUploadPreviewDialogRef" />
+    <NuxtLayout class="fit-height">
+        <div class="withPadding">
+            <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
+                @command="handleAction"
+                @row-dblclick="handleDblclick"
+                @pagination-change="handlePaginationChange">
+                <template #preSortButton>
+                    <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
+                        inputKey="fileName" inputPlaceHolder="tip.fileOrFolderName"/>
+                </template> 
+                <template #status="{ row, index }">
+                    <el-tag :type="getTagType(row.uploadStatus )">
+                        {{ $t(`ai.status.${row.uploadStatus}`) }}
+                    </el-tag>
+                </template>
+                <template #commonActions="{ row, index }">
+                    <SvgIcon v-if="row.uploadStatus === 'Ready'" src="/icons/edit.svg" @click="handleEdit(row)" />
+                </template>
+            </Table>
+            <AiUploadPreviewDialog ref="AiUploadPreviewDialogRef" />
+        </div>
     </NuxtLayout>
 </template>
 

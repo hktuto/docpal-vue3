@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div style="margin-bottom: 10px;">{{$t('upload')}}</div>
+    <div style="margin-bottom: 10px;">{{$t('upload.upload')}}</div>
     <el-collapse v-model="activeNames" >
         <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :name="index.toString()">
             <template #title>
@@ -51,6 +51,7 @@ const props = defineProps<{
 const router = useRouter()
 const activeNames = ref(['0'])
 const { uploadState }  = useUploadAIStore()
+const { allowFeature } = useLayout()
 function fileSizeFilter (bytes) {
     if (!bytes) return ''
     bytes = Number(bytes)
@@ -108,8 +109,8 @@ function getPercentage(finish, total) {
 function getRequestTitle(uploadRequestItem) {
     const percentage = getPercentage(uploadRequestItem.finishCount, uploadRequestItem.docList.length)
     if(percentage !== 100) return percentage + '%'
-    else if(!uploadRequestItem.aiFinish) return $t('ai.waitForAi')
-    else return $t('ai.uploadcomplete')
+    else if(!uploadRequestItem.aiFinish) return allowFeature('AI_CLASSIFICATION') ? $t('ai.waitForAi'): $t('upload.complete')
+    else return allowFeature('AI_CLASSIFICATION') ? $t('ai.uploadcomplete') : $t('upload.complete')
 }
 watch(uploadState, () => {
     console.log("uploadState", uploadState.value)

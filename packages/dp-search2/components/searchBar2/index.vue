@@ -1,6 +1,6 @@
 <template>
     <div v-if="state.inputValue || state.expanded" class="searchBar-container-placeholder" ></div>
-    <div :class="['searchBar-container', {'searchBar-container-absolute': state.inputValue || state.expanded }]" @mouseleave="handleClearInputValue">
+    <div :class="['searchBar-container', {'searchBar-container-absolute': state.inputValue || state.expanded }]" @mouseleave="handleClearInputValue" ref="searchContainerEl">
         <div class="searchBar-main">
             <SearchBar2AssetType v-model:assetType="searchConfig.assetType" @update:assetType="init(searchConfig.assetType)"/>
             <searchBar2ConditionTag
@@ -33,6 +33,7 @@
     <SearchExportDialog ref="SearchDownloadDialogRef" />
 </template>
 <script lang="ts" setup>
+import { onClickOutside } from '@vueuse/core'
 import { ArrowDownBold, Search  } from '@element-plus/icons-vue';
 import {
     getConditionStore,
@@ -40,6 +41,7 @@ import {
     getSuggestList
 } from '../../utils/searchBar2'
 const props = defineProps(['exportButton'])
+const searchContainerEl = ref(null);
 const emits = defineEmits(['export', 'search', 'setSearchParams'])
 const searchConfig = reactive<any>({
     assetType: '',
@@ -179,6 +181,13 @@ function handleExport() {
 onMounted(() => {
     init()
 })
+
+watch(state, () => {
+    if(state.expanded) {
+      onClickOutside(searchContainerEl, evt => state.expanded = false);
+    }
+},{deep: true})
+
 defineExpose({
     handleChangeParams, handleSearch, setLoading
 })

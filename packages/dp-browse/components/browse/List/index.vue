@@ -1,7 +1,9 @@
 <template>
     <div class="listContainer">
-        <div class="left">
-          <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" />
+        <div :class="['left', { 'left--drag': isDrag }]">
+          <DropzoneContainer v-if="!isMobile" class="backgroundDrop rootDrop" :doc="doc" 
+            @contextmenu="handleEmptyRightClick"
+            @change="(value) => isDrag = value"/>
             <el-tabs v-model="modelProps" @tab-click="tabChange">
             <el-tab-pane :label="$t('browse_list_table')" name="table" class="h100" >
                 <browse-list-table v-if="modelProps === 'table'" id="browseTable" :list="children" :loading="pending" 
@@ -42,6 +44,7 @@ const props = withDefaults(defineProps<{
     view: 'table'
 })
 const {doc} = toRefs(props)
+const isDrag = ref(false)
 const modelProps = ref('table')
 
 function tabChange(tab: TabsPaneContext, event: Event) {
@@ -64,8 +67,24 @@ async function getList (param:any):Promise<any> {
     return
   }
 }
-
-
+async function handleEmptyRightClick(event: MouseEvent) {
+    event.preventDefault()
+    const data = {
+        doc: props.doc,
+        isFolder: props.doc.isFolder,
+        idOrPath: props.doc.path,
+        pageX: event.pageX,
+        pageY: event.pageY,
+        actions: {
+            cut: false,
+            copy: false,
+            rename: false,
+            delete: false
+        }
+    }
+    const ev = new CustomEvent('fileRightClick',{ detail: data })
+    document.dispatchEvent(ev)
+}
 async function cleanList () {
   children.value = []
 }
@@ -132,5 +151,12 @@ watch( doc, () => {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+.left--drag {
+  :deep .el-table-fixed-column--left, 
+  :deep .el-table-fixed-column--right,
+  :deep thead .el-table__cell{
+    background: var(--table-drag-bg);
+  }
 }
 </style>

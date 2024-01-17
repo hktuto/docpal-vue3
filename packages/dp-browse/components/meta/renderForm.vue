@@ -29,7 +29,7 @@ type initMetaFormOptions = {
     aiDocId?: string
 }
 const props = withDefaults(defineProps<{
-    mode: 'fileRequest' | 'ai' | 'ai-edit', 'normal',
+    mode: 'fileRequest' | 'upload' | 'ai' | 'ai-edit', 'normal',
 }>(), {
     mode: 'normal',
 })
@@ -86,7 +86,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                 }
             });
             
-            if(props.mode === 'ai') {
+            if(['ai', 'upload'].includes(props.mode)) {
                 state.variables.unshift({
                     name: 'documentType',
                     label: $t('search.documentType'),

@@ -4,9 +4,13 @@ import {
   GetDocPermission, 
   GetDocumentAdditionalApi, 
   DocDetail,
-  GetDocumentHoldApi
+  GetDocumentHoldApi,
+  DownloadDocApi,
+  exportFolderStructureApi
 } from "dp-api";
 import * as mime from 'mime-types'
+import { Download, Loading } from '@element-plus/icons-vue';
+import { ElNotification, ElMessage} from 'element-plus'
 export const isRoot = (path:string):boolean => {
     return path === "/";
 };
@@ -112,8 +116,9 @@ export const getDocumentDetailSync = async (idOrPath: string, userId?:string) =>
     doc.displayMeta = await GetDocumentAdditionalApi({ documentType })
   }
   async function getPermission() {
-    if(userId) {
-      const _permission:any = await GetDocPermission(idOrPath, userId);
+    if(userId && doc.id) {
+      const idPath = doc.path === '/' ? '/' : doc.id
+      const _permission:any = await GetDocPermission(idPath, userId);
       if(!_permission.hold) _permission.hold = {}
       if(!!_permission) permission = _permission
     }
@@ -198,4 +203,53 @@ export function downloadBlob (blob:any, name:string, type = "application/octet-s
   console.log(fileName, blob.type)
   const url = window.URL.createObjectURL(blobStream)
   downloadUrl(url, fileName)
+}
+export function downloadHandler(doc: any) {
+  console.log(doc.isFolder);
+  
+  if(!doc.isFolder) downloadFileHandler(doc)
+  else downloadFolderHandler(doc)
+}
+export async function downloadFolderHandler(doc: any) {
+  const noti = ElNotification({
+    title: '',
+    dangerouslyUseHTMLString: true,
+    icon: Loading,
+    message: `downloading ~ ${doc.name}`,
+    showClose: false,
+    customClass: 'loading-notification',
+    duration: 0,
+    position: 'bottom-right'
+  });
+  const res = await exportFolderStructureApi(doc.id, doc.name)
+  noti.close()
+}
+export async function downloadFileHandler(doc: any){
+  console.log(doc);
+  
+  // exportFolderStructureApi
+  const id = new Date().valueOf() + doc.name
+  const notification = ElNotification({
+    title: '',
+    icon: Download,
+    dangerouslyUseHTMLString: true,
+    message: `<span id="${id}">0%</span> ${doc.name}`,
+    showClose: false,
+    customClass: 'download-notification',
+    duration: 0,
+    position: 'bottom-right'
+  });
+  try{
+    const blob = await DownloadDocApi(doc.id, (e: any) => {
+      const el = document.getElementById(id)
+      if(el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+    })
+    await downloadBlob(blob, doc.name)
+    // await DownloadDocApi(props.doc.id)
+  } catch(error:any) {
+    ElMessage.error($t('download_noFile') as string)
+  }
+  setTimeout(() => {
+    notification.close()
+  }, 3000)
 }

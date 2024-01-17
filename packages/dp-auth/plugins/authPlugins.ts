@@ -45,7 +45,7 @@ const cancelAxiosWhiteList = [
 ]
 let flag = 0
 export default defineNuxtPlugin((nuxtApp) => {
-    const { logout } = useUser()
+    const { logout, isLogin } = useUser()
     const router:any = nuxtApp.$router;
     const route:any = nuxtApp._route;
     // Doing something with nuxtApp
@@ -70,7 +70,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return config;
     },(error) => Promise.reject(error));
     api.interceptors.response.use((response) => {
-     
       return response
     }, async(error) => {
         console.log(error)
@@ -93,7 +92,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             return api(config);
         }
         if ((error?.response?.status === 404 || error?.response?.status === 503) &&
-                    !routeMatcher(route.path, noRouteErrorPages)) {
+                    !routeMatcher(route.path, noRouteErrorPages) && !error.config.headers.noRouteErrorPage) {
                 router.push(`/error/${error.response.status}`)
                 return
             } else if (messageErrorCode.includes(error?.response?.status)) {
@@ -110,11 +109,14 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         return Promise.reject(error);
     });
+
+
 })
 function getBaseUrl(baseURL) {
-    const { public:{ DASHBOARD_PROXY, CLIENT_PROXY } } = useRuntimeConfig();
-    if(baseURL === '/dashboard') return DASHBOARD_PROXY
-    if(baseURL === '/client') return CLIENT_PROXY
+    const { public:{ DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY } } = useRuntimeConfig();
+    if (baseURL === '/dashboard') return DASHBOARD_PROXY
+    if (baseURL === '/client') return CLIENT_PROXY
+    if (baseURL === '/admin') return ADMIN_PROXY
     return baseURL
 }
 function routeMatcher (path, routeList) {

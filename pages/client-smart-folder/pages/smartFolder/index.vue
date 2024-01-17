@@ -1,6 +1,6 @@
 <template>
-    <NuxtLayout class="fit-height withPadding">
-        <div class="smartFolder-container">
+    <NuxtLayout class="fit-height ">
+        <div class="smartFolder-container withPadding">
             <SmartFolderBreadCrumb :breadcrumbs="state.breadcrumbs"></SmartFolderBreadCrumb>
             <Table v-loading="loading" :columns="tableSetting.columns" :table-data="tableData" :options="options"
                     @command="handleAction"

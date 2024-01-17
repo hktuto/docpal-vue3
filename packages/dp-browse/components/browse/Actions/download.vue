@@ -17,7 +17,7 @@
             <ElDialog v-model="popupOpened" width="280" append-to-body>
             <div class="popoverContent">
                 <!-- download button -->
-                <el-button type="text" @click="downloadHandler">Download original</el-button>
+                <el-button type="text" @click="downloadFileHandler(doc)">Download original</el-button>
                 <!-- download as pdf button -->
                 <el-button v-if="isPdf" type="text" @click="downloadAsPdfHandler">Download as PDF</el-button>
                 <!-- download pdf and annotation -->
@@ -49,6 +49,7 @@ import { DownloadDocApi, downloadDocRecord, getSupportedFormatApi, submitExportR
 import { Download } from '@element-plus/icons-vue';
 import { ElNotification, ElMessage} from 'element-plus'
 import {useEventListener} from "@vueuse/core";
+import { downloadFileHandler } from "~/utils/browseHelper";
 const props = defineProps<{
     doc: any,
     blob: any,
@@ -112,58 +113,38 @@ onMounted(async () => {
 
 
 // #endregion
-async function downloadHandler(){
-    const id = new Date().valueOf() + props.doc.name
-    const notification = ElNotification({
-          title: '',
-          icon: Download,
-          dangerouslyUseHTMLString: true,
-          message: `<span id="${id}">0%</span> ${props.doc.name}`,
-          showClose: false,
-          customClass: 'download-notification',
-          duration: 0,
-          position: 'bottom-right'
-        });
-    try{
-      const blob = await DownloadDocApi(props.doc.id, (e) => {
-        const el = document.getElementById(id)
-        if(el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
-      })
-      await downloadBlob(blob, props.doc.name)
-    //   await DownloadDocApi(props.doc.id)
-    } catch(error:any) {
-        ElMessage.error(t('download_noFile') as string)
-    }
-    notification.close()
-}
-async function downloadAsPdfHandler(){
-    // TODO : impelment action
-    const notification = ElNotification({
-          title: '',
-          icon: Download,
-          dangerouslyUseHTMLString: true,
-          message: `${props.doc.name}`,
-          showClose: false,
-          customClass: 'download-notification',
-          duration: 0,
-          position: 'bottom-right'
-        });
-    try{
-      console.log("downloadHandler")
-      const ev = new CustomEvent('downloadPdf')
-      document.dispatchEvent(ev);
-        await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDF'})
-    } catch(error:any) {
-        ElMessage.error(t('download_noFile') as string)
-    }
-    notification.close()
-}
+// #region module: 
+  
+  async function downloadAsPdfHandler(){
+      // TODO : impelment action
+      const notification = ElNotification({
+            title: '',
+            icon: Download,
+            dangerouslyUseHTMLString: true,
+            message: `${props.doc.name}`,
+            showClose: false,
+            customClass: 'download-notification',
+            duration: 0,
+            position: 'bottom-right'
+          });
+      try{
+        const ev = new CustomEvent('downloadPdf')
+        document.dispatchEvent(ev);
+          await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDF'})
+      } catch(error:any) {
+          ElMessage.error(t('download_noFile') as string)
+      }
+      setTimeout(() => {
+        notification.close()
+      }, 1000);
+  }
 
-async function downloadPdfAndAnnotationHandler(){
-    // TODO : impelment action
-    const ev = new CustomEvent('downloadPdfAndAnnotation', { detail: props.doc })
-    window.dispatchEvent(ev);
-}
+  async function downloadPdfAndAnnotationHandler(){
+      // TODO : impelment action
+      const ev = new CustomEvent('downloadPdfAndAnnotation', { detail: props.doc })
+      window.dispatchEvent(ev);
+  }
+// #endregion
 
 useEventListener(document, 'isDocPdf', () => {
   console.log('isDocPdf')
