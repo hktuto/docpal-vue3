@@ -16,7 +16,7 @@
               <AiChatContentSearchResultList 
                   :searchResult="searchResult" 
                   @openDirectory="openDirectory" 
-                  @openPreview="openDirectory"
+                  @openPreview="openDetail"
                   @scrollBottom="$emit('scrollBottom')"
               />
             </template>
@@ -36,11 +36,17 @@ const state = reactive<any>({
 })
 
 
-function openDirectory(path:string) {
-  openFileDetail(path, {
-      showInfo:true,
-      showHeaderAction:true
-    })
+function openDirectory(docId:string) {
+  router.push({
+    path:'/browse',
+    query: {
+      docId
+    }
+  })
+}
+
+function openDetail(path:string) {
+  openFileDetail(path, {})
 }
 
 

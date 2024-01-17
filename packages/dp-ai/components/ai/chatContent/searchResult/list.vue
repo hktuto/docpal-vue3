@@ -36,7 +36,11 @@ function getPreviewFile(list:any[]) {
 
 function openDetail(item:any){
   console.log(item)
-  emits('openDirectory', item.payload.id)
+  emits('openPreview', item.payload.id)
+}
+
+function openParent(item:any){
+  emits('openDirectory', item.payload['ecm:parentId'])
 }
 
 watch(props.searchResult, (val:any) => {
@@ -52,8 +56,9 @@ watch(props.searchResult, (val:any) => {
   <div class="searchResultListContainer">
     <div v-for="item in searchResult" :key="item.payload.id" class="frame">
       <Reader class="ai-search-result-reader" v-bind="state.previewMap[item.payload.id]"></Reader>
-      <div class="ai-search-result-reader--text ellipsis" :title="item.payload['ecm:title']" @click="openDetail(item)"> 
-        {{ item.payload['ecm:title'] }} 
+      <div class="ai-search-result-reader--text ellipsis" :title="item.payload['ecm:title']"> 
+        <SvgIcon src="/icons/folder-normal.svg" @click="openParent(item)"></SvgIcon>
+        <div class="name"  @click="openDetail(item)">{{ item.payload['ecm:title'] }} </div>
       </div>
     </div>
   </div>
@@ -71,7 +76,12 @@ watch(props.searchResult, (val:any) => {
 .ai-search-result-reader--text {
   width: 250px;
   padding: var(--app-padding) 0;
-  cursor: pointer;
+  --icon-size:1rem;
+  display: flex;
+  gap: var(--app-padding);
+  .name{
+    cursor: pointer;
+  }
 }
 .searchResultListContainer {
   display: flex;
