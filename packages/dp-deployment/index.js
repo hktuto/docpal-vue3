@@ -28,7 +28,6 @@ function normalizeSetting(){
 
 function generateJson(){
     const config = normalizeSetting()
-
     fs.writeFileSync(`${config.path}/public/siteSetting.json`, JSON.stringify(config.setting))
     console.log("Finish")
 }

@@ -8,7 +8,7 @@ const defaultConfig = {
   runtimeConfig:{
       public:{
         env,
-
+        // availableLocales:['zh-CN','en-US','zh-HK'],
       }
   },
   vite:{
