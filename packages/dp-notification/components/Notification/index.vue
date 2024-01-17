@@ -15,6 +15,8 @@ const router = useRouter()
 
 const { uploadState }  = useUploadAIStore()
 const { messageHandlers } = useNotification()
+const { allowFeature } = useLayout()
+
 const userId:string = useUser().getUserId()
 function handleOpen () {
     NotificationDialogRef.value.handleOpen()
@@ -52,7 +54,7 @@ function handleAiUpload(content) {
     if(content.uploadId) {
         const noti = ElNotification({
             title: $t('ai.uploadcomplete'),
-            message: $t('ai.uploadAndAIComplete'),
+            message: allowFeature('AI_CLASSIFICATION') ? $t('ai.uploadAndAIComplete') : '',
             type: 'success',
             duration: 0,
             onClick: () => {
