@@ -1,6 +1,5 @@
 {
     "pdfReaderUrl": "https://app4.wclsolution.com/resources/pdfjs/web/viewer.html",
-    "LOCAL_KEY": "admin,meta",
     "PROXY":"https://app4.wclsolution.com/api",
     "DASHBOARD_PROXY":"https://app4.wclsolution.com/public-api/report/v1/api",
     "CLIENT_PROXY": "https://app4.wclsolution.com/api",

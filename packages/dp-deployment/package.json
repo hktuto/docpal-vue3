@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js --app client --path ../../apps/client --pdfReaderUrl http://localhost:3001 --PROXY http://localhost:8080 --CLIENT_PROXY http://localhost:8080 --ADMIN_PROXY http://localhost:3001 --endPoint http://localhost:3001 --DEFAULT_PATH http://localhost:3001 --OFFICE_END_POINT http://localhost:3001 --UPLOAD_END_POINT http://localhost:3001 --DOCPAL_END_POINT http://localhost:3001 --ADMIN_END_POINT http://localhost:3001",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
