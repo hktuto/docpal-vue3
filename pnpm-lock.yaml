@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -555,6 +551,12 @@ importers:
       typescript:
         specifier: ^4.9.3
         version: 4.9.5
+
+  packages/dp-deployment:
+    dependencies:
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
 
   packages/dp-editorjs:
     dependencies:
@@ -16065,7 +16067,6 @@ packages:
 
   /minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
-    dev: true
 
   /minipass-collect@1.0.2:
     resolution: {integrity: sha512-6T6lH0H8OG9kITm/Jm6tdooIbogG9e0tLgpY6mphXSm/A9u8Nq1ryBG+Qspiub9LjWlBPsPS3tWQ/Botq4FdxA==}
@@ -23258,3 +23259,7 @@ packages:
     dependencies:
       '@tauri-apps/api': 1.5.3
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
