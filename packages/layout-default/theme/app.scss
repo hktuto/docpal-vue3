@@ -207,5 +207,6 @@ $--scroll-dialog-height: fit-content;
 }
 .el-popper {
     max-height: 70vh;
+    overflow-y: auto;
     // max-width: 300px;
 }
