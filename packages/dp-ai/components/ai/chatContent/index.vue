@@ -29,13 +29,14 @@ function scrollBottom(){
   const aiChatContent = document.getElementById('ai-chat-content')
   if (aiChatContent) {
     // set an interval to scrolldown aiChatContent
+    if(scrollDownInterval.value) clearInterval(scrollDownInterval.value)
     scrollDownInterval.value = setInterval(() => {
       if(aiChatContent.scrollTop + aiChatContent.clientHeight === aiChatContent.scrollHeight){
         console.log("clean")
         clearInterval(scrollDownInterval.value)
       }
       aiChatContent.scrollTop = aiChatContent.scrollHeight
-    }, 300)
+    }, 500)
     
   }
 }
