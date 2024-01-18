@@ -207,6 +207,6 @@ $--scroll-dialog-height: fit-content;
 }
 .el-popper {
     max-height: 70vh;
-    overflow-y: auto;
+    overflow-y: auto; // 去掉会有样式错误，非必要不修改
     // max-width: 300px;
 }
