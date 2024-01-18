@@ -8,6 +8,7 @@ const defaultConfig = {
   runtimeConfig:{
       public:{
         env,
+        mode: process.env.NODE_ENV
         // availableLocales:['zh-CN','en-US','zh-HK'],
       }
   },
