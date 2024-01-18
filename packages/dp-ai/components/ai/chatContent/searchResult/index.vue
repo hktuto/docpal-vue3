@@ -46,7 +46,9 @@ function openDirectory(docId:string) {
 }
 
 function openDetail(path:string) {
-  openFileDetail(path, {})
+  openFileDetail(path,{
+    showHeaderAction:true
+  })
 }
 
 
