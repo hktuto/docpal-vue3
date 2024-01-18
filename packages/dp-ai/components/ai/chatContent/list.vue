@@ -42,6 +42,11 @@ async function handleAddToComment(id) {
         state.commentLoading = false
     }, 1000);
 }
+watch(props.chatRecord, () => {
+  setTimeout(() => {
+    emits('scrollBottom')
+  },500)
+})
 </script>
 <style lang="scss" scoped>
 .ai-chat-record-container {

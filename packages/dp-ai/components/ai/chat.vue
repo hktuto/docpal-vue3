@@ -7,7 +7,7 @@
             v-bind="state.aiInit"
             @aiInput="(value: string) => state.searchParams.question = value"> </AiChatContent>
         <div>
-            <el-button v-if="showAddCurrentContext" class="ai-new-topic" type="primary" :icon="Plus" text @click="state.searchParams.idOrPath = route.query.path">{{ $t('ai.addCurrentContext')  }}</el-button>
+            <el-button v-if="showAddCurrentContext" class="ai-new-topic" type="primary" :icon="Plus" text @click="() => {state.searchParams.idOrPath = $route.query.docId || $route.query.path || '/'}">{{ $t('ai.addCurrentContext')  }}</el-button>
             <el-button class="ai-new-topic" type="primary" :loading="state.newTopicLoading" :icon="Plus" text @click="handleNewTopic">{{ $t('ai.newTopic')  }}</el-button>
             <AiChatBox v-model="state.searchParams.question" :rows="state.fullScreen ? 3 : rows" :loading="state.loading" @enter="handleEnter"/>
         </div>
