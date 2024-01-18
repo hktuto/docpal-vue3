@@ -30,7 +30,7 @@ function scrollBottom(){
   if (aiChatContent) {
     // set an interval to scrolldown aiChatContent
     scrollDownInterval.value = setInterval(() => {
-      if(aiChatContent.scrollTop === aiChatContent.scrollHeight){
+      if(aiChatContent.scrollTop + aiChatContent.clientHeight === aiChatContent.scrollHeight){
         console.log("clean")
         clearInterval(scrollDownInterval.value)
       }
