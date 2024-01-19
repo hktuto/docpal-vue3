@@ -100,10 +100,11 @@ function replyBoxShow () {
         line-height: 1.5rem;
         color: var(--color-grey-900);
         &>span {
-        white-space: break-spaces;
+            white-space: break-spaces;
+            word-break: break-word;
         }
         &_to{
-        color: var(--color-grey-500);
+            color: var(--color-grey-500);
         }
     }
     &_name { 

@@ -8,7 +8,7 @@ export const AiChatInitApi = async() => {
     return res
 }
 export const AddAiCommentApi = async(answerId) => {
-    const res = await api.post('/ai/ask_ai/ai_chat/addAiComment', { answerId }).then(res => res.data.data)
+    const res = await api.post('/ai/ask_ai/ai_chat/addAiComment', { answerId }).then(res => res.data.message)
     return res
 }
 export const AiAaskQuestionApi = async(params) => {

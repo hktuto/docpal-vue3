@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import anime from 'animejs'
+import { useEventListener } from '@vueuse/core'
 import { CommentsGetApi, CommentsDeleteApi, CommentsAddApi } from 'dp-api'
 const props = defineProps<{
     doc: any,
@@ -78,9 +79,11 @@ function handleScroll () {
         })
     })
 }
+useEventListener(document, 'refreshComment', handleCommentsGet)
 watch(() => props.doc, (val) => {
     if (val) handleCommentsGet()
 }, { immediate: true })
+
 </script>
 
 <style lang="scss" scoped>
