@@ -6,6 +6,7 @@
                     <el-tag v-for="item in row.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
                 </div>
             </template>
+            <template #documentTypeHeader="{column}">{{ $t(column.label) }} </template>
     </Table>
 </template>
 

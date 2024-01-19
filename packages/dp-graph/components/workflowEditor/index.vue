@@ -96,6 +96,8 @@ function saveForm(updatedData:any) {
     bpmnJson.value.definitions.process['attr_flowable:candidateStarterGroups'] = updatedData['attr_flowable:candidateStarterGroups'];
   }
   workflowForm.value = updatedData;
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
+  
 }
 
 function saveUserStep(stepData) {
@@ -117,7 +119,7 @@ function saveUserStep(stepData) {
     const dd = node.getData();
     selectedData.value = dd;
   }
-
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 
@@ -158,6 +160,7 @@ function setStepData(stepId, newData) {
       return;
     }
   }
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 function saveEmailStep(stepData) {
@@ -176,6 +179,7 @@ function saveEmailStep(stepData) {
     })
     node.setData(newData);
   }
+  graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
 
 onMounted(() => {
@@ -339,6 +343,10 @@ function newDocumentHandler(node:Node) {
   addNewServiceTask(data, 'document', bpmnJson);
   graphJson.value = bpmnToX6(bpmnJson.value, { hideEnd:false });
 }
+
+function boundaryChange(value){
+  boundaryDataUpdate(bpmnJson, value);
+}
 useEventListener(document, 'delete-workflow-graph-item', ({detail:{node}}) => itemDeleteHandler(node))
 useEventListener(document, 'new-approve-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node, 'approve'))
 useEventListener(document, 'new-form-workflow-graph-item', ({detail:{node}}) =>newApproveHandler(node, 'form'))
@@ -361,7 +369,7 @@ defineExpose({
       <template v-if="selectedData">
         <WorkflowEditorForm v-if="selectedData.type === 'workflowForm'"  @close="closeSidePanel" @submit="saveForm" />
         <WorkflowEditorFormUserTask v-else-if="selectedData.type === 'userTask'" :data="selectedData"  @close="closeSidePanel" @submit="saveUserStep" />
-        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" @boundaryChange="(newVal) => boundaryDataUpdate(bpmnJson, newVal)" />
+        <WorkflowEditorFormEmail v-else-if="selectedData['attr_flowable:delegateExpression'] === '${sendNotificationDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" @boundaryChange="boundaryChange" />
         <WorkflowEditorFormDocument v-else-if="selectedData['attr_flowable:delegateExpression'] === '${generateDocumentDelegate}'" :data="selectedData" :allField="allFormField.form" @close="closeSidePanel" @submit="saveEmailStep" />
         <WorkflowEditorFormBoundaryEvent v-else-if="selectedData.type === 'boundaryEvent'" :data="selectedData" @close="closeSidePanel" @submit="saveBoundaryStep" />
       </template>

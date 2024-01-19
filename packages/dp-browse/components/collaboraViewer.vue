@@ -40,7 +40,7 @@ function refresh(){
 
 
 function toggleMode() {
-    if(!editing.value) return
+  if(!props.editable) return
   if(mode.value === 'view') {
     mode.value = 'edit';
   } else {
