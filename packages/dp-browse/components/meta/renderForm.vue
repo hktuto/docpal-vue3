@@ -29,7 +29,7 @@ type initMetaFormOptions = {
     aiDocId?: string
 }
 const props = withDefaults(defineProps<{
-    mode: 'fileRequest' | 'upload' | 'ai' | 'ai-edit', 'normal',
+    mode: 'fileRequest' | 'upload' | 'ai' | 'ai-edit'| 'normal',
 }>(), {
     mode: 'normal',
 })
@@ -135,11 +135,13 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
     }
     function getAIFormJson (formJson) {
         const widgetList = []
-        formJson.widgetList.forEach(item => {
-            const gridItem = getMetaApplyFormGridItem(16,8, ['ai-suggestion-container'])
+        formJson.widgetList.forEach((item:any) => {
+            const gridItem = getMetaApplyFormGridItem( )
             const slotItem = getMetaAISlot(item.options.name)
-            gridItem.cols[0].widgetList.push(item)
-            gridItem.cols[1].widgetList.push(slotItem)
+          // combine item and slot
+            // gridItem.cols[0].widgetList.push(newItem)
+            gridItem.cols[0].widgetList.push(item, slotItem)
+            // gridItem.cols[1].widgetList.push(slotItem)
             widgetList.push(gridItem)
         })
         return { formConfig: formJson.formConfig, widgetList }
