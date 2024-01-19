@@ -11,7 +11,15 @@ export class aiChatRecord {
         this.author = params.author
         if(params.question) this.question = params.question;
         if(params.answer) this.answer = params.answer;
-        this.type = params.type || 'question'
+
+        if(params.type === 'explain' && 
+            (   !params.answer 
+                || params.answer === ''
+                || params.answer.replaceAll('/n', '').trim() === ''
+            )
+        ) this.type = 'notFound'
+        else this.type = params.type || 'question'
+
         this.searchResult = params.searchResult
         this.supportList = params.supportList || []
         

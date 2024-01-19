@@ -10,7 +10,7 @@
             </div>
             <div v-else-if="item.type === 'explain'"  :key="item.id" class="ai-chat--explain">
                 <div>{{ item.answer }}</div>
-                <el-button :laoding="state.commentLoading" @click="handleAddToComment(item.id)">{{ $t('ai.addTocomment') }}</el-button>
+                <el-button v-if="!state.commentedList.includes(item.id)" :loading="state.commentLoading" @click="handleAddToComment(item.id)">{{ $t('ai.addTocomment') }}</el-button>
             </div>
             <AiChatContentAiAction v-else-if="item.type === 'loading'" placeholder="ai.generatingAnswer"/>
             <AiChatContentAiAction v-else :placeholder="`ai.${item.type}`"/>
@@ -24,6 +24,7 @@
 </template>
 <script lang="ts" setup>
 import { AddAiCommentApi } from 'dp-api'
+import { ElMessage } from 'element-plus'
 const emits = defineEmits(['scrollBottom'])
 const props = withDefaults(defineProps<{
     chatRecord: any
@@ -32,16 +33,34 @@ const props = withDefaults(defineProps<{
 })
 
 const state = reactive<any>({
-    commentLoading: false
+    commentLoading: false,
+    commentedList: []
 })
 
 async function handleAddToComment(id) {
     state.commentLoading = true
-    await AddAiCommentApi(id)
+    try {
+        const result = await AddAiCommentApi(id)
+
+        if (result === 'success') ElMessage.success($t('dpMsg_success'))
+        else ElMessage.error(result)
+        
+        state.commentedList.push(id)
+        sessionStorage.setItem('commentedList', state.commentedList)
+        const ev = new CustomEvent('refreshComment')
+        document.dispatchEvent(ev);
+    } catch (error) {
+        ElMessage.error('error')
+    }
+
     setTimeout(() => {
         state.commentLoading = false
     }, 1000);
 }
+onMounted(() => {
+    const commentedList = sessionStorage.getItem('commentedList')
+    if(!!commentedList) state.commentedList = commentedList || []
+})
 watch(props.chatRecord, () => {
   setTimeout(() => {
     emits('scrollBottom')

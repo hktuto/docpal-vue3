@@ -74,7 +74,7 @@ async function handleEnter() {
             author: 'AI',
             searchResult: _chatRecord2.searchResult,
             id: _chatRecord2.answerId,
-            type: _chatRecord2.questionType === 'explain' && !_chatRecord2.answer ? 'notFound' : _chatRecord2.questionType,
+            type: _chatRecord2.questionType,
             question: searchParams.question,
             answer: _chatRecord2.answer,
             supportList: _chatRecord2.supportList
