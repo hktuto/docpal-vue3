@@ -116,6 +116,7 @@
                 @size-change="pageSizeChange"
                 @current-change="currentPageChange" />
         </div>
+        <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
     </div>
 </template>
 <script lang="ts" setup>
@@ -417,6 +418,7 @@ defineExpose({ reorderColumn, toggleSelection, tableRef })
     }
 }
 .dp-table-container {
+    position: relative;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     height: 99%;

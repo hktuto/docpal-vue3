@@ -8,6 +8,10 @@ const type = ref("");
 const shape = ref("");
 const exclusive = ref(false);
 const dataId = ref("");
+const itemData = ref({
+  boundary:[],
+  exclusive: false
+});
 
 const typeOption = {
   "form-node": {icon:"/bpmn/icons/form.svg", color: "#0099ff", radius: "1rem", size:"80px"},
@@ -35,6 +39,7 @@ function getData() {
   shape.value = node.value.shape;
   exclusive.value = data.exclusive || false;
   dataId.value = data.attr_id || "";
+  itemData.value = data;
 }
 
 function emitDeleteEvent(){
@@ -104,9 +109,9 @@ onMounted(() => {
       <el-dropdown-menu v-if="dataId !== 'end'">
         <el-dropdown-item v-if="dataId !== 'start' && type !=='exclusiveGateway'" command="delete">Remove</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive" command="approval">Add Approval</el-dropdown-item>
-        <el-dropdown-item v-if="!exclusive" command="form">Add Form</el-dropdown-item>
+        <el-dropdown-item v-if="!exclusive " command="form">Add Form</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive" command="email">Add Email</el-dropdown-item>
-        <el-dropdown-item v-if="type === 'userTask'" command="dueEmail">Add Remind Email</el-dropdown-item>
+        <el-dropdown-item v-if="type === 'userTask' && (!itemData.boundary || itemData.boundary.length === 0)" command="dueEmail">Add Remind Email</el-dropdown-item>
         <el-dropdown-item v-if="!exclusive"  command="document">Add Document</el-dropdown-item>
       </el-dropdown-menu>
     </template>
