@@ -3,7 +3,7 @@
     id="drawer"
     :resizable="true"
     :resizeOption="{
-            edges: { left: true, right: false, bottom: false, top: false }
+            edges: { left: true, right: true, bottom: false, top: false }
         }"
     :style="style"
     @resizemove="resizeMove"
@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<{
     defaultW: number,
     minWidth: number,
     maxWidth: number,
-    close: boolean
+    close: boolean,
 }>(),{
     defaultOpen: false,
     showClose: true,
@@ -41,24 +41,24 @@ const interact = reactive({
     closeShow: false
 })
 const style = computed(() => {
-    let s = `--drawer-width: ${interact.w}px;` 
+    let s = `--drawer-width: ${interact.w}px;`
     s += `--drawer-padding: ${interact.w === 0 ? 0 + 'px': 'var(--app-padding)'};`
     s += `--drawer-min-width: ${interact.w === 0 ? 0 : props.minWidth }px;`
     return s
 })
 function handleSwitch(isOpen: boolean = false) {
     console.log(isOpen , 'isOpen');
-    
+
     if (interact.w === 0 || isOpen) {
-        interact.w = props.defaultW 
+        interact.w = props.defaultW
         interact.closeShow = true
     } else {
-        interact.w = 0 
+        interact.w = 0
         interact.closeShow = false
     }
 }
 function handleOpen(width: number = props.defaultW) {
-    interact.w = width 
+    interact.w = width
     interact.closeShow = props.showClose
 }
 function resizeMove(event:any) {

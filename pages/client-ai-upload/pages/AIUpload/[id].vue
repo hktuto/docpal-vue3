@@ -1,39 +1,55 @@
 <template>
 <NuxtLayout class="fit-height" :backPath="state.backPath" :pageTitle="$t('ai.uploadText')">
-    <main class="upload-main withPadding" v-loading="state.loading">
-        <div class="main-left">
-            <el-tree ref="treeRef" :data="state.fileList"
-                    default-expand-all
-                    nodeKey="id" :expand-on-click-node="false"
-                    @node-click="handleNodeClick">
-                <template #default="{ node, data }">
-                    <div class="flex-x-between tree-item">
-                        <span :class="['flex-x-start', { 'color__danger': state.repearNameIdList.includes(data.id) }]">
-                            <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
-                            {{data.name}}
-                        </span>
-                        <div class="flex-x-start" style="--icon-size: 16px;">
-                            <!-- <el-tag v-if="Object.keys(data.aiAnalysis).length > 0" color="#FFC401" type="warning" class="mx-1" effect="dark" round >
-                                <SvgIcon src="/icons/file/ai.svg" style="--icon-color: #fff;"/>
-                            </el-tag> -->
-                            <SvgIcon src="/icons/menu/trash.svg"  class="el-icon--right" @click.stop="handleDeleteFile(data)"/>
-                        </div>
-                    </div>
-                </template>
-            </el-tree>
-        </div>
-        <div class="main-center">
-            <div class="flex-x-between" v-show="state.selectedDoc">{{ state.selectedDoc.name }}
-                <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>
-            </div>
-            <div :class="{ 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }">
-                <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'upload'" @formChange="handleMetaChange"></MetaRenderForm>
-            </div>
-        </div>
-        <div v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" class="main-right">
-    <!--        {{ checkExtension(state.selectedDoc.fileRelativePath) }}-->
-            <CollaboraViewer  :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
-        </div>
+    <main class="upload-main " v-loading="state.loading">
+        <splitpanes class="uploadContent default-theme">
+          
+        
+          <pane 
+              class="main-left"
+          >
+              <div class="toggleSectionHeader">
+                <SvgIcon src="/icons/file/folder.svg" />
+                <div class="label">Uploaded Files</div>
+              </div>
+              <el-tree ref="treeRef" :data="state.fileList"
+                      default-expand-all
+                      nodeKey="id" :expand-on-click-node="false"
+                      @node-click="handleNodeClick">
+                  <template #default="{ node, data }">
+                      <div class="flex-x-between tree-item">
+                          <span :class="['flex-x-start', { 'color__danger': state.repearNameIdList.includes(data.id) }]">
+                              <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
+                              {{data.name}}
+                          </span>
+                          <div class="flex-x-start" style="--icon-size: 16px;">
+                              <!-- <el-tag v-if="Object.keys(data.aiAnalysis).length > 0" color="#FFC401" type="warning" class="mx-1" effect="dark" round >
+                                  <SvgIcon src="/icons/file/ai.svg" style="--icon-color: #fff;"/>
+                              </el-tag> -->
+                              <SvgIcon src="/icons/menu/trash.svg"  class="el-icon--right" @click.stop="handleDeleteFile(data)"/>
+                          </div>
+                      </div>
+                  </template>
+              </el-tree>
+          </pane>
+          <pane class="main-center">
+              <div class="flex-x-between" v-show="state.selectedDoc">
+                {{ state.selectedDoc.name }}
+                  
+              </div>
+              <div :class="{ 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }">
+  <!--                <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>-->
+                  <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'upload'" @formChange="handleMetaChange"></MetaRenderForm>
+              </div>
+          </pane>
+          
+          <pane 
+              v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" 
+              class="main-right"
+          >
+      
+              <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
+          </pane>
+        </splitpanes>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
             <div class="space"></div>
@@ -51,7 +67,9 @@
 <script lang="ts" setup>
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { UploadAIDetailApi, ConfirmUploadAIApi, CancelUploadAIApi, DeleteUploadAIApi, CheckFileExistApi } from 'dp-api'
-import { useDebounceFn } from '@vueuse/core'
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
+
 const route = useRoute()
 const router = useRouter()
 const userId:string = useUser().getUserId()
@@ -68,6 +86,8 @@ const state = reactive({
     selectedDoc: {},
     repearNameIdList: []
 })
+
+
 
 const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
     state.selectedDoc.properties = deepCopy(formModel)
@@ -259,42 +279,78 @@ onMounted(async() => {
 </script>
 
 <style lang="scss" scoped>
+.toggleSectionHeader{
+  padding: calc(var(--app-padding) / 2) calc(var(--app-padding) * 2);
+  --icon-size: 1rem;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--app-padding);
+  justify-content: flex-start;
+  color: var(--primary-color);
+  align-items: center;
+}
 .upload-main {
-    height: 100%;
     display: grid;
-    grid-template-columns: min-content 1fr min-content;
     grid-template-rows: 1fr min-content;
-    grid-column-gap: var(--app-padding);
-    grid-row-gap: var(--app-padding);
-    position: relative;
+    height:100%;
     overflow: hidden;
-    .main-left { 
-        grid-area: 1 / 1 / 2 / 2;
-        height: 100%;
-        overflow: auto;
+    position: relative;
+    gap:0;
+  .uploadContent {
+    
+    .main-center{
+      padding: var(--app-padding) calc(var(--app-padding) * 2);;
     }
-    .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto; overflow-x: hidden;}
-    .main-right { grid-area: 1 / 3 / 2 / 4; min-width: clamp(320px, 400px, min(50vw, 640px)); }
-    .upload-footer{
-        grid-area: 2 / 1 / 3 / 4;
-        display: flex;
-        flex-flow: row wrap;
-        gap: var(--app-padding);
+    .main-left{
+      //padding-top: calc(var(--app-padding) * 2);
+      //min-width:40px;
+      //border-right:1px solid var(--color-grey-050);
     }
-  @media(max-width: 640px) {
-    .main-right { min-width: 320px }
-  }  
-  @media(max-width: 1024px) {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: min-content 1fr repeat(2, min-content);
-        overflow: hidden;
-        height: calc(100vh - 108px);
-        .main-left { grid-area: 1 / 1 / 2 / 2; }
-        .main-center { grid-area: 2 / 1 / 3 / 2;}
-        .main-right { grid-area: 3 / 1 / 4 / 2; display: none;}
-        .upload-footer { grid-area: 4 / 1 / 5 / 2; }
+    .main-right{
+      //border-left:1px solid var(--color-grey-050);
+      //min-width:320px;
     }
+  }
+  .upload-footer{
+    border-top:1px solid var(--color-grey-050);
+    padding: var(--app-padding) calc(var(--app-padding) * 2);
+    
+  }
+  //  height: 100%;
+  //  display: grid;
+  //  grid-template-columns: min-content 1fr min-content;
+  //  grid-template-rows: 1fr min-content;
+  //  grid-column-gap: var(--app-padding);
+  //  grid-row-gap: var(--app-padding);
+  //  position: relative;
+  //  overflow: hidden;
+  //  .main-left { 
+  //      grid-area: 1 / 1 / 2 / 2;
+  //      height: 100%;
+  //      overflow: auto;
+  //  }
+  //  .main-center { grid-area: 1 / 2 / 2 / 3;  overflow: auto; overflow-x: hidden;}
+  //  .main-right { grid-area: 1 / 3 / 2 / 4; min-width: clamp(320px, 400px, min(50vw, 640px)); }
+  //  .upload-footer{
+  //      grid-area: 2 / 1 / 3 / 4;
+  //      display: flex;
+  //      flex-flow: row wrap;
+  //      gap: var(--app-padding);
+  //  }
+  //@media(max-width: 640px) {
+  //  .main-right { min-width: 320px }
+  //}  
+  //@media(max-width: 1024px) {
+  //      display: grid;
+  //      grid-template-columns: 1fr;
+  //      grid-template-rows: min-content 1fr repeat(2, min-content);
+  //      overflow: hidden;
+  //      height: calc(100vh - 108px);
+  //      .main-left { grid-area: 1 / 1 / 2 / 2; }
+  //      .main-center { grid-area: 2 / 1 / 3 / 2;}
+  //      .main-right { grid-area: 3 / 1 / 4 / 2; display: none;}
+  //      .upload-footer { grid-area: 4 / 1 / 5 / 2; }
+  //  }
 }
 .tree-item {
     width: 100%;
