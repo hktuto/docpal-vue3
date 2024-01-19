@@ -1,15 +1,12 @@
 <template>
 <NuxtLayout class="fit-height" :backPath="state.backPath" :pageTitle="$t('ai.uploadText')">
     <main class="upload-main " v-loading="state.loading">
-        <splitpanes class="uploadContent default-theme">
+        <Splitpanes id="panesContainer" class="default-theme" :firstSplitter="true" @resize="resizeHandler">
           
-        
-          <pane 
-              class="main-left"
-          >
+          <Pane class="main-left" :size="leftSize">
               <div class="toggleSectionHeader">
                 <SvgIcon src="/icons/file/folder.svg" />
-                <div class="label">Uploaded Files</div>
+                <div class="label">Uploaded Files</div>{{leftSize}}
               </div>
               <el-tree ref="treeRef" :data="state.fileList"
                       default-expand-all
@@ -30,8 +27,8 @@
                       </div>
                   </template>
               </el-tree>
-          </pane>
-          <pane class="main-center">
+          </Pane>
+          <Pane class="main-center" :size="middleSize" >
               <div class="flex-x-between" v-show="state.selectedDoc">
                 {{ state.selectedDoc.name }}
                   
@@ -40,16 +37,19 @@
   <!--                <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>-->
                   <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'upload'" @formChange="handleMetaChange"></MetaRenderForm>
               </div>
-          </pane>
+          </Pane>
           
-          <pane 
-              v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'" 
+          <Pane 
+              
               class="main-right"
+              :size="rightSize"
           >
       
-              <CollaboraViewer :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
-          </pane>
-        </splitpanes>
+              <CollaboraViewer
+                  v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'"
+                  :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
+          </Pane>
+        </Splitpanes>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
             <div class="space"></div>
@@ -86,7 +86,23 @@ const state = reactive({
     selectedDoc: {},
     repearNameIdList: []
 })
+const leftSize = ref(15)
+const middleSize = ref(55)
+const rightSize = ref(30)
+const leftMin = ref(5);
+const rightMin = ref(5)
 
+function CalMax() {
+  const el = document.getElementById('panesContainer');
+  if(!el) return 10
+  // get panes size and convert sizeInPixel to percentage
+  const { width, height } = el.getBoundingClientRect()
+  return Number(((40 / width) * 100).toFixed(0))
+}
+
+function resizeHandler(e){
+  console.log(e)
+}
 
 
 const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
@@ -275,6 +291,14 @@ onMounted(async() => {
             treeRef.value.setCurrentKey(state.fileList[0].id)
         }, 100);
     }
+    leftMin.value = CalMax()
+  rightMin.value = CalMax()
+  setTimeout(() => {
+    
+  leftSize.value = 15
+  middleSize.value = 55
+  rightSize.value = 30
+  }, 2000)
 })
 </script>
 
@@ -288,6 +312,7 @@ onMounted(async() => {
   justify-content: flex-start;
   color: var(--primary-color);
   align-items: center;
+  white-space: nowrap;
 }
 .upload-main {
     display: grid;
@@ -296,6 +321,27 @@ onMounted(async() => {
     overflow: hidden;
     position: relative;
     gap:0;
+  :deep{
+    .splitpanes.default-theme .splitpanes__pane {background-color: var(--color-grey-0000);}
+    .splitpanes__splitter {
+      width: 2px;
+      background-color: var(--color-grey-050);position: relative;
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        transition: opacity 0.4s;
+        opacity: 0;
+        z-index: 1;
+      }
+      &:hover{
+        background-color: var(--primary-color);
+        &:before {opacity: 1;}
+      }
+    }
+    .splitpanes--vertical > .splitpanes__splitter:before {top:50%;left: -14px;height: 100%;width:30px;}
+    .splitpanes--horizontal > .splitpanes__splitter:before {top: -30px;bottom: -30px;width: 100%;}
+  }
   .uploadContent {
     
     .main-center{
