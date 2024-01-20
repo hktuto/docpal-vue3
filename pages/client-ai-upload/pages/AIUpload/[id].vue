@@ -1,13 +1,24 @@
 <template>
 <NuxtLayout class="fit-height" :backPath="state.backPath" :pageTitle="$t('ai.uploadText')">
     <main class="upload-main " v-loading="state.loading">
-        <Splitpanes id="panesContainer" class="default-theme" :firstSplitter="true" @resize="resizeHandler">
+        <Splitpanes id="panesContainer" class="default-theme"  @resize="dragging = true" @resized="(e) => {dragging = false; leftSize = e[0].size ; middleSize = e[1].size ; rightSize = e[2].size}">
           
-          <Pane class="main-left" :size="leftSize">
-              <div class="toggleSectionHeader">
-                <SvgIcon src="/icons/file/folder.svg" />
-                <div class="label">Uploaded Files</div>{{leftSize}}
-              </div>
+          <SplitpanesPanes 
+              class="main-left" 
+              v-model:size="leftSize" 
+              :defaultSize="15"
+              parentId="panesContainer" 
+              :minSizeInPixel="60"
+              :dragging="dragging"
+              toggle
+              @toggled="reCalcuate"
+          >
+            <template #toggleButton>
+              <SvgIcon src="/icons/file/folder.svg" />
+            </template>
+            <template #toggleText>
+              <div class="label">Uploaded Files</div>
+            </template>
               <el-tree ref="treeRef" :data="state.fileList"
                       default-expand-all
                       nodeKey="id" :expand-on-click-node="false"
@@ -27,8 +38,15 @@
                       </div>
                   </template>
               </el-tree>
-          </Pane>
-          <Pane class="main-center" :size="middleSize" >
+          </SplitpanesPanes>
+          <SplitpanesPanes 
+              class="main-center"
+              v-model:size="middleSize"
+              :defaultSize="55"
+              parentId="panesContainer"
+              :dragging="dragging"
+              :minSizeInPixel="300"
+          >
               <div class="flex-x-between" v-show="state.selectedDoc">
                 {{ state.selectedDoc.name }}
                   
@@ -37,18 +55,30 @@
   <!--                <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>-->
                   <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'upload'" @formChange="handleMetaChange"></MetaRenderForm>
               </div>
-          </Pane>
+          </SplitpanesPanes>
           
-          <Pane 
+          <SplitpanesPanes 
               
               class="main-right"
-              :size="rightSize"
+              v-model:size="rightSize"
+              :defaultSize="15"
+              parentId="panesContainer"
+              :minSizeInPixel="60"
+              :dragging="dragging"
+              toggle
+              @toggled="reCalcuate"
           >
+            <template #toggleButton>
+              <SvgIcon src="/icons/doc/file.svg" />
+            </template>
+            <template #toggleText>
+              <div class="label">Preview</div>
+            </template>
       
               <CollaboraViewer
                   v-if="state.selectedDoc.id && !state.selectedDoc.isFolder && checkExtension(state.selectedDoc.fileRelativePath) === 'collabora'"
                   :docId="state.selectedDoc.id" fileType="LOCAL" :readonly="true" />
-          </Pane>
+          </SplitpanesPanes>
         </Splitpanes>
 <!--        <UploadStructurePreview class="main-right" ref="previewRef" />-->
         <div class="upload-footer flex-x-between">
@@ -91,6 +121,17 @@ const middleSize = ref(55)
 const rightSize = ref(30)
 const leftMin = ref(5);
 const rightMin = ref(5)
+const dragging = ref(false)
+
+function reCalcuate(){
+  if(leftSize.value + middleSize.value + rightSize.value < 100){
+    middleSize.value = 100 - (leftSize.value + rightSize.value)
+    return;
+  }
+  if(leftSize.value + middleSize.value + rightSize.value > 100) {
+    middleSize.value = 100 - (leftSize.value + rightSize.value)
+  }
+}
 
 function CalMax() {
   const el = document.getElementById('panesContainer');
@@ -100,9 +141,7 @@ function CalMax() {
   return Number(((40 / width) * 100).toFixed(0))
 }
 
-function resizeHandler(e){
-  console.log(e)
-}
+
 
 
 const handleMetaChange = async({fieldName, formModel, newValue, oldValue}) => {
@@ -293,27 +332,12 @@ onMounted(async() => {
     }
     leftMin.value = CalMax()
   rightMin.value = CalMax()
-  setTimeout(() => {
-    
-  leftSize.value = 15
-  middleSize.value = 55
-  rightSize.value = 30
-  }, 2000)
+  
 })
 </script>
 
 <style lang="scss" scoped>
-.toggleSectionHeader{
-  padding: calc(var(--app-padding) / 2) calc(var(--app-padding) * 2);
-  --icon-size: 1rem;
-  display: flex;
-  flex-flow: row nowrap;
-  gap: var(--app-padding);
-  justify-content: flex-start;
-  color: var(--primary-color);
-  align-items: center;
-  white-space: nowrap;
-}
+
 .upload-main {
     display: grid;
     grid-template-rows: 1fr min-content;
