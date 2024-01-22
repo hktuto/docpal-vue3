@@ -17,7 +17,7 @@
               <SvgIcon src="/icons/file/folder.svg" />
             </template>
             <template #toggleText>
-              <div class="label">Uploaded Files</div>
+              <div class="label">{{ $t('ai.uploadText')}}</div>
             </template>
               <el-tree ref="treeRef" :data="state.fileList"
                       default-expand-all
@@ -47,13 +47,14 @@
               :dragging="dragging"
               :minSizeInPixel="300"
           >
-              <div class="flex-x-between" v-show="state.selectedDoc">
+              <div class="flex-x-between" v-show="state.selectedDoc" style="padding:var(--app-padding);">
                 {{ state.selectedDoc.name }}
                   
               </div>
-              <div :class="{ 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }">
+              <div :class="{ 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }" style="padding-top:var(--app-padding);">
   <!--                <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>-->
                   <MetaRenderForm ref="MetaFormRef" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'upload'" @formChange="handleMetaChange"></MetaRenderForm>
+              
               </div>
           </SplitpanesPanes>
           
@@ -72,7 +73,7 @@
               <SvgIcon src="/icons/doc/file.svg" />
             </template>
             <template #toggleText>
-              <div class="label">Preview</div>
+              <div class="label">{{ $t('common_preview')}}</div>
             </template>
       
               <CollaboraViewer

@@ -96,23 +96,25 @@ defineExpose({
   height: 100%;
   width: 100%;
   position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  overflow: hidden;
   &.dragging{
     pointer-events: none;
     opacity: 0.5;
   }
   &.toggle{
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    overflow: hidden;
+
     .contentContainer{
-      flex: 1 0 auto;
+
     }
   }
   .toggleContainer{
     flex: 0 0 auto;
   }
   .contentContainer{
+    flex: 1 0 auto;
     //height: 100%;
     //width: 100%;
   }
@@ -130,7 +132,6 @@ defineExpose({
   white-space: nowrap;
   cursor: pointer;
   &.opened{
-    padding: calc(var(--app-padding) / 2) calc(var(--app-padding) * 2);
   }
 }
 </style>
