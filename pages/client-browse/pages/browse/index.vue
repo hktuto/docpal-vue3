@@ -54,7 +54,6 @@
         </div>
 
         <!-- global action -->
-        <BrowseActionsRename v-show="false" @success="handleRefresh"/>
         <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
         <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
         <BrowseActionsUploadDoc v-show="false" @success="handleRefresh"/>
