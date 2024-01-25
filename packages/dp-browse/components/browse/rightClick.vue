@@ -75,7 +75,6 @@ const router = useRouter()
 const userId:string = useUser().getUserId()
 const FileRightClickPopoverRef = ref()
 async function handleRightClick (detail: any) {
-
     state.visible = true
     state.doc = detail.doc
     

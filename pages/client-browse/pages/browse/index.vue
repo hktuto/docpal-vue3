@@ -11,7 +11,7 @@
                     <BrowseBreadcrumb :ref="(el) => breadCrumb = el" :path="routePath" rootPath="/" />
                 </slot>
                 <div id="browseHeaderRight" class="folderAction">
-                    <CollapseMenu>
+                    <!-- <CollapseMenu>
                         <template #default="{collapse}">
 
                             <template v-for="(group,key) in folderActions" :key="key">
@@ -22,13 +22,13 @@
                             </template>
 
                         </template>
-                    </CollapseMenu>
+                    </CollapseMenu> -->
                     <BrowseActionsInfo :doc="currentDocument.doc" :permission="currentDocument.permission" @click="infoOpened = !infoOpened"/>
                 </div>
             </div>
             <div v-else-if="selectList.length !== 0" class="browseHeader--multi selectedAction">
                 <div class="color__primary">{{$t('dpDocument_fileSelected')}}({{selectList.length}})</div>
-                <CollapseMenu>
+                <!-- <CollapseMenu>
                     <el-button type="text" size="small" @click="handleClearSelected">{{$t('button.clearSelected')}}</el-button>
                   <template v-for="(group,key) in shareActions" :key="key">
                     <template v-for="item in group" :key="item.name">
@@ -36,7 +36,7 @@
                     </template>
                     <div :class="{actionDivider:true, collapse}"></div>
                   </template>
-                </CollapseMenu>
+                </CollapseMenu> -->
             </div>
             <BrowseList
                 v-loading="loading"
@@ -46,9 +46,9 @@
                 @select-change="handleSelectionChange"
             >
                 <template  #default="{doc, permission}" >
+                    <!-- <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" v-show="false" :doc="currentDocument.doc" @success="handleRefresh"/> -->
                     <BrowseInfo v-if="currentDocument.doc && currentDocument.permission" :doc="selectList.length === 1 ? selectList[0] : doc" :listData="currentDocument" :permission="permission" :infoOpened="infoOpened" @close="infoOpened = false" />
                     <BrowseRightClick></BrowseRightClick>
-                    <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" v-show="false" :doc="currentDocument.doc" @success="handleRefresh"/>
                 </template>
             </BrowseList>
         </div>
@@ -57,6 +57,7 @@
         <BrowseActionsPaste v-show="false" @success="handleRefresh"/>
         <BrowseActionsNewFolder v-show="false" @success="handleRefresh"/>
         <BrowseActionsUploadDoc v-show="false" @success="handleRefresh"/>
+        <BrowseActionsRename v-show="false" @success="handleRefresh"/>
     </page-container>
 
 </NuxtLayout>
