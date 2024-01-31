@@ -19,6 +19,7 @@ export type TableColumnItem = {
     label?: string,
     sortable?:boolean,
     slot ?: string,
+    headerSlot ?: string,
     align ?: string,
     width ?: string | number,
     defaultValue ?: any,
@@ -90,6 +91,7 @@ export enum TABLE {
     CLIENT_RETENTION_DONE = "clientRetentionDone",
     CLIENT_RETENTION_PENDING= "clientRetentionPending",
     CLIENT_DASHBOARD = 'clientDashboard',
+    CLIENT_UPLOAD_AI = 'clientUploadAi',
 
     PUBLIC_SHARE = 'publicShare',
     ADMIN_LOG_MANAGE = 'adminLogManage',
@@ -402,6 +404,31 @@ export const defaultTableSetting: TableColumnSetting = {
         events: [],
         options: { pageSize: 20 }
     },
+    [TABLE.CLIENT_UPLOAD_AI] : {
+        columns: [
+            { id: '1', label: 'dpTable_createdDate', prop: "createdDate", formatList: [
+                {
+                    "joiner": "",
+                    "prop": "createdDate",
+                    "formatFun": "dateFormat",
+                    "params": {
+                        "format": ""
+                    },
+                    "index": 0
+                }]
+            },
+            { id: '2', label: 'tableHeader_filesCount', prop: 'filesCount' },
+            { id: '3', label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { id: '4', label: 'dpTable_actions', slot: 'commonActions', width: 100 }
+        ],
+        events: [],
+        slots: [
+            { label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { label: 'dpTable_actions', slot: 'commonActions' }
+        ],
+        options: { pageSize: 20 }
+    },
+    
     [TABLE.CLIENT_TRASH] : {
         columns: [
             { id: '6', type: 'selection' },
@@ -534,6 +561,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ],
             },
+            { id: '7', slot: 'mimeType', label: 'docInfo.fileExtension' },
             { id: '4', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true },
             { id: '5', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true },
             {
@@ -1193,11 +1221,13 @@ export const defaultTableSetting: TableColumnSetting = {
     },
     [TABLE.CLIENT_SEARCH] : {
         columns: [
-            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
-            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', showOverflowTooltip: true },
-            { id: '3', label: 'tableHeader_type', prop: 'type' },
-            { id: '6', label: 'search_authors', prop: 'createdBy' },
-            { id: '7', label: 'search_contributors', prop: 'properties.dc:contributors',
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true },
+            { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey' },
+            { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue' },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath' },
+            { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true, headerSlot: 'documentTypeHeader', width: 165 },
+            { id: '6', label: 'search.authors', prop: 'createdBy', sortable: true },
+            { id: '7', label: 'search.contributors', prop: 'properties.dc:contributors',
                 formatList: [
                     {
                         "joiner": "",
@@ -1210,7 +1240,7 @@ export const defaultTableSetting: TableColumnSetting = {
                     }
                 ]
             },
-            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180',
+            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180', sortable: true,
                 formatList: [
                     {
                         "joiner": "",
@@ -2544,9 +2574,7 @@ export const defaultTableSetting: TableColumnSetting = {
 
 export function TableAddColumns (columnItem: TableColumnItem, columnList: any, position: number = 1) {
     const _columnItem: TableColumnItem = {
-        label: columnItem.label,
-        prop: columnItem.prop,
-        id: columnItem.id,
+        ...columnItem,
         showOverflowTooltip: true
     }
     if (columnItem.type === 'date') {

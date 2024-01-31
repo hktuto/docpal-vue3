@@ -10,7 +10,7 @@ export default defineAppConfig({
         routeName:"workflowEditor",
         url:"/workflowEditor",
         icon: "/icons/menu/workflowEditor.svg",
-        order:2,
+        order:45,
         parentId: "admin_workflow"
     }]
 })

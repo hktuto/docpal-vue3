@@ -60,7 +60,7 @@ function toTree (data) {
                     // routeName: item.parentRouteName || '',
                     url: item.parentUrl || '',
                     icon: item.parentIcon || item.icon || '',
-                    order: item.parentOrder || 10000,
+                    order: item.parentOrder || item.order || 10000,
                     children: []
                 } 
                 map[item.parentId].children.push({...item})

@@ -1,0 +1,19 @@
+{
+  "version": "v1.0.1",
+  "notes": "Test version",
+  "pub_date": "2020-06-22T19:25:57Z",
+  "platforms": {
+    "darwin-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUM3YrME95eW9lM3hpSk5jWWtYYkNXNXFFdy9wRjk5RjltY0VGVys4K3lHMzdjazgyZXY1NUh5VFNCZzZNdEpiNmVjWExPRUhDWThQWnFrZGFsSnlRV3ZXdXVjcUxxV2dZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzMDU1MzUxCWZpbGU6RG9jUGFsLmFwcC50YXIuZ3oKTEVaM21RRXE3T2hHRURRRDV1OFVMY2RQY0ZrMzA0SUwyQkNPMWtQQWhaNkt2TEJxd0VIa1daelJqSlZXZURrY0JwZTBKNjJ0bVU2VFZDR0NJTFRQQ1E9PQo=",
+      "url": "https://app4.wclsolution.com/resources/desktop/mac/DocPal.app.tar.gz"
+    },
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUM3YrME95eW9lM3hpSk5jWWtYYkNXNXFFdy9wRjk5RjltY0VGVys4K3lHMzdjazgyZXY1NUh5VFNCZzZNdEpiNmVjWExPRUhDWThQWnFrZGFsSnlRV3ZXdXVjcUxxV2dZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzMDU1MzUxCWZpbGU6RG9jUGFsLmFwcC50YXIuZ3oKTEVaM21RRXE3T2hHRURRRDV1OFVMY2RQY0ZrMzA0SUwyQkNPMWtQQWhaNkt2TEJxd0VIa1daelJqSlZXZURrY0JwZTBKNjJ0bVU2VFZDR0NJTFRQQ1E9PQo=",
+      "url": "https://app4.wclsolution.com/resources/desktop/mac/DocPal.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUM3YrME95eW9lM3hpSk5jWWtYYkNXNXFFdy9wRjk5RjltY0VGVys4K3lHMzdjazgyZXY1NUh5VFNCZzZNdEpiNmVjWExPRUhDWThQWnFrZGFsSnlRV3ZXdXVjcUxxV2dZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzAzMDU1MzUxCWZpbGU6RG9jUGFsLmFwcC50YXIuZ3oKTEVaM21RRXE3T2hHRURRRDV1OFVMY2RQY0ZrMzA0SUwyQkNPMWtQQWhaNkt2TEJxd0VIa1daelJqSlZXZURrY0JwZTBKNjJ0bVU2VFZDR0NJTFRQQ1E9PQo",
+      "url": "https://app4.wclsolution.com/resources/desktop/pc/DocPal.app.tar.gz"
+    }
+  }
+}

@@ -69,7 +69,11 @@ async function getAllTags() {
 }
 
 watch(doc, () => {
-    tags.value =( props.doc.properties['nxtag:tags'] || []).map((item:any) => ({
+    if(!props.doc && !props.doc.properties) {
+      tags.value = []
+      return
+    }
+    tags.value =( props.doc?.properties['nxtag:tags'] || []).map((item:any) => ({
       key: item.label,
       value: item.label
     }))

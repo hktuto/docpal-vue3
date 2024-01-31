@@ -1,5 +1,6 @@
 // @ts-nocheck
 import {api} from '../';
+import { GetGroupListApi } from './user'
 import { pageParams, SearchFilter, paginationResponse,sfloderDetail, paginationResponseData, Response } from '../model';
 export const sfolderGetApi = async():Promise<sfloderDetail[]> => {
     return api.get<Response<sfloderDetail[]>>('/nuxeo/sfolder/').then(res => res.data.data);
@@ -63,7 +64,7 @@ export const getAggregation = async (aggregation?, searchParams?) => {
                 break
             case 'includeFolder_agg':
                 prev[newKey] = aggregationItem.map((option) => ({
-                    label: option.key === 'notInclude' ? $t('searchType_includeFolder_0') : $t('searchType_includeFolder_1'),
+                    label: option.key === 'notInclude' ? $t('searchType.includeFolder_0') : $t('searchType.includeFolder_1'),
                     value: option.key === 'notInclude' ? 'false' : 'true'
                 }))
                 break
@@ -89,7 +90,7 @@ export const getAggregation = async (aggregation?, searchParams?) => {
     }, {})
     function returnI18nArr(arr) {
         return arr.map(arrItem => ({
-            label: $t(`searchType_${arrItem.key}`),
+            label: $t(`searchType.${arrItem.key}`),
             value: arrItem.key
         }))
     }
@@ -144,7 +145,7 @@ export const ExportSearchCsvApi = async(params) => {
     const res = await api.post('/nuxeo/search/exportCsv', params, {
         responseType: 'blob',
         timeout: 0,
-        headers: { TimeZone }
+        headers: { TimeZone, 'white': 'true' }
     }).then(res => res.data)
     return res
 }
@@ -186,15 +187,15 @@ export const GetSTextSearchTypesApi = async() => {
     const res = await api.get('/nuxeo/search/textSearchTypes', {}).then(res => res.data.data)
     searchOptions.textSearchType = res.map(item => ({
         value: item,
-        label: $t('searchType_'+item)
+        label: $t('searchType.'+item)
     }))
     return searchOptions.textSearchType
 }
 export const GetSAssetTypeApi = async() => {
     return [
-        { label: $t('searchType_Picture'), value: 'Picture' },
-        { label: $t('searchType_Video'), value: 'Video' },
-        { label: $t('searchType_Audio'), value: 'Audio' }
+        { label: $t('searchType.Picture'), value: 'Picture' },
+        { label: $t('searchType.Video'), value: 'Video' },
+        { label: $t('searchType.Audio'), value: 'Audio' }
     ]
 }
 export const GetSTypesApi = async() => {
@@ -202,9 +203,14 @@ export const GetSTypesApi = async() => {
     const res = await api.get('/nuxeo/types', {}).then(res => res.data.data)
     searchOptions.types = res.map(item => ({
         value: item.name,
-        label: $t(item.name)
+        label: $t(item.name),
+        isFolder: item.isFolder
     }))
     return searchOptions.types
+}
+export const GetDocListWithIsFolderApi = async(isFolder:boolean = true) => {
+    const docList = await GetSTypesApi()
+    return docList.filter(item => item.isFolder === isFolder)
 }
 export const GetKeyCloakAllUsersApi = async() => {
     if (searchOptions.users) return searchOptions.users
@@ -217,36 +223,54 @@ export const GetKeyCloakAllUsersApi = async() => {
     }))
     return searchOptions.users
 }
-export const GetSearchExtendsApi = async(primaryType, key) => {
-    const res = await api.get(`/nuxeo/search/getSearchExtends?primaryType=${primaryType}`).then(res => res.data.data)
-    if(!!key && res[key]) return res[key].map( item => ({
-        label: ['mimeType'].includes(key) ? item : $t(`searchType_${item}`), 
-        value: item
-    }))
+export const GetUsersAndGroupsApi = async() => {
+    const users = await GetKeyCloakAllUsersApi()
+    const groups = await GetGroupListApi()
+    
+    return [
+        {  label: $t('user_users'),  children: users },
+        {  label: $t('user_groups'),  children: groups.map(item => ({ value: item.id, label: item.name })) },
+    ]
+}
+export const GetSearchExtendsApi = async(assetType, key: width | height | duration | mimeType) => {
+    if(searchOptions[`${assetType}-${key}`]) return searchOptions[`${assetType}-${key}`]
+    const res = await api.get(`/nuxeo/search/getSearchExtends?primaryType=${assetType}`).then(res => res.data.data)
+    if(!!key && res[key]) {
+        searchOptions[`${assetType}-${key}`] = Object.keys(res[key]).map( kKey => {
+            const kItem = res[key][kKey]
+            return {
+                label: ['mimeType', 'width', 'height', 'duration'].includes(key) ? kItem : $t(`searchType.${kItem}`), 
+                value: kKey
+            }
+        })
+        return searchOptions[`${assetType}-${key}`]
+    } 
+    
     return []
 }
 export const GetSModifiedDateApi = async() => {
     return [
-        { label: $t('searchType_last24h'), value: 'last24h' },
-        { label: $t('searchType_lastWeek'), value: 'lastWeek' },
-        { label: $t('searchType_lastMonth'), value: 'lastMonth' },
-        { label: $t('searchType_lastYear'), value: 'lastYear' },
-        { label: $t('searchType_priorToLastYear'), value: 'priorToLastYear' }
+        { label: $t('searchType.last24h'), value: 'last24h' },
+        { label: $t('searchType.lastWeek'), value: 'lastWeek' },
+        { label: $t('searchType.lastMonth'), value: 'lastMonth' },
+        { label: $t('searchType.lastYear'), value: 'lastYear' },
+        { label: $t('searchType.priorToLastYear'), value: 'priorToLastYear' }
     ]
 }
 export const GetSSizeApi = async() => {
     return [
-        { label: $t('searchType_100'), value: '100' },
-        { label: $t('searchType_1000'), value: '1000' },
-        { label: $t('searchType_10000'), value: '10000' },
-        { label: $t('searchType_100000'), value: '100000' },
-        { label: $t('searchType_1000000'), value: '1000000' }
+        { label: $t('searchType.100'), value: '100' },
+        { label: $t('searchType.1000'), value: '1000' },
+        { label: $t('searchType.10000'), value: '10000' },
+        { label: $t('searchType.100000'), value: '100000' },
+        { label: $t('searchType.1000000'), value: '1000000' }
     ]
 }
+
 export const GetSSIncludeFolderApi = async() => {
     return [
-        { label: $t('searchType_includeFolder_1'), value: 'true' },
-        { label: $t('searchType_includeFolder_0'), value: 'false' },
+        { label: $t('searchType.includeFolder_1'), value: 'true' },
+        { label: $t('searchType.includeFolder_0'), value: 'false' },
     ]
 }
 export const GetSCollectionsApi = async() => {
@@ -270,3 +294,17 @@ export const GetSTagsApi = async() => {
     return searchOptions.tags
 }
 
+export const GetRecentSearchPageApi = async(params: pageParams):Promise<paginationData> => {
+    const res = await api.post('/docpal/logs/recent/search/page', params).then(res => res.data.data)
+    return {
+        entryList: res.entryList,
+        totalSize: res.totalSize
+    }
+}
+export const GetRecentDocumentPageApi = async(params: pageParams):Promise<paginationData> => {
+    const res = await api.post('/docpal/logs/recent/document/page', params).then(res => res.data.data)
+    return {
+        entryList: res.entryList,
+        totalSize: res.totalSize
+    }
+}

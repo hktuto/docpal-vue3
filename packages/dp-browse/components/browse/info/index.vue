@@ -13,7 +13,8 @@
 <div class="infoHeaderSection">
     <slot name="header" />
     <div class="headerTopRow">
-        <div class="name">{{ doc.name }}</div>
+        <div class="name"><div class="namespan" @dblclick="openEditInfo">{{ doc.name }}</div> <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/></div>
+        
         <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
     </div>
 </div>
@@ -44,7 +45,7 @@
     </el-tab-pane> -->
     <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
       <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail, permission}" />
-    </el-tab-pane>
+    </el-tab-pane> 
 </el-tabs>
   <div v-else v-loading="loading" class="loadingContainer">
     {{ detail }}
@@ -58,6 +59,8 @@ import {deepCopy, DocDetail} from "dp-api";
 import { getDocumentDetailSync } from '../../../utils/browseHelper';
 
 const { infoSlots } = useBrowse()
+
+const BrowseActionsEditRef = ref();
 const props = withDefaults(defineProps<{
     doc?: any,
     infoOpened?:boolean,
@@ -127,6 +130,12 @@ function dragmove(event:any) {
     y.value += event.dy;
 }
 
+function openEditInfo() {
+    if(BrowseActionsEditRef.value) {
+        BrowseActionsEditRef.value.openDialog()
+    }
+}
+
 async function docUpdated(forceRefresh?: boolean = false) {
     if(props.listData && doc.value.id === props.listData.doc.id && !forceRefresh) {
         detail.value = deepCopy(props.listData.doc)
@@ -141,8 +150,6 @@ async function docUpdated(forceRefresh?: boolean = false) {
         if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
             currentTab.value = 'info'
         }
-        console.log('updateaa1');
-        
         // get detail
         //   const response = await getDocumentDetail(doc.value.id, userId);
         const response = await getDocumentDetailSync(doc.value.id, userId);
@@ -185,6 +192,11 @@ defineExpose({
     font-weight: 800;
     font-size: 1.2rem;
     word-break: break-all;
+    display: flex;
+    flex-flow:row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap:calc(var(--app-padding));
   }
 }
 .infoContainer {

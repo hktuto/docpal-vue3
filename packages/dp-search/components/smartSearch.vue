@@ -3,7 +3,7 @@
         <div ref="wrapper" id="smartSearchContainer" :class="{wrapper:true, dropdownOpened: !!dropdownState}">
             <div :class="{inputContainer:true, dropdownOpened: !!dropdownState}" @mouseenter="focusInput">
                 <ElIcon><Search /></ElIcon>
-                <input ref="inputEl" :value="state.keyword" :placeholder="$t('search_keyword')"
+                <input ref="inputEl" :value="state.keyword" :placeholder="$t('search.paramsInTextSearch')"
                     @input="keywordInputHandler"
                     @keyup.enter="keywordEnter()" />
                 <ElIcon class="filterIcon" @click="openFilter"><Operation /></ElIcon>

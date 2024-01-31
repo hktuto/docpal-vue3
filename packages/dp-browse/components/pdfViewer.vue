@@ -38,6 +38,7 @@ async function getAnnotation():Promise<Object> {
     let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
+          
             annotationObj = Array.isArray(JSON.parse(annotation[0].object.paths)) ? JSON.parse(annotation[0].object.paths) : []
         }
     }
@@ -50,6 +51,7 @@ async function getAnnotation():Promise<Object> {
 
 async function downloadPdf() {
   console.log(blob.value)
+  
   await downloadBlob(blob.value, props.doc.name)
 }
 async function sendPdfAndAnnotation() {
@@ -57,7 +59,7 @@ async function sendPdfAndAnnotation() {
     loading.value = true;
     try {
         blob.value = await GetDocumentPreview(props.doc.id);
-        
+        console.log(blob.value)
         const annotations = await getAnnotation()
         const frame = iframe.value?.contentWindow;
         frame?.postMessage({blob:blob.value, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');

@@ -35,18 +35,20 @@
                         </div>
                         <div class="label">{{row.name}}</div>
                         <DropzoneContainer v-if="row.isFolder" :doc="row" class="folderDropzone backgroundDrop"></DropzoneContainer>
-                        
                     </div>
                 </template>
+                <template #mimeType="{ row, index }">
+                    <template v-if="!row.isFolder && row.mimeType">{{ mime.extension(row.mimeType) }}</template>
+                    <template v-else>-</template>
+                </template>
                 <template #tags="{ row, index }">
-                    <el-tag v-for="tag in row.tags">{{ tag }}</el-tag>
+                    <el-tag class="el-icon--left" v-for="tag in row.tags">{{ tag }}</el-tag>
                 </template>
                 <template #contributors="{ row, index }">
-                    <el-tag v-for="tag in row.contributors">{{ tag }}</el-tag>
+                    <el-tag class="el-icon--left" v-for="tag in row.contributors">{{ tag }}</el-tag>
                 </template>
         </Table>
         
-        <BrowseUpload2 ref="FileUpload2Ref" class="FileUpload2" ></BrowseUpload2>
 </div>
 
 </template>
@@ -56,6 +58,7 @@
 import { GetDocDetail, TABLE, defaultTableSetting } from 'dp-api'
 import {openFileDetail} from "~/utils/browseHelper";
 import { useEventListener } from '@vueuse/core'
+import * as mime from 'mime-types'
 const emit = defineEmits([
     'right-click',
     'select-change',
@@ -121,26 +124,25 @@ const { tableData, options, loading } = toRefs(state)
 // #endregion
 
 
-function handleDblclick (row:any) {
-  
-    state.curDoc = row;
-    if(row.isFolder) {
-      router.push({
-          query: {
-                ...route.query,
-              path: row.path,
-              isFolder: row.isFolder
-          }
-      });
-      return 
-      
+function handleDblclick (row:any, column: any, event: any) {
+    if (event.ctrlKey) {
+        const url = router.resolve({  path: '/browse', query: { path: row.path } })
+        window.open(url.href, '_blank');
+        return
     }
+    state.curDoc = row;
+    router.push({
+      query: {
+        ...route.query,
+        path: row.path,
+        isFolder: row.isFolder
+      }
+    });
     
-    openFileDetail(row.path, {
-      showInfo:true,
-      showHeaderAction:true
-    })
-    
+    // openFileDetail(row.path, {
+    //   showInfo:true,
+    //   showHeaderAction:true
+    // })
 }
 async function handleEmptyRightClick(event: MouseEvent) {
     event.preventDefault()
@@ -281,12 +283,6 @@ defineExpose({ TableRef })
             height: var(--icon-size);
         }
     }
-}
-.FileUpload2 {
-    pointer-events: auto!important;
-    display: none;
-    height: 100%;
-    width: 100%;
 }
 .backgroundDrop{
     position: absolute;

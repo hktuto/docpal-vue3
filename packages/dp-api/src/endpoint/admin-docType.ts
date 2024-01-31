@@ -3,7 +3,8 @@ import {api} from '../';
 export const CreateSchemasApi = async(params) => {
     const res = await api.post('/nuxeo/studio/createSchemas', params, { 
         responseType: 'blob', 
-        timeout: 0 
+        timeout: 0,
+        headers: {'white': 'true'}
     }).then(res => res.data)
     return res
 }
@@ -25,7 +26,8 @@ export const GetSchemaApi = async(id: string) => {
 export const UpdateSchemasApi = async(params) => {
     const res = await api.post('/nuxeo/studio/updateSchemas', params, { 
         responseType: 'blob', 
-        timeout: 0 
+        timeout: 0,
+        headers: {'white': 'true'} 
     }).then(res => res.data)
     return res
 }
@@ -34,7 +36,8 @@ export const UpdateSchemasApi = async(params) => {
 export const CreateDocTypesApi = async(params) => {
     const res = await api.post('/nuxeo/studio/createDocTypes', params, { 
         responseType: 'blob', 
-        timeout: 0 
+        timeout: 0,
+        headers: {'white': 'true'} 
     }).then(res => res.data)
     return res
 }
@@ -56,7 +59,8 @@ export const GetDocTypeApi = async(id: string) => {
 export const UpdateDocTypesApi = async(params) => {
     const res = await api.post('/nuxeo/studio/updateDocTypes', params, { 
         responseType: 'blob', 
-        timeout: 0 
+        timeout: 0,
+        headers: {'white': 'true'} 
     }).then(res => res.data)
     return res
 }
@@ -99,7 +103,8 @@ export const fieldTypeRelatedList = { // 依后台需求根据fieldTypeId转换f
 export const DownloadPackageTarApi = async() => {
     const res = await api.get('/nuxeo/studio/download/last/nuxeo/package', { 
         responseType: 'blob', 
-        timeout: 0 
+        timeout: 0,
+        headers: {'white': 'true'} 
     }).then(res => res.data)
     return res
 }

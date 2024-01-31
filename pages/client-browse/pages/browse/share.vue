@@ -23,7 +23,7 @@
                 <div>
                     <el-button type="primary" @click="handleAddMore">{{$t('button.addMore')}}</el-button>
                     <el-button type="info" @click="handleDiscard">{{$t('discard')}}</el-button>
-                    <el-button type="primary" @click="handleSubmit">{{$t('confirm')}}</el-button>
+                    <el-button type="primary" @click="handleSubmit">{{$t('dpButtom_confirm')}}</el-button>
                 </div>
             </div>
         </main>

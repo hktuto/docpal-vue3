@@ -16,13 +16,11 @@
                     <SvgIcon src="/icons/dots.svg" @click.stop @dblclick.stop></SvgIcon>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <!-- <el-dropdown-item v-loading="loading" @click="handleDblclick(row)">{{$t('masterTable.editInfo')}}</el-dropdown-item> -->
                             <el-dropdown-item v-loading="loading" @click="handleDblclick(row)">{{$t('masterTable.editDetail')}}</el-dropdown-item>
                             <el-dropdown-item v-loading="loading" @click="handleShowSchema(row)">{{$t('masterTable.showSchema')}}</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
-                
             </template>
         </Table>
         <MasterTableDialog ref="MasterTableDialogRef" @refresh="handlePaginationChange(1)"/>
@@ -140,7 +138,9 @@ function handleAdd () {
     const ResponsiveFilterRef = ref()
     async function getFilter() {
         const filters = await GetMasterTablesPageConditionApi()
-        ResponsiveFilterRef.value.init(filters)
+        nextTick(() => {
+            ResponsiveFilterRef.value.init(filters)
+        })
     }
     function handleFilterFormChange(formModel) {
         state.extraParams = formModel

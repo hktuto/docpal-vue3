@@ -76,6 +76,7 @@ export const GetDocumentAdditionalApi = async(params) => {
 
 
 export const GetDocumentPreview = async(idOrPath:string) => {
+    console.log("GetDocumentPreview")
     return api.post('/nuxeo/document/preview', {
         idOrPath
     },{
@@ -384,8 +385,8 @@ export const CommentsGetApi = (params:any) => {
 }
 
 // get doc office 
-export const getOfficeTokenApi = (documentId) => {
-    return api.get(`/nuxeo/getOfficeToken/${documentId}`).then(res => res.data.data);
+export const getOfficeTokenApi = (documentId:string, fileType:string) => {
+    return api.get(`/nuxeo/getOfficeToken/${documentId}?fileType=${fileType.toUpperCase()}`).then(res => res.data.data);
 }
 
 

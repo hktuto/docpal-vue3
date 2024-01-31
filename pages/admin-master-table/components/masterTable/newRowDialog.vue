@@ -3,6 +3,7 @@
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
+    destroy-on-close
     @close="handleClose"
     >
     <FromVariablesRenderer ref="FromVariablesRendererRef"/>
@@ -67,9 +68,10 @@ function turnFields(fields) {
         'VARCHAR:255': 'textarea',
         'varchar:4000': 'textarea',
         'clob': 'textarea',
-        'bigint': 'number',
+        'bigint': 'int',
         'timestamp': 'date',
-        'bit': 'switch'
+        'bit': 'switch',
+        'decimal': 'number'
     }
     return fields.reduce((prev, item) => {
         if(!props.ignoreList.includes(item.columnName) && typeMap[item.dataType]) {
@@ -77,10 +79,17 @@ function turnFields(fields) {
                 name: item.columnName,
                 label: item.columnName,
                 type: typeMap[item.dataType],
-                required: item.required
+                required: item.required,
+                options: {}
             }
             if(item.dataType === 'varchar') _item.maxLength = 255
             else if(item.dataType === 'varchar:4000') _item.maxLength = 4000
+            else if(item.dataType === 'bigint') {
+                _item.type = 'number'
+                _item.options.stepStrictly = true
+                _item.options.customClass = ['align-left']
+                _item.options.precision = 0
+            }
             prev.push(_item)
         } 
         return prev

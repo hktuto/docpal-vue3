@@ -1,33 +1,58 @@
 <template>
+<div v-loading="state.loading" style="height: 100%;">
     <FromVariablesRenderer ref="FromVariablesRendererRef" @formChange="formChange"
-        @handleApply="handleApply"/>
+        @handleApply="handleApply" >
+        <template v-for="item in state.variables" v-slot:[`slot-${item.name}`]>
+            <div v-if="state.aiAnalysis && state.aiAnalysis[item.name]" 
+                :id="`slot-${item.name}`" :key="item.name" class="ai-suggestion-content">
+                <SvgIcon src="/icons/file/ai.svg" />
+                <pre>{{state.aiAnalysis[item.name].label || state.aiAnalysis[item.name].value}}</pre> 
+                <div class="flex-x-start ai-button-list">
+                    <el-button :icon="Check" type="primary" text style="color: #fff"
+                        @click="aiFormChange(item.name, state.aiAnalysis[item.name])"></el-button>
+                    <el-button :icon="Close" type="primary" text class="el-icon--right" style="color: #fff"
+                        @click="deleteAiSuggestion(item.name)"></el-button>
+                </div>
+            </div>
+        </template>
+    </FromVariablesRenderer>
+</div>
 </template>
 
 <script lang="ts" setup> 
+import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import { GetMetaValidationRuleApi } from 'dp-api'
+import { GetMetaValidationRuleApi, GetDocListWithIsFolderApi, UpdateAiDocumentApi } from 'dp-api'
+type initMetaFormOptions = {
+    isFolder?: boolean,
+    aiAnalysis?: any,
+    aiDocId?: string
+}
 const props = withDefaults(defineProps<{
-    showApply: boolean,
+    mode: 'fileRequest' | 'ai' | 'ai-edit', 'normal',
 }>(), {
-  showApply: false
+    mode: 'normal',
 })
 const emits = defineEmits(['formChange', 'handleApply'])
 const route = useRoute()
 const state = reactive({
+    loading: false,
     data: [],
     variables: [],
-    documentTypeSelected: ''
+    documentTypeSelected: '',
+    aiAnalysis: {},
+    aiDocId: '',
 })
 const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
 // #region module: Variables
     const FromVariablesRendererRef = ref()
-    async function getVariables() {
+    async function getVariables(isFolder?: boolean) {
         try {
             const date = new Date().valueOf()
             state.variables = []
             state.data.forEach((item, index) => {
                 if(item.display && ignoreList.indexOf(item.metaData) === -1) {
-                    const _item = {
+                    const _item: any = {
                         name: item.metaData,
                         label: $t(item.metaData),
                         type: item.dataType || 'input',
@@ -48,6 +73,8 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                             break;
                         case 'select':
                             if(item.values) _item.options.optionItems = item.values
+                            _item.options.clearable = true
+                            _item.options.filterable = true
                             break
                         default:
                             break;
@@ -58,10 +85,37 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     state.variables.push(_item)
                 }
             });
+            
+            if(props.mode === 'ai') {
+                state.variables.unshift({
+                    name: 'documentType',
+                    label: $t('search.documentType'),
+                    type: 'select',
+                    required: true,
+                    options: {
+                        optionItems: await GetDocListWithIsFolderApi(isFolder),
+                        clearable: false,
+                        filterable: true
+                    }
+                })
+                state.variables.unshift({
+                    name: 'docName',
+                    label: $t('tableHeader_name'),
+                    type: 'input',
+                    required: true,
+                    options: {
+                        clearable: false,
+                    }
+                })
+            }
             nextTick(async () => {
                 const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
-                if (props.showApply) {
+                if (props.mode === 'fileRequest') {
                     const newFormJson = getApplyFormJson(formJson)
+                    FromVariablesRendererRef.value.setFormJson(newFormJson)
+                }
+                else if (props.mode === 'ai' || props.mode === 'ai-edit') {
+                    const newFormJson = getAIFormJson(formJson)
                     FromVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
@@ -79,6 +133,17 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
         })
         return { formConfig: formJson.formConfig, widgetList }
     }
+    function getAIFormJson (formJson) {
+        const widgetList = []
+        formJson.widgetList.forEach(item => {
+            const gridItem = getMetaApplyFormGridItem(16,8, ['ai-suggestion-container'])
+            const slotItem = getMetaAISlot(item.options.name)
+            gridItem.cols[0].widgetList.push(item)
+            gridItem.cols[1].widgetList.push(slotItem)
+            widgetList.push(gridItem)
+        })
+        return { formConfig: formJson.formConfig, widgetList }
+    }
     function getValidate(rule = '^[a-zA-Z_][a-zA-Z0-9_]*$') {
         return `if(!/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
     }
@@ -86,18 +151,24 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
         state.variables = []
         FromVariablesRendererRef.value.createJson(state.variables )
     }
-    async function init(documentType) {
+    async function init(documentType, initOptions: initMetaFormOptions) {
         if (!documentType) {
             clear()
             return
         }
         try {
+            state.loading = true
             state.data = []
             state.variables = []
             state.data = await GetMetaValidationRuleApi({ documentType })
+            await getVariables(initOptions.isFolder)
+            if(props.mode === 'ai' || props.mode === 'ai-edit') {
+                if(initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
+                if(initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
+            }
         } catch (error) {
         }
-        getVariables()
+        state.loading = false
     }
 // #endregion
 async function setData(properties) {
@@ -110,7 +181,10 @@ async function setData(properties) {
                 break;
         }
     })
-    return await FromVariablesRendererRef.value.setData(properties)
+    setTimeout(() => {
+        FromVariablesRendererRef.value.setData(properties)
+    })
+    // return await FromVariablesRendererRef.value.setData(properties)
 }
 async function getData() {
     const data = await FromVariablesRendererRef.value.getData()
@@ -133,8 +207,35 @@ async function getData() {
 function formChange(formData) {
     emits('formChange', formData)
 }
+async function aiFormChange (key, analysis) {
+    FromVariablesRendererRef.value.setData({
+        [key]: analysis.value
+    })
+}
+async function deleteAiSuggestion(deleteName: string) {
+    const _aiAnalysis = deepCopy(state.aiAnalysis)
+    delete _aiAnalysis.documentType
+    delete _aiAnalysis[deleteName]
+    const params: any = {
+        documentType: deleteName === 'documentType' || !state.aiAnalysis.documentType ? null : state.aiAnalysis?.documentType?.value,
+        metaDatas: Object.keys(_aiAnalysis).reduce((prev: any,key) => {
+            const item = _aiAnalysis[key]
+            prev.push({
+                name: key,
+                value: item.value
+            })
+            return prev
+        }, []),
+        aiId:  state.aiDocId
+    }
+    try {
+        const res = await UpdateAiDocumentApi(params)
+        delete state.aiAnalysis[deleteName]
+    } catch (error) {
+        
+    }
+}
 function handleApply(formModel) {
-    console.log(formModel);
     emits('handleApply', formModel)
 }
 // #region module: Validate
@@ -159,6 +260,7 @@ function handleApply(formModel) {
         if (_msg) return `<h4 class="msg-h4">${doc[docKey]}:</h4>${_msg}`
         return ''
     }
+    // docListItem: name,properties, documentType
     async function checkMetaValidate(docList: any[], docKey: string = 'name') {
         const pList = []
         docList.forEach(item => {
@@ -179,15 +281,56 @@ function handleApply(formModel) {
         
     }
 // #endregion
+
+
 defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
 </script>
+<style lang="scss" scoped>
+.ai-button-list {
+    gap: var(--app-padding);
+    .el-button {
+        margin: unset;
+        padding: unset;
+    }
+}
+</style>
 
 <style lang="scss">
-.meta-button-flex-end {
-  display: flex!important;
-  align-items: flex-end;
-}
-.meta-button-flex-end button{
-   margin-bottom: 18px;
+.ai-suggestion-container {
+    .field-wrapper, .static-content-item, .slot-wrapper-render {
+        height: 100%;
+    }
+    padding: 24px 0 18px;
+    .ai-suggestion-content {
+        height: 100%;
+        --icon-color: #fff;
+        --icon-size: 18px;
+        padding: 3px var(--app-padding);
+        background-color: #FFC401;
+        color: #fff;
+        border-radius: 15px;
+        display: grid;
+        grid-template-columns: min-content 1fr min-content;
+        align-items: self-start;
+        gap: var(--app-padding);
+        line-height: 30px;
+        .el-button.is-text:not(.is-disabled):hover, .el-button.is-text:not(.is-disabled):focus {
+            background-color: unset;
+            opacity: .5;
+        }
+        pre {
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            padding: unset;
+            margin: unset;
+            white-space: pre-wrap; /* css-3 */
+            word-wrap: break-word; /* InternetExplorer5.5+ */
+            white-space: -moz-pre-wrap; /* Mozilla,since1999 */
+            white-space: -pre-wrap; /* Opera4-6 */
+            white-space: -o-pre-wrap;
+            word-break: break-all;
+        }
+    }
 }
 </style>

@@ -17,7 +17,7 @@
             >
             <WorkflowDetailFormRender ref="FromRendererRef" :form-json="formJson"/>
             <template #footer>
-              <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('confirm') }}</el-button>
+              <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('dpButtom_confirm') }}</el-button>
             </template>
         </el-dialog>
     </div>

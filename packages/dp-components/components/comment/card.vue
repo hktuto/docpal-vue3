@@ -28,7 +28,7 @@
                 <p>{{$t('msg_confirmWhetherToDelete')}}</p>
                 <div style="text-align: right; margin: 0">
                     <el-button size="mini" type="text" @click="state.popoverShow = false">{{$t('cancelText')}}</el-button>
-                    <el-button type="primary" size="mini" @click="$emit('handleReplyDelete')">{{$t('confirm')}}</el-button>
+                    <el-button type="primary" size="mini" @click="$emit('handleReplyDelete')">{{$t('dpButtom_confirm')}}</el-button>
                 </div>
                 
                 <!-- class="commentCard_ribbon_reply el-icon-delete color__danger__hover el-icon--left el-icon--right cursorPointer" -->

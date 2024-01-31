@@ -8,7 +8,7 @@ export default defineAppConfig({
       routeName:"meta-validation",
       url:"/meta-validation",
       icon: "/icons/menu/meta.svg",
-      order:49,
+      order:28,
       parentId: "admin_browse"
     }
   ],

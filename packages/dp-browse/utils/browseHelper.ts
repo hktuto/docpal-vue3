@@ -131,13 +131,15 @@ const deepCopy  = (data:any) => {
 
 export type FileDetailOptions = {
     showInfo: boolean,
-    showHeaderAction: boolean
+    showHeaderAction: boolean,
+    openEdit: boolean
 }
 export const openFileDetail = (pathOrId:string, options: FileDetailOptions) => {
     const ev = new CustomEvent('openFilePreview', {detail: {
             pathOrId,
             options
         }})
+    console.log('open detail', ev)
     document.dispatchEvent(ev);
 }
 
@@ -160,6 +162,33 @@ export function calFileNameAndExt(mimeType: string, name: string):string {
     return name;
   }
   
+}
+
+/**
+ * Retrieves the mime type from a given document object.
+ *
+ * @param {any} doc - The document object from which to retrieve the mime type.
+ * @returns {string} The mime type of the document. If the mime type is not available, it returns an empty string.
+ */
+export function getMimeTypeFromDocument(doc:any):string | undefined{
+  const properties = doc.properties as any
+  const mimeType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
+  if(!mimeType) return undefined;
+  return mimeType
+}
+
+export function canCollaboraEdit(mimeType:string) {
+  // is mimeType is .doc or .docx file
+    // check is doc or docx
+    const excelType = ['application/vnd.ms-excel', 'application/msexcel', 'application/x-msexcel', 'application/x-ms-excel', 'application/x-excel', 'application/x-dos_ms_excel','application/xls','application/x-xls','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+    if(excelType.includes(mimeType)) return true;
+    const wordType = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-word.template.macroEnabled.12']
+    if(wordType.includes(mimeType)) return true;
+    const pptType = ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation']
+    if(pptType.includes(mimeType)) return true;
+
+    if(mimeType.includes('application/vnd.collabora') || mimeType.includes('application/vnd.collabora-project'))  return true;
+  return false;
 }
 
 export function downloadBlob (blob:any, name:string, type = "application/octet-stream") {

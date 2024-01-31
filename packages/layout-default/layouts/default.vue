@@ -18,7 +18,10 @@
                 <!-- <DpIcon :name=" opened ? 's-fold' : 's-unfold'" /> -->
             </div>
         </div>
-        <div data-tauri-drag-region id="topBarContainer">
+        <div  id="topBarContainer">
+          <div v-if="feature.tauri" data-tauri-drag-region class="tauriHeader">
+
+          </div>
         <div class="headerLeft">
           <SvgIcon v-if="isMobile" src="/icons/menu.svg" @click="toggleOpen" />
           <PageTitle :title="pageTitle"  :backPath="backPath"/>
@@ -30,9 +33,10 @@
         </div>
 
         <div v-if="isLogin"  class="actions">
+          <AppDownload v-if="!feature.tauri" />
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload"></UploadStructureButton>
           <Notification v-if="feature.notification" />
-          <TauriHeader v-if="feature.tauri" />
+          <component v-for="s in headerSlots" :key="s.name" :is="s.component" v-bind="$props" />
         </div>
       </div>
         <main id="mainContainer">
@@ -62,9 +66,9 @@ const { feature, menu } = useAppConfig();
 const {isLogin} = useUser()
 const { public:{ mode }} = useRuntimeConfig();
 const { isMobile } = useLayout();
-const { uploadState, uploadRequestList } = useUploadStore()
+const { uploadState, uploadRequestList } = useUploadAIStore()
 const sidebarEl = ref();
-const { sideSlot } = useLayout()
+const { sideSlot, headerSlots } = useLayout()
 
 onClickOutside(sidebarEl, () => {
   if(isMobile && !collapse.value) {
@@ -81,17 +85,17 @@ function toggleOpen() {
 
 // #region module:
   const InteractDrawerRef = ref()
-  function handleOpenUpload() {
-    InteractDrawerRef.value.handleSwitch()
+  function handleOpenUpload(isOpen: boolean = false) {
+    InteractDrawerRef.value.handleSwitch(isOpen)
   }
 // #endregion
 
-
+provide('handleOpenUploadDrawer', handleOpenUpload)
 </script>
 
 <style lang="scss" scoped>
 #pageContainer{
-  background-color: aquamarine;
+  background-color: #fff;
     width: 100%;
     height: 100%;
     position: relative;
@@ -215,9 +219,11 @@ function toggleOpen() {
   display: grid;
   grid-template-columns: 1fr min-content;
 }
-
-
-
+.bc-grey {
+  #mainContainer{
+    background-color: #fcfdff!important;
+  }
+}
 .fit-height {
   #mainContainer{
     width: 100%;

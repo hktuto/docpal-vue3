@@ -8,8 +8,8 @@ export default defineAppConfig({
             routeName:"master-table",
             url:"/master-table",
             icon: "/icons/menu/masterTable.svg",
-            order: 10001,
-            // parentId: "admin_dashboardManagement"
+            order: 15,
+            parentId: "admin_glossary"
         }
     ]
 })

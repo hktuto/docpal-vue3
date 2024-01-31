@@ -8,7 +8,7 @@ export default defineAppConfig({
       routeName:"smartFolder",
       url:"/smartFolder",
       icon: "/icons/menu/preSearchConfig.svg",
-      order:1,
+      order:21,
       parentId: "admin_browse"
     }
   ],

@@ -54,7 +54,7 @@
                             <el-option v-for="(item, index) in state.canContainList" :key="index" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>
-                    <el-button @click="row.setPopVisible = !row.setPopVisible">{{$t('confirm')}}</el-button>
+                    <el-button @click="row.setPopVisible = !row.setPopVisible">{{$t('dpButtom_confirm')}}</el-button>
                 </template>
             </el-popover>
         </template>

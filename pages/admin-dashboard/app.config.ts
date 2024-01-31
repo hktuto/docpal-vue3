@@ -11,7 +11,7 @@ export default defineAppConfig({
         routeName:"data-dashboard",
         url:"/data-dashboard",
         icon: "/icons/menu/dashboard.svg",
-        order: 10001,
+        order: 45,
         parentId: "admin_dashboardManagement"
     }]
 })
